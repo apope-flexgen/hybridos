@@ -1,0 +1,205 @@
+{
+    "system": {
+        "name": "FlexGen HybridOS",
+        "protocol": "DNP3",
+        "version": "0.2",
+        "base_uri": "/base_uri_client",
+        "id": "test_client",
+        "ip_address": "172.17.0.3",
+        "local_uri": "/local_client",
+        "port": 20000,
+        "frequency": 100,
+        "event_pub": false
+    },
+    "registers": [
+        {
+            "type": "AnOPInt32",
+            "map": [
+                { "note": "for keeping track of test number", "id": "test_id", "offset": 0, "uri": "/components/test_id" },
+                { "note": "test basic input", "id": "analog_out_1", "offset": 1 },
+                { "note": "test idx vs offset (should be no difference)", "id": "analog_out_2", "idx": 2 },
+                { "note": "test uri", "id": "analog_out_4", "offset": 4, "uri": "/components/test" },
+                { "note": "test class 1", "id": "analog_out_5", "offset": 5, "uri": "/components/test", "class": 1 },
+                { "note": "test class 2", "id": "analog_out_7", "offset": 7, "uri": "/components/test", "class": 2 },
+                { "note": "test class 3", "id": "analog_out_11", "offset": 11, "uri": "/components/test", "class": 3 },
+                { "note": "test scale", "id": "analog_out_12", "offset": 12, "uri": "/components/test", "scale": 1000 },
+                { "note": "test signed", "id": "analog_out_13", "offset": 13, "uri": "/components/test", "signed": true },
+                { "note": "test naked format", "id": "analog_out_15", "offset": 15, "uri": "/components/test_naked", "format": "naked" },
+                { "note": "test clothed format", "id": "analog_out_17", "offset": 17, "uri": "/components/test_clothed", "format": "clothed" },
+                { "note": "test full format", "id": "analog_out_20", "offset": 20, "uri": "/components/test_full", "format": "full" },
+                { "note": "test naked format with timeout", "id": "analog_out_22", "offset": 22, "uri": "/components/test_naked", "format": "naked", "timeout": 1000 },
+                { "note": "test clothed format with timeout", "id": "analog_out_23", "offset": 23, "uri": "/components/test_clothed", "format": "clothed", "timeout": 1000 },
+                { "note": "test full format with timeout", "id": "analog_out_25", "offset": 25, "uri": "/components/test_full", "format": "full", "timeout": 1000 },
+                { "note": "test xbatch set", "id": "analog_out_27", "offset": 27, "uri": "/components/test", "xbatch_set_rate": 1000 },
+                { "note": "test xinterval set", "id": "analog_out_28", "offset": 28, "uri": "/components/test", "xinterval_set_rate": 1000 },
+                { "note": "test xbatch pub", "id": "analog_out_29", "offset": 29, "uri": "/components/test",  "xbatch_pub_rate": 1000 },
+                { "note": "test xinterval pub", "id": "analog_out_30", "offset": 30, "uri": "/components/test",  "xinterval_pub_rate": 1000 },
+                { "note": "test deadband", "id": "analog_out_31", "offset": 31, "uri": "/components/test", "deadband": 10},
+                { "note": "test basic timeout", "id": "analog_out_32", "offset": 32, "uri": "/components/test", "timeout": 1000 },
+                { "note": "test timeout with deadband", "id": "analog_out_33", "offset": 33, "uri": "/components/test", "deadband": 10, "timeout": 1000}
+            ]
+        },
+        {
+            "type": "AnOPInt16",
+            "map": [
+                { "note": "test basic input", "id": "analog_out_34", "offset": 34 },
+                { "note": "test idx vs offset (should be no difference)", "id": "analog_out_36", "idx": 36 },
+                { "note": "test uri", "id": "analog_out_38", "offset": 38, "uri": "/components/test" },
+                { "note": "test class 1", "id": "analog_out_39", "offset": 39, "uri": "/components/test", "class": 1 },
+                { "note": "test class 2", "id": "analog_out_41", "offset": 41, "uri": "/components/test", "class": 2 },
+                { "note": "test class 3", "id": "analog_out_45", "offset": 45, "uri": "/components/test", "class": 3 },
+                { "note": "test scale", "id": "analog_out_46", "offset": 46, "uri": "/components/test", "scale": 1000 },
+                { "note": "test signed", "id": "analog_out_47", "offset": 47, "uri": "/components/test", "signed": true },
+                { "note": "test naked format", "id": "analog_out_49", "offset": 49, "uri": "/components/test_naked", "format": "naked" },
+                { "note": "test clothed format", "id": "analog_out_51", "offset": 51, "uri": "/components/test_clothed", "format": "clothed" },
+                { "note": "test full format", "id": "analog_out_54", "offset": 54, "uri": "/components/test_full", "format": "full" },
+                { "note": "test naked format with timeout", "id": "analog_out_56", "offset": 56, "uri": "/components/test_naked", "format": "naked", "timeout": 1000 },
+                { "note": "test clothed format with timeout", "id": "analog_out_57", "offset": 57, "uri": "/components/test_clothed", "format": "clothed", "timeout": 1000 },
+                { "note": "test full format with timeout", "id": "analog_out_59", "offset": 59, "uri": "/components/test_full", "format": "full", "timeout": 1000 },
+                { "note": "test xbatch set", "id": "analog_out_61", "offset": 61, "uri": "/components/test", "xbatch_set_rate": 1000 },
+                { "note": "test xinterval set", "id": "analog_out_62", "offset": 62, "uri": "/components/test", "xinterval_set_rate": 1000 },
+                { "note": "test xbatch pub", "id": "analog_out_63", "offset": 63, "uri": "/components/test",  "xbatch_pub_rate": 1000 },
+                { "note": "test xinterval pub", "id": "analog_out_64", "offset": 64, "uri": "/components/test",  "xinterval_pub_rate": 1000 },
+                { "note": "test deadband", "id": "analog_out_65", "offset": 65, "uri": "/components/test", "deadband": 10 },
+                { "note": "test basic timeout", "id": "analog_out_66", "offset": 66, "uri": "/components/test", "timeout": 1000 },
+                { "note": "test timeout with deadband", "id": "analog_out_67", "offset": 67, "uri": "/components/test", "deadband": 10, "timeout": 1000 }
+            ]            
+        },
+        {
+            "type": "AnOPF32",
+            "map": [
+                { "note": "test basic input", "id": "analog_out_68", "offset": 68 },
+                { "note": "test idx vs offset (should be no difference)", "id": "analog_out_70", "idx": 70 },
+                { "note": "test uri", "id": "analog_out_72", "offset": 72, "uri": "/components/test" },
+                { "note": "test class 1", "id": "analog_out_73", "offset": 73, "uri": "/components/test", "class": 1 },
+                { "note": "test class 2", "id": "analog_out_75", "offset": 75, "uri": "/components/test", "class": 2 },
+                { "note": "test class 3", "id": "analog_out_79", "offset": 79, "uri": "/components/test", "class": 3 },
+                { "note": "test scale", "id": "analog_out_80", "offset": 80, "uri": "/components/test", "scale": 1000 },
+                { "note": "test signed", "id": "analog_out_81", "offset": 81, "uri": "/components/test", "signed": true },
+                { "note": "test naked format", "id": "analog_out_83", "offset": 83, "uri": "/components/test_naked", "format": "naked" },
+                { "note": "test clothed format", "id": "analog_out_85", "offset": 85, "uri": "/components/test_clothed", "format": "clothed" },
+                { "note": "test full format", "id": "analog_out_88", "offset": 88, "uri": "/components/test_full", "format": "full" },
+                { "note": "test naked format with timeout", "id": "analog_out_90", "offset": 90, "uri": "/components/test_naked", "format": "naked", "timeout": 1000 },
+                { "note": "test clothed format with timeout", "id": "analog_out_91", "offset": 91, "uri": "/components/test_clothed", "format": "clothed", "timeout": 1000 },
+                { "note": "test full format with timeout", "id": "analog_out_93", "offset": 93, "uri": "/components/test_full", "format": "full", "timeout": 1000 },
+                { "note": "test xbatch set", "id": "analog_out_95", "offset": 95, "uri": "/components/test", "xbatch_set_rate": 1000 },
+                { "note": "test xinterval set", "id": "analog_out_96", "offset": 96, "uri": "/components/test", "xinterval_set_rate": 1000 },
+                { "note": "test xbatch pub", "id": "analog_out_97", "offset": 97, "uri": "/components/test",  "xbatch_pub_rate": 1000 },
+                { "note": "test xinterval pub", "id": "analog_out_98", "offset": 98, "uri": "/components/test",  "xinterval_pub_rate": 1000 },
+                { "note": "test deadband", "id": "analog_out_99", "offset": 99, "uri": "/components/test", "deadband": 10 },
+                { "note": "test basic timeout", "id": "analog_out_100", "offset": 100, "uri": "/components/test", "timeout": 1000 },
+                { "note": "test timeout with deadband", "id": "analog_out_101", "offset": 101, "uri": "/components/test", "deadband": 10, "timeout": 1000 }
+            ]            
+        },
+        {
+            "type": "analogOS",
+            "note": "this does not have a default static variation or event variation",
+            "map": [
+                { "note": "test static var 1", "id": "analog_out_102", "offset": 102, "uri": "/components/test", "variation": "Group40Var1" },
+                { "note": "test static var 2", "id": "analog_out_103", "offset": 103, "uri": "/components/test", "variation": "Group40Var2" },
+                { "note": "test static var 3", "id": "analog_out_104", "offset": 104, "uri": "/components/test", "variation": "Group40Var3" },
+                { "note": "test static var 4", "id": "analog_out_105", "offset": 105, "uri": "/components/test", "variation": "Group40Var4" }
+            ]           
+        },
+        {
+            "type": "CROB",
+            "map": [
+                { "note": "test basic input", "id": "binary_out_0", "offset": 0 },
+                { "note": "test idx vs offset (should be no difference)", "id": "binary_out_2", "idx": 2 },
+                { "note": "test uri", "id": "binary_out_4", "offset": 4, "uri": "/components/test" },
+                { "note": "test class 1", "id": "binary_out_5", "offset": 5, "uri": "/components/test", "class": 1 },
+                { "note": "test class 2", "id": "binary_out_7", "offset": 7, "uri": "/components/test", "class": 2 },
+                { "note": "test class 3", "id": "binary_out_11", "offset": 11, "uri": "/components/test", "class": 3 },
+                { "note": "test scale", "id": "binary_out_12", "offset": 12, "uri": "/components/test", "scale": -1 },
+                { "note": "test signed", "id": "binary_out_13", "offset": 13, "uri": "/components/test", "signed": true },
+                { "note": "test naked format", "id": "binary_out_15", "offset": 15, "uri": "/components/test_naked", "format": "naked" },
+                { "note": "test clothed format", "id": "binary_out_17", "offset": 17, "uri": "/components/test_clothed", "format": "clothed" },
+                { "note": "test full format", "id": "binary_out_20", "offset": 20, "uri": "/components/test_full", "format": "full" },
+                { "note": "test naked format with timeout", "id": "binary_out_22", "offset": 22, "uri": "/components/test_naked", "format": "naked", "timeout": 1000 },
+                { "note": "test clothed format with timeout", "id": "binary_out_23", "offset": 23, "uri": "/components/test_clothed", "format": "clothed", "timeout": 1000 },
+                { "note": "test full format with timeout", "id": "binary_out_25", "offset": 25, "uri": "/components/test_full", "format": "full", "timeout": 1000 },
+                { "note": "test xbatch set", "id": "binary_out_27", "offset": 27, "uri": "/components/test", "xbatch_set_rate": 1000 },
+                { "note": "test xinterval set", "id": "binary_out_28", "offset": 28, "uri": "/components/test", "xinterval_set_rate": 1000 },
+                { "note": "test xbatch pub", "id": "binary_out_29", "offset": 29, "uri": "/components/test",  "xbatch_pub_rate": 1000 },
+                { "note": "test xinterval pub", "id": "binary_out_30", "offset": 30, "uri": "/components/test",  "xinterval_pub_rate": 1000 },
+                { "note": "test basic timeout", "id": "binary_out_32", "offset": 32, "uri": "/components/test", "timeout": 1000 }
+            ]
+        },
+        {
+            "type": "binaryOS",
+            "map": [
+                { "note": "test basic input", "id": "binary_out_34", "offset": 34 },
+                { "note": "test idx vs offset (should be no difference)", "id": "binary_out_36", "idx": 36 },
+                { "note": "test uri", "id": "binary_out_38", "offset": 38, "uri": "/components/test" },
+                { "note": "test class 1", "id": "binary_out_39", "offset": 39, "uri": "/components/test", "class": 1 },
+                { "note": "test class 2", "id": "binary_out_41", "offset": 41, "uri": "/components/test", "class": 2 },
+                { "note": "test class 3", "id": "binary_out_45", "offset": 45, "uri": "/components/test", "class": 3 },
+                { "note": "test scale", "id": "binary_out_46", "offset": 46, "uri": "/components/test", "scale": 1000 },
+                { "note": "test signed", "id": "binary_out_47", "offset": 47, "uri": "/components/test", "signed": true },
+                { "note": "test naked format", "id": "binary_out_49", "offset": 49, "uri": "/components/test_naked", "format": "naked" },
+                { "note": "test clothed format", "id": "binary_out_51", "offset": 51, "uri": "/components/test_clothed", "format": "clothed" },
+                { "note": "test full format", "id": "binary_out_54", "offset": 54, "uri": "/components/test_full", "format": "full" },
+                { "note": "test naked format with timeout", "id": "binary_out_56", "offset": 56, "uri": "/components/test_naked", "format": "naked", "timeout": 1000 },
+                { "note": "test clothed format with timeout", "id": "binary_out_57", "offset": 57, "uri": "/components/test_clothed", "format": "clothed", "timeout": 1000 },
+                { "note": "test full format with timeout", "id": "binary_out_59", "offset": 59, "uri": "/components/test_full", "format": "full", "timeout": 1000 },
+                { "note": "test xbatch set", "id": "binary_out_61", "offset": 61, "uri": "/components/test", "xbatch_set_rate": 1000 },
+                { "note": "test xinterval set", "id": "binary_out_62", "offset": 62, "uri": "/components/test", "xinterval_set_rate": 1000 },
+                { "note": "test xbatch pub", "id": "binary_out_63", "offset": 63, "uri": "/components/test",  "xbatch_pub_rate": 1000 },
+                { "note": "test xinterval pub", "id": "binary_out_64", "offset": 64, "uri": "/components/test",  "xinterval_pub_rate": 1000 },
+                { "note": "test basic timeout", "id": "binary_out_66", "offset": 66, "uri": "/components/test", "timeout": 1000 }
+            ]  
+        },
+        {
+            "type": "binary",
+
+            "map": [
+                { "note": "test basic input", "id": "binary_in_0", "offset": 0 },
+                { "note": "test idx vs offset (should be no difference)", "id": "binary_in_2", "idx": 2 },
+                { "note": "test uri", "id": "binary_in_4", "offset": 4, "uri": "/components/test" },
+                { "note": "test class 1", "id": "binary_in_5", "offset": 5, "uri": "/components/test", "class": 1 },
+                { "note": "test class 2", "id": "binary_in_7", "offset": 7, "uri": "/components/test", "class": 2 },
+                { "note": "test class 3", "id": "binary_in_11", "offset": 11, "uri": "/components/test", "class": 3 },
+                { "note": "test scale", "id": "binary_in_12", "offset": 12, "uri": "/components/test", "scale": -1 },
+                { "note": "test signed", "id": "binary_in_13", "offset": 13, "uri": "/components/test", "signed": true },
+                { "note": "test naked format", "id": "binary_in_15", "offset": 15, "uri": "/components/test_naked", "format": "naked" },
+                { "note": "test clothed format", "id": "binary_in_17", "offset": 17, "uri": "/components/test_clothed", "format": "clothed" },
+                { "note": "test full format", "id": "binary_in_20", "offset": 20, "uri": "/components/test_full", "format": "full" },
+                { "note": "test naked format with timeout", "id": "binary_in_22", "offset": 22, "uri": "/components/test_naked", "format": "naked", "timeout": 1000 },
+                { "note": "test clothed format with timeout", "id": "binary_in_23", "offset": 23, "uri": "/components/test_clothed", "format": "clothed", "timeout": 1000 },
+                { "note": "test full format with timeout", "id": "binary_in_25", "offset": 25, "uri": "/components/test_full", "format": "full", "timeout": 1000 },
+                { "note": "test xbatch set", "id": "binary_in_27", "offset": 27, "uri": "/components/test", "xbatch_set_rate": 1000 },
+                { "note": "test xinterval set", "id": "binary_in_28", "offset": 28, "uri": "/components/test", "xinterval_set_rate": 1000 },
+                { "note": "test xbatch pub", "id": "binary_in_29", "offset": 29, "uri": "/components/test",  "xbatch_pub_rate": 1000 },
+                { "note": "test xinterval pub", "id": "binary_in_30", "offset": 30, "uri": "/components/test",  "xinterval_pub_rate": 1000 },
+                { "note": "test basic timeout", "id": "binary_in_32", "offset": 32, "uri": "/components/test", "timeout": 1000 }
+            ]
+        },
+        {
+            "type": "analog",
+            "map": [
+                { "note": "test tracker", "id": "test_id", "offset": 0, "uri": "/components/test"},
+                { "note": "test basic input", "id": "analog_in_1", "offset": 1 },
+                { "note": "test idx vs offset (should be no difference)", "id": "analog_in_2", "idx": 2 },
+                { "note": "test uri", "id": "analog_in_4", "offset": 4, "uri": "/components/test" },
+                { "note": "test class 1", "id": "analog_in_5", "offset": 5, "uri": "/components/test", "class": 1 },
+                { "note": "test class 2", "id": "analog_in_7", "offset": 7, "uri": "/components/test", "class": 2 },
+                { "note": "test class 3", "id": "analog_in_11", "offset": 11, "uri": "/components/test", "class": 3 },
+                { "note": "test scale", "id": "analog_in_12", "offset": 12, "uri": "/components/test", "scale": 1000 },
+                { "note": "test signed", "id": "analog_in_13", "offset": 13, "uri": "/components/test", "signed": true },
+                { "note": "test naked format", "id": "analog_in_15", "offset": 15, "uri": "/components/test_naked", "format": "naked" },
+                { "note": "test clothed format", "id": "analog_in_17", "offset": 17, "uri": "/components/test_clothed", "format": "clothed" },
+                { "note": "test full format", "id": "analog_in_20", "offset": 20, "uri": "/components/test_full", "format": "full" },
+                { "note": "test naked format with timeout", "id": "analog_in_22", "offset": 22, "uri": "/components/test_naked", "format": "naked", "timeout": 1000 },
+                { "note": "test clothed format with timeout", "id": "analog_in_23", "offset": 23, "uri": "/components/test_clothed", "format": "clothed", "timeout": 1000 },
+                { "note": "test full format with timeout", "id": "analog_in_25", "offset": 25, "uri": "/components/test_full", "format": "full", "timeout": 1000 },
+                { "note": "test xbatch set", "id": "analog_in_27", "offset": 27, "uri": "/components/test", "xbatch_set_rate": 1000 },
+                { "note": "test xinterval set", "id": "analog_in_28", "offset": 28, "uri": "/components/test", "xinterval_set_rate": 1000 },
+                { "note": "test xbatch pub", "id": "analog_in_29", "offset": 29, "uri": "/components/test",  "xbatch_pub_rate": 1000 },
+                { "note": "test xinterval pub", "id": "analog_in_30", "offset": 30, "uri": "/components/test",  "xinterval_pub_rate": 1000 },
+                { "note": "test deadband", "id": "analog_in_31", "offset": 31, "uri": "/components/test", "deadband": 10},
+                { "note": "test basic timeout", "id": "analog_in_32", "offset": 32, "uri": "/components/test", "timeout": 1000 },
+                { "note": "test timeout with deadband", "id": "analog_in_33", "offset": 33, "uri": "/components/test", "deadband": 10, "timeout": 1000}       
+            ]
+        }
+    ]
+}

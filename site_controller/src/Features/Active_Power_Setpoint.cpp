@@ -23,7 +23,10 @@ features::Active_Power_Setpoint::Active_Power_Setpoint() {
 }
 
 void features::Active_Power_Setpoint::execute(Asset_Cmd_Object& asset_cmd) {
-    External_Inputs feature_inputs = External_Inputs{ asset_cmd.solar_data.max_potential_kW, asset_cmd.site_kW_load, asset_cmd.site_kW_demand, asset_cmd.ess_data.kW_request, asset_cmd.gen_data.kW_request, asset_cmd.solar_data.kW_request };
+    External_Inputs feature_inputs = External_Inputs{
+        asset_cmd.solar_data.max_potential_kW,    asset_cmd.site_kW_load, asset_cmd.site_kW_demand, asset_cmd.ess_data.kW_request, asset_cmd.gen_data.kW_request, asset_cmd.solar_data.kW_request, asset_cmd.get_total_available_discharge_kW(),
+        asset_cmd.get_total_available_charge_kW()
+    };
 
     External_Outputs feature_outputs = execute_helper(feature_inputs);
     asset_cmd.solar_data.kW_request = feature_outputs.solar_kW_request;
@@ -47,15 +50,32 @@ features::Active_Power_Setpoint::External_Outputs features::Active_Power_Setpoin
         new_solar_kW_request = inputs.solar_kW_request;
     }
 
-    // Setup desired command at the POI
+    // Setup desired command at the POI, not including load nor limited by potential dispatch.
     float poi_cmd = local_kW_cmd;
 
     // Load must be included in the reference command and routed through the slewed target
-    float additional_load_compensation = asset_cmd_utils::calculate_additional_load_compensation(load_compensation(load_method.value.value_int), inputs.site_kW_load, inputs.site_kW_demand, inputs.ess_kW_request, inputs.gen_kW_request,
-                                                                                                 new_solar_kW_request);
-    local_kW_cmd += additional_load_compensation;
-    float site_kW_demand = kW_slew.get_slew_target(local_kW_cmd);
-    additional_load_compensation = asset_cmd_utils::track_slewed_load(load_compensation(load_method.value.value_int), site_kW_demand, local_kW_cmd, additional_load_compensation, kW_slew);
+    float intermediate_load_compensation = asset_cmd_utils::calculate_additional_load_compensation(  // clang-format off
+        load_compensation(load_method.value.value_int),
+        inputs.site_kW_load,
+        inputs.site_kW_demand,
+        inputs.ess_kW_request,
+        inputs.gen_kW_request,
+        new_solar_kW_request
+    );  // clang-format on
+    local_kW_cmd += intermediate_load_compensation;
+
+    // Determine target of kW_slew and clamp within charge/discharge limits.
+    float limited_kW_cmd = kW_slew.get_slew_target(local_kW_cmd);
+    limited_kW_cmd = std::min(limited_kW_cmd, inputs.total_available_kW_discharge);
+    limited_kW_cmd = std::max(limited_kW_cmd, inputs.total_available_kW_charge);
+
+    // Demand is simply current slewed kw value within dispatch limits.
+    float site_kW_demand = limited_kW_cmd;
+
+    // Update slew target to limited value.
+    kW_slew.update_slew_target(limited_kW_cmd);
+
+    float additional_load_compensation = asset_cmd_utils::track_slewed_load(load_compensation(load_method.value.value_int), site_kW_demand, local_kW_cmd, intermediate_load_compensation, kW_slew);
     return External_Outputs{ new_solar_kW_request, poi_cmd, load_compensation(load_method.value.value_int), additional_load_compensation, site_kW_demand };
 }
 

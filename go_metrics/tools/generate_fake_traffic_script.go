@@ -8,6 +8,8 @@ import (
 	"math/rand"
 	"os"
 	"time"
+	"strings"
+	"strconv"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyz" +
@@ -52,7 +54,29 @@ start () {
 while true
 do
 `
-	for _, input := range inputData.Inputs {
+	for i := 0; i < 10; i++ {
+	for inputKey, input := range inputData.Inputs {
+		if input.Uri != ""{
+		if strings.Contains(inputKey, "##"){
+			for j := 1; j < 10; j++{
+				file += fmt.Sprintf("fims_send -m set -u %s ", strings.ReplaceAll(input.Uri, "##", strconv.Itoa(j)))
+			switch input.Type {
+			case "string":
+				file += "\\\"" + String(rand.Intn(10)) + "\\\"" + "\n"
+			case "float":
+				file += fmt.Sprintf("%f\n", rand.Float64()*100)
+			case "bool":
+				if math.Round(rand.Float64()) == 0 {
+					file += fmt.Sprintf("false\n")
+				} else {
+					file += fmt.Sprintf("true\n")
+				}
+			default:
+				file += fmt.Sprintf("%f\n", rand.Float64()*100)
+			}
+			file += "sleep 0.001\n"
+			}
+		} else {
 		file += fmt.Sprintf("fims_send -m set -u %s ", input.Uri)
 		switch input.Type {
 		case "string":
@@ -70,7 +94,8 @@ do
 		}
 		file += "sleep 0.001\n"
 	}
-	file += "sleep 1\ndone\n}\n"
+	}}
+}
 
 	f, err := os.Create("run_data.sh")
 	f.WriteString(file)

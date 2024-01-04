@@ -1,0 +1,39 @@
+Using Dbi for gcom modbus client/server
+
+p. wilshire  12_27_2023
+
+
+
+
+run mongod 
+
+mkdir -p /data/dbi
+mongod&
+
+run dbi
+
+dbi&
+
+
+
+
+Test gcom_modbus_server dbi file load
+
+First set up dbi with the config file.
+fims_send -m set -r /$$ -u/dbi/modbus_server/gcom_test_server -f configs/server/gcom_test_server.json
+
+Then use the new dbi entry to start up modbus client
+gcom_modbus_server -u /dbi/modbus_server/gcom_test_server
+
+
+
+
+Test gcom_modbus_client dbi file load
+
+
+First set up dbi with the config file.
+fims_send -m set -r /$$ -u/dbi/modbus_client/gcom_test_client -f configs/client/gcom_test_client.json
+
+Then use the new dbi entry to start up modbus client
+gcom_modbus_client -u /dbi/modbus_client/gcom_test_client ip:172.17.0.3
+

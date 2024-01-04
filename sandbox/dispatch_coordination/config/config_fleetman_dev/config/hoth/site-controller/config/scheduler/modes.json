@@ -1,7 +1,5 @@
 {
     "absolute_ess": {
-        "name": "Absolute ESS",
-        "icon": "BatteryVert",
         "color_code": "lightGreen",
         "constants": [
             {
@@ -13,6 +11,8 @@
                 "value": 6
             }
         ],
+        "icon": "BatteryVert",
+        "name": "Absolute ESS",
         "variables": [
             {
                 "id": "charge_flag",
@@ -32,34 +32,7 @@
             }
         ]
     },
-    "target_soc": {
-        "name": "Target SOC",
-        "icon": "BatteryCharging",
-        "color_code": "lightBlue",
-        "constants": [
-            {
-                "id": "runmode1_kW_mode_cmd",
-                "name": "Active Power Feature",
-                "type": "Int",
-                "unit": "",
-                "uri": "/features/active_power/runmode1_kW_mode_cmd",
-                "value": 1
-            }
-        ],
-        "variables": [
-            {
-                "id": "soc_target",
-                "name": "Target SoC Setpoint",
-                "type": "Float",
-                "unit": "%",
-                "uri": "/features/active_power/ess_charge_control_target_soc",
-                "value": 100
-            }
-        ]
-    },
     "default": {
-        "name": "Default",
-        "icon": "Build",
         "color_code": "gray",
         "constants": [
             {
@@ -87,6 +60,33 @@
                 "value": 0
             }
         ],
+        "icon": "Build",
+        "name": "Default",
         "variables": []
+    },
+    "target_soc": {
+        "color_code": "lightBlue",
+        "constants": [
+            {
+                "id": "runmode1_kW_mode_cmd",
+                "name": "Active Power Feature",
+                "type": "Int",
+                "unit": "",
+                "uri": "/features/active_power/runmode1_kW_mode_cmd",
+                "value": 1
+            }
+        ],
+        "icon": "BatteryCharging",
+        "name": "Target SOC",
+        "variables": [
+            {
+                "id": "soc_target",
+                "name": "Target SoC Setpoint",
+                "type": "Float",
+                "unit": "%",
+                "uri": "/features/active_power/ess_charge_control_target_soc",
+                "value": 100
+            }
+        ]
     }
 }

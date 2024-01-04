@@ -1,0 +1,13 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/dts",
+			"args": [
+				"--c=/usr/local/etc/config/dts/dts.json",
+				"--logCfg=/usr/local/etc/config/logging/dts/dts_verbose.json"
+			],
+			"max_restarts": -1
+		}
+	]
+}

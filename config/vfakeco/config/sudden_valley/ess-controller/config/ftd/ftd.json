@@ -1,0 +1,108 @@
+{
+    "db_name": "owner_sudden_valley",
+    "period": 300,
+    "num_archive_workers": 1,
+    "archive": "/home/hybridos/powercloud/archives",
+    "uris": [
+        {
+            "sources": 
+            [
+                "pcs_registers_fast", "pcs_registers_slow"
+            ],
+            "uri": "/components",
+            "measurement": "pcs_modbus_data",
+            "destination": "influx"
+        },
+        {
+            "sources": 
+            [
+                "catl_ems_bms_rw", "catl_mbmu_summary_r", "catl_mbmu_stat_r", "catl_bms_ems_r"
+            ],
+            "uri": "/components",
+            "measurement": "mbmu_modbus_data",
+            "destination": "influx"
+        },
+        {
+            "sources": 
+            [
+                "catl_sbmu_1", "catl_sbmu_2", "catl_sbmu_3", "catl_sbmu_4", "catl_sbmu_5", "catl_sbmu_6", "catl_sbmu_7", "catl_sbmu_8", "catl_sbmu_9"
+            ],
+            "uri": "/components",
+            "measurement": "sbmu_modbus_data",
+            "destination": "influx"
+        },
+        {
+            "sources":
+            [
+                "catl_mb", "catl_mbmu_sum_r", "sel_2440"
+            ],
+            "uri": "/components",
+            "measurement": "components",
+            "destination": "influx"
+        },
+        {
+            "sources": 
+            [
+                "summary"
+            ],
+            "uri": "/assets/bms",
+            "measurement": "mbmu_assets_data",
+            "destination": "influx"
+        },
+        {
+            "sources": 
+            [
+                "sbmu_1", "sbmu_2", "sbmu_3", "sbmu_4", "sbmu_5", "sbmu_6", "sbmu_7", "sbmu_8", "sbmu_9"
+            ],
+            "uri": "/assets/bms",
+            "measurement": "sbmu_assets_data",
+            "destination": "influx"
+        },
+        {
+            "uri": "/site",
+            "measurement": "site",
+            "destination": "influx"
+        },
+        {
+            "uri": "/features",
+            "measurement": "features",
+            "destination": "influx"
+        },
+        {
+            "uri": "/metrics",
+            "measurement": "metrics",
+            "destination": "influx"
+        },
+        {
+            "uri": "/systemstats/cpu",
+            "measurement": "cpustats",
+            "destination": "influx"
+        },
+        {
+            "uri": "/systemstats/mem",
+            "measurement": "memstats",
+            "destination": "influx"
+        },
+        {
+            "uri": "/systemstats/net",
+            "measurement": "netstats",
+            "destination": "influx"
+        },
+        {
+            "uri": "/systemstats/disk",
+            "measurement": "diskstats",
+            "destination": "influx"
+        },
+        {
+            "uri": "/systemstats/process",
+            "measurement": "processstats",
+            "destination": "influx"
+        },
+        {
+            "uri": "/events",
+            "destination": "mongo",
+            "measurement": "events"
+        }
+    ]
+}
+

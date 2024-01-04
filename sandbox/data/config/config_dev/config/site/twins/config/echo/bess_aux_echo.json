@@ -1,0 +1,29 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/bess_aux",
+			"publishRate": 500,
+			"inputs": [
+				{
+					"uri": "/components/twins_bess_aux",
+					"registers": {
+						"active_power": "p",
+						"apparent_power": "s",
+						"current": "i",
+						"frequency": "f1",
+						"power_factor": "pf",
+						"reactive_power": "q",
+						"voltage": "v1"
+					}
+				},
+				{
+					"uri": "/components/bess_aux_load",
+					"registers": {
+						"active_power_setpoint": "pcmd",
+						"reactive_power_setpoint": "qcmd"
+					}
+				}
+			]
+		}
+	]
+}

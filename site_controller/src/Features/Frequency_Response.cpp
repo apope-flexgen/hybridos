@@ -22,7 +22,6 @@ features::Frequency_Response::Frequency_Response() {
     variable_ids = {
         // inputs
         { &enable_mask, "fr_enable_mask" },
-        { &baseload_cmd_kw, "fr_baseload_cmd_kw" },
         { &target_freq_hz, "fr_target_freq_hz" },
         { &freq_offset_hz, "fr_freq_offset_hz" },
         // outputs
@@ -121,7 +120,6 @@ void features::Frequency_Response::get_feature_vars(std::vector<Fims_Object*>& v
     var_list.push_back(&target_freq_hz);
     var_list.push_back(&freq_offset_hz);
     var_list.push_back(&enable_mask);
-    var_list.push_back(&baseload_cmd_kw);
     var_list.push_back(&total_output_kw);
 
     for (auto curr_freq_resp_comp : response_components) {
@@ -129,30 +127,15 @@ void features::Frequency_Response::get_feature_vars(std::vector<Fims_Object*>& v
     }
 }
 
-/**
- * @brief Loads the given vector with pointers to only the Frequency Response parameters
- * that have been requested by Commissioning/Integration/etc. teams to be displayed in
- * Site Controller's features summary.
- * @param var_list List of variable pointers that will be included in the features summary
- * object.
- */
-void features::Frequency_Response::get_summary_vars(std::vector<Fims_Object*>& var_list) {
-    var_list.push_back(&baseload_cmd_kw);
-}
-
 void features::Frequency_Response::execute(Asset_Cmd_Object& asset_cmd, float ess_total_rated_active_power, float site_frequency, timespec current_time) {
     // get inputs
-    Frequency_Response_Inputs ins{ asset_cmd.ess_data.max_potential_kW, asset_cmd.ess_data.min_potential_kW, ess_total_rated_active_power, site_frequency, current_time };
+    Frequency_Response_Inputs ins{ asset_cmd.site_kW_demand, asset_cmd.ess_data.max_potential_kW, asset_cmd.ess_data.min_potential_kW, ess_total_rated_active_power, site_frequency, current_time };
     // call frequency response algorithm
     Frequency_Response_Outputs outs = aggregate_response_components(ins);
     // set outputs
     asset_cmd.ess_data.max_potential_kW = outs.ess_max_potential;
     asset_cmd.ess_data.min_potential_kW = outs.ess_min_potential;
     asset_cmd.site_kW_demand = outs.output_kw;
-    // Fully curtail solar. Even if configured to be larger, the UF response will not exceed the ESS (and gen) output and will not request from solar
-    asset_cmd.solar_data.max_potential_kW = 0;
-    // This feature does not track load
-    asset_cmd.set_load_compensation_method(NO_COMPENSATION);
 }
 
 /**
@@ -165,7 +148,7 @@ void features::Frequency_Response::execute(Asset_Cmd_Object& asset_cmd, float es
  */
 Frequency_Response_Outputs features::Frequency_Response::aggregate_response_components(Frequency_Response_Inputs input_settings) {
     Frequency_Response_Outputs aggregate_values{
-        baseload_cmd_kw.value.value_float,
+        input_settings.site_input_kW_demand,
         input_settings.ess_max_potential,
         input_settings.ess_min_potential,
     };
@@ -206,8 +189,6 @@ void features::Frequency_Response::handle_fims_set(std::string uri_endpoint, con
     // check if target endpoint matches any Frequency Response high-level endpoints and handle the SET if so
     if (enable_mask.set_fims_int(uri_endpoint.c_str(), msg_value.valueint))
         return;
-    if (baseload_cmd_kw.set_fims_float(uri_endpoint.c_str(), msg_value.valueint))
-        return;
     if (freq_offset_hz.set_fims_float(uri_endpoint.c_str(), msg_value.valueint))
         return;
 
@@ -226,4 +207,11 @@ void features::Frequency_Response::handle_fims_set(std::string uri_endpoint, con
     // If a frequency endpoint was matched, check its component variables
     if (matched_comp)
         matched_comp->handle_fims_set(&msg_value, uri_endpoint.c_str());
+
+    if (msg_value.type == cJSON_True || msg_value.type == cJSON_False) {
+        bool value_bool = msg_value.type != cJSON_False;
+        if (available) {
+            enable_flag.set_fims_bool(uri_endpoint.c_str(), value_bool);
+        }
+    }
 }

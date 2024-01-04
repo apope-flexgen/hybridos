@@ -177,7 +177,6 @@ const Items = () => {
           label={BASE_URI}
           onChange={handleTextFieldChange}
           value={selectedAsset?.info.baseURI || ''}
-          required
         />
       </Row>
       <Divider orientation="horizontal" variant="fullWidth" />

@@ -1,0 +1,69 @@
+{
+    "name" : "tx100-lab-test",
+    "destination" : 
+    {
+        "influx" : false,
+        "interval" : 10,
+        "database" : "overwatch",
+        "address": "localhost:8086",
+        "timeout" : 30,
+        "health_check_delay": 10
+    },
+    "mem": 
+    {
+        "collection" : {
+            "active" : true,
+            "interval" : 5
+        },
+        "stats" : [ "MemAvailable", "MemTotal", "MemFree", "Active", "Dirty" ]
+    },
+    "cpu": 
+    {
+        "collection" : {
+            "active" : true,
+            "interval" : 5
+        },
+        "loadavg" : 5, 
+        "temperature" : true, 
+        "uptime" : true
+    },
+    "disk": 
+    {
+        "collection" : {
+            "active" : true,
+            "interval" : 5
+        },
+        "mounts": true, 
+        "directories" : [ ],
+        "filecount_tracking_max" : 50000,
+        "mb_size_tracking_max" : 5000
+    },
+    "net": 
+    {
+        "collection" : {
+            "active" : true,
+            "interval" : 5
+        },
+        "fims" : true, 
+        "ports" : true, 
+        "ips" : { }, 
+        "stats" : [ "wmem_max", "rmem_max" ]
+    },
+    "process" : 
+    {
+        "collection" : {
+            "active" : true,
+            "interval" : 2
+        },
+        "refresh" : 10,
+        "process_names" : [ "influxd", "mongod", "overwatch", "ess_controller", "storage", "modbus_client@ess_1_bms_modbus_client.json",  "modbus_client@ess_1_pcs_modbus_client.json", "modbus_client@sel_2440_modbus_client.json", "events", "ftd", "cloud_sync" ],
+        "databases" : { }
+    },
+    "device" : 
+    {
+        "collection" : {
+            "active" : true,
+            "interval" : 86400
+        }
+    }
+}

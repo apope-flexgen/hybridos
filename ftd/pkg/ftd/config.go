@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	fg "github.com/flexgen-power/go_flexgen"
-	log "github.com/flexgen-power/go_flexgen/logger"
+	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
+	"github.com/flexgen-power/hybridos/go_flexgen/parsemap"
 )
 
 type Config struct {
@@ -31,13 +31,13 @@ var GlobalConfig Config // data structure for data parsed from configuration
 // Validates config data and returns error if invalid.
 func HandleConfiguration(body map[string]interface{}) error {
 	// parse DB name
-	dbNameInterface, err := fg.ExtractValueWithType(body, "db_name", fg.STRING)
+	dbNameInterface, err := parsemap.ExtractValueWithType(body, "db_name", parsemap.STRING)
 	if err != nil {
 		return fmt.Errorf("failed to extract db_name from configuration, %w", err)
 	}
 	GlobalConfig.DbName = dbNameInterface.(string)
 
-	periodInterface, err := fg.ExtractAsInt(body, "period")
+	periodInterface, err := parsemap.ExtractAsInt(body, "period")
 	if err != nil {
 		return fmt.Errorf("failed to extract period from configuration, %w", err)
 	}
@@ -46,7 +46,7 @@ func HandleConfiguration(body map[string]interface{}) error {
 	}
 	GlobalConfig.ArchivePeriod = periodInterface
 
-	archiveInterface, err := fg.ExtractValueWithType(body, "archive", fg.STRING)
+	archiveInterface, err := parsemap.ExtractValueWithType(body, "archive", parsemap.STRING)
 	if err == nil {
 		GlobalConfig.ArchivePath = archiveInterface.(string)
 	} else {
@@ -54,7 +54,7 @@ func HandleConfiguration(body map[string]interface{}) error {
 		log.Warnf("Failed to extract archive from configuration, default value %s used", GlobalConfig.ArchivePath)
 	}
 
-	numArchiveWorkers, err := fg.ExtractAsInt(body, "num_archive_workers")
+	numArchiveWorkers, err := parsemap.ExtractAsInt(body, "num_archive_workers")
 	if err != nil {
 		return fmt.Errorf("failed to extract num_archive_workers from configuration: %w", err)
 	}
@@ -63,7 +63,7 @@ func HandleConfiguration(body map[string]interface{}) error {
 	}
 	GlobalConfig.NumArchiveWorkers = numArchiveWorkers
 
-	urisInterface, err := fg.ExtractValueWithType(body, "uris", fg.INTERFACE_SLICE)
+	urisInterface, err := parsemap.ExtractValueWithType(body, "uris", parsemap.INTERFACE_SLICE)
 	if err != nil {
 		return fmt.Errorf("failed to extract uris list from configuration: %w", err)
 	}
@@ -87,7 +87,7 @@ func HandleConfiguration(body map[string]interface{}) error {
 			Group:         "",
 		}
 
-		uriInterface, err := fg.ExtractValueWithType(uriObj, "uri", fg.STRING)
+		uriInterface, err := parsemap.ExtractValueWithType(uriObj, "uri", parsemap.STRING)
 		if err != nil {
 			return fmt.Errorf("failed to extract uri from uris entry %d configuration: %w", index, err)
 		}
@@ -131,13 +131,13 @@ func HandleConfiguration(body map[string]interface{}) error {
 			uriEntry.Group = group
 		}
 
-		measurementInterface, err := fg.ExtractValueWithType(uriObj, "measurement", fg.STRING)
+		measurementInterface, err := parsemap.ExtractValueWithType(uriObj, "measurement", parsemap.STRING)
 		if err != nil {
 			return fmt.Errorf("failed to extract measurement for URI- %s at index %d with error %v", uriEntry.BaseUri, index, err)
 		}
 		uriEntry.Measurement = measurementInterface.(string)
 
-		destinationInterface, err := fg.ExtractValueWithType(uriObj, "destination", fg.STRING)
+		destinationInterface, err := parsemap.ExtractValueWithType(uriObj, "destination", parsemap.STRING)
 		// If error, fall back to default value
 		if err == nil {
 			uriEntry.DestinationDb = destinationInterface.(string)

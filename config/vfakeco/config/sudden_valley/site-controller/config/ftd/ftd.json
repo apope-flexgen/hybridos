@@ -1,0 +1,243 @@
+{
+    "archive": "/home/hybridos/powercloud/owner/sudden_valley/archives",
+    "db_name": "sudden_valley",
+    "num_archive_workers": 1,
+    "period": 300,
+    "uris": [
+        {
+            "destination": "influx",
+            "measurement": "site",
+            "uri": "/site"
+        },
+        {
+            "destination": "influx",
+            "measurement": "features",
+            "uri": "/features"
+        },
+        {
+            "destination": "influx",
+            "group": "assets_ess_group",
+            "measurement": "ess",
+            "sources": [
+                "ess_01",
+                "ess_02",
+                "ess_03",
+                "ess_04",
+                "ess_05",
+                "ess_06",
+                "ess_07",
+                "ess_08",
+                "ess_09",
+                "ess_10",
+                "ess_11",
+                "ess_12",
+                "ess_13",
+                "ess_14",
+                "ess_15",
+                "ess_16",
+                "ess_17",
+                "ess_18",
+                "ess_19",
+                "ess_20",
+                "ess_21",
+                "ess_22",
+                "ess_23",
+                "ess_24",
+                "ess_25",
+                "ess_26",
+                "ess_27",
+                "ess_28",
+                "ess_29",
+                "ess_30",
+                "ess_31",
+                "ess_32",
+                "ess_33"
+            ],
+            "uri": "/assets/ess"
+        },
+        {
+            "destination": "influx",
+            "measurement": "ess",
+            "sources": [
+                "summary"
+            ],
+            "uri": "/assets/ess"
+        },
+        {
+            "destination": "influx",
+            "measurement": "feeders",
+            "uri": "/assets/feeders"
+        },
+        {
+            "destination": "influx",
+            "group": "components_flexgen_ess_01_to_11_hs_group",
+            "measurement": "flexgen_ess_high_speed",
+            "sources": [
+                "flexgen_ess_01_hs",
+                "flexgen_ess_02_hs",
+                "flexgen_ess_03_hs",
+                "flexgen_ess_04_hs",
+                "flexgen_ess_05_hs",
+                "flexgen_ess_06_hs",
+                "flexgen_ess_07_hs",
+                "flexgen_ess_08_hs",
+                "flexgen_ess_09_hs",
+                "flexgen_ess_10_hs",
+                "flexgen_ess_11_hs"
+            ],
+            "uri": "/components"
+        },
+        {
+            "destination": "influx",
+            "group": "components_flexgen_ess_12_to_22_hs_group",
+            "measurement": "flexgen_ess_high_speed",
+            "sources": [
+                "flexgen_ess_12_hs",
+                "flexgen_ess_13_hs",
+                "flexgen_ess_14_hs",
+                "flexgen_ess_15_hs",
+                "flexgen_ess_16_hs",
+                "flexgen_ess_17_hs",
+                "flexgen_ess_18_hs",
+                "flexgen_ess_19_hs",
+                "flexgen_ess_20_hs",
+                "flexgen_ess_21_hs",
+                "flexgen_ess_22_hs"
+            ],
+            "uri": "/components"
+        },
+        {
+            "destination": "influx",
+            "group": "components_flexgen_ess_23_to_33_hs_group",
+            "measurement": "flexgen_ess_high_speed",
+            "sources": [
+                "flexgen_ess_23_hs",
+                "flexgen_ess_24_hs",
+                "flexgen_ess_25_hs",
+                "flexgen_ess_26_hs",
+                "flexgen_ess_27_hs",
+                "flexgen_ess_28_hs",
+                "flexgen_ess_29_hs",
+                "flexgen_ess_30_hs",
+                "flexgen_ess_31_hs",
+                "flexgen_ess_32_hs",
+                "flexgen_ess_33_hs"
+            ],
+            "uri": "/components"
+        },
+        {
+            "destination": "influx",
+            "group": "components_flexgen_ess_ls_group",
+            "measurement": "flexgen_ess_low_speed",
+            "sources": [
+                "flexgen_ess_01_ls",
+                "flexgen_ess_02_ls",
+                "flexgen_ess_03_ls",
+                "flexgen_ess_04_ls",
+                "flexgen_ess_05_ls",
+                "flexgen_ess_06_ls",
+                "flexgen_ess_07_ls",
+                "flexgen_ess_08_ls",
+                "flexgen_ess_09_ls",
+                "flexgen_ess_10_ls",
+                "flexgen_ess_11_ls",
+                "flexgen_ess_12_ls",
+                "flexgen_ess_13_ls",
+                "flexgen_ess_14_ls",
+                "flexgen_ess_15_ls",
+                "flexgen_ess_16_ls",
+                "flexgen_ess_17_ls",
+                "flexgen_ess_18_ls",
+                "flexgen_ess_19_ls",
+                "flexgen_ess_20_ls",
+                "flexgen_ess_21_ls",
+                "flexgen_ess_22_ls",
+                "flexgen_ess_23_ls",
+                "flexgen_ess_24_ls",
+                "flexgen_ess_25_ls",
+                "flexgen_ess_26_ls",
+                "flexgen_ess_27_ls",
+                "flexgen_ess_28_ls",
+                "flexgen_ess_29_ls",
+                "flexgen_ess_30_ls",
+                "flexgen_ess_31_ls",
+                "flexgen_ess_32_ls",
+                "flexgen_ess_33_ls"
+            ],
+            "uri": "/components"
+        },
+        {
+            "destination": "influx",
+            "measurement": "meters",
+            "sources": [
+                "sel_735",
+                "sel_351_1",
+                "sel_351_2"
+            ],
+            "uri": "/components"
+        },
+        {
+            "destination": "influx",
+            "measurement": "rtac",
+            "sources": [
+                "sel_3530_rtac"
+            ],
+            "uri": "/components"
+        },
+        {
+            "destination": "influx",
+            "measurement": "components",
+            "sources": [
+                "apc_ups",
+                "sel_411l_pri",
+                "sel_487e_pri"
+            ],
+            "uri": "/components"
+        },
+        {
+            "destination": "influx",
+            "measurement": "metrics",
+            "uri": "/metrics"
+        },
+        {
+            "destination": "mongo",
+            "measurement": "events",
+            "uri": "/events"
+        },
+        {
+            "destination": "influx",
+            "measurement": "cpustats",
+            "uri": "/systemstats/cpu"
+        },
+        {
+            "destination": "influx",
+            "measurement": "memstats",
+            "uri": "/systemstats/mem"
+        },
+        {
+            "destination": "influx",
+            "measurement": "netstats",
+            "uri": "/systemstats/net"
+        },
+        {
+            "destination": "influx",
+            "measurement": "diskstats",
+            "uri": "/systemstats/disk"
+        },
+        {
+            "destination": "influx",
+            "measurement": "processstats",
+            "uri": "/systemstats/process"
+        },
+        {
+            "destination": "influx",
+            "measurement": "cops_stats",
+            "uri": "/cops/stats"
+        },
+        {
+            "destination": "influx",
+            "measurement": "cops_summary",
+            "uri": "/cops/summary"
+        }
+    ]
+}

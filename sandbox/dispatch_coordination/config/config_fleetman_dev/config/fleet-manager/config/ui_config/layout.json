@@ -1,0 +1,12 @@
+{
+    "_doc": "layout",
+    "data": [
+        {
+            "info": {
+                "icon": "ViewModule",
+                "key": "sites_tab",
+                "name": "Sites"
+            }
+        }
+    ]
+}

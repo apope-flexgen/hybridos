@@ -36,7 +36,6 @@
 #include <Features/Constant_Power_Factor.h>
 #include <Features/Active_Power_POI_Limits.h>
 #include <Features/Reactive_Power_POI_Limits.h>
-#include <Features/PFR.h>
 #include <Features/Watt_Watt.h>
 #include <Features/LDSS.h>
 #include <Features/Load_Shed.h>
@@ -299,7 +298,7 @@ protected:
     uint64_t available_runmode1_kW_features_mask;
     uint64_t runmode1_kW_features_charge_control_mask = 2;  // Mask indicating which active power features utilize charge control
     std::vector<Feature*> runmode1_kW_features_list = std::vector<Feature*>{
-        &energy_arbitrage, &target_soc, &active_power_setpoint_mode, &manual_power_mode, &frequency_response, &ess_calibration,
+        &energy_arbitrage, &target_soc, &active_power_setpoint_mode, &manual_power_mode, &ess_calibration,
     };
     Fims_Object feature_kW_demand;
     Fims_Object site_kW_charge_production;      // Charge up to this amount during dispatch
@@ -319,8 +318,6 @@ protected:
     features::Active_Power_Setpoint active_power_setpoint_mode;
 
     features::Manual manual_power_mode;
-
-    features::Frequency_Response frequency_response;
 
 public:
     features::ESS_Calibration ess_calibration;
@@ -420,14 +417,14 @@ protected:
     uint64_t available_standalone_power_features_mask;
     bool configure_available_standalone_power_features_list();
     std::vector<Feature*> standalone_power_features_list = {
-        &active_power_poi_limits, &pfr, &watt_watt, &ldss, &load_shed, &solar_shed, &ess_discharge_prevention, &agg_asset_limit, &active_power_closed_loop, &reactive_power_closed_loop, &reactive_power_poi_limits,
+        &active_power_poi_limits, &frequency_response, &watt_watt, &ldss, &load_shed, &solar_shed, &ess_discharge_prevention, &agg_asset_limit, &active_power_closed_loop, &reactive_power_closed_loop, &reactive_power_poi_limits,
     };
 
     features::Active_Power_POI_Limits active_power_poi_limits;
 
     features::Reactive_Power_POI_Limits reactive_power_poi_limits;
 
-    features::PFR pfr;
+    features::Frequency_Response frequency_response;
 
     features::Watt_Watt watt_watt;
 

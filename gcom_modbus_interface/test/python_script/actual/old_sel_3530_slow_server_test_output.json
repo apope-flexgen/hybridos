@@ -1,0 +1,3684 @@
+{
+    "test_results": {
+        "0": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.037183
+            }
+        ],
+        "1": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 37
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.048314
+            }
+        ],
+        "2": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.056705
+            }
+        ],
+        "3": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 215
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.065464
+            }
+        ],
+        "4": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.072633
+            }
+        ],
+        "5": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.081536
+            }
+        ],
+        "6": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.089464
+            }
+        ],
+        "7": [],
+        "8": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 65535
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.106638
+            }
+        ],
+        "9": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.115433
+            }
+        ],
+        "10": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 65535
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.123478
+            }
+        ],
+        "11": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.131965
+            }
+        ],
+        "12": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.13868
+            }
+        ],
+        "13": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.146456
+            }
+        ],
+        "14": [],
+        "15": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.162462
+            }
+        ],
+        "16": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.169481
+            }
+        ],
+        "17": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 479
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.17701
+            }
+        ],
+        "18": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": -66
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.184556
+            }
+        ],
+        "19": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 364
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.19177
+            }
+        ],
+        "20": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.198446
+            }
+        ],
+        "21": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.205378
+            }
+        ],
+        "22": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.213787
+            }
+        ],
+        "23": [],
+        "24": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.229065
+            }
+        ],
+        "25": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.238072
+            }
+        ],
+        "26": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.248497
+            }
+        ],
+        "27": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.256474
+            }
+        ],
+        "28": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.26434
+            }
+        ],
+        "29": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.271932
+            }
+        ],
+        "30": [],
+        "31": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.287194
+            }
+        ],
+        "32": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.294503
+            }
+        ],
+        "33": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 216.07
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.301174
+            }
+        ],
+        "34": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.30852
+            }
+        ],
+        "35": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 308
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.31532
+            }
+        ],
+        "36": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.321951
+            }
+        ],
+        "37": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.329055
+            }
+        ],
+        "38": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.335531
+            }
+        ],
+        "39": [],
+        "40": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.351009
+            }
+        ],
+        "41": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.358183
+            }
+        ],
+        "42": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.365475
+            }
+        ],
+        "43": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.372489
+            }
+        ],
+        "44": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.379667
+            }
+        ],
+        "45": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.385706
+            }
+        ],
+        "46": [],
+        "47": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.399654
+            }
+        ],
+        "48": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.406659
+            }
+        ],
+        "49": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 129.93
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.413853
+            }
+        ],
+        "50": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.420894
+            }
+        ],
+        "51": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 91
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.427679
+            }
+        ],
+        "52": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.434374
+            }
+        ],
+        "53": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.441095
+            }
+        ],
+        "54": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.447684
+            }
+        ],
+        "55": [],
+        "56": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.463929
+            }
+        ],
+        "57": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.471645
+            }
+        ],
+        "58": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.48128
+            }
+        ],
+        "59": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.489241
+            }
+        ],
+        "60": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.497285
+            }
+        ],
+        "61": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.504242
+            }
+        ],
+        "62": [],
+        "63": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_1",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.520274
+            }
+        ],
+        "64": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 4294966962
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.528357
+            }
+        ],
+        "65": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 462
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.535564
+            }
+        ],
+        "66": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 4294967196
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.542384
+            }
+        ],
+        "67": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 273
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.549219
+            }
+        ],
+        "68": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.555437
+            }
+        ],
+        "69": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.563649
+            }
+        ],
+        "70": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.570573
+            }
+        ],
+        "71": [],
+        "72": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.584566
+            }
+        ],
+        "73": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 4294836224
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.592086
+            }
+        ],
+        "74": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.598714
+            }
+        ],
+        "75": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.605563
+            }
+        ],
+        "76": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.612564
+            }
+        ],
+        "77": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.619314
+            }
+        ],
+        "78": [],
+        "79": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.632703
+            }
+        ],
+        "80": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": -263.07275390625
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.640516
+            }
+        ],
+        "81": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": 50.17551803588867
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.648369
+            }
+        ],
+        "82": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": -400
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.655455
+            }
+        ],
+        "83": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": 70
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.662413
+            }
+        ],
+        "84": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.669227
+            }
+        ],
+        "85": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.677581
+            }
+        ],
+        "86": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.684572
+            }
+        ],
+        "87": [],
+        "88": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": 131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.697694
+            }
+        ],
+        "89": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": -131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.706444
+            }
+        ],
+        "90": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": 8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.715484
+            }
+        ],
+        "91": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": -8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.722469
+            }
+        ],
+        "92": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": null
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.729804
+            }
+        ],
+        "93": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": 1.1756894115685215e-42
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.736187
+            }
+        ],
+        "94": [],
+        "95": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.75057
+            }
+        ],
+        "96": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": -472
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.758246
+            }
+        ],
+        "97": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": 330
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.764975
+            }
+        ],
+        "98": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": -350
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.77144
+            }
+        ],
+        "99": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": 6
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.779756
+            }
+        ],
+        "100": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.786057
+            }
+        ],
+        "101": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.794358
+            }
+        ],
+        "102": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.802138
+            }
+        ],
+        "103": [],
+        "104": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": 131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.819947
+            }
+        ],
+        "105": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": -131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.828609
+            }
+        ],
+        "106": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.836273
+            }
+        ],
+        "107": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.845545
+            }
+        ],
+        "108": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": -2147483648
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.854154
+            }
+        ],
+        "109": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.863143
+            }
+        ],
+        "110": [],
+        "111": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.88002
+            }
+        ],
+        "112": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 42949407.71
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.888021
+            }
+        ],
+        "113": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 212.74
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.895426
+            }
+        ],
+        "114": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 42949543.96
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.901637
+            }
+        ],
+        "115": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 163
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.909262
+            }
+        ],
+        "116": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.917715
+            }
+        ],
+        "117": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.924714
+            }
+        ],
+        "118": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.931935
+            }
+        ],
+        "119": [],
+        "120": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.946572
+            }
+        ],
+        "121": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 42818600.96
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.955018
+            }
+        ],
+        "122": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.961827
+            }
+        ],
+        "123": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.968409
+            }
+        ],
+        "124": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.977227
+            }
+        ],
+        "125": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918012.984925
+            }
+        ],
+        "126": [],
+        "127": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.001078
+            }
+        ],
+        "128": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": -100.43625
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.008153
+            }
+        ],
+        "129": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": 310.2266015625
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.014919
+            }
+        ],
+        "130": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": -263
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.021764
+            }
+        ],
+        "131": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": 111
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.028743
+            }
+        ],
+        "132": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.035565
+            }
+        ],
+        "133": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.042157
+            }
+        ],
+        "134": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.049215
+            }
+        ],
+        "135": [],
+        "136": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": 131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.064079
+            }
+        ],
+        "137": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": -131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.071562
+            }
+        ],
+        "138": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": 8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.078624
+            }
+        ],
+        "139": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": -8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.085552
+            }
+        ],
+        "140": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": null
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.092637
+            }
+        ],
+        "141": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": 1.175493229783516e-42
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.099208
+            }
+        ],
+        "142": [],
+        "143": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.114238
+            }
+        ],
+        "144": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": -154.33
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.120678
+            }
+        ],
+        "145": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": 131.27
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.128264
+            }
+        ],
+        "146": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": -15
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.134566
+            }
+        ],
+        "147": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": 67
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.141556
+            }
+        ],
+        "148": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.148248
+            }
+        ],
+        "149": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.155437
+            }
+        ],
+        "150": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.162603
+            }
+        ],
+        "151": [],
+        "152": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": 131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.176254
+            }
+        ],
+        "153": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": -131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.183413
+            }
+        ],
+        "154": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": -21474836.48
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.190513
+            }
+        ],
+        "155": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": -21474836.48
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.197511
+            }
+        ],
+        "156": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": -21474836.48
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.204791
+            }
+        ],
+        "157": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.211618
+            }
+        ],
+        "158": [],
+        "159": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_2",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.22552
+            }
+        ],
+        "160": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 1.8446744073709552e+19
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.232095
+            }
+        ],
+        "161": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 153
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.24193
+            }
+        ],
+        "162": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 1.8446744073709552e+19
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.249552
+            }
+        ],
+        "163": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 275
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.256381
+            }
+        ],
+        "164": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.26354
+            }
+        ],
+        "165": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.270144
+            }
+        ],
+        "166": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.277235
+            }
+        ],
+        "167": [],
+        "168": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.291228
+            }
+        ],
+        "169": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 1.844674407370942e+19
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.299183
+            }
+        ],
+        "170": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.306389
+            }
+        ],
+        "171": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 1.8446744065119617e+19
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.315323
+            }
+        ],
+        "172": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.321936
+            }
+        ],
+        "173": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.330158
+            }
+        ],
+        "174": [],
+        "175": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/normal_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.34444
+            }
+        ],
+        "176": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": -337.38435254233184
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.351682
+            }
+        ],
+        "177": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": 39.48557985480744
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.359388
+            }
+        ],
+        "178": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": -145
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.366095
+            }
+        ],
+        "179": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": 239
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.372922
+            }
+        ],
+        "180": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.381079
+            }
+        ],
+        "181": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.3886
+            }
+        ],
+        "182": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.396477
+            }
+        ],
+        "183": [],
+        "184": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": 131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.410011
+            }
+        ],
+        "185": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": -131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.417044
+            }
+        ],
+        "186": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": 8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.424485
+            }
+        ],
+        "187": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": -8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.431317
+            }
+        ],
+        "188": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": 6.8056474e+38
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.438002
+            }
+        ],
+        "189": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": 1.175494e-42
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.445161
+            }
+        ],
+        "190": [],
+        "191": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/float_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.458389
+            }
+        ],
+        "192": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": -385
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.46538
+            }
+        ],
+        "193": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": 343
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.472957
+            }
+        ],
+        "194": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": -408
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.480026
+            }
+        ],
+        "195": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": 146
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.487856
+            }
+        ],
+        "196": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.49506
+            }
+        ],
+        "197": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.502258
+            }
+        ],
+        "198": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.509977
+            }
+        ],
+        "199": [],
+        "200": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": 131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.525262
+            }
+        ],
+        "201": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": -131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.533778
+            }
+        ],
+        "202": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": 8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.540571
+            }
+        ],
+        "203": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": -8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.548135
+            }
+        ],
+        "204": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": -9.223372036854776e+18
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.554645
+            }
+        ],
+        "205": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.562313
+            }
+        ],
+        "206": [],
+        "207": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/signed_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.578841
+            }
+        ],
+        "208": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 1.8446744073709536e+17
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.586142
+            }
+        ],
+        "209": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 78.28
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.593664
+            }
+        ],
+        "210": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 1.8446744073709526e+17
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.60036
+            }
+        ],
+        "211": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 82
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.606628
+            }
+        ],
+        "212": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.614659
+            }
+        ],
+        "213": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.621192
+            }
+        ],
+        "214": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.629036
+            }
+        ],
+        "215": [],
+        "216": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.643634
+            }
+        ],
+        "217": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 1.8446744073696445e+17
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.651135
+            }
+        ],
+        "218": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.658296
+            }
+        ],
+        "219": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 1.8446743214716093e+17
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.665469
+            }
+        ],
+        "220": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.673123
+            }
+        ],
+        "221": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.680683
+            }
+        ],
+        "222": [],
+        "223": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.694904
+            }
+        ],
+        "224": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": -182.7695581311698
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.701363
+            }
+        ],
+        "225": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": 213.9023834901817
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.708304
+            }
+        ],
+        "226": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": -288
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.715506
+            }
+        ],
+        "227": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": 257
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.722136
+            }
+        ],
+        "228": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.730096
+            }
+        ],
+        "229": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.737061
+            }
+        ],
+        "230": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.744388
+            }
+        ],
+        "231": [],
+        "232": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": 131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.758842
+            }
+        ],
+        "233": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": -131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.76612
+            }
+        ],
+        "234": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": 8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.774261
+            }
+        ],
+        "235": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": -8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.78168
+            }
+        ],
+        "236": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": 6.8056474e+38
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.789336
+            }
+        ],
+        "237": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": 1.175494e-42
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.796768
+            }
+        ],
+        "238": [],
+        "239": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_float_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.812444
+            }
+        ],
+        "240": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": -175.57
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.819383
+            }
+        ],
+        "241": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": 240.03
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.829047
+            }
+        ],
+        "242": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": -305
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.836039
+            }
+        ],
+        "243": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": 191
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.843736
+            }
+        ],
+        "244": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.852084
+            }
+        ],
+        "245": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": 1
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.860675
+            }
+        ],
+        "246": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.867699
+            }
+        ],
+        "247": [],
+        "248": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": 131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.883675
+            }
+        ],
+        "249": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": -131072
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.891991
+            }
+        ],
+        "250": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": 8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.901299
+            }
+        ],
+        "251": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": -8589934592
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.911844
+            }
+        ],
+        "252": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": -92233720368547760
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.921548
+            }
+        ],
+        "253": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.930514
+            }
+        ],
+        "254": [],
+        "255": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/scaled_signed_4",
+                "body": {
+                    "value": 0
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.949362
+            }
+        ],
+        "320": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.959616
+            }
+        ],
+        "321": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.96719
+            }
+        ],
+        "322": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.974842
+            }
+        ],
+        "323": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.982124
+            }
+        ],
+        "324": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.988547
+            }
+        ],
+        "325": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918013.995335
+            }
+        ],
+        "326": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.002747
+            }
+        ],
+        "327": [],
+        "328": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.015875
+            }
+        ],
+        "329": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.023223
+            }
+        ],
+        "330": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.032109
+            }
+        ],
+        "331": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.038898
+            }
+        ],
+        "332": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.047241
+            }
+        ],
+        "333": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.054342
+            }
+        ],
+        "334": [],
+        "335": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_normal_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.067962
+            }
+        ],
+        "336": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.075768
+            }
+        ],
+        "337": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.085038
+            }
+        ],
+        "338": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.092161
+            }
+        ],
+        "339": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.099514
+            }
+        ],
+        "340": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.10606
+            }
+        ],
+        "341": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.112718
+            }
+        ],
+        "342": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.119813
+            }
+        ],
+        "343": [],
+        "344": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.133888
+            }
+        ],
+        "345": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.141101
+            }
+        ],
+        "346": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.14823
+            }
+        ],
+        "347": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.15468
+            }
+        ],
+        "348": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.162295
+            }
+        ],
+        "349": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.169417
+            }
+        ],
+        "350": [],
+        "351": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_client_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.184601
+            }
+        ],
+        "352": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.19176
+            }
+        ],
+        "353": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.198625
+            }
+        ],
+        "354": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.206158
+            }
+        ],
+        "355": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.213261
+            }
+        ],
+        "356": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.220441
+            }
+        ],
+        "357": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.227792
+            }
+        ],
+        "358": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.235885
+            }
+        ],
+        "359": [],
+        "360": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.251969
+            }
+        ],
+        "361": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.259447
+            }
+        ],
+        "362": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.266674
+            }
+        ],
+        "363": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.274116
+            }
+        ],
+        "364": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.281739
+            }
+        ],
+        "365": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.28895
+            }
+        ],
+        "366": [],
+        "367": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_server_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.304
+            }
+        ],
+        "368": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.311731
+            }
+        ],
+        "369": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.318397
+            }
+        ],
+        "370": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.325841
+            }
+        ],
+        "371": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.332769
+            }
+        ],
+        "372": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.340321
+            }
+        ],
+        "373": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.34832
+            }
+        ],
+        "374": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.356662
+            }
+        ],
+        "375": [],
+        "376": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.374165
+            }
+        ],
+        "377": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.382196
+            }
+        ],
+        "378": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.389307
+            }
+        ],
+        "379": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.39636
+            }
+        ],
+        "380": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.404219
+            }
+        ],
+        "381": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": false
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.412573
+            }
+        ],
+        "382": [],
+        "383": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac/coil_scale_both_1",
+                "body": {
+                    "value": true
+                },
+                "replyto": "(null)",
+                "process": "SEL_3530_RTAC ",
+                "username": "root",
+                "timestamp": 1701918014.429434
+            }
+        ]
+    }
+}

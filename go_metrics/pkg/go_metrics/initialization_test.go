@@ -117,47 +117,22 @@ func TestGenerateScope(t *testing.T) {
 
 	generateScope()
 
-	if len(Scope) != len(expectedScope) {
-		t.Errorf("%s: output scope length %v not equal to expected length %v\n", "generateScope()", len(Scope), len(expectedScope))
+	if len(InputScope) != len(expectedScope) {
+		t.Errorf("%s: output scope length %v not equal to expected length %v\n", "generateScope()", len(InputScope), len(expectedScope))
 	} else {
-		for key, inputArr := range Scope {
+		for key, inputArr := range InputScope {
 			if expectedInputArr, ok := expectedScope[key]; !ok {
 				t.Errorf("%s: output scope contains an extra key %s not found in expected output scope\n", "generateScope()", key)
 			} else {
 				for i, input := range inputArr {
-					if input.Uri != expectedInputArr[i].Uri {
-						t.Errorf("%s: scope input uri %v does not match expected %v\n", key, input.Uri, expectedInputArr[i].Uri)
-					}
-					if input.Internal != expectedInputArr[i].Internal {
-						t.Errorf("%s: scope input internal %v does not match expected %v\n", key, input.Internal, expectedInputArr[i].Internal)
-					}
-					if input.Type != expectedInputArr[i].Type {
-						t.Errorf("%s: scope input type %v does not match expected %v\n", key, input.Type, expectedInputArr[i].Type)
-					}
-					if input.Name != expectedInputArr[i].Name {
-						t.Errorf("%s: scope input name %v does not match expected %v\n", key, input.Name, expectedInputArr[i].Name)
-					}
-					if input.Value != expectedInputArr[i].Value {
-						t.Errorf("%s: scope input value %v does not match expected %v\n", key, input.Value, expectedInputArr[i].Value)
-					}
-
-					if len(input.Attributes) != len(expectedInputArr[i].Attributes) {
-						t.Errorf("%s: scope input attributes length %v does not match expected %v\n", key, len(input.Attributes), len(expectedInputArr[i].Attributes))
-					} else {
-						for j, _ := range input.Attributes {
-							if input.Attributes[j] != expectedInputArr[i].Attributes[j] {
-								t.Errorf("%s: scope input attribute %v does not match expected %v\n", key, input.Attributes[j], expectedInputArr[i].Attributes[j])
-							}
-							if input.AttributesMap[input.Attributes[j]] != expectedInputArr[i].AttributesMap[input.Attributes[j]] {
-								t.Errorf("%s: scope input attribute map %v does not match expected %v\n", key, input.AttributesMap[input.Attributes[j]], expectedInputArr[i].AttributesMap[input.Attributes[j]])
-							}
-						}
+					if input != expectedInputArr[i].Value {
+						t.Errorf("%s: scope input value %v does not match expected %v\n", key, input, expectedInputArr[i].Value)
 					}
 				}
 			}
 		}
-		for key, _ := range expectedScope {
-			if _, ok := Scope[key]; !ok {
+		for key := range expectedScope {
+			if _, ok := InputScope[key]; !ok {
 				t.Errorf("%s: output scope is missing key %s\n", "generateScope()", key)
 			}
 		}
@@ -462,11 +437,7 @@ func compareMetrics(metric1, metric2 MetricsObject) bool {
 		}
 	}
 
-	if !compareExpression(metric1.ParsedExpression, metric2.ParsedExpression) {
-		return false
-	}
-
-	return true
+	return compareExpression(metric1.ParsedExpression, metric2.ParsedExpression)
 }
 
 func compareExpression(exp1, exp2 Expression) bool {
@@ -1798,7 +1769,7 @@ var CheckErrorLogTestCase = []CheckErrorLog{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'test_key' not found"),
+				"key 'test_key' not found",
 			},
 		},
 	},
@@ -1830,7 +1801,7 @@ var CheckErrorLogTestCase = []CheckErrorLog{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'test_key' not found"),
+				"key 'test_key' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -1847,7 +1818,7 @@ var CheckErrorLogTestCase = []CheckErrorLog{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be type string"),
+				"expected value to be type string",
 			},
 		},
 	},
@@ -1915,6 +1886,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{
 				"v1_times_5": Output{
+					Name:		   "v1_times_5",
 					Uri:           "/some/v1/output",
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
@@ -2056,6 +2028,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Value:         Union{tag: STRING, s: ""},
 				},
 				"level2_output": Output{
+					Name:			"level2_output",
 					Uri:           "/some/level2",
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
@@ -2367,7 +2340,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("metrics expression produces possible result type int but gets cast to float (warning only)"),
+				"metrics expression produces possible result type int but gets cast to float (warning only)",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -2640,7 +2613,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'uri' not found"),
+				"key 'uri' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -2653,7 +2626,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'type' not found"),
+				"key 'type' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -2666,7 +2639,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("duplicate input variable 'var_name3'; only considering first occurence"),
+				"duplicate input variable 'var_name3'; only considering first occurence",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -2679,7 +2652,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("unhandled filter expression; discarding filter"),
+				"unhandled filter expression; discarding filter",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -2692,7 +2665,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'uri' not found"),
+				"key 'uri' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -2858,7 +2831,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"),
+				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -2922,7 +2895,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"),
+				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -2952,7 +2925,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"),
+				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -2982,7 +2955,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"),
+				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3012,7 +2985,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"),
+				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3042,7 +3015,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"),
+				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3055,7 +3028,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'uri' not found"),
+				"key 'uri' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3068,7 +3041,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'publishRate' not found"),
+				"key 'publishRate' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3236,7 +3209,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("could not identify template type; need either from/to pair or list"),
+				"could not identify template type; need either from/to pair or list",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3249,7 +3222,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'to' not found"),
+				"key 'to' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3262,7 +3235,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'token' not found"),
+				"key 'token' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3279,7 +3252,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("unable to convert type \\\" to int"),
+				"unable to convert type \\\" to int",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3296,7 +3269,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("unable to convert type \\\" to int"),
+				"unable to convert type \\\" to int",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3313,7 +3286,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("unable to convert type \\\" to int"),
+				"unable to convert type \\\" to int",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3330,7 +3303,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be string"),
+				"expected value to be string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3343,7 +3316,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'from' not found"),
+				"key 'from' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3356,7 +3329,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'to' not found"),
+				"key 'to' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3369,7 +3342,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'token' not found"),
+				"key 'token' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3386,7 +3359,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("unable to convert type \\\" to int"),
+				"unable to convert type \\\" to int",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3403,7 +3376,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("unable to convert type \\\" to int"),
+				"unable to convert type \\\" to int",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3420,7 +3393,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("unable to convert type \\\" to int"),
+				"unable to convert type \\\" to int",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3437,7 +3410,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be string"),
+				"expected value to be string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3454,7 +3427,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeArray,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3471,7 +3444,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeArray,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3488,7 +3461,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("template 1 contains template 16's token in its entirety; note that neither template may behave as desired"),
+				"template 1 contains template 16's token in its entirety; note that neither template may behave as desired",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3505,7 +3478,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be string"),
+				"expected value to be string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3522,7 +3495,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("template tokens cannot be empty strings"),
+				"template tokens cannot be empty strings",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3539,7 +3512,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("template tokens cannot contain '@' symbol; symbol is reserved for attributes"),
+				"template tokens cannot contain '@' symbol; symbol is reserved for attributes",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3556,7 +3529,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("template 20 contains template 1's token in its entirety; note that neither template may behave as desired"),
+				"template 20 contains template 1's token in its entirety; note that neither template may behave as desired",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3573,7 +3546,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("template 20 contains template 2's token in its entirety; note that neither template may behave as desired"),
+				"template 20 contains template 2's token in its entirety; note that neither template may behave as desired",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3590,7 +3563,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("unexpected template type something invalid: need \\\"sequential\\\" or \\\"list\\\""),
+				"unexpected template type something invalid: need \\\"sequential\\\" or \\\"list\\\"",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3607,7 +3580,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("cannot convert type array to string"),
+				"cannot convert type array to string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3624,7 +3597,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("cannot have template step of 0; defaulting to a step of 1"),
+				"cannot have template step of 0; defaulting to a step of 1",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3641,7 +3614,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("cannot have template step of 0; defaulting to a step of 1"),
+				"cannot have template step of 0; defaulting to a step of 1",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3654,7 +3627,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'list' not found"),
+				"key 'list' not found",
 			},
 		},
 	},
@@ -3676,7 +3649,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeArray,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 		},
 	},
@@ -3702,7 +3675,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 		},
 	},
@@ -3758,7 +3731,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be string"),
+				"expected value to be string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3775,7 +3748,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be string"),
+				"expected value to be string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3792,7 +3765,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("invalid data type banana specified for input; must be string, bool, float, int, or uint"),
+				"invalid data type banana specified for input; must be string, bool, float, int, or uint",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3809,7 +3782,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeArray,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3826,7 +3799,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeBool,
 					},
 				},
-				fmt.Sprintf("key 'internal' is specified as true but 'uri' field contains a uri; defaulting to internally calculated value"),
+				"key 'internal' is specified as true but 'uri' field contains a uri; defaulting to internally calculated value",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3843,7 +3816,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("type \\\"[\\\" found before object was found"),
+				"type \\\"[\\\" found before object was found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3860,7 +3833,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeBool,
 					},
 				},
-				fmt.Sprintf("expected value to be bool, but \\\""),
+				"expected value to be bool, but \\\"",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3877,7 +3850,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeBool,
 					},
 				},
-				fmt.Sprintf("key 'internal' is specified as false but 'uri' field is empty; need one or the other"),
+				"key 'internal' is specified as false but 'uri' field is empty; need one or the other",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -3898,7 +3871,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be string"),
+				"expected value to be string",
 			},
 		},
 	},
@@ -3920,7 +3893,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 		},
 	},
@@ -3942,7 +3915,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 		},
 	},
@@ -3964,7 +3937,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 		},
 	},
@@ -3994,7 +3967,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be string"),
+				"expected value to be string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4011,7 +3984,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeArray,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4032,7 +4005,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be string"),
+				"expected value to be string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4053,7 +4026,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("invalid output flag 'banana'"),
+				"invalid output flag 'banana'",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4070,7 +4043,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("unable to convert type \\\" to int"),
+				"unable to convert type \\\" to int",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4087,7 +4060,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4104,7 +4077,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be string"),
+				"expected value to be string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4117,7 +4090,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("found 'enum' field, but no matching output flag"),
+				"found 'enum' field, but no matching output flag",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4130,7 +4103,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("found 'enum' flag, but no matching 'enum' field"),
+				"found 'enum' flag, but no matching 'enum' field",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4147,7 +4120,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeArray,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4160,7 +4133,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("found 'bitfield' flag, but no matching 'bitfield' field"),
+				"found 'bitfield' flag, but no matching 'bitfield' field",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4173,7 +4146,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("found 'bitfield' field, but no matching output flag"),
+				"found 'bitfield' field, but no matching output flag",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4190,7 +4163,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeArray,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4207,7 +4180,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("publish rate must be greater than 0; defaulting to global publish rate"),
+				"publish rate must be greater than 0; defaulting to global publish rate",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4220,7 +4193,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("duplicate output variable 'output14'; only considering first occurence"),
+				"duplicate output variable 'output14'; only considering first occurence",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4245,7 +4218,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("path not found; using default index of 0"),
+				"path not found; using default index of 0",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4270,7 +4243,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("path not found; using default string of \\\"Unknown\\\""),
+				"path not found; using default string of \\\"Unknown\\\"",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4295,7 +4268,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("cannot convert type array to string; using default index of 1 and string of \\\"Unknown\\\""),
+				"cannot convert type array to string; using default index of 1 and string of \\\"Unknown\\\"",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4320,7 +4293,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("unable to convert type \\\" to int; using default index of 2"),
+				"unable to convert type \\\" to int; using default index of 2",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4345,7 +4318,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("cannot convert type array to string; using default string of \\\"Unknown\\\""),
+				"cannot convert type array to string; using default string of \\\"Unknown\\\"",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4370,7 +4343,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("path not found; using default index of 0"),
+				"path not found; using default index of 0",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4395,7 +4368,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("path not found; using default string of \\\"Unknown\\\""),
+				"path not found; using default string of \\\"Unknown\\\"",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4420,7 +4393,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("cannot convert type array to string; using default index of 1 and string of \\\"Unknown\\\""),
+				"cannot convert type array to string; using default index of 1 and string of \\\"Unknown\\\"",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4445,7 +4418,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("unable to convert type \\\" to int; using default index of 2"),
+				"unable to convert type \\\" to int; using default index of 2",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4470,7 +4443,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("cannot convert type array to string; using default string of \\\"Unknown\\\""),
+				"cannot convert type array to string; using default string of \\\"Unknown\\\"",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4495,7 +4468,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeInt,
 					},
 				},
-				fmt.Sprintf("cannot skip values for bitfields; using default index of 3"),
+				"cannot skip values for bitfields; using default index of 3",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4741,7 +4714,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeArray,
 					},
 				},
-				fmt.Sprintf("output variable '5' does not have a corresponding output config"),
+				"output variable '5' does not have a corresponding output config",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4754,7 +4727,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"),
+				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4771,7 +4744,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("cannot find variable banana in inputs or filters; excluding this metric from calculations"),
+				"cannot find variable banana in inputs or filters; excluding this metric from calculations",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4788,7 +4761,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("internal_output variable '5' does not have a corresponding input config"),
+				"internal_output variable '5' does not have a corresponding input config",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4801,7 +4774,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"),
+				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4818,7 +4791,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be string"),
+				"expected value to be string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4835,7 +4808,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("internal_output variable 'v1_times_5' does not have a corresponding input config"),
+				"internal_output variable 'v1_times_5' does not have a corresponding input config",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4848,7 +4821,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"),
+				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4861,7 +4834,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'type' not found"),
+				"key 'type' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4874,7 +4847,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'outputs' not found"),
+				"key 'outputs' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4887,7 +4860,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"),
+				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4908,7 +4881,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be string"),
+				"expected value to be string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4925,7 +4898,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("cannot find variable banana in inputs or filters; excluding this metric from calculations"),
+				"cannot find variable banana in inputs or filters; excluding this metric from calculations",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4942,7 +4915,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("cannot convert type array to string"),
+				"cannot convert type array to string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4955,7 +4928,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"),
+				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4968,7 +4941,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'expression' not found"),
+				"key 'expression' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4985,7 +4958,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("cannot map internal_output variable to attribute"),
+				"cannot map internal_output variable to attribute",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -4998,7 +4971,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"),
+				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5032,7 +5005,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeArray,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 		},
 	},
@@ -5057,7 +5030,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 		},
 	},
@@ -5152,7 +5125,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'uri' not found"),
+				"key 'uri' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5165,7 +5138,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'publishRate' not found"),
+				"key 'publishRate' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5178,7 +5151,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'publishRate' not found"),
+				"key 'publishRate' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5195,7 +5168,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("cannot convert type object to string"),
+				"cannot convert type object to string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5208,7 +5181,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'publishRate' not found"),
+				"key 'publishRate' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5225,7 +5198,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeArray,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5250,7 +5223,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("type \\\"l\\\" found before object was found"),
+				"type \\\"l\\\" found before object was found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5271,7 +5244,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'registers' not found"),
+				"key 'registers' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5292,7 +5265,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'uri' not found"),
+				"key 'uri' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5317,7 +5290,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("could not convert registers to map[string]interface{}"),
+				"could not convert registers to map[string]interface{}",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5342,7 +5315,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("could not convert registers to map[string]string"),
+				"could not convert registers to map[string]string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5375,7 +5348,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				fmt.Sprintf("expected value to be string"),
+				"expected value to be string",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5404,7 +5377,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("key 'source' not found"),
+				"key 'source' not found",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5421,7 +5394,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("could not convert echo object to map[string]interface{}"),
+				"could not convert echo object to map[string]interface{}",
 			},
 		},
 	},
@@ -5442,7 +5415,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5451,7 +5424,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5460,7 +5433,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5469,7 +5442,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5478,7 +5451,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeArray,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5487,7 +5460,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeArray,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 			ErrorLocation{
 				[]JsonAccessor{
@@ -5496,7 +5469,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("found unknown key 'string' in configuration document; ignoring config element"),
+				"found unknown key 'string' in configuration document; ignoring config element",
 			},
 		},
 	},
@@ -5521,7 +5494,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				fmt.Sprintf("next item is not object"),
+				"next item is not object",
 			},
 		},
 	},
@@ -6165,7 +6138,7 @@ func TestGetPubTickers(t *testing.T) {
 		}
 
 	}
-	for key, _ := range testPubTickers {
+	for key := range testPubTickers {
 		if _, ok := pubTickers[key]; !ok {
 			t.Errorf("Missing key %s in pubTickers\n", key)
 		}
@@ -6873,7 +6846,7 @@ func TestGetSubscribeUris(t *testing.T) {
 			} else {
 				for _, pathList := range subList {
 					match := false
-					for q, _ := range subList2 {
+					for q := range subList2 {
 						all_match := true
 						if len(pathList) == len(subList2[q]) {
 							{
@@ -6911,7 +6884,7 @@ func TestGetSubscribeUris(t *testing.T) {
 			} else {
 				for _, pathList := range subList {
 					match := false
-					for q, _ := range subList2 {
+					for q := range subList2 {
 						all_match := true
 						if len(pathList) == len(subList2[q]) {
 							{

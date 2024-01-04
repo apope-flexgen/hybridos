@@ -1,0 +1,21 @@
+{
+    "connection": {
+        "name": "some_name",
+        "ip_address": "192.168.114.11",
+        "frequency": 1000,
+        "device_id": 1
+    },
+    "components": [
+        {
+            "id": "hello_world",
+            "registers": [
+                {
+                    "type": "Holding",
+                    "map": [
+                        { "id": "some_id", "offset": 0 }
+                    ]
+                }
+            ]
+        }
+    ]
+}

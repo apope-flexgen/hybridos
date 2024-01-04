@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/flexgen-power/fims_codec"
-	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/flexgen-power/hybridos/fims_codec"
+	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -91,17 +91,21 @@ func (collator *MsgCollator) collate(msg *fims.FimsMsg) {
 		return
 	}
 
-	//get the codec either from group or the URI
+	// get the codec either from group or the URI
 	encoder := uriFtdData.encoder
 	if len(uriFtdData.Config.Group) > 0 {
 		encoder = collator.groups[uriFtdData.Config.Group]
 		bodyMap["ftd_group"] = path.Base(msg.Uri)
 	}
 
-	//now that we recorded URI append msg to codec
+	// now that we recorded URI append msg to codec
 	err := encoder.Encode(bodyMap)
 	if err != nil {
 		log.Errorf("Failed to append msg for URI %s with error: %v", msg.Uri, err)
+	}
+	// if encoder is now full, flush all encoders immediately
+	if encoder.GetNumMessages() == fims_codec.MaxMessageCount {
+		collator.flush()
 	}
 }
 

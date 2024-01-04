@@ -1,0 +1,848 @@
+{
+    "data": [
+        {
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [
+                {
+                    "inputType": "switch",
+                    "name": "Maintenance Mode",
+                    "scalar": "",
+                    "units": "",
+                    "uri": "/maint_mode"
+                }
+            ],
+            "controls": [
+                {
+                    "inputType": "switch",
+                    "name": "Maintenance Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/maint_mode"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Start",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/start"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Stop",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/stop"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Clear Faults",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/clear_faults"
+                },
+                {
+                    "inputType": "switch",
+                    "name": "Limits Override",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/limits_override"
+                },
+                {
+                    "inputType": "number",
+                    "name": "Active Power Setpoint",
+                    "scalar": "1000",
+                    "todo": "will need to change back to W and scalar 1000",
+                    "units": "MW",
+                    "uri": "/maint_active_power_setpoint"
+                },
+                {
+                    "inputType": "number",
+                    "name": "Reactive Power Setpoint",
+                    "scalar": "1000",
+                    "todo": "will need to change back to MVAR and scalar 1000",
+                    "units": "MVAR",
+                    "uri": "/maint_reactive_power_setpoint"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Open Contactors",
+                    "uri": "/open_dc_contactors"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Close Contactors",
+                    "uri": "/close_dc_contactors"
+                }
+            ],
+            "info": {
+                "alarmFields": [
+                    "alarms",
+                    "alarms_2",
+                    "ess_alarms",
+                    "pcs1_alarms1",
+                    "pcs1_alarms2",
+                    "pcs1_alarms3",
+                    "pcs1_alarms4",
+                    "module_1_alarms1",
+                    "module_1_alarms2",
+                    "module_2_alarms1",
+                    "module_2_alarms2",
+                    "module_3_alarms1",
+                    "module_3_alarms2",
+                    "module_4_alarms1",
+                    "module_4_alarms2",
+                    "module_5_alarms1",
+                    "module_5_alarms2",
+                    "module_6_alarms1",
+                    "module_6_alarms2",
+                    "bms_alarms",
+                    "battery_rack_1_alarms",
+                    "battery_rack_2_alarms",
+                    "battery_rack_3_alarms",
+                    "battery_rack_4_alarms",
+                    "battery_rack_5_alarms",
+                    "battery_rack_6_alarms",
+                    "battery_rack_7_alarms",
+                    "battery_rack_8_alarms",
+                    "battery_rack_9_alarms"
+                ],
+                "assetKey": "ESS",
+                "baseURI": "/ess",
+                "extension": "/ess_0",
+                "faultFields": [
+                    "faults",
+                    "faults_2",
+                    "com_status",
+                    "ems_alarms",
+                    "ess_faults",
+                    "pcs1_faults1",
+                    "pcs1_faults2",
+                    "pcs1_faults3",
+                    "pcs1_faults4",
+                    "module_1_faults1",
+                    "module_1_faults2",
+                    "module_2_faults1",
+                    "module_2_faults2",
+                    "module_3_faults1",
+                    "module_3_faults2",
+                    "module_4_faults1",
+                    "module_4_faults2",
+                    "module_5_faults1",
+                    "module_5_faults2",
+                    "module_6_faults1",
+                    "module_6_faults2",
+                    "bms_faults",
+                    "battery_rack_1_faults1",
+                    "battery_rack_1_faults2",
+                    "battery_rack_2_faults1",
+                    "battery_rack_2_faults2",
+                    "battery_rack_3_faults1",
+                    "battery_rack_3_faults2",
+                    "battery_rack_4_faults1",
+                    "battery_rack_4_faults2",
+                    "battery_rack_5_faults1",
+                    "battery_rack_5_faults2",
+                    "battery_rack_6_faults1",
+                    "battery_rack_6_faults2",
+                    "battery_rack_7_faults1",
+                    "battery_rack_7_faults2",
+                    "battery_rack_8_faults1",
+                    "battery_rack_8_faults2",
+                    "battery_rack_9_faults1",
+                    "battery_rack_9_faults2",
+                    "watchdog_fault"
+                ],
+                "hasAllControls": true,
+                "hasSummary": false,
+                "itemName": "",
+                "name": "ESS Block",
+                "numberOfItems": "12",
+                "sourceURI": "/assets"
+            },
+            "statuses": [
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Active Power Setpoint",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power_setpoint"
+                },
+                {
+                    "name": "Apparent Power",
+                    "scalar": "1000",
+                    "units": "MVA",
+                    "uri": "/apparent_power"
+                },
+                {
+                    "name": "Average Cell Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/bms_avg_cell_voltage"
+                },
+                {
+                    "name": "Average Cell Temperature",
+                    "scalar": "1",
+                    "units": "C",
+                    "uri": "/bms_avg_temp"
+                },
+                {
+                    "name": "Highest Cell Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/bms_max_cell_voltage"
+                },
+                {
+                    "name": "Highest Cell Temperature",
+                    "scalar": "1",
+                    "units": "C",
+                    "uri": "/bms_max_temp"
+                },
+                {
+                    "name": "Lowest Cell Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/bms_min_cell_voltage"
+                },
+                {
+                    "name": "Lowest Cell Temperature",
+                    "scalar": "1",
+                    "units": "C",
+                    "uri": "/bms_min_temp"
+                },
+                {
+                    "name": "Battery Racks In Service",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/bms_racks_in_service"
+                },
+                {
+                    "name": "Component Connected",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/component_connected"
+                },
+                {
+                    "name": "Watchdog Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/watchdog_status"
+                },
+                {
+                    "name": "DC Contactors Closed",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/dc_contactors_closed"
+                },
+                {
+                    "name": "Frequency",
+                    "scalar": "1",
+                    "units": "Hz",
+                    "uri": "/frequency"
+                },
+                {
+                    "name": "Watchdog Heartbeat",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/watchdog_heartbeat"
+                },
+                {
+                    "name": "L1 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/pcs_current_l1"
+                },
+                {
+                    "name": "L2 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/pcs_current_l2"
+                },
+                {
+                    "name": "L3 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/pcs_current_l3"
+                },
+                {
+                    "name": "L1-L2 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/pcs_voltage_l1_l2"
+                },
+                {
+                    "name": "L2-L3 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/pcs_voltage_l2_l3"
+                },
+                {
+                    "name": "L3-L1 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/pcs_voltage_l3_l1"
+                },
+                {
+                    "name": "Reactive Power",
+                    "scalar": "1000",
+                    "units": "MVAR",
+                    "uri": "/reactive_power"
+                },
+                {
+                    "name": "Reactive Power Setpoint",
+                    "scalar": "1000",
+                    "units": "MVAR",
+                    "uri": "/reactive_power_setpoint"
+                },
+                {
+                    "name": "State of Charge",
+                    "scalar": "1",
+                    "units": "%",
+                    "uri": "/soc"
+                },
+                {
+                    "name": "State of Health",
+                    "scalar": "1",
+                    "units": "%",
+                    "uri": "/soh"
+                },
+                {
+                    "name": "System Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/status"
+                },
+                {
+                    "name": "System Chargeable Energy",
+                    "scalar": "1000",
+                    "units": "MWh",
+                    "uri": "/system_chargeable_energy"
+                },
+                {
+                    "name": "System Chargeable Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/system_chargeable_power"
+                },
+                {
+                    "name": "System Dischargeable Energy",
+                    "scalar": "1000",
+                    "units": "MWh",
+                    "uri": "/system_dischargeable_energy"
+                },
+                {
+                    "name": "System Dischargeable Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/system_dischargeable_power"
+                },
+                {
+                    "name": "DC Voltage",
+                    "scalar": "1000",
+                    "units": "MV",
+                    "uri": "/voltage_dc"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
+        },
+        {
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [],
+            "controls": [
+                {
+                    "inputType": "switch",
+                    "name": "Maintenance Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/maint_mode"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Breaker Close",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/breaker_close"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Breaker Open",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/breaker_open"
+                }
+            ],
+            "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
+                "assetKey": "feeders_tab",
+                "baseURI": "/feeders",
+                "extension": "/feed_1",
+                "faultFields": [
+                    "faults"
+                ],
+                "hasAllControls": false,
+                "hasSummary": false,
+                "itemName": "POI Feeder",
+                "name": "",
+                "numberOfItems": "1",
+                "sourceURI": "/assets"
+            },
+            "statuses": [
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "units": "W",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Apparent Power",
+                    "scalar": "1000",
+                    "units": "VA",
+                    "uri": "/apparent_power"
+                },
+                {
+                    "name": "L1 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l1"
+                },
+                {
+                    "name": "L2 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l2"
+                },
+                {
+                    "name": "L3 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l3"
+                },
+                {
+                    "name": "Grid Frequency",
+                    "scaler": "1",
+                    "unit": "Hz",
+                    "uri": "/grid_frequency"
+                },
+                {
+                    "name": "Reactive Energy Delivered",
+                    "scaler": "1000",
+                    "unit": "VARh",
+                    "uri": "/kvarh_delivered"
+                },
+                {
+                    "name": "Reactive Energy Received",
+                    "scaler": "1000",
+                    "unit": "VARh",
+                    "uri": "/kvarh_received"
+                },
+                {
+                    "name": "Active Energy Delivered",
+                    "scaler": "1000",
+                    "unit": "Wh",
+                    "uri": "/kwh_delivered"
+                },
+                {
+                    "name": "Active Energy Received",
+                    "scaler": "1000",
+                    "unit": "Wh",
+                    "uri": "/kwh_received"
+                },
+                {
+                    "name": "Power Factor",
+                    "scaler": "1",
+                    "uri": "/power_factor"
+                },
+                {
+                    "name": "Reactive Power",
+                    "scaler": "1000",
+                    "unit": "VAR",
+                    "uri": "/reactive_power"
+                },
+                {
+                    "name": "THD Current L1",
+                    "scaler": "1",
+                    "unit": "%",
+                    "uri": "/thd_i_l1"
+                },
+                {
+                    "name": "THD Current L2",
+                    "scaler": "1",
+                    "unit": "%",
+                    "uri": "/thd_i_l2"
+                },
+                {
+                    "name": "THD Current L3",
+                    "scaler": "1",
+                    "unit": "%",
+                    "uri": "/thd_i_l3"
+                },
+                {
+                    "name": "THD Voltage L1",
+                    "scaler": "1",
+                    "unit": "%",
+                    "uri": "/thd_v_l1"
+                },
+                {
+                    "name": "THD Voltage L2",
+                    "scaler": "1",
+                    "unit": "%",
+                    "uri": "/thd_v_l2"
+                },
+                {
+                    "name": "THD Voltage L3",
+                    "scaler": "1",
+                    "unit": "%",
+                    "uri": "/thd_v_l3"
+                },
+                {
+                    "name": "L1-L2 AC Voltage",
+                    "scaler": "1",
+                    "unit": "V",
+                    "uri": "/voltage_l1_l2"
+                },
+                {
+                    "name": "L2-L3 AC Voltage",
+                    "scaler": "1",
+                    "unit": "V",
+                    "uri": "/voltage_l2_l3"
+                },
+                {
+                    "name": "L3-L1 AC Voltage",
+                    "scaler": "1",
+                    "unit": "V",
+                    "uri": "/voltage_l3_l1"
+                },
+                {
+                    "name": "Breaker Status",
+                    "type": "Bool",
+                    "uri": "/breaker_status"
+                },
+                {
+                    "name": "Supply Voltage",
+                    "scaler": "1",
+                    "unit": "V",
+                    "uri": "/dc_battery_1_voltage_SEL-411L"
+                },
+                {
+                    "name": "MOD Close",
+                    "type": "Bool",
+                    "uri": "/mod_close"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
+        },
+        {
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [],
+            "controls": [],
+            "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
+                "assetKey": "feeders_tab",
+                "baseURI": "/feeders",
+                "extension": "/feed_2",
+                "faultFields": [
+                    "faults"
+                ],
+                "hasAllControls": false,
+                "hasSummary": false,
+                "itemName": "SEL-351-1 ESS Collection 1 (52F1)",
+                "name": "",
+                "numberOfItems": "1",
+                "sourceURI": "/assets"
+            },
+            "statuses": [
+                {
+                    "name": "AC Active Power",
+                    "scalar": "-1000",
+                    "units": "W",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Breaker Status",
+                    "type": "Bool",
+                    "uri": "/breaker_status"
+                },
+                {
+                    "name": "L1 Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l1"
+                },
+                {
+                    "name": "L2 Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l2"
+                },
+                {
+                    "name": "L3 Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l3"
+                },
+                {
+                    "name": "Frequency",
+                    "scaler": "1",
+                    "unit": "Hz",
+                    "uri": "/grid_frequency"
+                },
+                {
+                    "name": "Power Factor",
+                    "scaler": "-1",
+                    "uri": "/power_factor"
+                },
+                {
+                    "name": "Reactive Energy Delivered",
+                    "scaler": "1",
+                    "unit": "MVARh",
+                    "uri": "/reactive_energy_delivered"
+                },
+                {
+                    "name": "Reactive Energy Received",
+                    "scaler": "1",
+                    "unit": "MVARh",
+                    "uri": "/reactive_energy_received"
+                },
+                {
+                    "name": "AC Reactive Power",
+                    "scaler": "1000",
+                    "unit": "VAR",
+                    "uri": "/reactive_power"
+                },
+                {
+                    "name": "Real Energy Delivered",
+                    "scaler": "1",
+                    "unit": "MWh",
+                    "uri": "/real_energy_delivered"
+                },
+                {
+                    "name": "Real Energy Received",
+                    "scaler": "1",
+                    "unit": "MWh",
+                    "uri": "/real_energy_received"
+                },
+                {
+                    "name": "Supply Voltage",
+                    "scaler": "1",
+                    "unit": "V",
+                    "uri": "/station_battery_voltage"
+                },
+                {
+                    "name": "Voltage L1-L2",
+                    "scaler": "1",
+                    "unit": "V",
+                    "uri": "/voltage_l1_l2"
+                },
+                {
+                    "name": "Voltage L2-L3",
+                    "scaler": "1",
+                    "unit": "V",
+                    "uri": "/voltage_l2_l3"
+                },
+                {
+                    "name": "Voltage L3-L1",
+                    "scaler": "1",
+                    "unit": "V",
+                    "uri": "/voltage_l3_l1"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
+        },
+        {
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [],
+            "controls": [],
+            "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
+                "assetKey": "feeders_tab",
+                "baseURI": "/feeders",
+                "extension": "/feed_3",
+                "faultFields": [
+                    "faults"
+                ],
+                "hasAllControls": false,
+                "hasSummary": false,
+                "itemName": "SEL-351-2 ESS Collection 2 (52F2)",
+                "name": "",
+                "numberOfItems": "1",
+                "sourceURI": "/assets"
+            },
+            "statuses": [
+                {
+                    "name": "AC Active Power",
+                    "scalar": "-1000",
+                    "units": "W",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Breaker Status",
+                    "type": "Bool",
+                    "uri": "/breaker_status"
+                },
+                {
+                    "name": "L1 Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l1"
+                },
+                {
+                    "name": "L2 Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l2"
+                },
+                {
+                    "name": "L3 Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l3"
+                },
+                {
+                    "name": "Frequency",
+                    "scaler": "1",
+                    "unit": "Hz",
+                    "uri": "/grid_frequency"
+                },
+                {
+                    "name": "Power Factor",
+                    "scaler": "-1",
+                    "uri": "/power_factor"
+                },
+                {
+                    "name": "Reactive Energy Delivered",
+                    "scaler": "1",
+                    "unit": "MVARh",
+                    "uri": "/reactive_energy_delivered"
+                },
+                {
+                    "name": "Reactive Energy Received",
+                    "scaler": "1",
+                    "unit": "MVARh",
+                    "uri": "/reactive_energy_received"
+                },
+                {
+                    "name": "AC Reactive Power",
+                    "scaler": "1000",
+                    "unit": "VAR",
+                    "uri": "/reactive_power"
+                },
+                {
+                    "name": "Real Energy Delivered",
+                    "scaler": "1",
+                    "unit": "MWh",
+                    "uri": "/real_energy_delivered"
+                },
+                {
+                    "name": "Real Energy Received",
+                    "scaler": "1",
+                    "unit": "MWh",
+                    "uri": "/real_energy_received"
+                },
+                {
+                    "name": "Supply Voltage",
+                    "scaler": "1",
+                    "unit": "V",
+                    "uri": "/station_battery_voltage"
+                },
+                {
+                    "name": "Voltage L1-L2",
+                    "scaler": "1",
+                    "unit": "V",
+                    "uri": "/voltage_l1_l2"
+                },
+                {
+                    "name": "Voltage L2-L3",
+                    "scaler": "1",
+                    "unit": "V",
+                    "uri": "/voltage_l2_l3"
+                },
+                {
+                    "name": "Voltage L3-L1",
+                    "scaler": "1",
+                    "unit": "V",
+                    "uri": "/voltage_l3_l1"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
+        },
+        {
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [],
+            "controls": [],
+            "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
+                "assetKey": "feeders_tab",
+                "baseURI": "/feeders",
+                "extension": "/feed_4",
+                "faultFields": [
+                    "faults"
+                ],
+                "hasAllControls": false,
+                "hasSummary": false,
+                "itemName": "Aux Power Measurements",
+                "name": "",
+                "numberOfItems": "1",
+                "sourceURI": "/assets"
+            },
+            "statuses": [
+                {
+                    "name": "Auxiliary Load Active Power",
+                    "scaler": "1",
+                    "unit": "kW",
+                    "uri": "aux_load_active_power"
+                },
+                {
+                    "name": "BMS Aux Load Active Power",
+                    "scaler": "1",
+                    "unit": "kW",
+                    "uri": "bms_aux_load_active_power"
+                },
+                {
+                    "name": "BMS Aux Load Reactive Power",
+                    "scaler": "1",
+                    "unit": "kVAR",
+                    "uri": "bms_aux_load_reactive_power"
+                },
+                {
+                    "name": "Estimated PCS Aux Load Active Power",
+                    "scaler": "1",
+                    "unit": "kW",
+                    "uri": "pcs_aux_load_active_power"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
+        }
+    ]
+}

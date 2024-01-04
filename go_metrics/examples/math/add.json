@@ -22,7 +22,7 @@
         },
         {
             "id": "dummy",
-            "value": "string", 
+            "type": "string", 
             "outputs": "string_output1",
             "expression": "Add(string1, string2)"
         },
@@ -34,7 +34,7 @@
         },
         {
             "id": "dummy",
-            "value": "string", 
+            "type": "string", 
             "outputs": "string_output2",
             "expression": "string1 + string2"
         }

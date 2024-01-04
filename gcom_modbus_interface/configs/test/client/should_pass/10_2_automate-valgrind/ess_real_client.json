@@ -1,0 +1,402 @@
+{
+    "connection": {
+        "name": "ess_real",
+        "ip_address": "172.3.27.2",
+        "port": 10005,
+        "device_id": 1
+    },
+    "components": [
+        {
+            "id": "ess_real_hs",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "frequency": 100,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1000,
+                    "number_of_registers": 15,
+                    "map": [
+                        {
+                            "id": "life",
+                            "offset": 1000, 
+                            "size": 2, 
+                            "name": "Heartbeat Write", 
+                            "signed": true 
+                        },
+                        {
+                            "id": "start_stop", 
+                            "offset": 1002, 
+                            "name": "Start/Stop/Standby Command", 
+                            "echo_id": "/components/twins_ess_2/ctrlword1" 
+                        },
+                        {
+                            "id": "run_mode", 
+                            "offset": 1003, 
+                            "name": "On-grid Charging/Discharging Mode" 
+                        },
+                        {
+                            "id": "on_off_grid_mode", 
+                            "offset": 1004, 
+                            "name": "On/Off grid mode setting", 
+                            "echo_id": "/components/twins_ess_2/ctrlword3" 
+                        },
+                        {
+                            "id": "active_power_setpoint", 
+                            "offset": 1005, 
+                            "name": "Active Power Setpoint", 
+                            "float": true, 
+                            "size": 2,
+                            "echo_id": "/components/twins_ess_2/pcmd" 
+                        },
+                        {
+                            "id": "reactive_power_setpoint", 
+                            "offset": 1007, 
+                            "name": "Reactive Power Setpoint", 
+                            "float": true,
+                            "size": 2,
+                            "echo_id": "/components/twins_ess_2/qcmd" 
+                        },
+                        {
+                            "id": "clear_faults", 
+                            "offset": 1009, 
+                            "name": "Clear Faults Command", 
+                            "uri": "/site/ess_hs", 
+                            "individual_bits": true, 
+                            "bit_strings": [ 
+                                "clear_faults" 
+                            ] 
+                        },
+                        {
+                            "id": "bms_dc_contactors", 
+                            "offset": 1010, 
+                            "name": "BMS DC Contactor Control", 
+                            "echo_id": "/components/twins_ess_2/ctrlword2" 
+                        },
+                        {
+                            "id": "frequency_setpoint", 
+                            "offset": 1011,
+                            "float": true,
+                            "size": 2,
+                            "name": "Frequency Setpoint", 
+                            "echo_id": "/components/twins_ess_2/fcmd"
+                        },
+                        {
+                            "id": "voltage_setpoint", 
+                            "offset": 1013,
+                            "float": true,
+                            "size": 2,
+                            "name": "Voltage Setpoint", 
+                            "echo_id": "/components/twins_ess_2/vcmd"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "ess_real_ls",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "frequency": 1000,
+            "offset_time": 10,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2000,
+                    "number_of_registers": 40,
+                    "map": [
+                        {
+                            "id": "life_signal", 
+                            "offset": 2000, 
+                            "size": 2, 
+                            "name": "Heartbeat Read", 
+                            "signed": true 
+                        },
+                        {
+                            "id": "chargeable_energy", 
+                            "offset": 2002,
+                            "size": 2,
+                            "float": true,
+                            "name": "Chargeable Energy" 
+                        },
+                        {
+                            "id": "dischargeable_energy", 
+                            "offset": 2004,
+                            "size": 2,
+                            "float": true,
+                            "name": "Dischargeable Energy" 
+                        },
+                        {
+                            "id": "chargeable_power", 
+                            "offset": 2006, 
+                            "name": "Chargeable Power",
+                            "size": 2,
+                            "float": true,
+                            "echo_id": "/components/twins_ess_2/plow" 
+                        },
+                        {
+                            "id": "dischargeable_power", 
+                            "offset": 2008, 
+                            "name": "Dischargeable Power",
+                            "size": 2,
+                            "float": true,
+                            "echo_id": "/components/twins_ess_2/phigh" 
+                        },
+                        {
+                            "id": "system_state", 
+                            "offset": 2010, 
+                            "name": "System State", 
+                            "uri": "/site/ess_ls", 
+                            "bool": true,
+                            "enum": true, 
+                            "bit_strings": [ 
+                                "Stopped",
+                                "Running"
+                            ],
+                            "echo_id": "/components/twins_ess_2/on"
+                        },
+                        {
+                            "id": "com_status", 
+                            "offset": 2011, 
+                            "name": "Comms Status", 
+                            "uri": "/site/ess_ls", 
+                            "bit_field": true, 
+                            "bit_strings": [ 
+                                "PCS Communication Offline", 
+                                "BMS Communication Offline", 
+                                "EMS Communication Offline", 
+                                "FSS Communication Offline" 
+                            ] 
+                        },
+                        {
+                            "id": "ess_faults", 
+                            "offset": 2012, 
+                            "name": "ESS Faults", 
+                            "uri": "/site/ess_ls", 
+                            "bit_field": true, 
+                            "bit_strings": [ 
+                                "BMS Max Cell Voltage Threshold Exceeded", 
+                                "BMS Min Cell Voltage Threshold Exceeded", 
+                                "BMS Max Cell Temperature Threshold Exceeded", 
+                                "BMS Min Cell Temperature Threshold Exceeded", 
+                                "BMS Current Max Threshold Exceeded", 
+                                "BMS Current Min Threshold Exceeded", 
+                                "Number of Closed-in Battery Racks Below Threshold", 
+                                "BMS State of Health Below Threshold", 
+                                "PCS DC Voltage Threshold Exceeded", 
+                                "Number of PCS Modules Below Threshold", 
+                                "PCS Active Power Threshold Exceeded"
+                            ] 
+                        },
+                        {
+                            "id": "ess_alarms", 
+                            "offset": 2013, 
+                            "name": "ESS Alarms", 
+                            "uri": "/site/ess_ls", 
+                            "bit_field": true, 
+                            "bit_strings": [ 
+                                "BMS Max Cell Voltage Threshold Exceeded", 
+                                "BMS Min Cell Voltage Threshold Exceeded", 
+                                "BMS Max Cell Temperature Threshold Exceeded", 
+                                "BMS Min Cell Temperature Threshold Exceeded", 
+                                "BMS Current Max Threshold Exceeded", 
+                                "BMS Current Min Threshold Exceeded", 
+                                "Number of Closed-in Battery Racks Below Threshold", 
+                                "BMS State of Health Below Threshold", 
+                                "PCS DC Voltage Threshold Exceeded", 
+                                "Number of PCS Modules Below Threshold", 
+                                "PCS Active Power Threshold Exceeded"
+                            ] 
+                        },
+                        {
+                            "id": "voltage_l1_l2", 
+                            "offset": 2014, 
+                            "name": "Grid Voltage 1",
+                            "float": true,
+                            "size": 2,
+                            "echo_id": "/components/twins_ess_2/v" 
+                        },
+                        {
+                            "id": "voltage_l2_l3", 
+                            "offset": 2016, 
+                            "float": true,
+                            "size": 2,
+                            "name": "Grid Voltage 2"
+                        },
+                        {
+                            "id": "voltage_l3_l1", 
+                            "offset": 2018, 
+                            "float": true,
+                            "size": 2,
+                            "name": "Grid Voltage 3"
+                        },
+                        {
+                            "id": "current_l1", 
+                            "offset": 2020,
+                            "size": 2,
+                            "float": true,
+                            "name": "Grid Current 1", 
+                            "echo_id": "/components/twins_ess_2/i" 
+                        },
+                        {
+                            "id": "current_l2", 
+                            "offset": 2022,
+                            "size": 2,
+                            "float": true,
+                            "name": "Grid Current 2" 
+                        },
+                        {
+                            "id": "current_l3", 
+                            "offset": 2024,
+                            "size": 2,
+                            "float": true,
+                            "name": "Grid Current 3" 
+                        },
+                        {
+                            "id": "frequency", 
+                            "offset": 2026,
+                            "size": 2,
+                            "float": true,
+                            "name": "Frequency", 
+                            "echo_id": "/components/twins_ess_2/f" 
+                        },
+                        {
+                            "id": "active_power", 
+                            "offset": 2028, 
+                            "name": "Active Power",
+                            "size": 2,
+                            "float": true, 
+                            "echo_id": "/components/twins_ess_2/p" 
+                        },
+                        {
+                            "id": "reactive_power", 
+                            "offset": 2030, 
+                            "name": "Reactive Power",
+                            "size": 2,
+                            "float": true, 
+                            "echo_id": "/components/twins_ess_2/q" 
+                        },
+                        {
+                            "id": "apparent_power", 
+                            "offset": 2032,
+                            "name": "Apparent Power",
+                            "size": 2,
+                            "float": true, 
+                            "echo_id": "/components/twins_ess_2/s" 
+                        },
+                        {
+                            "id": "pf", 
+                            "offset": 2034,
+                            "size": 2,
+                            "float": true, 
+                            "name": "Power Factor", 
+                            "echo_id": "/components/twins_ess_2/pf" 
+                        },
+                        {
+                            "id": "voltage_dc", 
+                            "offset": 2036,
+                            "size": 2,
+                            "float": true, 
+                            "name": "DC Voltage",
+                            "echo_id": "/components/twins_ess_2/vdc" 
+                        },
+                        {
+                            "id": "current_dc", 
+                            "offset": 2038,
+                            "size": 2,
+                            "float": true, 
+                            "name": "DC Current",
+                            "echo_id": "/components/twins_ess_2/idc" 
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2200,
+                    "number_of_registers": 18,
+                    "map": [
+                        {
+                            "id": "bms_maximum_cell_voltage", 
+                            "offset": 2200,
+                            "size": 2,
+                            "float": true, 
+                            "name": "BMS Maximum Cell Voltage" 
+                        },
+                        {
+                            "id": "bms_minimum_cell_voltage", 
+                            "offset": 2202,
+                            "size": 2,
+                            "float": true, 
+                            "name": "BMS Minimum Cell Voltage" 
+                        },
+                        {
+                            "id": "bms_average_cell_voltage", 
+                            "offset": 2204,
+                            "size": 2,
+                            "float": true, 
+                            "name": "BMS Average Cell Voltage" 
+                        },
+                        {
+                            "id": "bms_maximum_cell_temperature", 
+                            "offset": 2206,
+                            "size": 2,
+                            "float": true, 
+                            "name": "BMS Maximum Cell Temperature"
+                        },
+                        {
+                            "id": "bms_minimum_cell_temperature", 
+                            "offset": 2208,
+                            "size": 2,
+                            "float": true, 
+                            "name": "BMS Minimum Cell Temperature"
+                        },
+                        {
+                            "id": "bms_average_cell_temperature", 
+                            "offset": 2210,
+                            "size": 2,
+                            "float": true, 
+                            "name": "BMS Average Cell Temperature"
+                        },
+                        {
+                            "id": "bms_soc", 
+                            "offset": 2212,
+                            "size": 2,
+                            "float": true, 
+                            "name": "BMS SOC", 
+                            "echo_id": "/components/twins_ess_2/soc" 
+                        },
+                        {
+                            "id": "bms_soh", 
+                            "offset": 2214,
+                            "size": 2,
+                            "float": true, 
+                            "name": "BMS SOH" 
+                        },
+                        {
+                            "id": "dc_contactors_closed", 
+                            "offset": 2216, 
+                            "name": "DC Contactors Closed Status", 
+                            "uri": "/site/ess_ls", 
+                            "individual_bits": true, 
+                            "bit_strings": [ 
+                                "dc_contactors_closed" 
+                            ], 
+                            "echo_id": "/components/twins_ess_2/dccontactors" 
+                        },
+                        {
+                            "id": "racks_in_service", 
+                            "offset": 2217, 
+                            "name": "Number of Battery Racks in Service", 
+                            "echo_id": "/components/twins_ess_2/racksinservice" 
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

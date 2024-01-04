@@ -16,6 +16,12 @@ function build()
 {
     echo "##### BUILD"
     echo "building $name..."
+
+    # we need to explicitly tell package_utility to use go modules since we're using the monomodule go.mod, 
+    # so it won't find the go.mod in the expected location (same location as the build_utils.sh)
+    export GO111MODULE=on
+    go mod tidy
+
     go build -ldflags "$go_linker_flags" -o $build_output/$name ./src/
     if [ "$?" -eq 0 ]; then echo "build() - $name built"; else echo "build() - $name not built"; fi
     echo

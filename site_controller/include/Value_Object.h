@@ -22,6 +22,7 @@ public:
     Value_Object();
     Value_Object(int val);
 
+    /** @cond exclude from doxygen comments. These functions are all over the place and can crowd diagrams.*/
     void set(int value);
     void set(bool value);
     void set(float value);
@@ -29,6 +30,7 @@ public:
     void set(const char* value);
     void set(std::string value);
     void set(Value_Object& new_value);
+    /** @endcond */
     std::string print();
     bool add_value_to_JSON_buffer(fmt::memory_buffer& buf, bool round_float = false);
     bool add_naked_value_to_JSON_buffer(fmt::memory_buffer& buf);

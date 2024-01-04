@@ -1,0 +1,20 @@
+{
+    "clients": {
+        "main" : {
+            "directory" : "/home/hybridos/powercloud_test/data",
+            "servers" : [ "local" ],
+            "extension" : ".tar.gz"   
+        }
+    },
+    "servers": {
+        "local": {
+            "ip" : "",
+            "directory" : "/home/hybridos/powercloud_test/server",
+            "timeout" : 10
+        }
+    },
+    "db_directory" : "/home/hybridos/powercloud_test/.cloud_sync/db",
+    "retry_limit" : 1,
+    "sleep_limit_seconds" : 30,
+    "buffer_size" : 100000
+}

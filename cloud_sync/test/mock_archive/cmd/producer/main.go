@@ -23,7 +23,7 @@ func main() {
 	// create an archive periodically
 	ticker := time.NewTicker(archivePeriod)
 	defer ticker.Stop()
-	averageSize := 10000000
+	averageSize := 100000
 	stdDevSize := 0.05 * float64(averageSize)
 	archiveCount := 1
 	for range ticker.C {

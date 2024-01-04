@@ -1,0 +1,13 @@
+[Unit]
+Description=HybridOS Gcom Modbus Client - injest modbus traffic and route to FIMS
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/gcom_modbus_client /usr/local/etc/config/gcom_modbus_client/%I
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

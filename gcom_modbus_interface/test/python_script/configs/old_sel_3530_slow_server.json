@@ -1,0 +1,72 @@
+{
+    "system":
+    {
+        "name": "SEL_3530_RTAC",
+
+        "protocol": "Modbus TCP",
+        "id": "SEL_3530_RTAC",
+        "ip_address": "0.0.0.0",
+        "xserver_delay": 510,
+        "port": 502,
+        "device_id": 1,
+        "bypass_init": false
+    },
+    "registers":
+    {
+        "holding_registers": [
+            { "id": "normal_1", "name": "normal_1",                 "offset": 0, "size": 1, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "signed_1", "name": "signed_1",                 "offset": 2, "size": 1, "signed":true, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "scaled_1", "name": "scaled_1",                 "offset": 3, "size": 1, "scale":100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "scaled_signed_1", "name": "scaled_signed_1",   "offset": 5, "size": 1, "signed":true, "scale": 100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "normal_2", "name": "normal_2",                 "offset": 6, "size": 2, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "float_2", "name": "float_2",                   "offset": 8, "size": 2, "float":true, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "signed_2", "name": "signed_2",                 "offset": 10, "size": 2, "signed":true, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "scaled_2", "name": "scaled_2",                 "offset": 12, "size": 2, "scale":100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "scaled_float_2", "name": "scaled_float_2",     "offset": 14, "size": 2, "float":true, "scale": 100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "scaled_signed_2", "name": "scaled_signed_2",   "offset": 16, "size": 2, "signed":true, "scale": 100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "normal_4", "name": "normal_4",                 "offset": 18, "size": 4, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "float_4", "name": "float_4",                   "offset": 22, "size": 4, "float":true, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "signed_4", "name": "signed_4",                 "offset": 26, "size": 4, "signed":true, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "scaled_4", "name": "scaled_4",                 "offset": 30, "size": 4, "scale":100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "scaled_float_4", "name": "scaled_float_4",     "offset": 34, "size": 4, "float":true, "scale": 100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "scaled_signed_4", "name": "scaled_signed_4",   "offset": 38, "size": 4, "signed":true, "scale": 100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "test_id", "name": "test",                      "offset": 42, "size": 2, "signed": true, "uri": "/components/sel_3530_slow_rtac" }
+        ],
+        "discrete_inputs": [
+            { "id": "discrete_normal_1", "name": "normal_1",                 "offset": 0, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "discrete_scale_client_1", "name": "scale_1",                 "offset": 1, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "discrete_scale_server_1", "name": "scale_1",                 "offset": 2, "scale": -1, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "discrete_scale_both_1", "name": "scale_1",                 "offset": 3 ,"scale": -1, "uri": "/components/sel_3530_slow_rtac"}
+                
+        ],
+        "coils": [
+            { "id": "coil_normal_1", "name": "normal_1",                 "offset": 0, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "coil_scale_client_1", "name": "scale_1",                 "offset": 1, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "coil_scale_server_1", "name": "scale_1",                 "offset": 2, "scale": -1, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "coil_scale_both_1", "name": "scale_1",                 "offset": 3 ,"scale": -1, "uri": "/components/sel_3530_slow_rtac"}
+                
+        ],
+
+        "input_registers": [
+            { "id": "input_normal_1", "name": "normal_1",                 "offset": 0, "size": 1, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_signed_1", "name": "signed_1",                 "offset": 2, "size": 1, "signed":true, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_scaled_1", "name": "scaled_1",                 "offset": 3, "size": 1, "scale":100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_scaled_signed_1", "name": "scaled_signed_1",   "offset": 5, "size": 1, "signed":true, "scale": 100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_normal_2", "name": "normal_2",                 "offset": 6, "size": 2, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_float_2", "name": "float_2",                   "offset": 8, "size": 2, "float":true, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_signed_2", "name": "signed_2",                 "offset": 10, "size": 2, "signed":true, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_scaled_2", "name": "scaled_2",                 "offset": 12, "size": 2, "scale":100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_scaled_float_2", "name": "scaled_float_2",     "offset": 14, "size": 2, "float":true, "scale": 100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_scaled_signed_2", "name": "scaled_signed_2",   "offset": 16, "size": 2, "signed":true, "scale": 100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_normal_4", "name": "normal_4",                 "offset": 18, "size": 4, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_float_4", "name": "float_4",                   "offset": 22, "size": 4, "float":true, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_signed_4", "name": "signed_4",                 "offset": 26, "size": 4, "signed":true, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_scaled_4", "name": "scaled_4",                 "offset": 30, "size": 4, "scale":100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_scaled_float_4", "name": "scaled_float_4",     "offset": 34, "size": 4, "float":true, "scale": 100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_scaled_signed_4", "name": "scaled_signed_4",   "offset": 38, "size": 4, "signed":true, "scale": 100, "uri": "/components/sel_3530_slow_rtac" },
+            { "id": "input_test_id", "name": "test",                      "offset": 42, "size": 2, "signed": true, "uri": "/components/sel_3530_slow_rtac" }
+        
+        ]
+    }
+}
+

@@ -7,4 +7,4 @@ export const DEFAULT_URIS = {
   features: '/features',
 };
 
-export const NAKED_URIS = ['/assets/ess', '/assets/generators', '/assets/solar', '/assets/bms', '/assets/pcs'];
+export const NAKED_URIS = ['/assets/ess','/assets/feeders', '/assets/generators', '/assets/solar', '/assets/bms', '/assets/pcs', '/fleet/sites', '/sites'];

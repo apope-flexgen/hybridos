@@ -1,0 +1,149 @@
+{
+    "connection": {
+        "name": "foobar_##ip##",
+        "ip_address": "192.168.114.##ip##",
+        "port": 502,
+        "ip_range": {
+            "begin": 10, "end": 12,
+            "replace": "##ip##"
+        },
+        "frequency": 1000,
+        "device_id": 1,
+        "off_by_one": false,
+        "byte_swap": false
+    },
+    "components": [
+        {
+            "id": "abc_##ip##",
+            "registers": [
+                {
+                    "type": "Holding",
+                    "map": [
+                        { "id": "01", "offset": 100 },
+                        { "id": "02", "offset": 101, "size": 2 },
+                        { "id": "03", "offset": 103, "size": 4 },
+                        { "id": "04", "offset": 110, "size": 1, "scale": 1000 },
+                        { "id": "05", "offset": 110, "size": 1, "scale": 0.001 },
+                        { "id": "06", "offset": 110, "size": 1, "shift": 10 },
+                        { "id": "07", "offset": 110, "size": 1, "shift": -10 },
+                        { "id": "08", "offset": 110, "size": 1, "invert_mask": "0xF" },
+                        { "id": "09", "offset": 110, "size": 1, "invert_mask": "0b1111" },
+                        { "id": "10", "offset": 107, "size": 1, "signed": true },
+                        { "id": "11", "offset": 108, "size": 2, "float": true },
+                        { "id": "12", "offset": 108, "size": 4, "float": true },
+                        { "id": "13", "offset": 108, "size": 1, "random_enum": true, "bit_strings": ["hello", "world"] },
+                        { "id": "14", "offset": 108, "size": 1, "random_enum": true, "bit_strings": [
+                            {"value": 300, "string": "hello"}, 
+                            {"value": 500, "string": "again"}
+                        ]},
+                        { "id": "15", "offset": 108, "size": 1, "enum": true, "random_enum": true, "bit_strings": [
+                            {"value": 10, "string": "hello"},
+                            "yet",
+                            "again"
+                        ]},
+                        { "id": "16", "offset": 108, "size": 1, "bit_field": true, "bit_strings": ["hello", "single", "bit", "world"] },
+                        { "id": "17", "offset": 108, "size": 1, "bit_field": true, "bit_strings": ["hello", "single", "IGNORE", "bit", "world", "again"] },
+                        { "id": "18", "offset": 108, "size": 1, "bit_field": true, "bit_strings": [
+                            "hello", 
+                            "single", 
+                            {"IGNORE": 10},
+                            "bit", 
+                            "world",
+                            "yet",
+                            "again"
+                        ]},
+                        { "id": "19_all", "offset": 108, "size": 1, "individual_bits": true, "bit_strings": ["hello", "individual", "booleans", "as", "bits", "world"] },
+                        { "id": "20_all", "offset": 108, "size": 1, "individual_bits": true, "bit_strings": ["hello", "individual", "booleans", null, "as", "bits", "world", "again"] },
+                        { "id": "21_all", "offset": 108, "size": 1, "individual_bits": true, "bit_strings": [
+                            "hello", 
+                            "individual", 
+                            {"IGNORE": 8},
+                            "booleans", 
+                            "as",
+                            "bits",
+                            "world",
+                            "yet",
+                            "again"
+                        ]},
+                        { "id": "22", "offset": 108, "size": 1, "enum_field": true, "bit_strings": [
+                            { "begin_bit": 0, "end_bit": 1, "enum_strings": ["hello", "enum_field", "world"] },
+                            { "begin_bit": 2, "end_bit": 3, "care_mask": "0x3", "enum_strings": ["hello", "enum_field", "world", "again"] },
+                            { "begin_bit": 4, "end_bit": 6, "ignore_mask": "0b100", "enum_strings": [
+                                "hello",
+                                { "value": 1, "string": "tiny" },
+                                "enum_field",
+                                "world"
+                            ]}
+                        ]},
+                        { "id": "23_all", "offset": 108, "size": 1, "individual_enums": true, "bit_strings": [
+                            { "id": "23_enum_one", "begin_bit": 0, "end_bit": 1, "enum_strings": ["hello", "individual", "enum", "world"] },
+                            { "id": "23_enum_two", "begin_bit": 2, "end_bit": 3, "care_mask": "0x3", "enum_strings": ["hello", "individual_enum", "world", "again"] },
+                            { "id": "23_enum_three", "begin_bit": 4, "end_bit": 6, "ignore_mask": "0b100", "enum_strings": [
+                                "hello",
+                                { "value": 1, "string": "tiny" },
+                                "individual_enum",
+                                "world"
+                            ]}
+                        ]}
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "abc_##ip##_##component_id##",
+            "frequency": 200,
+            "device_id": 10,
+            "component_offset_range": {
+                "begin": 1, "end": 2,
+                "step": 100,
+                "replace": "##component_id##"
+            },
+            "registers": [
+                {
+                    "type": "Coil",
+                    "decode_offset_range": {
+                        "begin": 1, "end": 2,
+                        "step": 10,
+                        "replace": "##decode_id##"
+                    },
+                    
+                    "map": [
+                        { "id": "24_##decode_id##", "offset": 110 }
+                    ]
+                },
+                {
+                    "type": "Discrete Input",
+                    "map": [
+                        { "id": "25", "offset": 111 }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "xyz_##ip#_##device_id##",
+            "off_by_one": true,
+            "byte_swap": true,
+            "device_id_range": {
+                "begin": 3, "end": 4,
+                "replace": "##device_id##"
+            },
+            "registers": [
+                {
+                    "type": "Input",
+                    "decode_offset_range": {
+                        "begin": 1, "end": 2,
+                        "step": 10,
+                        "replace": "##decode_id##"
+                    },
+                    "map": [
+                        { "id": "26", "offset": 110 },
+                        { "id": "27_all_##decode_id##", "offset": 111, "size": 1, "individual_bits": true, "bit_strings": ["hello_##decode_id##", "individual_##decode_id##", "booleans_##decode_id##", "as_##decode_id##", "bits_##decode_id##", "world_##decode_id##"] },
+                        { "id": "28_all_##decode_id##", "offset": 112, "size": 1, "individual_enums": true, "bit_strings": [
+                            { "id": "28_enum_one_##decode_id##", "begin_bit": 0, "end_bit": 1, "enum_strings": ["hello", "individual", "enum", "world"] }
+                        ]}
+                    ]
+                }
+            ]
+        }
+    ]
+}

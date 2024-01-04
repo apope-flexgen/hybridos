@@ -17,6 +17,7 @@ export type SiteConfiguration = {
   events: boolean;
   control_cabinet: boolean;
   fleet_manager_dashboard: boolean;
+  system_status?: boolean;
   scheduler: boolean;
   product: string;
   units: {
@@ -58,8 +59,6 @@ const getRoutes = (
   const customAssetsArray = customAssets
     ? customAssets.map(({ info: { name, key, icon } }) => {
         const validIcon = icon && isValidIconString(icon) ? icon : 'Storage';
-        console.log('icon stuff', icon, icon && isValidIconString(icon), validIcon);
-
         return {
           componentName: 'AssetsPage',
           icon: validIcon,
@@ -161,9 +160,18 @@ const getRoutes = (
       itemName: 'UI Config',
       path: '/ui-config',
     },
+    { showDivider: userRole === Roles.Admin || userRole === Roles.Developer ? true : false },
+    ((userRole === Roles.Admin || userRole === Roles.Developer) 
+      && siteConfiguration.system_status 
+    ) && {
+      componentName: 'SystemStatus',
+      icon: 'SystemStatus',
+      itemName: 'System Status',
+      path: '/system-status',
+    },
   ];
 
-  const returnRoutes = routes.filter((item) => typeof item !== 'boolean') as RouteObject[];
+  const returnRoutes = routes.filter((item) => typeof item !== 'boolean' && item !== undefined) as RouteObject[];
 
   const routesWithoutAdjacentDividers = returnRoutes.filter(
     (item, index) =>

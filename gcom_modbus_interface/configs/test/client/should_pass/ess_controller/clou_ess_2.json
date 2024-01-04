@@ -1,0 +1,2992 @@
+{
+    "connection": {
+        "name": "Clou_ESS_Controller",
+        "ip_address": "192.168.114.12",
+        "port": 502
+    },
+    "components": [
+        {
+            "id": "clou_ess_2_hs",
+            "frequency": 50,
+            "offset_time": 0,
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 1000,
+            "add_timings":false,
+            "component_heartbeat_timeout_ms": 1000,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1000,
+                    "number_of_registers": 11,
+                    "map": [
+                        {
+                            "id": "life",
+                            "offset": 1000,
+                            "size": 2,
+                            "name": "Life",
+                            "signed": true
+                        },
+                        {
+                            "id": "start_stop",
+                            "offset": 1002,
+                            "name": "Control_Command"
+                        },
+                        {
+                            "id": "run_mode",
+                            "offset": 1003,
+                            "name": "Run_mode"
+                        },
+                        {
+                            "id": "on_off_grid_mode",
+                            "offset": 1004,
+                            "name": "On/Off grid mode setting"
+                        },
+                        {
+                            "id": "active_power_setpoint",
+                            "offset": 1005,
+                            "scale": 10,
+                            "name": "Power_Set_AC",
+                            "signed": true
+                        },
+                        {
+                            "id": "reactive_power_setpoint",
+                            "offset": 1006,
+                            "scale": 10,
+                            "name": "Active_Set_AC",
+                            "signed": true
+                        },
+                        {
+                            "id": "active_power_rising_slope",
+                            "offset": 1007,
+                            "scale": 10,
+                            "name": "Active_power_rising_slope"
+                        },
+                        {
+                            "id": "active_power_droop_slope",
+                            "offset": 1008,
+                            "scale": 10,
+                            "name": "Active_power_droop_slope"
+                        },
+                        {
+                            "id": "reactive_power_rising_slope",
+                            "offset": 1009,
+                            "scale": 10,
+                            "name": "Reactive_power_rising_slope"
+                        },
+                        {
+                            "id": "reactive_power_droop_slope",
+                            "offset": 1010,
+                            "scale": 10,
+                            "name": "Reactive_power_droop_slope"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2000,
+                    "number_of_registers": 53,
+                    "map": [
+                        {
+                            "id": "life_signal",
+                            "offset": 2000,
+                            "size": 2,
+                            "name": "life_signal",
+                            "signed": true
+                        },
+                        {
+                            "id": "chargeable_energy",
+                            "offset": 2002,
+                            "scale": 10,
+                            "name": "Q_charge"
+                        },
+                        {
+                            "id": "dischargeable_energy",
+                            "offset": 2003,
+                            "scale": 10,
+                            "name": "Q_discharge"
+                        },
+                        {
+                            "id": "chargeable_power",
+                            "offset": 2004,
+                            "scale": -10,
+                            "name": "W_charge",
+                            "signed": true
+                        },
+                        {
+                            "id": "dischargeable_power",
+                            "offset": 2005,
+                            "scale": 10,
+                            "name": "W_discharge",
+                            "signed": true
+                        },
+                        {
+                            "id": "system_state",
+                            "offset": 2006,
+                            "name": "System_state",
+                            "enum": true,
+                            "bit_strings": [
+                                "Stop",
+                                "Run",
+                                "Fault",
+                                "Standby"
+                            ]
+                        },
+                        {
+                            "id": "com_status",
+                            "offset": 2007,
+                            "name": "Com_status",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "PCS Communication Offline",
+                                "BMS Communication Offline",
+                                "EMMU Communication Offline",
+                                "EMS Communication Offline"
+                            ]
+                        },
+                        {
+                            "id": "pcs_under_power",
+                            "offset": 2008,
+                            "name": "PCS under power"
+                        },
+                        {
+                            "id": "pcs_over_power",
+                            "offset": 2009,
+                            "name": "PCS over power"
+                        },
+                        {
+                            "id": "voltage_l1_l2",
+                            "offset": 2030,
+                            "scale": 10,
+                            "name": "Uinab_RMS"
+                        },
+                        {
+                            "id": "voltage_l2_l3",
+                            "offset": 2031,
+                            "scale": 10,
+                            "name": "Uinbc_RMS"
+                        },
+                        {
+                            "id": "voltage_l3_l1",
+                            "offset": 2032,
+                            "scale": 10,
+                            "name": "Uinca_RMS"
+                        },
+                        {
+                            "id": "current_l1",
+                            "offset": 2033,
+                            "scale": 10,
+                            "name": "Iina_RMS"
+                        },
+                        {
+                            "id": "current_l2",
+                            "offset": 2034,
+                            "scale": 10,
+                            "name": "Iinb_RMS"
+                        },
+                        {
+                            "id": "current_l3",
+                            "offset": 2035,
+                            "scale": 10,
+                            "name": "Iinc_RMS"
+                        },
+                        {
+                            "id": "frequency",
+                            "offset": 2036,
+                            "scale": 100,
+                            "name": "Frequency"
+                        },
+                        {
+                            "id": "active_power",
+                            "offset": 2037,
+                            "scale": 10,
+                            "name": "Active Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "reactive_power",
+                            "offset": 2038,
+                            "scale": 10,
+                            "name": "Reactive Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "pf",
+                            "offset": 2039,
+                            "scale": 1000,
+                            "name": "Power Factor"
+                        },
+                        {
+                            "id": "voltage_dc",
+                            "offset": 2040,
+                            "scale": 10,
+                            "name": "Ubtra_Ever",
+                            "signed": true
+                        },
+                        {
+                            "id": "current_dc",
+                            "offset": 2041,
+                            "scale": 10,
+                            "name": "Ibtra_Ever",
+                            "signed": true
+                        },
+                        {
+                            "id": "active_power_dc",
+                            "offset": 2042,
+                            "scale": 10,
+                            "name": "Pbtra",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_mode",
+                            "offset": 2043,
+                            "name": "PCS_Mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "On-grid constant current (CC)",
+                                "On-grid constant voltage (CV)",
+                                "On-grid constant power (AC)",
+                                "On-grid constant power (DC)",
+                                "Reserved Address:2043 Bit:4",
+                                "Reserved Address:2043 Bit:5",
+                                "Reserved Address:2043 Bit:6",
+                                "Reserved Address:2043 Bit:7",
+                                "Reserved Address:2043 Bit:8",
+                                "On-grid Mode",
+                                "Off-grid Mode"
+                            ]
+                        },
+                        {
+                            "id": "pcs_state",
+                            "offset": 2044,
+                            "size": 2,
+                            "name": "PCS_State1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Running",
+                                "Reserved Address:2044 Bit:1",
+                                "Reserved Address:2044 Bit:2",
+                                "Key stop",
+                                "Standby",
+                                "Emergency stop",
+                                "Start in process",
+                                "Stop in process",
+                                "Reserved Address:2044 Bit:8",
+                                "Fault stop",
+                                "Alarm running",
+                                "Derating running",
+                                "Reserved Address:2044 Bit:12",
+                                "Reserved Address:2044 Bit:13",
+                                "Reserved Address:2044 Bit:14",
+                                "DSP communication error"
+                            ]
+                        },
+                        {
+                            "id": "pcs_state2",
+                            "offset": 2046,
+                            "name": "PCS_State2",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Charging",
+                                "Discharging",
+                                "Non-operating mode"
+                            ]
+                        },
+                        {
+                            "id": "faults",
+                            "offset": 2047,
+                            "name": "Overall_Fault",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Smoke Alarm",
+                                "Door Open Protection"
+                            ]
+                        },
+                        {
+                            "id": "alarms",
+                            "offset": 2048,
+                            "size": 2,
+                            "name": "Overall_Alarm",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Temperature & Humidity Board Communication Error",
+                                "Switch Board Communication Error",
+                                "Tributary Board Communication Error"
+                            ]
+                        },
+                        {
+                            "id": "overall_maximum_charging_power_limit",
+                            "offset": 2050,
+                            "scale": 10,
+                            "name": "Overall Maximum charging power limit",
+                            "signed": true
+                        },
+                        {
+                            "id": "overall_maximum_discharging_power_limit",
+                            "offset": 2051,
+                            "scale": 10,
+                            "name": "Overall Maximum discharging power limit",
+                            "signed": true
+                        },
+                        {
+                            "id": "apparent_power",
+                            "offset": 2052,
+                            "scale": 10,
+                            "name": "Overall apparent power",
+                            "signed": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "clou_ess_2",
+            "frequency": 1000,
+            "offset": 20,
+            "add_timings":false,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2070,
+                    "number_of_registers": 102,
+                    "map": [
+                        {
+                            "id": "pcs1_voltage_l1_l2",
+                            "offset": 2070,
+                            "scale": 10,
+                            "name": "Unit1_Uinab_RMS"
+                        },
+                        {
+                            "id": "pcs1_voltage_l2_l3",
+                            "offset": 2071,
+                            "scale": 10,
+                            "name": "Unit1_Uinbc_RMS"
+                        },
+                        {
+                            "id": "pcs1_voltage_l3_l1",
+                            "offset": 2072,
+                            "scale": 10,
+                            "name": "Unit1_Uinca_RMS"
+                        },
+                        {
+                            "id": "pcs1_current_l1",
+                            "offset": 2073,
+                            "scale": 10,
+                            "name": "Unit1_Iina_RMS"
+                        },
+                        {
+                            "id": "pcs1_current_l2",
+                            "offset": 2074,
+                            "scale": 10,
+                            "name": "Unit1_Iinb_RMS"
+                        },
+                        {
+                            "id": "pcs1_current_l3",
+                            "offset": 2075,
+                            "scale": 10,
+                            "name": "Unit1_Iinc_RMS"
+                        },
+                        {
+                            "id": "pcs1_active_power",
+                            "offset": 2076,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Unit1_P",
+                            "signed": true
+                        },
+                        {
+                            "id": "psc1_reactive_power",
+                            "offset": 2078,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Unit1_Q",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs1_voltage_dc",
+                            "offset": 2080,
+                            "scale": 10,
+                            "name": "Unit1_Ubtra_Ever",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs1_current_dc",
+                            "offset": 2081,
+                            "scale": 10,
+                            "name": "Unit1_Ibtra_Ever",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs1_active_power_dc",
+                            "offset": 2082,
+                            "scale": 10,
+                            "name": "Unit1_Pbtra",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs1_alarm",
+                            "offset": 2083,
+                            "size": 2,
+                            "name": "Unit1_Alarm_state1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Reserved Address:2083 Bit:0",
+                                "AC Switch Abnormal",
+                                "Fan 2 abnormal",
+                                "AC main contactor abnormal",
+                                "Reserved Address:2083 Bit:4",
+                                "IO-LCD comm error",
+                                "Reserved Address:2083 Bit:6",
+                                "Reserved Address:2083 Bit:7",
+                                "Reserved Address:2083 Bit:8",
+                                "Reserved Address:2083 Bit:9",
+                                "Reserved Address:2083 Bit:10",
+                                "Reserved Address:2083 Bit:11",
+                                "Reserved Address:2083 Bit:12",
+                                "Reserved Address:2083 Bit:13",
+                                "Reserved Address:2083 Bit:14",
+                                "Reserved Address:2083 Bit:15",
+                                "Temp abnormal",
+                                "Reserved Address:2083 Bit:17",
+                                "GFRT Running",
+                                "Reserved Address:2083 Bit:19",
+                                "DC fuse abnormal",
+                                "Reserved Address:2083 Bit:21",
+                                "DC sensor abnormal",
+                                "DC SPD alarm",
+                                "AC SPD alarm",
+                                "Chargine condition not met",
+                                "Discharging condition not met",
+                                "Reserved Address:2083 Bit:27",
+                                "DC switch abnormal",
+                                "Fan 1 Abnormal"
+                            ]
+                        },
+                        {
+                            "id": "pcs1_faults",
+                            "offset": 2085,
+                            "size": 4,
+                            "name": "Unit1_Fault_state1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Insulation Resistance",
+                                "AC SPD Fault",
+                                "Sampling Fault",
+                                "Battery polarity reversed",
+                                "Reserved Address:2085 Bit:4",
+                                "LCD_DSP fault",
+                                "AC current unbalanced",
+                                "Host Fault",
+                                "DC SPD Fault",
+                                "Reserved Address:2085 Bit:9",
+                                "DC Injection Fault",
+                                "DC Switch Fault",
+                                "Device code repeat fault",
+                                "Parallel communication error",
+                                "PCS Control cabinet temperature abnormal",
+                                "Reserved Address:2085 Bit:15",
+                                "AC voltage unbalanced",
+                                "Reserved Address:2085 Bit:17",
+                                "Reserved Address:2085 Bit:18",
+                                "AC switch fault",
+                                "Soft Start Fault",
+                                "DC Voltage sampling fault",
+                                "Fan 2 fault",
+                                "AC current unbalanced 2",
+                                "AC current unbalanced 3",
+                                "Drive board fault",
+                                "Neutral point potential shift",
+                                "Carier sync fault",
+                                "Reserved Address:2085 Bit:28",
+                                "Reserved Address:2085 Bit:29",
+                                "Reserved Address:2085 Bit:30",
+                                "Reserved Address:2085 Bit:31",
+                                "DC undervoltage",
+                                "DC overvoltage",
+                                "AC undervoltage",
+                                "AC overvoltage",
+                                "AC underfrequency",
+                                "AC overfrequency",
+                                "AC contactor fault",
+                                "Islanding portection",
+                                "Reserved Address:2085 Bit:40",
+                                "PDP protection",
+                                "Module overtemperature",
+                                "Reactor overtemperature",
+                                "Transformer overtemperature",
+                                "Leakage current",
+                                "Reserved Address:2085 Bit:46",
+                                "Overload protection",
+                                "Reserved Address:2085 Bit:48",
+                                "Fan 1 Fault",
+                                "DC fuse fault",
+                                "Reserved Address:2085 Bit:51",
+                                "DC overcurrent",
+                                "AC overcurrent",
+                                "Reserved Address:2085 Bit:54",
+                                "Ambient temperature abnormal",
+                                "Hardware fault"
+                            ]
+                        },
+                        {
+                            "id": "maximum_charging_power_limit_pcs1",
+                            "offset": 2089,
+                            "scale": 10,
+                            "name": "Maximum charging power limit Unit1",
+                            "signed": true
+                        },
+                        {
+                            "id": "maximum_discharging_power_limit_pcs1",
+                            "offset": 2090,
+                            "scale": 10,
+                            "name": "Maximum discharging power limit Unit1",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs2_voltage_l1_l2",
+                            "offset": 2100,
+                            "scale": 10,
+                            "name": "Unit2_Uinab_RMS"
+                        },
+                        {
+                            "id": "pcs2_voltage_l2_l3",
+                            "offset": 2101,
+                            "scale": 10,
+                            "name": "Unit2_Uinbc_RMS"
+                        },
+                        {
+                            "id": "pcs2_voltage_l3_l1",
+                            "offset": 2102,
+                            "scale": 10,
+                            "name": "Unit2_Uinca_RMS"
+                        },
+                        {
+                            "id": "pcs2_current_l1",
+                            "offset": 2103,
+                            "scale": 10,
+                            "name": "Unit2_Iina_RMS"
+                        },
+                        {
+                            "id": "pcs2_current_l2",
+                            "offset": 2104,
+                            "scale": 10,
+                            "name": "Unit2_Iinb_RMS"
+                        },
+                        {
+                            "id": "pcs2_current_l3",
+                            "offset": 2105,
+                            "scale": 10,
+                            "name": "Unit2_Iinc_RMS"
+                        },
+                        {
+                            "id": "pcs2_active_power",
+                            "offset": 2106,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Unit2_P",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs2_reactive_power",
+                            "offset": 2108,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Unit2_Q",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs2_voltage_dc",
+                            "offset": 2110,
+                            "scale": 10,
+                            "name": "Unit2_Ubtra_Ever",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs2_current_dc",
+                            "offset": 2111,
+                            "scale": 10,
+                            "name": "Unit2_Ibtra_Ever",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs2_active_power_dc",
+                            "offset": 2112,
+                            "scale": 10,
+                            "name": "Unit2_Pbtra",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs2_alarms",
+                            "offset": 2113,
+                            "size": 2,
+                            "name": "Unit2_Alarm_state1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Reserved Address:2113 Bit:0",
+                                "AC Switch Abnormal",
+                                "Fan 2 abnormal",
+                                "AC main contactor abnormal",
+                                "Reserved Address:2113 Bit:4",
+                                "IO-LCD comm error",
+                                "Reserved Address:2113 Bit:6",
+                                "Reserved Address:2113 Bit:7",
+                                "Reserved Address:2113 Bit:8",
+                                "Reserved Address:2113 Bit:9",
+                                "Reserved Address:2113 Bit:10",
+                                "Reserved Address:2113 Bit:11",
+                                "Reserved Address:2113 Bit:12",
+                                "Reserved Address:2113 Bit:13",
+                                "Reserved Address:2113 Bit:14",
+                                "Reserved Address:2113 Bit:15",
+                                "Temp abnormal",
+                                "Reserved Address:2113 Bit:17",
+                                "GFRT Running",
+                                "Reserved Address:2113 Bit:19",
+                                "DC fuse abnormal",
+                                "Reserved Address:2113 Bit:21",
+                                "DC sensor abnormal",
+                                "DC SPD alarm",
+                                "AC SPD alarm",
+                                "Chargine condition not met",
+                                "Discharging condition not met",
+                                "Reserved Address:2113 Bit:27",
+                                "DC switch abnormal",
+                                "Fan 1 Abnormal"
+                            ]
+                        },
+                        {
+                            "id": "pcs2_faults",
+                            "offset": 2115,
+                            "size": 4,
+                            "name": "Unit2_Fault_state1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Insulation Resistance",
+                                "AC SPD Fault",
+                                "Sampling Fault",
+                                "Battery polarity reversed",
+                                "Reserved Address:2115 Bit:4",
+                                "LCD_DSP fault",
+                                "AC current unbalanced",
+                                "Host Fault",
+                                "DC SPD Fault",
+                                "Reserved Address:2115 Bit:9",
+                                "DC Injection Fault",
+                                "DC Switch Fault",
+                                "Device code repeat fault",
+                                "Parallel communication error",
+                                "PCS Control cabinet temperature abnormal",
+                                "Reserved Address:2115 Bit:15",
+                                "AC voltage unbalanced",
+                                "Reserved Address:2115 Bit:17",
+                                "Reserved Address:2115 Bit:18",
+                                "AC switch fault",
+                                "Soft Start Fault",
+                                "DC Voltage sampling fault",
+                                "Fan 2 fault",
+                                "AC current unbalanced 2",
+                                "AC current unbalanced 3",
+                                "Drive board fault",
+                                "Neutral point potential shift",
+                                "Carier sync fault",
+                                "Reserved Address:2115 Bit:28",
+                                "Reserved Address:2115 Bit:29",
+                                "Reserved Address:2115 Bit:30",
+                                "Reserved Address:2115 Bit:31",
+                                "DC undervoltage",
+                                "DC overvoltage",
+                                "AC undervoltage",
+                                "AC overvoltage",
+                                "AC underfrequency",
+                                "AC overfrequency",
+                                "AC contactor fault",
+                                "Islanding portection",
+                                "Reserved Address:2115 Bit:40",
+                                "PDP protection",
+                                "Module overtemperature",
+                                "Reactor overtemperature",
+                                "Transformer overtemperature",
+                                "Leakage current",
+                                "Reserved Address:2115 Bit:46",
+                                "Overload protection",
+                                "Reserved Address:2115 Bit:48",
+                                "Fan 1 Fault",
+                                "DC fuse fault",
+                                "Reserved Address:2115 Bit:51",
+                                "DC overcurrent",
+                                "AC overcurrent",
+                                "Reserved Address:2115 Bit:54",
+                                "Ambient temperature abnormal",
+                                "Hardware fault"
+                            ]
+                        },
+                        {
+                            "id": "maximum_charging_power_limit_pcs2",
+                            "offset": 2119,
+                            "scale": 10,
+                            "name": "Maximum charging power limit Unit2",
+                            "signed": true
+                        },
+                        {
+                            "id": "maximum_discharging_power_limit_pcs2",
+                            "offset": 2120,
+                            "scale": 10,
+                            "name": "Maximum discharging power limit Unit2",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_maximum_cell_voltage",
+                            "offset": 2130,
+                            "scale": 10000,
+                            "name": "BMS maximum cell voltage"
+                        },
+                        {
+                            "id": "module_index_maximum_cell_voltage",
+                            "offset": 2131,
+                            "name": "Stackindex of the BMS maximum cell voltage"
+                        },
+                        {
+                            "id": "cluster_index_maximum_cell_voltage",
+                            "offset": 2132,
+                            "name": "Cluster index of the BMS maximum cell voltage"
+                        },
+                        {
+                            "id": "bms_minimum_cell_voltage",
+                            "offset": 2133,
+                            "scale": 10000,
+                            "name": "BMS minimum cell voltage"
+                        },
+                        {
+                            "id": "module_index_minimum_cell_voltage",
+                            "offset": 2134,
+                            "name": "Stackindex of the BMS minimum cell voltage"
+                        },
+                        {
+                            "id": "cluster_index_minimum_cell_voltage",
+                            "offset": 2135,
+                            "name": "Cluster index of the BMS minimum cell voltage"
+                        },
+                        {
+                            "id": "bms_maximum_cell_temperature",
+                            "offset": 2136,
+                            "scale": 100,
+                            "name": "BMS maximum cell temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "module_index_maximum_cell_temperature",
+                            "offset": 2137,
+                            "name": "Stackindex of the BMS maximum cell temperature"
+                        },
+                        {
+                            "id": "cluster_index_maximum_cell_temperature",
+                            "offset": 2138,
+                            "name": "Cluster index of the BMS maximum cell temperature"
+                        },
+                        {
+                            "id": "bms_minimum_cell_temperature",
+                            "offset": 2139,
+                            "scale": 100,
+                            "name": "BMS minimum cell temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "module_index_minimum_cell_temperature",
+                            "offset": 2140,
+                            "name": "Stackindex of the BMS minimum cell temperature"
+                        },
+                        {
+                            "id": "cluster_index_minimum_cell_temperature",
+                            "offset": 2141,
+                            "name": "Cluster index of the BMS minimum cell temperature"
+                        },
+                        {
+                            "id": "bms_bus_voltage",
+                            "offset": 2142,
+                            "scale": 10,
+                            "name": "BMS bus voltage"
+                        },
+                        {
+                            "id": "bms_bus_current",
+                            "offset": 2143,
+                            "scale": 10,
+                            "name": "BMS bus current",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_soc",
+                            "offset": 2144,
+                            "scale": 10,
+                            "name": "BMS SOC"
+                        },
+                        {
+                            "id": "bms_power",
+                            "offset": 2145,
+                            "scale": 10,
+                            "signed": true,
+                            "name": "BMS power"
+                        },
+                        {
+                            "id": "operation_status",
+                            "offset": 2146,
+                            "name": "Operation status",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Standby",
+                                "Charging",
+                                "Discharging"
+                            ]
+                        },
+                        {
+                            "id": "bms_current_chargeable_capacity",
+                            "offset": 2149,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "BMS current rechargeable capacity"
+                        },
+                        {
+                            "id": "bms_current_dischargeable_capacity",
+                            "offset": 2151,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "BMS current dischargeable capacity"
+                        },
+                        {
+                            "id": "racks_in_service",
+                            "offset": 2153,
+                            "name": "Racks in service"
+                        },
+                        {
+                            "id": "circuit_breaker_control_word",
+                            "offset": 2154,
+                            "name": "Circuit breaker control word"
+                        },
+                        {
+                            "id": "main_circuit_breaker_status",
+                            "offset": 2155,
+                            "name": "Main circuit breaker status"
+                        },
+                        {
+                            "id": "bms_maximum_charging_power_limit",
+                            "offset": 2157,
+                            "scale": 100,
+                            "name": "BMS Maximum charging power limit"
+                        },
+                        {
+                            "id": "bms_maximum_discharging_power_limit",
+                            "offset": 2158,
+                            "scale": 100,
+                            "name": "BMS Maximum discharging power limit"
+                        },
+                        {
+                            "id": "power_limit_state",
+                            "offset": 2159,
+                            "size": 4,
+                            "name": "Power limit state",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Reserved Address:2159 Bit:0",
+                                "Charge overvoltage half power limit of cell",
+                                "Charge overvoltage half power limit of cluster",
+                                "Reserved Address:2159 Bit:3",
+                                "Reserved Address:2159 Bit:4",
+                                "Charge under-temp half power limit",
+                                "Charge over-temp half power limit",
+                                "Reserved Address:2159 Bit:7",
+                                "Reserved Address:2159 Bit:8",
+                                "Reserved Address:2159 Bit:9",
+                                "Reserved Address:2159 Bit:10",
+                                "Reserved Address:2159 Bit:11",
+                                "Reserved Address:2159 Bit:12",
+                                "Reserved Address:2159 Bit:13",
+                                "Reserved Address:2159 Bit:14",
+                                "Reserved Address:2159 Bit:15",
+                                "Reserved Address:2159 Bit:16",
+                                "Discharge undervoltage half power limit of cell",
+                                "Discharge undervoltage half power limit of cluster",
+                                "Reserved Address:2159 Bit:19",
+                                "Reserved Address:2159 Bit:20",
+                                "Discharge under-temp half power limit",
+                                "Discharge over-temp half power limit",
+                                "Reserved Address:2159 Bit:23",
+                                "Reserved Address:2159 Bit:24",
+                                "Reserved Address:2159 Bit:25",
+                                "Reserved Address:2159 Bit:26",
+                                "Reserved Address:2159 Bit:27",
+                                "Reserved Address:2159 Bit:28",
+                                "Reserved Address:2159 Bit:29",
+                                "Reserved Address:2159 Bit:30",
+                                "Reserved Address:2159 Bit:31",
+                                "Reserved Address:2159 Bit:32",
+                                "Charge overvoltage zero power limit of cell",
+                                "Charge overvoltage zero power limit of cluster",
+                                "Charge overcurrent zero power limit of cluster",
+                                "Charge overcurrent zero power limit of array",
+                                "Charge under-temp zero power limit",
+                                "Charge over-temp zero power limit",
+                                "Reserved Address:2159 Bit:39",
+                                "Reserved Address:2159 Bit:40",
+                                "Reserved Address:2159 Bit:41",
+                                "Reserved Address:2159 Bit:42",
+                                "Reserved Address:2159 Bit:43",
+                                "Reserved Address:2159 Bit:44",
+                                "Reserved Address:2159 Bit:45",
+                                "Reserved Address:2159 Bit:46",
+                                "Reserved Address:2159 Bit:47",
+                                "Reserved Address:2159 Bit:48",
+                                "Discharge undervoltage zero power limit of cell",
+                                "Discharge undervoltage zero power limit of cluster",
+                                "Discharge overcurrent zero power limit of cluster",
+                                "Discharge overcurrent zero power limit of array",
+                                "Discharge under-temp zero power limit",
+                                "Discharge over-temp zero power limit"
+                            ]
+                        },
+                        {
+                            "id": "bms_alarms",
+                            "offset": 2163,
+                            "size": 4,
+                            "name": "BMS alarm state",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Reserved Address:2163 Bit:0",
+                                "Reserved Address:2163 Bit:1",
+                                "Reserved Address:2163 Bit:2",
+                                "Discharge undervoltage warning of cell",
+                                "Charge overvoltage warning of cell",
+                                "Discharge undervoltage warning of cluster",
+                                "Charge overvoltage warning of cluster",
+                                "Discharge overcurrent warning of cluster",
+                                "Charge overcurrent warning of cluster",
+                                "Discharge overcurrent warning of array",
+                                "Charge overcurrent warning of array",
+                                "Low-temp warning",
+                                "High-temp warning",
+                                "Reserved Address:2163 Bit:13",
+                                "High voltage-difference warning",
+                                "High temp-difference warning",
+                                "PCS communication abnormal warning",
+                                "BMU communication abnormal warning",
+                                "BCMS communication abnormal warning",
+                                "BAMS abnormal warning",
+                                "BCMS abnormal warning",
+                                "High SOC warning",
+                                "Low SOC warning",
+                                "Reserved Address:2163 Bit:23",
+                                "Reserved Address:2163 Bit:24",
+                                "EMMU abnormal warning"
+                            ]
+                        },
+                        {
+                            "id": "bms_faults",
+                            "offset": 2167,
+                            "size": 4,
+                            "name": "BMS fault state",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Reserved Address:2167 Bit:0",
+                                "Reserved Address:2167 Bit:1",
+                                "Insulation error protection",
+                                "Discharge undervoltage LV1 protection of cell",
+                                "Charge overvoltage LV1 protection of cell",
+                                "Discharge undervoltage LV1 protection of cluster",
+                                "Charge overvoltage LV1 protection of cluster",
+                                "Discharge overcurrent LV1 protection of cluster",
+                                "Charge overcurrent LV1 protection of cluster",
+                                "Discharge overcurrent LV1 protection of array",
+                                "Charge overcurrent LV1 protection of array",
+                                "Low-temp LV1 protection",
+                                "High-temp LV1 protection",
+                                "Reserved Address:2167 Bit:13",
+                                "Reserved Address:2167 Bit:14",
+                                "Reserved Address:2167 Bit:15",
+                                "Reserved Address:2167 Bit:16",
+                                "Reserved Address:2167 Bit:17",
+                                "Reserved Address:2167 Bit:18",
+                                "Reserved Address:2167 Bit:19",
+                                "Self-protection of BMS",
+                                "Reserved Address:2167 Bit:21",
+                                "E-stop fault",
+                                "Reserved Address:2167 Bit:23",
+                                "Reserved Address:2167 Bit:24",
+                                "Reserved Address:2167 Bit:25",
+                                "Reserved Address:2167 Bit:26",
+                                "Self-protection of EMMU",
+                                "Reserved Address:2167 Bit:28",
+                                "Reserved Address:2167 Bit:29",
+                                "Reserved Address:2167 Bit:30",
+                                "Reserved Address:2167 Bit:31",
+                                "Reserved Address:2167 Bit:32",
+                                "Discharge undervoltage LV2 protection of cell",
+                                "Charge overvoltage LV2 protection of cell",
+                                "Discharge undervoltage LV2 protection of cluster",
+                                "Discharge undervoltage LV2 protection of cluster",
+                                "Discharge overcurrent LV2 protection of cluster",
+                                "Charge overcurrent LV2 protection of cluster",
+                                "Discharge overcurrent LV2 protection of array",
+                                "Charge overcurrent LV2 protection of array",
+                                "Low-temp LV2 protection",
+                                "High-temp LV2 protection"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2200,
+                    "number_of_registers": 102,
+                    "map": [
+                        {
+                            "id": "cluster_no_1_battery_cluster_voltage",
+                            "offset": 2200,
+                            "scale": 10,
+                            "name": "Cluster No. 1 battery cluster voltage"
+                        },
+                        {
+                            "id": "cluster_no_2_battery_cluster_voltage",
+                            "offset": 2201,
+                            "scale": 10,
+                            "name": "Cluster No. 2 battery cluster voltage"
+                        },
+                        {
+                            "id": "cluster_no_3_battery_cluster_voltage",
+                            "offset": 2202,
+                            "scale": 10,
+                            "name": "Cluster No. 3 battery cluster voltage"
+                        },
+                        {
+                            "id": "cluster_no_4_battery_cluster_voltage",
+                            "offset": 2203,
+                            "scale": 10,
+                            "name": "Cluster No. 4 battery cluster voltage"
+                        },
+                        {
+                            "id": "cluster_no_5_battery_cluster_voltage",
+                            "offset": 2204,
+                            "scale": 10,
+                            "name": "Cluster No. 5 battery cluster voltage"
+                        },
+                        {
+                            "id": "cluster_no_6_battery_cluster_voltage",
+                            "offset": 2205,
+                            "scale": 10,
+                            "name": "Cluster No. 6 battery cluster voltage"
+                        },
+                        {
+                            "id": "cluster_no_7_battery_cluster_voltage",
+                            "offset": 2206,
+                            "scale": 10,
+                            "name": "Cluster No. 7 battery cluster voltage"
+                        },
+                        {
+                            "id": "cluster_no_8_battery_cluster_voltage",
+                            "offset": 2207,
+                            "scale": 10,
+                            "name": "Cluster No. 8 battery cluster voltage"
+                        },
+                        {
+                            "id": "cluster_no_9_battery_cluster_voltage",
+                            "offset": 2208,
+                            "scale": 10,
+                            "name": "Cluster No. 9 battery cluster voltage"
+                        },
+                        {
+                            "id": "cluster_no_10_battery_cluster_voltage",
+                            "offset": 2209,
+                            "scale": 10,
+                            "name": "Cluster No. 10 battery cluster voltage"
+                        },
+                        {
+                            "id": "cluster_no_11_battery_cluster_voltage",
+                            "offset": 2210,
+                            "scale": 10,
+                            "name": "Cluster No. 11 battery cluster voltage"
+                        },
+                        {
+                            "id": "cluster_no_1_battery_cluster_current",
+                            "offset": 2220,
+                            "scale": 10,
+                            "name": "Cluster No. 1 battery cluster current",
+                            "signed": true
+                        },
+                        {
+                            "id": "cluster_no_2_battery_cluster_current",
+                            "offset": 2221,
+                            "scale": 10,
+                            "name": "Cluster No. 2 battery cluster current",
+                            "signed": true
+                        },
+                        {
+                            "id": "cluster_no_3_battery_cluster_current",
+                            "offset": 2222,
+                            "scale": 10,
+                            "name": "Cluster No. 3 battery cluster current",
+                            "signed": true
+                        },
+                        {
+                            "id": "cluster_no_4_battery_cluster_current",
+                            "offset": 2223,
+                            "scale": 10,
+                            "name": "Cluster No. 4 battery cluster current",
+                            "signed": true
+                        },
+                        {
+                            "id": "cluster_no_5_battery_cluster_current",
+                            "offset": 2224,
+                            "scale": 10,
+                            "name": "Cluster No. 5 battery cluster current",
+                            "signed": true
+                        },
+                        {
+                            "id": "cluster_no_6_battery_cluster_current",
+                            "offset": 2225,
+                            "scale": 10,
+                            "name": "Cluster No. 6 battery cluster current",
+                            "signed": true
+                        },
+                        {
+                            "id": "cluster_no_7_battery_cluster_current",
+                            "offset": 2226,
+                            "scale": 10,
+                            "name": "Cluster No. 7 battery cluster current",
+                            "signed": true
+                        },
+                        {
+                            "id": "cluster_no_8_battery_cluster_current",
+                            "offset": 2227,
+                            "scale": 10,
+                            "name": "Cluster No. 8 battery cluster current",
+                            "signed": true
+                        },
+                        {
+                            "id": "cluster_no_9_battery_cluster_current",
+                            "offset": 2228,
+                            "scale": 10,
+                            "name": "Cluster No. 9 battery cluster current",
+                            "signed": true
+                        },
+                        {
+                            "id": "cluster_no_10_battery_cluster_current",
+                            "offset": 2229,
+                            "scale": 10,
+                            "name": "Cluster No. 10 battery cluster current",
+                            "signed": true
+                        },
+                        {
+                            "id": "cluster_no_11_battery_cluster_current",
+                            "offset": 2230,
+                            "scale": 10,
+                            "name": "Cluster No. 11 battery cluster current",
+                            "signed": true
+                        },
+                        {
+                            "id": "cluster_no_1_max_cell_voltage",
+                            "offset": 2240,
+                            "scale": 10000,
+                            "name": "Cluster No. 1 max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_1_max_cell_voltage_pack_num",
+                            "offset": 2241,
+                            "name": "Cluster No. 1 max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_2_max_cell_voltage",
+                            "offset": 2242,
+                            "scale": 10000,
+                            "name": "Cluster No. 2 max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_2_max_cell_voltage_pack_num",
+                            "offset": 2243,
+                            "name": "Cluster No. 2 max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_3_max_cell_voltage",
+                            "offset": 2244,
+                            "scale": 10000,
+                            "name": "Cluster No. 3 max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_3_max_cell_voltage_pack_num",
+                            "offset": 2245,
+                            "name": "Cluster No. 3 max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_4_max_cell_voltage",
+                            "offset": 2246,
+                            "scale": 10000,
+                            "name": "Cluster No. 4 max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_4_max_cell_voltage_pack_num",
+                            "offset": 2247,
+                            "name": "Cluster No. 4 max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_5_max_cell_voltage",
+                            "offset": 2248,
+                            "scale": 10000,
+                            "name": "Cluster No. 5 max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_5_max_cell_voltage_pack_num",
+                            "offset": 2249,
+                            "name": "Cluster No. 5 max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_6_max_cell_voltage",
+                            "offset": 2250,
+                            "scale": 10000,
+                            "name": "Cluster No. 6 max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_6_max_cell_voltage_pack_num",
+                            "offset": 2251,
+                            "name": "Cluster No. 6 max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_7_max_cell_voltage",
+                            "offset": 2252,
+                            "scale": 10000,
+                            "name": "Cluster No. 7 max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_7_max_cell_voltage_pack_num",
+                            "offset": 2253,
+                            "name": "Cluster No. 7 max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_8_max_cell_voltage",
+                            "offset": 2254,
+                            "scale": 10000,
+                            "name": "Cluster No. 8 max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_8_max_cell_voltage_pack_num",
+                            "offset": 2255,
+                            "name": "Cluster No. 8 max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_9_max_cell_voltage",
+                            "offset": 2256,
+                            "scale": 10000,
+                            "name": "Cluster No. 9 max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_9_max_cell_voltage_pack_num",
+                            "offset": 2257,
+                            "name": "Cluster No. 9 max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_10_max_cell_voltage",
+                            "offset": 2258,
+                            "scale": 10000,
+                            "name": "Cluster No. 10 max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_10_max_cell_voltage_pack_num",
+                            "offset": 2259,
+                            "name": "Cluster No. 10 max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_11_max_cell_voltage",
+                            "offset": 2260,
+                            "scale": 10000,
+                            "name": "Cluster No. 11 max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_11_max_cell_voltage_pack_num",
+                            "offset": 2261,
+                            "name": "Cluster No. 11 max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_1_second_max_cell_voltage",
+                            "offset": 2280,
+                            "scale": 10000,
+                            "name": "Cluster No. 1 second max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_1_second_max_cell_voltage_pack_num",
+                            "offset": 2281,
+                            "name": "Cluster No. 1 second max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_2_second_max_cell_voltage",
+                            "offset": 2282,
+                            "scale": 10000,
+                            "name": "Cluster No. 2 second max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_2_second_max_cell_voltage_pack_num",
+                            "offset": 2283,
+                            "name": "Cluster No. 2 second max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_3_second_max_cell_voltage",
+                            "offset": 2284,
+                            "scale": 10000,
+                            "name": "Cluster No. 3 second max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_3_second_max_cell_voltage_pack_num",
+                            "offset": 2285,
+                            "name": "Cluster No. 3 second max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_4_second_max_cell_voltage",
+                            "offset": 2286,
+                            "scale": 10000,
+                            "name": "Cluster No. 4 second max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_4_second_max_cell_voltage_pack_num",
+                            "offset": 2287,
+                            "name": "Cluster No. 4 second max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_5_second_max_cell_voltage",
+                            "offset": 2288,
+                            "scale": 10000,
+                            "name": "Cluster No. 5 second max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_5_second_max_cell_voltage_pack_num",
+                            "offset": 2289,
+                            "name": "Cluster No. 5 second max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_6_second_max_cell_voltage",
+                            "offset": 2290,
+                            "scale": 10000,
+                            "name": "Cluster No. 6 second max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_6_second_max_cell_voltage_pack_num",
+                            "offset": 2291,
+                            "name": "Cluster No. 6 second max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_7_second_max_cell_voltage",
+                            "offset": 2292,
+                            "scale": 10000,
+                            "name": "Cluster No. 7 second max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_7_second_max_cell_voltage_pack_num",
+                            "offset": 2293,
+                            "name": "Cluster No. 7 second max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_8_second_max_cell_voltage",
+                            "offset": 2294,
+                            "scale": 10000,
+                            "name": "Cluster No. 8 second max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_8_second_max_cell_voltage_pack_num",
+                            "offset": 2295,
+                            "name": "Cluster No. 8 second max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_9_second_max_cell_voltage",
+                            "offset": 2296,
+                            "scale": 10000,
+                            "name": "Cluster No. 9 second max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_9_second_max_cell_voltage_pack_num",
+                            "offset": 2297,
+                            "name": "Cluster No. 9 second max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_10_second_max_cell_voltage",
+                            "offset": 2298,
+                            "scale": 10000,
+                            "name": "Cluster No. 10 second max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_10_second_max_cell_voltage_pack_num",
+                            "offset": 2299,
+                            "name": "Cluster No. 10 second max cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_11_second_max_cell_voltage",
+                            "offset": 2300,
+                            "scale": 10000,
+                            "name": "Cluster No. 11 second max cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_11_second_max_cell_voltage_pack_num",
+                            "offset": 2301,
+                            "name": "Cluster No. 11 second max cell voltage pack num."
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2320,
+                    "number_of_registers": 102,
+                    "map": [
+                        {
+                            "id": "cluster_no_1_min_cell_voltage",
+                            "offset": 2320,
+                            "scale": 10000,
+                            "name": "Cluster No. 1 min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_1_min_cell_voltage_pack_num",
+                            "offset": 2321,
+                            "name": "Cluster No. 1 min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_2_min_cell_voltage",
+                            "offset": 2322,
+                            "scale": 10000,
+                            "name": "Cluster No. 2 min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_2_min_cell_voltage_pack_num",
+                            "offset": 2323,
+                            "name": "Cluster No. 2 min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_3_min_cell_voltage",
+                            "offset": 2324,
+                            "scale": 10000,
+                            "name": "Cluster No. 3 min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_3_min_cell_voltage_pack_num",
+                            "offset": 2325,
+                            "name": "Cluster No. 3 min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_4_min_cell_voltage",
+                            "offset": 2326,
+                            "scale": 10000,
+                            "name": "Cluster No. 4 min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_4_min_cell_voltage_pack_num",
+                            "offset": 2327,
+                            "name": "Cluster No. 4 min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_5_min_cell_voltage",
+                            "offset": 2328,
+                            "scale": 10000,
+                            "name": "Cluster No. 5 min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_5_min_cell_voltage_pack_num",
+                            "offset": 2329,
+                            "name": "Cluster No. 5 min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_6_min_cell_voltage",
+                            "offset": 2330,
+                            "scale": 10000,
+                            "name": "Cluster No. 6 min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_6_min_cell_voltage_pack_num",
+                            "offset": 2331,
+                            "name": "Cluster No. 6 min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_7_min_cell_voltage",
+                            "offset": 2332,
+                            "scale": 10000,
+                            "name": "Cluster No. 7 min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_7_min_cell_voltage_pack_num",
+                            "offset": 2333,
+                            "name": "Cluster No. 7 min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_8_min_cell_voltage",
+                            "offset": 2334,
+                            "scale": 10000,
+                            "name": "Cluster No. 8 min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_8_min_cell_voltage_pack_num",
+                            "offset": 2335,
+                            "name": "Cluster No. 8 min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_9_min_cell_voltage",
+                            "offset": 2336,
+                            "scale": 10000,
+                            "name": "Cluster No. 9 min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_9_min_cell_voltage_pack_num",
+                            "offset": 2337,
+                            "name": "Cluster No. 9 min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_10_min_cell_voltage",
+                            "offset": 2338,
+                            "scale": 10000,
+                            "name": "Cluster No. 10 min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_10_min_cell_voltage_pack_num",
+                            "offset": 2339,
+                            "name": "Cluster No. 10 min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_11_min_cell_voltage",
+                            "offset": 2340,
+                            "scale": 10000,
+                            "name": "Cluster No. 11 min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_11_min_cell_voltage_pack_num",
+                            "offset": 2341,
+                            "name": "Cluster No. 11 min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_1_second_min_cell_voltage",
+                            "offset": 2360,
+                            "scale": 10000,
+                            "name": "Cluster No. 1 second min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_1_second_min_cell_voltage_pack_num",
+                            "offset": 2361,
+                            "name": "Cluster No. 1 second min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_2_second_min_cell_voltage",
+                            "offset": 2362,
+                            "scale": 10000,
+                            "name": "Cluster No. 2 second min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_2_second_min_cell_voltage_pack_num",
+                            "offset": 2363,
+                            "name": "Cluster No. 2 second min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_3_second_min_cell_voltage",
+                            "offset": 2364,
+                            "scale": 10000,
+                            "name": "Cluster No. 3 second min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_3_second_min_cell_voltage_pack_num",
+                            "offset": 2365,
+                            "name": "Cluster No. 3 second min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_4_second_min_cell_voltage",
+                            "offset": 2366,
+                            "scale": 10000,
+                            "name": "Cluster No. 4 second min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_4_second_min_cell_voltage_pack_num",
+                            "offset": 2367,
+                            "name": "Cluster No. 4 second min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_5_second_min_cell_voltage",
+                            "offset": 2368,
+                            "scale": 10000,
+                            "name": "Cluster No. 5 second min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_5_second_min_cell_voltage_pack_num",
+                            "offset": 2369,
+                            "name": "Cluster No. 5 second min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_6_second_min_cell_voltage",
+                            "offset": 2370,
+                            "scale": 10000,
+                            "name": "Cluster No. 6 second min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_6_second_min_cell_voltage_pack_num",
+                            "offset": 2371,
+                            "name": "Cluster No. 6 second min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_7_second_min_cell_voltage",
+                            "offset": 2372,
+                            "scale": 10000,
+                            "name": "Cluster No. 7 second min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_7_second_min_cell_voltage_pack_num",
+                            "offset": 2373,
+                            "name": "Cluster No. 7 second min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_8_second_min_cell_voltage",
+                            "offset": 2374,
+                            "scale": 10000,
+                            "name": "Cluster No. 8 second min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_8_second_min_cell_voltage_pack_num",
+                            "offset": 2375,
+                            "name": "Cluster No. 8 second min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_9_second_min_cell_voltage",
+                            "offset": 2376,
+                            "scale": 10000,
+                            "name": "Cluster No. 9 second min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_9_second_min_cell_voltage_pack_num",
+                            "offset": 2377,
+                            "name": "Cluster No. 9 second min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_10_second_min_cell_voltage",
+                            "offset": 2378,
+                            "scale": 10000,
+                            "name": "Cluster No. 10 second min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_10_second_min_cell_voltage_pack_num",
+                            "offset": 2379,
+                            "name": "Cluster No. 10 second min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_11_second_min_cell_voltage",
+                            "offset": 2380,
+                            "scale": 10000,
+                            "name": "Cluster No. 11 second min cell voltage"
+                        },
+                        {
+                            "id": "cluster_no_11_second_min_cell_voltage_pack_num",
+                            "offset": 2381,
+                            "name": "Cluster No. 11 second min cell voltage pack num."
+                        },
+                        {
+                            "id": "cluster_no_1_max_cell_temperature",
+                            "offset": 2400,
+                            "scale": 100,
+                            "name": "Cluster No. 1 max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_1_max_cell_temperature_pack_num",
+                            "offset": 2401,
+                            "name": "Cluster No. 1 max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_2_max_cell_temperature",
+                            "offset": 2402,
+                            "scale": 100,
+                            "name": "Cluster No. 2 max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_2_max_cell_temperature_pack_num",
+                            "offset": 2403,
+                            "name": "Cluster No. 2 max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_3_max_cell_temperature",
+                            "offset": 2404,
+                            "scale": 100,
+                            "name": "Cluster No. 3 max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_3_max_cell_temperature_pack_num",
+                            "offset": 2405,
+                            "name": "Cluster No. 3 max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_4_max_cell_temperature",
+                            "offset": 2406,
+                            "scale": 100,
+                            "name": "Cluster No. 4 max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_4_max_cell_temperature_pack_num",
+                            "offset": 2407,
+                            "name": "Cluster No. 4 max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_5_max_cell_temperature",
+                            "offset": 2408,
+                            "scale": 100,
+                            "name": "Cluster No. 5 max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_5_max_cell_temperature_pack_num",
+                            "offset": 2409,
+                            "name": "Cluster No. 5 max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_6_max_cell_temperature",
+                            "offset": 2410,
+                            "scale": 100,
+                            "name": "Cluster No. 6 max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_6_max_cell_temperature_pack_num",
+                            "offset": 2411,
+                            "name": "Cluster No. 6 max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_7_max_cell_temperature",
+                            "offset": 2412,
+                            "scale": 100,
+                            "name": "Cluster No. 7 max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_7_max_cell_temperature_pack_num",
+                            "offset": 2413,
+                            "name": "Cluster No. 7 max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_8_max_cell_temperature",
+                            "offset": 2414,
+                            "scale": 100,
+                            "name": "Cluster No. 8 max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_8_max_cell_temperature_pack_num",
+                            "offset": 2415,
+                            "name": "Cluster No. 8 max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_9_max_cell_temperature",
+                            "offset": 2416,
+                            "scale": 100,
+                            "name": "Cluster No. 9 max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_9_max_cell_temperature_pack_num",
+                            "offset": 2417,
+                            "name": "Cluster No. 9 max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_10_max_cell_temperature",
+                            "offset": 2418,
+                            "scale": 100,
+                            "name": "Cluster No. 10 max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_10_max_cell_temperature_pack_num",
+                            "offset": 2419,
+                            "name": "Cluster No. 10 max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_11_max_cell_temperature",
+                            "offset": 2420,
+                            "scale": 100,
+                            "name": "Cluster No. 11 max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_11_max_cell_temperature_pack_num",
+                            "offset": 2421,
+                            "name": "Cluster No. 11 max cell temperature pack num."
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2440,
+                    "number_of_registers": 102,
+                    "map": [
+                        {
+                            "id": "cluster_no_1_second_max_cell_temperature",
+                            "offset": 2440,
+                            "scale": 100,
+                            "name": "Cluster No. 1 second max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_1_second_max_cell_temperature_pack_num",
+                            "offset": 2441,
+                            "name": "Cluster No. 1 second max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_2_second_max_cell_temperature",
+                            "offset": 2442,
+                            "scale": 100,
+                            "name": "Cluster No. 2 second max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_2_second_max_cell_temperature_pack_num",
+                            "offset": 2443,
+                            "name": "Cluster No. 2 second max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_3_second_max_cell_temperature",
+                            "offset": 2444,
+                            "scale": 100,
+                            "name": "Cluster No. 3 second max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_3_second_max_cell_temperature_pack_num",
+                            "offset": 2445,
+                            "name": "Cluster No. 3 second max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_4_second_max_cell_temperature",
+                            "offset": 2446,
+                            "scale": 100,
+                            "name": "Cluster No. 4 second max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_4_second_max_cell_temperature_pack_num",
+                            "offset": 2447,
+                            "name": "Cluster No. 4 second max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_5_second_max_cell_temperature",
+                            "offset": 2448,
+                            "scale": 100,
+                            "name": "Cluster No. 5 second max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_5_second_max_cell_temperature_pack_num",
+                            "offset": 2449,
+                            "name": "Cluster No. 5 second max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_6_second_max_cell_temperature",
+                            "offset": 2450,
+                            "scale": 100,
+                            "name": "Cluster No. 6 second max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_6_second_max_cell_temperature_pack_num",
+                            "offset": 2451,
+                            "name": "Cluster No. 6 second max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_7_second_max_cell_temperature",
+                            "offset": 2452,
+                            "scale": 100,
+                            "name": "Cluster No. 7 second max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_7_second_max_cell_temperature_pack_num",
+                            "offset": 2453,
+                            "name": "Cluster No. 7 second max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_8_second_max_cell_temperature",
+                            "offset": 2454,
+                            "scale": 100,
+                            "name": "Cluster No. 8 second max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_8_second_max_cell_temperature_pack_num",
+                            "offset": 2455,
+                            "name": "Cluster No. 8 second max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_9_second_max_cell_temperature",
+                            "offset": 2456,
+                            "scale": 100,
+                            "name": "Cluster No. 9 second max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_9_second_max_cell_temperature_pack_num",
+                            "offset": 2457,
+                            "name": "Cluster No. 9 second max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_10_second_max_cell_temperature",
+                            "offset": 2458,
+                            "scale": 100,
+                            "name": "Cluster No. 10 second max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_10_second_max_cell_temperature_pack_num",
+                            "offset": 2459,
+                            "name": "Cluster No. 10 second max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_11_second_max_cell_temperature",
+                            "offset": 2460,
+                            "scale": 100,
+                            "name": "Cluster No. 11 second max cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_11_second_max_cell_temperature_pack_num",
+                            "offset": 2461,
+                            "name": "Cluster No. 11 second max cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_1_min_cell_temperature",
+                            "offset": 2480,
+                            "scale": 100,
+                            "name": "Cluster No. 1 min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_1_min_cell_temperature_pack_num",
+                            "offset": 2481,
+                            "name": "Cluster No. 1 min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_2_min_cell_temperature",
+                            "offset": 2482,
+                            "scale": 100,
+                            "name": "Cluster No. 2 min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_2_min_cell_temperature_pack_num",
+                            "offset": 2483,
+                            "name": "Cluster No. 2 min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_3_min_cell_temperature",
+                            "offset": 2484,
+                            "scale": 100,
+                            "name": "Cluster No. 3 min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_3_min_cell_temperature_pack_num",
+                            "offset": 2485,
+                            "name": "Cluster No. 3 min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_4_min_cell_temperature",
+                            "offset": 2486,
+                            "scale": 100,
+                            "name": "Cluster No. 4 min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_4_min_cell_temperature_pack_num",
+                            "offset": 2487,
+                            "name": "Cluster No. 4 min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_5_min_cell_temperature",
+                            "offset": 2488,
+                            "scale": 100,
+                            "name": "Cluster No. 5 min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_5_min_cell_temperature_pack_num",
+                            "offset": 2489,
+                            "name": "Cluster No. 5 min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_6_min_cell_temperature",
+                            "offset": 2490,
+                            "scale": 100,
+                            "name": "Cluster No. 6 min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_6_min_cell_temperature_pack_num",
+                            "offset": 2491,
+                            "name": "Cluster No. 6 min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_7_min_cell_temperature",
+                            "offset": 2492,
+                            "scale": 100,
+                            "name": "Cluster No. 7 min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_7_min_cell_temperature_pack_num",
+                            "offset": 2493,
+                            "name": "Cluster No. 7 min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_8_min_cell_temperature",
+                            "offset": 2494,
+                            "scale": 100,
+                            "name": "Cluster No. 8 min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_8_min_cell_temperature_pack_num",
+                            "offset": 2495,
+                            "name": "Cluster No. 8 min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_9_min_cell_temperature",
+                            "offset": 2496,
+                            "scale": 100,
+                            "name": "Cluster No. 9 min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_9_min_cell_temperature_pack_num",
+                            "offset": 2497,
+                            "name": "Cluster No. 9 min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_10_min_cell_temperature",
+                            "offset": 2498,
+                            "scale": 100,
+                            "name": "Cluster No. 10 min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_10_min_cell_temperature_pack_num",
+                            "offset": 2499,
+                            "name": "Cluster No. 10 min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_11_min_cell_temperature",
+                            "offset": 2500,
+                            "scale": 100,
+                            "name": "Cluster No. 11 min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_11_min_cell_temperature_pack_num",
+                            "offset": 2501,
+                            "name": "Cluster No. 11 min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_1_second_min_cell_temperature",
+                            "offset": 2520,
+                            "scale": 100,
+                            "name": "Cluster No. 1 second min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_1_second_min_cell_temperature_pack_num",
+                            "offset": 2521,
+                            "name": "Cluster No. 1 second min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_2_second_min_cell_temperature",
+                            "offset": 2522,
+                            "scale": 100,
+                            "name": "Cluster No. 2 second min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_2_second_min_cell_temperature_pack_num",
+                            "offset": 2523,
+                            "name": "Cluster No. 2 second min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_3_second_min_cell_temperature",
+                            "offset": 2524,
+                            "scale": 100,
+                            "name": "Cluster No. 3 second min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_3_second_min_cell_temperature_pack_num",
+                            "offset": 2525,
+                            "name": "Cluster No. 3 second min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_4_second_min_cell_temperature",
+                            "offset": 2526,
+                            "scale": 100,
+                            "name": "Cluster No. 4 second min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_4_second_min_cell_temperature_pack_num",
+                            "offset": 2527,
+                            "name": "Cluster No. 4 second min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_5_second_min_cell_temperature",
+                            "offset": 2528,
+                            "scale": 100,
+                            "name": "Cluster No. 5 second min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_5_second_min_cell_temperature_pack_num",
+                            "offset": 2529,
+                            "name": "Cluster No. 5 second min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_6_second_min_cell_temperature",
+                            "offset": 2530,
+                            "scale": 100,
+                            "name": "Cluster No. 6 second min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_6_second_min_cell_temperature_pack_num",
+                            "offset": 2531,
+                            "name": "Cluster No. 6 second min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_7_second_min_cell_temperature",
+                            "offset": 2532,
+                            "scale": 100,
+                            "name": "Cluster No. 7 second min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_7_second_min_cell_temperature_pack_num",
+                            "offset": 2533,
+                            "name": "Cluster No. 7 second min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_8_second_min_cell_temperature",
+                            "offset": 2534,
+                            "scale": 100,
+                            "name": "Cluster No. 8 second min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_8_second_min_cell_temperature_pack_num",
+                            "offset": 2535,
+                            "name": "Cluster No. 8 second min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_9_second_min_cell_temperature",
+                            "offset": 2536,
+                            "scale": 100,
+                            "name": "Cluster No. 9 second min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_9_second_min_cell_temperature_pack_num",
+                            "offset": 2537,
+                            "name": "Cluster No. 9 second min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_10_second_min_cell_temperature",
+                            "offset": 2538,
+                            "scale": 100,
+                            "name": "Cluster No. 10 second min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_10_second_min_cell_temperature_pack_num",
+                            "offset": 2539,
+                            "name": "Cluster No. 10 second min cell temperature pack num."
+                        },
+                        {
+                            "id": "cluster_no_11_second_min_cell_temperature",
+                            "offset": 2540,
+                            "scale": 100,
+                            "name": "Cluster No. 11 second min cell temperature"
+                        },
+                        {
+                            "id": "cluster_no_11_second_min_cell_temperature_pack_num",
+                            "offset": 2541,
+                            "name": "Cluster No. 11 second min cell temperature pack num."
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2560,
+                    "number_of_registers": 11,
+                    "map": [
+                        {
+                            "id": "cluster_no_1_battery_cluster_average_voltage",
+                            "offset": 2560,
+                            "scale": 1000,
+                            "name": "Cluster No. 1 battery cluster average voltage"
+                        },
+                        {
+                            "id": "cluster_no_2_battery_cluster_average_voltage",
+                            "offset": 2561,
+                            "scale": 1000,
+                            "name": "Cluster No. 2 battery cluster average voltage"
+                        },
+                        {
+                            "id": "cluster_no_3_battery_cluster_average_voltage",
+                            "offset": 2562,
+                            "scale": 1000,
+                            "name": "Cluster No. 3 battery cluster average voltage"
+                        },
+                        {
+                            "id": "cluster_no_4_battery_cluster_average_voltage",
+                            "offset": 2563,
+                            "scale": 1000,
+                            "name": "Cluster No. 4 battery cluster average voltage"
+                        },
+                        {
+                            "id": "cluster_no_5_battery_cluster_average_voltage",
+                            "offset": 2564,
+                            "scale": 1000,
+                            "name": "Cluster No. 5 battery cluster average voltage"
+                        },
+                        {
+                            "id": "cluster_no_6_battery_cluster_average_voltage",
+                            "offset": 2565,
+                            "scale": 1000,
+                            "name": "Cluster No. 6 battery cluster average voltage"
+                        },
+                        {
+                            "id": "cluster_no_7_battery_cluster_average_voltage",
+                            "offset": 2566,
+                            "scale": 1000,
+                            "name": "Cluster No. 7 battery cluster average voltage"
+                        },
+                        {
+                            "id": "cluster_no_8_battery_cluster_average_voltage",
+                            "offset": 2567,
+                            "scale": 1000,
+                            "name": "Cluster No. 8 battery cluster average voltage"
+                        },
+                        {
+                            "id": "cluster_no_9_battery_cluster_average_voltage",
+                            "offset": 2568,
+                            "scale": 1000,
+                            "name": "Cluster No. 9 battery cluster average voltage"
+                        },
+                        {
+                            "id": "cluster_no_10_battery_cluster_average_voltage",
+                            "offset": 2569,
+                            "scale": 1000,
+                            "name": "Cluster No. 10 battery cluster average voltage"
+                        },
+                        {
+                            "id": "cluster_no_11_battery_cluster_average_voltage",
+                            "offset": 2570,
+                            "scale": 1000,
+                            "name": "Cluster No. 11 battery cluster average voltage"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2800,
+                    "number_of_registers": 28,
+                    "map": [
+                        {
+                            "id": "stack_overall_average_cell_temperature",
+                            "offset": 2800,
+                            "scale": 100,
+                            "name": "Stack overall average cell temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "average_ambient_temperature_inside_the_container",
+                            "offset": 2801,
+                            "scale": 100,
+                            "name": "Average ambient temperature inside the container",
+                            "signed": true
+                        },
+                        {
+                            "id": "average_ambient_humidity_inside_the_container",
+                            "offset": 2802,
+                            "scale": 100,
+                            "name": "Average ambient humidity inside the container"
+                        },
+                        {
+                            "id": "maximum_cell_temperature",
+                            "offset": 2803,
+                            "scale": 100,
+                            "name": "Maximum cell temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "stack_index_of_maximum_cell_temperature",
+                            "offset": 2804,
+                            "name": "Stack index of maximum cell temperature"
+                        },
+                        {
+                            "id": "cluster_index_of_maximum_cell_temperature",
+                            "offset": 2805,
+                            "name": "Cluster index of maximum cell temperature"
+                        },
+                        {
+                            "id": "pack_index_of_maximum_cell_temperature",
+                            "offset": 2806,
+                            "name": "Pack index of maximum cell temperature"
+                        },
+                        {
+                            "id": "minimum_cell_temperature",
+                            "offset": 2807,
+                            "scale": 100,
+                            "name": "Minimum cell temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "stack_index_of_minimum_cell_temperature",
+                            "offset": 2808,
+                            "name": "Stack index of Minimum cell temperature"
+                        },
+                        {
+                            "id": "cluster_index_of_minimum_cell_temperature",
+                            "offset": 2809,
+                            "name": "Cluster index of Minimum cell temperature"
+                        },
+                        {
+                            "id": "pack_index_of_minimum_cell_temperature",
+                            "offset": 2810,
+                            "name": "Pack index of Minimum cell temperature"
+                        },
+                        {
+                            "id": "offline_bams",
+                            "offset": 2811,
+                            "name": "BAMS online status",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "BAMS 1",
+                                "BAMS 2",
+                                "BAMS 3",
+                                "BAMS 4"
+                            ]
+                        },
+                        {
+                            "id": "offline_air_conditioners",
+                            "offset": 2812,
+                            "name": "Air conditioner online status",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Air Conditioner 1",
+                                "Air Conditioner 2",
+                                "Air Conditioner 3",
+                                "Air Conditioner 4",
+                                "Air Conditioner 5",
+                                "Air Conditioner 6",
+                                "Air Conditioner 7",
+                                "Air Conditioner 8",
+                                "Air Conditioner 9",
+                                "Air Conditioner 10",
+                                "Air Conditioner 11",
+                                "Air Conditioner 12",
+                                "Air Conditioner 13",
+                                "Air Conditioner 14",
+                                "Air Conditioner 15",
+                                "Air Conditioner 16"
+                            ]
+                        },
+                        {
+                            "id": "offline_temperature_and_humidity_sensors",
+                            "offset": 2813,
+                            "name": "Temperature and humidity sensor online status",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Sensor 1",
+                                "Sensor 2",
+                                "Sensor 3"
+                            ]
+                        },
+                        {
+                            "id": "meter_online_status",
+                            "offset": 2814,
+                            "name": "Meter online status"
+                        },
+                        {
+                            "id": "gas_sensor_online_status",
+                            "offset": 2815,
+                            "name": "Gas sensor online status"
+                        },
+                        {
+                            "id": "number_of_online_bams",
+                            "offset": 2816,
+                            "name": "Number of online BAMS"
+                        },
+                        {
+                            "id": "number_of_online_air_conditioners",
+                            "offset": 2817,
+                            "name": "Number of online air conditioners"
+                        },
+                        {
+                            "id": "number_of_online_temperature_and_humidity",
+                            "offset": 2818,
+                            "name": "Number of online temperature and humidity"
+                        },
+                        {
+                            "id": "number_of_online_meters",
+                            "offset": 2819,
+                            "name": "Number of online Meters"
+                        },
+                        {
+                            "id": "number_of_online_gas_sensors",
+                            "offset": 2820,
+                            "name": "Number of online gas sensors"
+                        },
+                        {
+                            "id": "emmu_alarms",
+                            "offset": 2821,
+                            "size": 4,
+                            "name": "Environmental alarm status",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Access control state of AC panel",
+                                "Access control state of DC panel",
+                                "Access control state of SYS panel",
+                                "SPD fault (AC)",
+                                "FSS fault",
+                                "Single fire alarm warning",
+                                "Reserved Address:2821 Bit:6",
+                                "Reserved Address:2821 Bit:7",
+                                "Reserved Address:2821 Bit:8",
+                                "Reserved Address:2821 Bit:9",
+                                "Reserved Address:2821 Bit:10",
+                                "Gas detector H2-1 abnormal",
+                                "Gas detector H2-2 abnormal",
+                                "Gas detector CO-1 abnormal",
+                                "Gas detector CO-2 abnormal",
+                                "HVAC high-temp warning",
+                                "HVAC low-temp warning",
+                                "HVAC high humidity warning",
+                                "HVAC low humidity warning",
+                                "HVAC high pressure warning",
+                                "Exhaust air high-temp warning",
+                                "Reserved Address:2821 Bit:21",
+                                "Reserved Address:2821 Bit:22",
+                                "Reserved Address:2821 Bit:23",
+                                "Reserved Address:2821 Bit:24",
+                                "Reserved Address:2821 Bit:25",
+                                "Reserved Address:2821 Bit:26",
+                                "Reserved Address:2821 Bit:27",
+                                "Reserved Address:2821 Bit:28",
+                                "Reserved Address:2821 Bit:29",
+                                "Reserved Address:2821 Bit:30",
+                                "Reserved Address:2821 Bit:31",
+                                "Reserved Address:2821 Bit:32",
+                                "Reserved Address:2821 Bit:33",
+                                "Reserved Address:2821 Bit:34",
+                                "Reserved Address:2821 Bit:35",
+                                "Reserved Address:2821 Bit:36",
+                                "Reserved Address:2821 Bit:37",
+                                "HVAC communication error warning",
+                                "Reserved Address:2821 Bit:39",
+                                "Reserved Address:2821 Bit:40",
+                                "UPS communication error warning"
+                            ]
+                        },
+                        {
+                            "id": "emmu_faults",
+                            "offset": 2825,
+                            "size": 2,
+                            "name": "Emmu fault status",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Fire composite alarm protection",
+                                "E-stop of AC panel",
+                                "E-stop of system",
+                                "Remote E-stop",
+                                "Water flood sensor",
+                                "Gas detector H2-1 abnormal",
+                                "Gas detector H2-2 abnormal",
+                                "Gas detector CO-1 abnormal",
+                                "Gas detector CO-2 abnormal"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2900,
+                    "number_of_registers": 36,
+                    "map": [
+                        {
+                            "id": "carbon_monoxide_concentration",
+                            "offset": 2900,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "Carbon monoxide concentration"
+                        },
+                        {
+                            "id": "hydrogen_concentration",
+                            "offset": 2902,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "Hydrogen concentration"
+                        },
+                        {
+                            "id": "oxygen_concentration",
+                            "offset": 2904,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "Oxygen concentration"
+                        },
+                        {
+                            "id": "carbon_monoxide_alarm_status",
+                            "offset": 2906,
+                            "name": "Carbon monoxide alarm status"
+                        },
+                        {
+                            "id": "hydrogen_alarm_status",
+                            "offset": 2907,
+                            "name": "Hydrogen alarm status"
+                        },
+                        {
+                            "id": "oxygen_alarm_status",
+                            "offset": 2908,
+                            "name": "Oxygen alarm status"
+                        },
+                        {
+                            "id": "temperature_reading_of_temperature_and_humidty_sensor_no_1",
+                            "offset": 2930,
+                            "scale": 100,
+                            "name": "Temperature reading of temperature and humidty sensor No. 1",
+                            "signed": true
+                        },
+                        {
+                            "id": "temperature_reading_of_temperature_and_humidty_sensor_no_2",
+                            "offset": 2931,
+                            "scale": 100,
+                            "name": "Temperature reading of temperature and humidty sensor No. 2",
+                            "signed": true
+                        },
+                        {
+                            "id": "temperature_reading_of_temperature_and_humidty_sensor_no_3",
+                            "offset": 2932,
+                            "scale": 100,
+                            "name": "Temperature reading of temperature and humidty sensor No. 3",
+                            "signed": true
+                        },
+                        {
+                            "id": "humidity_reading_of_temperature_and_humidty_sensor_no_1",
+                            "offset": 2933,
+                            "scale": 100,
+                            "name": "Humidity reading of temperature and humidty sensor No. 1",
+                            "signed": true
+                        },
+                        {
+                            "id": "humidity_reading_of_temperature_and_humidty_sensor_no_2",
+                            "offset": 2934,
+                            "scale": 100,
+                            "name": "Humidity reading of temperature and humidty sensor No. 2",
+                            "signed": true
+                        },
+                        {
+                            "id": "humidity_reading_of_temperature_and_humidty_sensor_no_3",
+                            "offset": 2935,
+                            "scale": 100,
+                            "name": "Humidity reading of temperature and humidty sensor No. 3",
+                            "signed": true
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 3000,
+                    "number_of_registers": 51,
+                    "map": [
+                        {
+                            "id": "air_conditioner_temperature_limit_1",
+                            "offset": 3000,
+                            "scale": 100,
+                            "name": "Air conditioner temperature limit 1"
+                        },
+                        {
+                            "id": "air_conditioner_temperature_limit_2",
+                            "offset": 3001,
+                            "scale": 100,
+                            "name": "Air conditioner temperature limit 2"
+                        },
+                        {
+                            "id": "air_conditioner_temperature_limit_3",
+                            "offset": 3002,
+                            "scale": 100,
+                            "name": "Air conditioner temperature limit 3"
+                        },
+                        {
+                            "id": "air_conditioner_1_current_mode",
+                            "offset": 3003,
+                            "name": "Air conditioner1 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_1_temperature",
+                            "offset": 3004,
+                            "scale": 100,
+                            "name": "Air conditioner1 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_1_humidity",
+                            "offset": 3005,
+                            "scale": 100,
+                            "name": "Air conditioner1 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_2_current_mode",
+                            "offset": 3006,
+                            "name": "Air conditioner2 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_2_temperature",
+                            "offset": 3007,
+                            "scale": 100,
+                            "name": "Air conditioner2 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_2_humidity",
+                            "offset": 3008,
+                            "scale": 100,
+                            "name": "Air conditioner2 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_3_current_mode",
+                            "offset": 3009,
+                            "name": "Air conditioner3 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_3_temperature",
+                            "offset": 3010,
+                            "scale": 100,
+                            "name": "Air conditioner3 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_3_humidity",
+                            "offset": 3011,
+                            "scale": 100,
+                            "name": "Air conditioner3 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_4_current_mode",
+                            "offset": 3012,
+                            "name": "Air conditioner4 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_4_temperature",
+                            "offset": 3013,
+                            "scale": 100,
+                            "name": "Air conditioner4 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_4_humidity",
+                            "offset": 3014,
+                            "scale": 100,
+                            "name": "Air conditioner4 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_5_current_mode",
+                            "offset": 3015,
+                            "name": "Air conditioner5 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_5_temperature",
+                            "offset": 3016,
+                            "scale": 100,
+                            "name": "Air conditioner5 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_5_humidity",
+                            "offset": 3017,
+                            "scale": 100,
+                            "name": "Air conditioner5 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_6_current_mode",
+                            "offset": 3018,
+                            "name": "Air conditioner6 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_6_temperature",
+                            "offset": 3019,
+                            "scale": 100,
+                            "name": "Air conditioner6 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_6_humidity",
+                            "offset": 3020,
+                            "scale": 100,
+                            "name": "Air conditioner6 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_7_current_mode",
+                            "offset": 3021,
+                            "name": "Air conditioner7 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_7_temperature",
+                            "offset": 3022,
+                            "scale": 100,
+                            "name": "Air conditioner7 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_7_humidity",
+                            "offset": 3023,
+                            "scale": 100,
+                            "name": "Air conditioner7 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_8_current_mode",
+                            "offset": 3024,
+                            "name": "Air conditioner8 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_8_temperature",
+                            "offset": 3025,
+                            "scale": 100,
+                            "name": "Air conditioner8 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_8_humidity",
+                            "offset": 3026,
+                            "scale": 100,
+                            "name": "Air conditioner8 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_9_current_mode",
+                            "offset": 3027,
+                            "name": "Air conditioner9 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_9_temperature",
+                            "offset": 3028,
+                            "scale": 100,
+                            "name": "Air conditioner9 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_9_humidity",
+                            "offset": 3029,
+                            "scale": 100,
+                            "name": "Air conditioner9 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_10_current_mode",
+                            "offset": 3030,
+                            "name": "Air conditioner10 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_10_temperature",
+                            "offset": 3031,
+                            "scale": 100,
+                            "name": "Air conditioner10 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_10_humidity",
+                            "offset": 3032,
+                            "scale": 100,
+                            "name": "Air conditioner10 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_11_current_mode",
+                            "offset": 3033,
+                            "name": "Air conditioner11 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_11_temperature",
+                            "offset": 3034,
+                            "scale": 100,
+                            "name": "Air conditioner11 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_11_humidity",
+                            "offset": 3035,
+                            "scale": 100,
+                            "name": "Air conditioner11 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_12_current_mode",
+                            "offset": 3036,
+                            "name": "Air conditioner12 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_12_temperature",
+                            "offset": 3037,
+                            "scale": 100,
+                            "name": "Air conditioner12 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_12_humidity",
+                            "offset": 3038,
+                            "scale": 100,
+                            "name": "Air conditioner12 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_13_current_mode",
+                            "offset": 3039,
+                            "name": "Air conditioner13 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_13_temperature",
+                            "offset": 3040,
+                            "scale": 100,
+                            "name": "Air conditioner13 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_13_humidity",
+                            "offset": 3041,
+                            "scale": 100,
+                            "name": "Air conditioner13 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_14_current_mode",
+                            "offset": 3042,
+                            "name": "Air conditioner14 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_14_temperature",
+                            "offset": 3043,
+                            "scale": 100,
+                            "name": "Air conditioner14 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_14_humidity",
+                            "offset": 3044,
+                            "scale": 100,
+                            "name": "Air conditioner14 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_15_current_mode",
+                            "offset": 3045,
+                            "name": "Air conditioner15 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_15_temperature",
+                            "offset": 3046,
+                            "scale": 100,
+                            "name": "Air conditioner15 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_15_humidity",
+                            "offset": 3047,
+                            "scale": 100,
+                            "name": "Air conditioner15 humidity"
+                        },
+                        {
+                            "id": "air_conditioner_16_current_mode",
+                            "offset": 3048,
+                            "name": "Air conditioner16 current mode",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Self-control",
+                                "Cooling",
+                                "Supply Air",
+                                "Standby",
+                                "Heating"
+                            ]
+                        },
+                        {
+                            "id": "air_conditioner_16_temperature",
+                            "offset": 3049,
+                            "scale": 100,
+                            "name": "Air conditioner16 temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "air_conditioner_16_humidity",
+                            "offset": 3050,
+                            "scale": 100,
+                            "name": "Air conditioner16 humidity"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+

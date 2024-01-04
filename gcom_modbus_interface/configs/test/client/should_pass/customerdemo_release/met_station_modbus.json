@@ -1,0 +1,407 @@
+{
+	"system":
+	{
+		"id": "met_station",
+		"ip_address": "192.168.0.150",
+		"port": 502,
+		"device_id": 2,
+		"frequency": 500,
+		"off_by_one": true,
+		"byte_swap": true
+	},
+	"registers": 
+	[
+		{
+			"type": "Input Registers",
+			"starting_offset": 40001,
+			"number_of_registers": 16,
+			"map":
+			[			
+				{
+					"id": "Heartbeat",
+					"offset": 40001,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Supply Voltage",
+					"offset": 40003,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Irradiance 1",
+					"offset": 40019,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Irradiance 2",
+					"offset": 40021,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Irradiance 3",
+					"offset": 40023,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Irradiance 4",
+					"offset": 40025,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Temperature 1",
+					"offset": 40059,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Temperature 2",
+					"offset": 40061,
+					"size": 2,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 40099,
+			"number_of_registers": 16,
+			"map":
+			[	
+				{
+					"id": "Wind Direction",
+					"offset": 40099,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Wind Speed",
+					"offset": 40101,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Air Temperature",
+					"offset": 40139,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "SR50A_Distance",
+					"offset": 40199,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "SR50A_Quality",
+					"offset": 40201,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "SR50A_Temperature",
+					"offset": 40203,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "SR50A_SnowDepth",
+					"offset": 40205,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "TE525_PPT",
+					"offset": 40239,
+					"size": 2,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 40399,
+			"number_of_registers": 16,
+			"map":
+			[	
+				{
+					"id": "Modbus Result Code",
+					"offset": 40399,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Modbus Result Code",
+					"offset": 40401,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Modbus Result Code",
+					"offset": 40403,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Modbus Result Code",
+					"offset": 40405,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Short-Circuit Current",
+					"offset": 40599,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "PV Temperature",
+					"offset": 40601,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Calibration Date",
+					"offset": 40603,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Irradiance Temp Comp",
+					"offset": 40639,
+					"size": 2,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 40641,
+			"number_of_registers": 16,
+			"map":
+			[	
+				{
+					"id": "Irradiance No Temp Comp",
+					"offset": 40641,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Body Temperature",
+					"offset": 40643,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Serial Number",
+					"offset": 40645,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Calibration Date",
+					"offset": 40647,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Humidity",
+					"offset": 40649,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Pressure Average",
+					"offset": 40651,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Tilt Angle",
+					"offset": 40653,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Fan Speed",
+					"offset": 40655,
+					"size": 2,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 40657,
+			"number_of_registers": 16,
+			"map":
+			[	
+				{
+					"id": "Heater Current",
+					"offset": 40657,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Fan Current",
+					"offset": 40659,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Irradiance Temp Comp",
+					"offset": 40679,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Irradiance No Temp Comp",
+					"offset": 40681,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Body Temperature",
+					"offset": 40683,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Serial Number",
+					"offset": 40685,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Calibration Date",
+					"offset": 40687,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Humidity",
+					"offset": 40689,
+					"size": 2,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 40691,
+			"number_of_registers": 16,
+			"map":
+			[	
+				{
+					"id": "Pressure Average",
+					"offset": 40691,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Tilt Angle",
+					"offset": 40693,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Fan Speed",
+					"offset": 40695,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Heater Current",
+					"offset": 40697,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Fan Current",
+					"offset": 40699,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Irradiance Temp Comp",
+					"offset": 40719,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Irradiance No Temp Comp",
+					"offset": 40721,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Body Temperature",
+					"offset": 40723,
+					"size": 2,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 40725,
+			"number_of_registers": 16,
+			"map":
+			[	
+				{
+					"id": "Serial Number",
+					"offset": 40725,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Calibration Date",
+					"offset": 40727,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Humidity",
+					"offset": 40729,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Pressure Average",
+					"offset": 40731,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Tilt Angle",
+					"offset": 40733,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Fan Speed",
+					"offset": 40735,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Heater Current",
+					"offset": 40737,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "Fan Current",
+					"offset": 40739,
+					"size": 2,
+					"signed": true
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,6 @@
+{
+    "configuration": {
+        "data_process_period_ms": 2000,
+        "data_publish_period_ms": 2000
+    }
+}

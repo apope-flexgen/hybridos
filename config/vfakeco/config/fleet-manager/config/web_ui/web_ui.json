@@ -1,0 +1,25 @@
+{
+    "timezone": "America/New_York",
+    "met_station": false,
+    "tracker": false,
+    "features": false,
+    "events": true,
+    "product": "FM",
+    "scheduler": true,
+    "fleet_manager": true,
+    "units": {
+        "W": "M",
+        "Wh": "M",
+        "VAR": "M",
+        "VARh": "M",
+        "VA": "M",
+        "VAh": "M",
+        "W/s": "M"
+    },
+    "inspectorComponentsName": "test_controller",
+    "fleet_name": "ERCOT",
+    "customer": {
+        "name": "VFakeCo",
+        "server": "Fleet Manager 1"
+    }
+}

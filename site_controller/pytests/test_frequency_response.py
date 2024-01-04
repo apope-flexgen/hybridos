@@ -13,16 +13,19 @@ def setup_cleanup_test_fast_frequency_response():
     # Collect values of settings before test edits them so that cleanup can reset them
     grid_frequency = run_twins_command('fims_send -m get -u /components/grid/fcmd -r /$$')
     runmode1_active_power_feature = fims_get('/features/active_power/runmode1_kW_mode_cmd')['value']
-    frequency_response_component_enable_mask = fims_get('/features/active_power/fr_enable_mask')['value']
-    uf_ffr_active_cmd_kw = fims_get('/features/active_power/uf_ffr_active_cmd_kw')['value']
+    frequency_response_component_enable_mask = fims_get('/features/standalone_power/fr_enable_mask')['value']
+    uf_ffr_active_cmd_kw = fims_get('/features/standalone_power/uf_ffr_active_cmd_kw')['value']
+    fr_enabled = fims_get('/features/standalone_power/fr_mode_enable_flag')['value']
 
     # Setup: start the site in Frequency Response mode with only the FFR response component active
     # with a command equal to the sum of all ESS rated active powers. Grid @ 60 Hz and all non-ESS
     # assets in maintenance mode. Let ESSs settle to 0kW in case they were previously non-zero
     assert run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$') == 60
-    fims_set('/features/active_power/runmode1_kW_mode_cmd', 4)
-    fims_set('/features/active_power/fr_enable_mask', 4)
-    fims_set('/features/active_power/uf_ffr_active_cmd_kw', 11000)
+    fims_set('/features/active_power/runmode1_kW_mode_cmd', 2)
+    fims_set('/features/standalone_power/fr_enable_mask', 4)
+    fims_set('/features/standalone_power/uf_ffr_active_cmd_kw', 11000)
+    fims_set('/features/standalone_power/fr_mode_enable_flag ', True)
+
     start_site()
     toggle_solar_and_gen_maintenance_mode(True)
     poll_until_uri_is_at_value('/assets/ess/ess_1/active_power_setpoint', expected=0, tolerance=1)
@@ -34,8 +37,9 @@ def setup_cleanup_test_fast_frequency_response():
     run_twins_command(f'fims_send -m set -u /components/grid/fcmd {grid_frequency} -r /$$')
     toggle_solar_and_gen_maintenance_mode(False)
     fims_set('/features/active_power/runmode1_kW_mode_cmd', runmode1_active_power_feature)
-    fims_set('/features/active_power/fr_enable_mask', frequency_response_component_enable_mask)
-    fims_set('/features/active_power/uf_ffr_active_cmd_kw', uf_ffr_active_cmd_kw)
+    fims_set('/features/standalone_power/fr_enable_mask', frequency_response_component_enable_mask)
+    fims_set('/features/standalone_power/uf_ffr_active_cmd_kw', uf_ffr_active_cmd_kw)
+    fims_set('/features/standalone_power/fr_mode_enable_flag', fr_enabled)
 
 
 def test_fast_frequency_response(setup_cleanup_test_fast_frequency_response):

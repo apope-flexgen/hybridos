@@ -120,6 +120,7 @@ export class AppEnvService {
             site_name,
             fleet_name,
             customer,
+            system_status,
         } = this.appConfig
 
         return {
@@ -143,6 +144,7 @@ export class AppEnvService {
             site_name,
             fleet_name,
             customer,
+            system_status,
         }
     }
 

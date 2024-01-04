@@ -1,0 +1,164 @@
+{
+	"fileInfo":{},
+	"system":{
+		"device_id": 1,
+		"id": "shared_poi",
+		"ip_address": "0.0.0.0",
+		"name": "shared_poi",
+		"port": 10002
+	},
+	"registers":{
+		"holding_registers": [
+			{
+				"float": true,
+				"id": "grid_voltage_l1",
+				"name": "Grid Voltage L1",
+				"offset": 1000,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "grid_voltage_l2",
+				"name": "Grid Voltage L2",
+				"offset": 1002,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "grid_voltage_l3",
+				"name": "Grid Voltage L3",
+				"offset": 1004,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "frequency",
+				"name": "Frequency",
+				"offset": 1006,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "current_l1",
+				"name": "Current L1",
+				"offset": 1008,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "current_l2",
+				"name": "Current L2",
+				"offset": 1010,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "current_l3",
+				"name": "Current L3",
+				"offset": 1012,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "voltage_l1",
+				"name": "Voltage L1",
+				"offset": 1014,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "voltage_l2",
+				"name": "Voltage L2",
+				"offset": 1016,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "voltage_l3",
+				"name": "Voltage L3",
+				"offset": 1018,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "active_power",
+				"name": "Active Power",
+				"offset": 1020,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "reactive_power",
+				"name": "Reactive Power",
+				"offset": 1022,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "apparent_power",
+				"name": "Apparent Power",
+				"offset": 1024,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "power_factor",
+				"name": "Power Factor",
+				"offset": 1026,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"id": "breaker_control",
+				"name": "Breaker Control",
+				"offset": 1028,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "voltage_l1_l2",
+				"name": "Voltage L1 L2",
+				"offset": 1029,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "voltage_l2_l3",
+				"name": "Voltage L2 L3",
+				"offset": 1031,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			},
+			{
+				"float": true,
+				"id": "voltage_l3_l1",
+				"name": "Voltage L3 L1",
+				"offset": 1033,
+				"size": 2,
+				"uri": "/components/shared_poi"
+			}
+		],
+		"discrete_inputs": [
+			{
+				"id": "breaker_status",
+				"name": "Breaker Status",
+				"offset": 2000,
+				"uri": "/components/shared_poi"
+			}
+		]
+	}
+}

@@ -1,0 +1,164 @@
+{
+	"system":
+	{
+		"id": "emcp_1",
+		"ip_address": "10.8.20.13",
+		"port": 502,
+		"frequency": 500,
+		"byte_swap": false,
+		"off_by_one": true
+	},
+	"registers":
+	[
+		{
+			"type": "Holding Registers",
+			"starting_offset": 100,
+			"number_of_registers": 107,
+			"map":
+			[
+				{
+					"id": "average_rms_voltage",
+					"offset": 100
+				},
+				{
+					"id": "average_rms_current",
+					"offset": 101
+				},
+				{
+					"id": "average_rms_frequency",
+					"offset": 102,
+					"scale": 128
+				},
+				{
+					"id": "power_factor",
+					"offset": 103,
+					"scale": 16384,
+					"shift": -1
+				},
+				{
+					"id": "active_power",
+					"offset": 106,
+					"size": 2,
+					"scale": 1000,
+					"shift": -2000000
+				},
+				{
+					"id": "ac_voltage_l1_l2",
+					"offset": 108
+				},
+				{
+					"id": "ac_voltage_l2_l3",
+					"offset": 109
+				},
+				{
+					"id": "ac_voltage_l3_l1",
+					"offset": 110
+				},
+				{
+					"id": "ac_current_l1",
+					"offset": 111
+				},
+				{
+					"id": "ac_current_l2",
+					"offset": 112
+				},
+				{
+					"id": "ac_current_l3",
+					"offset": 113
+				},
+				{
+					"id": "voltage_l1",
+					"offset": 114
+				},
+				{
+					"id": "voltage_l2",
+					"offset": 115
+				},
+				{
+					"id": "voltage_l3",
+					"offset": 116
+				},
+				{
+					"id": "apparent_power",
+					"offset": 138,
+					"size": 2,
+					"scale": 1000,
+					"shift": -2000000
+				},
+				{
+					"id": "reactive_power",
+					"offset": 141,
+					"size": 2,
+					"scale": 1000,
+					"shift": -2000000
+				},
+				{
+					"id": "oil_temperature",
+					"offset": 199,
+					"scale": 32,
+					"shift": -273
+				},
+				{
+					"id": "oil_pressure",
+					"offset": 200,
+					"scale": 8
+				},
+				{
+					"id": "coolant_temperature",
+					"offset": 201,
+					"scale": 32,
+					"shift": -273
+				},
+				{
+					"id": "engine_speed",
+					"offset": 203,
+					"scale": 8
+				},
+				{
+					"id": "operating_time",
+					"offset": 204,
+					"size": 2,
+					"scale": 20
+				},
+				{
+					"id": "start_state",
+					"offset": 206,
+					"enum": true,
+					"bit_strings":
+					[
+						"Init",
+						"Pre Crank",
+						"Starting",
+						"Running",
+						"Pre-Cooldown",
+						"Cooldown",
+						"Stopping",
+						"Stopped",
+						"Idling"
+					]
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			"starting_offset": 1057,
+			"number_of_registers": 9,
+			"map":
+			[
+				{
+					"id": "desired_output_voltage",
+					"offset": 1057
+				},
+				{
+					"id": "requested_speed",
+					"offset": 1060,
+					"scale": 8
+				},
+				{
+					"id": "generator_breaker_status",
+					"offset": 1065
+				}
+			]
+		}
+	]
+}

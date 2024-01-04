@@ -7,8 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/flexgen-power/go_flexgen/fileops"
-	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/flexgen-power/hybridos/go_flexgen/fileops"
+	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 )
 
 // Moves the archive out of the archive path.

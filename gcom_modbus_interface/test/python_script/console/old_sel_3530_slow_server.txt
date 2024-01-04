@@ -1,0 +1,37 @@
+System config complete: Setup register map.
+Count 4 variables included in coils config object.
+Inserted map entry for variable with type coils, ID coil_normal_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type coils, ID coil_scale_client_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type coils, ID coil_scale_server_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type coils, ID coil_scale_both_1, and URI /components/sel_3530_slow_rtac.
+Starting at an offset of 0 and ending at an offset of 4, there are 4 total individual registers for the coils register type.
+Count 4 variables included in discrete_inputs config object.
+Inserted map entry for variable with type discrete_inputs, ID discrete_normal_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type discrete_inputs, ID discrete_scale_client_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type discrete_inputs, ID discrete_scale_server_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type discrete_inputs, ID discrete_scale_both_1, and URI /components/sel_3530_slow_rtac.
+Starting at an offset of 0 and ending at an offset of 4, there are 4 total individual registers for the discrete_inputs register type.
+Count 17 variables included in input_registers config object.
+Inserted map entry for variable with type input_registers, ID input_normal_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_signed_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_scaled_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_scaled_signed_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_normal_2, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_float_2, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_signed_2, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_scaled_2, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_scaled_float_2, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_scaled_signed_2, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_normal_4, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_float_4, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_signed_4, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_scaled_4, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_scaled_float_4, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_scaled_signed_4, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type input_registers, ID input_test_id, and URI /components/sel_3530_slow_rtac.
+Starting at an offset of 0 and ending at an offset of 44, there are 44 total individual registers for the input_registers register type.
+Count 17 variables included in holding_registers config object.
+Inserted map entry for variable with type holding_registers, ID normal_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type holding_registers, ID signed_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type holding_registers, ID scaled_1, and URI /components/sel_3530_slow_rtac.
+Inserted map entry for variable with type holding_registers

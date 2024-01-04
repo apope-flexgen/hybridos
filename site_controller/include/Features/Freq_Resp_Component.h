@@ -18,6 +18,7 @@
 #include <Slew_Object.h>
 
 typedef struct frequency_response_input {
+    float site_input_kW_demand;
     float ess_max_potential;
     float ess_min_potential;
     float ess_total_rated_active_power;

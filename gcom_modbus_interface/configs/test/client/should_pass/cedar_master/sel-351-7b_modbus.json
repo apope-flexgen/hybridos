@@ -1,0 +1,77 @@
+{
+	"system":
+	{
+		"id": "sel-351-7B",
+		"ip_address": "10.8.20.20",
+		"port": 502,
+		"frequency": 500,
+		"byte_swap": false
+	},
+	"registers":
+	[		
+		{
+			"type": "Discrete Inputs",
+			"starting_offset": 4,
+			"number_of_registers": 2,
+			"map":
+			[
+				{
+					"id": "breaker_status",
+					"offset": 4
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 1,
+			"number_of_registers": 44,
+			"map":
+			[
+				{
+					"id": "ac_current_l1",
+					"offset": 1
+				},
+				{
+					"id": "ac_current_l2",
+					"offset": 3
+				},
+				{
+					"id": "ac_current_l3",
+					"offset": 5
+				},
+				{
+					"id": "voltage_l1",
+					"offset": 11
+				},
+				{
+					"id": "voltage_l2",
+					"offset": 14
+				},
+				{
+					"id": "voltage_l3",
+					"offset": 17
+				},
+				{
+					"id": "active_power",
+					"offset": 23,
+					"signed": true
+				},
+				{
+					"id": "reactive_power",
+					"offset": 25,
+					"signed": true
+				},
+				{
+					"id": "power_factor",
+					"offset": 27,
+					"scale": 100
+				},
+				{
+					"id": "frequency",
+					"offset": 29,
+					"scale": 100
+				}
+			]
+		}
+	]
+}

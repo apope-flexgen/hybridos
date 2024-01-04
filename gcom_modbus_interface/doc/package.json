@@ -1,0 +1,32 @@
+{
+  "name": "NodeRelay",
+  "version": "1.0.0",
+  "description": "NodeRelay System for command and file relay",
+  "main": "NodeRelay.js",
+  "scripts": {
+    "start": "node NodeRelay.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourgithubusername/NodeRelay.git"
+  },
+  "keywords": [
+    "node",
+    "relay",
+    "command",
+    "file"
+  ],
+  "author": "Your Name <your-email@example.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourgithubusername/NodeRelay/issues"
+  },
+  "homepage": "https://github.com/yourgithubusername/NodeRelay#readme",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "express": "^4.17.1",
+    "fs-extra": "^10.0.0",
+    "uuid": "^8.3.2"
+  }
+}

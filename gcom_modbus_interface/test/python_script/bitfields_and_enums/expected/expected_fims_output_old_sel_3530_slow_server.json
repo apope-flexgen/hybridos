@@ -1,0 +1,1924 @@
+{
+    "test_cases": {
+        "0": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 65280
+                }
+            }
+        ],
+        "1": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 131
+                }
+            }
+        ],
+        "2": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 65361
+                }
+            }
+        ],
+        "3": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 199
+                }
+            }
+        ],
+        "4": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 0
+                }
+            }
+        ],
+        "5": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 1
+                }
+            }
+        ],
+        "6": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 0
+                }
+            }
+        ],
+        "7": [],
+        "8": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 65535
+                }
+            }
+        ],
+        "9": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 0
+                }
+            }
+        ],
+        "10": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 65535
+                }
+            }
+        ],
+        "11": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 0
+                }
+            }
+        ],
+        "12": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 65535
+                }
+            }
+        ],
+        "13": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_1": 0
+                }
+            }
+        ],
+        "14": [],
+        "15": [],
+        "16": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": -158
+                }
+            }
+        ],
+        "17": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": 133
+                }
+            }
+        ],
+        "18": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": -167
+                }
+            }
+        ],
+        "19": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": 350
+                }
+            }
+        ],
+        "20": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": 0
+                }
+            }
+        ],
+        "21": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": 1
+                }
+            }
+        ],
+        "22": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": 0
+                }
+            }
+        ],
+        "23": [],
+        "24": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": 32767
+                }
+            }
+        ],
+        "25": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": -32768
+                }
+            }
+        ],
+        "26": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": 32767
+                }
+            }
+        ],
+        "27": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": -32768
+                }
+            }
+        ],
+        "28": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": 32767
+                }
+            }
+        ],
+        "29": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_1": 0
+                }
+            }
+        ],
+        "30": [],
+        "31": [],
+        "32": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 503.16
+                }
+            }
+        ],
+        "33": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 47.11
+                }
+            }
+        ],
+        "34": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 382.36
+                }
+            }
+        ],
+        "35": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 31.0
+                }
+            }
+        ],
+        "36": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 0.0
+                }
+            }
+        ],
+        "37": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 1.0
+                }
+            }
+        ],
+        "38": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 0.0
+                }
+            }
+        ],
+        "39": [],
+        "40": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 655.35
+                }
+            }
+        ],
+        "41": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 0.0
+                }
+            }
+        ],
+        "42": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 655.35
+                }
+            }
+        ],
+        "43": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 0.0
+                }
+            }
+        ],
+        "44": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 655.35
+                }
+            }
+        ],
+        "45": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_1": 0.0
+                }
+            }
+        ],
+        "46": [],
+        "47": [],
+        "48": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": -179.57
+                }
+            }
+        ],
+        "49": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": 310.56
+                }
+            }
+        ],
+        "50": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": -79.0
+                }
+            }
+        ],
+        "51": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": 70.0
+                }
+            }
+        ],
+        "52": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": 0.0
+                }
+            }
+        ],
+        "53": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": 1.0
+                }
+            }
+        ],
+        "54": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": 0.0
+                }
+            }
+        ],
+        "55": [],
+        "56": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": 327.67
+                }
+            }
+        ],
+        "57": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": -327.68
+                }
+            }
+        ],
+        "58": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": 327.67
+                }
+            }
+        ],
+        "59": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": -327.68
+                }
+            }
+        ],
+        "60": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": 327.67
+                }
+            }
+        ],
+        "61": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_1": 0.0
+                }
+            }
+        ],
+        "62": [],
+        "63": [],
+        "64": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 4294967090
+                }
+            }
+        ],
+        "65": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 287
+                }
+            }
+        ],
+        "66": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 4294966881
+                }
+            }
+        ],
+        "67": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 219
+                }
+            }
+        ],
+        "68": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 0
+                }
+            }
+        ],
+        "69": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 1
+                }
+            }
+        ],
+        "70": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 0
+                }
+            }
+        ],
+        "71": [],
+        "72": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 131072
+                }
+            }
+        ],
+        "73": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 4294836224
+                }
+            }
+        ],
+        "74": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 4294967295
+                }
+            }
+        ],
+        "75": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 0
+                }
+            }
+        ],
+        "76": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 4294967295
+                }
+            }
+        ],
+        "77": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_2": 0
+                }
+            }
+        ],
+        "78": [],
+        "79": [],
+        "80": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": -70.738
+                }
+            }
+        ],
+        "81": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": 382.21
+                }
+            }
+        ],
+        "82": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": -160.0
+                }
+            }
+        ],
+        "83": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": 452.0
+                }
+            }
+        ],
+        "84": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": 0.0
+                }
+            }
+        ],
+        "85": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": 1.0
+                }
+            }
+        ],
+        "86": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": 0.0
+                }
+            }
+        ],
+        "87": [],
+        "88": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": 131072.0
+                }
+            }
+        ],
+        "89": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": -131072.0
+                }
+            }
+        ],
+        "90": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": 8589930000.0
+                }
+            }
+        ],
+        "91": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": -8589930000.0
+                }
+            }
+        ],
+        "92": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": 3.40282e+38
+                }
+            }
+        ],
+        "93": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_2": 0.0
+                }
+            }
+        ],
+        "94": [],
+        "95": [],
+        "96": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": -322
+                }
+            }
+        ],
+        "97": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": 246
+                }
+            }
+        ],
+        "98": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": -404
+                }
+            }
+        ],
+        "99": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": 56
+                }
+            }
+        ],
+        "100": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": 0
+                }
+            }
+        ],
+        "101": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": 1
+                }
+            }
+        ],
+        "102": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": 0
+                }
+            }
+        ],
+        "103": [],
+        "104": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": 131072
+                }
+            }
+        ],
+        "105": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": -131072
+                }
+            }
+        ],
+        "106": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": 2147483647
+                }
+            }
+        ],
+        "107": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": -2147483648
+                }
+            }
+        ],
+        "108": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": 2147483647
+                }
+            }
+        ],
+        "109": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_2": 0
+                }
+            }
+        ],
+        "110": [],
+        "111": [],
+        "112": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 42949424.48
+                }
+            }
+        ],
+        "113": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 110.37
+                }
+            }
+        ],
+        "114": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 42949363.96
+                }
+            }
+        ],
+        "115": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 292.0
+                }
+            }
+        ],
+        "116": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 0.0
+                }
+            }
+        ],
+        "117": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 1.0
+                }
+            }
+        ],
+        "118": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 0.0
+                }
+            }
+        ],
+        "119": [],
+        "120": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 131072.0
+                }
+            }
+        ],
+        "121": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 42818600.96
+                }
+            }
+        ],
+        "122": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 42949672.95
+                }
+            }
+        ],
+        "123": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 0.0
+                }
+            }
+        ],
+        "124": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 42949672.95
+                }
+            }
+        ],
+        "125": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_2": 0.0
+                }
+            }
+        ],
+        "126": [],
+        "127": [],
+        "128": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": -263.134
+                }
+            }
+        ],
+        "129": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": 238.599
+                }
+            }
+        ],
+        "130": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": -40.0
+                }
+            }
+        ],
+        "131": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": 2.0
+                }
+            }
+        ],
+        "132": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": 0.0
+                }
+            }
+        ],
+        "133": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": 1.0
+                }
+            }
+        ],
+        "134": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": 0.0
+                }
+            }
+        ],
+        "135": [],
+        "136": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": 131072.0
+                }
+            }
+        ],
+        "137": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": -131072.0
+                }
+            }
+        ],
+        "138": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": 8589930000.0
+                }
+            }
+        ],
+        "139": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": -8589930000.0
+                }
+            }
+        ],
+        "140": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": 3.40282e+36
+                }
+            }
+        ],
+        "141": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_2": 0.0
+                }
+            }
+        ],
+        "142": [],
+        "143": [],
+        "144": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": -283.37
+                }
+            }
+        ],
+        "145": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": 64.55
+                }
+            }
+        ],
+        "146": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": -8.0
+                }
+            }
+        ],
+        "147": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": 257.0
+                }
+            }
+        ],
+        "148": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": 0.0
+                }
+            }
+        ],
+        "149": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": 1.0
+                }
+            }
+        ],
+        "150": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": 0.0
+                }
+            }
+        ],
+        "151": [],
+        "152": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": 131072.0
+                }
+            }
+        ],
+        "153": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": -131072.0
+                }
+            }
+        ],
+        "154": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": 21474836.47
+                }
+            }
+        ],
+        "155": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": -21474836.48
+                }
+            }
+        ],
+        "156": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": 21474836.47
+                }
+            }
+        ],
+        "157": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_2": 0.0
+                }
+            }
+        ],
+        "158": [],
+        "159": [],
+        "160": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": -464.989
+                }
+            }
+        ],
+        "161": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": 51.1531
+                }
+            }
+        ],
+        "162": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": -363.0
+                }
+            }
+        ],
+        "163": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": 406.0
+                }
+            }
+        ],
+        "164": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": 0.0
+                }
+            }
+        ],
+        "165": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": 1.0
+                }
+            }
+        ],
+        "166": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": 0.0
+                }
+            }
+        ],
+        "167": [],
+        "168": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": 131072.0
+                }
+            }
+        ],
+        "169": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": -131072.0
+                }
+            }
+        ],
+        "170": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": 8589930000.0
+                }
+            }
+        ],
+        "171": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": -8589930000.0
+                }
+            }
+        ],
+        "172": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": 6.80565e+38
+                }
+            }
+        ],
+        "173": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "normal_4": 1.17549e-42
+                }
+            }
+        ],
+        "174": [],
+        "175": [],
+        "176": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": -0.156506
+                }
+            }
+        ],
+        "177": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": 402.816
+                }
+            }
+        ],
+        "178": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": -74.0
+                }
+            }
+        ],
+        "179": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": 283.0
+                }
+            }
+        ],
+        "180": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": 0.0
+                }
+            }
+        ],
+        "181": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": 1.0
+                }
+            }
+        ],
+        "182": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": 0.0
+                }
+            }
+        ],
+        "183": [],
+        "184": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": 131072.0
+                }
+            }
+        ],
+        "185": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": -131072.0
+                }
+            }
+        ],
+        "186": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": 8589930000.0
+                }
+            }
+        ],
+        "187": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": -8589930000.0
+                }
+            }
+        ],
+        "188": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": 6.80565e+38
+                }
+            }
+        ],
+        "189": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "float_4": 1.17549e-42
+                }
+            }
+        ],
+        "190": [],
+        "191": [],
+        "192": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": -146.914
+                }
+            }
+        ],
+        "193": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": 301.92
+                }
+            }
+        ],
+        "194": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": -10.0
+                }
+            }
+        ],
+        "195": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": 211.0
+                }
+            }
+        ],
+        "196": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": 0.0
+                }
+            }
+        ],
+        "197": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": 1.0
+                }
+            }
+        ],
+        "198": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": 0.0
+                }
+            }
+        ],
+        "199": [],
+        "200": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": 131072.0
+                }
+            }
+        ],
+        "201": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": -131072.0
+                }
+            }
+        ],
+        "202": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": 8589930000.0
+                }
+            }
+        ],
+        "203": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": -8589930000.0
+                }
+            }
+        ],
+        "204": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": 6.80565e+38
+                }
+            }
+        ],
+        "205": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "signed_4": 1.17549e-42
+                }
+            }
+        ],
+        "206": [],
+        "207": [],
+        "208": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": -174.547
+                }
+            }
+        ],
+        "209": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": 183.814
+                }
+            }
+        ],
+        "210": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": -304.0
+                }
+            }
+        ],
+        "211": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": 273.0
+                }
+            }
+        ],
+        "212": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": 0.0
+                }
+            }
+        ],
+        "213": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": 1.0
+                }
+            }
+        ],
+        "214": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": 0.0
+                }
+            }
+        ],
+        "215": [],
+        "216": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": 131072.0
+                }
+            }
+        ],
+        "217": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": -131072.0
+                }
+            }
+        ],
+        "218": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": 8589930000.0
+                }
+            }
+        ],
+        "219": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": -8589930000.0
+                }
+            }
+        ],
+        "220": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": 6.80565e+38
+                }
+            }
+        ],
+        "221": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_4": 1.17549e-42
+                }
+            }
+        ],
+        "222": [],
+        "223": [],
+        "224": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": -326.78
+                }
+            }
+        ],
+        "225": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": 237.282
+                }
+            }
+        ],
+        "226": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": -33.0
+                }
+            }
+        ],
+        "227": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": 225.0
+                }
+            }
+        ],
+        "228": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": 0.0
+                }
+            }
+        ],
+        "229": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": 1.0
+                }
+            }
+        ],
+        "230": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": 0.0
+                }
+            }
+        ],
+        "231": [],
+        "232": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": 131072.0
+                }
+            }
+        ],
+        "233": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": -131072.0
+                }
+            }
+        ],
+        "234": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": 8589930000.0
+                }
+            }
+        ],
+        "235": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": -8589930000.0
+                }
+            }
+        ],
+        "236": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": 6.80565e+38
+                }
+            }
+        ],
+        "237": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_float_4": 1.17549e-42
+                }
+            }
+        ],
+        "238": [],
+        "239": [],
+        "240": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": -297.93
+                }
+            }
+        ],
+        "241": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": 133.547
+                }
+            }
+        ],
+        "242": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": -182.0
+                }
+            }
+        ],
+        "243": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": 82.0
+                }
+            }
+        ],
+        "244": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": 0.0
+                }
+            }
+        ],
+        "245": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": 1.0
+                }
+            }
+        ],
+        "246": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": 0.0
+                }
+            }
+        ],
+        "247": [],
+        "248": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": 131072.0
+                }
+            }
+        ],
+        "249": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": -131072.0
+                }
+            }
+        ],
+        "250": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": 8589930000.0
+                }
+            }
+        ],
+        "251": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": -8589930000.0
+                }
+            }
+        ],
+        "252": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": 6.80565e+38
+                }
+            }
+        ],
+        "253": [
+            {
+                "method": "set",
+                "uri": "/components/sel_3530_slow_rtac",
+                "body": {
+                    "scaled_signed_4": 1.17549e-42
+                }
+            }
+        ],
+        "254": [],
+        "255": []
+    }
+}

@@ -2,12 +2,17 @@ import sys
 import json
 import time
 from threading import Thread
-from subprocess import PIPE, CalledProcessError, run
+from subprocess import PIPE, TimeoutExpired, CalledProcessError, run
 from typing import Any, Dict
 
 
-def fims(params: str) -> Dict:
+def fims(params: str, container: str) -> Dict:
     fims_cmd = "fims_send " + params
+    if container != None:
+        if fims_cmd.find("-m get ") != -1:
+            fims_cmd = "docker exec -it " + container + " " + fims_cmd
+        else:
+            fims_cmd = "docker exec -d " + container + " " + fims_cmd
     response = {}
     response_dict = {}
     try:
@@ -24,13 +29,13 @@ def fims(params: str) -> Dict:
     return response_dict
 
 
-def fims_get(uri: str) -> Dict:
+def fims_get(uri: str, destination: str = None) -> Dict:
     params = f"-m get -r /pytest -u {uri}"
-    response_dict = fims(params)
+    response_dict = fims(params, destination)
     return response_dict
 
 
-def fims_set(uri: str, value: Any, reply_to: str = None) -> Dict:
+def fims_set(uri: str, value: Any, reply_to: str = None, destination: str = None) -> Dict:
     if isinstance(value, bool):
         my_value = str(value).lower()
     elif isinstance(value, dict) or isinstance(value, list):
@@ -41,12 +46,26 @@ def fims_set(uri: str, value: Any, reply_to: str = None) -> Dict:
         params = f"-m set -u {uri} -- {my_value}"
     else:
         params = f"-m set -u {uri} -r {reply_to} -- {my_value}"
-    return fims(params)
+    return fims(params, destination)
 
 
-def fims_del(uri: str):
+def fims_del(uri: str, destination: str = None):
     params = f"-m del -r /pytest -u {uri}"
-    return fims(params)
+    return fims(params, destination)
+
+
+# Listen to the given uri and return true if any sets were captured
+def no_fims_msgs(uri: str, method: str = "set", duration_secs=5) -> bool:
+    result = None
+
+    try:
+        result = run(["fims_listen", "-m", method, "-u", uri, "-n", "1"], stdout=PIPE,
+                     stderr=PIPE, timeout=duration_secs, universal_newlines=True)
+    except TimeoutExpired as result:
+        # output = stdout. Neither stdout nor stderr should have any output after the listen
+        assert not result.output and not result.stderr
+    else:
+        raise Exception(f"Test failed, received fims set: {result.stdout} when none was expected")
 
 
 def fims_threaded_pub(uri: str, value: Any, publish_frequency=.2, duration=30):
@@ -88,7 +107,7 @@ def poll_until_uri_is_at_value(uri: str, expected: float, tolerance: float = 0, 
     actual = fims_get(uri)
     if abs(expected - actual) <= tolerance:
         return True
-    # poll periodically until expected is reached or we've hit the timeout, 
+    # poll periodically until expected is reached or we've hit the timeout,
     # ensure we poll at least 4 times
     period = min(timeout_seconds / 4, 1)
     time_passed = 0

@@ -21,7 +21,7 @@ func parsePID(body interface{}) (receivedPID int, errorMsg string) {
 }
 
 // Starting point for handling any and all incoming FIMS messages
-func processFIMS(msg fims.FimsMsg) {
+func processFIMS(msg fims.FimsMsg) error {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Errorf("Error processing FIMS message: %v", r)
@@ -34,14 +34,18 @@ func processFIMS(msg fims.FimsMsg) {
 			if configErr, ok := err.(*configurationError); ok {
 				log.Fatalf("Fatal error: %v", configErr)
 			} else {
-				log.Errorf("Error: %v", err)
+				return fmt.Errorf("handling set: %w", err)
 			}
 		}
 	case "get":
-		handleGet(msg)
+		if err := handleGet(msg); err != nil {
+			return fmt.Errorf("handling FIMs get: %w", err)
+		}
 	default:
 		log.Warnf("Received FIMS message that was not a SET. No action taken.")
 	}
+
+	return nil
 }
 
 // Check if the controller was previously put into update mode
@@ -73,21 +77,28 @@ func getDBIUpdate() {
 }
 
 // Put all FIMS GET hooks here
-func handleGet(msg fims.FimsMsg) {
-	switch msg.Uri {
-	case "/cops/processStats":
+func handleGet(msg fims.FimsMsg) error {
+	switch {
+	case msg.Uri == "/cops/processStats":
 		f.SendSet(msg.Replyto, "", buildHealthStatsMap())
-	case "/cops/healthScore":
+	case msg.Uri == "/cops/stats":
+		f.SendSet(msg.Replyto, "", buildHealthStatsMap())
+	case msg.Uri == "/cops/healthScore":
 		f.SendSet(msg.Replyto, "", dr.healthCheckup())
-	case "/cops/status":
+	case msg.Uri == "/cops/status":
 		f.SendSet(msg.Replyto, "", statusNames[controllerMode])
-	case "/cops/controller_name":
+	case msg.Uri == "/cops/controller_name":
 		f.SendSet(msg.Replyto, "", controllerName)
-	case "/cops":
+	case msg.Uri == "/cops":
 		f.SendSet(msg.Replyto, "", buildBriefingReport())
+	case strings.HasPrefix(msg.Uri, "/cops/stats/"):
+		if err := handleGetStats(msg); err != nil {
+			return fmt.Errorf("getting cops stats: %w", err)
+		}
 	default:
-		log.Errorf("Error in handleSet: message URI doesn't match any known patterns. msg.uri: %s", msg.Uri)
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
 	}
+	return nil
 }
 
 // Put all FIMS SET hooks here
@@ -107,8 +118,23 @@ func handleSet(msg fims.FimsMsg) error {
 			return &configurationError{fmt.Errorf("expected DBI configuration document, but it was empty")}
 		}
 		return &configurationError{handleConfigBody(body)}
+
+	// Check URI is one of /cops/stats/<processName> to enact an action.
+	case msg.Nfrags == 5 && strings.Contains(msg.Uri, "controls"):
+		if config.AllowActions {
+			// TODO: Handle fims reply to for errors from handlecontorlMsg
+			if err := handleControlMsg(msg); err != nil {
+				f.SendSet(msg.Replyto, "", fmt.Sprintf("error handling control set: %v", err))
+				return fmt.Errorf("handling control message: %v", err)
+			}
+		} else {
+			// TODO: convert to reply to message. tech debt ticket.
+			return fmt.Errorf("Received a FIMS set to take an action on process %s but actions are not allowed. %s",
+				msg.Frags[2], "Please configure the COPS JSON file to allow actions.")
+		}
+
 	// Check for DBI update response first
-	// Check uri is one of /cops/<process_name>/dbi_update_complete or <writeouturi>/dbi_update
+	// Check URI is one of /cops/<process_name>/dbi_update_complete or <writeouturi>/dbi_update
 	case msg.Nfrags == 3 && strings.HasSuffix(msg.Uri, "dbi_update_complete"):
 		_, processKnown := processJurisdiction[msg.Frags[1]]
 		if processKnown {
@@ -153,9 +179,285 @@ func handleSet(msg fims.FimsMsg) error {
 
 	default:
 		// If not caught by any of the above checks, then the set is invalid
-		log.Errorf("Error in handleSet: message URI doesn't match any known patterns. msg.uri: %s", msg.Uri)
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
 	}
 	return nil
+}
+
+// Expose gets on all stats.
+func handleGetStats(msg fims.FimsMsg) error {
+	switch {
+	case msg.Nfrags == 3:
+		// Get process info: /cops/stats/<process>
+		if err := handleGetProcess(msg); err != nil {
+			return fmt.Errorf("getting process: %w", err)
+		}
+	case msg.Nfrags > 3:
+		// Get process statistic: /cops/stats/<process>/<item>
+		if err := handleGetProcessItem(msg); err != nil {
+			return fmt.Errorf("getting process item: %w", err)
+		}
+	default:
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
+	}
+
+	return nil
+}
+
+// Handle URIs targeted at specific process stats.
+func handleGetProcessItem(msg fims.FimsMsg) error {
+	switch {
+	case msg.Nfrags == 4:
+		// Handle retrieval of statistics: /cops/stats/<process>/<item>
+		if err := handleGetProcessStatistic(msg); err != nil {
+			return fmt.Errorf("getting stat: %w", err)
+		}
+	case msg.Nfrags == 5 && strings.Contains(msg.Uri, "controls"):
+		// Get actions map: /cops/stats/<process>/controls/<action>
+		if err := handleGetProcessControlsAction(msg); err != nil {
+			return fmt.Errorf("getting controls: %w", err)
+		}
+	case msg.Nfrags == 6 && strings.Contains(msg.Uri, "controls"):
+		// Get actions enabled status: /cops/stats/<process>/controls/<action>/enabled
+		if err := handleGetProcessControl(msg); err != nil {
+			return fmt.Errorf("getting controls: %w", err)
+		}
+	default:
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
+	}
+
+	return nil
+}
+
+// Reply with a given process enabled status.
+func handleGetProcessControl(msg fims.FimsMsg) error {
+
+	// Determine which control to get.
+	switch {
+	case msg.Frags[5] == "value":
+		if err := handleGetProcessControlValue(msg); err != nil {
+			return fmt.Errorf("getting control value: %w", err)
+		}
+	case msg.Frags[5] == "enabled":
+		if err := handleGetProcessControlEnabled(msg); err != nil {
+			return fmt.Errorf("getting enabled status: %w", err)
+		}
+	default:
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
+	}
+
+	return nil
+}
+
+// Send a reply to with process information.
+func handleGetProcess(msg fims.FimsMsg) error {
+
+	// Get process name.
+	processName := msg.Frags[2]
+
+	// Verify the process exists in COPS config file.
+	if _, ok := processJurisdiction[processName]; !ok {
+		f.SendSet(msg.Replyto, "", "process does not exist.")
+		return fmt.Errorf("process: %s does not exist", processName)
+	}
+
+	// Send reply to with stats report on proces
+	process := processJurisdiction[processName]
+
+	// Reply with designated process.
+	f.SendSet(msg.Replyto, "", process.buildStatsReport())
+	return nil
+}
+
+// Handle gets on controls for a process.
+func handleGetProcessStatistic(msg fims.FimsMsg) error {
+
+	// Get process name.
+	processName := msg.Frags[2]
+
+	// Get the item.
+	item := msg.Frags[3]
+
+	// Verify the process exists in COPS config file.
+	if _, ok := processJurisdiction[processName]; !ok {
+		f.SendSet(msg.Replyto, "", "process does not exist.")
+		return fmt.Errorf("process: %s does not exist", processName)
+	}
+
+	// Retrieve stats pertaining to the process.
+	stats := processJurisdiction[processName].buildStatsReport()
+
+	// Verify the item exists in the statistics report.
+	if _, ok := stats[item]; !ok {
+		f.SendSet(msg.Replyto, "", "statistic does not exist.")
+		return fmt.Errorf("statistic: %s does not exist", item)
+	}
+
+	// Send reply with specified statistic.
+	f.SendSet(msg.Replyto, "", stats[item])
+	return nil
+}
+
+// Return map of a given action.
+func handleGetProcessControlsAction(msg fims.FimsMsg) error {
+	// /cops/stats/<process>/controls/<action>
+	processName := msg.Frags[2]
+	action := msg.Frags[4]
+
+	// Verify the process exists in COPS config file.
+	if _, ok := processJurisdiction[processName]; !ok {
+		f.SendSet(msg.Replyto, "", "process does not exist.")
+		return fmt.Errorf("process: %s does not exist", processName)
+	}
+
+	// Retrieve controls pertaining to the process.
+	controlsMap := processJurisdiction[processName].generateControlsMap()
+
+	// Verify the action exists in the process controls.
+	if _, ok := controlsMap[action]; !ok {
+		f.SendSet(msg.Replyto, "", "action does not exist")
+		return fmt.Errorf("action: %s does not exist", action)
+	}
+
+	// Send reply with specified actions map.
+	f.SendSet(msg.Replyto, "", controlsMap[action])
+	return nil
+
+}
+
+// Return value of control enabled status.
+func handleGetProcessControlEnabled(msg fims.FimsMsg) error {
+	// /cops/stats/<process>/controls/<action>/enabled
+	processName := msg.Frags[2]
+	action := msg.Frags[4]
+
+	// Verify the process exists in COPS config file.
+	if _, ok := processJurisdiction[processName]; !ok {
+		f.SendSet(msg.Replyto, "", "process does not exist.")
+		return fmt.Errorf("process: %s does not exist", processName)
+	}
+
+	// Get controls information.
+	controls := processJurisdiction[processName].enableControls
+
+	// Verify action is a valid action.
+	switch action {
+	case "start":
+		f.SendSet(msg.Replyto, "", controls.startEnabled)
+	case "stop":
+		f.SendSet(msg.Replyto, "", controls.stopEnabled)
+	case "restart":
+		f.SendSet(msg.Replyto, "", controls.restartEnabled)
+	default:
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
+	}
+
+	return nil
+}
+
+// Retrieve the value of a given process control action.
+func handleGetProcessControlValue(msg fims.FimsMsg) error {
+	// /cops/stats/<process>/controls/<action>/value
+	processName := msg.Frags[2]
+	action := msg.Frags[4]
+	item := msg.Frags[5]
+
+	// Verify the process exists in COPS config file.
+	if _, ok := processJurisdiction[processName]; !ok {
+		f.SendSet(msg.Replyto, "", "process does not exist.")
+		return fmt.Errorf("process: %s does not exist", processName)
+	}
+
+	// Retrieve controls pertaining to the process.
+	controlsMap := processJurisdiction[processName].generateControlsMap()
+
+	// Verify the action exists in the process controls.
+	if _, ok := controlsMap[action]; !ok {
+		f.SendSet(msg.Replyto, "", "action does not exist")
+		return fmt.Errorf("action: %s does not exist", action)
+	}
+
+	// No need for check - will always be a map[string]interface{}
+	// as it's defined as such in generateControlsMap()
+	actionVals := controlsMap[action].(map[string]interface{})
+
+	// Verify the value exists in the process controls.
+	if _, ok := actionVals[item]; !ok {
+		f.SendSet(msg.Replyto, "", "value does not exist")
+		return fmt.Errorf("value does not exist")
+	}
+
+	f.SendSet(msg.Replyto, "", actionVals[item])
+	return nil
+}
+
+// Handle sets on a control action for a defined process.
+// Function verifies process is defined in the COPS file, extracts
+// control value and process from the FIMS message, and checks
+// to make sure actions are allowed for the process.
+func handleControlMsg(msg fims.FimsMsg) error {
+	// Expected URI format: /cops/stats/[process]/controls/[action]
+	process := msg.Frags[2]
+
+	// Validate process exists and actions are enabled.
+	if err := validateProcessControls(process); err != nil {
+		return fmt.Errorf("validating controls message: %w", err)
+	}
+
+	// Extract action command type: start, stop, restart.
+	cmd, err := getSystemdCmd(msg)
+	if err != nil {
+		return fmt.Errorf("retrieving control type for process %s: %w", process, err)
+	}
+
+	// Handle the control type for the defined process.
+	if err := handleSystemdCmd(cmd, msg); err != nil {
+		return fmt.Errorf("handling command \"%s\" for %s: %w", cmd, process, err)
+	}
+
+	return nil
+}
+
+// Extract control command from a FIMS body.
+// TODO: streamline getting the value from a naked set with how scheduler does it.
+func getSystemdCmd(msg fims.FimsMsg) (string, error) {
+	var value bool
+	var ok bool
+
+	// Expected command stored as URI fragment in 5th position:
+	// Example: /cops/stats/[process]/controls/[action]
+	action := msg.Frags[4]
+
+	// Handle the FIMS body whether it's a naked set or a map.
+	// This if statement is quite ugly. I'd like to find a better way to do this.
+	if _, ok = msg.Body.(bool); ok {
+		// Handle if FIMS set sends a single boolean value.
+		value = msg.Body.(bool)
+	} else if _, ok = msg.Body.(map[string]interface{}); ok {
+		// Handle FIMS set using a key value pair.
+		msgBody := msg.Body.(map[string]interface{})
+
+		// Return error on an empty body.
+		if len(msgBody) == 0 {
+			return "", fmt.Errorf("body of FIMS message is empty")
+		}
+
+		// Verify we received a value of true on the action.
+		value, ok = msgBody["value"].(bool)
+		if !ok {
+			return "", fmt.Errorf("command \"%s\" received non boolean value in FIMS set", action)
+		}
+	} else {
+		// Handle exception of incorrect set format.
+		return "", fmt.Errorf("invalid FIMS body. Expected body is key-value pair or boolean value")
+	}
+
+	// Verify our value is actually true for enacting the command.
+	if !value {
+		return "", fmt.Errorf("FIMS set command \"%s\" to false - no action taken", action)
+	}
+
+	return action, nil
 }
 
 // Handle a set to update mode coming from either ansible or dbi

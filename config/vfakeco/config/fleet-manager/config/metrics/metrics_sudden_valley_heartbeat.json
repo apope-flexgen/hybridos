@@ -1,0 +1,33 @@
+{
+    "publishRate": 1000,
+    "listenRate": 2,
+    "publishUris": [
+        {
+            "uri": "/metrics/internal_sudden_valley",
+            "naked": true,
+            "metrics": [ 
+                {
+                    "id": "site_controller_heartbeat",
+                    "inputs": [
+                        {
+                            "uri": "/sites/sudden_valley",
+                            "id": "heartbeat_counter"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "uri": "/sites/sudden_valley",
+                            "id": "fm_timestamp"
+                        },
+                        {
+                            "uri": "/sites/sudden_valley",
+                            "id": "watchdog_pet"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                }
+            ]
+        }
+    ]
+}

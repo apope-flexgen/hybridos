@@ -1,0 +1,41 @@
+{
+    "/vlinks/##RACK_ID##": {
+        "soc"              : { "value": "/components/catl_##RACK_ID##:sbmu_soc"              , "vlink": "/status/##RACK_ID##:SOC"            },
+        "soh"              : { "value": "/components/catl_##RACK_ID##:sbmu_soh"              , "vlink": "/status/##RACK_ID##:SOH"            },
+        "dc_current"       : { "value": "/components/catl_##RACK_ID##:sbmu_current"          , "vlink": "/status/##RACK_ID##:DCCurrent"      },
+        "dc_voltage"       : { "value": "/components/catl_##RACK_ID##:sbmu_voltage"          , "vlink": "/status/##RACK_ID##:DCVoltage"      },
+        "max_cell_temp"    : { "value": "/components/catl_##RACK_ID##:sbmu_max_cell_temp"    , "vlink": "/status/##RACK_ID##:MaxCellTemp"    },
+        "avg_cell_temp"    : { "value": "/components/catl_##RACK_ID##:sbmu_avg_cell_temp"    , "vlink": "/status/##RACK_ID##:AvgCellTemp"    },
+        "min_cell_temp"    : { "value": "/components/catl_##RACK_ID##:sbmu_min_cell_temp"    , "vlink": "/status/##RACK_ID##:MinCellTemp"    },
+        "max_cell_voltage" : { "value": "/components/catl_##RACK_ID##:sbmu_max_cell_voltage" , "vlink": "/status/##RACK_ID##:MaxCellVoltage" },
+        "avg_cell_voltage" : { "value": "/components/catl_##RACK_ID##:sbmu_avg_cell_voltage" , "vlink": "/status/##RACK_ID##:AvgCellVoltage" },
+        "min_cell_voltage" : { "value": "/components/catl_##RACK_ID##:sbmu_min_cell_voltage" , "vlink": "/status/##RACK_ID##:MinCellVoltage" }
+    },
+    "/components/catl_##RACK_ID##": {
+        "sbmu_master_negative": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": 0,
+                                "outValue": false,
+                                "uri": "/status/##RACK_ID##:DCClosed"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": true,
+                                "uri": "/status/##RACK_ID##:DCClosed"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##RACK_ID##:enable",
+            "ifChanged": false,
+            "note": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        }
+    }
+}

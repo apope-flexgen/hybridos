@@ -1,0 +1,24 @@
+{
+   "system":
+   {
+        "name": "SEL_3530_RTAC",
+
+        "protocol": "Modbus TCP",
+       "id": "SEL_3530_RTAC",
+       "ip_address": "0.0.0.0",
+       "xserver_delay": 510, 
+       "port": 503, 
+       "device_id": 1, 
+       "bypass_init": false 
+   },
+   "registers":
+    {
+    "holding_registers":
+    [
+            {"id":"frequency_3","name":"Frequency 3 Cycle","offset":0, "uri": "/components/sel_3530_fast"},
+            {"id":"fast_active_power","name":"Fast Active Power","offset":1, "size":2,"uri": "/components/sel_3530_fast" },
+            {"id":"frequency","name":"Frequency 10 Cycle","offset":3, "uri": "/components/sel_3530_fast" }
+    ]
+   }
+}
+

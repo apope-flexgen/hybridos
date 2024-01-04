@@ -1,0 +1,106 @@
+{
+    "/components/catl_bms_ems_r": {
+        "bms_poweron": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": 0,
+                                "outValue": "Normal",
+                                "uri": "/status/bms:Status"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": "Normal",
+                                "uri": "/status/bms:Status"
+                            },
+                            {
+                                "inValue": 2,
+                                "outValue": "On Fault",
+                                "uri": "/status/bms:Status"
+                            },
+                            {
+                                "inValue": 3,
+                                "outValue": "Off Fault",
+                                "uri": "/status/bms:Status"
+                            },
+                            {
+                                "inValue": 0,
+                                "outValue": false,
+                                "uri": "/status/bms:DCClosed"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": true,
+                                "uri": "/status/bms:DCClosed"
+                            },
+                            {
+                                "inValue": 2,
+                                "outValue": false,
+                                "uri": "/status/bms:DCClosed"
+                            },
+                            {
+                                "inValue": 3,
+                                "outValue": true,
+                                "uri": "/status/bms:DCClosed"
+                            },
+                            {
+                                "enable": "/config/bms:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/bms:status@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "note": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        }
+    },
+    "/sched/bms": {
+        "checkInputs_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": false,
+                                "uri": "/components/bms:status@ifChanged"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Sets ifChanged to false to process inputs for various interface variables with actions regardless of value change",
+            "value": 0
+        }
+    },
+    "/vlinks/bms": {
+        "soc"                        : { "value": "/components/catl_mbmu_summary_r:mbmu_soc"                        , "vlink": "/status/bms:SOC"                 },
+        "soh"                        : { "value": "/components/catl_mbmu_summary_r:mbmu_soh"                        , "vlink": "/status/bms:SOH"                 },
+        "dc_charge_energy_limit"     : { "value": "/components/catl_bms_ems_r:bms_remain_charge_energy"    , "vlink": "/status/bms:ChargeableEnergy"    },
+        "dc_discharge_energy_limit"  : { "value": "/components/catl_bms_ems_r:bms_remain_discharge_energy" , "vlink": "/status/bms:DischargeableEnergy" },
+        "dc_current"                 : { "value": "/components/catl_mbmu_summary_r:mbmu_current"                    , "vlink": "/status/bms:DCCurrent"           },
+        "dc_voltage"                 : { "value": "/components/catl_mbmu_summary_r:mbmu_voltage"                    , "vlink": "/status/bms:DCVoltage"           },
+        "dc_power"                   : { "value": "/components/catl_mbmu_summary_r:mbmu_power"                    , "vlink": "/status/bms:DCPower"           },
+        "max_cell_temperature"       : { "value": "/components/catl_mbmu_summary_r:mbmu_max_cell_temperature"              , "vlink": "/status/bms:MaxCellTemp"         },
+        "avg_cell_temperature"       : { "value": "/components/catl_mbmu_summary_r:mbmu_avg_cell_temperature"              , "vlink": "/status/bms:AvgCellTemp"         },
+        "min_cell_temperature"       : { "value": "/components/catl_mbmu_summary_r:mbmu_min_cell_temperature"              , "vlink": "/status/bms:MinCellTemp"         },
+        "max_cell_voltage"           : { "value": "/components/catl_mbmu_summary_r:mbmu_max_cell_voltage"           , "vlink": "/status/bms:MaxCellVoltage"      },
+        "avg_cell_voltage"           : { "value": "/components/catl_mbmu_summary_r:mbmu_avg_cell_voltage"           , "vlink": "/status/bms:AvgCellVoltage"      },
+        "min_cell_voltage"           : { "value": "/components/catl_mbmu_summary_r:mbmu_min_cell_voltage"           , "vlink": "/status/bms:MinCellVoltage"      },
+        "num_online_racks"           : { "value": "/components/catl_bms_ems_r:num_hv_subsystem"            , "vlink": "/status/bms:NumRacksOnline"      },
+
+        "dc_discharge_current_limit" : { "value": "/components/catl_mbmu_summary_r:mbmu_max_discharge_current"    , "vlink": "/limits/bms:DischargeCurrentLimit" },
+        "dc_charge_current_limit"    : { "value": "/components/catl_mbmu_summary_r:mbmu_max_charge_current"       , "vlink": "/limits/bms:ChargeCurrentLimit"    },
+        "dc_discharge_power_limit"   : { "value": "/components/catl_bms_ems_r:bms_max_discharge_allowed"    , "vlink": "/limits/bms:DischargePowerLimit" },
+        "dc_charge_power_limit"      : { "value": "/components/catl_bms_ems_r:bms_max_charge_allowed"       , "vlink": "/limits/bms:ChargePowerLimit"    },
+        "heartbeat_read"             : { "value": "/components/catl_bms_ems_r:bms_heartbeat"                  , "vlink": "/status/bms:HeartbeatRead" }
+    }
+}

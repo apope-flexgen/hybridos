@@ -21,6 +21,7 @@ export class LoggingService extends ConsoleLogger {
                             reject()
                         } else {
                             fs.write(fd, `${message}\n`, (err) => {
+                                fs.close(fd)
                                 if (err) {
                                     reject()
                                 } else {

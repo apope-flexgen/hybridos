@@ -1140,93 +1140,24 @@ var EvalTests = []EvalTest{
 func TestEval(t *testing.T) {
 	loud := Quiet()
 	defer loud()
-	Scope = map[string][]Input{
-		"bool1": []Input{
-			Input{
-				Type:  "bool",
-				Value: Union{tag: BOOL, b: true},
-			},
-		},
-		"bool2": []Input{
-			Input{
-				Type:  "bool",
-				Value: Union{tag: BOOL, b: false},
-			},
-		},
-		"uint1": []Input{
-			Input{
-				Type:  "uint",
-				Value: Union{tag: UINT, ui: 5},
-			},
-		},
-		"uint2": []Input{
-			Input{
-				Type:  "uint",
-				Value: Union{tag: UINT, ui: 7},
-			},
-		},
-		"int1": []Input{
-			Input{
-				Type:  "int",
-				Value: Union{tag: INT, i: 6},
-			},
-		},
-		"int2": []Input{
-			Input{
-				Type:  "int",
-				Value: Union{tag: INT, i: 8},
-			},
-		},
-		"float1": []Input{
-			Input{
-				Type:  "float",
-				Value: Union{tag: FLOAT, f: 5.3},
-			},
-		},
-		"float2": []Input{
-			Input{
-				Type:  "float",
-				Value: Union{tag: FLOAT, f: 7.3},
-			},
-		},
-		"string1": []Input{
-			Input{
-				Type:  "string",
-				Value: Union{tag: STRING, s: "hello"},
-			},
-		},
-		"string2": []Input{
-			Input{
-				Type:  "string",
-				Value: Union{tag: STRING, s: ""},
-			},
-		},
-		"noval": []Input{},
-		"multival": []Input{
-			Input{
-				Type:  "int",
-				Value: Union{tag: INT, i: 9},
-			},
-			Input{
-				Type:  "int",
-				Value: Union{tag: INT, i: 11},
-			},
-		},
-		"input1@enabled": []Input{
-			Input{
-				Type:  "bool",
-				Value: Union{tag: BOOL, b: true},
-			},
-		},
-		"input2@enabled": []Input{
-			Input{
-				Type:  "bool",
-				Value: Union{tag: BOOL, b: true},
-			},
-		},
-		"input4@enabled": []Input{},
+	InputScope = map[string][]Union{
+		"bool1": []Union{{tag: BOOL, b: true}},
+		"bool2": []Union{{tag: BOOL, b: false}},
+		"uint1": []Union{{tag: UINT, ui: 5}},
+		"uint2": []Union{{tag: UINT, ui: 7}},
+		"int1": []Union{{tag: INT, i: 6}},
+		"int2": []Union{{tag: INT, i: 8}},
+		"float1": []Union{{tag: FLOAT, f: 5.3}},
+		"float2": []Union{{tag: FLOAT, f: 7.3}},
+		"string1": []Union{{tag: STRING, s: "hello"}},
+		"string2": []Union{{tag: STRING, s: ""}},
+		"noval": []Union{},
+		"multival": []Union{{tag: INT, i: 9},{tag: INT, i: 11}},
+		"input1@enabled": []Union{{tag: BOOL, b: true}},
+		"input2@enabled": []Union{{tag: BOOL, b: true}},
+		"input4@enabled": []Union{},
 	}
-	var output Union
+	var output []Union
 	var err error
 	for _, test := range EvalTests {
 		exp, _ := Parse(test.inputExpression)
@@ -1239,8 +1170,8 @@ func TestEval(t *testing.T) {
 			continue
 		}
 
-		if output != test.expectedOutput {
-			t.Errorf("%s: output var %v not equal to expected var %v\n", test.inputExpression, output, test.expectedOutput)
+		if output[0] != test.expectedOutput {
+			t.Errorf("%s: output var %v not equal to expected var %v\n", test.inputExpression, output[0], test.expectedOutput)
 		}
 	}
 }
@@ -1279,7 +1210,7 @@ var TimeSensitiveTests = []EvalTest{
 }
 
 func TestTimeSensitiveEvals(t *testing.T) {
-	var output Union
+	var output []Union
 	var err error
 	for _, test := range TimeSensitiveTests {
 		t0 := time.Now()
@@ -1290,12 +1221,12 @@ func TestTimeSensitiveEvals(t *testing.T) {
 			fmt.Printf("%-50s\t%5d ns\n", test.inputExpression, duration)
 		}
 
-		if output.tag != test.expectedOutput.tag {
-			t.Errorf("%s: output %v not equal to expected %v\n", test.inputExpression, output, test.expectedOutput)
+		if output[0].tag != test.expectedOutput.tag {
+			t.Errorf("%s: output %v not equal to expected %v\n", test.inputExpression, output[0], test.expectedOutput)
 		}
 		// this might be too large of a buffer...
-		if math.Abs(float64(output.i-test.expectedOutput.i)) >= 10 {
-			t.Errorf("%s: output %v not within 10 milliseconds of expected %v\n", test.inputExpression, output, test.expectedOutput)
+		if math.Abs(float64(output[0].i-test.expectedOutput.i)) >= 10 {
+			t.Errorf("%s: output %v not within 10 milliseconds of expected %v\n", test.inputExpression, output[0], test.expectedOutput)
 		}
 
 		if err == nil && test.errorExpected {

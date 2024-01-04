@@ -1,0 +1,221 @@
+version: '3'
+services:
+  mongo-container:
+    image: mongo:latest
+    container_name: mongo-container
+    hostname: mongo-container
+    volumes:
+      - mongo-data:/data/db 
+
+  influx-container:
+    image: influxdb:1.8
+    container_name: influx-container
+    hostname: influx-container
+    volumes:
+      - influx-data:/var/lib/influxdb 
+
+  php-gui:
+    image: samueltallet/mongodb-php-gui:latest
+    container_name: mongo-ui
+    ports:
+      - '5000:5000'
+    depends_on:
+      - mongo-container
+
+  grafana:
+    image: grafana/grafana-oss
+    container_name: influx-ui
+    ports:
+      - '3000:3000'
+    depends_on:
+      - influx-container
+
+  config-fleet-manager-01:
+    image: flexgen/fleet_manager-snapshot:11.3.0.alpha.3
+    container_name: config-fleet-manager-01
+    hostname: config-fleet-manager-01
+    ports:
+      - 10000:9150
+      - 9000:443
+    networks:
+      config-fleet-net:
+        ipv4_address: 10.10.1.5
+    tty: true
+    volumes:
+      - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/.secret:/home/secret
+      - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
+      - ftd-data:/home/hybridos/powercloud/owner/fleetman01/archives
+
+  lima-site-controller-01:
+    image: flexgen/site_controller-snapshot:11.3.0.alpha.3
+    container_name: lima-site-controller-01
+    hostname: lima-site-controller-01
+    ports:
+      - 10001:9150
+      - 9001:443
+    networks:
+      config-fleet-net:
+        ipv4_address: 10.10.1.10
+      lima-site-net:
+        ipv4_address: 192.168.10.5
+    tty: true
+    volumes:
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/site-controller/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/site-controller/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/site-controller/.secret:/home/secret
+      - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
+      - ftd-data:/home/hybridos/powercloud/owner/lima/archives
+
+  lima-ess-controller-01:
+    image: flexgen/ess_controller-snapshot:11.3.0.alpha.3
+    container_name: lima-ess-controller-01
+    hostname: lima-ess-controller-01
+    ports:
+      - 10002:9150
+      - 9002:443
+    networks:
+      lima-site-net:
+        ipv4_address: 192.168.10.10
+      lima-ess-net:
+        ipv4_address: 192.168.11.10
+    tty: true
+    volumes:
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/ess-controller/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/ess-controller/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/ess-controller/.secret:/home/secret
+      - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
+      - ftd-data:/home/hybridos/powercloud/archives
+
+  lima-psm-01:
+    image: flexgen/twins-snapshot:11.3.0.alpha.3
+    container_name: lima-psm-01
+    hostname: lima-psm-01
+    ports:
+      - 10003:9150
+    networks:
+      lima-ess-net:
+        ipv4_address: 192.168.11.5
+      lima-site-net:
+        ipv4_address: 192.168.10.250
+    tty: true
+    volumes:
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/psm/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/psm/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/psm/.secret:/home/secret
+      - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
+
+  sudden_valley-site-controller-01:
+    image: flexgen/site_controller-snapshot:11.3.0.alpha.3
+    container_name: sudden_valley-site-controller-01
+    hostname: sudden_valley-site-controller-01
+    ports:
+      - 10004:9150
+      - 9004:443
+    networks:
+      config-fleet-net:
+        ipv4_address: 10.10.1.11
+      sudden_valley-site-net:
+        ipv4_address: 192.168.12.5
+    tty: true
+    volumes:
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/site-controller/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/site-controller/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/site-controller/.secret:/home/secret
+      - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
+      - ftd-data:/home/hybridos/powercloud/owner/sudden_valley/archives
+
+  sudden_valley-ess-controller-01:
+    image: flexgen/ess_controller-snapshot:11.3.0.alpha.3
+    container_name: sudden_valley-ess-controller-01
+    hostname: sudden_valley-ess-controller-01
+    ports:
+      - 10005:9150
+      - 9005:443
+    networks:
+      sudden_valley-site-net:
+        ipv4_address: 192.168.12.10
+      sudden_valley-ess-net:
+        ipv4_address: 192.168.13.10
+    tty: true
+    volumes:
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/ess-controller/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/ess-controller/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/ess-controller/.secret:/home/secret
+      - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
+      - ftd-data:/home/hybridos/powercloud/archives
+
+  sudden_valley-psm-01:
+    image: flexgen/twins-snapshot:11.3.0.alpha.3
+    container_name: sudden_valley-psm-01
+    hostname: sudden_valley-psm-01
+    ports:
+      - 10006:9150
+    networks:
+      sudden_valley-ess-net:
+        ipv4_address: 192.168.13.5
+      sudden_valley-site-net:
+        ipv4_address: 192.168.12.250
+    tty: true
+    volumes:
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/psm/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/psm/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/psm/.secret:/home/secret
+      - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
+
+  config-powercloud-01:
+    image: flexgen/dts-snapshot:11.3.0.alpha.3
+    container_name: config-powercloud-01
+    hostname: config-powercloud-01
+    tty: true
+    volumes:
+      - /home/hybridos/git/hybridos/config/vfakeco/config/powercloud/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/powercloud/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/powercloud/.secret:/home/secret
+      - /home/hybridos/git/hybridos/virtual_site/scripts/dts:/home/scripts
+      - ftd-data:/home/hybridos/powercloud/inbox
+      - dts-failed-validate:/home/hybridos/powercloud/validate_error
+      - dts-failed-write:/home/hybridos/powercloud/write_error
+    depends_on:
+      - mongo-container
+      - influx-container
+
+networks:
+  config-fleet-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.1.0/24
+
+  lima-site-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.10.0/24
+
+  lima-ess-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.11.0/24
+
+  sudden_valley-site-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.12.0/24
+
+  sudden_valley-ess-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.13.0/24
+
+volumes:
+  ftd-data:
+  mongo-data:
+  influx-data:
+  dts-failed-validate:
+  dts-failed-write:
+

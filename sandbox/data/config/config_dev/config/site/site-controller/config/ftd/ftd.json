@@ -1,0 +1,97 @@
+{
+    "db_name": "test_database",
+    "period" : 180,
+    "num_archive_workers": 1,
+    "archive": "/home/hybridos/powercloud_test/data",
+    "uris": [
+        {
+            "uri": "/assets/ess",
+            "sources":
+            [
+                "ess_1"
+            ],
+            "group": "assets_ess_1_group",
+            "measurement": "ess",
+            "destination": "influx"
+        },
+        {
+            "uri": "/assets/ess",
+            "sources":
+            [
+                "ess_2"
+            ],
+            "group": "assets_ess_2_group",
+            "measurement": "ess",
+            "destination": "influx"
+        },
+        {
+            "uri": "/assets/ess",
+            "sources":
+            [
+                "summary"
+            ],
+            "destination": "influx",
+            "measurement": "ess_summary"
+        },
+        {
+            "uri": "/site",
+            "measurement": "site"
+        },
+        {
+            "uri": "/features",
+            "measurement": "features"
+        },
+        {
+            "uri": "/components",
+            "sources":
+            [
+                "ess_twins"
+            ],
+            "destination": "influx",
+            "measurement": "components_ess_twins"
+        },
+        {
+            "uri": "/components",
+            "sources":
+            [
+                "ess_real_hs"
+            ],
+            "destination": "influx",
+            "measurement": "components_ess_real_hs"
+        },
+        {
+            "uri": "/components",
+            "sources":
+            [
+                "ess_real_ls"
+            ],
+            "destination": "influx",
+            "measurement": "components_ess_real_ls"
+        },
+        {
+            "uri": "/metrics",
+            "destination": "influx",
+            "measurement": "metrics"
+        },
+        {
+            "uri": "/cops/stats",
+            "destination": "influx",
+            "measurement": "cops_stats"
+        },
+        {
+            "uri": "/cops/summary",
+            "destination": "influx",
+            "measurement": "cops_summary"
+        },
+        {
+            "uri": "/events",
+            "destination": "mongo",
+            "measurement": "events"
+        },
+        {
+            "uri": "/ftd_test",
+            "destination": "influx",
+            "measurement": "ftd_test"
+        }
+    ]
+}

@@ -1,0 +1,268 @@
+{
+    "system": {
+        "name": "SYSO Interface",
+        "id": "syso_interface",
+        "ip_address": "0.0.0.0",
+        "port": 502
+    },
+    "registers": {
+        "holding_registers": [
+            {
+                "id": "active_power",
+                "offset": 0,
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "name": "Site - Active Power Total Net",
+                "uri": "/components/sel_735"
+            },
+            {
+                "id": "reactive_power",
+                "offset": 2,
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "name": "Site - Reactive Power Total Net",
+                "uri": "/components/sel_735"
+            },
+            {
+                "id": "setpoint",
+                "offset": 4,
+                "name": "Curtailment Flag",
+                "uri": "/metrics/curtailment_flag"
+            },
+            {
+                "id": "features_kW_mode_cmd",
+                "offset": 5,
+                "name": "Mode Select - Active Power",
+                "uri": "/features/active_power"
+            },
+            {
+                "id": "features_kW_mode_cmd_local",
+                "offset": 6,
+                "name": "Active Power Select Command",
+                "uri": "/features/active_power"
+            },
+            {
+                "id": "absolute_power_kW_cmd",
+                "offset": 7,
+                "name": "Absolute Power Setpoint",
+                "uri": "/features/active_power"
+            },
+            {
+                "id": "absolute_power_kW_cmd_local",
+                "offset": 8,
+                "name": "Absolute Power Setpoint Command",
+                "uri": "/features/active_power"
+            },
+            {
+                "id": "features_kVAR_mode_cmd",
+                "offset": 9,
+                "name": "Mode Select - Reactive Power",
+                "uri": "/features/reactive_power"
+            },
+            {
+                "id": "features_kVAR_mode_cmd_local",
+                "offset": 10,
+                "name": "Reactive Power Select Command",
+                "uri": "/features/reactive_power"
+            },
+            {
+                "id": "active_voltage_cmd",
+                "offset": 11,
+                "name": "Active Voltage Setpoint",
+                "uri": "/features/reactive_power"
+            },
+            {
+                "id": "active_voltage_cmd_local",
+                "offset": 12,
+                "name": "Active Voltage Setpoint Command",
+                "uri": "/features/reactive_power"
+            },
+            {
+                "id": "ess_charge_control_target_soc",
+                "offset": 13,
+                "name": "Target SOC Setpoint",
+                "uri": "/features/active_power"
+            },
+            {
+                "id": "ess_charge_control_target_soc_local",
+                "offset": 14,
+                "name": "Target SOC Setpoint Command",
+                "uri": "/features/active_power"
+            }
+        ],
+        "input_registers": [
+            {
+                "id": "features_kW_mode_status",
+                "offset": 1000,
+                "name": "Active Power Operating Mode",
+                "uri": "/features/active_power"
+            },
+            {
+                "id": "features_kVAR_mode_status",
+                "offset": 1001,
+                "name": "Reactive Power Operating Mode",
+                "uri": "/features/reactive_power"
+            },
+            {
+                "id": "command_feedback",
+                "offset": 1002,
+                "name": "Active Power Command Feedback",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/metrics/kW_set"
+            },
+            {
+                "id": "ess_total_active_power",
+                "offset": 1004,
+                "name": "BES Active Power Output",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/assets/ess/summary"
+            },
+            {
+                "id": "active_power",
+                "offset": 1006,
+                "name": "POI Active Power Output",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/components/sel_735"
+            },
+            {
+                "id": "command_feedback",
+                "offset": 1008,
+                "name": "Reactive Power Command Feedback",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/metrics/kVAR_set"
+            },
+            {
+                "id": "ess_total_reactive_power",
+                "offset": 1010,
+                "name": "BES Reactive Power Output",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/assets/ess/summary"
+            },
+            {
+                "id": "reactive_power",
+                "offset": 1012,
+                "name": "POI Reactive Power Output",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/components/sel_735"
+            },
+            {
+                "id": "voltage_l1_l2",
+                "offset": 1014,
+                "name": "POI Voltage L1-L2",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/components/sel_735"
+            },
+            {
+                "id": "ess_average_soc",
+                "offset": 1016,
+                "name": "Average State of Charge",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/assets/ess/summary"
+            },
+            {
+                "id": "ess_chargeable_power",
+                "offset": 1018,
+                "name": "Battery - Chargeable Power",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/assets/ess/summary"
+            },
+            {
+                "id": "ess_chargeable_energy",
+                "offset": 1020,
+                "name": "Battery - Chargeable Energy",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/assets/ess/summary"
+            },
+            {
+                "id": "ess_dischargeable_power",
+                "offset": 1022,
+                "name": "Battery - Dischargeable Power",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/assets/ess/summary"
+            },
+            {
+                "id": "ess_dischargeable_energy",
+                "offset": 1024,
+                "name": "Battery - Dischargeable Energy",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/assets/ess/summary"
+            },
+            {
+                "id": "soc",
+                "offset": 1026,
+                "name": "BESS Inverter Block 01 - SOC",
+                "uri": "/assets/ess/ess_01"
+            },
+            {
+                "id": "kwh_delivered",
+                "offset": 1027,
+                "name": "BES Production",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/components/sel_735"
+            },
+            {
+                "id": "kwh_received",
+                "offset": 1029,
+                "name": "BES Consumption",
+                "size": 2,
+                "signed": true,
+                "float": true,
+                "uri": "/components/sel_735"
+            },
+            {
+                "id": "soh",
+                "offset": 1031,
+                "name": "BESS Inverter Block 01 - SOH",
+                "uri": "/assets/ess/ess_01"
+            }
+        ],
+        "coils": [
+            {
+                "id": "breaker_status",
+                "offset": 2000,
+                "name": "POI Breaker Status",
+                "uri": "/components/sel_351"
+            },
+            {
+                "id": "alarm_status_flag",
+                "offset": 2001,
+                "name": "Alarm Status",
+                "uri": "/site/operation"
+            },
+            {
+                "id": "fault_status_flag",
+                "offset": 2002,
+                "name": "Fault Status",
+                "uri": "/site/operation"
+            }
+        ]
+    }
+}

@@ -1,16 +1,16 @@
 {
     "systemInformationRequests": [
         {
-            "name": "PROCESSES",
-            "command": "rpm -qa fims node_fims hybridos_controller modbus_interface mcp storage metrics events dbi web_server influxdb"
+            "command": "rpm -qa fims node_fims hybridos_controller modbus_interface mcp storage metrics events dbi web_server influxdb",
+            "name": "PROCESSES"
         },
         {
-            "name": "DISKSPACE",
-            "command": "df -h"
+            "command": "df -h",
+            "name": "DISKSPACE"
         },
         {
-            "name": "CPU USAGE",
-            "command": "ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10"
+            "command": "ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10",
+            "name": "CPU USAGE"
         }
     ]
 }

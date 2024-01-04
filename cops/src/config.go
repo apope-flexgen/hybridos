@@ -15,6 +15,7 @@ import (
 )
 
 var cfgDir = "/usr/local/etc/config/cops"
+var config = Config{}
 
 // Error wrapper to distinguish configuration issues that should be fatal
 type configurationError struct {
@@ -29,6 +30,7 @@ type Config struct {
 	BriefingFrequencyMS     int       `json:"briefingFrequencyMS"`
 	C2cMsgFrequencyMS       int       `json:"c2cMsgFrequencyMS"`
 	TemperatureSource       string    `json:"temperatureSource"`
+	Syswatch                bool      `json:"syswatch"` // Enable system hardware stats reporting.
 	EnableRedundantFailover bool      `json:"enableRedundantFailover"`
 	PrimaryIP               []string  `json:"primaryIP,omitempty"`
 	PrimaryNetworkInterface []string  `json:"primaryNetworkInterface,omitempty"`
@@ -37,15 +39,17 @@ type Config struct {
 	PduIP                   string    `json:"pduIP,omitempty"`
 	PduOutletEndpoint       string    `json:"pduOutletEndpoint"`
 	OtherCtrlrOutlet        string    `json:"otherCtrlrOutlet"`
+	AllowActions            bool      `json:"allowActions"` // Global for whether or not to allow taking an action
 	ProcessList             []Process `json:"processList"`
 }
 
 type Process struct {
 	Name                     string   `json:"name"`
 	Uri                      string   `json:"uri"`
+	AllowActions             bool     `json:"allowActions"`
 	WriteOutC2C              []string `json:"writeOutC2C"`
 	KillOnHang               bool     `json:"killOnHang"`
-	RequiredForHealthyStatus bool     `json:"requiredForHealthyStatus"`
+	RequiredForHealthyStatus bool     `json:"requiredForHealthyStatus"` // Determines whether or not heartbeats are enabled for a process.
 	HangTimeAllowanceMS      int      `json:"hangTimeAllowanceMS"`
 	ConfigRestart            bool     `json:"configRestart"`
 	replyToURI               string
@@ -55,12 +59,6 @@ type Process struct {
 	alive                    bool
 	healthStats              processHealthStats
 	version                  processVersion
-}
-
-// Generate an empty configuration.
-func newConfig() Config {
-	config := Config{}
-	return config
 }
 
 // Pretty print the config to stdout for debugging purposes.
@@ -75,8 +73,6 @@ func printConfig(config Config) error {
 
 // Handle a configuration body received from DBI.
 func handleConfigBody(m map[string]interface{}) error {
-	config := newConfig()
-
 	// Marshal the map to JSON
 	bytes, err := json.Marshal(m)
 	if err != nil {
@@ -99,7 +95,7 @@ func handleConfigBody(m map[string]interface{}) error {
 func parse(cfgSource string) error {
 
 	if cfgSource == "dbi" {
-		// Handle config from dbi
+		// Handle config from DBI.
 		cfg, err := cfgfetch.Retrieve(processName, cfgSource)
 		if err != nil {
 			return fmt.Errorf("retrieving dbi config body: %w", err)
@@ -110,8 +106,6 @@ func parse(cfgSource string) error {
 		}
 
 	} else if cfgSource != "" {
-		// Handle config from file input
-		c := newConfig()
 
 		log.Infof("Retrieving config from: %s", cfgSource)
 		configBytes, err := os.ReadFile(cfgSource)
@@ -119,14 +113,20 @@ func parse(cfgSource string) error {
 			return fmt.Errorf("reading config file: %w", err)
 		}
 
-		if err := json.Unmarshal(configBytes, &c); err != nil {
+		if err := json.Unmarshal(configBytes, &config); err != nil {
 			return fmt.Errorf("unmarshaling config: %w", err)
 		}
 
-		// Configure cops with the provided json file
-		if err := configureCOPS(c); err != nil {
-			return fmt.Errorf("Configuring COPS: %w", err)
+		// Validate configuration file.
+		if err := config.validate(); err != nil {
+			return fmt.Errorf("validating config file: %w", err)
 		}
+
+		// Configure cops with the provided json file.
+		if err := configureCOPS(config); err != nil {
+			return fmt.Errorf("configuring COPS: %w", err)
+		}
+
 	}
 
 	return nil
@@ -182,15 +182,15 @@ func (c *Config) validate() error {
 }
 
 // Validate a given process from configuration.
-func (p Process) validate() error {
+func (p *Process) validate() error {
 
 	// Validate each process provided in the list
 	if p.Name == "" {
-		return fmt.Errorf("process name not provided.")
+		return fmt.Errorf("process name not provided")
 	}
 
 	if p.Uri == "" {
-		return fmt.Errorf("process uri not provided.")
+		log.Warnf("URI for process %s not provided.", p.Name)
 	}
 
 	if p.HangTimeAllowanceMS == 0 {
@@ -224,7 +224,7 @@ func (config *Config) validateFailoverConfig() error {
 		}
 	}
 	if len(config.PrimaryNetworkInterface) != len(config.PrimaryIP) {
-		return fmt.Errorf("a network interface must be provided for each ip given when failover is enabled. Got %d ips and %d interfaces.", len(config.PrimaryIP), len(config.PrimaryNetworkInterface))
+		return fmt.Errorf("a network interface must be provided for each ip given when failover is enabled. Got %d ips and %d interfaces", len(config.PrimaryIP), len(config.PrimaryNetworkInterface))
 	}
 	for i, netInterface := range config.PrimaryNetworkInterface {
 		if netInterface == "" {
@@ -232,13 +232,13 @@ func (config *Config) validateFailoverConfig() error {
 		}
 	}
 	if net.ParseIP(config.ThisCtrlrStaticIP) == nil {
-		return fmt.Errorf("invalid static IP provided for this controller: %s.", config.ThisCtrlrStaticIP)
+		return fmt.Errorf("invalid static IP provided for this controller: %s", config.ThisCtrlrStaticIP)
 	}
 	if net.ParseIP(config.OtherCtrlrStaticIP) == nil {
-		return fmt.Errorf("invalid static IP provided for other controller: %s.", config.OtherCtrlrStaticIP)
+		return fmt.Errorf("invalid static IP provided for other controller: %s", config.OtherCtrlrStaticIP)
 	}
 	if net.ParseIP(config.PduIP) == nil {
-		return fmt.Errorf("invalid pdu IP provided: %s.", config.PduIP)
+		return fmt.Errorf("invalid pdu IP provided: %s", config.PduIP)
 	}
 	if config.PduOutletEndpoint == "" {
 		// SNMP endpoint for PDU outlet control. Should be the same for all PDU models in the field (AP7901b)
@@ -303,6 +303,7 @@ func configureCOPS(config Config) error {
 		var processEntry processInfo
 		processEntry.name = process.Name
 		processEntry.uri = process.Uri
+		processEntry.allowActions = process.AllowActions
 		processEntry.writeOutC2C = process.WriteOutC2C
 		processEntry.killOnHang = process.KillOnHang
 		processEntry.requiredForHealthyStatus = process.RequiredForHealthyStatus
@@ -312,10 +313,16 @@ func configureCOPS(config Config) error {
 		processEntry.replyToURI = path.Join("/cops/heartbeat/", process.Name)
 		processEntry.alive = true
 		processEntry.healthStats.lastConfirmedAlive = beginningTime
-		processEntry.healthStats.lastRestart = beginningTime
 		processEntry.healthStats.totalRestarts = -1 // First startup will increment this to zero
 		processEntry.healthStats.copsRestarts = 0
 		processJurisdiction[process.Name] = &processEntry
+	}
+
+	// Initialize dependency list for each process
+	for _, p := range processJurisdiction {
+		if err := p.updateDependencies(); err != nil {
+			return fmt.Errorf("updating %s dependency list: %w", p.name, err)
+		}
 	}
 
 	dr.configure(float64(config.HeartbeatFrequencyMS))

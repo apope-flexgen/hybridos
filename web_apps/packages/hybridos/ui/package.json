@@ -16,7 +16,7 @@
   "dependencies": {
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
     "@babel/plugin-proposal-optional-chaining": "^7.18.9",
-    "@flexgen/storybook": "^0.2.186",
+    "@flexgen/storybook": "^0.2.198",
     "@mui/lab": "^5.0.0-alpha.117",
     "@mui/material": "^5.11.13",
     "@mui/system": "^5.11.13",
@@ -52,7 +52,7 @@
     "react-is": "^18.2.0",
     "react-router-dom": "^6.4.5",
     "shared": "workspace:../shared",
-    "styled-components": "6.0.0-rc.1",
+    "styled-components": "^6.1.0",
     "typescript": "^4.9.3",
     "uuid": "^9.0.0",
     "vite": "^4.1.4",
@@ -64,7 +64,7 @@
   "devDependencies": {
     "@cypress/webpack-dev-server": "^3.2.2",
     "@types/node": "^18.11.15",
-    "@types/styled-components": "^5.1.26",
+    "@types/styled-components": "^5.1.28",
     "cypress": "^12.3.0",
     "eslint": "^8.37.0",
     "eslint-config-airbnb": "^19.0.4",

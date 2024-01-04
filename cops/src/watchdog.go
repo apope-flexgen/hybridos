@@ -17,7 +17,7 @@ func fatalErrorCheck(err error, message string) {
 }
 
 // Checks health status of each process and calls failure actions if necessary
-func patrolProcesses() {
+func patrolProcesses() error {
 	for _, process := range processJurisdiction {
 		if process.isStillHungOrDead() {
 			log.Infof("Failure: Process %s still dead.", process.name)
@@ -25,10 +25,19 @@ func patrolProcesses() {
 			log.Infof("Success: Process %s resurrected.", process.name)
 			process.alive = true
 			process.sendPrimaryFlag(controllerMode == Primary)
-		} else if process.isHungOrDead() {
+		} else if process.isHungOrDead() && process.requiredForHealthyStatus {
+			// Only handle failure actions for processes with heartbeats. Current expectation is that
+			// failure actions are only performed on COPS processes that have heartbeats.
 			takeFailureAction(process)
 		}
+
+		// Update the service status for a given process
+		if err := process.updateStatus(); err != nil {
+			return fmt.Errorf("updating service %v status: %w", process.name, err)
+		}
 	}
+
+	return nil
 }
 
 // Takes necessary failure actions on a process that has been newly declared hung or dead

@@ -5,7 +5,7 @@ package ftd
 import (
 	"fims"
 
-	log "github.com/flexgen-power/go_flexgen/logger"
+	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 )
 
 // Adapted from go_flexgen buffman

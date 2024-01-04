@@ -1,13 +1,11 @@
 {
-    "name" : "test",
-    "destination" : 
+    "name" : "air",
+    "mode" : "archives",
+    "record_settings" : 
     {
-        "influx" : true,
         "interval" : 10,
-        "database" : "overwatch",
-        "address": "localhost:8086",
-        "timeout" : 30,
-        "health_check_delay": 10
+        "database" : "ow_test_database",
+        "archive_directory" : "/home/vagrant/overwatch_data/archives"
     },
     "mem": 
     {
@@ -34,7 +32,7 @@
             "interval" : 10
         },
         "mounts": true, 
-        "directories" : [ "/home/vagrant/archives" ],
+        "directories" : [ "/home/vagrant/overwatch_data/archives" ],
         "filecount_tracking_max" : 50000,
         "mb_size_tracking_max" : 5000
     },
@@ -46,7 +44,7 @@
         },
         "fims" : true, 
         "interfaces" : true, 
-        "ips" : { "aux1" : "172.24.78.48", "aux2" : "172.24.24.79" }, 
+        "ips" : {  }, 
         "stats" : [ "wmem_max", "rmem_max" ]
     },
     "process" : 

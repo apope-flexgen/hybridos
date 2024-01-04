@@ -1,0 +1,100 @@
+{
+    "absolute_ess": {
+        "name": "Absolute ESS",
+        "icon": "BatteryVert",
+        "color_code": "lightGreen",
+        "constants": [
+            {
+                "id": "runmode1_kW_mode_cmd",
+                "name": "Active Power Feature",
+                "type": "Int",
+                "unit": "",
+                "uri": "/features/active_power/runmode1_kW_mode_cmd",
+                "value": 6
+            },
+            {
+                "id": "absolute_mode_flag",
+                "name": "Absolute Mode Flag",
+                "type": "Bool",
+                "unit": "",
+                "uri": "/features/active_power/active_power_setpoint_absolute_mode_flag",
+                "value": true
+            }
+        ],
+        "variables": [
+            {
+                "id": "charge_flag",
+                "name": "Charge Flag",
+                "type": "Bool",
+                "unit": "",
+                "uri": "/features/active_power/active_power_setpoint_direction_flag",
+                "value": false
+            },
+            {
+                "id": "kw_cmd",
+                "name": "Active Power Setpoint",
+                "type": "Float",
+                "unit": "kW",
+                "uri": "/features/active_power/active_power_setpoint_kW_cmd",
+                "value": 1000
+            }
+        ]
+    },
+    "target_soc": {
+        "name": "Target SOC",
+        "icon": "BatteryCharging",
+        "color_code": "lightBlue",
+        "constants": [
+            {
+                "id": "runmode1_kW_mode_cmd",
+                "name": "Active Power Feature",
+                "type": "Int",
+                "unit": "",
+                "uri": "/features/active_power/runmode1_kW_mode_cmd",
+                "value": 1
+            }
+        ],
+        "variables": [
+            {
+                "id": "soc_target",
+                "name": "Target SoC Setpoint",
+                "type": "Float",
+                "unit": "%",
+                "uri": "/features/active_power/ess_charge_control_target_soc",
+                "value": 100
+            }
+        ]
+    },
+    "default": {
+        "name": "Default",
+        "icon": "Build",
+        "color_code": "gray",
+        "constants": [
+            {
+                "id": "charge_flag",
+                "name": "Charge Flag",
+                "type": "Bool",
+                "unit": "",
+                "uri": "/features/active_power/active_power_setpoint_direction_flag",
+                "value": false
+            },
+            {
+                "id": "kw_cmd",
+                "name": "Absolute ESS Setpoint",
+                "type": "Float",
+                "unit": "kW",
+                "uri": "/features/active_power/active_power_setpoint_kW_cmd",
+                "value": 0.0
+            },
+            {
+                "id": "soc_target",
+                "name": "Target SoC Setpoint",
+                "type": "Float",
+                "unit": "%",
+                "uri": "/features/active_power/ess_charge_control_target_soc",
+                "value": 0
+            }
+        ],
+        "variables": []
+    }
+}

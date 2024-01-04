@@ -1,0 +1,57 @@
+{
+    "system": {
+        "name": "FlexGen HybridOS",
+        "protocol": "DNP3",
+        "version": "0.2",
+        "base_uri": "/sites",
+        "id": "dnp3_server",
+        "debug": 0,
+        "unsol": true,
+        "ip_address": "*.*.*.*",
+        "local_uri": "/local_server",
+        "port": 20000,
+        "stats_pub_uri": "/dnp3_server/stats",
+        "stats_pub_frequency": 1000
+    },
+    "registers": [
+        {
+            "type": "AnOPInt32",
+            "map": [
+                { "id": "TestBatchSetClient",       "offset": 0, "name": "TestBatchSetClient",      "uri": "/analog/out/batch"},
+                { "id": "TestIntervalSetClient",    "offset": 1, "name": "TestIntervalSetClient",   "uri": "/analog/out"},
+                { "id": "TestBatchSetServer",       "offset": 2, "name": "TestBatchSetServer",      "uri": "/analog/out/batch", "batch_set_rate": 1000  },
+                { "id": "TestIntervalSetServer",    "offset": 3, "name": "TestIntervalSetServer",   "uri": "/analog/out", "interval_set_rate": 1000  }
+            ]
+        },
+        {
+            "type": "CROB",
+            "map": [
+                { "id": "TestBatchSetClient",    "offset": 0, "name": "TestBatchSetClient",     "uri": "/binary/out/batch"},
+                { "id": "TestIntervalSetClient", "offset": 1, "name": "TestIntervalSetClient",  "uri": "/binary/out"},
+                { "id": "TestBatchSetServer",    "offset": 2, "name": "TestBatchSetServer",     "uri": "/binary/out/batch",   "batch_set_rate": 1000  },
+                { "id": "TestIntervalSetServer", "offset": 3, "name": "TestIntervalSetServer",  "uri": "/binary/out", "interval_set_rate": 1000  }
+            ]
+        },
+        {
+            "type": "binary",
+
+            "map": [
+                { "id": "TestBatchPubClient",       "offset": 0, "uri": "/binary/in/batch", "name": "binary_1"},
+                { "id": "TestIntervalPubClient",    "offset": 1, "uri": "/binary/in", "name": "binary_2"},
+                { "id": "TestBatchPubServer",       "offset": 2, "uri": "/binary/in/batch", "name": "binary_3",  "batch_pub_rate": 1000},
+                { "id": "TestIntervalPubServer",    "offset": 3, "uri": "/binary/in", "name": "binary_4",  "interval_pub_rate": 1000}
+            ]
+        },
+        {
+            "type": "analog",
+            "map": [
+                { "id": "TestBatchPubClient",       "offset": 0, "uri": "/analog/in/batch", "name": "analog_1"},
+                { "id": "TestIntervalPubClient",    "offset": 1, "uri": "/analog/in", "name": "analog_2"},
+                { "id": "TestBatchPubServer",       "offset": 2, "uri": "/analog/in/batch", "name": "analog_3", "batch_pub_rate": 1000},
+                { "id": "TestIntervalPubServer",    "offset": 3, "uri": "/analog/in", "name": "analog_4", "interval_pub_rate": 1000},
+                { "id": "MakeSureIComeAlong",       "offset": 4, "uri": "/analog/in", "name": "analog_5"},
+                { "id": "MakeSureIComeAlong2",    "offset": 5, "uri": "/analog/in", "name": "analog_6"}
+            ]
+        }
+    ]
+}

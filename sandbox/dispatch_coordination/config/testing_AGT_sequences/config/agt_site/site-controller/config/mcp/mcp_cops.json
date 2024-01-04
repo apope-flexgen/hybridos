@@ -1,11 +1,9 @@
 {
-	"processes": 
-	[
-		{
-			"name":"/usr/local/bin/cops",
-			"args": [
-			],
-			"max_restarts": -1
-		}
-	]
+    "processes": [
+        {
+            "args": [],
+            "max_restarts": -1,
+            "name": "/usr/local/bin/cops"
+        }
+    ]
 }

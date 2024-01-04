@@ -3,8 +3,6 @@
         "notes": "",
         "permissions": [
             {
-                "roleOrUsername": "observer",
-                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'.",
                 "access": [
                     "/login readWrite",
                     "/storageConfig read",
@@ -34,11 +32,11 @@
                     "disconnect read",
                     "updatePropertyValue function read",
                     "readusers function read"
-                ]
+                ],
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'.",
+                "roleOrUsername": "observer"
             },
             {
-                "roleOrUsername": "user",
-                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'.",
                 "access": [
                     "/login readWrite",
                     "/storageConfig readWrite",
@@ -68,11 +66,11 @@
                     "disconnect readWrite",
                     "updatePropertyValue function readWrite",
                     "readusers function read"
-                ]
+                ],
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'.",
+                "roleOrUsername": "user"
             },
             {
-                "roleOrUsername": "admin",
-                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'.",
                 "access": [
                     "/login readWrite",
                     "/storageConfig readWrite",
@@ -107,21 +105,21 @@
                     "removeuser function readWrite",
                     "readusers function readWrite",
                     "message readWrite"
-                ]
+                ],
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'.",
+                "roleOrUsername": "admin"
             },
             {
-                "roleOrUsername": "rest",
+                "access": [],
                 "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'. For the basic rest role, only read is allowed.",
-                "access": []
+                "roleOrUsername": "rest"
             },
             {
-                "roleOrUsername": "restreadwrite",
+                "access": [],
                 "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'. For this username, readWrite is allowed. This username - when configured as a 'rest' role username - primarly adds writing to '_manual' and '_override' to the basic permissions of the rest role.",
-                "access": []
+                "roleOrUsername": "restreadwrite"
             },
             {
-                "roleOrUsername": "developer",
-                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'. NOTE: '/storage/storage/inspector/' must keep the slash at the end, unlike the other uris",
                 "access": [
                     "/login readWrite",
                     "/storageConfig readWrite",
@@ -166,7 +164,9 @@
                     "removeuser function readWrite",
                     "readusers function readWrite",
                     "message readWrite"
-                ]
+                ],
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'. NOTE: '/storage/storage/inspector/' must keep the slash at the end, unlike the other uris",
+                "roleOrUsername": "developer"
             }
         ]
     }

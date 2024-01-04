@@ -1,0 +1,26 @@
+{
+    "buffer_size": 100000,
+    "clients": {
+        "site_controller": {
+            "directory": "/home/hybridos/powercloud/owner/sudden_valley/archives",
+            "extension": ".tar.gz",
+            "known_hosts": "/home/hybridos/.ssh/known_hosts",
+            "private_key": "/home/hybridos/.ssh/id_rsa",
+            "servers": [
+                "owner-sudden_valley-local-historian-01"
+            ]
+        }
+    },
+    "db_directory": "/home/hybridos/.cloud_sync/db",
+    "retry_limit": 1,
+    "servers": {
+        "owner-sudden_valley-local-historian-01": {
+            "directory": "/mnt/historian/owner/sudden_valley-site-controller-01",
+            "ip": "192.168.114.13",
+            "port": "22",
+            "timeout": 10,
+            "user": "hybridos"
+        }
+    },
+    "sleep_limit_seconds": 30
+}

@@ -247,16 +247,8 @@ func unionValueToString(union *Union) string {
 	case FLOAT:
 		return fmt.Sprintf("%f", union.f)
 	default:
-		return fmt.Sprintf("null")
+		return "null"
 	}
-}
-
-// check if a Union is an int64, uint64, or a float
-func isNumeric(union *Union) bool {
-	if union.tag == INT || union.tag == UINT || union.tag == FLOAT {
-		return true
-	}
-	return false
 }
 
 // cast a union from one time to another
@@ -484,17 +476,16 @@ func castValueToUnionType(value interface{}, newType DataType) Union {
 		case float64:
 			str = fmt.Sprintf("%f", value)
 		default:
-			str = fmt.Sprintf("")
+			str = ""
 		}
 		return Union{
 			tag: STRING,
 			s:   str,
 		}
 	case BOOL:
-		switch (value).(type) {
+		switch x := (value).(type) {
 		case string:
-			s, _ := (value).(string)
-			if s == "false" {
+			if x == "false" {
 				return Union{
 					tag: newType,
 					b:   false,
@@ -502,52 +493,46 @@ func castValueToUnionType(value interface{}, newType DataType) Union {
 			}
 			return Union{
 				tag: newType,
-				b:   len(s) > 0,
+				b:   len(x) > 0,
 			}
 		case uint64:
-			b, _ := value.(uint64)
 			return Union{
 				tag: newType,
-				b:   b != 0,
+				b:   x != 0,
 			}
 		case int64:
-			b, _ := value.(int64)
 			return Union{
 				tag: newType,
-				b:   b != 0,
+				b:   x != 0,
 			}
 		case int:
-			b, _ := value.(int)
 			return Union{
 				tag: newType,
-				b:   b != 0,
+				b:   x != 0,
 			}
 		case float64:
-			b, _ := value.(float64)
 			return Union{
 				tag: newType,
-				b:   b != 0,
+				b:   x != 0,
 			}
 		case bool:
 			return Union{
 				tag: newType,
-				b:   (value).(bool),
+				b:   x,
 			}
 		default:
 			return Union{tag: BOOL}
 		}
 	case INT:
-		switch (value).(type) {
+		switch x := (value).(type) {
 		case string:
-			s, _ := value.(string)
-			str, _ := strconv.ParseInt(s, 10, 64)
+			str, _ := strconv.ParseInt(x, 10, 64)
 			return Union{
 				tag: INT,
 				i:   str,
 			}
 		case uint64:
-			b, _ := value.(uint64)
-			if b > uint64(math.MaxInt64) {
+			if x > uint64(math.MaxInt64) {
 				return Union{
 					tag: newType,
 					i:   math.MaxInt64,
@@ -555,46 +540,42 @@ func castValueToUnionType(value interface{}, newType DataType) Union {
 			}
 			return Union{
 				tag: newType,
-				i:   int64(b),
+				i:   int64(x),
 			}
 		case int64:
-			b, _ := value.(int64)
 			return Union{
 				tag: newType,
-				i:   int64(b),
+				i:   int64(x),
 			}
 		case int:
-			b, _ := value.(int)
 			return Union{
 				tag: newType,
-				i:   int64(b),
+				i:   int64(x),
 			}
 		case float64:
-			b, _ := value.(float64)
-			if b > float64(math.MaxInt64) {
+			if x > float64(math.MaxInt64) {
 				return Union{
 					tag: newType,
 					i:   math.MaxInt64,
 				}
-			} else if b < float64(math.MinInt64) {
+			} else if x < float64(math.MinInt64) {
 				return Union{
 					tag: newType,
 					i:   math.MinInt64,
 				}
 			}
-			if b < 0 {
+			if x < 0 {
 				return Union{
 					tag: newType,
-					i:   int64(-math.Floor(math.Abs(b))),
+					i:   int64(-math.Floor(math.Abs(x))),
 				}
 			}
 			return Union{
 				tag: newType,
-				i:   int64(math.Floor(b)),
+				i:   int64(math.Floor(x)),
 			}
 		case bool:
-			b, _ := (value).(bool)
-			if b {
+			if x {
 				return Union{
 					tag: newType,
 					i:   1,
@@ -609,23 +590,20 @@ func castValueToUnionType(value interface{}, newType DataType) Union {
 			return Union{tag: INT}
 		}
 	case UINT:
-		switch (value).(type) {
+		switch x := (value).(type) {
 		case string:
-			s, _ := value.(string)
-			str, _ := strconv.ParseUint(s, 10, 64)
+			str, _ := strconv.ParseUint(x, 10, 64)
 			return Union{
 				tag: UINT,
 				ui:  str,
 			}
 		case uint64:
-			b, _ := value.(uint64)
 			return Union{
 				tag: newType,
-				ui:  uint64(b),
+				ui:  uint64(x),
 			}
 		case int64:
-			b, _ := value.(int64)
-			if b < 0 {
+			if x < 0 {
 				return Union{
 					tag: newType,
 					ui:  0,
@@ -633,11 +611,10 @@ func castValueToUnionType(value interface{}, newType DataType) Union {
 			}
 			return Union{
 				tag: newType,
-				ui:  uint64(b),
+				ui:  uint64(x),
 			}
 		case int:
-			b, _ := value.(int)
-			if b < 0 {
+			if x < 0 {
 				return Union{
 					tag: newType,
 					ui:  0,
@@ -645,16 +622,15 @@ func castValueToUnionType(value interface{}, newType DataType) Union {
 			}
 			return Union{
 				tag: newType,
-				ui:  uint64(b),
+				ui:  uint64(x),
 			}
 		case float64:
-			b, _ := value.(float64)
-			if b < 0 {
+			if x < 0 {
 				return Union{
 					tag: newType,
 					ui:  0,
 				}
-			} else if b > math.MaxUint64 {
+			} else if x > math.MaxUint64 {
 				return Union{
 					tag: UINT,
 					ui:  math.MaxUint64,
@@ -662,11 +638,10 @@ func castValueToUnionType(value interface{}, newType DataType) Union {
 			}
 			return Union{
 				tag: newType,
-				ui:  uint64(math.Floor(b)),
+				ui:  uint64(math.Floor(x)),
 			}
 		case bool:
-			b, _ := (value).(bool)
-			if b {
+			if x {
 				return Union{
 					tag: newType,
 					ui:  1,
@@ -681,41 +656,35 @@ func castValueToUnionType(value interface{}, newType DataType) Union {
 			return Union{tag: UINT}
 		}
 	case FLOAT:
-		switch (value).(type) {
+		switch x := (value).(type) {
 		case string:
-			s, _ := value.(string)
-			str, _ := strconv.ParseFloat(s, 64)
+			str, _ := strconv.ParseFloat(x, 64)
 			return Union{
 				tag: FLOAT,
 				f:   str,
 			}
 		case uint64:
-			b, _ := value.(uint64)
 			return Union{
 				tag: newType,
-				f:   float64(b),
+				f:   float64(x),
 			}
 		case int64:
-			b, _ := value.(int64)
 			return Union{
 				tag: newType,
-				f:   float64(b),
+				f:   float64(x),
 			}
 		case int:
-			b, _ := value.(int)
 			return Union{
 				tag: newType,
-				f:   float64(b),
+				f:   float64(x),
 			}
 		case float64:
-			b, _ := value.(float64)
 			return Union{
 				tag: newType,
-				f:   float64(b),
+				f:   float64(x),
 			}
 		case bool:
-			b, _ := (value).(bool)
-			if b {
+			if x {
 				return Union{
 					tag: newType,
 					f:   1.0,
@@ -755,17 +724,6 @@ func getValueFromUnion(union *Union) interface{} {
 func stringInSlice(s []string, str string) bool {
 	for _, v := range s {
 		if v == str {
-			return true
-		}
-	}
-	return false
-}
-
-// why does this not exist in the standard string library yet????
-func errorInSlice(s []error, str error) bool {
-	stringErr := fmt.Sprintf("%v", str)
-	for _, v := range s {
-		if fmt.Sprintf("%v", v) == stringErr {
 			return true
 		}
 	}
@@ -821,12 +779,12 @@ func removeDuplicateValues(slice []string) []string {
 	return list
 }
 
-func stringListsMatch(list1, list2 []string) bool {
+func unionListsMatch(list1, list2 []Union) bool {
 	if len(list1) != len(list2) {
 		return false
 	}
-	for _, str := range list1 {
-		if !stringInSlice(list2, str) {
+	for i, union1 := range list1 { // order matters
+		if union1 != list2[i] {
 			return false
 		}
 	}

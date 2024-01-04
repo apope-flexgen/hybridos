@@ -1,0 +1,378 @@
+{
+    "_doc": "dashboard",
+    "data": [
+        {
+            "info": {
+                "baseURI": "/summary",
+                "batteryView": false,
+                "batteryViewSourceURI": null,
+                "batteryViewURI": "",
+                "isTemplate": true,
+                "items": [
+                    {
+                        "name": "Site Summary",
+                        "uri": "/summary"
+                    }
+                ],
+                "name": "Site Summary",
+                "sourceURIs": [
+                    "/site"
+                ]
+            },
+            "status": [
+                {
+                    "name": "Site Controller Status",
+                    "scalar": null,
+                    "sourceURI": "/site",
+                    "units": "",
+                    "uri": "/site_status"
+                },
+                {
+                    "name": "ESS Active Power Setpoint",
+                    "scalar": 1000,
+                    "sourceURI": "/site",
+                    "units": "MW",
+                    "uri": "/ess_kW_cmd"
+                },
+                {
+                    "name": "ESS Reactive Power Setpoint",
+                    "scalar": "1000",
+                    "sourceURI": "/site",
+                    "units": "MVAR",
+                    "uri": "/ess_kVAR_cmd"
+                }
+            ]
+        },
+        {
+            "info": {
+                "baseURI": "/summary",
+                "batteryView": false,
+                "batteryViewSourceURI": null,
+                "batteryViewURI": "",
+                "isTemplate": true,
+                "items": [
+                    {
+                        "name": "Features Summary",
+                        "uri": "/summary"
+                    }
+                ],
+                "name": "Features Summary",
+                "sourceURIs": [
+                    "/features"
+                ]
+            },
+            "status": [
+                {
+                    "name": "Active Power Mode",
+                    "scalar": null,
+                    "sourceURI": "/features",
+                    "units": "",
+                    "uri": "/runmode1_kW_mode_status"
+                },
+                {
+                    "name": "Reactive Power Mode",
+                    "scalar": null,
+                    "sourceURI": "/features",
+                    "units": "",
+                    "uri": "/runmode1_kVAR_mode_status"
+                },
+                {
+                    "name": "Minimum POI Power Limit",
+                    "scalar": 1000,
+                    "sourceURI": "/features",
+                    "units": "MW",
+                    "uri": "/active_power_poi_limits_min_kW"
+                },
+                {
+                    "name": "Maximum POI Power Limit",
+                    "scalar": 1000,
+                    "sourceURI": "/features",
+                    "units": "MW",
+                    "uri": "/active_power_poi_limits_max_kW"
+                },
+                {
+                    "name": "Basepoint",
+                    "scalar": 1000,
+                    "sourceURI": "/features",
+                    "units": "MW",
+                    "uri": "/fr_baseload_cmd_kw"
+                },
+                {
+                    "name": "Site Frequency",
+                    "scalar": null,
+                    "sourceURI": "/features",
+                    "units": "Hz",
+                    "uri": "/site_frequency"
+                }
+            ]
+        },
+        {
+            "info": {
+                "baseURI": "/feeders/summary",
+                "batteryView": false,
+                "batteryViewSourceURI": null,
+                "batteryViewURI": "",
+                "isTemplate": true,
+                "items": [
+                    {
+                        "name": "Feeder Summary",
+                        "uri": "/feeders/summary"
+                    }
+                ],
+                "name": "Feeder Summary",
+                "sourceURIs": [
+                    "/assets"
+                ]
+            },
+            "status": [
+                {
+                    "name": "Sync Feeder Status",
+                    "scalar": null,
+                    "sourceURI": "/assets",
+                    "units": "",
+                    "uri": "/sync_feeder_status"
+                },
+                {
+                    "name": "POI Breaker Status",
+                    "scalar": null,
+                    "sourceURI": "/assets",
+                    "units": "",
+                    "uri": "/feed_1_breaker_status"
+                },
+                {
+                    "name": "POI Active Power",
+                    "scalar": "1",
+                    "sourceURI": "/assets",
+                    "units": "kW",
+                    "uri": "/feed_1_active_power"
+                },
+                {
+                    "name": "ESS Aux Active Power",
+                    "scalar": "",
+                    "sourceURI": "/assets",
+                    "units": "kW",
+                    "uri": "/feed_3_active_power"
+                }
+            ]
+        },
+        {
+            "info": {
+                "baseURI": "/ess/summary",
+                "batteryView": false,
+                "batteryViewSourceURI": null,
+                "batteryViewURI": "",
+                "isTemplate": true,
+                "items": [
+                    {
+                        "name": "Storage",
+                        "uri": "/ess/summary"
+                    }
+                ],
+                "name": "Storage Summary",
+                "sourceURIs": [
+                    "/assets"
+                ]
+            },
+            "status": [
+                {
+                    "name": "Units Available",
+                    "scalar": null,
+                    "sourceURI": "/assets",
+                    "units": "",
+                    "uri": "/num_ess_available"
+                },
+                {
+                    "name": "Units Running",
+                    "scalar": null,
+                    "sourceURI": "/assets",
+                    "units": "",
+                    "uri": "/num_ess_running"
+                },
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "sourceURI": "/assets",
+                    "units": "MW",
+                    "uri": "/ess_total_active_power"
+                },
+                {
+                    "name": "Reactive Power",
+                    "scalar": "1000",
+                    "sourceURI": "/assets",
+                    "units": "MVAR",
+                    "uri": "/ess_total_reactive_power"
+                },
+                {
+                    "name": "Apparent Power",
+                    "scalar": "1000",
+                    "sourceURI": "/assets",
+                    "units": "MVA",
+                    "uri": "/ess_total_apparent_power"
+                },
+                {
+                    "name": "Average State of Charge",
+                    "scalar": null,
+                    "sourceURI": "/assets",
+                    "units": "%",
+                    "uri": "/ess_average_soc"
+                },
+                {
+                    "name": "Chargeable Power",
+                    "scalar": 1000,
+                    "sourceURI": "/assets",
+                    "units": "MW",
+                    "uri": "/ess_chargeable_power"
+                },
+                {
+                    "name": "Dischargeable Power",
+                    "scalar": 1000,
+                    "sourceURI": "/assets",
+                    "units": "MW",
+                    "uri": "/ess_dischargeable_power"
+                },
+                {
+                    "name": "Chargeable Energy",
+                    "scalar": 1000,
+                    "sourceURI": "/assets",
+                    "units": "MWh",
+                    "uri": "/ess_chargeable_energy"
+                },
+                {
+                    "name": "Dischargeable Energy",
+                    "scalar": 1000,
+                    "sourceURI": "/assets",
+                    "units": "MWh",
+                    "uri": "/ess_dischargeable_energy"
+                },
+                {
+                    "name": "Grid Forming Voltage Slew",
+                    "scalar": null,
+                    "sourceURI": "/assets",
+                    "units": "%/s",
+                    "uri": "/grid_forming_voltage_slew"
+                },
+                {
+                    "name": "Total Alarms",
+                    "scalar": null,
+                    "sourceURI": "/assets",
+                    "units": "",
+                    "uri": "/ess_total_alarms"
+                },
+                {
+                    "name": "Total faults",
+                    "scalar": null,
+                    "sourceURI": "/assets",
+                    "units": "",
+                    "uri": "/ess_total_faults"
+                }
+            ]
+        },
+        {
+            "info": {
+                "baseURI": "/ess",
+                "batteryView": true,
+                "batteryViewSourceURI": "/assets",
+                "batteryViewURI": "/soc",
+                "isTemplate": true,
+                "items": [
+                    {
+                        "name": "ESS 1",
+                        "uri": "/ess/ess_01"
+                    },
+                    {
+                        "name": "ESS 2",
+                        "uri": "/ess/ess_02"
+                    },
+                    {
+                        "name": "ESS 3",
+                        "uri": "/ess/ess_03"
+                    }
+                ],
+                "name": "ESS Summary",
+                "sourceURIs": [
+                    "/assets"
+                ]
+            },
+            "status": [
+                {
+                    "name": "System Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/status"
+                },
+                {
+                    "name": "Maintenance Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/maint_mode"
+                },
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Active Power Setpoint",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power_setpoint"
+                },
+                {
+                    "name": "Reactive Power",
+                    "scalar": "1000",
+                    "units": "MVAR",
+                    "uri": "/reactive_power"
+                },
+                {
+                    "name": "Apparent Power",
+                    "scalar": "1000",
+                    "units": "MVA",
+                    "uri": "/apparent_power"
+                },
+                {
+                    "name": "Battery Racks In Service",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/bms_racks_in_service"
+                },
+                {
+                    "name": "State of Charge",
+                    "scalar": "1",
+                    "units": "%",
+                    "uri": "/soc"
+                },
+                {
+                    "name": "System Chargeable Energy",
+                    "scalar": "1000",
+                    "units": "MWh",
+                    "uri": "/system_chargeable_energy"
+                },
+                {
+                    "name": "System Dischargeable Energy",
+                    "scalar": "1000",
+                    "units": "MWh",
+                    "uri": "/system_dischargeable_energy"
+                },
+                {
+                    "name": "System Chargeable Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/system_chargeable_power"
+                },
+                {
+                    "name": "System Dischargeable Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/system_dischargeable_power"
+                },
+                {
+                    "name": "State of Health",
+                    "scalar": "1",
+                    "units": "%",
+                    "uri": "/soh"
+                }
+            ]
+        }
+    ]
+}

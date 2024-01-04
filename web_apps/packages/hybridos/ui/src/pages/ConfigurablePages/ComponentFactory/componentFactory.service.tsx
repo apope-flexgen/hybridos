@@ -14,6 +14,8 @@ import {
   ControlComponentStateInfo,
   MemoizedComponentObject,
 } from './componentFactory.types';
+import { useAppContext } from 'src/App/App';
+import { Roles } from 'shared/types/api/Users/Users.types';
 
 // FIXME: debounce button inputs (should this be an option in our button component?)
 const generateControlHandlerObject = (
@@ -121,17 +123,20 @@ const organizeProps = (
   component: string,
   stateInfo: StatusComponentStateInfo | ControlComponentStateInfo | undefined,
 ): any => {
+  const { currentUser } = useAppContext();
+
   if (stateInfo === undefined) {
+    props.disabled = currentUser.role === Roles.Observer;
     return props;
   }
 
   const [value, enabled] =
     typeof stateInfo === 'object' ? [stateInfo.value, stateInfo.enabled] : [stateInfo, true];
 
-  props.disabled = !enabled;
+  props.disabled = !enabled || currentUser.role === Roles.Observer;
 
   if (component === 'TextField') {
-    props.disabled = false;
+    props.disabled = currentUser.role === Roles.Observer;
     props.bold = enabled;
     props.value = value;
     props.adornment = 'end';
@@ -150,7 +155,7 @@ const organizeProps = (
     props.bold = enabled;
     props.helperTextSize = 'small';
     props.color = enabled ? 'secondary' : 'primary';
-    props.disabled = false;
+    props.disabled  = currentUser.role === Roles.Observer;
   } else if (component === 'Switch') {
     props.labelPlacement = 'right';
     props.color = 'primary';

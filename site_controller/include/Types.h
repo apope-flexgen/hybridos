@@ -106,13 +106,16 @@ struct ESS_Calibration_Settings {
     bool calibration_flag;
     float balancing_factor;
     bool power_dist_flag;
-    bool limits_override;
+    bool soc_protection_buffers_disable;
     bool soc_limits_flag;
     float min_soc_limit;
     float max_soc_limit;
-    bool voltage_limits;
-    float min_voltage_limit;
-    float max_voltage_limit;
+    bool cell_voltage_limits;
+    float min_cell_voltage_limit;
+    float max_cell_voltage_limit;
+    bool rack_voltage_limits;
+    float min_rack_voltage_limit;
+    float max_rack_voltage_limit;
     float raw_feature_setpoint;
 };
 

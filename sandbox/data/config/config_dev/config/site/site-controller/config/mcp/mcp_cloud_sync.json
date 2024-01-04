@@ -1,0 +1,13 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/cloud_sync",
+			"args": [
+				"--c=/usr/local/etc/config/cloud_sync/cloud_sync.json",
+				"--logCfg=/usr/local/etc/config/logging/cloud_sync/cloud_sync_verbose.json"
+			],
+			"max_restarts": -1
+		}
+	]
+}

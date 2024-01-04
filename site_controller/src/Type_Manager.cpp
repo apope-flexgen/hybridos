@@ -110,7 +110,7 @@ bool Type_Manager::add_type_data_to_buffer(fmt::memory_buffer& buf) {
         // add asset instance's ID with colon
         bufJSON_AddId(buf, pAssets[i]->get_id().c_str());
         // add asset instance's data
-        if (!pAssets[i]->add_asset_data_to_buffer(buf, strcmp(asset_type_id, FEEDERS_TYPE_ID) == 0)) {
+        if (!pAssets[i]->add_asset_data_to_buffer(buf)) {
             FPS_ERROR_LOG("Error adding asset instance with type %s and index %zu to the type manager data object.", asset_type_id, i);
             return false;
         }
@@ -208,13 +208,13 @@ int Type_Manager::get_num_in_local_mode(void) {
 // Sends one PUB for each asset instance and one PUB for the asset type summary data.
 // If there are no configured instances for this asset type, the summary will not be published.
 // The passed type must match the Type_Manager's asset type.
-void Type_Manager::publish_assets(asset_type type) {
+void Type_Manager::publish_assets() {
     std::string asset_type_base_uri = "/assets/" + std::string(asset_type_id) + "/";
 
     // publish data for each asset instance
     for (size_t i = 0; i < pAssets.size(); ++i) {
         send_FIMS_buf.clear();
-        if (!pAssets[i]->add_asset_data_to_buffer(send_FIMS_buf, type == FEEDERS)) {
+        if (!pAssets[i]->add_asset_data_to_buffer(send_FIMS_buf)) {
             FPS_ERROR_LOG("Error adding asset instance with type %s and index %zu to the type manager publish.", asset_type_id, i);
             return;
         }

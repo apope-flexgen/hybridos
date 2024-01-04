@@ -1,0 +1,21 @@
+{
+    "_doc": "layout",
+    "_id": "628f9aa7ac280424cefffbe3",
+    "_version": "2022-06-02T09:21:50.978-04:00",
+    "data": [
+        {
+            "info": {
+                "key": "ESS",
+                "name": "ESS",
+                "icon": "ViewModule"
+            }
+        },
+        {
+            "info": {
+                "key": "feeders_tab",
+                "name": "Feeders",
+                "icon": "Feeders"
+            }
+        }
+    ]
+}

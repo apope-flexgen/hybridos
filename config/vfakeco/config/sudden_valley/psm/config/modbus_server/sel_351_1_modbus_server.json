@@ -1,0 +1,257 @@
+{
+	"fileInfo":{},
+	"system":{
+		"device_id": 1,
+		"id": "SEL_351_1",
+		"ip_address": "0.0.0.0",
+		"name": "SEL_351_1",
+		"port": 10001
+	},
+	"registers":{
+		"discrete_inputs": [
+			{
+				"id": "breaker_status",
+				"name": null,
+				"offset": 298,
+				"uri": "/components/sel_351_1"
+			}
+		],
+		"input_registers": [
+			{
+				"id": "current_l1",
+				"name": null,
+				"offset": 0,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "current_angle_l1",
+				"name": null,
+				"offset": 1,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "current_l2",
+				"name": null,
+				"offset": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "current_angle_l2",
+				"name": null,
+				"offset": 3,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "current_l3",
+				"name": null,
+				"offset": 4,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "current_angle_l3",
+				"name": null,
+				"offset": 5,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "current_g",
+				"name": null,
+				"offset": 6,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "current_angle_g",
+				"name": null,
+				"offset": 7,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "current_n",
+				"name": null,
+				"offset": 8,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "current_angle_n",
+				"name": null,
+				"offset": 9,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "voltage_l1",
+				"name": null,
+				"offset": 10,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "voltage_angle_l1",
+				"name": null,
+				"offset": 12,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "voltage_l2",
+				"name": null,
+				"offset": 13,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "voltage_angle_l2",
+				"name": null,
+				"offset": 15,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "voltage_l3",
+				"name": null,
+				"offset": 16,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "voltage_angle_l3",
+				"name": null,
+				"offset": 18,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "voltage_synch",
+				"name": null,
+				"offset": 19,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "voltage_synch_angle",
+				"name": null,
+				"offset": 21,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "active_power",
+				"name": null,
+				"offset": 22,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "reactive_power",
+				"name": null,
+				"offset": 24,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "power_factor",
+				"name": null,
+				"offset": 26,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "power_factor_leading",
+				"name": null,
+				"offset": 27,
+				"signed": true,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "frequency",
+				"name": null,
+				"offset": 28,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "station_battery_voltage",
+				"name": null,
+				"offset": 29,
+				"scale": 10,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "real_energy_received",
+				"name": null,
+				"offset": 30,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "real_energy_delivered",
+				"name": null,
+				"offset": 32,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "reactive_energy_received",
+				"name": null,
+				"offset": 34,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "reactive_energy_delivered",
+				"name": null,
+				"offset": 36,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "active_settings_group",
+				"name": null,
+				"offset": 38,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "voltage_l1_l2",
+				"name": null,
+				"offset": 43,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "voltage_l2_l3",
+				"name": null,
+				"offset": 45,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			},
+			{
+				"id": "voltage_l3_l1",
+				"name": null,
+				"offset": 47,
+				"size": 2,
+				"uri": "/components/sel_351_1"
+			}
+		]
+	}
+}

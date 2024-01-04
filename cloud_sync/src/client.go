@@ -232,10 +232,6 @@ func (cl *client) retry(serv *server) {
 				// if there was a retryable failure, add the file back to the retry queue
 				cl.retryQ[serv.name] <- fileName
 			}
-			// if the server connection was bad, wait some time before trying to send any more retry requests
-			if !resp.connectionOkay {
-				time.Sleep(time.Second * time.Duration(config.SleepLimitSeconds))
-			}
 			continue
 		}
 
@@ -324,9 +320,6 @@ func createClient(name string, cfg ClientConfig) (newClient *client, err error) 
 		serv, ok := servers[cleanedName]
 		if !ok {
 			return nil, fmt.Errorf("did not find server with name %s in server map", cleanedName)
-		}
-		if err = serv.initConnection(newClient); err != nil {
-			return nil, fmt.Errorf("failed to initialize connection to server %s for client %s: %w", serv.name, newClient.name, err)
 		}
 		newClient.sendRequestQsToServers[serv.name] = make(chan transferRequest)
 		newClient.retryRequestQsToServers[serv.name] = make(chan transferRequest)

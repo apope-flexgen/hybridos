@@ -1,0 +1,29 @@
+{
+    "timezone": "America/Chicago",
+    "ess": false,
+    "gen": false,
+    "solar": false,
+    "met_station": false,
+    "tracker": false,
+    "feeders": false,
+    "features": true,
+    "site": true,
+    "events": true,
+    "control_cabinet": true,
+    "fleet_manager_dashboard": true,
+    "product" : "SC",
+    "scheduler": true,
+    "units": {
+        "W": "M",
+        "Wh": "M",
+        "VAR": "M",
+        "VARh": "M",
+        "VA": "M",
+        "VAh": "M",
+        "W/s": "M",
+        "VAR/s": "M"
+    },
+    "inspectorComponentsName": "test_controller",
+    "site_name": "Durham",
+    "system_status": true
+}

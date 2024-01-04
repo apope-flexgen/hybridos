@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	buffman "github.com/flexgen-power/go_flexgen/buffman"
-	log "github.com/flexgen-power/go_flexgen/logger"
+	buffman "github.com/flexgen-power/hybridos/go_flexgen/buffman"
+	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 	"golang.org/x/sync/errgroup"
 )
 

@@ -1,48 +1,50 @@
 {
-    "controllerName": "controller 1",
-    "heartbeatFrequencyMS": 1000,
-    "patrolFrequencyMS": 1000,
     "briefingFrequencyMS": 5000,
     "c2cMsgFrequencyMS": 50,
-    "statsPubFrequencySeconds": 1,
+    "controllerName": "controller 1",
     "enableRedundantFailover": false,
-    "primaryIP": ["192.168.1.1"],
-    "primaryNetworkInterface": ["eno10"],
-    "thisCtrlrStaticIP": "172.16.1.80",
-    "otherCtrlrStaticIP": "172.16.2.82",
-    "pduIP": "10.0.1.83",
+    "heartbeatFrequencyMS": 1000,
     "otherCtrlrOutlet": "2",
+    "otherCtrlrStaticIP": "172.16.2.82",
+    "patrolFrequencyMS": 1000,
+    "pduIP": "10.0.1.83",
+    "primaryIP": [
+        "192.168.1.1"
+    ],
+    "primaryNetworkInterface": [
+        "eno10"
+    ],
     "processList": [
         {
+            "configRestart": true,
+            "hangTimeAllowanceMS": 3000,
+            "killOnHang": true,
             "name": "site_controller",
+            "requiredForHealthyStatus": true,
             "uri": "/site",
-            "writeOutC2C":
-            [
+            "writeOutC2C": [
                 "/cops/site_controller/assets",
                 "/cops/site_controller/sequences",
                 "/cops/site_controller/variables",
                 "/cops/site_controller/setpoints"
-            ],
-            "killOnHang": true,
-            "requiredForHealthyStatus": true,
-            "hangTimeAllowanceMS": 3000,
-            "configRestart": true
+            ]
         },
         {
+            "configRestart": true,
+            "hangTimeAllowanceMS": 3000,
+            "killOnHang": true,
             "name": "scheduler",
+            "requiredForHealthyStatus": true,
             "uri": "/scheduler",
-            "writeOutC2C":
-            [
+            "writeOutC2C": [
                 "/cops/scheduler/modes",
                 "/cops/scheduler/events",
                 "/cops/scheduler/configuration",
                 "/cops/scheduler/last_schedule_modification",
                 "/cops/scheduler/timezones"
-            ],
-            "killOnHang": true,
-            "requiredForHealthyStatus": true,
-            "hangTimeAllowanceMS": 3000,
-            "configRestart": true
+            ]
         }
-    ]
+    ],
+    "statsPubFrequencySeconds": 1,
+    "thisCtrlrStaticIP": "172.16.1.80"
 }

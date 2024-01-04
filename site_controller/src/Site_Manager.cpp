@@ -89,11 +89,6 @@ void Site_Manager::post_configure_initialize_features(void) {
     //
     // Run Mode 1 Active Power Features
     //
-    // Frequency Response Mode
-    // frequency response feature vars must be loaded after configuration parsing to
-    // properly load all frequency response component feature vars
-    frequency_response.get_feature_vars(frequency_response.feature_vars);
-    frequency_response.get_summary_vars(frequency_response.summary_vars);
 
     // Copy SoC balancing factor to be preserved in Site Manager and overwritten in Asset Manager when this feature is enabled
     ess_soc_balancing_factor = pAssets->get_soc_balancing_factor();
@@ -134,22 +129,13 @@ void Site_Manager::post_configure_initialize_features(void) {
     //
     // Standalone Power Features
     //
-    // Disable all features as part of initial configuration in case any are accidentally enabled
-    for (auto feature : standalone_power_features_list) {
-        feature->enable_flag.value.set(false);
-    }
     // send Generator Manager the initial LDSS settings
     set_ldss_variables();
-    // PFR feature_vars depend on configuration, so initialize feature_vars now
-    pfr.initialize_feature_vars();
 
-    //
-    // Site Operation Features
-    //
-    // Disable all features as part of initial configuration in case any are accidentally enabled
-    for (auto feature : site_operation_features_list) {
-        feature->enable_flag.value.set(false);
-    }
+    // Frequency Response Mode
+    // frequency response feature vars must be loaded after configuration parsing to
+    // properly load all frequency response component feature vars
+    frequency_response.get_feature_vars(frequency_response.feature_vars);
 }
 
 // gets called just when the user clicks the Features tab. publish_all() subsequently updates the values
@@ -819,10 +805,18 @@ bool Site_Manager::parse_variables(cJSON* variables_config_object) {
                 unrecognized_variable_ids.erase(id);
             }
 
-            if (!has_valid_available_features_config || !feature->available) {
+            if (!has_valid_available_features_config) {
                 continue;
             }
             Config_Validation_Result feature_validation_result = feature->parse_json_config(JSON_flat_vars, is_primary, &input_sources, field_defaults, multi_input_command_vars);
+            if (!feature->available) {
+                // if a feature is not available AND enabled it is an error.
+                if (feature->enable_flag.value.value_bool == true) {
+                    validation_result.ERROR_details.push_back(Result_Details(fmt::format("Enable flag \"{}\" was set as true but the feature is not available.", feature->enable_flag.get_name())));
+                    validation_result.is_valid_config = false;
+                }
+                continue;
+            }
             validation_result.absorb(feature_validation_result);
         }
     }
@@ -1307,9 +1301,6 @@ void Site_Manager::get_values() {
     avr.actual_volts.value.set(pAssets->get_poi_gridside_avg_voltage());
     avr.status_flag.value.set(false);
 
-    // standalone pfr status flag set
-    pfr.status_flag.value.set(false);
-
     num_ess_available = pAssets->get_num_ess_avail();
     num_ess_running = pAssets->get_num_ess_running();
     num_ess_controllable = pAssets->get_num_ess_controllable();
@@ -1401,7 +1392,6 @@ void Site_Manager::set_values() {
     ess_kVAR_cmd_slew.update_slew_target(ess_kVAR_cmd.value.value_float);
     gen_kVAR_cmd_slew.update_slew_target(gen_kVAR_cmd.value.value_float);
     solar_kVAR_cmd_slew.update_slew_target(solar_kVAR_cmd.value.value_float);
-    remove_active_poi_corrections_from_slew_targets();
     remove_reactive_poi_corrections_from_slew_targets();
     manual_power_mode.manual_solar_kW_slew.update_slew_target(solar_kW_cmd.value.value_float);
     manual_power_mode.manual_ess_kW_slew.update_slew_target(ess_kW_cmd.value.value_float);
@@ -1509,28 +1499,6 @@ void Site_Manager::set_volatile_asset_cmd_variables() {
     feature_kW_demand.value.set(asset_cmd.feature_kW_demand);
     site_kW_charge_production.value.set(asset_cmd.site_kW_charge_production);
     site_kW_discharge_production.value.set(asset_cmd.site_kW_discharge_production);
-}
-
-/**
- * The output of standalone features will be included in the asset commands. In the case of POI correction features,
- * this will throw off the slew target of active power features that utilize their own slew rates.
- *
- * Remove the corrections instead to get a clean slew target that's also limited by asset potentials. This function
- * handles the following active power feature slews: Export Target
- * by removing the following POI corrections: Active Power Closed Loop Control, Watt-Watt
- */
-void Site_Manager::remove_active_poi_corrections_from_slew_targets() {
-    // TODO: fix for mixed asset commands
-    // i.e. a -10MW charge cmd could produce asset cmds of -10MW ESS, +10MW Solar, resulting in a target of 0MW
-    // We would only get passed this with a sufficient slew rate that can reach -10MW from net 0MW
-    float slew_target = ess_kW_cmd.value.value_float + solar_kW_cmd.value.value_float + gen_kW_cmd.value.value_float;
-    // Remove corrections in reverse of the order they were dispatched
-    if (watt_watt.enable_flag.value.value_bool)
-        slew_target -= watt_watt.site_kW_demand_correction;
-    if (active_power_closed_loop.enable_flag.value.value_bool)
-        slew_target -= active_power_closed_loop.total_correction.value.value_float;
-    // Reset feature slews
-    active_power_setpoint_mode.kW_slew.update_slew_target(slew_target);
 }
 
 /**
@@ -1647,9 +1615,12 @@ void Site_Manager::update_power_feature_selections() {
         bool soc_limits_enabled = ess_calibration.enable_flag.value.value_bool && ess_calibration.soc_limits_enable.value.value_bool;
         ess_calibration.min_soc_limit.ui_enabled = soc_limits_enabled;
         ess_calibration.max_soc_limit.ui_enabled = soc_limits_enabled;
-        bool voltage_limits_enabled = ess_calibration.enable_flag.value.value_bool && ess_calibration.voltage_limits_enable.value.value_bool;
-        ess_calibration.min_voltage_limit.ui_enabled = voltage_limits_enabled;
-        ess_calibration.max_voltage_limit.ui_enabled = voltage_limits_enabled;
+        bool cell_voltage_limits_enabled = ess_calibration.enable_flag.value.value_bool && ess_calibration.cell_voltage_limits_enable.value.value_bool;
+        ess_calibration.min_cell_voltage_limit.ui_enabled = cell_voltage_limits_enabled;
+        ess_calibration.max_cell_voltage_limit.ui_enabled = cell_voltage_limits_enabled;
+        bool rack_voltage_limits_enabled = ess_calibration.enable_flag.value.value_bool && ess_calibration.rack_voltage_limits_enable.value.value_bool;
+        ess_calibration.min_rack_voltage_limit.ui_enabled = rack_voltage_limits_enabled;
+        ess_calibration.max_rack_voltage_limit.ui_enabled = rack_voltage_limits_enabled;
     }
 
     // if runmode2 active power feature command has changed, switch runmode2 active power features
@@ -2006,28 +1977,47 @@ void Site_Manager::update_ess_kpi_values() {
     ess_instant_charge_pv.value.set(ess_pv_kW);
 }
 
+/**
+ * Track the fault with the given fault_number
+ * @param fault_number Index of the fault message within the faults options array
+ */
 void Site_Manager::set_faults(int fault_number) {
     char event_message[SHORT_MSG_LEN];
 
+    // Make sure the fault number is in range. The range of available options will be determined by the configuration received for faults
+    // TODO: make faults default to filling all 32 possible options values
+    std::string fault_message = "internal fault tracking error";
+    if (size_t(fault_number) < faults.options_name.size()) {
+        fault_message = faults.options_name[fault_number];
+    }
+
     active_fault_array[fault_number] = true;
-    snprintf(event_message, SHORT_MSG_LEN, "Fault: %s", faults.options_name[fault_number].c_str());
+    snprintf(event_message, SHORT_MSG_LEN, "Fault: %s", fault_message.c_str());
     FPS_ERROR_LOG("%s", event_message);
 
     emit_event("Site", event_message, FAULT_ALERT);
     fault_status_flag.value.value_bool = true;
 }
 
+/**
+ * Track the alarm with the given alarm_number
+ * @param alarm_number Index of the alarm message within the alarms options array
+ */
 void Site_Manager::set_alarms(int alarm_number) {
-    active_alarm_array[alarm_number] = true;
-
-#ifndef FPS_TEST_MODE
-    // Causes seg faults in test mode as options names undefined
     char event_message[SHORT_MSG_LEN];
-    snprintf(event_message, SHORT_MSG_LEN, "Alarm: %s", alarms.options_name[alarm_number].c_str());
-    FPS_ERROR_LOG("%s", event_message);
-    emit_event("Site", event_message, ALARM_ALERT);
-#endif
 
+    // Make sure the alarm number is in range. The range of available options will be determined by the configuration received for alarms
+    // TODO: make alarms default to filling all 32 possible options values
+    std::string alarm_message = "internal alarm tracking error";
+    if (size_t(alarm_number) < alarms.options_name.size()) {
+        alarm_message = alarms.options_name[alarm_number];
+    }
+
+    active_alarm_array[alarm_number] = true;
+    snprintf(event_message, SHORT_MSG_LEN, "Alarm: %s", alarm_message.c_str());
+    FPS_ERROR_LOG("%s", event_message);
+
+    emit_event("Site", event_message, ALARM_ALERT);
     alarm_status_flag.value.value_bool = true;
 }
 
@@ -2385,7 +2375,6 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
 
 void Site_Manager::check_state(void) {
     Sequence current_sequence = sequences[current_state];
-    Path current_path = current_sequence.paths[current_sequence.current_path_index];
 
     // if faulted or shutdown cmd, enter shutdown state
     if (current_state != Init && (current_sequence.check_faults() || (disable_flag.value.value_bool)))
@@ -2393,6 +2382,8 @@ void Site_Manager::check_state(void) {
 
     // check if alarms are present
     current_sequence.check_alarms();
+
+    Path current_path = current_sequence.paths[current_sequence.current_path_index];
 
     // count number of asset faults and asset alarms
     num_path_faults = current_path.num_active_faults;
@@ -2597,9 +2588,10 @@ void Site_Manager::runmode1_state(void) {
     if (ess_discharge_prevention.enable_flag.value.value_bool)
         ess_discharge_prevention.execute(asset_cmd, soc_avg_running.value.value_float, max_potential_ess_kW.value.value_float, min_potential_ess_kW.value.value_float, pAssets->get_ess_total_kW_discharge_limit(), total_asset_kW_discharge_limit);
 
-    // call PFR to adjust site_kW_demand and ess_kW_request as needed
-    if (pfr.enable_flag.value.value_bool)
-        pfr.execute(asset_cmd, site_frequency.value.value_float, total_site_kW_charge_limit.value.value_float, total_site_kW_discharge_limit.value.value_float);
+    // FR MODE (frequency response) - output or absorb additional power if frequency deviates by a set amount
+    else if (frequency_response.enable_flag.value.value_bool) {
+        frequency_response.execute(asset_cmd, get_ess_total_rated_active_power(), site_frequency.value.value_float, current_time);
+    }
 
     // limit power values based on the amount of power that the POI can legally/physically handle
     if (active_power_poi_limits.enable_flag.value.value_bool)
@@ -2821,10 +2813,6 @@ void Site_Manager::process_runmode1_kW_feature() {
     else if (manual_power_mode.enable_flag.value.value_bool) {
         manual_power_mode.execute(asset_cmd);
     }
-    // FR MODE (frequency response) - output or absorb additional power if frequency deviates by a set amount
-    else if (frequency_response.enable_flag.value.value_bool) {
-        frequency_response.execute(asset_cmd, get_ess_total_rated_active_power(), site_frequency.value.value_float, current_time);
-    }
     // ENERGY ARBITRAGE MODE determines storage charge/discharge based on current price and thresholds
     else if (energy_arbitrage.enable_flag.value.value_bool) {
         if (!energy_arbitrage.execute(asset_cmd, soc_avg_running.value.value_float, active_alarm_array)) {
@@ -2981,13 +2969,16 @@ void Site_Manager::set_ess_calibration_variables() {
     // ESS power distribution balancing always disabled in this mode
     settings.power_dist_flag = !ess_calibration.enable_flag.value.value_bool;
     // limits override always enabled in this mode
-    settings.limits_override = ess_calibration.enable_flag.value.value_bool;
+    settings.soc_protection_buffers_disable = ess_calibration.enable_flag.value.value_bool;
     settings.soc_limits_flag = ess_calibration.soc_limits_enable.value.value_bool;
     settings.min_soc_limit = ess_calibration.min_soc_limit.value.value_float;
     settings.max_soc_limit = ess_calibration.max_soc_limit.value.value_float;
-    settings.voltage_limits = ess_calibration.voltage_limits_enable.value.value_bool;
-    settings.min_voltage_limit = ess_calibration.min_voltage_limit.value.value_float;
-    settings.max_voltage_limit = ess_calibration.max_voltage_limit.value.value_float;
+    settings.cell_voltage_limits = ess_calibration.cell_voltage_limits_enable.value.value_bool;
+    settings.min_cell_voltage_limit = ess_calibration.min_cell_voltage_limit.value.value_float;
+    settings.max_cell_voltage_limit = ess_calibration.max_cell_voltage_limit.value.value_float;
+    settings.rack_voltage_limits = ess_calibration.rack_voltage_limits_enable.value.value_bool;
+    settings.min_rack_voltage_limit = ess_calibration.min_rack_voltage_limit.value.value_float;
+    settings.max_rack_voltage_limit = ess_calibration.max_rack_voltage_limit.value.value_float;
     // Write through the feature setpoint as well so we have a reference of whether it's being met for each asset
     settings.raw_feature_setpoint = ess_calibration.kW_cmd.value.value_float;
     pAssets->set_ess_calibration_vars(settings);

@@ -1,0 +1,160 @@
+{
+	"system":
+	{
+		"id": "pv_ion_8650b",
+		"serial_device":"/dev/ttyS0",
+		"baud_rate":115200,
+		"parity":"none",
+		"data_bits":8,
+		"stop_bits":1,
+		"device_id": 1,
+		"frequency": 500,
+		"device_id": 1,
+
+	},
+	"registers": 
+	[
+		{
+			"type": "Holding Registers",
+			"starting_offset": 33,
+			"number_of_registers": 25,
+			"map":
+			[
+				{
+					"id": "active_power",
+					"offset": 33,
+					"alternate_offset": 204,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "reactive_power",
+					"offset": 41,
+					"alternate_offset": 214,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "apparent_power",
+					"offset": 49,
+					"alternate_offset": 224,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "power_factor",
+					"alternate_offset": 265,
+					"offset": 57,
+					"signed": true,
+					"scale": 100
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			"starting_offset": 150,
+			"number_of_registers": 34,
+			"map":
+			[
+
+				{
+					"id": "current_a",
+					"offset": 150,
+					"scale": 10
+				},
+				{
+					"id": "current_b",
+					"offset": 151,
+					"scale": 10
+				},
+				{
+					"id": "current_c",
+					"offset": 152,
+					"scale": 10
+				},
+				{
+					"id": "frequency",
+					"offset": 159,
+					"scale": 10
+				},
+				{
+					"id": "voltage_ab",
+					"offset": 178,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "voltage_bc",
+					"offset": 180,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "voltage_ca",
+					"offset": 182,
+					"scale": 10,
+					"size": 2
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			"starting_offset": 23,
+			"number_of_registers": 42,
+			"map":
+			[
+				{
+					"id": "kwh_delivered",
+					"offset": 230,
+					"signed": true,
+					"size": 2
+				},
+				{
+					"id": "kwh_received",
+					"offset": 232,
+					"signed": true,
+					"scale": 1,
+					"size": 2
+				},
+				{
+					"id": "thd_v_l1",
+					"offset": 266,
+					"signed": true,
+					"scale": 100
+				},
+				{
+					"id": "thd_v_l2",
+					"offset": 267,
+					"signed": true,
+					"scale": 100
+				},
+				{
+					"id": "thd_v_l3",
+					"offset": 268,
+					"signed": true,
+					"scale": 100
+				},
+				{
+					"id": "thd_i_l1",
+					"offset": 269,
+					"signed": true,
+					"scale": 100
+				},
+				{
+					"id": "thd_i_l2",
+					"offset": 270,
+					"signed": true,
+					"scale": 100
+				},
+				{
+					"id": "thd_i_l3",
+					"offset": 271,
+					"signed": true,
+					"scale": 100
+				}
+			]
+		}
+	]
+}

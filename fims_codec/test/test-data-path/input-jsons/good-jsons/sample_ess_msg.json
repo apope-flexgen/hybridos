@@ -1,0 +1,270 @@
+{
+    "ftd_group": "ess_19",
+    "name": "BESS Inverter Block 19",
+    "active_power": -1,
+    "active_power_setpoint": 0,
+    "alarms": 0,
+    "apparent_power": 1,
+    "bms_1_alarms_1": 0,
+    "bms_1_alarms_2": 0,
+    "bms_1_battery_rack_10_alarms": 0,
+    "bms_1_battery_rack_10_faults": 0,
+    "bms_1_battery_rack_11_alarms": 0,
+    "bms_1_battery_rack_11_faults": 0,
+    "bms_1_battery_rack_12_alarms": 0,
+    "bms_1_battery_rack_12_faults": 0,
+    "bms_1_battery_rack_13_alarms": 0,
+    "bms_1_battery_rack_13_faults": 0,
+    "bms_1_battery_rack_14_alarms": 0,
+    "bms_1_battery_rack_14_faults": 0,
+    "bms_1_battery_rack_15_alarms": 0,
+    "bms_1_battery_rack_15_faults": 0,
+    "bms_1_battery_rack_16_alarms": 0,
+    "bms_1_battery_rack_16_faults": 0,
+    "bms_1_battery_rack_17_alarms": 0,
+    "bms_1_battery_rack_17_faults": 0,
+    "bms_1_battery_rack_18_alarms": 0,
+    "bms_1_battery_rack_18_faults": 0,
+    "bms_1_battery_rack_19_alarms": 0,
+    "bms_1_battery_rack_19_faults": 0,
+    "bms_1_battery_rack_1_alarms": 0,
+    "bms_1_battery_rack_1_faults": 0,
+    "bms_1_battery_rack_20_alarms": 0,
+    "bms_1_battery_rack_20_faults": 0,
+    "bms_1_battery_rack_2_alarms": 0,
+    "bms_1_battery_rack_2_faults": 0,
+    "bms_1_battery_rack_3_alarms": 0,
+    "bms_1_battery_rack_3_faults": 0,
+    "bms_1_battery_rack_4_alarms": 0,
+    "bms_1_battery_rack_4_faults": 0,
+    "bms_1_battery_rack_5_alarms": 0,
+    "bms_1_battery_rack_5_faults": 0,
+    "bms_1_battery_rack_6_alarms": 0,
+    "bms_1_battery_rack_6_faults": 0,
+    "bms_1_battery_rack_7_alarms": 0,
+    "bms_1_battery_rack_7_faults": 0,
+    "bms_1_battery_rack_8_alarms": 0,
+    "bms_1_battery_rack_8_faults": 0,
+    "bms_1_battery_rack_9_alarms": 0,
+    "bms_1_battery_rack_9_faults": 0,
+    "bms_1_faults_1": 0,
+    "bms_1_faults_11": 0,
+    "bms_1_faults_12": 0,
+    "bms_1_faults_2": 0,
+    "bms_1_faults_21": 0,
+    "bms_1_faults_22": 0,
+    "bms_2_alarms_1": 0,
+    "bms_2_alarms_2": 0,
+    "bms_2_battery_rack_10_alarms": 0,
+    "bms_2_battery_rack_10_faults": 0,
+    "bms_2_battery_rack_11_alarms": 0,
+    "bms_2_battery_rack_11_faults": 0,
+    "bms_2_battery_rack_12_alarms": 0,
+    "bms_2_battery_rack_12_faults": 0,
+    "bms_2_battery_rack_13_alarms": 0,
+    "bms_2_battery_rack_13_faults": 0,
+    "bms_2_battery_rack_14_alarms": 0,
+    "bms_2_battery_rack_14_faults": 0,
+    "bms_2_battery_rack_15_alarms": 0,
+    "bms_2_battery_rack_15_faults": 0,
+    "bms_2_battery_rack_16_alarms": 0,
+    "bms_2_battery_rack_16_faults": 0,
+    "bms_2_battery_rack_17_alarms": 0,
+    "bms_2_battery_rack_17_faults": 0,
+    "bms_2_battery_rack_18_alarms": 0,
+    "bms_2_battery_rack_18_faults": 0,
+    "bms_2_battery_rack_19_alarms": 0,
+    "bms_2_battery_rack_19_faults": 0,
+    "bms_2_battery_rack_1_alarms": 0,
+    "bms_2_battery_rack_1_faults": 0,
+    "bms_2_battery_rack_20_alarms": 0,
+    "bms_2_battery_rack_20_faults": 0,
+    "bms_2_battery_rack_2_alarms": 0,
+    "bms_2_battery_rack_2_faults": 0,
+    "bms_2_battery_rack_3_alarms": 0,
+    "bms_2_battery_rack_3_faults": 0,
+    "bms_2_battery_rack_4_alarms": 0,
+    "bms_2_battery_rack_4_faults": 0,
+    "bms_2_battery_rack_5_alarms": 0,
+    "bms_2_battery_rack_5_faults": 0,
+    "bms_2_battery_rack_6_alarms": 0,
+    "bms_2_battery_rack_6_faults": 0,
+    "bms_2_battery_rack_7_alarms": 0,
+    "bms_2_battery_rack_7_faults": 0,
+    "bms_2_battery_rack_8_alarms": 0,
+    "bms_2_battery_rack_8_faults": 0,
+    "bms_2_battery_rack_9_alarms": 0,
+    "bms_2_battery_rack_9_faults": 0,
+    "bms_2_faults_1": 0,
+    "bms_2_faults_11": 0,
+    "bms_2_faults_12": 0,
+    "bms_2_faults_2": 0,
+    "bms_2_faults_21": 0,
+    "bms_2_faults_22": 0,
+    "bms_avg_cell_voltage": 3.4375,
+    "bms_avg_temp": 50,
+    "bms_max_cell_voltage": 3.454400062561035,
+    "bms_max_temp": 51,
+    "bms_min_cell_voltage": 3.4207000732421875,
+    "bms_min_temp": 49,
+    "bms_racks_in_service": 20,
+    "com_status": 0,
+    "component_connected": true,
+    "dc_contactors_closed": false,
+    "ems_alarms": 0,
+    "ess_1_alarms": 0,
+    "ess_1_faults": 0,
+    "ess_2_alarms": 0,
+    "ess_2_faults": 0,
+    "faults": 0,
+    "frequency": 0,
+    "modbus_heartbeat": 1118713,
+    "module_1_alarms1": 0,
+    "module_1_alarms2": 0,
+    "module_1_faults1": 0,
+    "module_1_faults2": 0,
+    "module_2_alarms1": 0,
+    "module_2_alarms2": 0,
+    "module_2_faults1": 0,
+    "module_2_faults2": 0,
+    "module_3_alarms1": 0,
+    "module_3_alarms2": 0,
+    "module_3_faults1": 0,
+    "module_3_faults2": 0,
+    "module_4_alarms1": 0,
+    "module_4_alarms2": 0,
+    "module_4_faults1": 0,
+    "module_4_faults2": 0,
+    "module_5_alarms1": 0,
+    "module_5_alarms2": 0,
+    "module_5_faults1": 0,
+    "module_5_faults2": 0,
+    "module_6_alarms1": 0,
+    "module_6_alarms2": 0,
+    "module_6_faults1": 0,
+    "module_6_faults2": 0,
+    "pcs1_alarms1": 0,
+    "pcs1_alarms2": 0,
+    "pcs1_alarms3": 0,
+    "pcs1_alarms4": 0,
+    "pcs1_faults1": 0,
+    "pcs1_faults2": 0,
+    "pcs1_faults3": 0,
+    "pcs1_faults4": 0,
+    "pcs_current_l1": 0,
+    "pcs_current_l2": 0,
+    "pcs_current_l3": 0,
+    "pcs_modules_in_service": 0,
+    "pcs_voltage_l1_l2": 34537,
+    "pcs_voltage_l2_l3": 34537,
+    "pcs_voltage_l3_l1": 34537,
+    "reactive_power": 0,
+    "reactive_power_setpoint": 0,
+    "soc": 49.462364196777344,
+    "soh": 1,
+    "status": "",
+    "system_chargeable_energy": 4743,
+    "system_chargeable_power": 0,
+    "system_dischargeable_energy": 4742.39990234375,
+    "system_dischargeable_power": 0,
+    "voltage_dc": 0,
+    "maint_mode": {
+        "value": false,
+        "enabled": true,
+        "options": [
+            {
+                "name": "No",
+                "return_value": false
+            },
+            {
+                "name": "Yes",
+                "return_value": true
+            }
+        ]
+    },
+    "start": {
+        "enabled": false,
+        "options": [
+            {
+                "name": "On",
+                "return_value": true
+            },
+            {
+                "name": "Off",
+                "return_value": false
+            }
+        ]
+    },
+    "stop": {
+        "enabled": false,
+        "options": [
+            {
+                "name": "On",
+                "return_value": true
+            },
+            {
+                "name": "Off",
+                "return_value": false
+            }
+        ]
+    },
+    "clear_faults": {
+        "enabled": false,
+        "options": [
+            {
+                "name": "Clear Faults",
+                "return_value": true
+            }
+        ]
+    },
+    "limits_override": {
+        "value": false,
+        "enabled": false,
+        "options": [
+            {
+                "name": "On",
+                "return_value": true
+            },
+            {
+                "name": "Off",
+                "return_value": false
+            }
+        ]
+    },
+    "maint_active_power_setpoint": {
+        "value": 0,
+        "enabled": false,
+        "options": []
+    },
+    "maint_reactive_power_setpoint": {
+        "value": 0,
+        "enabled": false,
+        "options": []
+    },
+    "open_dc_contactors": {
+        "enabled": false,
+        "options": [
+            {
+                "name": "On",
+                "return_value": true
+            },
+            {
+                "name": "Off",
+                "return_value": false
+            }
+        ]
+    },
+    "close_dc_contactors": {
+        "enabled": false,
+        "options": [
+            {
+                "name": "On",
+                "return_value": true
+            },
+            {
+                "name": "Off",
+                "return_value": false
+            }
+        ]
+    }
+}

@@ -197,8 +197,8 @@ const Assets = () => {
     () =>
       !!assets.length &&
       (!(selectedAsset?.info.name || '').trim() ||
-        !(selectedAsset?.info.sourceURI || '').trim() ||
-        !(selectedAsset?.info.baseURI || '').trim()),
+        !(selectedAsset?.info.sourceURI || '').trim()
+      ),
     [assets, selectedAsset],
   );
 
@@ -208,8 +208,7 @@ const Assets = () => {
       assets.some(
         (asset) =>
           !(asset?.info.name || '').trim() ||
-          !(asset?.info.sourceURI || '').trim() ||
-          !(asset?.info.baseURI || '').trim(),
+          !(asset?.info.sourceURI || '').trim()
       ),
     [assets],
   );

@@ -1,0 +1,26 @@
+{
+  "test_cases": {
+    "256": [
+      {
+        "cmds": [
+          {
+            "method": "pub",
+            "uri": "/components/sel_3530_slow_rtac",
+            "value": {
+              "discrete_normal_1": -15.846278524872787
+            }
+          }
+        ],
+        "expected": [
+          {
+            "method": "pub",
+            "uri": "/components/sel_3530_slow_rtac",
+            "body": {
+              "discrete_normal_1": false
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

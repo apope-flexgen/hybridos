@@ -1,0 +1,34 @@
+[2023-12-15] [17:29:47.066] [0.00024608s] [PID 24] [server_01] [[32minfo    [m] Setting up logger with config from: NULL
+[2023-12-15] [17:29:47.066] [0.000322295s] [PID 24] [server_01] [[33m[1mwarning [m] no logger configuration provided, default values used
+[2023-12-15] [17:29:47.066] [0.000373525s] [PID 24] [server_01] [[32minfo    [m] build: "361"
+[2023-12-15] [17:29:47.066] [0.000412728s] [PID 24] [server_01] [[32minfo    [m] commit: "9c4b620"
+[2023-12-15] [17:29:47.066] [0.000474585s] [PID 24] [server_01] [[32minfo    [m] tag: "v11.3.0-beta.2"
+[2023-12-15] [17:29:47.072] [0.00678733s] [PID 24] [server_01] [[32minfo    [m] ### TCP(test_server), listening on port 20000
+[2023-12-15] [17:29:47.076] [0.0103829s] [PID 24] [server_01] [[32minfo    [m] Subscribed to:
+	/test_server, 
+	/local_server, 
+	/base_uri_server/test_server, 
+	/components/test, 
+	/components/test_clothed, 
+	/components/test_full, 
+	/components/test_id, 
+	/components/test_naked
+[2023-12-15] [17:29:47.078] [0.0119177s] [PID 24] [server_01] [[32minfo    [m] DNP3 Server Setup complete: Entering main loop.
+[2023-12-15] [17:29:50.078] [3.01228s] [PID 24] [server_01] [[32minfo    [m] ### TCP: Accept received connect request from IP address 172.17.0.4
+[2023-12-15] [17:29:50.078] [3.01238s] [PID 24] [server_01] [[32minfo    [m] ### TCP: Accept this connection
+[2023-12-15] [17:29:50.078] [3.01284s] [PID 24] [server_01] [[32minfo    [m] Connected to client. Time to connect 0 ms.
+[2023-12-15] [17:29:55.288] [8.30577s] [PID 24] [server_01] [[31m[1merror   [m] only floats, uints, ints, and bools are supported, skipping this uri: /base_uri_server/test_server
+[2023-12-15] [17:30:05.160] [18.1784s] [PID 24] [server_01] [[31m[1merror   [m] only floats, uints, ints, and bools are supported, skipping this uri: /components/test
+[2023-12-15] [17:30:17.359] [30.306s ] [PID 24] [server_01] [[31m[1merror   [m] only floats, uints, ints, and bools are supported, skipping this uri: /components/test
+[2023-12-15] [17:30:30.051] [42.9973s] [PID 24] [server_01] [[31m[1merror   [m] only floats, uints, ints, and bools are supported, skipping this uri: /components/test
+[2023-12-15] [17:30:53.238] [66.1823s] [PID 24] [server_01] [[31m[1merror   [m] Binary input point [22] status is [COMM_LOST]
+[2023-12-15] [17:30:58.246] [71.1904s] [PID 24] [server_01] [[31m[1merror   [m] Binary input point [23] status is [COMM_LOST]
+[2023-12-15] [17:31:03.190] [76.1338s] [PID 24] [server_01] [[31m[1merror   [m] Binary input point [25] status is [COMM_LOST]
+[2023-12-15] [17:31:27.880] [100.814s] [PID 24] [server_01] [[31m[1merror   [m] Binary input point [32] status is [COMM_LOST]
+[2023-12-15] [17:31:30.901] [103.835s] [PID 24] [server_01] [[31m[1merror   [m] Pub to analog input point [1] (32-bit float) exceeded maximum (3.40282e+38). Setting to maximum value instead.
+[2023-12-15] [17:31:31.212] [104.146s] [PID 24] [server_01] [[31m[1merror   [m] Pub to analog input point [1] (32-bit float) exceeded minimum exponent value (1.17549e-38). Setting to 0 instead.
+[2023-12-15] [17:31:35.828] [108.762s] [PID 24] [server_01] [[31m[1merror   [m] Pub to analog input point [2] (32-bit float) exceeded maximum (3.40282e+38). Setting to maximum value instead.
+[2023-12-15] [17:31:36.139] [109.073s] [PID 24] [server_01] [[31m[1merror   [m] Pub to analog input point [2] (32-bit float) exceeded minimum exponent value (1.17549e-38). Setting to 0 instead.
+[2023-12-15] [17:31:40.789] [113.724s] [PID 24] [server_01] [[31m[1merror   [m] Pub to analog input point [4] (32-bit float) exceeded maximum (3.40282e+38). Setting to maximum value instead.
+[2023-12-15] [17:31:41.098] [114.032s] [PID 24] [server_01] [[31m[1merror   [m] Pub to analog input point [4] (32-bit float) exceeded minimum exponent value (1.17549e-38). Setting to 0 instead.
+[2023-12-15] [17:31:45.716] [118.651s] [PID 24] [server_01] [[31m[1merror   [m] Pub to analog input point [5] (32-bit float) exceeded maximum (3.40282e+38). Setting to maximum value instead.

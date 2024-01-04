@@ -1,0 +1,711 @@
+{
+    "components": [
+        {
+            "component_heartbeat_read_uri": "heartbeat_from_ess",
+            "component_heartbeat_timeout_ms": 10000,
+            "component_heartbeat_write_uri": "heartbeat_to_ess",
+            "device_id": 1,
+            "frequency": 100,
+            "heartbeat_enabled": true,
+            "id": "flexgen_ess_09",
+            "registers": [
+                {
+                    "map": [
+                        {
+                            "id": "active_power_ramp_rate",
+                            "name": "Active Power Ramp Rate",
+                            "offset": 0,
+                            "units": "kW/s"
+                        },
+                        {
+                            "id": "active_power_setpoint",
+                            "name": "Active Power Setpoint",
+                            "offset": 1,
+                            "signed": true,
+                            "units": "kW"
+                        },
+                        {
+                            "id": "bms_dc_contactor_control",
+                            "name": "BMS DC Contactor Command",
+                            "offset": 2
+                        },
+                        {
+                            "id": "clear_faults",
+                            "name": "Clear Faults Command",
+                            "offset": 3
+                        },
+                        {
+                            "id": "frequency_setpoint",
+                            "name": "Frequency Setpoint",
+                            "offset": 4,
+                            "units": "Hz"
+                        },
+                        {
+                            "id": "heartbeat_to_ess",
+                            "name": "Heartbeat To ESS Controller",
+                            "offset": 5
+                        },
+                        {
+                            "id": "on_off_grid_mode_setting",
+                            "name": "Grid-following/forming Mode Command",
+                            "offset": 6
+                        },
+                        {
+                            "id": "reactive_power_ramp_rate",
+                            "name": "Reactive Power Ramp Rate",
+                            "offset": 7,
+                            "units": "kVAR/s"
+                        },
+                        {
+                            "id": "reactive_power_setpoint",
+                            "name": "Reactive Power Setpoint",
+                            "offset": 8,
+                            "signed": true,
+                            "units": "kVAR"
+                        },
+                        {
+                            "id": "start_stop_standby_command",
+                            "name": "Start/Stop/Standby Command",
+                            "offset": 9
+                        },
+                        {
+                            "id": "voltage_setpoint",
+                            "name": "Voltage Setpoint",
+                            "offset": 10,
+                            "units": "V"
+                        }
+                    ],
+                    "number_of_registers": 11,
+                    "starting_offset": 0,
+                    "type": "Holding Registers"
+                },
+                {
+                    "map": [
+                        {
+                            "bit_strings": [
+                                "bms_alarm_active"
+                            ],
+                            "id": "bms_alarm_active",
+                            "individual_bits": true,
+                            "name": "BMS Alarm Active",
+                            "offset": 0
+                        },
+                        {
+                            "id": "bms_avg_cell_temp",
+                            "name": "BMS Avg Cell Temperature",
+                            "offset": 1,
+                            "scale": 100,
+                            "units": "°C"
+                        },
+                        {
+                            "id": "bms_avg_cell_voltage",
+                            "name": "BMS Avg Cell Voltage",
+                            "offset": 2,
+                            "scale": 10000,
+                            "units": "V"
+                        },
+                        {
+                            "id": "bms_cell_temp_delta",
+                            "name": "BMS Cell Temperature Delta",
+                            "offset": 3,
+                            "scale": 100,
+                            "units": "°C"
+                        },
+                        {
+                            "id": "bms_cell_voltage_delta",
+                            "name": "BMS Cell Voltage Delta",
+                            "offset": 4,
+                            "scale": 10000,
+                            "units": "V"
+                        },
+                        {
+                            "id": "bms_chargeable_energy",
+                            "name": "BMS Chargeable Energy",
+                            "offset": 5,
+                            "units": "kWh"
+                        },
+                        {
+                            "bit_strings": [
+                                "bms_comms_ok"
+                            ],
+                            "id": "bms_comms_ok",
+                            "individual_bits": true,
+                            "name": "BMS Comms OK",
+                            "offset": 6
+                        },
+                        {
+                            "bit_field": true,
+                            "bit_strings": [
+                                "BMS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "BMS CloseContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "BMS OpenContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "BMS VerifyCloseContactors - Command was sent, but the expected result was not observed before timeout",
+                                "BMS VerifyOpenContactors - Command was sent, but the expected result was not observed before timeout"
+                            ],
+                            "id": "bms_control_alarms",
+                            "name": "BMS Control Alarms",
+                            "offset": 7,
+                            "size": 2
+                        },
+                        {
+                            "bit_strings": [
+                                "bms_dc_charging"
+                            ],
+                            "id": "bms_dc_charging",
+                            "individual_bits": true,
+                            "name": "BMS DC Charging",
+                            "offset": 9
+                        },
+                        {
+                            "bit_strings": [
+                                "bms_dc_contactors_closed"
+                            ],
+                            "id": "bms_dc_contactors_closed",
+                            "individual_bits": true,
+                            "name": "BMS DC Contactors Closed",
+                            "offset": 10
+                        },
+                        {
+                            "id": "bms_dc_current",
+                            "name": "BMS DC Current",
+                            "offset": 11,
+                            "scale": 10,
+                            "signed": true,
+                            "units": "A"
+                        },
+                        {
+                            "bit_strings": [
+                                "bms_dc_discharging"
+                            ],
+                            "id": "bms_dc_discharging",
+                            "individual_bits": true,
+                            "name": "BMS DC Discharging",
+                            "offset": 12
+                        },
+                        {
+                            "id": "bms_dc_power",
+                            "name": "BMS DC Power",
+                            "offset": 13,
+                            "scale": 10,
+                            "signed": true,
+                            "units": "kW"
+                        },
+                        {
+                            "id": "bms_dc_voltage",
+                            "name": "BMS DC Voltage",
+                            "offset": 14,
+                            "scale": 10,
+                            "signed": true,
+                            "units": "V"
+                        },
+                        {
+                            "id": "bms_dischargeable_energy",
+                            "name": "BMS Dischargeable Energy",
+                            "offset": 15,
+                            "units": "kWh"
+                        },
+                        {
+                            "bit_strings": [
+                                "bms_fault_active"
+                            ],
+                            "id": "bms_fault_active",
+                            "individual_bits": true,
+                            "name": "BMS Fault Active",
+                            "offset": 16
+                        },
+                        {
+                            "bit_strings": [
+                                "bms_fire_fault_active"
+                            ],
+                            "id": "bms_fire_fault_active",
+                            "individual_bits": true,
+                            "name": "BMS Fire Fault Active",
+                            "offset": 17
+                        },
+                        {
+                            "id": "bms_max_cell_temp",
+                            "name": "BMS Max Cell Temperature",
+                            "offset": 18,
+                            "scale": 100,
+                            "units": "°C"
+                        },
+                        {
+                            "id": "bms_max_cell_voltage",
+                            "name": "BMS Max Cell Voltage",
+                            "offset": 19,
+                            "scale": 10000,
+                            "units": "V"
+                        },
+                        {
+                            "id": "bms_max_charge_current",
+                            "name": "BMS Max Charge Current",
+                            "offset": 20,
+                            "signed": true,
+                            "units": "A"
+                        },
+                        {
+                            "id": "bms_max_charge_power",
+                            "name": "BMS Max Charge Power",
+                            "offset": 21,
+                            "signed": true,
+                            "units": "kW"
+                        },
+                        {
+                            "id": "bms_max_discharge_current",
+                            "name": "BMS Max Discharge Current",
+                            "offset": 22,
+                            "units": "A"
+                        },
+                        {
+                            "id": "bms_max_discharge_power",
+                            "name": "BMS Max Discharge Power",
+                            "offset": 23,
+                            "units": "kW"
+                        },
+                        {
+                            "id": "bms_min_cell_temp",
+                            "name": "BMS Min Cell Temperature",
+                            "offset": 24,
+                            "scale": 100,
+                            "units": "°C"
+                        },
+                        {
+                            "id": "bms_min_cell_voltage",
+                            "name": "BMS Min Cell Voltage",
+                            "offset": 25,
+                            "scale": 10000,
+                            "units": "V"
+                        },
+                        {
+                            "bit_field": true,
+                            "bit_strings": [
+                                "BMS DC Current Max Threshold Exceeded",
+                                "BMS DC Current Min Threshold Exceeded",
+                                "BMS Max Cell Temperature Threshold Exceeded",
+                                "BMS Max Cell Voltage Threshold Exceeded",
+                                "BMS Min Cell Temperature Threshold Exceeded",
+                                "BMS Min Cell Voltage Threshold Exceeded",
+                                "BMS State of Health Below Threshold",
+                                "BMS DC Voltage Max Threshold Exceeded",
+                                "BMS DC Voltage Min Threshold Exceeded",
+                                "BMS SOC Max Threshold Exceeded",
+                                "BMS SOC Min Threshold Exceeded",
+                                "BMS Cell Voltage Delta Max Threshold Exceeded",
+                                "BMS Cell Temperature Delta Max Threshold Exceeded",
+                                "BMS Number of Racks Online Below Min Threshold"
+                            ],
+                            "id": "bms_monitor_alarms",
+                            "name": "BMS Monitor Alarms",
+                            "offset": 26,
+                            "size": 2
+                        },
+                        {
+                            "bit_field": true,
+                            "bit_strings": [
+                                "BMS DC Current Max Threshold Exceeded",
+                                "BMS DC Current Min Threshold Exceeded",
+                                "BMS Max Cell Temperature Threshold Exceeded",
+                                "BMS Max Cell Voltage Threshold Exceeded",
+                                "BMS Min Cell Temperature Threshold Exceeded",
+                                "BMS Min Cell Voltage Threshold Exceeded",
+                                "BMS State of Health Below Threshold",
+                                "BMS DC Voltage Max Threshold Exceeded",
+                                "BMS DC Voltage Min Threshold Exceeded",
+                                "BMS SOC Max Threshold Exceeded",
+                                "BMS SOC Min Threshold Exceeded",
+                                "BMS Cell Voltage Delta Max Threshold Exceeded",
+                                "BMS Cell Temperature Delta Max Threshold Exceeded",
+                                "BMS Number of Racks Online Below Min Threshold"
+                            ],
+                            "id": "bms_monitor_faults",
+                            "name": "BMS Monitor Faults",
+                            "offset": 28,
+                            "size": 2
+                        },
+                        {
+                            "id": "bms_num_racks_online",
+                            "name": "BMS Number of Racks Online",
+                            "offset": 30
+                        },
+                        {
+                            "id": "bms_num_racks_total",
+                            "name": "BMS Number of Racks Total",
+                            "offset": 31
+                        },
+                        {
+                            "id": "bms_soc",
+                            "name": "BMS State of Charge (SOC)",
+                            "offset": 32,
+                            "scale": 10,
+                            "units": "%"
+                        },
+                        {
+                            "id": "bms_soh",
+                            "name": "BMS State of Health (SOH)",
+                            "offset": 33,
+                            "scale": 10,
+                            "units": "%"
+                        },
+                        {
+                            "bit_field": true,
+                            "bit_strings": [
+                                "PCS Communication Failure",
+                                "BMS Commnuication Failure"
+                            ],
+                            "id": "comms_faults",
+                            "name": "Comms Faults",
+                            "offset": 34,
+                            "size": 2
+                        },
+                        {
+                            "bit_strings": [
+                                "ess_alarm_active"
+                            ],
+                            "id": "ess_alarm_active",
+                            "individual_bits": true,
+                            "name": "ESS Alarm Active",
+                            "offset": 36
+                        },
+                        {
+                            "bit_strings": [
+                                "ess_fault_active"
+                            ],
+                            "id": "ess_fault_active",
+                            "individual_bits": true,
+                            "name": "ESS Fault Active",
+                            "offset": 37
+                        },
+                        {
+                            "id": "ess_max_charge_power",
+                            "name": "ESS Max Charge Power",
+                            "offset": 38,
+                            "signed": true,
+                            "units": "kW"
+                        },
+                        {
+                            "id": "ess_max_discharge_power",
+                            "name": "ESS Max Discharge Power",
+                            "offset": 39,
+                            "units": "kW"
+                        },
+                        {
+                            "id": "heartbeat_from_ess",
+                            "name": "Heartbeat From ESS Controller",
+                            "offset": 40
+                        },
+                        {
+                            "id": "pcs_active_power",
+                            "name": "PCS Active Power",
+                            "offset": 41,
+                            "signed": true,
+                            "units": "kW"
+                        },
+                        {
+                            "id": "pcs_active_power_ramp_rate_feedback",
+                            "name": "PCS Active Power Ramp Rate Feedback",
+                            "offset": 42,
+                            "units": "kW/s"
+                        },
+                        {
+                            "id": "pcs_active_power_setpoint_feedback",
+                            "name": "PCS Active Power Setpoint Feedback",
+                            "offset": 43,
+                            "signed": true,
+                            "units": "kW"
+                        },
+                        {
+                            "bit_strings": [
+                                "pcs_alarm_active"
+                            ],
+                            "id": "pcs_alarm_active",
+                            "individual_bits": true,
+                            "name": "PCS Alarm Active",
+                            "offset": 44
+                        },
+                        {
+                            "id": "pcs_apparent_power",
+                            "name": "PCS Apparent Power",
+                            "offset": 45,
+                            "signed": true,
+                            "units": "kVA"
+                        },
+                        {
+                            "id": "pcs_avg_line_voltage",
+                            "name": "PCS Average Line Voltage",
+                            "offset": 46,
+                            "units": "V"
+                        },
+                        {
+                            "bit_strings": [
+                                "pcs_comms_ok"
+                            ],
+                            "id": "pcs_comms_ok",
+                            "individual_bits": true,
+                            "name": "PCS Comms OK",
+                            "offset": 47
+                        },
+                        {
+                            "bit_field": true,
+                            "bit_strings": [
+                                "PCS ActivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "PCS ActivePowerRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "PCS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "PCS FrequencySetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "PCS GridFollowPQ - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "PCS GridFormVF - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "PCS GridFormVSG - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "PCS ReactivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "PCS ReactivePowerRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "PCS Standby - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "PCS Start - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "PCS Stop - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "PCS VerifyActivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+                                "PCS VerifyActivePowerRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "PCS VerifyFrequencySetpoint - Command was sent, but the expected result was not observed before timeout",
+                                "PCS VerifyGridFollowPQ - Command was sent, but the expected result was not observed before timeout",
+                                "PCS VerifyGridFormVF - Command was sent, but the expected result was not observed before timeout",
+                                "PCS VerifyGridFormVSG - Command was sent, but the expected result was not observed before timeout",
+                                "PCS VerifyReactivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+                                "PCS VerifyReactivePowerRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "PCS VerifyStandby - Command was sent, but the expected result was not observed before timeout",
+                                "PCS VerifyStart - Command was sent, but the expected result was not observed before timeout",
+                                "PCS VerifyStop - Command was sent, but the expected result was not observed before timeout",
+                                "PCS VerifyVoltageSetpoint - Command was sent, but the expected result was not observed before timeout",
+                                "PCS VoltageSetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details"
+                            ],
+                            "id": "pcs_control_alarms",
+                            "name": "PCS Control Alarms",
+                            "offset": 48,
+                            "size": 2
+                        },
+                        {
+                            "id": "pcs_dc_current",
+                            "name": "PCS DC Current",
+                            "offset": 50,
+                            "scale": 10,
+                            "signed": true,
+                            "units": "A"
+                        },
+                        {
+                            "id": "pcs_dc_power",
+                            "name": "PCS DC Power",
+                            "offset": 51,
+                            "scale": 10,
+                            "signed": true,
+                            "units": "kW"
+                        },
+                        {
+                            "id": "pcs_dc_voltage",
+                            "name": "PCS DC Voltage",
+                            "offset": 52,
+                            "scale": 10,
+                            "signed": true,
+                            "units": "V"
+                        },
+                        {
+                            "bit_strings": [
+                                "pcs_fault_active"
+                            ],
+                            "id": "pcs_fault_active",
+                            "individual_bits": true,
+                            "name": "PCS Fault Active",
+                            "offset": 53
+                        },
+                        {
+                            "id": "pcs_frequency",
+                            "name": "PCS Grid Frequency",
+                            "offset": 54,
+                            "scale": 100,
+                            "units": "Hz"
+                        },
+                        {
+                            "id": "pcs_frequency_setpoint_feedback",
+                            "name": "PCS Frequency Setpoint Feedback",
+                            "offset": 55,
+                            "units": "Hz"
+                        },
+                        {
+                            "bit_field": true,
+                            "bit_strings": [
+                                "FollowPQ",
+                                "FormVF",
+                                "FormVSG"
+                            ],
+                            "id": "pcs_grid_mode",
+                            "name": "PCS Grid Mode",
+                            "offset": 56,
+                            "size": 2
+                        },
+                        {
+                            "bit_strings": [
+                                "pcs_is_running"
+                            ],
+                            "id": "pcs_is_running",
+                            "individual_bits": true,
+                            "name": "PCS is Running",
+                            "offset": 58
+                        },
+                        {
+                            "id": "pcs_l1_current",
+                            "name": "PCS Grid Current 1",
+                            "offset": 59,
+                            "scale": 10,
+                            "units": "A"
+                        },
+                        {
+                            "id": "pcs_l1_l2_voltage",
+                            "name": "PCS Grid Voltage L1-L2",
+                            "offset": 60,
+                            "units": "V"
+                        },
+                        {
+                            "id": "pcs_l2_current",
+                            "name": "PCS Grid Current 2",
+                            "offset": 61,
+                            "scale": 10,
+                            "units": "A"
+                        },
+                        {
+                            "id": "pcs_l2_l3_voltage",
+                            "name": "PCS Grid Voltage L2-L3",
+                            "offset": 62,
+                            "units": "V"
+                        },
+                        {
+                            "id": "pcs_l3_current",
+                            "name": "PCS Grid Current 3",
+                            "offset": 63,
+                            "scale": 10,
+                            "units": "A"
+                        },
+                        {
+                            "id": "pcs_l3_l1_voltage",
+                            "name": "PCS Grid Voltage L3-L1",
+                            "offset": 64,
+                            "units": "V"
+                        },
+                        {
+                            "id": "pcs_max_charge_power",
+                            "name": "PCS Max Charge Power",
+                            "offset": 65,
+                            "signed": true,
+                            "units": "kW"
+                        },
+                        {
+                            "id": "pcs_max_discharge_power",
+                            "name": "PCS Max Discharge Power",
+                            "offset": 66,
+                            "units": "kW"
+                        },
+                        {
+                            "id": "pcs_max_igbt_temperature",
+                            "name": "PCS Max IGBT Temperature",
+                            "offset": 67,
+                            "scale": 100,
+                            "units": "°C"
+                        },
+                        {
+                            "bit_field": true,
+                            "bit_strings": [
+                                "PCS Active Power Max Threshold Exceeded",
+                                "PCS DC Voltage Max Threshold Exceeded",
+                                "PCS DC Voltage Min Threshold Exceeded"
+                            ],
+                            "id": "pcs_monitor_alarms",
+                            "name": "PCS Monitor Alarms",
+                            "offset": 68,
+                            "size": 2
+                        },
+                        {
+                            "bit_field": true,
+                            "bit_strings": [
+                                "PCS Active Power Max Threshold Exceeded",
+                                "PCS DC Voltage Max Threshold Exceeded",
+                                "PCS DC Voltage Min Threshold Exceeded"
+                            ],
+                            "id": "pcs_monitor_faults",
+                            "name": "PCS Monitor Faults",
+                            "offset": 70,
+                            "size": 2
+                        },
+                        {
+                            "id": "pcs_power_factor",
+                            "name": "PCS Power Factor",
+                            "offset": 72,
+                            "scale": 1000,
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_rated_active_power",
+                            "name": "PCS Rated Active Power",
+                            "offset": 73,
+                            "signed": true,
+                            "units": "kW"
+                        },
+                        {
+                            "id": "pcs_rated_apparent_power",
+                            "name": "PCS Rated Apparent Power",
+                            "offset": 74,
+                            "signed": true,
+                            "units": "kVA"
+                        },
+                        {
+                            "id": "pcs_rated_reactive_power",
+                            "name": "PCS Rated Reactive Power",
+                            "offset": 75,
+                            "signed": true,
+                            "units": "kVAR"
+                        },
+                        {
+                            "id": "pcs_reactive_power",
+                            "name": "PCS Reactive Power",
+                            "offset": 76,
+                            "signed": true,
+                            "units": "kVAR"
+                        },
+                        {
+                            "id": "pcs_reactive_power_ramp_rate_feedback",
+                            "name": "PCS Reactive Power Ramp Rate Feedback",
+                            "offset": 77,
+                            "units": "kVAR/s"
+                        },
+                        {
+                            "id": "pcs_reactive_power_setpoint_feedback",
+                            "name": "PCS Reactive Power Setpoint Feedback",
+                            "offset": 78,
+                            "signed": true,
+                            "units": "kVAR"
+                        },
+                        {
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Stop",
+                                "Run",
+                                "Fault",
+                                "Standby"
+                            ],
+                            "id": "pcs_system_state",
+                            "name": "PCS System State",
+                            "offset": 79,
+                            "size": 2
+                        },
+                        {
+                            "id": "pcs_voltage_setpoint_feedback",
+                            "name": "PCS Voltage Setpoint Feedback",
+                            "offset": 81,
+                            "units": "V"
+                        }
+                    ],
+                    "number_of_registers": 82,
+                    "starting_offset": 0,
+                    "type": "Input Registers"
+                }
+            ]
+        }
+    ],
+    "connection": {
+        "ip_address": "192.168.10.250",
+        "name": "FlexGen ESS Controller 9",
+        "port": 10013
+    }
+}
