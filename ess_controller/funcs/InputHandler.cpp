@@ -28,7 +28,7 @@ namespace InputHandler
     void LocalStartBMS(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*aV)
     {
     
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{}", __func__);
         FunctionUtility::SharedInputHandlerLocalFunction(vmap, amap, aname, p_fims, aV, __func__);
     }
 
@@ -43,7 +43,7 @@ namespace InputHandler
     */
     void LocalStopBMS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{}", __func__);
         FunctionUtility::SharedInputHandlerLocalFunction(vmap, amap, aname, p_fims, aV, __func__);
 
     }
@@ -59,7 +59,7 @@ namespace InputHandler
     */
     void LocalStartPCS(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*aV)
     {
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{}", __func__);
         FunctionUtility::SharedInputHandlerLocalFunction(vmap, amap, aname, p_fims, aV, __func__);
     }
 
@@ -75,7 +75,7 @@ namespace InputHandler
     void LocalStopPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{}", __func__);
         FunctionUtility::SharedInputHandlerLocalFunction(vmap, amap, aname, p_fims, aV, __func__);
 
     }
@@ -92,7 +92,7 @@ namespace InputHandler
     void LocalStandbyPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{}", __func__);
         FunctionUtility::SharedInputHandlerLocalFunction(vmap, amap, aname, p_fims, aV, __func__);
     }
 
@@ -517,7 +517,7 @@ namespace InputHandler
     void SiteBMSContactorControl(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
-        if(1)FPS_PRINT_INFO("{}", __func__);
+        if(0)FPS_PRINT_INFO("{}", __func__);
        
 
         int reload = 0;
@@ -538,7 +538,6 @@ namespace InputHandler
 
         if (reload == 0)
         {
-            FPS_PRINT_INFO("reload == 0");
             linkVals(*vm, vmap, amap, aname, "/reload", reload, relname);
             essAv = amap[relname];
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
@@ -554,13 +553,11 @@ namespace InputHandler
             return;
         }
 
-        FPS_PRINT_INFO("Right before reload == 1");
-        if(1)FunctionUtility::PrintAssetVar(amap[siteUri.c_str()], assetVar::ATypes::AINT);
+        if(0)FunctionUtility::PrintAssetVar(amap[siteUri.c_str()], assetVar::ATypes::AINT);
 
         if (reload == 1)
         {
-            FPS_PRINT_INFO("reload == 1");
-
+ 
             //Hasn't been updated yet
             if(amap[siteUri.c_str()]->getiVal() == 0) {
                 FunctionUtility::PullOffScheduler(amap, aV, siteUri.c_str());
@@ -585,8 +582,6 @@ namespace InputHandler
         }
 
         if(reload == 2){
-            FPS_PRINT_INFO("reload == 2");
-
         
             int stCommand = amap[siteUri.c_str()]->getiVal();
             int returnValue = 0;
@@ -594,12 +589,10 @@ namespace InputHandler
             switch (stCommand) {
                 //CloseContactors
                 case 2:
-                    FPS_PRINT_INFO("2");
                     returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "CloseContactors");
                     break;
                 //OpenContactors
                 case 3:
-                    FPS_PRINT_INFO("3");
                     returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "OpenContactors");
                     break;
                 default:
@@ -610,7 +603,6 @@ namespace InputHandler
 
 
             if(returnValue == SUCCESS || returnValue == FAILURE) {
-                FPS_PRINT_INFO("5");
                 reload = 1;
                 essAv->setVal(reload);
             }
@@ -692,13 +684,7 @@ namespace InputHandler
         }
 
         if(reload == 2){
-
-            FPS_PRINT_INFO("reload == 2");
-        
             int stCommand = amap[siteUri.c_str()]->getiVal();
-
-            FPS_PRINT_INFO("start_stop_standby_command == {}", stCommand);
-
             int returnValue = 0;
 
             switch (stCommand) {
@@ -765,7 +751,7 @@ namespace InputHandler
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
-        if (reload < 2)
+        if (reload == 0)
         {
 
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
@@ -788,42 +774,91 @@ namespace InputHandler
 
             amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
-            if (reload == 0)
-            {
-
-            }
-            reload = 2;
+            reload = 1;
             cAv->setVal(reload);
         }
 
 
+        if (reload == 1)
+        {
 
-        bool maintMode = amap["maint_mode"]->getbVal();
-        bool dcClosed = amap["DCClosed"]->getbVal();
-        bool isFaulted = amap["IsFaulted"]->getbVal();
+            std::string message = "";
 
-        std::string message = "";
+            if (!amap["DCClosed"]->getbVal() && amap["maint_mode"]->getbVal() && !amap["IsFaulted"]->getbVal()) {
+                message += "CloseContactorsEnable TRUE";
+                amap["close_contactors"]->setParam("enabled", true);
+                amap["CloseContactorsEnabled"]->setVal(true);
+                reload = 2;
+                cAv->setVal(reload);
+            } else {
+                message += fmt::format(
+                    "CloseContactorsEnable FALSE ---> Condition(s): [{}:{}] == false && [{}:{}] == true && [{}:{}] == false",
+                    amap["DCClosed"]->getfName(), 
+                    amap["DCClosed"]->getbVal(),
+                    amap["maint_mode"]->getfName(), 
+                    amap["maint_mode"]->getbVal(),
+                    amap["IsFaulted"]->getfName(), 
+                    amap["IsFaulted"]->getbVal()
+                );
+                amap["close_contactors"]->setParam("enabled", false);
+                amap["CloseContactorsEnabled"]->setVal(false);
+                reload = 3;
+                cAv->setVal(reload);
+            }
 
-        if (!dcClosed && maintMode && !isFaulted) {
-            message += "CloseContactorsEnable TRUE";
-            amap["close_contactors"]->setParam("enabled", true);
-            amap["CloseContactorsEnabled"]->setVal(true);
-        } else {
-            message += fmt::format(
-                "CloseContactorsEnable FALSE ---> Condition(s): [{}:{}] == false && [{}:{}] == true && [{}:{}] == false",
-                amap["DCClosed"]->getfName(), 
-                amap["DCClosed"]->getbVal(),
-                amap["maint_mode"]->getfName(), 
-                amap["maint_mode"]->getbVal(),
-                amap["IsFaulted"]->getfName(), 
-                amap["IsFaulted"]->getbVal()
-            );
-            amap["close_contactors"]->setParam("enabled", false);
-            amap["CloseContactorsEnabled"]->setVal(false);
+            FPS_PRINT_INFO("{}", message);
+
         }
 
-        if(0)FPS_PRINT_INFO("{}", message);
+        //Enabled
+        if (reload == 2)
+        {
 
+            std::string message = "";
+
+            if (!amap["DCClosed"]->getbVal() && amap["maint_mode"]->getbVal() && !amap["IsFaulted"]->getbVal()) {
+                // No Change
+            } else {
+                // Change and therefore give a print
+                message += fmt::format(
+                    "CloseContactorsEnable FALSE ---> Condition(s): [{}:{}] == false && [{}:{}] == true && [{}:{}] == false",
+                    amap["DCClosed"]->getfName(), 
+                    amap["DCClosed"]->getbVal(),
+                    amap["maint_mode"]->getfName(), 
+                    amap["maint_mode"]->getbVal(),
+                    amap["IsFaulted"]->getfName(), 
+                    amap["IsFaulted"]->getbVal()
+                );
+                FPS_PRINT_INFO("{}", message);
+
+                amap["close_contactors"]->setParam("enabled", false);
+                amap["CloseContactorsEnabled"]->setVal(false);
+                reload = 3;
+                cAv->setVal(reload);
+            }
+
+        }
+
+        //Not Enabled
+        if (reload == 3)
+        {
+
+            std::string message = "";
+
+            if (!amap["DCClosed"]->getbVal() && amap["maint_mode"]->getbVal() && !amap["IsFaulted"]->getbVal()) {
+                // Changed to Enabled and therefore give a print
+                message += "CloseContactorsEnable TRUE";
+                amap["close_contactors"]->setParam("enabled", true);
+                amap["CloseContactorsEnabled"]->setVal(true);
+                FPS_PRINT_INFO("{}", message);
+                
+                reload = 2;
+                cAv->setVal(reload);
+            } else {
+                // No Change
+            }
+
+        }
 
     }
 

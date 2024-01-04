@@ -88,13 +88,6 @@ namespace FunctionUtility
     void PullOffScheduler(varmap& amap, assetVar* aV, const char* updatedAssetVarName) 
     {
 
-                    // if(0)FPS_PRINT_INFO("PRE endTime SET");
-            // if(0)FunctionUtility::PrintAssetVar(aV, assetVar::ATypes::AFLOAT);
-            // amap[scheduledFuncUri]->setParam("endTime", 1);
-            // if(0)FPS_PRINT_INFO("SET endTime to 1");
-            // if(0)FPS_PRINT_INFO("POST endTime SET");
-            // if(0)FunctionUtility::PrintAssetVar(aV, assetVar::ATypes::AFLOAT);
-
         if(0)FunctionUtility::PrintAssetVar(aV, assetVar::ATypes::AFLOAT);
         aV->setParam("endTime", 1);
 
@@ -114,7 +107,7 @@ namespace FunctionUtility
 
         std::string assetName = "";
         std::string uiUriName = "";
-        std::function<FunctionUtility::FunctionReturnObj(varsmap&, varmap&, const char*, fims*, assetVar*)> outputHandlerFunction;
+        std::function<FunctionUtility::FunctionReturnObj(varsmap&, varmap&, const char*, fims*, assetVar*, const char*)> outputHandlerFunction;
 
         std::string scheduledFuncName = inputHandlerFuncName;
 
@@ -157,7 +150,7 @@ namespace FunctionUtility
         amap[uiUriName.c_str()]->setParam("every", aV->getdParam("every"));
 
 
-        FunctionUtility::FunctionReturnObj returnObject = outputHandlerFunction(vmap, amap, aname, p_fims, aV);
+        FunctionUtility::FunctionReturnObj returnObject = outputHandlerFunction(vmap, amap, aname, p_fims, aV, uiUriName.c_str());
         int returnValue = returnObject.statusIndicator;
         std::string message = returnObject.message;
 
@@ -173,7 +166,7 @@ namespace FunctionUtility
         asset_manager * am = aV->am;
         VarMapUtils* vm = am->vm;
 
-        std::function<FunctionUtility::FunctionReturnObj(varsmap&, varmap&, const char*, fims*, assetVar*)> outputHandlerFunction;
+        std::function<FunctionUtility::FunctionReturnObj(varsmap&, varmap&, const char*, fims*, assetVar*, const char*)> outputHandlerFunction;
 
 
         if (outputHandlerFuncName == "CloseContactors") {
@@ -201,7 +194,8 @@ namespace FunctionUtility
         amap[siteUri.c_str()]->setParam("every", aV->getdParam("every"));
 
 
-        FunctionUtility::FunctionReturnObj returnObject = outputHandlerFunction(vmap, amap, aname, p_fims, aV);
+
+        FunctionUtility::FunctionReturnObj returnObject = outputHandlerFunction(vmap, amap, aname, p_fims, aV, siteUri.c_str());
         int returnValue = returnObject.statusIndicator;
         std::string message = returnObject.message;
 
@@ -411,6 +405,7 @@ namespace FunctionUtility
 
         // Phase 3 (VerifyControl)
         if(reload == 3) {
+
             returnObject = SharedIndividualHandleCmdLogic(amap, aname, p_fims, aV, verifyControl);
             switch(returnObject.statusIndicator) {
                 case RESET:
@@ -492,6 +487,12 @@ namespace FunctionUtility
                 }
             } else {
                 // ControlSuccess doesn't exist
+                returnObject.statusIndicator = IN_PROGRESS;
+                returnObject.message = fmt::format(
+                    "{} doesn't exist and therefore the control, {}, cannot be validated.",
+                    controlSuccess,
+                    control
+                );
             }
         } else {
             returnObject.statusIndicator = IN_PROGRESS;

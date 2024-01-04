@@ -28,13 +28,8 @@ namespace OutputHandler {
     * @param p_fims the interface used for data interchange
     * @param av the assetVar that contains the command value to send
     */
-    FunctionUtility::FunctionReturnObj OpenContactors(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
+    FunctionUtility::FunctionReturnObj OpenContactors(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
-
-
-        std::string funcName = __func__;
-        std::string assetUriName = "open_contactors";
-        std::string assetName = aname;
 
         if(0)FPS_PRINT_INFO("{}", __func__);
 
@@ -72,6 +67,8 @@ namespace OutputHandler {
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
                 // /status/bms/OpenContactorsSuccess
                 FunctionUtility::AssetVarInfo("/status/bms", "OpenContactorsSuccess", assetVar::ATypes::ABOOL),
+                // /status/bms/VerifyOpenContactorsSuccess
+                FunctionUtility::AssetVarInfo("/status/bms", "VerifyOpenContactorsSuccess", assetVar::ATypes::ABOOL),
                 // /controls/bms/OpenContactors
                 FunctionUtility::AssetVarInfo("/controls/bms", "OpenContactors", assetVar::ATypes::AFLOAT),
                 // /controls/bms:VerifyOpenContactors
@@ -100,7 +97,7 @@ namespace OutputHandler {
         }
 
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, "open_contactors", "OpenContactors", "VerifyOpenContactors");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "OpenContactors", "VerifyOpenContactors");
         returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, bmsch, p_fims, aV, "OpenContactors");
 
         return returnObject;
@@ -116,12 +113,8 @@ namespace OutputHandler {
     * @param p_fims the interface used for data interchange
     * @param av the assetVar that contains the command value to send
     */
-    FunctionUtility::FunctionReturnObj CloseContactors(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
+    FunctionUtility::FunctionReturnObj CloseContactors(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
-
-        std::string funcName = __func__;
-        std::string assetUriName = "close_contactors";
-        std::string assetName = aname;
 
         if(0)FPS_PRINT_INFO("{}", __func__);
 
@@ -140,8 +133,6 @@ namespace OutputHandler {
             bmsch = aV->getcParam("bms");
         }
 
-        assetName = bmsch;
-
         auto relname = fmt::format("{}_{}", __func__, bmsch).c_str();
         assetVar* cAv = amap[relname];
         if (!cAv || (reload = cAv->getiVal()) == 0)
@@ -158,6 +149,8 @@ namespace OutputHandler {
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
                 // /status/bms/CloseContactorsSuccess
                 FunctionUtility::AssetVarInfo("/status/bms", "CloseContactorsSuccess", assetVar::ATypes::ABOOL),
+                // /status/bms/VerifyCloseContactorsSuccess
+                FunctionUtility::AssetVarInfo("/status/bms", "VerifyCloseContactorsSuccess", assetVar::ATypes::ABOOL),
                 // /controls/bms/CloseContactors
                 FunctionUtility::AssetVarInfo("/controls/bms", "CloseContactors", assetVar::ATypes::AFLOAT),
                 // /controls/bms:VerifyCloseContactors
@@ -183,7 +176,7 @@ namespace OutputHandler {
         }
 
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, "close_contactors", "CloseContactors", "VerifyCloseContactors");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "CloseContactors", "VerifyCloseContactors");
         returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, bmsch, p_fims, aV, "CloseContactors");
 
         return returnObject;
@@ -198,7 +191,7 @@ namespace OutputHandler {
     * @param p_fims the interface used for data interchange
     * @param av the assetVar that contains the command value to send
     */
-    FunctionUtility::FunctionReturnObj StartPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
+    FunctionUtility::FunctionReturnObj StartPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
         if(0)FPS_PRINT_INFO("{}", __func__);
@@ -233,6 +226,8 @@ namespace OutputHandler {
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
                 // /status/pcs/StartSuccess
                 FunctionUtility::AssetVarInfo("/status/pcs", "StartSuccess", assetVar::ATypes::ABOOL),
+                // /status/bms/VerifyStartSuccess
+                FunctionUtility::AssetVarInfo("/status/bms", "VerifyStartSuccess", assetVar::ATypes::ABOOL),
                 // /controls/pcs/Start
                 FunctionUtility::AssetVarInfo("/controls/pcs", "Start", assetVar::ATypes::AFLOAT),
                 // /controls/pcs:VerifyStart
@@ -258,7 +253,7 @@ namespace OutputHandler {
             cAv->setVal(reload);
         }
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, "start", "Start", "VerifyStart");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "Start", "VerifyStart");
         returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, "Start");
 
         return returnObject;
@@ -273,7 +268,7 @@ namespace OutputHandler {
     * @param p_fims the interface used for data interchange
     * @param av the assetVar that contains the command value to send
     */
-    FunctionUtility::FunctionReturnObj StopPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
+    FunctionUtility::FunctionReturnObj StopPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
         if(0)FPS_PRINT_INFO("{}", __func__);
@@ -308,6 +303,8 @@ namespace OutputHandler {
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
                 // /status/pcs/StopSuccess
                 FunctionUtility::AssetVarInfo("/status/pcs", "StopSuccess", assetVar::ATypes::ABOOL),
+                // /status/bms/VerifyStopSuccess
+                FunctionUtility::AssetVarInfo("/status/bms", "VerifyStopSuccess", assetVar::ATypes::ABOOL),
                 // /controls/pcs/Stop
                 FunctionUtility::AssetVarInfo("/controls/pcs", "Stop", assetVar::ATypes::AFLOAT),
                 // /controls/pcs:VerifyStop
@@ -335,7 +332,7 @@ namespace OutputHandler {
         }
 
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, "stop", "Stop", "VerifyStop");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "Stop", "VerifyStop");
         returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, "Stop");
 
         return returnObject;
@@ -350,7 +347,7 @@ namespace OutputHandler {
     * @param p_fims the interface used for data interchange
     * @param av the assetVar that contains the command value to send
     */
-    FunctionUtility::FunctionReturnObj StandbyPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
+    FunctionUtility::FunctionReturnObj StandbyPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
         if(0)FPS_PRINT_INFO("{}", __func__);
@@ -385,6 +382,8 @@ namespace OutputHandler {
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
                 // /status/pcs/StandbySuccess
                 FunctionUtility::AssetVarInfo("/status/pcs", "StandbySuccess", assetVar::ATypes::ABOOL),
+                // /status/bms/VerifyStandbySuccess
+                FunctionUtility::AssetVarInfo("/status/bms", "VerifyStandbySuccess", assetVar::ATypes::ABOOL),
                 // /controls/pcs/Standby
                 FunctionUtility::AssetVarInfo("/controls/pcs", "Standby", assetVar::ATypes::AFLOAT),
                 // /controls/pcs:VerifyStandby
@@ -412,7 +411,7 @@ namespace OutputHandler {
         }
 
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, "standby", "Standby", "VerifyStandby");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "Standby", "VerifyStandby");
         returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, "Standby");
 
         return returnObject;
