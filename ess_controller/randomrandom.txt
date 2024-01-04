@@ -1,0 +1,178 @@
+sh-4.2# fims_send -m get -r /$$ -u /ess/full/assets/bms/summary/close_contactors | jq
+{
+  "close_contactors": {
+    "value": false
+  }
+}
+
+
+sh-4.2# fims_send -m get -r /$$ -u /ess/full/assets/bms/summary/close_contactors | jq
+{
+  "close_contactors": {
+    "value": false,
+    "aname": "bms",
+    "debug": 0,
+    "enabled": true,
+    "every": 0.1,
+    "name": "Close DC Contactor",
+    "offset": 0,
+    "scaler": 0,
+    "type": "enum_button",
+    "ui_type": "control",
+    "unit": "",
+    "uri": "/sched/bms:LocalStartBMS_bms",
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "aVal": false,
+              "func": "RunSched",
+              "inValue": true
+            }
+          ]
+        }
+      ]
+    },
+    "options": [
+      {
+        "name": "No",
+        "return_value": false
+      },
+      {
+        "name": "Yes",
+        "return_value": true
+      }
+    ]
+  }
+}
+
+
+sh-4.2# fims_send -m get -r /$$ -u /ess/full/assets/bms/summary/close_contactors | jq
+{
+  "close_contactors": {
+    "value": false,
+    "aname": "bms",
+    "debug": 0,
+    "enabled": true,
+    "every": 0.1,
+    "name": "Close DC Contactor",
+    "offset": 0,
+    "scaler": 0,
+    "type": "enum_button",
+    "ui_type": "control",
+    "unit": "",
+    "uri": "/sched/bms:LocalStartBMS_bms",
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "aVal": false,
+              "func": "RunSched",
+              "inValue": true
+            }
+          ]
+        }
+      ]
+    },
+    "options": [
+      {
+        "name": "No",
+        "return_value": false
+      },
+      {
+        "name": "Yes",
+        "return_value": true
+      }
+    ]
+  }
+}
+
+
+sh-4.2# fims_send -m get -r /$$ -u /ess/full/assets/bms/summary/close_contactors | jq
+{
+  "close_contactors": {
+    "value": true,
+    "after": 0,
+    "aname": "bms",
+    "debug": 0,
+    "enabled": true,
+    "every": 0,
+    "for": 0,
+    "name": "Close DC Contactor",
+    "offset": 0,
+    "scaler": 0,
+    "type": "enum_button",
+    "ui_type": "control",
+    "unit": "",
+    "uri": "none",
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "aVal": true,
+              "func": "RunSched",
+              "inValue": true
+            }
+          ]
+        }
+      ]
+    },
+    "options": [
+      {
+        "name": "No",
+        "return_value": false
+      },
+      {
+        "name": "Yes",
+        "return_value": true
+      }
+    ]
+  }
+}
+
+
+sh-4.2# fims_send -m get -r /$$ -u /ess/full/assets/bms/summary/close_contactors | jq
+{
+  "close_contactors": {
+    "value": true,
+    "after": 0,
+    "aname": "bms",
+    "debug": 0,
+    "enabled": true,
+    "every": 0,
+    "for": 0,
+    "name": "Close DC Contactor",
+    "offset": 0,
+    "scaler": 0,
+    "type": "enum_button",
+    "ui_type": "control",
+    "unit": "",
+    "uri": "none",
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "aVal": true,
+              "func": "RunSched",
+              "inValue": true
+            }
+          ]
+        }
+      ]
+    },
+    "options": [
+      {
+        "name": "No",
+        "return_value": false
+      },
+      {
+        "name": "Yes",
+        "return_value": true
+      }
+    ]
+  }
+}

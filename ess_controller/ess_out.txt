@@ -1,0 +1,2396 @@
+[0.000163148s] [info    ] [main_test_new_e]  >>>>>>>>>>>>>>>>>>>>>simdbi setup
+
+[0.00104089s] [info    ] [scheduler      ] hello scheduler [essSched]
+[0.00157215s] [info    ] [setVal         ] setVal setting lVal->valuestring to  [ess]
+[0.00202246s] [info    ] [setVal         ] setVal setting aVal->valuestring to  [ess]
+tsc_ghz:2.8032008603577618
+rdns_latency: 9 tmp: 2456666894701848794
+[1.01417s  ] [info    ] [setFunc        ] Note: adding aname [ess] to funMap av 0x7ffae1966c50
+[1.01479s  ] [info    ] [setFunc        ] Note: adding aname [flex] to funMap av 0x7ffae193eb80
+[1.01544s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [decode value bits  into a number  of different values]
+[1.016s    ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [decode value bits  into a number  of different values]
+[1.01653s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [set or clear a bit in an output var]
+[1.01704s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [set or clear a bit in an output var]
+[1.01757s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [decode a value into a number of different values]
+[1.01809s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [decode a value into a number of different values]
+[1.01862s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [forward a value to a different uri]
+[1.01909s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [forward a value to a different uri]
+[1.01962s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [set limits on a value]
+[1.02012s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [set limits on a value]
+[1.02071s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [run a func using an assetVar as an argument]
+[1.02124s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [run a func using an assetVar as an argument]
+[1.02178s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [use a bitmap to set the output variable]
+[1.0222s   ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [use a bitmap to set the output variable]
+[1.0228s   ] [info    ] [showVecList    ] [0] :: [/ess]
+[1.02333s  ] [info    ] [showVecList    ] [1] :: [/components]
+[1.02385s  ] [info    ] [showVecList    ] [2] :: [/assets]
+[1.02415s  ] [info    ] [showVecList    ] [3] :: [/system]
+[1.02457s  ] [info    ] [showVecList    ] [4] :: [/site]
+[1.02493s  ] [info    ] [showVecList    ] [5] :: [/reload]
+[1.02518s  ] [info    ] [showVecList    ] [6] :: [/misc2]
+[1.02552s  ] [info    ] [getVecListbyNam] no entry in vecs for [Subs]
+[1.02591s  ] [info    ] [main_test_new_e] recovered  [ess]  Subs [0x0] len  [0]
+[1.02624s  ] [info    ] [main_test_new_e]  flex_man >> No Subs found in flex config
+[1.02656s  ] [info    ] [fimsSetup      ] FIMSSETUP size of subs = 7
+[1.02733s  ] [info    ] [fimsSetup      ] name FlexSched connected to FIMS at attempt 0
+[1.02804s  ] [info    ] [fimsSetup      ] name FlexSched subscribed to FIMS [true] connected [true]
+[1.02849s  ] [info    ] [main_test_new_e]  flex_man >> p_fims [0xd497d0]  sched [0xd497d0]
+[1.0291s   ] [info    ] [write_cjson    ] Wrote 2713 bytes to file /var/log/ess_controller/run_configs/ess_after_assets.json
+[1.02998s  ] [info    ] [sendEvent      ] sending event  xxx >>>>>>>>>>>>>>>> [{"source":"ess","message":"ess starting  at 0.000","severity":1}]
+[1.03037s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [ACO-122-ESSC-PCS-Start-Stop-Standby]
+[1.03071s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [ACO-122-ESSC-PCS-Start-Stop-Standby]
+[1.03111s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [6d67ab3]
+[1.0315s   ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [6d67ab3]
+[1.03184s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [v11.3.0-alpha.2-305]
+[1.03214s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [v11.3.0-alpha.2-305]
+[1.03314s  ] [info    ] [setupControls  ] Created Fims var [/sched/fims:dummy]
+[1.03332s  ] [info    ] [setupControls  ] Created Runvar var [/control/ess:runTime]
+[1.03356s  ] [info    ] [setupControls  ] Created Stop var [/control/ess:stopTime]
+[1.4439s   ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/perf/ess:perf_SchedPerf]
+[1.44444s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/perf/ess:perf_SchedPerf]
+[3.82678s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [test]
+[3.82711s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [test]
+[3.87248s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [Stop]
+[3.87296s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [Stop]
+[3.89423s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[3.9024s   ] [info    ] [SchedItemOpts  ] @@@@@ [/system/commands:runOpts_pcs] found cjopts ready to schedule res1 [0x0] tav [/system/commands:run]
+[3.90295s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[3.90353s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[3.90405s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [LocalStartPCS]
+[3.90452s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [LocalStartPCS]
+[3.90543s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [LocalStopPCS]
+[3.90601s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [LocalStopPCS]
+[3.90659s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [LocalStandbyPCS]
+[3.90694s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [LocalStandbyPCS]
+[4.92023s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 3 endTime 0
+[4.92079s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[4.92131s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 2.889382839202881,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 3.905342119,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[4.92176s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[4.92228s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStopPCS] size 2 endTime 0
+[4.92268s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[4.92308s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStopPCS": {
+    "value": 2.891284942626953,
+    "targ": "/sched/pcs:LocalStopPCS",
+    "runTime": 3.906525373,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStopPCS",
+    "every": 0.5,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[4.92352s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStandbyPCS] size 1 endTime 0
+[4.92393s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[4.92434s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStandbyPCS": {
+    "value": 2.8924479484558105,
+    "targ": "/sched/pcs:LocalStandbyPCS",
+    "runTime": 3.907335685,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStandbyPCS",
+    "every": 0.5,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[8.60574s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[8.60617s  ] [info    ] [StartPCS       ] StartPCS
+[8.60667s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/perf/ess:perf_StartPCS]
+[8.60712s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/perf/ess:perf_StartPCS]
+[8.60755s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/reload/pcs:StartPCS_pcs]
+[8.60793s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/reload/pcs:StartPCS_pcs]
+[8.60822s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/reload/pcs:SharedHandleCmdProcess_Start_pcs]
+[8.60846s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/reload/pcs:SharedHandleCmdProcess_Start_pcs]
+[8.60887s  ] [info    ] [SharedHandleCmd] Completed Phase 0 (Start)
+[8.6093s   ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/reload/pcs:HandleCmd_Start]
+[8.60961s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/reload/pcs:HandleCmd_Start]
+[8.60995s  ] [info    ] [HandleCmd      ] reload first run [pcs] [/controls/pcs:Start]  reload 0
+[8.61028s  ] [info    ] [setupCmdParams ] Setting up params for [/controls/pcs:Start]
+[8.61063s  ] [info    ] [HandleCmd      ] Adding [/controls/pcs:Start] to amap in asset [pcs]
+[8.61099s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/controls/pcs:Start]
+[8.61133s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/controls/pcs:Start]
+[8.61175s  ] [info    ] [sendEvent      ] sending event  xxx >>>>>>>>>>>>>>>> [{"source":"ess->pcs","message":"Sent command value [7] to [/components/sungrow_pcs_controls:state_cmd]","severity":1}]
+[8.61259s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/var/log/ess_controller]
+[8.61281s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/var/log/ess_controller]
+[8.61313s  ] [info    ] [record         ] Sent command value [7] to [/components/sungrow_pcs_controls:state_cmd]
+[8.61343s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[9.62859s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[9.62939s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[9.63003s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 7.591588020324707,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 8.613661161,
+    "runCnt": 1,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[9.63055s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[9.63103s  ] [info    ] [StartPCS       ] StartPCS
+[9.63159s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[9.72867s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[9.72973s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[9.73063s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 8.614439010620117,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 8.713661161,
+    "runCnt": 1,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[9.73148s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[9.73233s  ] [info    ] [StartPCS       ] StartPCS
+[9.73319s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[9.8286s   ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[9.82928s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[9.82976s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 8.714515924453735,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 8.813661160999999,
+    "runCnt": 2,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[9.83029s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[9.83075s  ] [info    ] [StartPCS       ] StartPCS
+[9.83125s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[9.9287s   ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[9.92955s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[9.93025s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 8.814457893371582,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 8.913661160999999,
+    "runCnt": 3,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[9.93099s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[9.93165s  ] [info    ] [StartPCS       ] StartPCS
+[9.93235s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[10.0286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[10.0293s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[10.03s    ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 8.914523839950562,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 9.013661160999998,
+    "runCnt": 4,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[10.0307s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[10.0313s  ] [info    ] [StartPCS       ] StartPCS
+[10.032s   ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[10.1286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[10.1293s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[10.1299s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 9.014458894729614,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 9.113661160999998,
+    "runCnt": 5,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[10.1305s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[10.1312s  ] [info    ] [StartPCS       ] StartPCS
+[10.1318s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[10.2285s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[10.2288s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[10.2291s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 9.114444017410278,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 9.213661160999997,
+    "runCnt": 6,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[10.2293s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[10.2295s  ] [info    ] [StartPCS       ] StartPCS
+[10.2297s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[10.3287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[10.3297s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[10.3306s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 9.214367866516113,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 9.313661160999997,
+    "runCnt": 7,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[10.3314s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[10.3321s  ] [info    ] [StartPCS       ] StartPCS
+[10.3329s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[10.4286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[10.4294s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[10.4301s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 9.314517974853516,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 9.413661160999997,
+    "runCnt": 8,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[10.4307s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[10.4314s  ] [info    ] [StartPCS       ] StartPCS
+[10.432s   ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[10.5285s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[10.5292s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[10.5296s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 9.414485931396484,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 9.513661160999996,
+    "runCnt": 9,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[10.5301s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[10.5306s  ] [info    ] [StartPCS       ] StartPCS
+[10.5311s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[10.6286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[10.6292s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[10.6296s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 9.514395952224731,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 9.613661160999996,
+    "runCnt": 10,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[10.63s    ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[10.6302s  ] [info    ] [StartPCS       ] StartPCS
+[10.6305s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[10.7287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[10.7298s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[10.7307s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 9.614412784576416,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 9.713661160999996,
+    "runCnt": 11,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[10.7318s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[10.7327s  ] [info    ] [StartPCS       ] StartPCS
+[10.7335s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[10.8287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[10.8299s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[10.8309s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 9.71449899673462,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 9.813661160999995,
+    "runCnt": 12,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[10.8318s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[10.8327s  ] [info    ] [StartPCS       ] StartPCS
+[10.8336s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[10.9287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[10.9299s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[10.9308s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 9.814543962478638,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 9.913661160999995,
+    "runCnt": 13,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[10.9317s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[10.9326s  ] [info    ] [StartPCS       ] StartPCS
+[10.9335s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[11.0288s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[11.0296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[11.0304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 9.914564847946167,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 10.013661160999995,
+    "runCnt": 14,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[11.0311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[11.0319s  ] [info    ] [StartPCS       ] StartPCS
+[11.0327s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[11.1287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[11.1296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[11.1303s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 10.014685869216919,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 10.113661160999994,
+    "runCnt": 15,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[11.1311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[11.1318s  ] [info    ] [StartPCS       ] StartPCS
+[11.1325s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[11.2285s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[11.2289s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[11.2292s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 10.114520788192749,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 10.213661160999994,
+    "runCnt": 16,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[11.2294s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[11.2297s  ] [info    ] [StartPCS       ] StartPCS
+[11.2299s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[11.3287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[11.3296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[11.3305s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 10.21430778503418,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 10.313661160999994,
+    "runCnt": 17,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[11.3312s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[11.332s   ] [info    ] [StartPCS       ] StartPCS
+[11.3327s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[11.4288s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[11.4299s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[11.4307s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 10.314514875411987,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 10.413661160999993,
+    "runCnt": 18,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[11.4316s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[11.4323s  ] [info    ] [StartPCS       ] StartPCS
+[11.433s   ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[11.5287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[11.5297s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[11.5306s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 10.414631843566895,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 10.513661160999993,
+    "runCnt": 19,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[11.5318s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[11.5323s  ] [info    ] [StartPCS       ] StartPCS
+[11.5331s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[11.6284s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[11.6286s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[11.6288s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 10.514529943466187,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 10.613661160999992,
+    "runCnt": 20,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[11.6289s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[11.629s   ] [info    ] [StartPCS       ] StartPCS
+[11.6292s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[11.7287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[11.7296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[11.7303s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 10.614242792129517,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 10.713661160999992,
+    "runCnt": 21,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[11.7311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[11.7317s  ] [info    ] [StartPCS       ] StartPCS
+[11.7325s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[11.8287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[11.8299s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[11.8309s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 10.714500904083252,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 10.813661160999992,
+    "runCnt": 22,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[11.8319s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[11.8329s  ] [info    ] [StartPCS       ] StartPCS
+[11.8337s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[11.9286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[11.9291s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[11.9299s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 10.814530849456787,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 10.913661160999991,
+    "runCnt": 23,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[11.9303s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[11.9306s  ] [info    ] [StartPCS       ] StartPCS
+[11.931s   ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[12.0288s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[12.0299s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[12.0309s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 10.914408922195435,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 11.013661160999991,
+    "runCnt": 24,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[12.0323s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[12.0333s  ] [info    ] [StartPCS       ] StartPCS
+[12.0343s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[12.1288s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[12.1301s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[12.1311s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 11.014601945877075,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 11.11366116099999,
+    "runCnt": 25,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[12.1321s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[12.1329s  ] [info    ] [StartPCS       ] StartPCS
+[12.134s   ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[12.2287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[12.2297s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[12.2307s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 11.114668846130371,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 11.21366116099999,
+    "runCnt": 26,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[12.2317s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[12.2326s  ] [info    ] [StartPCS       ] StartPCS
+[12.2336s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[12.3286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[12.3296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[12.3304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 11.214531898498535,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 11.31366116099999,
+    "runCnt": 27,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[12.3311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[12.3318s  ] [info    ] [StartPCS       ] StartPCS
+[12.3325s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[12.4285s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[12.4291s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[12.4297s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 11.31445598602295,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 11.41366116099999,
+    "runCnt": 28,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[12.4302s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[12.4307s  ] [info    ] [StartPCS       ] StartPCS
+[12.4312s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[12.5286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[12.5291s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[12.5296s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 11.414358854293823,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 11.51366116099999,
+    "runCnt": 29,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[12.5301s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[12.5305s  ] [info    ] [StartPCS       ] StartPCS
+[12.531s   ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[12.6285s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[12.629s   ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[12.6293s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 11.514401912689209,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 11.613661160999989,
+    "runCnt": 30,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[12.6295s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[12.6298s  ] [info    ] [StartPCS       ] StartPCS
+[12.6299s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[12.7286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[12.7295s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[12.7303s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 11.614367008209229,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 11.713661160999989,
+    "runCnt": 31,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[12.7311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[12.7318s  ] [info    ] [StartPCS       ] StartPCS
+[12.7327s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[12.8286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[12.8295s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[12.8301s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 11.71440601348877,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 11.813661160999988,
+    "runCnt": 32,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[12.8307s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[12.8313s  ] [info    ] [StartPCS       ] StartPCS
+[12.8319s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[12.9287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[12.9295s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[12.9301s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 11.814450979232788,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 11.913661160999988,
+    "runCnt": 33,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[12.9304s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[12.9307s  ] [info    ] [StartPCS       ] StartPCS
+[12.9311s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[13.0287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[13.0296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[13.0303s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 11.914508819580078,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 12.013661160999987,
+    "runCnt": 34,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[13.0311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[13.0317s  ] [info    ] [StartPCS       ] StartPCS
+[13.0324s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[13.1286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[13.1295s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[13.1302s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 12.014539003372192,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 12.113661160999987,
+    "runCnt": 35,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[13.1308s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[13.1314s  ] [info    ] [StartPCS       ] StartPCS
+[13.1318s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[13.2287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[13.2296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[13.2305s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 12.114457845687866,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 12.213661160999987,
+    "runCnt": 36,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[13.2314s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[13.2321s  ] [info    ] [StartPCS       ] StartPCS
+[13.2329s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[13.3287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[13.3296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[13.3304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 12.214533805847168,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 12.313661160999986,
+    "runCnt": 37,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[13.3311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[13.3318s  ] [info    ] [StartPCS       ] StartPCS
+[13.3325s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[13.4287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[13.4297s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[13.4304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 12.314514875411987,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 12.413661160999986,
+    "runCnt": 38,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[13.4312s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[13.4321s  ] [info    ] [StartPCS       ] StartPCS
+[13.433s   ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[13.5285s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[13.5358s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[13.5365s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 12.41452693939209,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 12.513661160999986,
+    "runCnt": 39,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[13.5372s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[13.5378s  ] [info    ] [StartPCS       ] StartPCS
+[13.5382s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[13.6284s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[13.6289s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[13.6293s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 12.51430082321167,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 12.613661160999985,
+    "runCnt": 40,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[13.6297s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[13.6302s  ] [info    ] [StartPCS       ] StartPCS
+[13.6307s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[13.7287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[13.7299s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[13.7309s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 12.614251852035522,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 12.713661160999985,
+    "runCnt": 41,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[13.7318s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[13.7326s  ] [info    ] [StartPCS       ] StartPCS
+[13.7335s  ] [info    ] [checkCmd       ] currCheckCmdTime reached 0 and currCmdTries is now [1] for asset [pcs] with [/controls/pcs:Start]. Remaining number of command tries [1]
+[13.7343s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[13.8286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[13.8299s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[13.8311s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 12.71450400352478,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 12.813661160999985,
+    "runCnt": 42,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[13.8321s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[13.8331s  ] [info    ] [StartPCS       ] StartPCS
+[13.8343s  ] [info    ] [sendEvent      ] sending event  xxx >>>>>>>>>>>>>>>> [{"source":"ess->pcs","message":"Sent command value [7] to [/components/sungrow_pcs_controls:state_cmd]","severity":1}]
+[13.835s   ] [info    ] [record         ] Sent command value [7] to [/components/sungrow_pcs_controls:state_cmd]
+[13.8358s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[13.9286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[13.9296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[13.9304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 12.814486980438232,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 12.913661160999984,
+    "runCnt": 43,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[13.9311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[13.9318s  ] [info    ] [StartPCS       ] StartPCS
+[13.9325s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[14.0287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[14.0296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[14.0305s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 12.914453983306885,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 13.013661160999984,
+    "runCnt": 44,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[14.0314s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[14.0322s  ] [info    ] [StartPCS       ] StartPCS
+[14.0331s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[14.1288s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[14.1298s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[14.1306s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 13.014518976211548,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 13.113661160999984,
+    "runCnt": 45,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[14.1314s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[14.1322s  ] [info    ] [StartPCS       ] StartPCS
+[14.133s   ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[14.2287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[14.2299s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[14.2306s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 13.114646911621094,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 13.213661160999983,
+    "runCnt": 46,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[14.2313s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[14.2319s  ] [info    ] [StartPCS       ] StartPCS
+[14.2326s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[14.3287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[14.3295s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[14.3302s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 13.214510917663574,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 13.313661160999983,
+    "runCnt": 47,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[14.331s   ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[14.3316s  ] [info    ] [StartPCS       ] StartPCS
+[14.3324s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[14.4287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[14.4296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[14.4304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 13.31450891494751,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 13.413661160999983,
+    "runCnt": 48,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[14.4311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[14.4318s  ] [info    ] [StartPCS       ] StartPCS
+[14.4324s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[14.5287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[14.5297s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[14.5304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 13.414507865905762,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 13.513661160999982,
+    "runCnt": 49,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[14.5312s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[14.5319s  ] [info    ] [StartPCS       ] StartPCS
+[14.5326s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[14.6285s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[14.6291s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[14.6297s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 13.514586925506592,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 13.613661160999982,
+    "runCnt": 50,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[14.6304s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[14.6308s  ] [info    ] [StartPCS       ] StartPCS
+[14.6312s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[14.7286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[14.7296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[14.7304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 13.614360809326172,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 13.713661160999981,
+    "runCnt": 51,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[14.7311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[14.7318s  ] [info    ] [StartPCS       ] StartPCS
+[14.7325s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[14.8286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[14.8298s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[14.8307s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 13.714422941207886,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 13.813661160999981,
+    "runCnt": 52,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[14.8316s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[14.8323s  ] [info    ] [StartPCS       ] StartPCS
+[14.833s   ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[14.9287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[14.9296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[14.9305s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 13.814421892166138,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 13.91366116099998,
+    "runCnt": 53,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[14.9313s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[14.932s   ] [info    ] [StartPCS       ] StartPCS
+[14.9328s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[15.0288s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[15.0299s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[15.0308s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 13.914533853530884,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 14.01366116099998,
+    "runCnt": 54,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[15.0315s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[15.0325s  ] [info    ] [StartPCS       ] StartPCS
+[15.0333s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[15.1284s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[15.1288s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[15.1291s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 14.014603853225708,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 14.11366116099998,
+    "runCnt": 55,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[15.1295s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[15.1299s  ] [info    ] [StartPCS       ] StartPCS
+[15.1302s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[15.2286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[15.2294s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[15.23s    ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 14.114251852035522,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 14.21366116099998,
+    "runCnt": 56,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[15.2305s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[15.2309s  ] [info    ] [StartPCS       ] StartPCS
+[15.2314s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[15.3288s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[15.3297s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[15.3304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 14.214478969573975,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 14.31366116099998,
+    "runCnt": 57,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[15.3312s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[15.332s   ] [info    ] [StartPCS       ] StartPCS
+[15.3329s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[15.4285s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[15.4294s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[15.43s    ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 14.314600944519043,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 14.413661160999979,
+    "runCnt": 58,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[15.4304s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[15.4311s  ] [info    ] [StartPCS       ] StartPCS
+[15.4317s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[15.5287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[15.5297s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[15.5307s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 14.414378881454468,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 14.513661160999979,
+    "runCnt": 59,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[15.5316s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[15.5325s  ] [info    ] [StartPCS       ] StartPCS
+[15.5334s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[15.6285s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[15.6292s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[15.63s    ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 14.514503955841064,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 14.613661160999978,
+    "runCnt": 60,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[15.6305s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[15.6311s  ] [info    ] [StartPCS       ] StartPCS
+[15.6316s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[15.7284s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[15.7291s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[15.7296s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 14.614343881607056,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 14.713661160999978,
+    "runCnt": 61,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[15.7303s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[15.7308s  ] [info    ] [StartPCS       ] StartPCS
+[15.7314s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[15.8288s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[15.8299s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[15.8309s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 14.71425485610962,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 14.813661160999978,
+    "runCnt": 62,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[15.8319s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[15.8329s  ] [info    ] [StartPCS       ] StartPCS
+[15.8339s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[15.9289s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[15.9303s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[15.9312s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 14.814652919769287,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 14.913661160999977,
+    "runCnt": 63,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[15.932s   ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[15.9328s  ] [info    ] [StartPCS       ] StartPCS
+[15.9336s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[16.0287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[16.0298s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[16.0305s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 14.914694786071777,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 15.013661160999977,
+    "runCnt": 64,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[16.0313s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[16.0321s  ] [info    ] [StartPCS       ] StartPCS
+[16.0329s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[16.1287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[16.1297s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[16.1305s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 15.014545917510986,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 15.113661160999976,
+    "runCnt": 65,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[16.1312s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[16.132s   ] [info    ] [StartPCS       ] StartPCS
+[16.1327s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[16.2288s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[16.2298s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[16.2308s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 15.114579916000366,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 15.213661160999976,
+    "runCnt": 66,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[16.2317s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[16.2326s  ] [info    ] [StartPCS       ] StartPCS
+[16.2335s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[16.3286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[16.3296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[16.3305s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 15.214637994766235,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 15.313661160999976,
+    "runCnt": 67,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[16.3315s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[16.3323s  ] [info    ] [StartPCS       ] StartPCS
+[16.3333s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[16.4286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[16.4295s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[16.4304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 15.314442873001099,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 15.413661160999975,
+    "runCnt": 68,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[16.4313s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[16.4322s  ] [info    ] [StartPCS       ] StartPCS
+[16.4331s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[16.5287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[16.5296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[16.5304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 15.414422988891602,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 15.513661160999975,
+    "runCnt": 69,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[16.5312s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[16.5319s  ] [info    ] [StartPCS       ] StartPCS
+[16.5327s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[16.6286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[16.6291s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[16.6296s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 15.514539957046509,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 15.613661160999975,
+    "runCnt": 70,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[16.63s    ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[16.6303s  ] [info    ] [StartPCS       ] StartPCS
+[16.6308s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[16.7286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[16.7292s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[16.73s    ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 15.614453792572021,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 15.713661160999974,
+    "runCnt": 71,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[16.7308s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[16.7316s  ] [info    ] [StartPCS       ] StartPCS
+[16.7324s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[16.8287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[16.8296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[16.8303s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 15.714463949203491,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 15.813661160999974,
+    "runCnt": 72,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[16.831s   ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[16.8318s  ] [info    ] [StartPCS       ] StartPCS
+[16.8326s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[16.9286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[16.9295s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[16.9304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 15.814519882202148,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 15.913661160999974,
+    "runCnt": 73,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[16.9311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[16.932s   ] [info    ] [StartPCS       ] StartPCS
+[16.9327s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[17.0286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[17.0295s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[17.0304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 15.914460897445679,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 16.013661160999973,
+    "runCnt": 74,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[17.0312s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[17.032s   ] [info    ] [StartPCS       ] StartPCS
+[17.0328s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[17.1288s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[17.1298s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[17.1305s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 16.01444387435913,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 16.113661160999975,
+    "runCnt": 75,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[17.1313s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[17.132s   ] [info    ] [StartPCS       ] StartPCS
+[17.1327s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[17.2287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[17.2295s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[17.2303s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 16.11461091041565,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 16.213661160999976,
+    "runCnt": 76,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[17.2311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[17.232s   ] [info    ] [StartPCS       ] StartPCS
+[17.2329s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[17.3287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[17.3295s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[17.3301s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 16.214515924453735,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 16.313661160999978,
+    "runCnt": 77,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[17.3309s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[17.3317s  ] [info    ] [StartPCS       ] StartPCS
+[17.3325s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[17.4287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[17.4296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[17.4305s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 16.31453585624695,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 16.41366116099998,
+    "runCnt": 78,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[17.4312s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[17.432s   ] [info    ] [StartPCS       ] StartPCS
+[17.4328s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[17.5286s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[17.5292s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[17.5297s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 16.41457486152649,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 16.51366116099998,
+    "runCnt": 79,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[17.5301s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[17.5305s  ] [info    ] [StartPCS       ] StartPCS
+[17.5309s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[17.6285s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[17.6293s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[17.6302s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 16.51443886756897,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 16.613661160999982,
+    "runCnt": 80,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[17.6309s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[17.6327s  ] [info    ] [StartPCS       ] StartPCS
+[17.6333s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[17.7287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[17.7297s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[17.7304s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 16.614338874816895,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 16.713661160999983,
+    "runCnt": 81,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[17.7311s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[17.7318s  ] [info    ] [StartPCS       ] StartPCS
+[17.7327s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[17.8285s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[17.8289s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[17.8293s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 16.714537858963013,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 16.813661160999985,
+    "runCnt": 82,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[17.8298s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[17.8301s  ] [info    ] [StartPCS       ] StartPCS
+[17.8305s  ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[17.9287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[17.9297s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[17.9307s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 16.81431794166565,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 16.913661160999986,
+    "runCnt": 83,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[17.9315s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[17.9322s  ] [info    ] [StartPCS       ] StartPCS
+[17.933s   ] [info    ] [FunctionResultH] IN PROGRESS | LocalStartPCS | HandleCmd for Start is not complete yet | Current Phase: [1]
+[18.0288s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[18.0298s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[18.0307s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 16.9145188331604,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 17.013661160999987,
+    "runCnt": 84,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[18.0318s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[18.0329s  ] [info    ] [StartPCS       ] StartPCS
+[18.0337s  ] [info    ] [checkCmd       ] currCheckCmdTime reached 0 and currCmdTries is now [2] for asset [pcs] with [/controls/pcs:Start]. Remaining number of command tries [0]
+[18.0346s  ] [info    ] [sendEvent      ] sending event  xxx >>>>>>>>>>>>>>>> [{"source":"ess->pcs","message":"Reached max command tries [2]. Cannot verify that command value [7] has been sent to [/components/sungrow_pcs_controls:state_cmd]","severity":3}]
+[18.0353s  ] [warning ] [record         ] Reached max command tries [2]. Cannot verify that command value [7] has been sent to [/components/sungrow_pcs_controls:state_cmd]
+[18.0361s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [PCS Start - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details]
+[18.0369s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [PCS Start - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details]
+[18.0378s  ] [info    ] [sendEvent      ] sending event  xxx >>>>>>>>>>>>>>>> [{"source":"ess","message":"FAILURE | LocalStartPCS | HandleCmd for Start has timed out and StartSuccess was still false.  -> Condition(s): [/status/pcs:StartSuccess:false] == true","severity":1}]
+[18.1287s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 1
+[18.1296s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[18.1303s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 17.014623880386353,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 17.11366116099999,
+    "runCnt": 85,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 1,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[57.4059s  ] [info    ] [signal_handler ] signal of type 2 caught.
+[57.4437s  ] [info    ] [sendEvent      ] sending event  xxx >>>>>>>>>>>>>>>> [{"source":"ess","message":"ess shutting down at 56.429","severity":1}]
+[57.4441s  ] [info    ] [fimsThread     ] fims shutting down

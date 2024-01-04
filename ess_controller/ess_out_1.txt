@@ -1,0 +1,181 @@
+[0.000205756s] [info    ] [main_test_new_e]  >>>>>>>>>>>>>>>>>>>>>simdbi setup
+
+[0.00123201s] [info    ] [scheduler      ] hello scheduler [essSched]
+[0.00192887s] [info    ] [setVal         ] setVal setting lVal->valuestring to  [ess]
+[0.00228529s] [info    ] [setVal         ] setVal setting aVal->valuestring to  [ess]
+tsc_ghz:2.8032008490374358
+rdns_latency: 14 tmp: 2456694090297041768
+[1.01379s  ] [info    ] [setFunc        ] Note: adding aname [ess] to funMap av 0x7f8cd353ec50
+[1.0248s   ] [info    ] [setFunc        ] Note: adding aname [flex] to funMap av 0x7f8cd3516b80
+[1.02523s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [decode value bits  into a number  of different values]
+[1.02556s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [decode value bits  into a number  of different values]
+[1.02587s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [set or clear a bit in an output var]
+[1.02626s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [set or clear a bit in an output var]
+[1.02665s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [decode a value into a number of different values]
+[1.02705s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [decode a value into a number of different values]
+[1.02742s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [forward a value to a different uri]
+[1.02785s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [forward a value to a different uri]
+[1.02818s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [set limits on a value]
+[1.02857s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [set limits on a value]
+[1.02897s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [run a func using an assetVar as an argument]
+[1.02916s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [run a func using an assetVar as an argument]
+[1.02939s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [use a bitmap to set the output variable]
+[1.02962s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [use a bitmap to set the output variable]
+[1.02985s  ] [info    ] [showVecList    ] [0] :: [/ess]
+[1.03001s  ] [info    ] [showVecList    ] [1] :: [/components]
+[1.03029s  ] [info    ] [showVecList    ] [2] :: [/assets]
+[1.03055s  ] [info    ] [showVecList    ] [3] :: [/system]
+[1.03092s  ] [info    ] [showVecList    ] [4] :: [/site]
+[1.03123s  ] [info    ] [showVecList    ] [5] :: [/reload]
+[1.03144s  ] [info    ] [showVecList    ] [6] :: [/misc2]
+[1.03172s  ] [info    ] [getVecListbyNam] no entry in vecs for [Subs]
+[1.03199s  ] [info    ] [main_test_new_e] recovered  [ess]  Subs [0x0] len  [0]
+[1.03225s  ] [info    ] [main_test_new_e]  flex_man >> No Subs found in flex config
+[1.03248s  ] [info    ] [fimsSetup      ] FIMSSETUP size of subs = 7
+[1.03293s  ] [info    ] [fimsSetup      ] name FlexSched connected to FIMS at attempt 0
+[1.03331s  ] [info    ] [fimsSetup      ] name FlexSched subscribed to FIMS [true] connected [true]
+[1.03355s  ] [info    ] [main_test_new_e]  flex_man >> p_fims [0x25877d0]  sched [0x25877d0]
+[1.03415s  ] [info    ] [write_cjson    ] Wrote 2713 bytes to file /var/log/ess_controller/run_configs/ess_after_assets.json
+[1.03495s  ] [info    ] [sendEvent      ] sending event  xxx >>>>>>>>>>>>>>>> [{"source":"ess","message":"ess starting  at 0.000","severity":1}]
+[1.03523s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [ACO-122-ESSC-PCS-Start-Stop-Standby]
+[1.03544s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [ACO-122-ESSC-PCS-Start-Stop-Standby]
+[1.03575s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [6d67ab3]
+[1.03602s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [6d67ab3]
+[1.03623s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [v11.3.0-alpha.2-305]
+[1.03647s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [v11.3.0-alpha.2-305]
+[1.03727s  ] [info    ] [setupControls  ] Created Fims var [/sched/fims:dummy]
+[1.03762s  ] [info    ] [setupControls  ] Created Runvar var [/control/ess:runTime]
+[1.0381s   ] [info    ] [setupControls  ] Created Stop var [/control/ess:stopTime]
+[1.74048s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/perf/ess:perf_SchedPerf]
+[1.74105s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/perf/ess:perf_SchedPerf]
+[3.71265s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [test]
+[3.71313s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [test]
+[3.74924s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [Stop]
+[3.74961s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [Stop]
+[3.76855s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[3.77539s  ] [info    ] [SchedItemOpts  ] @@@@@ [/system/commands:runOpts_pcs] found cjopts ready to schedule res1 [0x0] tav [/system/commands:run]
+[3.77586s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[3.77621s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[3.77649s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [LocalStartPCS]
+[3.77666s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [LocalStartPCS]
+[3.777s    ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [LocalStopPCS]
+[3.77731s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [LocalStopPCS]
+[3.77763s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [LocalStandbyPCS]
+[3.77781s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [LocalStandbyPCS]
+[4.79151s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 3 endTime 0
+[4.79201s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[4.79244s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 2.7624359130859375,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 3.776924592,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[4.79284s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[4.79321s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStopPCS] size 2 endTime 0
+[4.79356s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[4.79393s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStopPCS": {
+    "value": 2.7632269859313965,
+    "targ": "/sched/pcs:LocalStopPCS",
+    "runTime": 3.777560204,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStopPCS",
+    "every": 0.5,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[4.79429s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStandbyPCS] size 1 endTime 0
+[4.79465s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[4.79501s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStandbyPCS": {
+    "value": 2.763857841491699,
+    "targ": "/sched/pcs:LocalStandbyPCS",
+    "runTime": 3.777963959,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStandbyPCS",
+    "every": 0.5,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[9.07409s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[9.07445s  ] [info    ] [sendEvent      ] sending event  xxx >>>>>>>>>>>>>>>> [{"source":"ess","message":"FAILURE | LocalStartPCS | Cannot run LocalStartPCS -----> Condition(s): [/status/bms:DCClosed:true] == true and [/assets/pcs/summary:maint_mode:false] == true and [/status/pcs:IsFaulted:false] == false","severity":1}]
+[10.0895s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 0
+[10.0901s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[10.0907s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 8.06029200553894,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 9.074839809,
+    "runCnt": 1,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 0,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
+[10.0913s  ] [info    ] [LocalStartPCS  ] LocalStartPCS
+[10.0919s  ] [info    ] [sendEvent      ] sending event  xxx >>>>>>>>>>>>>>>> [{"source":"ess","message":"FAILURE | LocalStartPCS | Cannot run LocalStartPCS -----> Condition(s): [/status/bms:DCClosed:true] == true and [/assets/pcs/summary:maint_mode:false] == true and [/status/pcs:IsFaulted:false] == false","severity":1}]
+[10.1895s  ] [info    ] [getSchedDelay  ] Got one with name [/sched/pcs:LocalStartPCS] size 1 endTime 1
+[10.1907s  ] [info    ] [getSchedDelay  ] SCHEDULER RECEIVED
+[10.1917s  ] [info    ] [PrintAssetVar  ] 
+{
+  "/sched/pcs:LocalStartPCS": {
+    "value": 9.075680017471313,
+    "targ": "/sched/pcs:LocalStartPCS",
+    "runTime": 9.174839809,
+    "runCnt": 1,
+    "reftime": 0,
+    "fcn": "RunTarg",
+    "uri": "/sched/pcs:LocalStartPCS",
+    "every": 0.1,
+    "enabled": true,
+    "runEnd": 0,
+    "debug": 0,
+    "endTime": 1,
+    "active": true,
+    "amap": true,
+  }
+}
+
+
