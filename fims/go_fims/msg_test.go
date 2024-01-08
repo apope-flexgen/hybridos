@@ -1,7 +1,6 @@
 package fims
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 )
@@ -15,6 +14,13 @@ var bodies = []interface{}{
 	[]string{"list", "body"},
 }
 
+var sizes = []int{
+	51,
+	41,
+	30,
+	43,
+}
+
 func TestGetFrags(t *testing.T) {
 	strs := []string{
 		"", "/", "/a", "/a/",
@@ -25,12 +31,12 @@ func TestGetFrags(t *testing.T) {
 		s []string
 	}
 	resps := []r{
-		{0, []string{}},
-		{0, []string{}},
+		{0, nil},
+		{1, []string{""}},
 		{1, []string{"a"}},
-		{1, []string{"a"}},
+		{2, []string{"a",""}},
 		{2, []string{"a", "b"}},
-		{2, []string{"a", "b"}},
+		{3, []string{"a", "b",""}},
 		{3, []string{"a", "b", "c"}},
 	}
 	for i, s := range strs {
@@ -69,7 +75,9 @@ func TestSend(t *testing.T) {
 		if err != nil {
 			t.Errorf("Failed to send the %dth body, %+v\n", i, b)
 		}
-		fmt.Printf("Wrote %d bytes of %+v\n", n, b)
+		if n !=  sizes[i] {
+			t.Errorf("Message %v: Sent size %v, expected size %d\n", b, n, sizes[i])
+		}
 	}
 
 }

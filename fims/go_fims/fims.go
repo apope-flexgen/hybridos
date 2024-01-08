@@ -22,9 +22,9 @@ var _zero uintptr
 // Do the interface allocations only once for common
 // Errno values.
 var (
-	errEAGAIN error = unix.EAGAIN
-	errEINVAL error = unix.EINVAL
-	errENOENT error = unix.ENOENT
+	errEAGAIN  error = unix.EAGAIN
+	errEINVAL  error = unix.EINVAL
+	errENOENT  error = unix.ENOENT
 )
 
 // errnoErr returns common boxed Errno values, to prevent
@@ -86,6 +86,8 @@ const (
 	Max_Expected_Data_len           = 924288 - Meta_Data_Info_Buf_Len - 8 // 8 is sizeof(Meta_Data_Info)
 	Fims_Data_Layout_Version uint16 = 1
 )
+
+var empty_message_count int
 
 // AES functions:
 // source: https://golangdocs.com/aes-encryption-decryption-in-golang
@@ -180,6 +182,20 @@ func (f *Fims) recv_raw_static(bufs *Receiver_Bufs_Static) (bool, error) {
 		{Base: &bufs.Data_buf[0], Len: uint64(len(bufs.Data_buf))},
 	}
 	bytes_read, err := readv(f.fd, recv_bufs)
+	
+	if bytes_read == 0 && err == nil {
+		empty_message_count += 1
+		if empty_message_count > 5 {
+			err = fmt.Errorf("No bytes read and rc 0. Likely fims disconnect.")
+			log.Printf("%v\n", err)
+			f.connected = false
+			f.fd = -1
+			unix.Close(f.fd)
+		}
+	} else {
+		empty_message_count = 0
+	}
+	
 	return bytes_read > 0, err
 }
 
@@ -190,6 +206,19 @@ func (f *Fims) recv_raw_dynamic(bufs *Receiver_Bufs_Dynamic) (bool, error) {
 		{Base: &bufs.Data_buf[0], Len: uint64(len(bufs.Data_buf))},
 	}
 	bytes_read, err := readv(f.fd, recv_bufs)
+	
+	if bytes_read == 0 && err == nil {
+		empty_message_count += 1
+		if empty_message_count > 5 {
+			err = fmt.Errorf("No bytes read and rc 0. Likely fims disconnect.")
+			log.Printf("%v\n", err)
+			f.connected = false
+			f.fd = -1
+			unix.Close(f.fd)
+		}
+	} else {
+		empty_message_count = 0
+	}
 	return bytes_read > 0, err
 }
 
