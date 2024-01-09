@@ -120,9 +120,7 @@ namespace FunctionUtility
     };
 
 
-
     extern std::unordered_map<std::string, std::string> controlsEnabledLogicMap;
-
 
     void FunctionResultHandler
     (
@@ -159,7 +157,6 @@ namespace FunctionUtility
     std::string GetEnabledLogicMessage(std::string controlUri);
 
     void UpdateEnabledLogicMessage(std::string controlUri, std::string logicMessage);
-
 
 }
 

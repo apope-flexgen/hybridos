@@ -27,7 +27,6 @@ namespace InputHandler
     */
     void LocalStartBMS(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*aV)
     {
-    
         if(0)FPS_PRINT_INFO("{}", __func__);
         FunctionUtility::SharedInputHandlerLocalFunction(vmap, amap, aname, p_fims, aV, __func__);
     }
@@ -91,7 +90,6 @@ namespace InputHandler
     */
     void LocalStandbyPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
-
         if(0)FPS_PRINT_INFO("{}", __func__);
         FunctionUtility::SharedInputHandlerLocalFunction(vmap, amap, aname, p_fims, aV, __func__);
     }
@@ -922,6 +920,7 @@ namespace InputHandler
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
+
         if(reload == 0){
 
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
@@ -1064,7 +1063,6 @@ namespace InputHandler
             if(0)FPS_PRINT_INFO("{}", message);
         }
 
-
     }
 
     /**
@@ -1174,7 +1172,6 @@ namespace InputHandler
             if(0)FPS_PRINT_INFO("{}", message);
         }
 
-
     }
 
     /**
@@ -1274,7 +1271,6 @@ namespace InputHandler
 
             if(0)FPS_PRINT_INFO("{}", message);
         }
-
 
     }
 
@@ -1386,11 +1382,6 @@ namespace InputHandler
 
     }
 
-
-
-
-
 }
-
 
 #endif
