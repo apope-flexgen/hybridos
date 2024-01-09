@@ -156,7 +156,7 @@ int32_t getInt32Val(DbVar* db)
             ival = INT_MIN;
         }
     }
-    else 
+    else
     {      
         if (dval >= UINT_MAX)
         {
@@ -199,7 +199,7 @@ int16_t getInt16Val(DbVar* db)
             ival = SHRT_MIN;
         }
     }
-    else 
+    else
     {
         // USHRT
         if (dval >= USHRT_MAX)
@@ -747,7 +747,7 @@ int addVarToCj(sysCfg*sys, cJSON* cj,  DbVar* db, int flag)
                 {
                     addSysCjVal(sys, cj, db, flag, true);
                 }
-                else 
+                else
                 {
                     addSysCjVal(sys, cj, db, flag, false);
                 }
@@ -1190,6 +1190,7 @@ bool parse_system(cJSON* cji, sysCfg* sys, int who)
     if(ret) ret = getCJdouble(cj,"event_rate",   sys->event_rate,       false);
     if(ret) ret = getCJbool  (cj,"useGets",      sys->useGets,          false);
     if(ret) ret = getCJbool  (cj,"event_pub",    sys->event_pub,        false);
+    if(ret) ret = getCJbool  (cj,"pub_outputs",  sys->pubOutputs,       false);
     if(ret) ret = getCJint   (cj,"event_buffer", sys->event_buffer,     false);
     if(ret) ret = getCJint   (cj,"batchPubDebug",sys->batch_pub_debug,  false);
     if(ret) ret = getCJbool  (cj,"enable_state_events",    sys->enable_state_events,        false);
@@ -1913,7 +1914,7 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
                 if (sys->debug> 1)
                    FPS_ERROR_PRINT("fims message body (%s) \n", msg->body);
             }
-            else 
+            else
             {
                return NULL;
             }
@@ -2040,7 +2041,7 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
             {
                 sys->addUrisToVec(dbs);
             }
-            else            
+            else
             {
                 sys->addVarsToVec(dbs, newUri, flag);
             }

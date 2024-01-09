@@ -56,10 +56,11 @@ public:
     virtual void OnTaskComplete(const opendnp3::TaskInfo& info) override final {
         auto end =  Now().msSinceEpoch;
         auto elapsed = end - sysdb->taskStart; 
+        //if(sysdb->debug)
         //std::cout << "Running ["<<__FUNCTION__<<" TaskID :"<< id << " Task Type :"<< type <<"]\n";
          if(sysdb->debug || (info.result != TaskCompletion::SUCCESS) || ((int)elapsed > sysdb->maxElapsed) )
         {
-            if((int)info.result != sysdb->last_result)
+            if(sysdb->debug || (int)info.result != sysdb->last_result)
             {
                 FPS_ERROR_PRINT("Running [%s] result [%s]  start[%lu] elapsed [%lu] \n"
                     , __FUNCTION__
@@ -70,6 +71,10 @@ public:
             }
         }
         bool flag =(info.result == TaskCompletion::SUCCESS);
+        if (sysdb->pubOutputs)
+        {
+            sysdb->addPubOutputs();
+        }
         sysdb->pubUris(flag);
         sysdb->pref++;
         

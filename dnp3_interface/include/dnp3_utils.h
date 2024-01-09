@@ -550,6 +550,7 @@ typedef struct sysCfg_t {
         events = true;
         useGets = false;
         event_pub = false;
+        pubOutputs = false;
 
         fname =  nullptr;
         pub_only =  true;
@@ -1230,6 +1231,67 @@ typedef struct sysCfg_t {
                     }
                 }
             }           
+        }
+
+        void addPubOutputs(int fmt = 0)
+        {
+            if(debug)FPS_ERROR_PRINT(" %s   running\n", __FUNCTION__);
+            for (int i = 0; i < static_cast<int32_t>(Type_of_Var::NumTypes); i++)
+            {
+                if (i == AnIn16 || i == AnIn32 || i == AnF32 || i == Type_Crob)
+                {
+                    if (dbVec[i].size() > 0)
+                    {
+                        if(debug > 0)
+                            FPS_ERROR_PRINT(" Add pub dnp3 type [%s] size [%ld]\n", iotypToStr(i), dbVec[i].size());
+                        for (int j = 0; j < static_cast<int32_t>(dbVec[i].size()); j++)
+                        {
+                            DbVar* db = dbVec[i][j];
+                            if(debug > 0)
+                                FPS_ERROR_PRINT("     name [%s] value [%2.3f]\n", db->name.c_str(), db->valuedouble);
+                            if (i == Type_Crob)
+                            {
+                                if (db->crob_input == CROB_STRING)
+                                {
+                                    // for now we cannot pub strings
+                                    //const char* cmd = OperationTypeSpec::to_string(OperationTypeSpec::from_type(db->crob));
+                                    //addSysCjVal(sys, cj, db, flag, cmd);
+                                    addPubVar(db, (double)db->crob, 0, fmt);
+                                }
+                                if (db->crob_input == CROB_INT)
+                                {
+                                    //addSysCjVal(sys, cj, db, flag, db->crob);
+                                    //addPubVar(db, (db->valuedouble > 0), 0, fmt);
+                                    addPubVar(db, (double)db->crob, 0, fmt);
+                                }
+                                if (db->crob_input == CROB_BOOL)
+                                {
+                                    if(db->crob_true == db->crob)
+                                    {
+                                        addPubVar(db, true, 0, fmt);
+                                    }
+                                    else if(db->crob_false == db->crob)
+                                    {
+                                        addPubVar(db, false, 0, fmt);
+                                    }
+                                    else if(0x03 == db->crob)
+                                    {
+                                        addPubVar(db, true, 0, fmt);
+                                    }
+                                    else 
+                                    {
+                                        addPubVar(db, false, 0, fmt);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                addPubVar(db, db->valuedouble, 0, fmt);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         void addPubVar(DbVar* db, double val, unsigned int etype = 0, int fmt = 0)
@@ -1990,6 +2052,7 @@ typedef struct sysCfg_t {
         int last_res;
         bool useGets;
         bool event_pub;
+        bool pubOutputs;
 
         char* fname;
         bool pub_only;
