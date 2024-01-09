@@ -120,6 +120,10 @@ namespace FunctionUtility
     };
 
 
+
+    extern std::unordered_map<std::string, std::string> controlsEnabledLogicMap;
+
+
     void FunctionResultHandler
     (
         int returnValue, 
@@ -151,6 +155,11 @@ namespace FunctionUtility
     FunctionReturnObj SharedIndividualHandleCmdLogic(varmap& amap, const char* aname, fims* p_fims, assetVar* aV, std::string controlString);
 
     void PrintAssetVar(assetVar* aV, assetVar::ATypes assetVarValType);
+
+    std::string GetEnabledLogicMessage(std::string controlUri);
+
+    void UpdateEnabledLogicMessage(std::string controlUri, std::string logicMessage);
+
 
 }
 

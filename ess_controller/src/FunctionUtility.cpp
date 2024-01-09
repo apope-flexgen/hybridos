@@ -580,6 +580,23 @@ namespace FunctionUtility
         FPS_PRINT_INFO("{}", assetVarString);
     }
 
+    std::unordered_map<std::string, std::string> controlsEnabledLogicMap = {
+        {"close_contactors", ""},
+        {"open_contactors", ""},
+        {"start", ""},
+        {"stop", ""},
+        {"standby", ""}
+
+    };
+
+    std::string GetEnabledLogicMessage(std::string controlUri){
+        return controlsEnabledLogicMap[controlUri];
+    }
+
+    void UpdateEnabledLogicMessage(std::string controlUri, std::string logicMessage){
+        controlsEnabledLogicMap[controlUri] = logicMessage;
+    }
+
 
 }
 
