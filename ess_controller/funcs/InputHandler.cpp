@@ -321,8 +321,6 @@ namespace InputHandler
 
 
 
-
-
     /**
     * @brief Function that can be put on the scheduler and is a command function to alter the state of a BESS block from the site level
     * 
@@ -544,7 +542,27 @@ namespace InputHandler
                 // /site/ess/start_stop
                 FunctionUtility::AssetVarInfo("/site/ess", siteUri.c_str(), assetVar::ATypes::AINT),
                 // /status/bms/IsFaulted
-                FunctionUtility::AssetVarInfo("/status/bms", "IsFaulted", assetVar::ATypes::ABOOL)
+                FunctionUtility::AssetVarInfo("/status/bms", "IsFaulted", assetVar::ATypes::ABOOL),
+
+                // /assets/bms/summary/maint_mode
+                FunctionUtility::AssetVarInfo("/assets/bms/summary", "maint_mode", assetVar::ATypes::ABOOL),
+                // /assets/bms/summary/close_contactors
+                FunctionUtility::AssetVarInfo("/assets/bms/summary", "close_contactors", assetVar::ATypes::ABOOL),
+                // /status/bms/CloseContactorsEnabled
+                FunctionUtility::AssetVarInfo("/status/bms", "CloseContactorsEnabled", assetVar::ATypes::ABOOL),
+                // /controls/bms/CloseContactorsEnable
+                FunctionUtility::AssetVarInfo("/controls/bms", "CloseContactorsEnable", assetVar::ATypes::ABOOL),
+
+                // /assets/bms/summary/open_contactors
+                FunctionUtility::AssetVarInfo("/assets/bms/summary", "open_contactors", assetVar::ATypes::ABOOL),
+                // /status/bms/DCClosed
+                FunctionUtility::AssetVarInfo("/status/bms", "DCClosed", "DCClosed_BMS", assetVar::ATypes::ABOOL),
+                // /status/bms/OpenContactorsEnabled
+                FunctionUtility::AssetVarInfo("/status/bms", "OpenContactorsEnabled", assetVar::ATypes::ABOOL),
+                // /controls/bms/OpenContactorsEnable
+                FunctionUtility::AssetVarInfo("/controls/bms", "OpenContactorsEnable", assetVar::ATypes::ABOOL),
+                // /status/pcs/DCClosed
+                FunctionUtility::AssetVarInfo("/status/pcs", "DCClosed", "DCClosed_PCS", assetVar::ATypes::ABOOL)
             };
             amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
@@ -589,11 +607,47 @@ namespace InputHandler
             switch (stCommand) {
                 //CloseContactors
                 case 2:
-                    returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "CloseContactors");
+                    if(!amap["DCClosed_BMS"]->getbVal() && !amap["IsFaulted"]->getbVal()) {
+                        returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "CloseContactors");
+                    } else {
+                        std::string message = "";
+                        message += fmt::format(
+                            "Failed Attempt to close bms contactors by a value of [{}] sent to [{}] because",
+                            stCommand,
+                            amap["bms_dc_contactor_control"]->getfName()
+                        );
+                        message += fmt::format(
+                            " ---> Condition(s): [{}:{}] == false && [{}:{}] == false",
+                            amap["DCClosed_BMS"]->getfName(), 
+                            amap["DCClosed_BMS"]->getbVal(),
+                            amap["IsFaulted"]->getfName(), 
+                            amap["IsFaulted"]->getbVal()
+                        );
+                        aV->sendEvent(aname, p_fims, Severity::Info, message.c_str());
+                        returnValue = FAILURE;
+                    }
                     break;
                 //OpenContactors
                 case 3:
-                    returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "OpenContactors");
+                    if (amap["DCClosed_BMS"]->getbVal() && !amap["DCClosed_PCS"]->getbVal()) {
+                        returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "OpenContactors");
+                    } else {
+                        std::string message = "";
+                        message += fmt::format(
+                            "Failed Attempt to open bms contactors by a value of [{}] sent to [{}] because",
+                            stCommand,
+                            amap["bms_dc_contactor_control"]->getfName()
+                        );
+                        message += fmt::format(
+                            " ---> Condition(s): [{}:{}] == true && [{}:{}] == false",
+                            amap["DCClosed_BMS"]->getfName(), 
+                            amap["DCClosed_BMS"]->getbVal(),
+                            amap["DCClosed_PCS"]->getfName(), 
+                            amap["DCClosed_PCS"]->getbVal()
+                        );
+                        aV->sendEvent(aname, p_fims, Severity::Info, message.c_str());
+                        returnValue = FAILURE;
+                    }
                     break;
                 default:
                     returnValue = FAILURE;
@@ -605,6 +659,7 @@ namespace InputHandler
             if(returnValue == SUCCESS || returnValue == FAILURE) {
                 reload = 1;
                 essAv->setVal(reload);
+                FunctionUtility::PullOffScheduler(amap, aV, siteUri.c_str());
             }
         }
     }
@@ -647,8 +702,37 @@ namespace InputHandler
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
                 // /site/ess/start_stop
                 FunctionUtility::AssetVarInfo("/site/ess", siteUri.c_str(), assetVar::ATypes::AINT),
-                // /status/bms/IsFaulted
-                FunctionUtility::AssetVarInfo("/status/pcs", "IsFaulted", assetVar::ATypes::ABOOL)
+                // /status/pcs/IsFaulted
+                FunctionUtility::AssetVarInfo("/status/pcs", "IsFaulted", assetVar::ATypes::ABOOL),
+
+
+                // /assets/pcs/summary/maint_mode
+                FunctionUtility::AssetVarInfo("/assets/pcs/summary", "maint_mode", assetVar::ATypes::ABOOL),
+                // /assets/pcs/summary/stop
+                FunctionUtility::AssetVarInfo("/assets/pcs/summary", "stop", assetVar::ATypes::ABOOL),
+                // /status/pcs/SystemState
+                FunctionUtility::AssetVarInfo("/status/pcs", "SystemState", assetVar::ATypes::ASTRING),
+                // /status/pcs/StopEnabled
+                FunctionUtility::AssetVarInfo("/status/pcs", "StopEnabled", assetVar::ATypes::ABOOL),
+                // /controls/pcs/StopEnable
+                FunctionUtility::AssetVarInfo("/controls/pcs", "StopEnable", assetVar::ATypes::ABOOL),
+
+
+                // /status/bms/DCClosed
+                FunctionUtility::AssetVarInfo("/status/bms", "DCClosed", assetVar::ATypes::ABOOL),
+                // /assets/pcs/summary/start
+                FunctionUtility::AssetVarInfo("/assets/pcs/summary", "start", assetVar::ATypes::ABOOL),
+                // /status/pcs/StartEnabled
+                FunctionUtility::AssetVarInfo("/status/pcs", "StartEnabled", assetVar::ATypes::ABOOL),
+                // /controls/pcs/StartEnable
+                FunctionUtility::AssetVarInfo("/controls/pcs", "StartEnable", assetVar::ATypes::ABOOL),
+
+                // /assets/pcs/summary/standby
+                FunctionUtility::AssetVarInfo("/assets/pcs/summary", "standby", assetVar::ATypes::ABOOL),
+                // /status/pcs/StandbyEnabled
+                FunctionUtility::AssetVarInfo("/status/pcs", "StandbyEnabled", assetVar::ATypes::ABOOL),
+                // /controls/pcs/StandbyEnable
+                FunctionUtility::AssetVarInfo("/controls/pcs", "StandbyEnable", assetVar::ATypes::ABOOL)
             };
             amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
@@ -687,18 +771,106 @@ namespace InputHandler
             int stCommand = amap[siteUri.c_str()]->getiVal();
             int returnValue = 0;
 
+            char* systemStateStatus = amap["SystemState"]->getcVal();
+            bool systemState = false;
+
             switch (stCommand) {
                 //Stop
                 case 0:
-                    returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "Stop");
+                    if(!(systemStateStatus == nullptr)){
+                        std::string compareString = systemStateStatus;
+                        systemState = (compareString != "Stop");
+                    }
+                    if (systemState) {
+                        returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "Stop");
+                    } else {
+                        std::string systemStateVal = "";
+                        if(amap["SystemState"]->getcVal() == nullptr) {
+                            systemStateVal += "nullptr";
+                        } else {
+                            systemStateVal += amap["SystemState"]->getcVal();
+                        }
+
+                        std::string message = "";
+                        message += fmt::format(
+                            "Failed Attempt to stop pcs by a value of [{}] sent to [{}] because",
+                            stCommand,
+                            amap["start_stop_standby_command"]->getfName()
+                        );
+                        message += fmt::format(
+                            " ---> Condition(s): [{}:{}] != Stop",
+                            amap["SystemState"]->getfName(), 
+                            systemStateVal
+                        );
+                        aV->sendEvent(aname, p_fims, Severity::Info, message.c_str());
+                        returnValue = FAILURE;
+                    }
                     break;
                 //Start
                 case 1:
-                    returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "Start");
+                    if(!(systemStateStatus == nullptr)){
+                        std::string compareString = systemStateStatus;
+                        systemState = (compareString == "Stop" || compareString == "Standby");
+                    }
+                    if (amap["DCClosed"]->getbVal() && (systemState) && !amap["IsFaulted"]->getbVal()) {
+                        returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "Start");
+                    } else {
+                        std::string systemStateVal = "";
+                        if(amap["SystemState"]->getcVal() == nullptr) {
+                            systemStateVal += "nullptr";
+                        } else {
+                            systemStateVal += amap["SystemState"]->getcVal();
+                        }
+                        std::string message = "";
+                        message += fmt::format(
+                            "Failed Attempt to start pcs by a value of [{}] sent to [{}] because",
+                            stCommand,
+                            amap["start_stop_standby_command"]->getfName()
+                        );
+                        message += fmt::format(
+                            " ---> Condition(s): [{}:{}] == true && [{}:{}] == (Stop or Standby) && [{}:{}] == false",
+                            amap["DCClosed"]->getfName(), 
+                            amap["DCClosed"]->getbVal(),
+                            amap["SystemState"]->getfName(), 
+                            systemStateVal,
+                            amap["IsFaulted"]->getfName(), 
+                            amap["IsFaulted"]->getbVal()
+                        );
+                        aV->sendEvent(aname, p_fims, Severity::Info, message.c_str());
+                        returnValue = FAILURE;
+                    }
                     break;
                 //Standby
                 case 2:
-                    returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "Standby");
+                    if(!(systemStateStatus == nullptr)){
+                        std::string compareString = systemStateStatus;
+                        systemState = (compareString == "Stop" || compareString == "Run");
+                    }
+                    if (amap["DCClosed"]->getbVal() && (systemState)) {
+                        returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "Standby");
+                    } else {
+                        std::string systemStateVal = "";
+                        if(amap["SystemState"]->getcVal() == nullptr) {
+                            systemStateVal += "nullptr";
+                        } else {
+                            systemStateVal += amap["SystemState"]->getcVal();
+                        }
+                        std::string message = "";
+                        message += fmt::format(
+                            "Failed Attempt to standby pcs by a value of [{}] sent to [{}] because",
+                            stCommand,
+                            amap["start_stop_standby_command"]->getfName()
+                        );
+                        message += fmt::format(
+                            " ---> Condition(s): [{}:{}] == true && [{}:{}] == (Stop or Run)",
+                            amap["DCClosed"]->getfName(), 
+                            amap["DCClosed"]->getbVal(),
+                            amap["SystemState"]->getfName(), 
+                            systemStateVal
+                        );
+                        aV->sendEvent(aname, p_fims, Severity::Info, message.c_str());
+                        returnValue = FAILURE;
+                    }
                     break;
                 default:
                     returnValue = FAILURE;
@@ -710,12 +882,11 @@ namespace InputHandler
             if(returnValue == SUCCESS || returnValue == FAILURE) {
                 reload = 1;
                 essAv->setVal(reload);
+                FunctionUtility::PullOffScheduler(amap, aV, siteUri.c_str());
             }
         }
 
     }
-
-
 
 
     /**
