@@ -572,8 +572,7 @@ namespace InputHandler
         if(0)FunctionUtility::PrintAssetVar(amap[siteUri.c_str()], assetVar::ATypes::AINT);
 
         if (reload == 1)
-        {
- 
+        { 
             //Hasn't been updated yet
             if(amap[siteUri.c_str()]->getiVal() == 0) {
                 FunctionUtility::PullOffScheduler(amap, aV, siteUri.c_str());
@@ -581,15 +580,15 @@ namespace InputHandler
             }
 
 
-            if(amap["IsFaulted"]->getbVal()) {
-                std::string message = fmt::format(
-                    "Condition(s): [{}:{}] == false",
-                    amap["IsFaulted"]->getfName(), 
-                    amap["IsFaulted"]->getbVal()
-                );
-                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
-                return;
-            }
+            // if(amap["IsFaulted"]->getbVal()) {
+            //     std::string message = fmt::format(
+            //         "Condition(s): [{}:{}] == false",
+            //         amap["IsFaulted"]->getfName(), 
+            //         amap["IsFaulted"]->getbVal()
+            //     );
+            //     FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
+            //     return;
+            // }
 
 
             reload = 2;
@@ -622,7 +621,7 @@ namespace InputHandler
                             amap["IsFaulted"]->getbVal()
                         );
                         aV->sendEvent(aname, p_fims, Severity::Info, message.c_str());
-                        returnValue = FAILURE;
+                        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                     }
                     break;
                 //OpenContactors
@@ -644,7 +643,7 @@ namespace InputHandler
                             amap["DCClosed_PCS"]->getbVal()
                         );
                         aV->sendEvent(aname, p_fims, Severity::Info, message.c_str());
-                        returnValue = FAILURE;
+                        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                     }
                     break;
                 default:
@@ -657,7 +656,6 @@ namespace InputHandler
             if(returnValue == SUCCESS || returnValue == FAILURE) {
                 reload = 1;
                 essAv->setVal(reload);
-                FunctionUtility::PullOffScheduler(amap, aV, siteUri.c_str());
             }
         }
     }
@@ -801,7 +799,7 @@ namespace InputHandler
                             systemStateVal
                         );
                         aV->sendEvent(aname, p_fims, Severity::Info, message.c_str());
-                        returnValue = FAILURE;
+                        FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                     }
                     break;
                 //Start
@@ -835,7 +833,7 @@ namespace InputHandler
                             amap["IsFaulted"]->getbVal()
                         );
                         aV->sendEvent(aname, p_fims, Severity::Info, message.c_str());
-                        returnValue = FAILURE;
+                        FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                     }
                     break;
                 //Standby
@@ -867,7 +865,7 @@ namespace InputHandler
                             systemStateVal
                         );
                         aV->sendEvent(aname, p_fims, Severity::Info, message.c_str());
-                        returnValue = FAILURE;
+                        FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                     }
                     break;
                 default:
@@ -880,7 +878,6 @@ namespace InputHandler
             if(returnValue == SUCCESS || returnValue == FAILURE) {
                 reload = 1;
                 essAv->setVal(reload);
-                FunctionUtility::PullOffScheduler(amap, aV, siteUri.c_str());
             }
         }
 
