@@ -1,0 +1,5052 @@
+{
+    "test_results": {
+        "0": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 0,
+                    "enum_256_1": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:03.179083"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487563.17983
+            }
+        ],
+        "1": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 1,
+                    "enum_256_1": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:04.177034"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487564.177265
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 1,
+                    "enum_256_1": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:05.178427"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487565.178765
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 1,
+                    "enum_256_1": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:06.178711"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487566.179196
+            }
+        ],
+        "2": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 2,
+                    "enum_256_1": [
+                        {
+                            "value": 1,
+                            "string": "another_string"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:07.178297"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487567.178673
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 2,
+                    "enum_256_1": [
+                        {
+                            "value": 1,
+                            "string": "another_string"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:08.177921"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487568.178223
+            }
+        ],
+        "3": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 3,
+                    "enum_256_1": [
+                        {
+                            "value": 2,
+                            "string": "yet_another_string"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:09.177013"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487569.177271
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 3,
+                    "enum_256_1": [
+                        {
+                            "value": 2,
+                            "string": "yet_another_string"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:10.177231"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487570.177485
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 3,
+                    "enum_256_1": [
+                        {
+                            "value": 2,
+                            "string": "yet_another_string"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:11.177805"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487571.178148
+            }
+        ],
+        "4": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 4,
+                    "enum_256_1": [
+                        {
+                            "value": 3,
+                            "string": "etc."
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:12.178933"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487572.179407
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 4,
+                    "enum_256_1": [
+                        {
+                            "value": 3,
+                            "string": "etc."
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:13.178848"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487573.179362
+            }
+        ],
+        "5": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 5,
+                    "enum_256_1": [
+                        {
+                            "value": 4,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:14.176426"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487574.176622
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 5,
+                    "enum_256_1": [
+                        {
+                            "value": 4,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:15.178453"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487575.17891
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 5,
+                    "enum_256_1": [
+                        {
+                            "value": 4,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:16.178905"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487576.179452
+            }
+        ],
+        "6": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 6,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:17.178075"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487577.178478
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 6,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:18.178015"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487578.178264
+            }
+        ],
+        "7": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 7,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:19.178946"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487579.179472
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 7,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:20.178929"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487580.179411
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 7,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:21.178932"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487581.17945
+            }
+        ],
+        "8": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 8,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 1,
+                            "string": "another_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:22.178876"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487582.179421
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 8,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 1,
+                            "string": "another_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:23.178877"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487583.179383
+            }
+        ],
+        "9": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 9,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 2,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:24.176932"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487584.177165
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 9,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 2,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:25.176937"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487585.177112
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 9,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 2,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:26.178932"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487586.179475
+            }
+        ],
+        "10": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 10,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 3,
+                            "string": "yet_another_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:27.178844"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487587.179397
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 10,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 3,
+                            "string": "yet_another_string"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:28.178933"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487588.179446
+            }
+        ],
+        "11": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 11,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4,
+                            "string": "etc."
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:29.177793"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487589.178053
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 11,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4,
+                            "string": "etc."
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:30.177488"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487590.177747
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 11,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4,
+                            "string": "etc."
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:31.179029"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487591.179471
+            }
+        ],
+        "12": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 12,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 5,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:32.178876"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487592.17938
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 12,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 5,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:33.177975"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487593.178343
+            }
+        ],
+        "13": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 13,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 6,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:34.177318"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487594.177647
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 13,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 6,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:35.178770"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487595.179326
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 13,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 6,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:36.177280"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487596.177546
+            }
+        ],
+        "14": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 14,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:37.178922"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487597.179443
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 14,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:38.177321"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487598.177626
+            }
+        ],
+        "15": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 15,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:39.178328"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487599.178605
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 15,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:40.178237"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487600.178608
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 15,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 0,
+                            "string": "some_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:41.178974"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487601.179448
+            }
+        ],
+        "16": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 16,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 1,
+                            "string": "another_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:42.179053"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487602.179548
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 16,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 1,
+                            "string": "another_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:43.179136"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487603.179644
+            }
+        ],
+        "17": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 17,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 2,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:44.176720"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487604.17691
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 17,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 2,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:45.178877"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487605.179325
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 17,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 2,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:46.177416"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487606.177718
+            }
+        ],
+        "18": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 18,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 3,
+                            "string": "yet_another_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:47.178937"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487607.1794
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 18,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 3,
+                            "string": "yet_another_string"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:48.178791"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487608.179236
+            }
+        ],
+        "19": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 19,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4,
+                            "string": "etc."
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:49.178882"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487609.179434
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 19,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4,
+                            "string": "etc."
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:50.177194"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487610.17747
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 19,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4,
+                            "string": "etc."
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:51.178556"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487611.179007
+            }
+        ],
+        "20": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 20,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 5,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:52.179030"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487612.179515
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 20,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 5,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:53.177635"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487613.177931
+            }
+        ],
+        "21": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 21,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 6,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:54.177302"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487614.17756
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 21,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 6,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:55.179003"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487615.17954
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 21,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 6,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:56.179082"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487616.179624
+            }
+        ],
+        "22": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 22,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:57.178950"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487617.179473
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 22,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:58.179254"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487618.179758
+            }
+        ],
+        "23": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 23,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:26:59.178682"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487619.179206
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 23,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:00.176970"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487620.177249
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 23,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:01.179504"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487621.180106
+            }
+        ],
+        "24": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 24,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": true,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:02.178517"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487622.178921
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 24,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": true,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:03.178769"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487623.179317
+            }
+        ],
+        "25": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 25,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": true,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:04.177005"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487624.177179
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 25,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": true,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:05.178957"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487625.179464
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 25,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": true,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:06.178874"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487626.179353
+            }
+        ],
+        "26": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 26,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:07.178945"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487627.179492
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 26,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:08.178887"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487628.17937
+            }
+        ],
+        "27": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 27,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": true,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:09.178459"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487629.178925
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 27,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": true,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:10.176975"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487630.177201
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 27,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": true,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:11.178713"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487631.179227
+            }
+        ],
+        "28": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 28,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": true,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:12.178711"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487632.179208
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 28,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": true,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:13.178861"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487633.179412
+            }
+        ],
+        "29": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 29,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": true,
+                    "yet_another_string_1": true,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:14.176438"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487634.176591
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 29,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": true,
+                    "yet_another_string_1": true,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:15.177250"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487635.177545
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 29,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": true,
+                    "yet_another_string_1": true,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:16.177749"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487636.178127
+            }
+        ],
+        "30": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 30,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": true,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:17.178058"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487637.178448
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 30,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": true,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:18.178933"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487638.17944
+            }
+        ],
+        "31": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 31,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": true,
+                    "yet_another_string_1": true,
+                    "etc._1": true,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:19.177119"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487639.177345
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 31,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": true,
+                    "yet_another_string_1": true,
+                    "etc._1": true,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:20.176496"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487640.176715
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 31,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": true,
+                    "another_string_1": true,
+                    "yet_another_string_1": true,
+                    "etc._1": true,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:21.177521"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487641.177796
+            }
+        ],
+        "32": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 32,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:22.178452"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487642.178915
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 32,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:23.179001"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487643.179467
+            }
+        ],
+        "33": [
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 33,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:24.177276"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487644.177564
+            },
+            {
+                "method": "pub",
+                "uri": "/components/comp_sel_2440",
+                "body": {
+                    "test_id": 33,
+                    "enum_256_1": [
+                        {
+                            "value": 65535,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_257_2": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "enum_259_4": [
+                        {
+                            "value": 4294967295,
+                            "string": "unknown"
+                        }
+                    ],
+                    "bsinput_0_4": 0,
+                    "bsinput_1_4": 0,
+                    "ibits_1000_1": 0,
+                    "some_string_1": false,
+                    "another_string_1": false,
+                    "yet_another_string_1": false,
+                    "etc._1": false,
+                    "some_string_2": false,
+                    "another_string_2": false,
+                    "yet_another_string_2": false,
+                    "etc._2": false,
+                    "some_string_4": false,
+                    "another_string_4": false,
+                    "yet_another_string_4": false,
+                    "etc._4": false,
+                    "bf_2007_1": [],
+                    "bf_2008_2": [],
+                    "bf_2010_4": [],
+                    "pack_1_first": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "pack_1_second": [
+                        {
+                            "value": 0,
+                            "string": "undefined"
+                        }
+                    ],
+                    "Timestamp": "12-01-2023 22:27:25.177060"
+                },
+                "replyto": "(null)",
+                "process": "modbus_client_uri@SEL-2440 ",
+                "username": "root",
+                "timestamp": 1701487645.177344
+            }
+        ]
+    }
+}

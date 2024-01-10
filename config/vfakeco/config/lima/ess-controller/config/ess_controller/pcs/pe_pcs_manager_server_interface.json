@@ -1,0 +1,688 @@
+{
+    "/site/ess": {
+        "active_power_ramp_rate": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/pcs:ActivePowerRampRate"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "name": "Active Power Ramp Rate",
+            "note": "Sets the active power ramp rate",
+            "type": "control",
+            "units": "kW/s",
+            "value": 0
+        },
+        "active_power_setpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/pcs:ActivePowerSetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "name": "Active Power Setpoint",
+            "note": "Sets the active power setpoint",
+            "signed": true,
+            "type": "control",
+            "units": "kW",
+            "value": 0
+        },
+        "frequency_setpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": true,
+                                "uri": "/controls/pcs:FrequencySetpoint@triggerCmd"
+                            },
+                            {
+                                "uri": "/controls/pcs:FrequencySetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "name": "Frequency Setpoint",
+            "note": "Sets the frequency setpoint",
+            "type": "control",
+            "units": "Hz",
+            "value": 0
+        },
+        "on_off_grid_mode_setting": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": 1,
+                                "outValue": true,
+                                "uri": "/controls/pcs:GridFollowPQ@triggerCmd"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": 1,
+                                "uri": "/controls/pcs:GridFollowPQ"
+                            },
+                            {
+                                "inValue": 2,
+                                "outValue": true,
+                                "uri": "/controls/pcs:GridFormVF@triggerCmd"
+                            },
+                            {
+                                "inValue": 2,
+                                "outValue": 2,
+                                "uri": "/controls/pcs:GridFormVF"
+                            },
+                            {
+                                "inValue": 3,
+                                "outValue": true,
+                                "uri": "/controls/pcs:GridFormVSG@triggerCmd"
+                            },
+                            {
+                                "inValue": 3,
+                                "outValue": 3,
+                                "uri": "/controls/pcs:GridFormVSG"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "ifChanged": false,
+            "name": "Grid-following/forming Mode Command",
+            "note": "Initiates PCS grid-following/forming command routines",
+            "type": "control",
+            "value": 0
+        },
+        "pcs_active_power": {
+            "name": "PCS Active Power",
+            "signed": true,
+            "type": "status",
+            "units": "kW",
+            "value": 0
+        },
+        "pcs_active_power_ramp_rate_feedback": {
+            "name": "PCS Active Power Ramp Rate Feedback",
+            "type": "status",
+            "units": "kW/s",
+            "value": 0
+        },
+        "pcs_active_power_setpoint_feedback": {
+            "name": "PCS Active Power Setpoint Feedback",
+            "signed": true,
+            "type": "status",
+            "units": "kW",
+            "value": 0
+        },
+        "pcs_alarm_active": {
+            "name": "PCS Alarm Active",
+            "type": "status",
+            "value": false
+        },
+        "pcs_apparent_power": {
+            "name": "PCS Apparent Power",
+            "signed": true,
+            "type": "status",
+            "units": "kVA",
+            "value": 0
+        },
+        "pcs_avg_line_voltage": {
+            "name": "PCS Average Line Voltage",
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "pcs_comms_ok": {
+            "name": "PCS Comms OK",
+            "type": "status",
+            "value": false
+        },
+        "pcs_control_alarms": {
+            "bit0": "PCS ActivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit1": "PCS ActivePowerRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit10": "PCS Start - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit11": "PCS Stop - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit12": "PCS VerifyActivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+            "bit13": "PCS VerifyActivePowerRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+            "bit14": "PCS VerifyFrequencySetpoint - Command was sent, but the expected result was not observed before timeout",
+            "bit15": "PCS VerifyGridFollowPQ - Command was sent, but the expected result was not observed before timeout",
+            "bit16": "PCS VerifyGridFormVF - Command was sent, but the expected result was not observed before timeout",
+            "bit17": "PCS VerifyGridFormVSG - Command was sent, but the expected result was not observed before timeout",
+            "bit18": "PCS VerifyReactivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+            "bit19": "PCS VerifyReactivePowerRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+            "bit2": "PCS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit20": "PCS VerifyStandby - Command was sent, but the expected result was not observed before timeout",
+            "bit21": "PCS VerifyStart - Command was sent, but the expected result was not observed before timeout",
+            "bit22": "PCS VerifyStop - Command was sent, but the expected result was not observed before timeout",
+            "bit23": "PCS VerifyVoltageSetpoint - Command was sent, but the expected result was not observed before timeout",
+            "bit24": "PCS VoltageSetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit3": "PCS FrequencySetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit4": "PCS GridFollowPQ - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit5": "PCS GridFormVF - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit6": "PCS GridFormVSG - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit7": "PCS ReactivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit8": "PCS ReactivePowerRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit9": "PCS Standby - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "name": "PCS Control Alarms",
+            "type": "bitfield",
+            "value": 0
+        },
+        "pcs_dc_current": {
+            "name": "PCS DC Current",
+            "scale": 10,
+            "signed": true,
+            "type": "status",
+            "units": "A",
+            "value": 0
+        },
+        "pcs_dc_power": {
+            "name": "PCS DC Power",
+            "scale": 10,
+            "signed": true,
+            "type": "status",
+            "units": "kW",
+            "value": 0
+        },
+        "pcs_dc_voltage": {
+            "name": "PCS DC Voltage",
+            "scale": 10,
+            "signed": true,
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "pcs_fault_active": {
+            "name": "PCS Fault Active",
+            "type": "status",
+            "value": false
+        },
+        "pcs_frequency": {
+            "name": "PCS Grid Frequency",
+            "scale": 100,
+            "type": "status",
+            "units": "Hz",
+            "value": 0
+        },
+        "pcs_frequency_setpoint_feedback": {
+            "name": "PCS Frequency Setpoint Feedback",
+            "type": "status",
+            "units": "Hz",
+            "value": 0
+        },
+        "pcs_grid_mode": {
+            "bit0": "FollowPQ",
+            "bit1": "FormVF",
+            "bit2": "FormVSG",
+            "name": "PCS Grid Mode",
+            "type": "bitfield",
+            "value": 0
+        },
+        "pcs_is_running": {
+            "name": "PCS is Running",
+            "type": "status",
+            "value": false
+        },
+        "pcs_l1_current": {
+            "name": "PCS Grid Current 1",
+            "scale": 10,
+            "type": "status",
+            "units": "A",
+            "value": 0
+        },
+        "pcs_l1_l2_voltage": {
+            "name": "PCS Grid Voltage L1-L2",
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "pcs_l2_current": {
+            "name": "PCS Grid Current 2",
+            "scale": 10,
+            "type": "status",
+            "units": "A",
+            "value": 0
+        },
+        "pcs_l2_l3_voltage": {
+            "name": "PCS Grid Voltage L2-L3",
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "pcs_l3_current": {
+            "name": "PCS Grid Current 3",
+            "scale": 10,
+            "type": "status",
+            "units": "A",
+            "value": 0
+        },
+        "pcs_l3_l1_voltage": {
+            "name": "PCS Grid Voltage L3-L1",
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "pcs_max_charge_power": {
+            "name": "PCS Max Charge Power",
+            "signed": true,
+            "type": "status",
+            "units": "kW",
+            "value": 0
+        },
+        "pcs_max_discharge_power": {
+            "name": "PCS Max Discharge Power",
+            "type": "status",
+            "units": "kW",
+            "value": 0
+        },
+        "pcs_max_igbt_temperature": {
+            "name": "PCS Max IGBT Temperature",
+            "scale": 100,
+            "type": "status",
+            "units": "°C",
+            "value": 0
+        },
+        "pcs_monitor_alarms": {
+            "bit0": "PCS Active Power Max Threshold Exceeded",
+            "bit1": "PCS DC Voltage Max Threshold Exceeded",
+            "bit2": "PCS DC Voltage Min Threshold Exceeded",
+            "bit3": "PCS Number of Modules Online Below Min Threshold",
+            "name": "PCS Monitor Alarms",
+            "type": "bitfield",
+            "value": 0
+        },
+        "pcs_monitor_faults": {
+            "bit0": "PCS Active Power Max Threshold Exceeded",
+            "bit1": "PCS DC Voltage Max Threshold Exceeded",
+            "bit2": "PCS DC Voltage Min Threshold Exceeded",
+            "bit3": "PCS Number of Modules Online Below Min Threshold",
+            "name": "PCS Monitor Faults",
+            "type": "bitfield",
+            "value": 0
+        },
+        "pcs_num_modules_online": {
+            "name": "PCS Number of Modules Online",
+            "type": "status",
+            "value": 0
+        },
+        "pcs_num_modules_total": {
+            "name": "PCS Number of Modules Total",
+            "type": "status",
+            "value": 0
+        },
+        "pcs_power_factor": {
+            "name": "PCS Power Factor",
+            "scale": 1000,
+            "signed": true,
+            "type": "status",
+            "value": 0
+        },
+        "pcs_rated_active_power": {
+            "name": "PCS Rated Active Power",
+            "signed": true,
+            "type": "status",
+            "units": "kW",
+            "value": 0
+        },
+        "pcs_rated_apparent_power": {
+            "name": "PCS Rated Apparent Power",
+            "signed": true,
+            "type": "status",
+            "units": "kVA",
+            "value": 0
+        },
+        "pcs_rated_reactive_power": {
+            "name": "PCS Rated Reactive Power",
+            "signed": true,
+            "type": "status",
+            "units": "kVAR",
+            "value": 0
+        },
+        "pcs_reactive_power": {
+            "name": "PCS Reactive Power",
+            "signed": true,
+            "type": "status",
+            "units": "kVAR",
+            "value": 0
+        },
+        "pcs_reactive_power_ramp_rate_feedback": {
+            "name": "PCS Reactive Power Ramp Rate Feedback",
+            "type": "status",
+            "units": "kVAR/s",
+            "value": 0
+        },
+        "pcs_reactive_power_setpoint_feedback": {
+            "name": "PCS Reactive Power Setpoint Feedback",
+            "signed": true,
+            "type": "status",
+            "units": "kVAR",
+            "value": 0
+        },
+        "pcs_standby_enabled": {
+            "excludeFromFile": true,
+            "name": "PCS Standby Enabled",
+            "type": "status",
+            "value": false
+        },
+        "pcs_start_enabled": {
+            "excludeFromFile": true,
+            "name": "PCS Start Enabled",
+            "type": "status",
+            "value": false
+        },
+        "pcs_status": {
+            "excludeFromFile": true,
+            "name": "PCS Status",
+            "type": "status",
+            "value": "INIT"
+        },
+        "pcs_stop_enabled": {
+            "excludeFromFile": true,
+            "name": "PCS Stop Enabled",
+            "type": "status",
+            "value": false
+        },
+        "pcs_system_state": {
+            "bit0": "Stop",
+            "bit1": "Run",
+            "bit2": "Fault",
+            "bit3": "Standby",
+            "name": "PCS System State",
+            "type": "bitfield",
+            "value": 0
+        },
+        "pcs_voltage_setpoint_feedback": {
+            "name": "PCS Voltage Setpoint Feedback",
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "reactive_power_ramp_rate": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/pcs:ReactivePowerRampRate"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "name": "Reactive Power Ramp Rate",
+            "note": "Sets the reactive power ramp rate",
+            "type": "control",
+            "units": "kVAR/s",
+            "value": 0
+        },
+        "reactive_power_setpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/pcs:ReactivePowerSetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "name": "Reactive Power Setpoint",
+            "note": "Sets the reactive power setpoint",
+            "signed": true,
+            "type": "control",
+            "units": "kVAR",
+            "value": 0
+        },
+        "start_stop_standby_command": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": 1,
+                                "outValue": true,
+                                "uri": "/controls/pcs:Start@triggerCmd"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": 1,
+                                "uri": "/controls/pcs:Start"
+                            },
+                            {
+                                "inValue": 2,
+                                "outValue": true,
+                                "uri": "/controls/pcs:Standby@triggerCmd"
+                            },
+                            {
+                                "inValue": 2,
+                                "outValue": 4,
+                                "uri": "/controls/pcs:Standby"
+                            },
+                            {
+                                "inValue": 0,
+                                "outValue": true,
+                                "uri": "/controls/pcs:Stop@triggerCmd"
+                            },
+                            {
+                                "inValue": 0,
+                                "outValue": 0,
+                                "uri": "/controls/pcs:Stop"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "ifChanged": false,
+            "name": "Start/Stop/Standby Command",
+            "note": "Initiates PCS start, standby, or stop command routines",
+            "type": "control",
+            "value": 0
+        },
+        "voltage_setpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": true,
+                                "uri": "/controls/pcs:VoltageSetpoint@triggerCmd"
+                            },
+                            {
+                                "uri": "/controls/pcs:VoltageSetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "name": "Voltage Setpoint",
+            "note": "Sets the voltage setpoint",
+            "type": "control",
+            "units": "V",
+            "value": 0
+        }
+    },
+    "/vlinks/pcs": {
+        "site_pcs_active_power": {
+            "value": "/site/ess:pcs_active_power",
+            "vlink": "/status/pcs:ActivePower"
+        },
+        "site_pcs_active_power_ramp_rate_feedback": {
+            "value": "/site/ess:pcs_active_power_ramp_rate_feedback",
+            "vlink": "/status/pcs:ActivePowerRampRateFeedback"
+        },
+        "site_pcs_active_power_setpoint_feedback": {
+            "value": "/site/ess:pcs_active_power_setpoint_feedback",
+            "vlink": "/status/pcs:ActivePowerSetpointFeedback"
+        },
+        "site_pcs_alarm_active": {
+            "value": "/site/ess:pcs_alarm_active",
+            "vlink": "/status/pcs:IsAlarming"
+        },
+        "site_pcs_apparent_power": {
+            "value": "/site/ess:pcs_apparent_power",
+            "vlink": "/status/pcs:ApparentPower"
+        },
+        "site_pcs_avg_line_voltage": {
+            "value": "/site/ess:pcs_avg_line_voltage",
+            "vlink": "/status/pcs:AvgLineVoltage"
+        },
+        "site_pcs_comms_ok": {
+            "value": "/site/ess:pcs_comms_ok",
+            "vlink": "/status/pcs:CommsOK"
+        },
+        "site_pcs_dc_current": {
+            "value": "/site/ess:pcs_dc_current",
+            "vlink": "/status/pcs:DCCurrent"
+        },
+        "site_pcs_dc_power": {
+            "value": "/site/ess:pcs_dc_power",
+            "vlink": "/status/pcs:DCPower"
+        },
+        "site_pcs_dc_voltage": {
+            "value": "/site/ess:pcs_dc_voltage",
+            "vlink": "/status/pcs:DCVoltage"
+        },
+        "site_pcs_fault_active": {
+            "value": "/site/ess:pcs_fault_active",
+            "vlink": "/status/pcs:IsFaulted"
+        },
+        "site_pcs_frequency": {
+            "value": "/site/ess:pcs_frequency",
+            "vlink": "/status/pcs:Frequency"
+        },
+        "site_pcs_frequency_setpoint_feedback": {
+            "value": "/site/ess:pcs_frequency_setpoint_feedback",
+            "vlink": "/status/pcs:FrequencySetpointFeedback"
+        },
+        "site_pcs_is_running": {
+            "value": "/site/ess:pcs_is_running",
+            "vlink": "/status/pcs:IsRunning"
+        },
+        "site_pcs_l1_current": {
+            "value": "/site/ess:pcs_l1_current",
+            "vlink": "/status/pcs:L1Current"
+        },
+        "site_pcs_l1_l2_voltage": {
+            "value": "/site/ess:pcs_l1_l2_voltage",
+            "vlink": "/status/pcs:L1L2Voltage"
+        },
+        "site_pcs_l2_current": {
+            "value": "/site/ess:pcs_l2_current",
+            "vlink": "/status/pcs:L2Current"
+        },
+        "site_pcs_l2_l3_voltage": {
+            "value": "/site/ess:pcs_l2_l3_voltage",
+            "vlink": "/status/pcs:L2L3Voltage"
+        },
+        "site_pcs_l3_current": {
+            "value": "/site/ess:pcs_l3_current",
+            "vlink": "/status/pcs:L3Current"
+        },
+        "site_pcs_l3_l1_voltage": {
+            "value": "/site/ess:pcs_l3_l1_voltage",
+            "vlink": "/status/pcs:L3L1Voltage"
+        },
+        "site_pcs_max_charge_power": {
+            "value": "/site/ess:pcs_max_charge_power",
+            "vlink": "/limits/pcs:MaxPCSChargePower"
+        },
+        "site_pcs_max_discharge_power": {
+            "value": "/site/ess:pcs_max_discharge_power",
+            "vlink": "/limits/pcs:MaxPCSDischargePower"
+        },
+        "site_pcs_max_igbt_temperature": {
+            "value": "/site/ess:pcs_max_igbt_temperature",
+            "vlink": "/status/pcs:MaxIGBTTemperature"
+        },
+        "site_pcs_num_modules_online": {
+            "value": "/site/ess:pcs_num_modules_online",
+            "vlink": "/status/pcs:NumModulesOnline"
+        },
+        "site_pcs_num_modules_total": {
+            "value": "/site/ess:pcs_num_modules_total",
+            "vlink": "/status/pcs:NumModulesTotal"
+        },
+        "site_pcs_power_factor": {
+            "value": "/site/ess:pcs_power_factor",
+            "vlink": "/status/pcs:PowerFactor"
+        },
+        "site_pcs_rated_active_power": {
+            "value": "/site/ess:pcs_rated_active_power",
+            "vlink": "/limits/pcs:RatedActivePower"
+        },
+        "site_pcs_rated_apparent_power": {
+            "value": "/site/ess:pcs_rated_apparent_power",
+            "vlink": "/limits/pcs:RatedApparentPower"
+        },
+        "site_pcs_rated_reactive_power": {
+            "value": "/site/ess:pcs_rated_reactive_power",
+            "vlink": "/limits/pcs:RatedReactivePower"
+        },
+        "site_pcs_reactive_power": {
+            "value": "/site/ess:pcs_reactive_power",
+            "vlink": "/status/pcs:ReactivePower"
+        },
+        "site_pcs_reactive_power_ramp_rate_feedback": {
+            "value": "/site/ess:pcs_reactive_power_ramp_rate_feedback",
+            "vlink": "/status/pcs:ReactivePowerRampRateFeedback"
+        },
+        "site_pcs_reactive_power_setpoint_feedback": {
+            "value": "/site/ess:pcs_reactive_power_setpoint_feedback",
+            "vlink": "/status/pcs:ReactivePowerSetpointFeedback"
+        },
+        "site_pcs_standby_enabled": {
+            "value": "/site/ess:pcs_standby_enabled",
+            "vlink": "/status/pcs:StandbyEnabled"
+        },
+        "site_pcs_start_enabled": {
+            "value": "/site/ess:pcs_start_enabled",
+            "vlink": "/status/pcs:StartEnabled"
+        },
+        "site_pcs_status": {
+            "value": "/site/ess:pcs_status",
+            "vlink": "/status/pcs:Status"
+        },
+        "site_pcs_stop_enabled": {
+            "value": "/site/ess:pcs_stop_enabled",
+            "vlink": "/status/pcs:StopEnabled"
+        },
+        "site_pcs_voltage_setpoint_feedback": {
+            "value": "/site/ess:pcs_voltage_setpoint_feedback",
+            "vlink": "/status/pcs:VoltageSetpointFeedback"
+        }
+    }
+}

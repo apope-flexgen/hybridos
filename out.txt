@@ -1,0 +1,21 @@
+[0.0990286s] [info    ] [scheduler      ] hello scheduler [essSched]
+[0.10052s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [ess]
+[0.100823s ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [ess]
+[0.101534s ] [info    ] [setFunc        ] Note: adding aname [ess] to funMap av 0x7ffff7af4080
+[0.101688s ] [info    ] [setFunc        ] Note: adding aname [bms] to funMap av 0x7ffff7af4080
+[0.101877s ] [info    ] [setFunc        ] Note: adding aname [pcs] to funMap av 0x7ffff7af4080
+[0.102699s ] [info    ] [main_test_new_e] add ess/summary and ess_1 to syscVec size now 2
+[0.102994s ] [info    ] [loadSiteManager] ess_man >> no site interface found
+[0.103157s ] [info    ] [main_test_new_e] ess_man >> Setting up site manager rc -1
+[0.103311s ] [info    ] [main_test_new_e] setting up [ess] manager Subs vecs 0x6f3c40 rc -1
+[0.103518s ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/config/ess:Subs]
+[0.103756s ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/config/ess:Subs]
+[0.103982s ] [info    ] [getList        ] No List recovered for aname [ess]  [Subs]
+[0.104217s ] [info    ] [main_test_new_e] setting up [ess] manager Subs found 0 rc -1
+[0.104411s ] [info    ] [getVecListbyNam] no entry in vecs for [Subs]
+[0.104636s ] [info    ] [main_test_new_e] recovered [ess] Subs 0x0 found 0
+[0.104834s ] [info    ] [main_test_new_e] ess_man >> No Subs found in ess config
+[0.104995s ] [info    ] [~scheduler     ] shutdown scheduler start [essSched]
+[0.105183s ] [info    ] [~scheduler     ] shutdown scheduler [essSched] done
+~VarMapUtils >>>>>>>>>>>>>>>>>>>>>>> Shutting down VarMapUtils delmap size = 59
+~VarMapUtils >>>>>>>>>>>>>>>>>>>>>>> Shutting down VarMapUtils delmap size = 0

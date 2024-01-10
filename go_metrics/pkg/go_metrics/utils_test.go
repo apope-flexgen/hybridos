@@ -112,7 +112,7 @@ func TestDataTypeMarshal(t *testing.T) {
 		if len(output) != len(test.expectedOutput) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutput)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutput[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output[i], test.expectedOutput[i])
 				}
@@ -341,6 +341,14 @@ var IsNumericTests = []IsNumericTestCase{
 		input:           Union{tag: FLOAT, f: 5.0},
 		expectedOutput:  true,
 	},
+}
+
+// check if a Union is an int64, uint64, or a float
+func isNumeric(union *Union) bool {
+	if union.tag == INT || union.tag == UINT || union.tag == FLOAT {
+		return true
+	}
+	return false
 }
 
 func TestIsNumeric(t *testing.T) {
@@ -1838,7 +1846,7 @@ var ErrorInSliceTests = []ErrorInSliceTestCase{
 	ErrorInSliceTestCase{
 		testDescription: "slightly different",
 		errorToLookFor:  fmt.Errorf("golden monkey"),
-		slice:           []error{fmt.Errorf("I"), fmt.Errorf("wish"), fmt.Errorf("I"), fmt.Errorf("was"), fmt.Errorf("a"), fmt.Errorf("golden monkey.")},
+		slice:           []error{fmt.Errorf("I"), fmt.Errorf("wish"), fmt.Errorf("I"), fmt.Errorf("was"), fmt.Errorf("a"), fmt.Errorf("golden monkeyy")},
 		expectedOutput:  false,
 	},
 	ErrorInSliceTestCase{
@@ -1865,6 +1873,17 @@ var ErrorInSliceTests = []ErrorInSliceTestCase{
 		slice:           []error{fmt.Errorf("I"), fmt.Errorf("wish"), fmt.Errorf("I"), fmt.Errorf("was"), fmt.Errorf("a"), fmt.Errorf(""), fmt.Errorf("golden monkey")},
 		expectedOutput:  true,
 	},
+}
+
+// why does this not exist in the standard string library yet????
+func errorInSlice(s []error, str error) bool {
+	stringErr := fmt.Sprintf("%v", str)
+	for _, v := range s {
+		if fmt.Sprintf("%v", v) == stringErr {
+			return true
+		}
+	}
+	return false
 }
 
 func TestErrorInSlice(t *testing.T) {
@@ -2050,7 +2069,7 @@ func TestRemoveDuplicateValues(t *testing.T) {
 		if len(output) != len(test.expectedOutput) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutput)
 		}
-		for i, _ := range test.expectedOutput {
+		for i := range test.expectedOutput {
 			if output[i] != test.expectedOutput[i] {
 				t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutput)
 				break
@@ -2103,6 +2122,18 @@ var StringListsMatchTests = []StringListsMatchTestCase{
 		input2:          []string{"string1", "oogabooga", "string3", "string4"},
 		expectedOutput:  false,
 	},
+}
+
+func stringListsMatch(list1, list2 []string) bool {
+	if len(list1) != len(list2) {
+		return false
+	}
+	for _, str := range list1 {
+		if !stringInSlice(list2, str) {
+			return false
+		}
+	}
+	return true
 }
 
 func TestStringListsMatch(t *testing.T) {

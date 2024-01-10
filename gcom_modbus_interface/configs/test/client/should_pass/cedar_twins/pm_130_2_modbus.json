@@ -1,0 +1,186 @@
+{
+	"system":
+	{
+		"id": "pm_130_2",
+		"ip_address": "10.239.2.31",
+		"port": 502,
+		"frequency": 500,
+		"byte_swap": true
+	},
+	"registers":
+	[
+		{
+			"type": "Input Registers",
+			"starting_offset": 13312,
+			"number_of_registers": 66,
+			"map":
+			[
+				{
+					"id": "voltage_l1",
+					"offset": 13312,
+					"size": 2,
+					"signed": false
+				},
+				{
+					"id": "voltage_l2",
+					"offset": 13314,
+					"size": 2,
+					"signed": false
+				},
+				{
+					"id": "voltage_l3",
+					"offset": 13316,
+					"size": 2,
+					"signed": false
+				},
+				{
+					"id": "current_l1",
+					"offset": 13318,
+					"size": 2,
+					"scale": 100,
+					"signed": false
+				},
+				{
+					"id": "current_l2",
+					"offset": 13320,
+					"size": 2,
+					"scale": 100,
+					"signed": false
+				},
+				{
+					"id": "current_l3",
+					"offset": 13322,
+					"size": 2,
+					"scale": 100,
+					"signed": false
+				},
+				{
+					"id": "voltage_l1_l2",
+					"offset": 13372,
+					"size": 2,
+					"signed": false
+				},
+				{
+					"id": "voltage_l2_l3",
+					"offset": 13374,
+					"size": 2,
+					"signed": false
+				},
+				{
+					"id": "voltage_l3_l1",
+					"offset": 13376,
+					"size": 2,
+					"signed": false
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 13696,
+			"number_of_registers": 26,
+			"map":
+			[
+				{
+					"id": "active_power",
+					"offset": 13696,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "reactive_power",
+					"offset": 13698,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "apparent_power",
+					"offset": 13700,
+					"size": 2,
+					"signed": false
+				},
+				{
+					"id": "power_factor",
+					"offset": 13702,
+					"size": 2,
+					"scale": 1000,
+					"signed":true
+				},
+				{
+					"id": "voltage_ln",
+					"offset": 13716,
+					"size": 2
+				},
+				{
+					"id": "voltage",
+					"offset": 13718,
+					"size": 2
+				},
+				{
+					"id": "current",
+					"offset": 13720,
+					"size": 2,
+					"scale": 100
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 13828,
+			"number_of_registers": 2,
+			"map":
+			[
+				{
+					"id": "frequency",
+					"offset": 13828,
+					"size": 2,
+					"scale": 100,
+					"signed": false
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 14720,
+			"number_of_registers": 26,
+			"map":
+			[
+				{
+					"id": "kwh_reveived",
+					"offset": 14720,
+					"size": 2,
+					"signed": false
+				},
+				{
+					"id": "kwh_delivered",
+					"offset": 14722,
+					"size": 2,
+					"signed": false
+				},
+				{
+					"id": "kvarh_reveived",
+					"offset": 14730,
+					"size": 2,
+					"signed": false
+				},
+				{
+					"id": "kvarh_delivered",
+					"offset": 14732,
+					"size": 2,
+					"signed": false
+				},
+				{
+					"id": "kvah_reveived",
+					"offset": 14742,
+					"size": 2,
+					"signed": false
+				},
+				{
+					"id": "kvah_delivered",
+					"offset": 14744,
+					"size": 2,
+					"signed": false
+				}
+			]
+		}
+	]
+}

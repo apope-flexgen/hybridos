@@ -1,0 +1,136 @@
+{
+	"system":
+	{
+		"id": "pv_aux_epm9650",
+		"ip_address": "10.201.112.137",
+		"port": 502,
+		"frequency": 500,
+		"off_by_one": true,
+		"byte_swap": false
+	},
+	"registers": 
+	[
+		{
+			"type": "Holding Registers",
+			"starting_offset": 131,
+			"number_of_registers": 44,
+			"map":
+			[
+				{
+					"id": "current_a",
+					"offset": 131,
+					"size": 2,
+					"scale": 218.4533,
+					"comment": "scale to secondary current=65536, ratio of 300 to primary"
+				},
+				{
+					"id": "current_b",
+					"offset": 133,
+					"size": 2,
+					"scale": 218.4533,
+					"comment": "scale to secondary current=65536, ratio of 300 to primary"
+				},
+				{
+					"id": "current_c",
+					"offset": 135,
+					"size": 2,
+					"scale": 218.4533,
+					"comment": "scale to secondary current=65536, ratio of 300 to primary"
+				},
+				{
+					"id": "voltage_ab",
+					"offset": 139,
+					"size": 2,
+					"scale": 16384,
+					"comment": "scale to secondary voltage=65536, ratio of 4 to primary"
+				},
+				{
+					"id": "voltage_bc",
+					"offset": 141,
+					"size": 2,
+					"scale": 16384,
+					"comment": "scale to secondary voltage=65536, ratio of 4 to primary"
+				},
+				{
+					"id": "voltage_ca",
+					"offset": 143,
+					"size": 2,
+					"scale": 16384,
+					"comment": "scale to secondary voltage=65536, ratio of 4 to primary"
+				},
+				{
+					"id": "apparent_power",
+					"offset": 151,
+					"size": 2,
+					"scale": 54613.3,
+					"comment": "scale to secondary power=65536, ratio of 1200 to primary, scale 1000 to kW for FIMS"
+				},
+				{
+					"id": "reactive_power",
+					"offset": 159,
+					"size": 2,
+					"signed": true,
+					"scale": 54613.3,
+					"comment": "scale to secondary power=65536, ratio of 1200 to primary, scale 1000 to kW for FIMS"
+				},
+				{
+					"id": "active_power",
+					"offset": 167,
+					"size": 2,
+					"signed": true,
+					"scale": 54613.3,
+					"comment": "scale to secondary power=65536, ratio of 1200 to primary, scale 1000 to kW for FIMS"
+				},
+				{
+					"id": "frequency",
+					"offset": 169,
+					"size": 2,
+					"scale": 65536
+				},
+				{
+					"id": "power_factor",
+					"offset": 174,
+					"scale": 1000
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			"starting_offset": 2558,
+			"number_of_registers": 6,
+			"map":
+			[
+				{
+					"id": "thd_v_l1",
+					"offset": 2558,
+					"scale": 100
+				},
+				{
+					"id": "thd_v_l2",
+					"offset": 2559,
+					"scale": 100
+				},
+				{
+					"id": "thd_v_l3",
+					"offset": 2560,
+					"scale": 100
+				},
+				{
+					"id": "thd_i_l1",
+					"offset": 2561,
+					"scale": 100
+				},
+				{
+					"id": "thd_i_l2",
+					"offset": 2562,
+					"scale": 100
+				},
+				{
+					"id": "thd_i_l3",
+					"offset": 2563,
+					"scale": 100
+				}
+			]
+		}
+	]
+}

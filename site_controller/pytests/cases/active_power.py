@@ -1,23 +1,10 @@
 import logging
 import subprocess
+from pytests.fims import no_fims_msgs
 from unittest.result import failfast
 from pytest_cases import parametrize, fixture
 from pytests.assertion_framework import Assertion_Type, Flex_Assertion, Tolerance_Type
 from pytests.pytest_steps import Setup, Steps, Teardown
-
-
-# Listen to the given uri and return true if any sets were captured
-def no_fims_sets(uri: str, duration_secs=5) -> bool:
-    result = None
-
-    try:
-        result = subprocess.run(["fims_listen", "-m", "set", "-u", uri, "-n", "1"], stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE, timeout=duration_secs, universal_newlines=True)
-    except subprocess.TimeoutExpired as result:
-        # output = stdout. Neither stdout nor stderr should have any output after the listen
-        assert not result.output and not result.stderr
-    else:
-        raise Exception(f"Test failed, received fims set: {result.stdout} when none was expected")
 
 
 # Generic feature (active power setpoint) testing ess chargeable power derating
@@ -191,7 +178,7 @@ def test_ess_dischargeable_derate(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/components/pv_2/active_power_setpoint", 5),
         ],
         post_lambda=[
-            lambda: no_fims_sets("/components/pv_2/active_power_setpoint")
+            lambda: no_fims_msgs("/components/pv_2/active_power_setpoint")
         ]
     ),
     Steps(
@@ -205,7 +192,7 @@ def test_ess_dischargeable_derate(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/components/easygen_3500xt/active_power_setpoint", 4),
         ],
         post_lambda=[
-            lambda: no_fims_sets("/components/easygen_3500xt/active_power_setpoint")
+            lambda: no_fims_msgs("/components/easygen_3500xt/active_power_setpoint")
         ]
     ),
     Steps(
@@ -219,7 +206,7 @@ def test_ess_dischargeable_derate(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/active_power_setpoint", -3),
         ],
         post_lambda=[
-            lambda: no_fims_sets("/components/ess_twins/active_power_setpoint")
+            lambda: no_fims_msgs("/components/ess_twins/active_power_setpoint")
         ]
     ),
     # Cleanup
@@ -262,7 +249,7 @@ def test_maint_active_power_rounding(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/components/pv_2/reactive_power_setpoint", 5),
         ],
         post_lambda=[
-            lambda: no_fims_sets("/components/pv_2/reactive_power_setpoint")
+            lambda: no_fims_msgs("/components/pv_2/reactive_power_setpoint")
         ]
     ),
     Steps(
@@ -276,7 +263,7 @@ def test_maint_active_power_rounding(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/components/easygen_3500xt/reactive_power_setpoint", 4),
         ],
         post_lambda=[
-            lambda: no_fims_sets("/components/easygen_3500xt/reactive_power_setpoint")
+            lambda: no_fims_msgs("/components/easygen_3500xt/reactive_power_setpoint")
         ]
     ),
     Steps(
@@ -290,7 +277,7 @@ def test_maint_active_power_rounding(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/reactive_power_setpoint", -3),
         ],
         post_lambda=[
-            lambda: no_fims_sets("/components/ess_twins/reactive_power_setpoint")
+            lambda: no_fims_msgs("/components/ess_twins/reactive_power_setpoint")
         ]
     ),
     # Cleanup

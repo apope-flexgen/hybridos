@@ -1,0 +1,1151 @@
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":0,"enum_256_1":[{"value":0, "string":"some_string"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:03.179083"} 
+Timestamp:    2023-12-01 22:26:03.179830
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":1,"enum_256_1":[{"value":0, "string":"some_string"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:04.177034"} 
+Timestamp:    2023-12-01 22:26:04.177265
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":1,"enum_256_1":[{"value":0, "string":"some_string"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:05.178427"} 
+Timestamp:    2023-12-01 22:26:05.178765
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":1,"enum_256_1":[{"value":0, "string":"some_string"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:06.178711"} 
+Timestamp:    2023-12-01 22:26:06.179196
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":2,"enum_256_1":[{"value":1, "string":"another_string"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:07.178297"} 
+Timestamp:    2023-12-01 22:26:07.178673
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":2,"enum_256_1":[{"value":1, "string":"another_string"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:08.177921"} 
+Timestamp:    2023-12-01 22:26:08.178223
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":3,"enum_256_1":[{"value":2, "string":"yet_another_string"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:09.177013"} 
+Timestamp:    2023-12-01 22:26:09.177271
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":3,"enum_256_1":[{"value":2, "string":"yet_another_string"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:10.177231"} 
+Timestamp:    2023-12-01 22:26:10.177485
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":3,"enum_256_1":[{"value":2, "string":"yet_another_string"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:11.177805"} 
+Timestamp:    2023-12-01 22:26:11.178148
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":4,"enum_256_1":[{"value":3, "string":"etc."}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:12.178933"} 
+Timestamp:    2023-12-01 22:26:12.179407
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":4,"enum_256_1":[{"value":3, "string":"etc."}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:13.178848"} 
+Timestamp:    2023-12-01 22:26:13.179362
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":5,"enum_256_1":[{"value":4, "string":"unknown"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:14.176426"} 
+Timestamp:    2023-12-01 22:26:14.176622
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":5,"enum_256_1":[{"value":4, "string":"unknown"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:15.178453"} 
+Timestamp:    2023-12-01 22:26:15.178910
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":5,"enum_256_1":[{"value":4, "string":"unknown"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:16.178905"} 
+Timestamp:    2023-12-01 22:26:16.179452
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":6,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:17.178075"} 
+Timestamp:    2023-12-01 22:26:17.178478
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":6,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:18.178015"} 
+Timestamp:    2023-12-01 22:26:18.178264
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":7,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:19.178946"} 
+Timestamp:    2023-12-01 22:26:19.179472
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":7,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:20.178929"} 
+Timestamp:    2023-12-01 22:26:20.179411
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":7,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":0, "string":"some_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:21.178932"} 
+Timestamp:    2023-12-01 22:26:21.179450
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":8,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":1, "string":"another_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:22.178876"} 
+Timestamp:    2023-12-01 22:26:22.179421
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":8,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":1, "string":"another_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:23.178877"} 
+Timestamp:    2023-12-01 22:26:23.179383
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":9,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":2, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:24.176932"} 
+Timestamp:    2023-12-01 22:26:24.177165
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":9,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":2, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:25.176937"} 
+Timestamp:    2023-12-01 22:26:25.177112
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":9,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":2, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:26.178932"} 
+Timestamp:    2023-12-01 22:26:26.179475
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":10,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":3, "string":"yet_another_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:27.178844"} 
+Timestamp:    2023-12-01 22:26:27.179397
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":10,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":3, "string":"yet_another_string"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:28.178933"} 
+Timestamp:    2023-12-01 22:26:28.179446
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":11,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4, "string":"etc."}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:29.177793"} 
+Timestamp:    2023-12-01 22:26:29.178053
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":11,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4, "string":"etc."}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:30.177488"} 
+Timestamp:    2023-12-01 22:26:30.177747
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":11,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4, "string":"etc."}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:31.179029"} 
+Timestamp:    2023-12-01 22:26:31.179471
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":12,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":5, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:32.178876"} 
+Timestamp:    2023-12-01 22:26:32.179380
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":12,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":5, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:33.177975"} 
+Timestamp:    2023-12-01 22:26:33.178343
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":13,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":6, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:34.177318"} 
+Timestamp:    2023-12-01 22:26:34.177647
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":13,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":6, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:35.178770"} 
+Timestamp:    2023-12-01 22:26:35.179326
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":13,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":6, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:36.177280"} 
+Timestamp:    2023-12-01 22:26:36.177546
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":14,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:37.178922"} 
+Timestamp:    2023-12-01 22:26:37.179443
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":14,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:38.177321"} 
+Timestamp:    2023-12-01 22:26:38.177626
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":15,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:39.178328"} 
+Timestamp:    2023-12-01 22:26:39.178605
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":15,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:40.178237"} 
+Timestamp:    2023-12-01 22:26:40.178608
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":15,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":0, "string":"some_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:41.178974"} 
+Timestamp:    2023-12-01 22:26:41.179448
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":16,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":1, "string":"another_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:42.179053"} 
+Timestamp:    2023-12-01 22:26:42.179548
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":16,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":1, "string":"another_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:43.179136"} 
+Timestamp:    2023-12-01 22:26:43.179644
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":17,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":2, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:44.176720"} 
+Timestamp:    2023-12-01 22:26:44.176910
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":17,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":2, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:45.178877"} 
+Timestamp:    2023-12-01 22:26:45.179325
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":17,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":2, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:46.177416"} 
+Timestamp:    2023-12-01 22:26:46.177718
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":18,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":3, "string":"yet_another_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:47.178937"} 
+Timestamp:    2023-12-01 22:26:47.179400
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":18,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":3, "string":"yet_another_string"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:48.178791"} 
+Timestamp:    2023-12-01 22:26:48.179236
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":19,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4, "string":"etc."}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:49.178882"} 
+Timestamp:    2023-12-01 22:26:49.179434
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":19,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4, "string":"etc."}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:50.177194"} 
+Timestamp:    2023-12-01 22:26:50.177470
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":19,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4, "string":"etc."}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:51.178556"} 
+Timestamp:    2023-12-01 22:26:51.179007
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":20,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":5, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:52.179030"} 
+Timestamp:    2023-12-01 22:26:52.179515
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":20,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":5, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:53.177635"} 
+Timestamp:    2023-12-01 22:26:53.177931
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":21,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":6, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:54.177302"} 
+Timestamp:    2023-12-01 22:26:54.177560
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":21,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":6, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:55.179003"} 
+Timestamp:    2023-12-01 22:26:55.179540
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":21,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":6, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:56.179082"} 
+Timestamp:    2023-12-01 22:26:56.179624
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":22,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:57.178950"} 
+Timestamp:    2023-12-01 22:26:57.179473
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":22,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:58.179254"} 
+Timestamp:    2023-12-01 22:26:58.179758
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":23,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:26:59.178682"} 
+Timestamp:    2023-12-01 22:26:59.179206
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":23,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:00.176970"} 
+Timestamp:    2023-12-01 22:27:00.177249
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":23,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:01.179504"} 
+Timestamp:    2023-12-01 22:27:01.180106
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":24,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":true,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:02.178517"} 
+Timestamp:    2023-12-01 22:27:02.178921
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":24,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":true,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:03.178769"} 
+Timestamp:    2023-12-01 22:27:03.179317
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":25,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":true,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:04.177005"} 
+Timestamp:    2023-12-01 22:27:04.177179
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":25,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":true,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:05.178957"} 
+Timestamp:    2023-12-01 22:27:05.179464
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":25,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":true,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:06.178874"} 
+Timestamp:    2023-12-01 22:27:06.179353
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":26,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:07.178945"} 
+Timestamp:    2023-12-01 22:27:07.179492
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":26,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:08.178887"} 
+Timestamp:    2023-12-01 22:27:08.179370
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":27,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":true,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:09.178459"} 
+Timestamp:    2023-12-01 22:27:09.178925
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":27,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":true,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:10.176975"} 
+Timestamp:    2023-12-01 22:27:10.177201
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":27,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":true,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:11.178713"} 
+Timestamp:    2023-12-01 22:27:11.179227
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":28,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":true,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:12.178711"} 
+Timestamp:    2023-12-01 22:27:12.179208
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":28,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":true,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:13.178861"} 
+Timestamp:    2023-12-01 22:27:13.179412
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":29,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":true,"yet_another_string_1":true,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:14.176438"} 
+Timestamp:    2023-12-01 22:27:14.176591
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":29,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":true,"yet_another_string_1":true,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:15.177250"} 
+Timestamp:    2023-12-01 22:27:15.177545
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":29,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":true,"yet_another_string_1":true,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:16.177749"} 
+Timestamp:    2023-12-01 22:27:16.178127
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":30,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":true,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:17.178058"} 
+Timestamp:    2023-12-01 22:27:17.178448
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":30,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":true,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:18.178933"} 
+Timestamp:    2023-12-01 22:27:18.179440
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":31,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":true,"yet_another_string_1":true,"etc._1":true,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:19.177119"} 
+Timestamp:    2023-12-01 22:27:19.177345
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":31,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":true,"yet_another_string_1":true,"etc._1":true,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:20.176496"} 
+Timestamp:    2023-12-01 22:27:20.176715
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":31,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":true,"another_string_1":true,"yet_another_string_1":true,"etc._1":true,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:21.177521"} 
+Timestamp:    2023-12-01 22:27:21.177796
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":32,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:22.178452"} 
+Timestamp:    2023-12-01 22:27:22.178915
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":32,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:23.179001"} 
+Timestamp:    2023-12-01 22:27:23.179467
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":33,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:24.177276"} 
+Timestamp:    2023-12-01 22:27:24.177564
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":33,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:25.177060"} 
+Timestamp:    2023-12-01 22:27:25.177344
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":33,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:26.178958"} 
+Timestamp:    2023-12-01 22:27:26.179524
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":34,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:27.177330"} 
+Timestamp:    2023-12-01 22:27:27.177620
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":34,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:28.176890"} 
+Timestamp:    2023-12-01 22:27:28.177110
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":34,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:29.178872"} 
+Timestamp:    2023-12-01 22:27:29.179386
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":35,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":true,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:30.178384"} 
+Timestamp:    2023-12-01 22:27:30.178594
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":35,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":true,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:31.178068"} 
+Timestamp:    2023-12-01 22:27:31.178456
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":36,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":true,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:32.179118"} 
+Timestamp:    2023-12-01 22:27:32.179658
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":36,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":true,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:33.178875"} 
+Timestamp:    2023-12-01 22:27:33.179427
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":36,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":true,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:34.177298"} 
+Timestamp:    2023-12-01 22:27:34.177567
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":37,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":true,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:35.178918"} 
+Timestamp:    2023-12-01 22:27:35.179455
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":37,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":true,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:36.178951"} 
+Timestamp:    2023-12-01 22:27:36.179524
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":38,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":true,"yet_another_string_2":true,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:37.178916"} 
+Timestamp:    2023-12-01 22:27:37.179485
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":38,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":true,"yet_another_string_2":true,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:38.177485"} 
+Timestamp:    2023-12-01 22:27:38.177760
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":38,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":true,"yet_another_string_2":true,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:39.177288"} 
+Timestamp:    2023-12-01 22:27:39.177637
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":39,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":true,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:40.177720"} 
+Timestamp:    2023-12-01 22:27:40.178088
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":39,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":true,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:41.176549"} 
+Timestamp:    2023-12-01 22:27:41.176705
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":40,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":true,"yet_another_string_2":true,"etc._2":true,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:42.177449"} 
+Timestamp:    2023-12-01 22:27:42.177744
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":40,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":true,"yet_another_string_2":true,"etc._2":true,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:43.176530"} 
+Timestamp:    2023-12-01 22:27:43.176716
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":40,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":true,"yet_another_string_2":true,"etc._2":true,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:44.176790"} 
+Timestamp:    2023-12-01 22:27:44.177057
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":41,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:45.176441"} 
+Timestamp:    2023-12-01 22:27:45.176565
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":41,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:46.176807"} 
+Timestamp:    2023-12-01 22:27:46.177005
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":42,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":true,"yet_another_string_2":true,"etc._2":true,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:47.176527"} 
+Timestamp:    2023-12-01 22:27:47.176670
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":42,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":true,"yet_another_string_2":true,"etc._2":true,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:48.176404"} 
+Timestamp:    2023-12-01 22:27:48.176536
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":42,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":true,"another_string_2":true,"yet_another_string_2":true,"etc._2":true,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:49.176747"} 
+Timestamp:    2023-12-01 22:27:49.176932
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":43,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:50.176494"} 
+Timestamp:    2023-12-01 22:27:50.176655
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":43,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:51.177126"} 
+Timestamp:    2023-12-01 22:27:51.177437
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":44,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:52.176459"} 
+Timestamp:    2023-12-01 22:27:52.176586
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":44,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:53.176872"} 
+Timestamp:    2023-12-01 22:27:53.177102
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":44,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:54.177706"} 
+Timestamp:    2023-12-01 22:27:54.178002
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":45,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":true,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:55.176506"} 
+Timestamp:    2023-12-01 22:27:55.176664
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":45,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":true,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:56.176558"} 
+Timestamp:    2023-12-01 22:27:56.176723
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":46,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":true,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:57.176729"} 
+Timestamp:    2023-12-01 22:27:57.176911
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":46,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":true,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:58.177025"} 
+Timestamp:    2023-12-01 22:27:58.177209
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":46,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":true,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:27:59.176950"} 
+Timestamp:    2023-12-01 22:27:59.177196
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":47,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":true,"another_string_4":true,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:00.177297"} 
+Timestamp:    2023-12-01 22:28:00.177571
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":47,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":true,"another_string_4":true,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:01.177464"} 
+Timestamp:    2023-12-01 22:28:01.177681
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":48,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":true,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:02.178545"} 
+Timestamp:    2023-12-01 22:28:02.179005
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":48,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":true,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:03.177604"} 
+Timestamp:    2023-12-01 22:28:03.177927
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":48,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":true,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:04.178270"} 
+Timestamp:    2023-12-01 22:28:04.178678
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":49,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":true,"another_string_4":true,"yet_another_string_4":true,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:05.177650"} 
+Timestamp:    2023-12-01 22:28:05.178012
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":49,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":true,"another_string_4":true,"yet_another_string_4":true,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:06.178416"} 
+Timestamp:    2023-12-01 22:28:06.178844
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":50,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":true,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:07.177370"} 
+Timestamp:    2023-12-01 22:28:07.177629
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":50,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":true,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:08.177261"} 
+Timestamp:    2023-12-01 22:28:08.177561
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":50,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":true,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:09.176983"} 
+Timestamp:    2023-12-01 22:28:09.177258
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":51,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":true,"another_string_4":true,"yet_another_string_4":true,"etc._4":true,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:10.177235"} 
+Timestamp:    2023-12-01 22:28:10.177548
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":51,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":true,"another_string_4":true,"yet_another_string_4":true,"etc._4":true,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:11.177738"} 
+Timestamp:    2023-12-01 22:28:11.178005
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":52,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:12.178532"} 
+Timestamp:    2023-12-01 22:28:12.178975
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":52,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:13.177455"} 
+Timestamp:    2023-12-01 22:28:13.177717
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":52,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:14.177058"} 
+Timestamp:    2023-12-01 22:28:14.177294
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":53,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":true,"another_string_4":true,"yet_another_string_4":true,"etc._4":true,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:15.177536"} 
+Timestamp:    2023-12-01 22:28:15.177812
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":53,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":true,"another_string_4":true,"yet_another_string_4":true,"etc._4":true,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:16.178002"} 
+Timestamp:    2023-12-01 22:28:16.178400
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":54,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:17.177207"} 
+Timestamp:    2023-12-01 22:28:17.177450
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":54,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:18.177279"} 
+Timestamp:    2023-12-01 22:28:18.177532
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":54,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:19.177221"} 
+Timestamp:    2023-12-01 22:28:19.177520
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":55,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:20.176997"} 
+Timestamp:    2023-12-01 22:28:20.177223
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":55,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:21.177675"} 
+Timestamp:    2023-12-01 22:28:21.177944
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":56,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[{"value":0,"string":"some_string"}],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:22.177782"} 
+Timestamp:    2023-12-01 22:28:22.178016
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":56,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[{"value":0,"string":"some_string"}],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:23.178980"} 
+Timestamp:    2023-12-01 22:28:23.179439
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":56,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[{"value":0,"string":"some_string"}],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:24.177410"} 
+Timestamp:    2023-12-01 22:28:24.177693
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":57,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[{"value":1,"string":"another_string"}],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_second":[{"value":0, "string":"undefined"}],"Timestamp":"12-01-2023 22:28:25.178752"} 
+Timestamp:    2023-12-01 22:28:25.179211
+
+Method:       pub
+Uri:          /components/comp_sel_2440
+ReplyTo:      (null)
+Process Name: modbus_client_uri@SEL-2440 
+Username:     root
+Body:         {"test_id":57,"enum_256_1":[{"value":65535, "string":"unknown"}],"enum_257_2":[{"value":4294967295, "string":"unknown"}],"enum_259_4":[{"value":4294967295, "string":"unknown"}],"bsinput_0_4":0,"bsinput_1_4":0,"ibits_1000_1":0,"some_string_1":false,"another_string_1":false,"yet_another_string_1":false,"etc._1":false,"some_string_2":false,"another_string_2":false,"yet_another_string_2":false,"etc._2":false,"some_string_4":false,"another_string_4":false,"yet_another_string_4":false,"etc._4":false,"bf_2007_1":[{"value":1,"string":"another_string"}],"bf_2008_2":[],"bf_2010_4":[],"pack_1_first":[{"value":0, "string":"undefined"}],"pack_1_

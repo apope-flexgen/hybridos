@@ -6,6 +6,7 @@ import { EventsModule } from './Events/events.module'
 import { SiteStatusModule } from './SiteStatusBar/sitestatus.module'
 import { ErcotOverrideModule } from './ErcotOverride/ercotOverride.module'
 import { LayoutsModule } from './Layouts/layouts.module'
+import { SystemStatusModule } from './SystemStatus/systemStatus.module'
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { LayoutsModule } from './Layouts/layouts.module'
         SiteStatusModule,
         ErcotOverrideModule,
         LayoutsModule,
+        SystemStatusModule,
     ],
     controllers: [],
     providers: [],

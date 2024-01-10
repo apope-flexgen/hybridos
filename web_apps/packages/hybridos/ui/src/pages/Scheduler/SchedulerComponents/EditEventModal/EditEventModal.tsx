@@ -103,7 +103,7 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
         ? events[siteId].find((eventFromAPI) => eventFromAPI.repeat?.id === event.repeat?.id)
         : undefined;
     const recurringDateWithNewStart =
-      parentEvent && parentEvent.start_time
+      parentEvent?.start_time
         ? getNewStartDate(state.startTime, parentEvent.start_time, timezone[0])
         : getNewStartDate(state.startTime, startUTC, timezone[0]);
     const typedVariableValues = handleVariableValues(state.variableValues, state.modeId, modes);
@@ -116,8 +116,8 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
         typedVariableValues,
         repeat,
       );
-      if (parentEvent && parentEvent.id) updateEvent(parentEvent.id, newEvent);
-    } else if (parentEvent && parentEvent.id) {
+      if (parentEvent?.id !== undefined) updateEvent(parentEvent.id, newEvent);
+    } else if (parentEvent?.id !== undefined) {
       axiosInstance
         .post(`${schedulerURLS.addEvent}/${siteId}/${parentEvent.id}/exceptions`, {
           data: event.start_time,
@@ -159,17 +159,21 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
         startUTC,
         typedVariableValues,
       );
-      if (event.id) updateEvent(event.id, newEvent);
+      if (event.id !== undefined) updateEvent(event.id, newEvent);
     }
     onClose();
   };
 
   const handleAddException = (eventWithoutException: SchedulerEvent, startTime: string) => {
-    if (eventWithoutException.repeat && eventWithoutException.repeat.id && events !== null) {
+    if (
+      eventWithoutException.repeat !== undefined 
+      && eventWithoutException.repeat.id !== undefined 
+      && events !== null
+    ) {
       const parentEvent = events[siteId].find(
         (eventFromAPI) => eventFromAPI.repeat?.id === eventWithoutException.repeat?.id,
       );
-      if (parentEvent && parentEvent.id) {
+      if (parentEvent?.id !== undefined) {
         addException(parentEvent.id, startTime);
       }
     }
@@ -180,10 +184,10 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
       const parentEvent = events[siteId].find(
         (eventFromAPI) => eventFromAPI.repeat?.id === event.repeat?.id,
       );
-      if (parentEvent && parentEvent.id) deleteEvent(parentEvent.id);
+      if (parentEvent?.id !== undefined) deleteEvent(parentEvent.id);
     } else if (!series && !(event.repeat?.end_count === 1)) {
       handleAddException(event, event.start_time);
-    } else if (event.id) deleteEvent(event.id);
+    } else if (event.id !== undefined) deleteEvent(event.id);
     onClose();
   };
 

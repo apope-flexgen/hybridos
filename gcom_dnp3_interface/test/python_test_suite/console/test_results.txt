@@ -1,0 +1,3071 @@
+Branch: gcom_dnp3_interface
+Latest Commit Hash: 9c4b62066754a79be066052b051a8022b16a4625
+Latest Commit Author: 'Stephanie Reynolds'
+Test date: 2023-12-15 12:29:46.700410
+Test Case 0:
+Expected: "uri": /base_uri_server/test_server
+Got     : "uri": /base_uri_client/test_client
+
+Test Case 1680: Pass
+Test Case 1681: Pass
+Test Case 1682: Pass
+Test Case 1683: Pass
+Test Case 1684: Pass
+Test Case 1685: Pass
+Test Case 1686: Pass
+Test Case 1687: Pass
+Test Case 1688: Pass
+Test Case 1689: Pass
+Test Case 1690: Pass
+Test Case 1691: Pass
+Test Case 1692: Pass
+Test Case 1693: Pass
+Test Case 1694: Pass
+Test Case 1695: Pass
+Test Case 1696: Pass
+Test Case 1697: Pass
+Test Case 1698: Pass
+Test Case 1699: Pass
+Test Case 1700: Pass
+Test Case 1701: Pass
+Test Case 1702: Pass
+Test Case 1703: Pass
+Test Case 1704: Pass
+Test Case 1705: Pass
+Test Case 1706: Pass
+Test Case 1707: Pass
+Test Case 1708: Pass
+Test Case 1709: Pass
+Test Case 1710: Pass
+Test Case 1711: Pass
+Test Case 1712: Pass
+Test Case 1713: Pass
+Test Case 1714: Pass
+Test Case 1715: Pass
+Test Case 1716: Pass
+Test Case 1717: Pass
+Test Case 1718: Pass
+Test Case 1719: Pass
+Test Case 1720: Pass
+Test Case 1721: Pass
+Test Case 1722: Pass
+Test Case 1723: Pass
+Test Case 1724: Pass
+Test Case 1725: Pass
+Test Case 1726: Pass
+Test Case 1727: Pass
+Test Case 1728: Pass
+Test Case 1729: Pass
+Test Case 1730: Pass
+Test Case 1731: Pass
+Test Case 1732: Pass
+Test Case 1733: Pass
+Test Case 1734: Pass
+Test Case 1735: Pass
+Test Case 1736: Pass
+Test Case 1737: Pass
+Test Case 1738: Pass
+Test Case 1739: Pass
+Test Case 1740: Pass
+Test Case 1741: Pass
+Test Case 1742: Pass
+Test Case 1743: Pass
+Test Case 1744: Pass
+Test Case 1745: Pass
+Test Case 1746: Pass
+Test Case 1747: Pass
+Test Case 1748: Pass
+Test Case 1749: Pass
+Test Case 1750: Pass
+Test Case 1751: Pass
+Test Case 1752: Pass
+Test Case 1753: Pass
+Test Case 1754: Pass
+Test Case 1755: Pass
+Test Case 1756: Pass
+Test Case 1757: Pass
+Test Case 1758: Pass
+Test Case 1759: Pass
+Test Case 1760: Pass
+Test Case 1761: Pass
+Test Case 1762: Pass
+Test Case 1763: Pass
+Test Case 1764: Pass
+Test Case 1765: Pass
+Test Case 1766: Pass
+Test Case 1767: Pass
+Test Case 1768: Pass
+Test Case 1769: Pass
+Test Case 1770: Pass
+Test Case 1771: Pass
+Test Case 1772: Pass
+Test Case 1773: Pass
+Test Case 1774: Pass
+Test Case 1775: Pass
+Test Case 1776: Pass
+Test Case 1777: Pass
+Test Case 1778: Pass
+Test Case 1779: Pass
+Test Case 1780: Pass
+Test Case 1781: Pass
+Test Case 1782: Pass
+Test Case 1783: Pass
+Test Case 1784: Pass
+Test Case 1785: Pass
+Test Case 1786: Pass
+Test Case 1787: Pass
+Test Case 1788: Pass
+Test Case 1789: Pass
+Test Case 1790: Pass
+Test Case 1791: Pass
+Test Case 1792: Pass
+Test Case 1793: Pass
+Test Case 1794: Pass
+Test Case 1795: Pass
+Test Case 1796: Pass
+Test Case 1797: Pass
+Test Case 1798: Pass
+Test Case 1799: Pass
+Test Case 1800: Pass
+Test Case 1801: Pass
+Test Case 1802: Pass
+Test Case 1803: Pass
+Test Case 1804: Pass
+Test Case 1805: Pass
+Test Case 1806: Pass
+Test Case 1807: Pass
+Test Case 1808: Pass
+Test Case 1809: Pass
+Test Case 1810: Pass
+Test Case 1811: Pass
+Test Case 1812: Pass
+Test Case 1813: Pass
+Test Case 1814: Pass
+Test Case 1815: Pass
+Test Case 1816: Pass
+Test Case 1817: Pass
+Test Case 1818: Pass
+Test Case 1819: Pass
+Test Case 1820: Pass
+Test Case 1821: Pass
+Test Case 1822: Pass
+Test Case 1823: Pass
+Test Case 1824: Pass
+Test Case 1825: Pass
+Test Case 1826: Pass
+Test Case 1827: Pass
+Test Case 1828: Pass
+Test Case 1829: Pass
+Test Case 1830: Pass
+Test Case 1831: Pass
+Test Case 1832: Pass
+Test Case 1833: Pass
+Test Case 1834: Pass
+Test Case 1835: Pass
+Test Case 1836: Pass
+Test Case 1837: Pass
+Test Case 1838: Pass
+Test Case 1839: Pass
+Test Case 1840: Pass
+Test Case 1841: Pass
+Test Case 1842: Pass
+Test Case 1843: Pass
+Test Case 1844: Pass
+Test Case 1845: Pass
+Test Case 1846: Pass
+Test Case 1847: Pass
+Test Case 1848: Pass
+Test Case 1849: Pass
+Test Case 1850: Pass
+Test Case 1851: Pass
+Test Case 1852: Pass
+Test Case 1853: Pass
+Test Case 1854: Pass
+Test Case 1855: Pass
+Test Case 1856: Pass
+Test Case 1857: Pass
+Test Case 1858: Pass
+Test Case 1859: Pass
+Test Case 1860: Pass
+Test Case 1861: Pass
+Test Case 1862: Pass
+Test Case 1863: Pass
+Test Case 1864: Pass
+Test Case 1865: Pass
+Test Case 1866: Pass
+Test Case 1867: Pass
+Test Case 1868: Pass
+Test Case 1869: Pass
+Test Case 1870: Pass
+Test Case 1871: Pass
+Test Case 1872: Pass
+Test Case 1873: Pass
+Test Case 1874: Pass
+Test Case 1875: Pass
+Test Case 1876: Pass
+Test Case 1877: Pass
+Test Case 1878: Pass
+Test Case 1879: Pass
+Test Case 1880: Pass
+Test Case 1881: Pass
+Test Case 1882: Pass
+Test Case 1883: Pass
+Test Case 1884: Pass
+Test Case 1885: Pass
+Test Case 1886: Pass
+Test Case 1887: Pass
+Test Case 1888: Pass
+Test Case 1889: Pass
+Test Case 1890: Pass
+Test Case 1891: Pass
+Test Case 1892: Pass
+Test Case 1893: Pass
+Test Case 1894: Pass
+Test Case 1895: Pass
+Test Case 1896: Pass
+Test Case 1897: Pass
+Test Case 1898: Pass
+Test Case 1899: Pass
+Test Case 1900: Pass
+Test Case 1901: Pass
+Test Case 1902: Pass
+Test Case 1903: Pass
+Test Case 1904: Pass
+Test Case 1905: Pass
+Test Case 1906: Pass
+Test Case 1907: Pass
+Test Case 1908: Pass
+Test Case 1909: Pass
+Test Case 1910: Pass
+Test Case 1911: Pass
+Test Case 1912: Pass
+Test Case 1913: Pass
+Test Case 1914: Pass
+Test Case 1915: Pass
+Test Case 1916: Pass
+Test Case 1917: Pass
+Test Case 1918: Pass
+Test Case 1919: Pass
+Test Case 1920: Pass
+Test Case 1921: Pass
+Test Case 1922: Pass
+Test Case 1923: Pass
+Test Case 1924: Pass
+Test Case 1925: Pass
+Test Case 1926: Pass
+Test Case 1927: Pass
+Test Case 1928: Pass
+Test Case 1929: Pass
+Test Case 1930: Pass
+Test Case 1931: Pass
+Test Case 1932: Pass
+Test Case 1933: Pass
+Test Case 1934: Pass
+Test Case 1935: Pass
+Test Case 1936: Pass
+Test Case 1937: Pass
+Test Case 1938: Pass
+Test Case 1939: Pass
+Test Case 1940: Pass
+Test Case 1941: Pass
+Test Case 1942: Pass
+Test Case 1943: Pass
+Test Case 1944: Pass
+Test Case 1945: Pass
+Test Case 1946: Pass
+Test Case 1947: Pass
+Test Case 1948: Pass
+Test Case 1949: Pass
+Test Case 1950: Pass
+Test Case 1951: Pass
+Test Case 1952: Pass
+Test Case 1953: Pass
+Test Case 1954: Pass
+Test Case 1955: Pass
+Test Case 1956: Pass
+Test Case 1957: Pass
+Test Case 1958: Pass
+Test Case 1959: Pass
+Test Case 1960: Pass
+Test Case 1961: Pass
+Test Case 1962: Pass
+Test Case 1963: Pass
+Test Case 1964: Pass
+Test Case 1965: Pass
+Test Case 1966: Pass
+Test Case 1967: Pass
+Test Case 1968: Pass
+Test Case 1969: Pass
+Test Case 1970: Pass
+Test Case 1971: Pass
+Test Case 1972: Pass
+Test Case 1973: Pass
+Test Case 1974: Pass
+Test Case 1975: Pass
+Test Case 1976: Pass
+Test Case 1977: Pass
+Test Case 1978: Pass
+Test Case 1979: Pass
+Test Case 1980: Pass
+Test Case 1981: Pass
+Test Case 1982: Pass
+Test Case 1983: Pass
+Test Case 1984:
+Expected: "analog_in_1":-235.193
+Got     : "analog_in_1":-235.1928405761719
+
+Test Case 1985:
+Expected: "analog_in_1":487.151
+Got     : "analog_in_1":487.1505737304688
+
+Test Case 1986: Pass
+Test Case 1987: Pass
+Test Case 1988: Pass
+Test Case 1989: Pass
+Test Case 1990: Pass
+Test Case 1991: Pass
+Test Case 1992: Pass
+Test Case 1993: Pass
+Test Case 1994:
+Expected: "analog_in_1":8589930000.0
+Got     : "analog_in_1":8589934592
+
+Test Case 1995:
+Expected: "analog_in_1":-8589930000.0
+Got     : "analog_in_1":-8589934592
+
+Test Case 1996:
+Expected: "analog_in_1":3.40282e+38
+Got     : "analog_in_1":3.402823466385289e+38
+
+Test Case 1997: Pass
+Test Case 1998:
+Expected: "analog_in_1":0.0
+Got     : "analog_in_1":1.175689411568522e-42
+
+Test Case 1999: Pass
+Test Case 2000:
+Expected: "analog_in_2":-268.799
+Got     : "analog_in_2":-268.7986755371094
+
+Test Case 2001:
+Expected: "analog_in_2":346.101
+Got     : "analog_in_2":346.1014404296875
+
+Test Case 2002: Pass
+Test Case 2003: Pass
+Test Case 2004: Pass
+Test Case 2005: Pass
+Test Case 2006: Pass
+Test Case 2007: Pass
+Test Case 2008: Pass
+Test Case 2009: Pass
+Test Case 2010:
+Expected: "analog_in_2":8589930000.0
+Got     : "analog_in_2":8589934592
+
+Test Case 2011:
+Expected: "analog_in_2":-8589930000.0
+Got     : "analog_in_2":-8589934592
+
+Test Case 2012:
+Expected: "analog_in_2":3.40282e+38
+Got     : "analog_in_2":3.402823466385289e+38
+
+Test Case 2013: Pass
+Test Case 2014:
+Expected: "analog_in_2":0.0
+Got     : "analog_in_2":1.175689411568522e-42
+
+Test Case 2015: Pass
+Test Case 2016:
+Expected: "analog_in_4":-147.244
+Got     : "analog_in_4":-147.2440032958984
+
+Test Case 2017:
+Expected: "analog_in_4":365.898
+Got     : "analog_in_4":365.8979187011719
+
+Test Case 2018: Pass
+Test Case 2019: Pass
+Test Case 2020: Pass
+Test Case 2021: Pass
+Test Case 2022: Pass
+Test Case 2023: Pass
+Test Case 2024: Pass
+Test Case 2025: Pass
+Test Case 2026:
+Expected: "analog_in_4":8589930000.0
+Got     : "analog_in_4":8589934592
+
+Test Case 2027:
+Expected: "analog_in_4":-8589930000.0
+Got     : "analog_in_4":-8589934592
+
+Test Case 2028:
+Expected: "analog_in_4":3.40282e+38
+Got     : "analog_in_4":3.402823466385289e+38
+
+Test Case 2029: Pass
+Test Case 2030:
+Expected: "analog_in_4":0.0
+Got     : "analog_in_4":1.175689411568522e-42
+
+Test Case 2031: Pass
+Test Case 2032:
+Expected: "analog_in_5":-239.751
+Got     : "analog_in_5":-239.7510375976562
+
+Test Case 2033:
+Expected: "analog_in_5":319.866
+Got     : "analog_in_5":319.8660583496094
+
+Test Case 2034: Pass
+Test Case 2035: Pass
+Test Case 2036: Pass
+Test Case 2037: Pass
+Test Case 2038: Pass
+Test Case 2039: Pass
+Test Case 2040: Pass
+Test Case 2041: Pass
+Test Case 2042:
+Expected: "analog_in_5":8589930000.0
+Got     : "analog_in_5":8589934592
+
+Test Case 2043:
+Expected: "analog_in_5":-8589930000.0
+Got     : "analog_in_5":-8589934592
+
+Test Case 2044:
+Expected: "analog_in_5":3.40282e+38
+Got     : "analog_in_5":3.402823466385289e+38
+
+Test Case 2045: Pass
+Test Case 2046:
+Expected: "analog_in_5":0.0
+Got     : "analog_in_5":1.175689411568522e-42
+
+Test Case 2047: Pass
+Test Case 2048:
+Expected: "analog_in_7":-31.2235
+Got     : "analog_in_7":-31.22352027893066
+
+Test Case 2049:
+Expected: "analog_in_7":430.385
+Got     : "analog_in_7":430.3852233886719
+
+Test Case 2050: Pass
+Test Case 2051: Pass
+Test Case 2052: Pass
+Test Case 2053: Pass
+Test Case 2054: Pass
+Test Case 2055: Pass
+Test Case 2056: Pass
+Test Case 2057: Pass
+Test Case 2058:
+Expected: "analog_in_7":8589930000.0
+Got     : "analog_in_7":8589934592
+
+Test Case 2059:
+Expected: "analog_in_7":-8589930000.0
+Got     : "analog_in_7":-8589934592
+
+Test Case 2060:
+Expected: "analog_in_7":3.40282e+38
+Got     : "analog_in_7":3.402823466385289e+38
+
+Test Case 2061: Pass
+Test Case 2062:
+Expected: "analog_in_7":0.0
+Got     : "analog_in_7":1.175689411568522e-42
+
+Test Case 2063: Pass
+Test Case 2064:
+Expected: "analog_in_11":-500.596
+Got     : "analog_in_11":-500.5956420898438
+
+Test Case 2065:
+Expected: "analog_in_11":28.4695
+Got     : "analog_in_11":28.46952247619629
+
+Test Case 2066: Pass
+Test Case 2067: Pass
+Test Case 2068: Pass
+Test Case 2069: Pass
+Test Case 2070: Pass
+Test Case 2071: Pass
+Test Case 2072: Pass
+Test Case 2073: Pass
+Test Case 2074:
+Expected: "analog_in_11":8589930000.0
+Got     : "analog_in_11":8589934592
+
+Test Case 2075:
+Expected: "analog_in_11":-8589930000.0
+Got     : "analog_in_11":-8589934592
+
+Test Case 2076:
+Expected: "analog_in_11":3.40282e+38
+Got     : "analog_in_11":3.402823466385289e+38
+
+Test Case 2077: Pass
+Test Case 2078:
+Expected: "analog_in_11":0.0
+Got     : "analog_in_11":1.175689411568522e-42
+
+Test Case 2079: Pass
+Test Case 2080:
+Expected: "analog_in_12":-15.925
+Got     : "analog_in_12":-15.92502734375
+
+Test Case 2081:
+Expected: "analog_in_12":5.35539
+Got     : "analog_in_12":5.35539404296875
+
+Test Case 2082: Pass
+Test Case 2083: Pass
+Test Case 2084: Pass
+Test Case 2085: Pass
+Test Case 2086: Pass
+Test Case 2087: Pass
+Test Case 2088: Pass
+Test Case 2089: Pass
+Test Case 2090:
+Expected: "analog_in_12":8589930000.0
+Got     : "analog_in_12":8589934592
+
+Test Case 2091:
+Expected: "analog_in_12":-8589930000.0
+Got     : "analog_in_12":-8589934592
+
+Test Case 2092:
+Expected: "analog_in_12":3.40282e+35
+Got     : "analog_in_12":3.402823466385289e+35
+
+Test Case 2093: Pass
+Test Case 2094:
+Expected: "analog_in_12":0.0
+Got     : "analog_in_12":1.17549463108198e-42
+
+Test Case 2095: Pass
+Test Case 2096:
+Expected: "analog_in_13":-382.462
+Got     : "analog_in_13":-382.4617004394531
+
+Test Case 2097:
+Expected: "analog_in_13":231.578
+Got     : "analog_in_13":231.5775756835938
+
+Test Case 2098: Pass
+Test Case 2099: Pass
+Test Case 2100: Pass
+Test Case 2101: Pass
+Test Case 2102: Pass
+Test Case 2103: Pass
+Test Case 2104: Pass
+Test Case 2105: Pass
+Test Case 2106:
+Expected: "analog_in_13":8589930000.0
+Got     : "analog_in_13":8589934592
+
+Test Case 2107:
+Expected: "analog_in_13":-8589930000.0
+Got     : "analog_in_13":-8589934592
+
+Test Case 2108:
+Expected: "analog_in_13":3.40282e+38
+Got     : "analog_in_13":3.402823466385289e+38
+
+Test Case 2109: Pass
+Test Case 2110:
+Expected: "analog_in_13":0.0
+Got     : "analog_in_13":1.175689411568522e-42
+
+Test Case 2111: Pass
+Test Case 2112:
+Expected: "analog_in_15":-273.286
+Got     : "analog_in_15":-273.2859497070312
+
+Test Case 2113:
+Expected: "analog_in_15":196.615
+Got     : "analog_in_15":196.6148986816406
+
+Test Case 2114: Pass
+Test Case 2115: Pass
+Test Case 2116: Pass
+Test Case 2117: Pass
+Test Case 2118: Pass
+Test Case 2119: Pass
+Test Case 2120: Pass
+Test Case 2121: Pass
+Test Case 2122:
+Expected: "analog_in_15":8589930000.0
+Got     : "analog_in_15":8589934592
+
+Test Case 2123:
+Expected: "analog_in_15":-8589930000.0
+Got     : "analog_in_15":-8589934592
+
+Test Case 2124:
+Expected: "analog_in_15":3.40282e+38
+Got     : "analog_in_15":3.402823466385289e+38
+
+Test Case 2125: Pass
+Test Case 2126:
+Expected: "analog_in_15":0.0
+Got     : "analog_in_15":1.175689411568522e-42
+
+Test Case 2127: Pass
+Test Case 2128:
+Expected: "analog_in_17":-197.236
+Got     : "analog_in_17":-197.2363891601562
+
+Test Case 2129:
+Expected: "analog_in_17":49.5783
+Got     : "analog_in_17":49.57829666137695
+
+Test Case 2130: Pass
+Test Case 2131: Pass
+Test Case 2132: Pass
+Test Case 2133: Pass
+Test Case 2134: Pass
+Test Case 2135: Pass
+Test Case 2136: Pass
+Test Case 2137: Pass
+Test Case 2138:
+Expected: "analog_in_17":8589930000.0
+Got     : "analog_in_17":8589934592
+
+Test Case 2139:
+Expected: "analog_in_17":-8589930000.0
+Got     : "analog_in_17":-8589934592
+
+Test Case 2140:
+Expected: "analog_in_17":3.40282e+38
+Got     : "analog_in_17":3.402823466385289e+38
+
+Test Case 2141: Pass
+Test Case 2142:
+Expected: "analog_in_17":0.0
+Got     : "analog_in_17":1.175689411568522e-42
+
+Test Case 2143: Pass
+Test Case 2144:
+Expected: "analog_in_20":-315.225
+Got     : "analog_in_20":-315.2245178222656
+
+Test Case 2145:
+Expected: "analog_in_20":113.693
+Got     : "analog_in_20":113.6928405761719
+
+Test Case 2146: Pass
+Test Case 2147: Pass
+Test Case 2148: Pass
+Test Case 2149: Pass
+Test Case 2150: Pass
+Test Case 2151: Pass
+Test Case 2152: Pass
+Test Case 2153: Pass
+Test Case 2154:
+Expected: "analog_in_20":8589930000.0
+Got     : "analog_in_20":8589934592
+
+Test Case 2155:
+Expected: "analog_in_20":-8589930000.0
+Got     : "analog_in_20":-8589934592
+
+Test Case 2156:
+Expected: "analog_in_20":3.40282e+38
+Got     : "analog_in_20":3.402823466385289e+38
+
+Test Case 2157: Pass
+Test Case 2158:
+Expected: "analog_in_20":0.0
+Got     : "analog_in_20":1.175689411568522e-42
+
+Test Case 2159: Pass
+Test Case 2160:
+Expected: "analog_in_22":-26.8905
+Got     : "analog_in_22":-26.89049530029297
+
+Test Case 2161:
+Expected: "analog_in_22":478.122
+Got     : "analog_in_22":478.12158203125
+
+Test Case 2162: Pass
+Test Case 2163: Pass
+Test Case 2164: Pass
+Test Case 2165: Pass
+Test Case 2166: Pass
+Test Case 2167: Pass
+Test Case 2168: Pass
+Test Case 2169: Pass
+Test Case 2170:
+Expected: "analog_in_22":8589930000.0
+Got     : "analog_in_22":8589934592
+
+Test Case 2171:
+Expected: "analog_in_22":-8589930000.0
+Got     : "analog_in_22":-8589934592
+
+Test Case 2172:
+Expected: "analog_in_22":3.40282e+38
+Got     : "analog_in_22":3.402823466385289e+38
+
+Test Case 2173: Pass
+Test Case 2174:
+Expected: "analog_in_22":0.0
+Got     : "analog_in_22":1.175689411568522e-42
+
+Test Case 2175: Pass
+Test Case 2176:
+Expected: "analog_in_23":-86.9318
+Got     : "analog_in_23":-86.93179321289062
+
+Test Case 2177:
+Expected: "analog_in_23":452.494
+Got     : "analog_in_23":452.4936828613281
+
+Test Case 2178: Pass
+Test Case 2179: Pass
+Test Case 2180: Pass
+Test Case 2181: Pass
+Test Case 2182: Pass
+Test Case 2183: Pass
+Test Case 2184: Pass
+Test Case 2185: Pass
+Test Case 2186:
+Expected: "analog_in_23":8589930000.0
+Got     : "analog_in_23":8589934592
+
+Test Case 2187:
+Expected: "analog_in_23":-8589930000.0
+Got     : "analog_in_23":-8589934592
+
+Test Case 2188:
+Expected: "analog_in_23":3.40282e+38
+Got     : "analog_in_23":3.402823466385289e+38
+
+Test Case 2189: Pass
+Test Case 2190:
+Expected: "analog_in_23":0.0
+Got     : "analog_in_23":1.175689411568522e-42
+
+Test Case 2191: Pass
+Test Case 2192:
+Expected: "analog_in_25":-273.824
+Got     : "analog_in_25":-273.823974609375
+
+Test Case 2193:
+Expected: "analog_in_25":15.2584
+Got     : "analog_in_25":15.25835800170898
+
+Test Case 2194: Pass
+Test Case 2195: Pass
+Test Case 2196: Pass
+Test Case 2197: Pass
+Test Case 2198: Pass
+Test Case 2199: Pass
+Test Case 2200: Pass
+Test Case 2201: Pass
+Test Case 2202:
+Expected: "analog_in_25":8589930000.0
+Got     : "analog_in_25":8589934592
+
+Test Case 2203:
+Expected: "analog_in_25":-8589930000.0
+Got     : "analog_in_25":-8589934592
+
+Test Case 2204:
+Expected: "analog_in_25":3.40282e+38
+Got     : "analog_in_25":3.402823466385289e+38
+
+Test Case 2205: Pass
+Test Case 2206:
+Expected: "analog_in_25":0.0
+Got     : "analog_in_25":1.175689411568522e-42
+
+Test Case 2207: Pass
+Test Case 2208:
+Expected: "analog_in_27":-146.083
+Got     : "analog_in_27":-146.0825347900391
+
+Test Case 2209:
+Expected: "analog_in_27":55.5018
+Got     : "analog_in_27":55.50175094604492
+
+Test Case 2210: Pass
+Test Case 2211: Pass
+Test Case 2212: Pass
+Test Case 2213: Pass
+Test Case 2214: Pass
+Test Case 2215: Pass
+Test Case 2216: Pass
+Test Case 2217: Pass
+Test Case 2218:
+Expected: "analog_in_27":8589930000.0
+Got     : "analog_in_27":8589934592
+
+Test Case 2219:
+Expected: "analog_in_27":-8589930000.0
+Got     : "analog_in_27":-8589934592
+
+Test Case 2220:
+Expected: "analog_in_27":3.40282e+38
+Got     : "analog_in_27":3.402823466385289e+38
+
+Test Case 2221: Pass
+Test Case 2222:
+Expected: "analog_in_27":0.0
+Got     : "analog_in_27":1.175689411568522e-42
+
+Test Case 2223: Pass
+Test Case 2224:
+Expected: "analog_in_28":-435.222
+Got     : "analog_in_28":-435.2223510742188
+
+Test Case 2225:
+Expected: "analog_in_28":440.032
+Got     : "analog_in_28":440.0315246582031
+
+Test Case 2226: Pass
+Test Case 2227: Pass
+Test Case 2228: Pass
+Test Case 2229: Pass
+Test Case 2230: Pass
+Test Case 2231: Pass
+Test Case 2232: Pass
+Test Case 2233: Pass
+Test Case 2234:
+Expected: "analog_in_28":8589930000.0
+Got     : "analog_in_28":8589934592
+
+Test Case 2235:
+Expected: "analog_in_28":-8589930000.0
+Got     : "analog_in_28":-8589934592
+
+Test Case 2236:
+Expected: "analog_in_28":3.40282e+38
+Got     : "analog_in_28":3.402823466385289e+38
+
+Test Case 2237: Pass
+Test Case 2238:
+Expected: "analog_in_28":0.0
+Got     : "analog_in_28":1.175689411568522e-42
+
+Test Case 2239: Pass
+Test Case 2240:
+Expected: "analog_in_29":-147.102
+Got     : "analog_in_29":-147.1015167236328
+
+Test Case 2241:
+Expected: "analog_in_29":95.3648
+Got     : "analog_in_29":95.36476135253906
+
+Test Case 2242: Pass
+Test Case 2243: Pass
+Test Case 2244: Pass
+Test Case 2245: Pass
+Test Case 2246: Pass
+Test Case 2247: Pass
+Test Case 2248: Pass
+Test Case 2249: Pass
+Test Case 2250:
+Expected: "analog_in_29":8589930000.0
+Got     : "analog_in_29":8589934592
+
+Test Case 2251:
+Expected: "analog_in_29":-8589930000.0
+Got     : "analog_in_29":-8589934592
+
+Test Case 2252:
+Expected: "analog_in_29":3.40282e+38
+Got     : "analog_in_29":3.402823466385289e+38
+
+Test Case 2253: Pass
+Test Case 2254:
+Expected: "analog_in_29":0.0
+Got     : "analog_in_29":1.175689411568522e-42
+
+Test Case 2255: Pass
+Test Case 2256:
+Expected: "analog_in_30":-140.061
+Got     : "analog_in_30":-140.0610809326172
+
+Test Case 2257:
+Expected: "analog_in_30":66.4029
+Got     : "analog_in_30":66.40286254882812
+
+Test Case 2258: Pass
+Test Case 2259: Pass
+Test Case 2260: Pass
+Test Case 2261: Pass
+Test Case 2262: Pass
+Test Case 2263: Pass
+Test Case 2264: Pass
+Test Case 2265: Pass
+Test Case 2266:
+Expected: "analog_in_30":8589930000.0
+Got     : "analog_in_30":8589934592
+
+Test Case 2267:
+Expected: "analog_in_30":-8589930000.0
+Got     : "analog_in_30":-8589934592
+
+Test Case 2268:
+Expected: "analog_in_30":3.40282e+38
+Got     : "analog_in_30":3.402823466385289e+38
+
+Test Case 2269: Pass
+Test Case 2270:
+Expected: "analog_in_30":0.0
+Got     : "analog_in_30":1.175689411568522e-42
+
+Test Case 2271: Pass
+Test Case 2272:
+Expected: "analog_in_31":-259.992
+Got     : "analog_in_31":-259.9918212890625
+
+Test Case 2273:
+Expected: "analog_in_31":202.768
+Got     : "analog_in_31":202.7679290771484
+
+Test Case 2274: Pass
+Test Case 2275: Pass
+Test Case 2276: Pass
+Test Case 2277: Pass
+Test Case 2278: Pass
+Test Case 2279: Pass
+Test Case 2280: Pass
+Test Case 2281: Pass
+Test Case 2282:
+Expected: "analog_in_31":8589930000.0
+Got     : "analog_in_31":8589934592
+
+Test Case 2283:
+Expected: "analog_in_31":-8589930000.0
+Got     : "analog_in_31":-8589934592
+
+Test Case 2284:
+Expected: "analog_in_31":3.40282e+38
+Got     : "analog_in_31":3.402823466385289e+38
+
+Test Case 2285: Pass
+Test Case 2286:
+Expected: "analog_in_31":0.0
+Got     : "analog_in_31":1.175689411568522e-42
+
+Test Case 2287: Pass
+Test Case 2288:
+Expected: "analog_in_32":-440.434
+Got     : "analog_in_32":-440.4343872070312
+
+Test Case 2289:
+Expected: "analog_in_32":390.574
+Got     : "analog_in_32":390.5743713378906
+
+Test Case 2290: Pass
+Test Case 2291: Pass
+Test Case 2292: Pass
+Test Case 2293: Pass
+Test Case 2294: Pass
+Test Case 2295: Pass
+Test Case 2296: Pass
+Test Case 2297: Pass
+Test Case 2298:
+Expected: "analog_in_32":8589930000.0
+Got     : "analog_in_32":8589934592
+
+Test Case 2299:
+Expected: "analog_in_32":-8589930000.0
+Got     : "analog_in_32":-8589934592
+
+Test Case 2300:
+Expected: "analog_in_32":3.40282e+38
+Got     : "analog_in_32":3.402823466385289e+38
+
+Test Case 2301: Pass
+Test Case 2302:
+Expected: "analog_in_32":0.0
+Got     : "analog_in_32":1.175689411568522e-42
+
+Test Case 2303: Pass
+Test Case 2304:
+Expected: "analog_in_33":-4.87959
+Got     : "analog_in_33":-4.879585266113281
+
+Test Case 2305:
+Expected: "analog_in_33":326.995
+Got     : "analog_in_33":326.9947814941406
+
+Test Case 2306: Pass
+Test Case 2307: Pass
+Test Case 2308: Pass
+Test Case 2309: Pass
+Test Case 2310: Pass
+Test Case 2311: Pass
+Test Case 2312: Pass
+Test Case 2313: Pass
+Test Case 2314:
+Expected: "analog_in_33":8589930000.0
+Got     : "analog_in_33":8589934592
+
+Test Case 2315:
+Expected: "analog_in_33":-8589930000.0
+Got     : "analog_in_33":-8589934592
+
+Test Case 2316:
+Expected: "analog_in_33":3.40282e+38
+Got     : "analog_in_33":3.402823466385289e+38
+
+Test Case 2317: Pass
+Test Case 2318:
+Expected: "analog_in_33":0.0
+Got     : "analog_in_33":1.175689411568522e-42
+
+Test Case 2319: Pass
+Test Case 1: Pass
+Test Case 2: Pass
+Test Case 3: Pass
+Test Case 4: Pass
+Test Case 5: Pass
+Test Case 6: Pass
+Test Case 7: Pass
+Test Case 8: Pass
+Test Case 9: Pass
+Test Case 10: Pass
+Test Case 11: Pass
+Test Case 12: Pass
+Test Case 13: Pass
+Test Case 14: Pass
+Test Case 15: Pass
+Test Case 16: Pass
+Test Case 17: Pass
+Test Case 18: Pass
+Test Case 19: Pass
+Test Case 20: Pass
+Test Case 21: Pass
+Test Case 22: Pass
+Test Case 23: Pass
+Test Case 24: Pass
+Test Case 25: Pass
+Test Case 26: Pass
+Test Case 27: Pass
+Test Case 28: Pass
+Test Case 29: Pass
+Test Case 30: Pass
+Test Case 31: Pass
+Test Case 32: Pass
+Test Case 33: Pass
+Test Case 34: Pass
+Test Case 35: Pass
+Test Case 36: Pass
+Test Case 37: Pass
+Test Case 38: Pass
+Test Case 39: Pass
+Test Case 40: Pass
+Test Case 41: Pass
+Test Case 42: Pass
+Test Case 43: Pass
+Test Case 44: Pass
+Test Case 45: Pass
+Test Case 46: Pass
+Test Case 47: Pass
+Test Case 48: Pass
+Test Case 49: Pass
+Test Case 50: Pass
+Test Case 51: Pass
+Test Case 52: Pass
+Test Case 53: Pass
+Test Case 54: Pass
+Test Case 55: Pass
+Test Case 56: Pass
+Test Case 57: Pass
+Test Case 58: Pass
+Test Case 59: Pass
+Test Case 60: Pass
+Test Case 61: Pass
+Test Case 62: Pass
+Test Case 63: Pass
+Test Case 64: Pass
+Test Case 65: Pass
+Test Case 66: Pass
+Test Case 67: Pass
+Test Case 68: Pass
+Test Case 69: Pass
+Test Case 70: Pass
+Test Case 71: Pass
+Test Case 72: Pass
+Test Case 73: Pass
+Test Case 74: Pass
+Test Case 75: Pass
+Test Case 76: Pass
+Test Case 77: Pass
+Test Case 78: Pass
+Test Case 79: Pass
+Test Case 80: Pass
+Test Case 81: Pass
+Test Case 82: Pass
+Test Case 83: Pass
+Test Case 84: Pass
+Test Case 85: Pass
+Test Case 86: Pass
+Test Case 87: Pass
+Test Case 88: Pass
+Test Case 89: Pass
+Test Case 90: Pass
+Test Case 91: Pass
+Test Case 92: Pass
+Test Case 93: Pass
+Test Case 94: Pass
+Test Case 95: Pass
+Test Case 96: Pass
+Test Case 97: Pass
+Test Case 98: Pass
+Test Case 99: Pass
+Test Case 100: Pass
+Test Case 101: Pass
+Test Case 102: Pass
+Test Case 103: Pass
+Test Case 104: Pass
+Test Case 105: Pass
+Test Case 106: Pass
+Test Case 107: Pass
+Test Case 108: Pass
+Test Case 109: Pass
+Test Case 110: Pass
+Test Case 111: Pass
+Test Case 112: Pass
+Test Case 113: Pass
+Test Case 114: Pass
+Test Case 115: Pass
+Test Case 116: Pass
+Test Case 117: Pass
+Test Case 118: Pass
+Test Case 119: Pass
+Test Case 120: Pass
+Test Case 121: Pass
+Test Case 122: Pass
+Test Case 123: Pass
+Test Case 124: Pass
+Test Case 125: Pass
+Test Case 126: Pass
+Test Case 127: Pass
+Test Case 128: Pass
+Test Case 129: Pass
+Test Case 130: Pass
+Test Case 131: Pass
+Test Case 132: Pass
+Test Case 133: Pass
+Test Case 134: Pass
+Test Case 135: Pass
+Test Case 136: Pass
+Test Case 137: Pass
+Test Case 138: Pass
+Test Case 139: Pass
+Test Case 140: Pass
+Test Case 141: Pass
+Test Case 142: Pass
+Test Case 143: Pass
+Test Case 144: Pass
+Test Case 145: Pass
+Test Case 146: Pass
+Test Case 147: Pass
+Test Case 148: Pass
+Test Case 149: Pass
+Test Case 150: Pass
+Test Case 151: Pass
+Test Case 152: Pass
+Test Case 153: Pass
+Test Case 154: Pass
+Test Case 155: Pass
+Test Case 156: Pass
+Test Case 157: Pass
+Test Case 158: Pass
+Test Case 159: Pass
+Test Case 160: Pass
+Test Case 161: Pass
+Test Case 162: Pass
+Test Case 163: Pass
+Test Case 164: Pass
+Test Case 165: Pass
+Test Case 166: Pass
+Test Case 167: Pass
+Test Case 168: Pass
+Test Case 169: Pass
+Test Case 170: Pass
+Test Case 171: Pass
+Test Case 172: Pass
+Test Case 173: Pass
+Test Case 174: Pass
+Test Case 175: Pass
+Test Case 176: Pass
+Test Case 177: Pass
+Test Case 178: Pass
+Test Case 179: Pass
+Test Case 180: Pass
+Test Case 181: Pass
+Test Case 182: Pass
+Test Case 183: Pass
+Test Case 184: Pass
+Test Case 185: Pass
+Test Case 186: Pass
+Test Case 187: Pass
+Test Case 188: Pass
+Test Case 189: Pass
+Test Case 190: Pass
+Test Case 191: Pass
+Test Case 192: Pass
+Test Case 193: Pass
+Test Case 194: Pass
+Test Case 195: Pass
+Test Case 196: Pass
+Test Case 197: Pass
+Test Case 198: Pass
+Test Case 199: Pass
+Test Case 200: Pass
+Test Case 201: Pass
+Test Case 202: Pass
+Test Case 203: Pass
+Test Case 204: Pass
+Test Case 205: Pass
+Test Case 206: Pass
+Test Case 207: Pass
+Test Case 208: Pass
+Test Case 209: Pass
+Test Case 210: Pass
+Test Case 211: Pass
+Test Case 212: Pass
+Test Case 213: Pass
+Test Case 214: Pass
+Test Case 215: Pass
+Test Case 216: Pass
+Test Case 217: Pass
+Test Case 218: Pass
+Test Case 219: Pass
+Test Case 220: Pass
+Test Case 221: Pass
+Test Case 222: Pass
+Test Case 223: Pass
+Test Case 224: Pass
+Test Case 225: Pass
+Test Case 226: Pass
+Test Case 227: Pass
+Test Case 228: Pass
+Test Case 229: Pass
+Test Case 230: Pass
+Test Case 231: Pass
+Test Case 232: Pass
+Test Case 233: Pass
+Test Case 234: Pass
+Test Case 235: Pass
+Test Case 236: Pass
+Test Case 237: Pass
+Test Case 238: Pass
+Test Case 239: Pass
+Test Case 240: Pass
+Test Case 241: Pass
+Test Case 242: Pass
+Test Case 243: Pass
+Test Case 244: Pass
+Test Case 245: Pass
+Test Case 246: Pass
+Test Case 247: Pass
+Test Case 248: Pass
+Test Case 249: Pass
+Test Case 250: Pass
+Test Case 251: Pass
+Test Case 252: Pass
+Test Case 253: Pass
+Test Case 254: Pass
+Test Case 255: Pass
+Test Case 256: Pass
+Test Case 257: Pass
+Test Case 258: Pass
+Test Case 259: Pass
+Test Case 260: Pass
+Test Case 261: Pass
+Test Case 262: Pass
+Test Case 263: Pass
+Test Case 264: Pass
+Test Case 265: Pass
+Test Case 266: Pass
+Test Case 267: Pass
+Test Case 268: Pass
+Test Case 269: Pass
+Test Case 270: Pass
+Test Case 271: Pass
+Test Case 272: Pass
+Test Case 273: Pass
+Test Case 274: Pass
+Test Case 275: Pass
+Test Case 276: Pass
+Test Case 277: Pass
+Test Case 278: Pass
+Test Case 279: Pass
+Test Case 280: Pass
+Test Case 281: Pass
+Test Case 282: Pass
+Test Case 283: Pass
+Test Case 284: Pass
+Test Case 285: Pass
+Test Case 286: Pass
+Test Case 287: Pass
+Test Case 288: Pass
+Test Case 289: Pass
+Test Case 290: Pass
+Test Case 291: Pass
+Test Case 292: Pass
+Test Case 293: Pass
+Test Case 294: Pass
+Test Case 295: Pass
+Test Case 296: Pass
+Test Case 297: Pass
+Test Case 298: Pass
+Test Case 299: Pass
+Test Case 300: Pass
+Test Case 301: Pass
+Test Case 302: Pass
+Test Case 303: Pass
+Test Case 304: Pass
+Test Case 305: Pass
+Test Case 306: Pass
+Test Case 307: Pass
+Test Case 308: Pass
+Test Case 309: Pass
+Test Case 310: Pass
+Test Case 311: Pass
+Test Case 312: Pass
+Test Case 313: Pass
+Test Case 314: Pass
+Test Case 315: Pass
+Test Case 316: Pass
+Test Case 317: Pass
+Test Case 318: Pass
+Test Case 319: Pass
+Test Case 320: Pass
+Test Case 321: Pass
+Test Case 322: Pass
+Test Case 323: Pass
+Test Case 324: Pass
+Test Case 325: Pass
+Test Case 326: Pass
+Test Case 327: Pass
+Test Case 328: Pass
+Test Case 329: Pass
+Test Case 330: Pass
+Test Case 331: Pass
+Test Case 332: Pass
+Test Case 333: Pass
+Test Case 334: Pass
+Test Case 335: Pass
+Test Case 336: Pass
+Test Case 337: Pass
+Test Case 338: Pass
+Test Case 339: Pass
+Test Case 340: Pass
+Test Case 341: Pass
+Test Case 342: Pass
+Test Case 343: Pass
+Test Case 344: Pass
+Test Case 345: Pass
+Test Case 346: Pass
+Test Case 347: Pass
+Test Case 348: Pass
+Test Case 349: Pass
+Test Case 350: Pass
+Test Case 351: Pass
+Test Case 352: Pass
+Test Case 353: Pass
+Test Case 354: Pass
+Test Case 355: Pass
+Test Case 356: Pass
+Test Case 357: Pass
+Test Case 358: Pass
+Test Case 359: Pass
+Test Case 360: Pass
+Test Case 361: Pass
+Test Case 362: Pass
+Test Case 363: Pass
+Test Case 364: Pass
+Test Case 365: Pass
+Test Case 366: Pass
+Test Case 367: Pass
+Test Case 368: Pass
+Test Case 369: Pass
+Test Case 370: Pass
+Test Case 371: Pass
+Test Case 372: Pass
+Test Case 373: Pass
+Test Case 374: Pass
+Test Case 375: Pass
+Test Case 376: Pass
+Test Case 377: Pass
+Test Case 378: Pass
+Test Case 379: Pass
+Test Case 380: Pass
+Test Case 381: Pass
+Test Case 382: Pass
+Test Case 383: Pass
+Test Case 384: Pass
+Test Case 385: Pass
+Test Case 386: Pass
+Test Case 387: Pass
+Test Case 388: Pass
+Test Case 389: Pass
+Test Case 390: Pass
+Test Case 391: Pass
+Test Case 392: Pass
+Test Case 393: Pass
+Test Case 394: Pass
+Test Case 395: Pass
+Test Case 396: Pass
+Test Case 397: Pass
+Test Case 398: Pass
+Test Case 399: Pass
+Test Case 400: Pass
+Test Case 401: Pass
+Test Case 402: Pass
+Test Case 403: Pass
+Test Case 404: Pass
+Test Case 405: Pass
+Test Case 406: Pass
+Test Case 407: Pass
+Test Case 408: Pass
+Test Case 409: Pass
+Test Case 410: Pass
+Test Case 411: Pass
+Test Case 412: Pass
+Test Case 413: Pass
+Test Case 414: Pass
+Test Case 415: Pass
+Test Case 416: Pass
+Test Case 417: Pass
+Test Case 418: Pass
+Test Case 419: Pass
+Test Case 420: Pass
+Test Case 421: Pass
+Test Case 422: Pass
+Test Case 423: Pass
+Test Case 424: Pass
+Test Case 425: Pass
+Test Case 426: Pass
+Test Case 427: Pass
+Test Case 428: Pass
+Test Case 429: Pass
+Test Case 430: Pass
+Test Case 431: Pass
+Test Case 432: Pass
+Test Case 433: Pass
+Test Case 434: Pass
+Test Case 435: Pass
+Test Case 436: Pass
+Test Case 437: Pass
+Test Case 438: Pass
+Test Case 439: Pass
+Test Case 440: Pass
+Test Case 441: Pass
+Test Case 442: Pass
+Test Case 443: Pass
+Test Case 444: Pass
+Test Case 445: Pass
+Test Case 446: Pass
+Test Case 447: Pass
+Test Case 448: Pass
+Test Case 449: Pass
+Test Case 450: Pass
+Test Case 451: Pass
+Test Case 452: Pass
+Test Case 453: Pass
+Test Case 454: Pass
+Test Case 455: Pass
+Test Case 456: Pass
+Test Case 457: Pass
+Test Case 458: Pass
+Test Case 459: Pass
+Test Case 460: Pass
+Test Case 461: Pass
+Test Case 462: Pass
+Test Case 463: Pass
+Test Case 464: Pass
+Test Case 465: Pass
+Test Case 466: Pass
+Test Case 467: Pass
+Test Case 468: Pass
+Test Case 469: Pass
+Test Case 470: Pass
+Test Case 471: Pass
+Test Case 472: Pass
+Test Case 473: Pass
+Test Case 474: Pass
+Test Case 475: Pass
+Test Case 476: Pass
+Test Case 477: Pass
+Test Case 478: Pass
+Test Case 479: Pass
+Test Case 480: Pass
+Test Case 481: Pass
+Test Case 482: Pass
+Test Case 483: Pass
+Test Case 484: Pass
+Test Case 485: Pass
+Test Case 486: Pass
+Test Case 487: Pass
+Test Case 488: Pass
+Test Case 489: Pass
+Test Case 490: Pass
+Test Case 491: Pass
+Test Case 492: Pass
+Test Case 493: Pass
+Test Case 494: Pass
+Test Case 495: Pass
+Test Case 496: Pass
+Test Case 497: Pass
+Test Case 498: Pass
+Test Case 499: Pass
+Test Case 500: Pass
+Test Case 501: Pass
+Test Case 502: Pass
+Test Case 503: Pass
+Test Case 504: Pass
+Test Case 505: Pass
+Test Case 506: Pass
+Test Case 507: Pass
+Test Case 508: Pass
+Test Case 509: Pass
+Test Case 510: Pass
+Test Case 511: Pass
+Test Case 512: Pass
+Test Case 513: Pass
+Test Case 514: Pass
+Test Case 515: Pass
+Test Case 516: Pass
+Test Case 517: Pass
+Test Case 518: Pass
+Test Case 519: Pass
+Test Case 520: Pass
+Test Case 521: Pass
+Test Case 522: Pass
+Test Case 523: Pass
+Test Case 524: Pass
+Test Case 525: Pass
+Test Case 526: Pass
+Test Case 527: Pass
+Test Case 528: Pass
+Test Case 529: Pass
+Test Case 530: Pass
+Test Case 531: Pass
+Test Case 532: Pass
+Test Case 533: Pass
+Test Case 534: Pass
+Test Case 535: Pass
+Test Case 536: Pass
+Test Case 537: Pass
+Test Case 538: Pass
+Test Case 539: Pass
+Test Case 540: Pass
+Test Case 541: Pass
+Test Case 542: Pass
+Test Case 543: Pass
+Test Case 544: Pass
+Test Case 545: Pass
+Test Case 546: Pass
+Test Case 547: Pass
+Test Case 548: Pass
+Test Case 549: Pass
+Test Case 550: Pass
+Test Case 551: Pass
+Test Case 552: Pass
+Test Case 553: Pass
+Test Case 554: Pass
+Test Case 555: Pass
+Test Case 556: Pass
+Test Case 557: Pass
+Test Case 558: Pass
+Test Case 559: Pass
+Test Case 560: Pass
+Test Case 561: Pass
+Test Case 562: Pass
+Test Case 563: Pass
+Test Case 564: Pass
+Test Case 565: Pass
+Test Case 566: Pass
+Test Case 567: Pass
+Test Case 568: Pass
+Test Case 569: Pass
+Test Case 570: Pass
+Test Case 571: Pass
+Test Case 572: Pass
+Test Case 573: Pass
+Test Case 574: Pass
+Test Case 575: Pass
+Test Case 576: Pass
+Test Case 577: Pass
+Test Case 578: Pass
+Test Case 579: Pass
+Test Case 580: Pass
+Test Case 581: Pass
+Test Case 582: Pass
+Test Case 583: Pass
+Test Case 584: Pass
+Test Case 585: Pass
+Test Case 586: Pass
+Test Case 587: Pass
+Test Case 588: Pass
+Test Case 589: Pass
+Test Case 590: Pass
+Test Case 591: Pass
+Test Case 592: Pass
+Test Case 593: Pass
+Test Case 594: Pass
+Test Case 595: Pass
+Test Case 596: Pass
+Test Case 597: Pass
+Test Case 598: Pass
+Test Case 599: Pass
+Test Case 600: Pass
+Test Case 601: Pass
+Test Case 602: Pass
+Test Case 603: Pass
+Test Case 604: Pass
+Test Case 605: Pass
+Test Case 606: Pass
+Test Case 607: Pass
+Test Case 608: Pass
+Test Case 609: Pass
+Test Case 610: Pass
+Test Case 611: Pass
+Test Case 612: Pass
+Test Case 613: Pass
+Test Case 614: Pass
+Test Case 615: Pass
+Test Case 616: Pass
+Test Case 617: Pass
+Test Case 618: Pass
+Test Case 619: Pass
+Test Case 620: Pass
+Test Case 621: Pass
+Test Case 622: Pass
+Test Case 623: Pass
+Test Case 624: Pass
+Test Case 625: Pass
+Test Case 626: Pass
+Test Case 627: Pass
+Test Case 628: Pass
+Test Case 629: Pass
+Test Case 630: Pass
+Test Case 631: Pass
+Test Case 632: Pass
+Test Case 633: Pass
+Test Case 634: Pass
+Test Case 635: Pass
+Test Case 636: Pass
+Test Case 637: Pass
+Test Case 638: Pass
+Test Case 639: Pass
+Test Case 640: Pass
+Test Case 641: Pass
+Test Case 642: Pass
+Test Case 643: Pass
+Test Case 644: Pass
+Test Case 645: Pass
+Test Case 646: Pass
+Test Case 647: Pass
+Test Case 648: Pass
+Test Case 649: Pass
+Test Case 650: Pass
+Test Case 651: Pass
+Test Case 652: Pass
+Test Case 653: Pass
+Test Case 654: Pass
+Test Case 655: Pass
+Test Case 656: Pass
+Test Case 657: Pass
+Test Case 658: Pass
+Test Case 659: Pass
+Test Case 660: Pass
+Test Case 661: Pass
+Test Case 662: Pass
+Test Case 663: Pass
+Test Case 664: Pass
+Test Case 665: Pass
+Test Case 666: Pass
+Test Case 667: Pass
+Test Case 668: Pass
+Test Case 669: Pass
+Test Case 670: Pass
+Test Case 671: Pass
+Test Case 672:
+Expected: "analog_out_68": -34.4387
+Got     : "analog_out_68": -34.43867874145508
+
+Test Case 673:
+Expected: "analog_out_68": 204.873
+Got     : "analog_out_68": 204.8728637695312
+
+Test Case 674: Pass
+Test Case 675: Pass
+Test Case 676: Pass
+Test Case 677: Pass
+Test Case 678: Pass
+Test Case 679: Pass
+Test Case 680: Pass
+Test Case 681: Pass
+Test Case 682:
+Expected: "analog_out_68": 8589930000.0
+Got     : "analog_out_68": 8589934592
+
+Test Case 683:
+Expected: "analog_out_68": -8589930000.0
+Got     : "analog_out_68": -8589934592
+
+Test Case 684:
+Expected: "analog_out_68": 3.40282e+38
+Got     : "analog_out_68": 3.402823466385289e+38
+
+Test Case 685: Pass
+Test Case 686: Pass
+Test Case 687: Pass
+Test Case 688:
+Expected: "analog_out_70": -493.54
+Got     : "analog_out_70": -493.5397644042969
+
+Test Case 689:
+Expected: "analog_out_70": 208.437
+Got     : "analog_out_70": 208.4372253417969
+
+Test Case 690: Pass
+Test Case 691: Pass
+Test Case 692: Pass
+Test Case 693: Pass
+Test Case 694: Pass
+Test Case 695: Pass
+Test Case 696: Pass
+Test Case 697: Pass
+Test Case 698:
+Expected: "analog_out_70": 8589930000.0
+Got     : "analog_out_70": 8589934592
+
+Test Case 699:
+Expected: "analog_out_70": -8589930000.0
+Got     : "analog_out_70": -8589934592
+
+Test Case 700:
+Expected: "analog_out_70": 3.40282e+38
+Got     : "analog_out_70": 3.402823466385289e+38
+
+Test Case 701: Pass
+Test Case 702: Pass
+Test Case 703: Pass
+Test Case 704:
+Expected: "analog_out_72": -247.209
+Got     : "analog_out_72": -247.2091827392578
+
+Test Case 705:
+Expected: "analog_out_72": 46.583
+Got     : "analog_out_72": 46.58296203613281
+
+Test Case 706: Pass
+Test Case 707: Pass
+Test Case 708: Pass
+Test Case 709: Pass
+Test Case 710: Pass
+Test Case 711: Pass
+Test Case 712: Pass
+Test Case 713: Pass
+Test Case 714:
+Expected: "analog_out_72": 8589930000.0
+Got     : "analog_out_72": 8589934592
+
+Test Case 715:
+Expected: "analog_out_72": -8589930000.0
+Got     : "analog_out_72": -8589934592
+
+Test Case 716:
+Expected: "analog_out_72": 3.40282e+38
+Got     : "analog_out_72": 3.402823466385289e+38
+
+Test Case 717: Pass
+Test Case 718: Pass
+Test Case 719: Pass
+Test Case 720:
+Expected: "analog_out_73": -6.13345
+Got     : "analog_out_73": -6.133451461791992
+
+Test Case 721:
+Expected: "analog_out_73": 243.879
+Got     : "analog_out_73": 243.8793029785156
+
+Test Case 722: Pass
+Test Case 723: Pass
+Test Case 724: Pass
+Test Case 725: Pass
+Test Case 726: Pass
+Test Case 727: Pass
+Test Case 728: Pass
+Test Case 729: Pass
+Test Case 730:
+Expected: "analog_out_73": 8589930000.0
+Got     : "analog_out_73": 8589934592
+
+Test Case 731:
+Expected: "analog_out_73": -8589930000.0
+Got     : "analog_out_73": -8589934592
+
+Test Case 732:
+Expected: "analog_out_73": 3.40282e+38
+Got     : "analog_out_73": 3.402823466385289e+38
+
+Test Case 733: Pass
+Test Case 734: Pass
+Test Case 735: Pass
+Test Case 736:
+Expected: "analog_out_75": -121.87
+Got     : "analog_out_75": -121.8704376220703
+
+Test Case 737:
+Expected: "analog_out_75": 19.7696
+Got     : "analog_out_75": 19.76958847045898
+
+Test Case 738: Pass
+Test Case 739: Pass
+Test Case 740: Pass
+Test Case 741: Pass
+Test Case 742: Pass
+Test Case 743: Pass
+Test Case 744: Pass
+Test Case 745: Pass
+Test Case 746:
+Expected: "analog_out_75": 8589930000.0
+Got     : "analog_out_75": 8589934592
+
+Test Case 747:
+Expected: "analog_out_75": -8589930000.0
+Got     : "analog_out_75": -8589934592
+
+Test Case 748:
+Expected: "analog_out_75": 3.40282e+38
+Got     : "analog_out_75": 3.402823466385289e+38
+
+Test Case 749: Pass
+Test Case 750: Pass
+Test Case 751: Pass
+Test Case 752:
+Expected: "analog_out_79": -348.125
+Got     : "analog_out_79": -348.1246337890625
+
+Test Case 753:
+Expected: "analog_out_79": 474.488
+Got     : "analog_out_79": 474.4876708984375
+
+Test Case 754: Pass
+Test Case 755: Pass
+Test Case 756: Pass
+Test Case 757: Pass
+Test Case 758: Pass
+Test Case 759: Pass
+Test Case 760: Pass
+Test Case 761: Pass
+Test Case 762:
+Expected: "analog_out_79": 8589930000.0
+Got     : "analog_out_79": 8589934592
+
+Test Case 763:
+Expected: "analog_out_79": -8589930000.0
+Got     : "analog_out_79": -8589934592
+
+Test Case 764:
+Expected: "analog_out_79": 3.40282e+38
+Got     : "analog_out_79": 3.402823466385289e+38
+
+Test Case 765: Pass
+Test Case 766: Pass
+Test Case 767: Pass
+Test Case 768:
+Expected: "analog_out_80": -10.1747
+Got     : "analog_out_80": -10.1747265625
+
+Test Case 769:
+Expected: "analog_out_80": 17.2937
+Got     : "analog_out_80": 17.293671875
+
+Test Case 770: Pass
+Test Case 771: Pass
+Test Case 772: Pass
+Test Case 773: Pass
+Test Case 774: Pass
+Test Case 775: Pass
+Test Case 776: Pass
+Test Case 777: Pass
+Test Case 778:
+Expected: "analog_out_80": 8589930000.0
+Got     : "analog_out_80": 8589934592
+
+Test Case 779:
+Expected: "analog_out_80": -8589930000.0
+Got     : "analog_out_80": -8589934592
+
+Test Case 780:
+Expected: "analog_out_80": 3.40282e+35
+Got     : "analog_out_80": 3.402823466385289e+35
+
+Test Case 781: Pass
+Test Case 782: Pass
+Test Case 783: Pass
+Test Case 784:
+Expected: "analog_out_81": -189.649
+Got     : "analog_out_81": -189.6486511230469
+
+Test Case 785:
+Expected: "analog_out_81": 409.042
+Got     : "analog_out_81": 409.0424194335938
+
+Test Case 786: Pass
+Test Case 787: Pass
+Test Case 788: Pass
+Test Case 789: Pass
+Test Case 790: Pass
+Test Case 791: Pass
+Test Case 792: Pass
+Test Case 793: Pass
+Test Case 794:
+Expected: "analog_out_81": 8589930000.0
+Got     : "analog_out_81": 8589934592
+
+Test Case 795:
+Expected: "analog_out_81": -8589930000.0
+Got     : "analog_out_81": -8589934592
+
+Test Case 796:
+Expected: "analog_out_81": 3.40282e+38
+Got     : "analog_out_81": 3.402823466385289e+38
+
+Test Case 797: Pass
+Test Case 798: Pass
+Test Case 799: Pass
+Test Case 800:
+Expected: "analog_out_83": -76.6614
+Got     : "analog_out_83": -76.66142272949219
+
+Test Case 801:
+Expected: "analog_out_83": 61.9955
+Got     : "analog_out_83": 61.99554824829102
+
+Test Case 802: Pass
+Test Case 803: Pass
+Test Case 804: Pass
+Test Case 805: Pass
+Test Case 806: Pass
+Test Case 807: Pass
+Test Case 808: Pass
+Test Case 809: Pass
+Test Case 810:
+Expected: "analog_out_83": 8589930000.0
+Got     : "analog_out_83": 8589934592
+
+Test Case 811:
+Expected: "analog_out_83": -8589930000.0
+Got     : "analog_out_83": -8589934592
+
+Test Case 812:
+Expected: "analog_out_83": 3.40282e+38
+Got     : "analog_out_83": 3.402823466385289e+38
+
+Test Case 813: Pass
+Test Case 814: Pass
+Test Case 815: Pass
+Test Case 816:
+Expected: "analog_out_85": -455.223
+Got     : "analog_out_85": -455.223388671875
+
+Test Case 817:
+Expected: "analog_out_85": 440.208
+Got     : "analog_out_85": 440.2075805664062
+
+Test Case 818: Pass
+Test Case 819: Pass
+Test Case 820: Pass
+Test Case 821: Pass
+Test Case 822: Pass
+Test Case 823: Pass
+Test Case 824: Pass
+Test Case 825: Pass
+Test Case 826:
+Expected: "analog_out_85": 8589930000.0
+Got     : "analog_out_85": 8589934592
+
+Test Case 827:
+Expected: "analog_out_85": -8589930000.0
+Got     : "analog_out_85": -8589934592
+
+Test Case 828:
+Expected: "analog_out_85": 3.40282e+38
+Got     : "analog_out_85": 3.402823466385289e+38
+
+Test Case 829: Pass
+Test Case 830: Pass
+Test Case 831: Pass
+Test Case 832:
+Expected: "analog_out_88": -86.8739
+Got     : "analog_out_88": -86.87390899658203
+
+Test Case 833:
+Expected: "analog_out_88": 420.841
+Got     : "analog_out_88": 420.8407897949219
+
+Test Case 834: Pass
+Test Case 835: Pass
+Test Case 836: Pass
+Test Case 837: Pass
+Test Case 838: Pass
+Test Case 839: Pass
+Test Case 840: Pass
+Test Case 841: Pass
+Test Case 842:
+Expected: "analog_out_88": 8589930000.0
+Got     : "analog_out_88": 8589934592
+
+Test Case 843:
+Expected: "analog_out_88": -8589930000.0
+Got     : "analog_out_88": -8589934592
+
+Test Case 844:
+Expected: "analog_out_88": 3.40282e+38
+Got     : "analog_out_88": 3.402823466385289e+38
+
+Test Case 845: Pass
+Test Case 846: Pass
+Test Case 847: Pass
+Test Case 848:
+Expected: "analog_out_90": -190.728
+Got     : "analog_out_90": -190.727783203125
+
+Test Case 849:
+Expected: "analog_out_90": 333.767
+Got     : "analog_out_90": 333.7667846679688
+
+Test Case 850: Pass
+Test Case 851: Pass
+Test Case 852: Pass
+Test Case 853: Pass
+Test Case 854: Pass
+Test Case 855: Pass
+Test Case 856: Pass
+Test Case 857: Pass
+Test Case 858:
+Expected: "analog_out_90": 8589930000.0
+Got     : "analog_out_90": 8589934592
+
+Test Case 859:
+Expected: "analog_out_90": -8589930000.0
+Got     : "analog_out_90": -8589934592
+
+Test Case 860:
+Expected: "analog_out_90": 3.40282e+38
+Got     : "analog_out_90": 3.402823466385289e+38
+
+Test Case 861: Pass
+Test Case 862: Pass
+Test Case 863: Pass
+Test Case 864:
+Expected: "analog_out_91": -218.49
+Got     : "analog_out_91": -218.4903259277344
+
+Test Case 865:
+Expected: "analog_out_91": 282.191
+Got     : "analog_out_91": 282.1912536621094
+
+Test Case 866: Pass
+Test Case 867: Pass
+Test Case 868: Pass
+Test Case 869: Pass
+Test Case 870: Pass
+Test Case 871: Pass
+Test Case 872: Pass
+Test Case 873: Pass
+Test Case 874:
+Expected: "analog_out_91": 8589930000.0
+Got     : "analog_out_91": 8589934592
+
+Test Case 875:
+Expected: "analog_out_91": -8589930000.0
+Got     : "analog_out_91": -8589934592
+
+Test Case 876:
+Expected: "analog_out_91": 3.40282e+38
+Got     : "analog_out_91": 3.402823466385289e+38
+
+Test Case 877: Pass
+Test Case 878: Pass
+Test Case 879: Pass
+Test Case 880:
+Expected: "analog_out_93": -436.048
+Got     : "analog_out_93": -436.0484008789062
+
+Test Case 881:
+Expected: "analog_out_93": 151.327
+Got     : "analog_out_93": 151.326904296875
+
+Test Case 882: Pass
+Test Case 883: Pass
+Test Case 884: Pass
+Test Case 885: Pass
+Test Case 886: Pass
+Test Case 887: Pass
+Test Case 888: Pass
+Test Case 889: Pass
+Test Case 890:
+Expected: "analog_out_93": 8589930000.0
+Got     : "analog_out_93": 8589934592
+
+Test Case 891:
+Expected: "analog_out_93": -8589930000.0
+Got     : "analog_out_93": -8589934592
+
+Test Case 892:
+Expected: "analog_out_93": 3.40282e+38
+Got     : "analog_out_93": 3.402823466385289e+38
+
+Test Case 893: Pass
+Test Case 894: Pass
+Test Case 895: Pass
+Test Case 896:
+Expected: "analog_out_95": -147.249
+Got     : "analog_out_95": -147.2485198974609
+
+Test Case 897:
+Expected: "analog_out_95": 4.98023
+Got     : "analog_out_95": 4.980229377746582
+
+Test Case 898: Pass
+Test Case 899: Pass
+Test Case 900: Pass
+Test Case 901: Pass
+Test Case 902: Pass
+Test Case 903: Pass
+Test Case 904: Pass
+Test Case 905: Pass
+Test Case 906:
+Expected: "analog_out_95": 8589930000.0
+Got     : "analog_out_95": 8589934592
+
+Test Case 907:
+Expected: "analog_out_95": -8589930000.0
+Got     : "analog_out_95": -8589934592
+
+Test Case 908:
+Expected: "analog_out_95": 3.40282e+38
+Got     : "analog_out_95": 3.402823466385289e+38
+
+Test Case 909: Pass
+Test Case 910: Pass
+Test Case 911: Pass
+Test Case 912:
+Expected: "analog_out_96": -62.1168
+Got     : "analog_out_96": -62.1168098449707
+
+Test Case 913:
+Expected: "analog_out_96": 456.293
+Got     : "analog_out_96": 456.2929992675781
+
+Test Case 914: Pass
+Test Case 915: Pass
+Test Case 916: Pass
+Test Case 917: Pass
+Test Case 918: Pass
+Test Case 919: Pass
+Test Case 920: Pass
+Test Case 921: Pass
+Test Case 922:
+Expected: "analog_out_96": 8589930000.0
+Got     : "analog_out_96": 8589934592
+
+Test Case 923:
+Expected: "analog_out_96": -8589930000.0
+Got     : "analog_out_96": -8589934592
+
+Test Case 924:
+Expected: "analog_out_96": 3.40282e+38
+Got     : "analog_out_96": 3.402823466385289e+38
+
+Test Case 925: Pass
+Test Case 926: Pass
+Test Case 927: Pass
+Test Case 928:
+Expected: "analog_out_97": -177.909
+Got     : "analog_out_97": -177.9092407226562
+
+Test Case 929:
+Expected: "analog_out_97": 363.561
+Got     : "analog_out_97": 363.5606384277344
+
+Test Case 930: Pass
+Test Case 931: Pass
+Test Case 932: Pass
+Test Case 933: Pass
+Test Case 934: Pass
+Test Case 935: Pass
+Test Case 936: Pass
+Test Case 937: Pass
+Test Case 938:
+Expected: "analog_out_97": 8589930000.0
+Got     : "analog_out_97": 8589934592
+
+Test Case 939:
+Expected: "analog_out_97": -8589930000.0
+Got     : "analog_out_97": -8589934592
+
+Test Case 940:
+Expected: "analog_out_97": 3.40282e+38
+Got     : "analog_out_97": 3.402823466385289e+38
+
+Test Case 941: Pass
+Test Case 942: Pass
+Test Case 943: Pass
+Test Case 944:
+Expected: "analog_out_98": -344.241
+Got     : "analog_out_98": -344.2406616210938
+
+Test Case 945:
+Expected: "analog_out_98": 343.13
+Got     : "analog_out_98": 343.129638671875
+
+Test Case 946: Pass
+Test Case 947: Pass
+Test Case 948: Pass
+Test Case 949: Pass
+Test Case 950: Pass
+Test Case 951: Pass
+Test Case 952: Pass
+Test Case 953: Pass
+Test Case 954:
+Expected: "analog_out_98": 8589930000.0
+Got     : "analog_out_98": 8589934592
+
+Test Case 955:
+Expected: "analog_out_98": -8589930000.0
+Got     : "analog_out_98": -8589934592
+
+Test Case 956:
+Expected: "analog_out_98": 3.40282e+38
+Got     : "analog_out_98": 3.402823466385289e+38
+
+Test Case 957: Pass
+Test Case 958: Pass
+Test Case 959: Pass
+Test Case 960:
+Expected: "analog_out_99": -424.191
+Got     : "analog_out_99": -424.1910705566406
+
+Test Case 961:
+Expected: "analog_out_99": 456.927
+Got     : "analog_out_99": 456.9271545410156
+
+Test Case 962: Pass
+Test Case 963: Pass
+Test Case 964: Pass
+Test Case 965: Pass
+Test Case 966: Pass
+Test Case 967: Pass
+Test Case 968: Pass
+Test Case 969: Pass
+Test Case 970:
+Expected: "analog_out_99": 8589930000.0
+Got     : "analog_out_99": 8589934592
+
+Test Case 971:
+Expected: "analog_out_99": -8589930000.0
+Got     : "analog_out_99": -8589934592
+
+Test Case 972:
+Expected: "analog_out_99": 3.40282e+38
+Got     : "analog_out_99": 3.402823466385289e+38
+
+Test Case 973: Pass
+Test Case 974: Pass
+Test Case 975: Pass
+Test Case 976:
+Expected: "analog_out_100": -231.138
+Got     : "analog_out_100": -231.1384887695312
+
+Test Case 977:
+Expected: "analog_out_100": 194.39
+Got     : "analog_out_100": 194.3896026611328
+
+Test Case 978: Pass
+Test Case 979: Pass
+Test Case 980: Pass
+Test Case 981: Pass
+Test Case 982: Pass
+Test Case 983: Pass
+Test Case 984: Pass
+Test Case 985: Pass
+Test Case 986:
+Expected: "analog_out_100": 8589930000.0
+Got     : "analog_out_100": 8589934592
+
+Test Case 987:
+Expected: "analog_out_100": -8589930000.0
+Got     : "analog_out_100": -8589934592
+
+Test Case 988:
+Expected: "analog_out_100": 3.40282e+38
+Got     : "analog_out_100": 3.402823466385289e+38
+
+Test Case 989: Pass
+Test Case 990: Pass
+Test Case 991: Pass
+Test Case 992:
+Expected: "analog_out_101": -469.277
+Got     : "analog_out_101": -469.2772521972656
+
+Test Case 993:
+Expected: "analog_out_101": 187.076
+Got     : "analog_out_101": 187.0759124755859
+
+Test Case 994: Pass
+Test Case 995: Pass
+Test Case 996: Pass
+Test Case 997: Pass
+Test Case 998: Pass
+Test Case 999: Pass
+Test Case 1000: Pass
+Test Case 1001: Pass
+Test Case 1002:
+Expected: "analog_out_101": 8589930000.0
+Got     : "analog_out_101": 8589934592
+
+Test Case 1003:
+Expected: "analog_out_101": -8589930000.0
+Got     : "analog_out_101": -8589934592
+
+Test Case 1004:
+Expected: "analog_out_101": 3.40282e+38
+Got     : "analog_out_101": 3.402823466385289e+38
+
+Test Case 1005: Pass
+Test Case 1006: Pass
+Test Case 1007: Pass
+Test Case 1008: Pass
+Test Case 1009: Pass
+Test Case 1010: Pass
+Test Case 1011: Pass
+Test Case 1012: Pass
+Test Case 1013: Pass
+Test Case 1014: Pass
+Test Case 1015: Pass
+Test Case 1016: Pass
+Test Case 1017: Pass
+Test Case 1018: Pass
+Test Case 1019: Pass
+Test Case 1020: Pass
+Test Case 1021: Pass
+Test Case 1022: Pass
+Test Case 1023: Pass
+Test Case 1024: Pass
+Test Case 1025: Pass
+Test Case 1026: Pass
+Test Case 1027: Pass
+Test Case 1028: Pass
+Test Case 1029: Pass
+Test Case 1030: Pass
+Test Case 1031: Pass
+Test Case 1032: Pass
+Test Case 1033: Pass
+Test Case 1034: Pass
+Test Case 1035: Pass
+Test Case 1036: Pass
+Test Case 1037: Pass
+Test Case 1038: Pass
+Test Case 1039: Pass
+Test Case 1040:
+Expected: "analog_out_104": -7.71702
+Got     : "analog_out_104": -7.717019081115723
+
+Test Case 1041:
+Expected: "analog_out_104": 502.874
+Got     : "analog_out_104": 502.8740234375
+
+Test Case 1042: Pass
+Test Case 1043: Pass
+Test Case 1044: Pass
+Test Case 1045: Pass
+Test Case 1046: Pass
+Test Case 1047: Pass
+Test Case 1048: Pass
+Test Case 1049: Pass
+Test Case 1050:
+Expected: "analog_out_104": 8589930000.0
+Got     : "analog_out_104": 8589934592
+
+Test Case 1051:
+Expected: "analog_out_104": -8589930000.0
+Got     : "analog_out_104": -8589934592
+
+Test Case 1052:
+Expected: "analog_out_104": 3.40282e+38
+Got     : "analog_out_104": 3.402823466385289e+38
+
+Test Case 1053: Pass
+Test Case 1054: Pass
+Test Case 1055: Pass
+Test Case 1056: Pass
+Test Case 1057: Pass
+Test Case 1058: Pass
+Test Case 1059: Pass
+Test Case 1060:
+Expected: "analog_out_105": 2.2250738585072014e-308
+Got     : "analog_out_105": 0
+
+Test Case 1061: Pass
+Test Case 1062:
+Expected: "analog_out_105": 2.2250738585072014e-308
+Got     : "analog_out_105": 0
+
+Test Case 1063: Pass
+Test Case 1064: Pass
+Test Case 1065: Pass
+Test Case 1066: Pass
+Test Case 1067: Pass
+Test Case 1068: Pass
+Test Case 1069: Pass
+Test Case 1070: Pass
+Test Case 1071: Pass
+Test Case 1072: Pass
+Test Case 1073: Pass
+Test Case 1074: Pass
+Test Case 1075: Pass
+Test Case 1076: Pass
+Test Case 1077: Pass
+Test Case 1078: Pass
+Test Case 1079: Pass
+Test Case 1080: Pass
+Test Case 1081: Pass
+Test Case 1082: Pass
+Test Case 1083: Pass
+Test Case 1084: Pass
+Test Case 1085: Pass
+Test Case 1086: Pass
+Test Case 1087: Pass
+Test Case 1088: Pass
+Test Case 1089: Pass
+Test Case 1090: Pass
+Test Case 1091: Pass
+Test Case 1092: Pass
+Test Case 1093: Pass
+Test Case 1094: Pass
+Test Case 1095: Pass
+Test Case 1096: Pass
+Test Case 1097: Pass
+Test Case 1098: Pass
+Test Case 1099: Pass
+Test Case 1100: Pass
+Test Case 1101: Pass
+Test Case 1102: Pass
+Test Case 1103: Pass
+Test Case 1104: Pass
+Test Case 1105: Pass
+Test Case 1106: Pass
+Test Case 1107: Pass
+Test Case 1108: Pass
+Test Case 1109: Pass
+Test Case 1110: Pass
+Test Case 1111: Pass
+Test Case 1112: Pass
+Test Case 1113: Pass
+Test Case 1114: Pass
+Test Case 1115: Pass
+Test Case 1116: Pass
+Test Case 1117: Pass
+Test Case 1118: Pass
+Test Case 1119: Pass
+Test Case 1120: Pass
+Test Case 1121: Pass
+Test Case 1122: Pass
+Test Case 1123: Pass
+Test Case 1124: Pass
+Test Case 1125: Pass
+Test Case 1126: Pass
+Test Case 1127: Pass
+Test Case 1128: Pass
+Test Case 1129: Pass
+Test Case 1130: Pass
+Test Case 1131: Pass
+Test Case 1132: Pass
+Test Case 1133: Pass
+Test Case 1134: Pass
+Test Case 1135: Pass
+Test Case 1136: Pass
+Test Case 1137: Pass
+Test Case 1138: Pass
+Test Case 1139: Pass
+Test Case 1140: Pass
+Test Case 1141: Pass
+Test Case 1142: Pass
+Test Case 1143: Pass
+Test Case 1144: Pass
+Test Case 1145: Pass
+Test Case 1146: Pass
+Test Case 1147: Pass
+Test Case 1148: Pass
+Test Case 1149: Pass
+Test Case 1150: Pass
+Test Case 1151: Pass
+Test Case 1152: Pass
+Test Case 1153: Pass
+Test Case 1154: Pass
+Test Case 1155: Pass
+Test Case 1156: Pass
+Test Case 1157: Pass
+Test Case 1158: Pass
+Test Case 1159: Pass
+Test Case 1160: Pass
+Test Case 1161: Pass
+Test Case 1162: Pass
+Test Case 1163: Pass
+Test Case 1164: Pass
+Test Case 1165: Pass
+Test Case 1166: Pass
+Test Case 1167: Pass
+Test Case 1168: Pass
+Test Case 1169: Pass
+Test Case 1170: Pass
+Test Case 1171: Pass
+Test Case 1172: Pass
+Test Case 1173: Pass
+Test Case 1174: Pass
+Test Case 1175: Pass
+Test Case 1176: Pass
+Test Case 1177: Pass
+Test Case 1178: Pass
+Test Case 1179: Pass
+Test Case 1180: Pass
+Test Case 1181: Pass
+Test Case 1182: Pass
+Test Case 1183: Pass
+Test Case 1184: Pass
+Test Case 1185: Pass
+Test Case 1186: Pass
+Test Case 1187: Pass
+Test Case 1188: Pass
+Test Case 1189: Pass
+Test Case 1190: Pass
+Test Case 1191: Pass
+Test Case 1192: Pass
+Test Case 1193: Pass
+Test Case 1194: Pass
+Test Case 1195: Pass
+Test Case 1196: Pass
+Test Case 1197: Pass
+Test Case 1198: Pass
+Test Case 1199: Pass
+Test Case 1200: Pass
+Test Case 1201: Pass
+Test Case 1202: Pass
+Test Case 1203: Pass
+Test Case 1204: Pass
+Test Case 1205: Pass
+Test Case 1206: Pass
+Test Case 1207: Pass
+Test Case 1208: Pass
+Test Case 1209: Pass
+Test Case 1210: Pass
+Test Case 1211: Pass
+Test Case 1212: Pass
+Test Case 1213: Pass
+Test Case 1214: Pass
+Test Case 1215: Pass
+Test Case 1216: Pass
+Test Case 1217: Pass
+Test Case 1218: Pass
+Test Case 1219: Pass
+Test Case 1220: Pass
+Test Case 1221: Pass
+Test Case 1222: Pass
+Test Case 1223: Pass
+Test Case 1224: Pass
+Test Case 1225: Pass
+Test Case 1226: Pass
+Test Case 1227: Pass
+Test Case 1228: Pass
+Test Case 1229: Pass
+Test Case 1230: Pass
+Test Case 1231: Pass
+Test Case 1232: Pass
+Test Case 1233: Pass
+Test Case 1234: Pass
+Test Case 1235: Pass
+Test Case 1236: Pass
+Test Case 1237: Pass
+Test Case 1238: Pass
+Test Case 1239: Pass
+Test Case 1240: Pass
+Test Case 1241: Pass
+Test Case 1242: Pass
+Test Case 1243: Pass
+Test Case 1244: Pass
+Test Case 1245: Pass
+Test Case 1246: Pass
+Test Case 1247: Pass
+Test Case 1248: Pass
+Test Case 1249: Pass
+Test Case 1250: Pass
+Test Case 1251: Pass
+Test Case 1252: Pass
+Test Case 1253: Pass
+Test Case 1254: Pass
+Test Case 1255: Pass
+Test Case 1256: Pass
+Test Case 1257: Pass
+Test Case 1258: Pass
+Test Case 1259: Pass
+Test Case 1260: Pass
+Test Case 1261: Pass
+Test Case 1262: Pass
+Test Case 1263: Pass
+Test Case 1264: Pass
+Test Case 1265: Pass
+Test Case 1266: Pass
+Test Case 1267: Pass
+Test Case 1268: Pass
+Test Case 1269: Pass
+Test Case 1270: Pass
+Test Case 1271: Pass
+Test Case 1272: Pass
+Test Case 1273: Pass
+Test Case 1274: Pass
+Test Case 1275: Pass
+Test Case 1276: Pass
+Test Case 1277: Pass
+Test Case 1278: Pass
+Test Case 1279: Pass
+Test Case 1280: Pass
+Test Case 1281: Pass
+Test Case 1282: Pass
+Test Case 1283: Pass
+Test Case 1284: Pass
+Test Case 1285: Pass
+Test Case 1286: Pass
+Test Case 1287: Pass
+Test Case 1288: Pass
+Test Case 1289: Pass
+Test Case 1290: Pass
+Test Case 1291: Pass
+Test Case 1292: Pass
+Test Case 1293: Pass
+Test Case 1294: Pass
+Test Case 1295: Pass
+Test Case 1296: Pass
+Test Case 1297: Pass
+Test Case 1298: Pass
+Test Case 1299: Pass
+Test Case 1300: Pass
+Test Case 1301: Pass
+Test Case 1302: Pass
+Test Case 1303: Pass
+Test Case 1304: Pass
+Test Case 1305: Pass
+Test Case 1306: Pass
+Test Case 1307: Pass
+Test Case 1308: Pass
+Test Case 1309: Pass
+Test Case 1310: Pass
+Test Case 1311: Pass
+Test Case 1312: Pass
+Test Case 1313: Pass
+Test Case 1314: Pass
+Test Case 1315: Pass
+Test Case 1316: Pass
+Test Case 1317: Pass
+Test Case 1318: Pass
+Test Case 1319: Pass
+Test Case 1320: Pass
+Test Case 1321: Pass
+Test Case 1322: Pass
+Test Case 1323: Pass
+Test Case 1324: Pass
+Test Case 1325: Pass
+Test Case 1326: Pass
+Test Case 1327: Pass
+Test Case 1328: Pass
+Test Case 1329: Pass
+Test Case 1330: Pass
+Test Case 1331: Pass
+Test Case 1332: Pass
+Test Case 1333: Pass
+Test Case 1334: Pass
+Test Case 1335: Pass
+Test Case 1336: Pass
+Test Case 1337: Pass
+Test Case 1338: Pass
+Test Case 1339: Pass
+Test Case 1340: Pass
+Test Case 1341: Pass
+Test Case 1342: Pass
+Test Case 1343: Pass
+Test Case 1344: Pass
+Test Case 1345: Pass
+Test Case 1346: Pass
+Test Case 1347: Pass
+Test Case 1348: Pass
+Test Case 1349: Pass
+Test Case 1350: Pass
+Test Case 1351: Pass
+Test Case 1352: Pass
+Test Case 1353: Pass
+Test Case 1354: Pass
+Test Case 1355: Pass
+Test Case 1356: Pass
+Test Case 1357: Pass
+Test Case 1358: Pass
+Test Case 1359: Pass
+Test Case 1360: Pass
+Test Case 1361: Pass
+Test Case 1362: Pass
+Test Case 1363: Pass
+Test Case 1364: Pass
+Test Case 1365: Pass
+Test Case 1366: Pass
+Test Case 1367: Pass
+Test Case 1368: Pass
+Test Case 1369: Pass
+Test Case 1370: Pass
+Test Case 1371: Pass
+Test Case 1372: Pass
+Test Case 1373: Pass
+Test Case 1374: Pass
+Test Case 1375: Pass
+Test Case 1376: Pass
+Test Case 1377: Pass
+Test Case 1378: Pass
+Test Case 1379: Pass
+Test Case 1380: Pass
+Test Case 1381: Pass
+Test Case 1382: Pass
+Test Case 1383: Pass
+Test Case 1384: Pass
+Test Case 1385: Pass
+Test Case 1386: Pass
+Test Case 1387: Pass
+Test Case 1388: Pass
+Test Case 1389: Pass
+Test Case 1390: Pass
+Test Case 1391: Pass
+Test Case 1392: Pass
+Test Case 1393: Pass
+Test Case 1394: Pass
+Test Case 1395: Pass
+Test Case 1396: Pass
+Test Case 1397: Pass
+Test Case 1398: Pass
+Test Case 1399: Pass
+Test Case 1400: Pass
+Test Case 1401: Pass
+Test Case 1402: Pass
+Test Case 1403: Pass
+Test Case 1404: Pass
+Test Case 1405: Pass
+Test Case 1406: Pass
+Test Case 1407: Pass
+Test Case 1408: Pass
+Test Case 1409: Pass
+Test Case 1410: Pass
+Test Case 1411: Pass
+Test Case 1412: Pass
+Test Case 1413: Pass
+Test Case 1414: Pass
+Test Case 1415: Pass
+Test Case 1416: Pass
+Test Case 1417: Pass
+Test Case 1418: Pass
+Test Case 1419: Pass
+Test Case 1420: Pass
+Test Case 1421: Pass
+Test Case 1422: Pass
+Test Case 1423: Pass
+Test Case 1424: Pass
+Test Case 1425: Pass
+Test Case 1426: Pass
+Test Case 1427: Pass
+Test Case 1428: Pass
+Test Case 1429: Pass
+Test Case 1430: Pass
+Test Case 1431: Pass
+Test Case 1432: Pass
+Test Case 1433: Pass
+Test Case 1434: Pass
+Test Case 1435: Pass
+Test Case 1436: Pass
+Test Case 1437: Pass
+Test Case 1438: Pass
+Test Case 1439: Pass
+Test Case 1440: Pass
+Test Case 1441: Pass
+Test Case 1442: Pass
+Test Case 1443: Pass
+Test Case 1444: Pass
+Test Case 1445: Pass
+Test Case 1446: Pass
+Test Case 1447: Pass
+Test Case 1448: Pass
+Test Case 1449: Pass
+Test Case 1450: Pass
+Test Case 1451: Pass
+Test Case 1452: Pass
+Test Case 1453: Pass
+Test Case 1454: Pass
+Test Case 1455: Pass
+Test Case 1456: Pass
+Test Case 1457: Pass
+Test Case 1458: Pass
+Test Case 1459: Pass
+Test Case 1460: Pass
+Test Case 1461: Pass
+Test Case 1462: Pass
+Test Case 1463: Pass
+Test Case 1464: Pass
+Test Case 1465: Pass
+Test Case 1466: Pass
+Test Case 1467: Pass
+Test Case 1468: Pass
+Test Case 1469: Pass
+Test Case 1470: Pass
+Test Case 1471: Pass
+Test Case 1472: Pass
+Test Case 1473: Pass
+Test Case 1474: Pass
+Test Case 1475: Pass
+Test Case 1476: Pass
+Test Case 1477: Pass
+Test Case 1478: Pass
+Test Case 1479: Pass
+Test Case 1480: Pass
+Test Case 1481: Pass
+Test Case 1482: Pass
+Test Case 1483: Pass
+Test Case 1484: Pass
+Test Case 1485: Pass
+Test Case 1486: Pass
+Test Case 1487: Pass
+Test Case 1488: Pass
+Test Case 1489: Pass
+Test Case 1490: Pass
+Test Case 1491: Pass
+Test Case 1492: Pass
+Test Case 1493: Pass
+Test Case 1494: Pass
+Test Case 1495: Pass
+Test Case 1496: Pass
+Test Case 1497: Pass
+Test Case 1498: Pass
+Test Case 1499: Pass
+Test Case 1500: Pass
+Test Case 1501: Pass
+Test Case 1502: Pass
+Test Case 1503: Pass
+Test Case 1504: Pass
+Test Case 1505: Pass
+Test Case 1506: Pass
+Test Case 1507: Pass
+Test Case 1508: Pass
+Test Case 1509: Pass
+Test Case 1510: Pass
+Test Case 1511: Pass
+Test Case 1512: Pass
+Test Case 1513: Pass
+Test Case 1514: Pass
+Test Case 1515: Pass
+Test Case 1516: Pass
+Test Case 1517: Pass
+Test Case 1518: Pass
+Test Case 1519: Pass
+Test Case 1520: Pass
+Test Case 1521: Pass
+Test Case 1522: Pass
+Test Case 1523: Pass
+Test Case 1524: Pass
+Test Case 1525: Pass
+Test Case 1526: Pass
+Test Case 1527: Pass
+Test Case 1528: Pass
+Test Case 1529: Pass
+Test Case 1530: Pass
+Test Case 1531: Pass
+Test Case 1532: Pass
+Test Case 1533: Pass
+Test Case 1534: Pass
+Test Case 1535: Pass
+Test Case 1536: Pass
+Test Case 1537: Pass
+Test Case 1538: Pass
+Test Case 1539: Pass
+Test Case 1540: Pass
+Test Case 1541: Pass
+Test Case 1542: Pass
+Test Case 1543: Pass
+Test Case 1544: Pass
+Test Case 1545: Pass
+Test Case 1546: Pass
+Test Case 1547: Pass
+Test Case 1548: Pass
+Test Case 1549: Pass
+Test Case 1550: Pass
+Test Case 1551: Pass
+Test Case 1552: Pass
+Test Case 1553: Pass
+Test Case 1554: Pass
+Test Case 1555: Pass
+Test Case 1556: Pass
+Test Case 1557: Pass
+Test Case 1558: Pass
+Test Case 1559: Pass
+Test Case 1560: Pass
+Test Case 1561: Pass
+Test Case 1562: Pass
+Test Case 1563: Pass
+Test Case 1564: Pass
+Test Case 1565: Pass
+Test Case 1566: Pass
+Test Case 1567: Pass
+Test Case 1568: Pass
+Test Case 1569: Pass
+Test Case 1570: Pass
+Test Case 1571: Pass
+Test Case 1572: Pass
+Test Case 1573: Pass
+Test Case 1574: Pass
+Test Case 1575: Pass
+Test Case 1576: Pass
+Test Case 1577: Pass
+Test Case 1578: Pass
+Test Case 1579: Pass
+Test Case 1580: Pass
+Test Case 1581: Pass
+Test Case 1582: Pass
+Test Case 1583: Pass
+Test Case 1584: Pass
+Test Case 1585: Pass
+Test Case 1586: Pass
+Test Case 1587: Pass
+Test Case 1588: Pass
+Test Case 1589: Pass
+Test Case 1590: Pass
+Test Case 1591: Pass
+Test Case 1592: Pass
+Test Case 1593: Pass
+Test Case 1594: Pass
+Test Case 1595: Pass
+Test Case 1596: Pass
+Test Case 1597: Pass
+Test Case 1598: Pass
+Test Case 1599: Pass
+Test Case 1600: Pass
+Test Case 1601: Pass
+Test Case 1602: Pass
+Test Case 1603: Pass
+Test Case 1604: Pass
+Test Case 1605: Pass
+Test Case 1606: Pass
+Test Case 1607: Pass
+Test Case 1608: Pass
+Test Case 1609: Pass
+Test Case 1610: Pass
+Test Case 1611: Pass
+Test Case 1612: Pass
+Test Case 1613: Pass
+Test Case 1614: Pass
+Test Case 1615: Pass
+Test Case 1616: Pass
+Test Case 1617: Pass
+Test Case 1618: Pass
+Test Case 1619: Pass
+Test Case 1620: Pass
+Test Case 1621: Pass
+Test Case 1622: Pass
+Test Case 1623: Pass
+Test Case 1624: Pass
+Test Case 1625: Pass
+Test Case 1626: Pass
+Test Case 1627: Pass
+Test Case 1628: Pass
+Test Case 1629: Pass
+Test Case 1630: Pass
+Test Case 1631: Pass
+Test Case 1632: Pass
+Test Case 1633: Pass
+Test Case 1634: Pass
+Test Case 1635: Pass
+Test Case 1636: Pass
+Test Case 1637: Pass
+Test Case 1638: Pass
+Test Case 1639: Pass
+Test Case 1640: Pass
+Test Case 1641: Pass
+Test Case 1642: Pass
+Test Case 1643: Pass
+Test Case 1644: Pass
+Test Case 1645: Pass
+Test Case 1646: Pass
+Test Case 1647: Pass
+Test Case 1648: Pass
+Test Case 1649: Pass
+Test Case 1650: Pass
+Test Case 1651: Pass
+Test Case 1652: Pass
+Test Case 1653: Pass
+Test Case 1654: Pass
+Test Case 1655: Pass
+Test Case 1656: Pass
+Test Case 1657: Pass
+Test Case 1658: Pass
+Test Case 1659: Pass
+Test Case 1660: Pass
+Test Case 1661: Pass
+Test Case 1662: Pass
+Test Case 1663: Pass
+Test Case 1664: Pass
+Test Case 1665: Pass
+Test Case 1666: Pass
+Test Case 1667: Pass
+Test Case 1668: Pass
+Test Case 1669: Pass
+Test Case 1670: Pass
+Test Case 1671: Pass
+Test Case 1672: Pass
+Test Case 1673: Pass
+Test Case 1674: Pass
+Test Case 1675: Pass
+Test Case 1676: Pass
+Test Case 1677: Pass
+Test Case 1678: Pass
+Test Case 1679: Pass
+
+
+Passed: 2081
+Failed: 239
+Failed: ]
+
+Complete messages: 9785
+Incomplete messages: 0
+
+Time between pubs
+/base_uri_client/test_client:
+	Average: 101.2
+	Min: 97.352
+	Max: 174.263
+/components/test:
+	Average: 101.2
+	Min: 96.186
+	Max: 174.042
+/components/test_naked:
+	Average: 101.2
+	Min: 95.72
+	Max: 174.148
+/components/test_clothed:
+	Average: 101.2
+	Min: 95.631
+	Max: 174.149
+/components/test_full:
+	Average: 101.2
+	Min: 95.299
+	Max: 174.193

@@ -1,0 +1,25 @@
+[2023-12-07] [19:32:59.704] [0.000263713s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] build: 433
+[2023-12-07] [19:32:59.704] [0.000347694s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] commit: 7ef03dd
+[2023-12-07] [19:32:59.704] [0.000362016s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] tag: 11.3.0-beta.2
+[2023-12-07] [19:32:59.710] [0.00659983s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] Connection IP: [172.17.0.3]. Port: [502]
+[2023-12-07] [19:32:59.710] [0.0066518s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] Heartbeat disabled
+[2023-12-07] [19:32:59.710] [0.00669186s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] Register size gap at Offset [0]: [normal_1]
+[2023-12-07] [19:32:59.710] [0.00672436s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] Register size gap at Offset [3]: [scaled_1]
+[2023-12-07] [19:32:59.710] [0.00676724s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] Register size gap at Offset [0]: [input_normal_1]
+[2023-12-07] [19:32:59.710] [0.00679836s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] Register size gap at Offset [3]: [input_scaled_1]
+[2023-12-07] [19:32:59.710] [0.00683775s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] Pubs found:
+[2023-12-07] [19:32:59.710] [0.00688969s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] 	pub_components_sel_3530_slow_rtac     Frequency: 0.200000 seconds     Offset: 0.000000 seconds
+[2023-12-07] [19:32:59.710] [0.00693942s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] Subs found:
+[2023-12-07] [19:32:59.710] [0.00697512s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] 	/components/sel_3530_slow_rtac
+[2023-12-07] [19:32:59.711] [0.00768428s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] IO_Fims create tId [0.000738]
+[2023-12-07] [19:32:59.811] [0.107551s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] IO Threads starting at 0.100553 
+[2023-12-07] [19:32:59.811] [0.107932s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] thread_id 0 starting at 0.100974 
+[2023-12-07] [19:32:59.812] [0.108455s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] All io_threads running at 0.101491 
+[2023-12-07] [19:32:59.819] [0.115157s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] Modbus Client [SEL_3530_RTAC] Thread id 1 Connecting to[172.17.0.3] on port [502]
+[2023-12-07] [19:32:59.819] [0.115373s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] Modbus Client [SEL_3530_RTAC] Thread  id 1 successfully connected to [172.17.0.3] on port [502]
+[2023-12-07] [19:33:01.711] [2.0077s ] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] Creating new pubGroup key [pub_components_sel_3530_slow_rtac]
+[2023-12-07] [19:36:19.868] [200.164s] [PID 24] [old_sel_3530_slow_client] [[32minfo    [m] IO_Fims create tId [200.157411]
+[*** LOG ERROR #0001 ***] [2023-12-07 19:36:19] [old_sel_3530_slow_client] {invalid format string}
+[2023-12-07] [19:36:19.954] [200.251s] [PID 24] [old_sel_3530_slow_client] [[31m[1merror   [m] input body [{"normal_1":some_random_string}}] 
+[2023-12-07] [19:36:19.954] [200.251s] [PID 24] [old_sel_3530_slow_client] [[31m[1merror   [m] parser error [The JSON document has an improper structure: missing or superfluous commas, braces, missing keys, etc.] 
+runProcessFims "SEL_3530_RTAC": failed with a message len 100000 

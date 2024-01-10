@@ -1,5 +1,6 @@
 from pytest_cases import parametrize, fixture
 
+from pytests.fims import no_fims_msgs
 from ..pytest_framework import Site_Controller_Instance
 from ..assertion_framework import Assertion_Type, Flex_Assertion
 from ..pytest_steps import Setup, Steps, Teardown
@@ -74,8 +75,8 @@ def generate_alerts_config():
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/feeders/feed_1/is_alarmed", False, wait_secs=.1),
         ],
         post_lambda=[
-            Site_Controller_Instance.get_instance().mig.upload(generate_alerts_config()),
-            Site_Controller_Instance.get_instance().restart_site_controller
+            lambda: Site_Controller_Instance.get_instance().mig.upload(generate_alerts_config()),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller()
         ]
 
     ),
@@ -90,7 +91,11 @@ def generate_alerts_config():
                            [{'name': 'Asset Alarm Detected', 'return_value': 1}], pattern="active_alarms.options"),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/ess_num_alarmed", 1, wait_secs=.1),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/ess_total_alarms", 1, wait_secs=.1),
+        ],
+        post_lambda=[
+            lambda: no_fims_msgs("/events", "pub")
         ]
+
     ),
 
     # There are 2 "alarming" machines which == ess_num_alarmed
@@ -101,6 +106,9 @@ def generate_alerts_config():
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/ess_num_alarmed", 1, wait_secs=.1),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/ess_total_alarms", 1, wait_secs=.1),
+        ],
+        post_lambda=[
+            lambda: no_fims_msgs("/events", "pub")
         ]
     ),
 
@@ -114,6 +122,9 @@ def generate_alerts_config():
                            [{"name": "Site Sequence Fault Detected", "return_value": 1}], pattern="active_faults.options"),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/ess_num_faulted", 1, wait_secs=.1),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/ess_total_faults", 1, wait_secs=.1),
+        ],
+        post_lambda=[
+            lambda: no_fims_msgs("/events", "pub")
         ]
     ),
 
@@ -125,6 +136,9 @@ def generate_alerts_config():
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/ess_num_faulted", 1, wait_secs=.1),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/ess_total_faults", 1, wait_secs=.1),
+        ],
+        post_lambda=[
+            lambda: no_fims_msgs("/events", "pub")
         ]
     ),
 
@@ -135,6 +149,9 @@ def generate_alerts_config():
         }],
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/summary/solar_num_faulted", 1),
+        ],
+        post_lambda=[
+            lambda: no_fims_msgs("/events", "pub")
         ]
     ),
     Steps(
@@ -143,6 +160,9 @@ def generate_alerts_config():
         }],
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/summary/solar_num_faulted", 2),
+        ],
+        post_lambda=[
+            lambda: no_fims_msgs("/events", "pub")
         ]
     ),
 
@@ -170,7 +190,7 @@ def generate_alerts_config():
         Flex_Assertion(Assertion_Type.approx_eq, "/site/operation/running_status_flag", True, wait_secs=8),
         post_lambda=[
             lambda: Site_Controller_Instance.get_instance().mig.download(generate_alerts_config()),
-            Site_Controller_Instance.get_instance().restart_site_controller
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller()
         ]
     )
 ])

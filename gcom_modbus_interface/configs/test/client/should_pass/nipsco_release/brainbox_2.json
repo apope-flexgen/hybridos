@@ -1,0 +1,76 @@
+{
+    "system": 
+    {
+        "id": "brainbox_2",
+        "ip_address": "192.168.1.41",
+        "port": 502,
+        "frequency": 500
+    },
+    "registers": 
+    [
+        {
+            "type": "Discrete Inputs",
+            "starting_offset": 0,
+            "number_of_registers": 8,
+            "map": 
+            [
+                {
+                  "id": "limit_bypass",
+                  "offset": 0
+                },
+                {
+                  "id": "start_soc",
+                  "offset": 1
+                },
+                {
+                  "id": "stop_soc",
+                  "offset": 2
+                },
+                {
+                  "id": "di_3",
+                  "offset": 3
+                },
+                {
+                  "id": "di_4",
+                  "offset": 4
+                },
+                {
+                  "id": "di_5",
+                  "offset": 5
+                },
+                {
+                  "id": "di_6",
+                  "offset": 6
+                },
+                {
+                  "id": "di_7",
+                  "offset": 7
+                }
+            ]
+        },
+        {
+            "type": "Coils",
+            "starting_offset": 0,
+            "number_of_registers": 4,
+            "map": 
+            [
+                {
+                  "id": "fault_flag",
+                  "offset": 0
+                },
+                {
+                  "id": "do_1",
+                  "offset": 1
+                },
+                {
+                  "id": "do_2",
+                  "offset": 2
+                },
+                {
+                  "id": "do_3",
+                  "offset": 3
+                }
+            ]
+        }
+    ]
+}

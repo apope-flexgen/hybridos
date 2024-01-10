@@ -1,0 +1,42 @@
+{
+	"connection":
+	{
+		"name": "brainbox_ed538",
+		"ip_address": "172.17.0.4",
+		"port": 502
+	},
+	"components":
+	[
+		{
+			"id": "brainbox_ed538",
+			"frequency": 500,
+			"offset_time": 0,
+			"add_timings":false,
+			"device_id":1,
+			"registers": 
+			[
+				{
+					"type": "Discrete Inputs",
+					"starting_offset": 0,
+					"number_of_registers": 3,
+					"map": 
+					[
+						{
+							"id": "intrusion_detection",
+							"offset": 0
+						},
+						{
+							"id": "HVAC_normally_open",
+							"offset": 1
+						},
+						{
+							"id": "HVAC_normally_close",
+							"offset": 2
+						}
+					]
+				}
+			]
+		}
+	]
+}
+

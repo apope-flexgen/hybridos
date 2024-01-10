@@ -6,8 +6,8 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/flexgen-power/go_flexgen/cfgfetch"
-	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/flexgen-power/hybridos/go_flexgen/cfgfetch"
+	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 )
 
 // structure to store config file

@@ -1,0 +1,2134 @@
+{
+	"fileInfo":{},
+	"system":{
+		"device_id": 1,
+		"id": "Clou_ESS_Controller",
+		"ip_address": "0.0.0.0",
+		"name": "Clou_ESS_Controller",
+		"port": 5030
+	},
+	"registers":{
+		"holding_registers": [
+			{
+				"id": "ems_heartbeat",
+				"name": "MS heartbeat",
+				"offset": 896,
+				"uri": "/components/catl_ems_bms_rw"
+			},
+			{
+				"bit_strings": [
+					"Initial",
+					"Stay Status",
+					"Power on cmd",
+					"Power off cmd"
+				],
+				"enum": true,
+				"id": "ems_cmd",
+				"name": "MS_cmd",
+				"offset": 897,
+				"uri": "/components/catl_ems_bms_rw"
+			},
+			{
+				"id": "ems_status",
+				"name": "EMS_status",
+				"offset": 898,
+				"uri": "/components/catl_ems_bms_rw"
+			},
+			{
+				"id": "ems_rtc_year",
+				"name": "EMS_RTC_year",
+				"offset": 900,
+				"uri": "/components/catl_ems_bms_rw"
+			},
+			{
+				"id": "ems_rtc_month",
+				"name": "EMS_RTC_month",
+				"offset": 901,
+				"uri": "/components/catl_ems_bms_rw"
+			},
+			{
+				"id": "ems_rtc_day",
+				"name": "EMS_RTC_day",
+				"offset": 902,
+				"uri": "/components/catl_ems_bms_rw"
+			},
+			{
+				"id": "ems_rtc_hour",
+				"name": "EMS_RTC_hour",
+				"offset": 903,
+				"uri": "/components/catl_ems_bms_rw"
+			},
+			{
+				"id": "ems_rtc_minute",
+				"name": "EMS_RTC_minute",
+				"offset": 904,
+				"uri": "/components/catl_ems_bms_rw"
+			},
+			{
+				"id": "ems_rtc_second",
+				"name": "EMS_RTC_second",
+				"offset": 905,
+				"uri": "/components/catl_ems_bms_rw"
+			},
+			{
+				"id": "fault_clear_cmd",
+				"name": "Fault_Clear_cmd",
+				"offset": 908,
+				"uri": "/components/catl_ems_bms_rw"
+			},
+			{
+				"id": "mbmu_warning_1",
+				"name": "System warning (with degrees) Detailed in appendix Ⅰ",
+				"note1": " 000000000000011: 0=norm, 1=cell OV warn 1, 2=cell OV warn2, 3= cell OV warn3",
+				"note2": " 000000000001100: 0=norm, 1=cell UV warn 1, 2=cell UV warn2, 3= cell UV warn3",
+				"note3": " 000000000110000: 0=norm, 1=cell OT warn 1, 2=cell OT warn2, 3= cell OT warn3",
+				"note4": " 000000011000000: 0=norm, 1=cell UT warn 1, 2=cell UT warn2, 3= cell UT warn3",
+				"note5": " 000001100000000: 0=norm, 1=cell Soc warn 1, 2=cell Soc  warn2, 3= cell Soc  warn3",
+				"offset": 0,
+				"uri": "/components/catl_mbmu_sum_r"
+			},
+			{
+				"id": "mbmu_warning_21",
+				"name": "System warning (without degrees) Detailed in appendix Ⅱ",
+				"offset": 1,
+				"uri": "/components/catl_mbmu_sum_r"
+			},
+			{
+				"id": "mbmu_warning_22",
+				"name": "System warning (without degrees) Detailed in appendix Ⅱ",
+				"offset": 2,
+				"uri": "/components/catl_mbmu_sum_r"
+			},
+			{
+				"id": "mbmu_status",
+				"name": "System status",
+				"offset": 16,
+				"uri": "/components/catl_mbmu_stat_r"
+			},
+			{
+				"id": "mbmu_voltage",
+				"name": "System voltage",
+				"offset": 32,
+				"scale": 10,
+				"uri": "/components/catl_mbmu_summary_r"
+			},
+			{
+				"id": "mbmu_current",
+				"name": "System Current",
+				"offset": 33,
+				"signed": true,
+				"scale": 1,
+				"uri": "/components/catl_mbmu_summary_r"
+			},
+			{
+				"id": "mbmu_soc",
+				"name": "SOC",
+				"offset": 34,
+				"scale": 10,
+				"uri": "/components/catl_mbmu_summary_r"
+			},
+			{
+				"id": "mbmu_soh",
+				"name": "SOH",
+				"offset": 35,
+				"scale": 1000,
+				"uri": "/components/catl_mbmu_summary_r"
+			},
+			{
+				"id": "mbmu_max_cell_voltage",
+				"name": "Max cell voltage",
+				"offset": 36,
+				"scale": 1000,
+				"signed": true,
+				"uri": "/components/catl_mbmu_summary_r"
+			},
+			{
+				"id": "mbmu_min_cell_voltage",
+				"name": "Min cell voltage",
+				"offset": 37,
+				"scale": 1000,
+				"signed": true,
+				"uri": "/components/catl_mbmu_summary_r"
+			},
+			{
+				"id": "mbmu_avg_cell_voltage",
+				"name": "Avg. cell voltage",
+				"offset": 38,
+				"scale": 1000,
+				"signed": true,
+				"uri": "/components/catl_mbmu_summary_r"
+			},
+			{
+				"id": "mbmu_max_cell_temperature",
+				"name": "Max cell temperature",
+				"offset": 39,
+				"uri": "/components/catl_mbmu_summary_r"
+			},
+			{
+				"id": "mbmu_min_cell_temperature",
+				"name": "Min cell temperature",
+				"offset": 40,
+				"uri": "/components/catl_mbmu_summary_r"
+			},
+			{
+				"id": "mbmu_avg_cell_temperature",
+				"name": "Avg. cell temperature",
+				"offset": 41,
+				"uri": "/components/catl_mbmu_summary_r"
+			},
+			{
+				"id": "mbmu_max_charge_current",
+				"name": "Max charge current allowed",
+				"offset": 42,
+				"scale": 1,
+				"uri": "/components/catl_mbmu_summary_r"
+			},
+			{
+				"id": "mbmu_max_discharge_current",
+				"name": "Max discharge current allowed",
+				"offset": 43,
+				"scale": 1,
+				"uri": "/components/catl_mbmu_summary_r"
+			},
+			{
+				"id": "bms_heartbeat",
+				"name": "BMS heartbeat",
+				"offset": 768,
+				"uri": "/components/catl_bms_ems_r"
+			},
+			{
+				"id": "bms_poweron",
+				"name": "BMS_poweron",
+				"offset": 769,
+				"uri": "/components/catl_bms_ems_r",
+				"xbit_strings": [
+					"Power off Ready",
+					"Power on Ready",
+					"Power on Fault",
+					"Power off Fault"
+				],
+				"xenum": true
+			},
+			{
+				"id": "bms_status",
+				"name": "BMS_status",
+				"offset": 770,
+				"uri": "/components/catl_bms_ems_r"
+			},
+			{
+				"id": "num_hv_subsystem",
+				"name": "Number of HV connected subsystem",
+				"offset": 772,
+				"uri": "/components/catl_bms_ems_r"
+			},
+			{
+				"id": "bms_remain_charge_energy",
+				"name": "System remain charge energy",
+				"offset": 775,
+				"uri": "/components/catl_bms_ems_r"
+			},
+			{
+				"id": "bms_remain_discharge_energy",
+				"name": "System remain discharge energy",
+				"offset": 776,
+				"uri": "/components/catl_bms_ems_r"
+			},
+			{
+				"id": "bms_max_discharge_allowed",
+				"name": "Max system discharge power allowed",
+				"offset": 783,
+				"uri": "/components/catl_bms_ems_r"
+			},
+			{
+				"id": "bms_max_charge_allowed",
+				"name": "Max system charge power allowed",
+				"offset": 784,
+				"uri": "/components/catl_bms_ems_r"
+			},
+			{
+				"id": "bms_limit_charge_hv",
+				"name": "BMS_limit_charge_hv",
+				"offset": 785,
+				"uri": "/components/catl_bms_ems_r"
+			},
+			{
+				"id": "bms_limit_discharge_hv",
+				"name": "BMS_limit_discharge_hv",
+				"offset": 786,
+				"uri": "/components/catl_bms_ems_r"
+			},
+			{
+				"id": "sbmu_warning_1",
+				"name": "Warning 1",
+				"offset": 1024,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_warning_21",
+				"name": "Warning 2.1",
+				"offset": 1025,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_warning_22",
+				"name": "Warning 2.2",
+				"offset": 1026,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_warning_23",
+				"name": "Warning 2.3",
+				"offset": 1027,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_precharge_status",
+				"name": "Precharge Status",
+				"offset": 1040,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_master_positive",
+				"name": "Master positive",
+				"offset": 1041,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_master_negative",
+				"name": "Master negative",
+				"offset": 1042,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_balance_status",
+				"name": "Balance status",
+				"offset": 1044,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_voltage",
+				"name": "Battery Subsystem Voltage",
+				"offset": 1056,
+				"scale": 10,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_current",
+				"name": "Battery Subsystem Current",
+				"offset": 1058,
+				"scale": 10,
+                "signed": true,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_soc",
+				"name": "Battery Subsystem SOC",
+				"offset": 1059,
+				"scale": 10,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_soh",
+				"name": "Battery Subsystem SOH",
+				"offset": 1060,
+				"scale": 1000,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_max_cell_voltage",
+				"name": "Battery Subsystem Max Cell Voltage",
+				"offset": 1061,
+				"scale": 1000,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_min_cell_voltage",
+				"name": "Battery Subsystem Min Cell Voltage",
+				"offset": 1062,
+				"scale": 1000,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_avg_cell_voltage",
+				"name": "Battery Subsystem Avg Cell Voltage",
+				"offset": 1063,
+				"scale": 1000,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_max_cell_temp",
+				"name": "Battery Subsystem Max Cell Temp",
+				"offset": 1064,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_min_cell_temp",
+				"name": "Battery Subsystem Min Cell Temp",
+				"offset": 1065,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_avg_cell_temp",
+				"name": "Battery Subsystem Avg Cell Temp",
+				"offset": 1066,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_max_charge_current",
+				"name": "Battery Subsystem Max Charge",
+				"offset": 1067,
+				"scale": 10,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_max_discharge_current",
+				"name": "Battery Subsystem Max Discharge",
+				"offset": 1068,
+				"scale": 10,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_max_cell_voltage_position",
+				"name": "Battery Subsystem Max Cell Voltage Positions",
+				"offset": 1072,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_min_cell_voltage_position",
+				"name": "Battery Subsystem Min Cell Voltage Positions",
+				"offset": 1073,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_max_cell_temp_position",
+				"name": "Battery Subsystem Max Cell Temp Positions",
+				"offset": 1074,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_min_cell_temp_position",
+				"name": "Battery Subsystem Min Cell Temp Positions",
+				"offset": 1075,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_sum_cells",
+				"name": "Battery Subsystem Sum Cell",
+				"offset": 1079,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_tms_mode_command",
+				"name": "Battery Subsystem TMS Mode Cmd",
+				"offset": 1098,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_tms_temp_setting",
+				"name": "Battery Subsystem TMS Temp Setting",
+				"offset": 1099,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_tms_real_mode",
+				"name": "Battery Subsystem TMS Real Mode",
+				"offset": 1100,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_ambient_temp",
+				"name": "Battery Subsystem Ambient Temp",
+				"offset": 1101,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_tms_demand_power",
+				"name": "Battery Subsystem TMS Demand Power",
+				"offset": 1102,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_tms_fault_code",
+				"name": "Battery Subsystem TMS Fault Code",
+				"offset": 1103,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_door_state",
+				"name": "Battery Subsystem Door State",
+				"offset": 1104,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_fan_in_box",
+				"name": "Battery Subsystem Fan In Box",
+				"offset": 1105,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_warning_1",
+				"name": "Warning 1",
+				"offset": 2048,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_warning_21",
+				"name": "Warning 2.1",
+				"offset": 2049,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_warning_22",
+				"name": "Warning 2.2",
+				"offset": 2050,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_warning_23",
+				"name": "Warning 2.3",
+				"offset": 2051,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_precharge_status",
+				"name": "Precharge Status",
+				"offset": 2064,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_master_positive",
+				"name": "Master positive",
+				"offset": 2065,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_master_negative",
+				"name": "Master negative",
+				"offset": 2066,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_balance_status",
+				"name": "Balance status",
+				"offset": 2068,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_voltage",
+				"name": "Battery Subsystem Voltage",
+				"offset": 2080,
+				"scale": 10,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_current",
+				"name": "Battery Subsystem Current",
+				"offset": 2082,
+				"scale": 10,
+                "signed": true,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_soc",
+				"name": "Battery Subsystem SOC",
+				"offset": 2083,
+				"scale": 10,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_soh",
+				"name": "Battery Subsystem SOH",
+				"offset": 2084,
+				"scale": 1000,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_max_cell_voltage",
+				"name": "Battery Subsystem Max Cell Voltage",
+				"offset": 2085,
+				"scale": 1000,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_min_cell_voltage",
+				"name": "Battery Subsystem Min Cell Voltage",
+				"offset": 2086,
+				"scale": 1000,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_avg_cell_voltage",
+				"name": "Battery Subsystem Avg Cell Voltage",
+				"offset": 2087,
+				"scale": 1000,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_max_cell_temp",
+				"name": "Battery Subsystem Max Cell Temp",
+				"offset": 2088,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_min_cell_temp",
+				"name": "Battery Subsystem Min Cell Temp",
+				"offset": 2089,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_avg_cell_temp",
+				"name": "Battery Subsystem Avg Cell Temp",
+				"offset": 2090,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_max_charge_current",
+				"name": "Battery Subsystem Max Charge",
+				"offset": 2091,
+				"scale": 10,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_max_discharge_current",
+				"name": "Battery Subsystem Max Discharge",
+				"offset": 2092,
+				"scale": 10,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_max_cell_voltage_position",
+				"name": "Battery Subsystem Max Cell Voltage Positions",
+				"offset": 2096,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_min_cell_voltage_position",
+				"name": "Battery Subsystem Min Cell Voltage Positions",
+				"offset": 2097,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_max_cell_temp_position",
+				"name": "Battery Subsystem Max Cell Temp Positions",
+				"offset": 2098,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_min_cell_temp_position",
+				"name": "Battery Subsystem Min Cell Temp Positions",
+				"offset": 2099,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_sum_cells",
+				"name": "Battery Subsystem Sum Cell",
+				"offset": 2103,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_tms_mode_command",
+				"name": "Battery Subsystem TMS Mode Cmd",
+				"offset": 2122,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_tms_temp_setting",
+				"name": "Battery Subsystem TMS Temp Setting",
+				"offset": 2123,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_tms_real_mode",
+				"name": "Battery Subsystem TMS Real Mode",
+				"offset": 2124,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_ambient_temp",
+				"name": "Battery Subsystem Ambient Temp",
+				"offset": 2125,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_tms_demand_power",
+				"name": "Battery Subsystem TMS Demand Power",
+				"offset": 2126,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_tms_fault_code",
+				"name": "Battery Subsystem TMS Fault Code",
+				"offset": 2127,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_door_state",
+				"name": "Battery Subsystem Door State",
+				"offset": 2128,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_fan_in_box",
+				"name": "Battery Subsystem Fan In Box",
+				"offset": 2129,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_warning_1",
+				"name": "Warning 1",
+				"offset": 3072,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_warning_21",
+				"name": "Warning 2.1",
+				"offset": 3073,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_warning_22",
+				"name": "Warning 2.2",
+				"offset": 3074,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_warning_23",
+				"name": "Warning 2.3",
+				"offset": 3075,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_precharge_status",
+				"name": "Precharge Status",
+				"offset": 3088,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_master_positive",
+				"name": "Master positive",
+				"offset": 3089,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_master_negative",
+				"name": "Master negative",
+				"offset": 3090,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_balance_status",
+				"name": "Balance status",
+				"offset": 3092,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_voltage",
+				"name": "Battery Subsystem Voltage",
+				"offset": 3104,
+				"scale": 10,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_current",
+				"name": "Battery Subsystem Current",
+				"offset": 3106,
+				"scale": 10,
+                "signed": true,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_soc",
+				"name": "Battery Subsystem SOC",
+				"offset": 3107,
+				"scale": 10,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_soh",
+				"name": "Battery Subsystem SOH",
+				"offset": 3108,
+				"scale": 1000,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_max_cell_voltage",
+				"name": "Battery Subsystem Max Cell Voltage",
+				"offset": 3109,
+				"scale": 1000,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_min_cell_voltage",
+				"name": "Battery Subsystem Min Cell Voltage",
+				"offset": 3110,
+				"scale": 1000,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_avg_cell_voltage",
+				"name": "Battery Subsystem Avg Cell Voltage",
+				"offset": 3111,
+				"scale": 1000,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_max_cell_temp",
+				"name": "Battery Subsystem Max Cell Temp",
+				"offset": 3112,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_min_cell_temp",
+				"name": "Battery Subsystem Min Cell Temp",
+				"offset": 3113,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_avg_cell_temp",
+				"name": "Battery Subsystem Avg Cell Temp",
+				"offset": 3114,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_max_charge_current",
+				"name": "Battery Subsystem Max Charge",
+				"offset": 3115,
+				"scale": 10,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_max_discharge_current",
+				"name": "Battery Subsystem Max Discharge",
+				"offset": 3116,
+				"scale": 10,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_max_cell_voltage_position",
+				"name": "Battery Subsystem Max Cell Voltage Positions",
+				"offset": 3120,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_min_cell_voltage_position",
+				"name": "Battery Subsystem Min Cell Voltage Positions",
+				"offset": 3121,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_max_cell_temp_position",
+				"name": "Battery Subsystem Max Cell Temp Positions",
+				"offset": 3122,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_min_cell_temp_position",
+				"name": "Battery Subsystem Min Cell Temp Positions",
+				"offset": 3123,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_sum_cells",
+				"name": "Battery Subsystem Sum Cell",
+				"offset": 3127,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_tms_mode_command",
+				"name": "Battery Subsystem TMS Mode Cmd",
+				"offset": 3146,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_tms_temp_setting",
+				"name": "Battery Subsystem TMS Temp Setting",
+				"offset": 3147,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_tms_real_mode",
+				"name": "Battery Subsystem TMS Real Mode",
+				"offset": 3148,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_ambient_temp",
+				"name": "Battery Subsystem Ambient Temp",
+				"offset": 3149,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_tms_demand_power",
+				"name": "Battery Subsystem TMS Demand Power",
+				"offset": 3150,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_tms_fault_code",
+				"name": "Battery Subsystem TMS Fault Code",
+				"offset": 3151,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_door_state",
+				"name": "Battery Subsystem Door State",
+				"offset": 3152,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_fan_in_box",
+				"name": "Battery Subsystem Fan In Box",
+				"offset": 3153,
+				"uri": "/components/catl_rack_3"
+			},
+			{
+				"id": "sbmu_warning_1",
+				"name": "Warning 1",
+				"offset": 4096,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_warning_21",
+				"name": "Warning 2.1",
+				"offset": 4097,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_warning_22",
+				"name": "Warning 2.2",
+				"offset": 4098,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_warning_23",
+				"name": "Warning 2.3",
+				"offset": 4099,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_precharge_status",
+				"name": "Precharge Status",
+				"offset": 4112,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_master_positive",
+				"name": "Master positive",
+				"offset": 4113,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_master_negative",
+				"name": "Master negative",
+				"offset": 4114,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_balance_status",
+				"name": "Balance status",
+				"offset": 4116,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_voltage",
+				"name": "Battery Subsystem Voltage",
+				"offset": 4128,
+				"scale": 10,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_current",
+				"name": "Battery Subsystem Current",
+				"offset": 4130,
+				"scale": 10,
+                "signed": true,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_soc",
+				"name": "Battery Subsystem SOC",
+				"offset": 4131,
+				"scale": 10,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_soh",
+				"name": "Battery Subsystem SOH",
+				"offset": 4132,
+				"scale": 1000,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_max_cell_voltage",
+				"name": "Battery Subsystem Max Cell Voltage",
+				"offset": 4133,
+				"scale": 1000,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_min_cell_voltage",
+				"name": "Battery Subsystem Min Cell Voltage",
+				"offset": 4134,
+				"scale": 1000,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_avg_cell_voltage",
+				"name": "Battery Subsystem Avg Cell Voltage",
+				"offset": 4135,
+				"scale": 1000,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_max_cell_temp",
+				"name": "Battery Subsystem Max Cell Temp",
+				"offset": 4136,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_min_cell_temp",
+				"name": "Battery Subsystem Min Cell Temp",
+				"offset": 4137,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_avg_cell_temp",
+				"name": "Battery Subsystem Avg Cell Temp",
+				"offset": 4138,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_max_charge_current",
+				"name": "Battery Subsystem Max Charge",
+				"offset": 4139,
+				"scale": 10,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_max_discharge_current",
+				"name": "Battery Subsystem Max Discharge",
+				"offset": 4140,
+				"scale": 10,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_max_cell_voltage_position",
+				"name": "Battery Subsystem Max Cell Voltage Positions",
+				"offset": 4144,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_min_cell_voltage_position",
+				"name": "Battery Subsystem Min Cell Voltage Positions",
+				"offset": 4145,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_max_cell_temp_position",
+				"name": "Battery Subsystem Max Cell Temp Positions",
+				"offset": 4146,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_min_cell_temp_position",
+				"name": "Battery Subsystem Min Cell Temp Positions",
+				"offset": 4147,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_sum_cells",
+				"name": "Battery Subsystem Sum Cell",
+				"offset": 4151,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_tms_mode_command",
+				"name": "Battery Subsystem TMS Mode Cmd",
+				"offset": 4170,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_tms_temp_setting",
+				"name": "Battery Subsystem TMS Temp Setting",
+				"offset": 4171,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_tms_real_mode",
+				"name": "Battery Subsystem TMS Real Mode",
+				"offset": 4172,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_ambient_temp",
+				"name": "Battery Subsystem Ambient Temp",
+				"offset": 4173,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_tms_demand_power",
+				"name": "Battery Subsystem TMS Demand Power",
+				"offset": 4174,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_tms_fault_code",
+				"name": "Battery Subsystem TMS Fault Code",
+				"offset": 4175,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_door_state",
+				"name": "Battery Subsystem Door State",
+				"offset": 4176,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_fan_in_box",
+				"name": "Battery Subsystem Fan In Box",
+				"offset": 4177,
+				"uri": "/components/catl_rack_4"
+			},
+			{
+				"id": "sbmu_warning_1",
+				"name": "Warning 1",
+				"offset": 5120,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_warning_21",
+				"name": "Warning 2.1",
+				"offset": 5121,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_warning_22",
+				"name": "Warning 2.2",
+				"offset": 5122,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_warning_23",
+				"name": "Warning 2.3",
+				"offset": 5123,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_precharge_status",
+				"name": "Precharge Status",
+				"offset": 5136,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_master_positive",
+				"name": "Master positive",
+				"offset": 5137,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_master_negative",
+				"name": "Master negative",
+				"offset": 5138,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_balance_status",
+				"name": "Balance status",
+				"offset": 5140,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_voltage",
+				"name": "Battery Subsystem Voltage",
+				"offset": 5152,
+				"scale": 10,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_current",
+				"name": "Battery Subsystem Current",
+				"offset": 5154,
+				"scale": 10,
+                "signed": true,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_soc",
+				"name": "Battery Subsystem SOC",
+				"offset": 5155,
+				"scale": 10,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_soh",
+				"name": "Battery Subsystem SOH",
+				"offset": 5156,
+				"scale": 1000,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_max_cell_voltage",
+				"name": "Battery Subsystem Max Cell Voltage",
+				"offset": 5157,
+				"scale": 1000,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_min_cell_voltage",
+				"name": "Battery Subsystem Min Cell Voltage",
+				"offset": 5158,
+				"scale": 1000,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_avg_cell_voltage",
+				"name": "Battery Subsystem Avg Cell Voltage",
+				"offset": 5159,
+				"scale": 1000,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_max_cell_temp",
+				"name": "Battery Subsystem Max Cell Temp",
+				"offset": 5160,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_min_cell_temp",
+				"name": "Battery Subsystem Min Cell Temp",
+				"offset": 5161,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_avg_cell_temp",
+				"name": "Battery Subsystem Avg Cell Temp",
+				"offset": 5162,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_max_charge_current",
+				"name": "Battery Subsystem Max Charge",
+				"offset": 5163,
+				"scale": 10,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_max_discharge_current",
+				"name": "Battery Subsystem Max Discharge",
+				"offset": 5164,
+				"scale": 10,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_max_cell_voltage_position",
+				"name": "Battery Subsystem Max Cell Voltage Positions",
+				"offset": 5168,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_min_cell_voltage_position",
+				"name": "Battery Subsystem Min Cell Voltage Positions",
+				"offset": 5169,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_max_cell_temp_position",
+				"name": "Battery Subsystem Max Cell Temp Positions",
+				"offset": 5170,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_min_cell_temp_position",
+				"name": "Battery Subsystem Min Cell Temp Positions",
+				"offset": 5171,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_sum_cells",
+				"name": "Battery Subsystem Sum Cell",
+				"offset": 5175,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_tms_mode_command",
+				"name": "Battery Subsystem TMS Mode Cmd",
+				"offset": 5194,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_tms_temp_setting",
+				"name": "Battery Subsystem TMS Temp Setting",
+				"offset": 5195,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_tms_real_mode",
+				"name": "Battery Subsystem TMS Real Mode",
+				"offset": 5196,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_ambient_temp",
+				"name": "Battery Subsystem Ambient Temp",
+				"offset": 5197,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_tms_demand_power",
+				"name": "Battery Subsystem TMS Demand Power",
+				"offset": 5198,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_tms_fault_code",
+				"name": "Battery Subsystem TMS Fault Code",
+				"offset": 5199,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_door_state",
+				"name": "Battery Subsystem Door State",
+				"offset": 5200,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_fan_in_box",
+				"name": "Battery Subsystem Fan In Box",
+				"offset": 5201,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_warning_1",
+				"name": "Warning 1",
+				"offset": 6144,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_warning_21",
+				"name": "Warning 2.1",
+				"offset": 6145,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_warning_22",
+				"name": "Warning 2.2",
+				"offset": 6146,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_warning_23",
+				"name": "Warning 2.3",
+				"offset": 6147,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_precharge_status",
+				"name": "Precharge Status",
+				"offset": 6160,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_master_positive",
+				"name": "Master positive",
+				"offset": 6161,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_master_negative",
+				"name": "Master negative",
+				"offset": 6162,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_balance_status",
+				"name": "Balance status",
+				"offset": 6164,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_voltage",
+				"name": "Battery Subsystem Voltage",
+				"offset": 6176,
+				"scale": 10,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_current",
+				"name": "Battery Subsystem Current",
+				"offset": 6178,
+				"scale": 10,
+                "signed": true,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_soc",
+				"name": "Battery Subsystem SOC",
+				"offset": 6179,
+				"scale": 10,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_soh",
+				"name": "Battery Subsystem SOH",
+				"offset": 6180,
+				"scale": 1000,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_max_cell_voltage",
+				"name": "Battery Subsystem Max Cell Voltage",
+				"offset": 6181,
+				"scale": 1000,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_min_cell_voltage",
+				"name": "Battery Subsystem Min Cell Voltage",
+				"offset": 6182,
+				"scale": 1000,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_avg_cell_voltage",
+				"name": "Battery Subsystem Avg Cell Voltage",
+				"offset": 6183,
+				"scale": 1000,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_max_cell_temp",
+				"name": "Battery Subsystem Max Cell Temp",
+				"offset": 6184,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_min_cell_temp",
+				"name": "Battery Subsystem Min Cell Temp",
+				"offset": 6185,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_avg_cell_temp",
+				"name": "Battery Subsystem Avg Cell Temp",
+				"offset": 6186,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_max_charge_current",
+				"name": "Battery Subsystem Max Charge",
+				"offset": 6187,
+				"scale": 10,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_max_discharge_current",
+				"name": "Battery Subsystem Max Discharge",
+				"offset": 6188,
+				"scale": 10,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_max_cell_voltage_position",
+				"name": "Battery Subsystem Max Cell Voltage Positions",
+				"offset": 6192,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_min_cell_voltage_position",
+				"name": "Battery Subsystem Min Cell Voltage Positions",
+				"offset": 6193,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_max_cell_temp_position",
+				"name": "Battery Subsystem Max Cell Temp Positions",
+				"offset": 6194,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_min_cell_temp_position",
+				"name": "Battery Subsystem Min Cell Temp Positions",
+				"offset": 6195,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_sum_cells",
+				"name": "Battery Subsystem Sum Cell",
+				"offset": 6199,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_tms_mode_command",
+				"name": "Battery Subsystem TMS Mode Cmd",
+				"offset": 6218,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_tms_temp_setting",
+				"name": "Battery Subsystem TMS Temp Setting",
+				"offset": 6219,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_tms_real_mode",
+				"name": "Battery Subsystem TMS Real Mode",
+				"offset": 6220,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_ambient_temp",
+				"name": "Battery Subsystem Ambient Temp",
+				"offset": 6221,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_tms_demand_power",
+				"name": "Battery Subsystem TMS Demand Power",
+				"offset": 6222,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_tms_fault_code",
+				"name": "Battery Subsystem TMS Fault Code",
+				"offset": 6223,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_door_state",
+				"name": "Battery Subsystem Door State",
+				"offset": 6224,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_fan_in_box",
+				"name": "Battery Subsystem Fan In Box",
+				"offset": 6225,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_warning_1",
+				"name": "Warning 1",
+				"offset": 7168,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_warning_21",
+				"name": "Warning 2.1",
+				"offset": 7169,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_warning_22",
+				"name": "Warning 2.2",
+				"offset": 7170,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_warning_23",
+				"name": "Warning 2.3",
+				"offset": 7171,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_precharge_status",
+				"name": "Precharge Status",
+				"offset": 7184,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_master_positive",
+				"name": "Master positive",
+				"offset": 7185,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_master_negative",
+				"name": "Master negative",
+				"offset": 7186,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_balance_status",
+				"name": "Balance status",
+				"offset": 7188,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_voltage",
+				"name": "Battery Subsystem Voltage",
+				"offset": 7200,
+				"scale": 10,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_current",
+				"name": "Battery Subsystem Current",
+				"offset": 7202,
+				"scale": 10,
+                "signed": true,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_soc",
+				"name": "Battery Subsystem SOC",
+				"offset": 7203,
+				"scale": 10,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_soh",
+				"name": "Battery Subsystem SOH",
+				"offset": 7204,
+				"scale": 1000,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_max_cell_voltage",
+				"name": "Battery Subsystem Max Cell Voltage",
+				"offset": 7205,
+				"scale": 1000,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_min_cell_voltage",
+				"name": "Battery Subsystem Min Cell Voltage",
+				"offset": 7206,
+				"scale": 1000,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_avg_cell_voltage",
+				"name": "Battery Subsystem Avg Cell Voltage",
+				"offset": 7207,
+				"scale": 1000,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_max_cell_temp",
+				"name": "Battery Subsystem Max Cell Temp",
+				"offset": 7208,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_min_cell_temp",
+				"name": "Battery Subsystem Min Cell Temp",
+				"offset": 7209,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_avg_cell_temp",
+				"name": "Battery Subsystem Avg Cell Temp",
+				"offset": 7210,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_max_charge_current",
+				"name": "Battery Subsystem Max Charge",
+				"offset": 7211,
+				"scale": 10,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_max_discharge_current",
+				"name": "Battery Subsystem Max Discharge",
+				"offset": 7212,
+				"scale": 10,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_max_cell_voltage_position",
+				"name": "Battery Subsystem Max Cell Voltage Positions",
+				"offset": 7216,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_min_cell_voltage_position",
+				"name": "Battery Subsystem Min Cell Voltage Positions",
+				"offset": 7217,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_max_cell_temp_position",
+				"name": "Battery Subsystem Max Cell Temp Positions",
+				"offset": 7218,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_min_cell_temp_position",
+				"name": "Battery Subsystem Min Cell Temp Positions",
+				"offset": 7219,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_sum_cells",
+				"name": "Battery Subsystem Sum Cell",
+				"offset": 7223,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_tms_mode_command",
+				"name": "Battery Subsystem TMS Mode Cmd",
+				"offset": 7242,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_tms_temp_setting",
+				"name": "Battery Subsystem TMS Temp Setting",
+				"offset": 7243,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_tms_real_mode",
+				"name": "Battery Subsystem TMS Real Mode",
+				"offset": 7244,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_ambient_temp",
+				"name": "Battery Subsystem Ambient Temp",
+				"offset": 7245,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_tms_demand_power",
+				"name": "Battery Subsystem TMS Demand Power",
+				"offset": 7246,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_tms_fault_code",
+				"name": "Battery Subsystem TMS Fault Code",
+				"offset": 7247,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_door_state",
+				"name": "Battery Subsystem Door State",
+				"offset": 7248,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_fan_in_box",
+				"name": "Battery Subsystem Fan In Box",
+				"offset": 7249,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_warning_1",
+				"name": "Warning 1",
+				"offset": 8192,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_warning_21",
+				"name": "Warning 2.1",
+				"offset": 8193,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_warning_22",
+				"name": "Warning 2.2",
+				"offset": 8194,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_warning_23",
+				"name": "Warning 2.3",
+				"offset": 8195,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_precharge_status",
+				"name": "Precharge Status",
+				"offset": 8208,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_master_positive",
+				"name": "Master positive",
+				"offset": 8209,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_master_negative",
+				"name": "Master negative",
+				"offset": 8210,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_balance_status",
+				"name": "Balance status",
+				"offset": 8212,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_voltage",
+				"name": "Battery Subsystem Voltage",
+				"offset": 8224,
+				"scale": 10,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_current",
+				"name": "Battery Subsystem Current",
+				"offset": 8226,
+				"scale": 10,
+                "signed": true,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_soc",
+				"name": "Battery Subsystem SOC",
+				"offset": 8227,
+				"scale": 10,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_soh",
+				"name": "Battery Subsystem SOH",
+				"offset": 8228,
+				"scale": 1000,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_max_cell_voltage",
+				"name": "Battery Subsystem Max Cell Voltage",
+				"offset": 8229,
+				"scale": 1000,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_min_cell_voltage",
+				"name": "Battery Subsystem Min Cell Voltage",
+				"offset": 8230,
+				"scale": 1000,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_avg_cell_voltage",
+				"name": "Battery Subsystem Avg Cell Voltage",
+				"offset": 8231,
+				"scale": 1000,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_max_cell_temp",
+				"name": "Battery Subsystem Max Cell Temp",
+				"offset": 8232,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_min_cell_temp",
+				"name": "Battery Subsystem Min Cell Temp",
+				"offset": 8233,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_avg_cell_temp",
+				"name": "Battery Subsystem Avg Cell Temp",
+				"offset": 8234,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_max_charge_current",
+				"name": "Battery Subsystem Max Charge",
+				"offset": 8235,
+				"scale": 10,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_max_discharge_current",
+				"name": "Battery Subsystem Max Discharge",
+				"offset": 8236,
+				"scale": 10,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_max_cell_voltage_position",
+				"name": "Battery Subsystem Max Cell Voltage Positions",
+				"offset": 8240,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_min_cell_voltage_position",
+				"name": "Battery Subsystem Min Cell Voltage Positions",
+				"offset": 8241,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_max_cell_temp_position",
+				"name": "Battery Subsystem Max Cell Temp Positions",
+				"offset": 8242,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_min_cell_temp_position",
+				"name": "Battery Subsystem Min Cell Temp Positions",
+				"offset": 8243,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_sum_cells",
+				"name": "Battery Subsystem Sum Cell",
+				"offset": 8247,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_tms_mode_command",
+				"name": "Battery Subsystem TMS Mode Cmd",
+				"offset": 8266,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_tms_temp_setting",
+				"name": "Battery Subsystem TMS Temp Setting",
+				"offset": 8267,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_tms_real_mode",
+				"name": "Battery Subsystem TMS Real Mode",
+				"offset": 8268,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_ambient_temp",
+				"name": "Battery Subsystem Ambient Temp",
+				"offset": 8269,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_tms_demand_power",
+				"name": "Battery Subsystem TMS Demand Power",
+				"offset": 8270,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_tms_fault_code",
+				"name": "Battery Subsystem TMS Fault Code",
+				"offset": 8271,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_door_state",
+				"name": "Battery Subsystem Door State",
+				"offset": 8272,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_fan_in_box",
+				"name": "Battery Subsystem Fan In Box",
+				"offset": 8273,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_warning_1",
+				"name": "Warning 1",
+				"offset": 9216,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_warning_21",
+				"name": "Warning 2.1",
+				"offset": 9217,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_warning_22",
+				"name": "Warning 2.2",
+				"offset": 9218,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_warning_23",
+				"name": "Warning 2.3",
+				"offset": 9219,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_precharge_status",
+				"name": "Precharge Status",
+				"offset": 9232,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_master_positive",
+				"name": "Master positive",
+				"offset": 9233,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_master_negative",
+				"name": "Master negative",
+				"offset": 9234,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_balance_status",
+				"name": "Balance status",
+				"offset": 9236,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_voltage",
+				"name": "Battery Subsystem Voltage",
+				"offset": 9248,
+				"scale": 10,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_current",
+				"name": "Battery Subsystem Current",
+				"offset": 9250,
+				"scale": 10,
+                "signed": true,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_soc",
+				"name": "Battery Subsystem SOC",
+				"offset": 9251,
+				"scale": 10,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_soh",
+				"name": "Battery Subsystem SOH",
+				"offset": 9252,
+				"scale": 1000,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_max_cell_voltage",
+				"name": "Battery Subsystem Max Cell Voltage",
+				"offset": 9253,
+				"scale": 1000,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_min_cell_voltage",
+				"name": "Battery Subsystem Min Cell Voltage",
+				"offset": 9254,
+				"scale": 1000,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_avg_cell_voltage",
+				"name": "Battery Subsystem Avg Cell Voltage",
+				"offset": 9255,
+				"scale": 1000,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_max_cell_temp",
+				"name": "Battery Subsystem Max Cell Temp",
+				"offset": 9256,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_min_cell_temp",
+				"name": "Battery Subsystem Min Cell Temp",
+				"offset": 9257,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_avg_cell_temp",
+				"name": "Battery Subsystem Avg Cell Temp",
+				"offset": 9258,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_max_charge_current",
+				"name": "Battery Subsystem Max Charge",
+				"offset": 9259,
+				"scale": 10,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_max_discharge_current",
+				"name": "Battery Subsystem Max Discharge",
+				"offset": 9260,
+				"scale": 10,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_max_cell_voltage_position",
+				"name": "Battery Subsystem Max Cell Voltage Positions",
+				"offset": 9264,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_min_cell_voltage_position",
+				"name": "Battery Subsystem Min Cell Voltage Positions",
+				"offset": 9265,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_max_cell_temp_position",
+				"name": "Battery Subsystem Max Cell Temp Positions",
+				"offset": 9266,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_min_cell_temp_position",
+				"name": "Battery Subsystem Min Cell Temp Positions",
+				"offset": 9267,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_sum_cells",
+				"name": "Battery Subsystem Sum Cell",
+				"offset": 9271,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_tms_mode_command",
+				"name": "Battery Subsystem TMS Mode Cmd",
+				"offset": 9290,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_tms_temp_setting",
+				"name": "Battery Subsystem TMS Temp Setting",
+				"offset": 9291,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_tms_real_mode",
+				"name": "Battery Subsystem TMS Real Mode",
+				"offset": 9292,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_ambient_temp",
+				"name": "Battery Subsystem Ambient Temp",
+				"offset": 9293,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_tms_demand_power",
+				"name": "Battery Subsystem TMS Demand Power",
+				"offset": 9294,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_tms_fault_code",
+				"name": "Battery Subsystem TMS Fault Code",
+				"offset": 9295,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_door_state",
+				"name": "Battery Subsystem Door State",
+				"offset": 9296,
+				"uri": "/components/catl_rack_9"
+			},
+			{
+				"id": "sbmu_fan_in_box",
+				"name": "Battery Subsystem Fan In Box",
+				"offset": 9297,
+				"uri": "/components/catl_rack_9"
+			}
+		]
+	}
+}

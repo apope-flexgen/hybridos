@@ -1,0 +1,29 @@
+{
+    "dataSources": [
+        {
+            "dataType": "string",
+            "field": "runmode1_kW_mode_status",
+            "label": "Mode",
+            "uri": "/features/active_power"
+        },
+        {
+            "dataType": "number",
+            "field": "feeder_actual_kW",
+            "label": "Active Power",
+            "uri": "/features/active_power"
+        },
+        {
+            "dataType": "number",
+            "field": "feeder_actual_kVAR",
+            "label": "Reactive Power",
+            "uri": "/features/reactive_power"
+        },
+        {
+            "dataType": "number",
+            "field": "feeder_actual_pf",
+            "label": "Power Factor",
+            "uri": "/features/reactive_power"
+        }
+    ],
+    "siteStatusLabel": "Sudden Valley"
+}

@@ -1,6 +1,6 @@
 {
-    "to_console": true,
-    "to_file": true,
+    "redundant_rate_secs": 0,
     "severity_threshold": 1,
-    "redundant_rate_secs": 0
+    "to_console": true,
+    "to_file": true
 }

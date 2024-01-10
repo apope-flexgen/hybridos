@@ -1,0 +1,255 @@
+{
+    "/config/ess": {
+        "AlarmDestination": "/assets/ess/ess_1:alarms",
+        "EventSourceFormat": {
+            "value": "assetName"
+        },
+        "FaultDestination": "/assets/ess/ess_1:faults",
+        "LogDir": "/var/log/ess_controller",
+        "NoAlarmMsg": "Normal",
+        "NoFaultMsg": "Normal",
+        "enable": false
+    },
+    "/sched/ess": {
+        "every1000ms_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "Every1000mS"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/ess:enable",
+            "note1": "Periodically runs Every1000mS, which is useful for reporting CPU statistics",
+            "note2": "Also useful for writing currently loaded ESS Controller variables to /var/log/ess_controller/run_configs folder",
+            "value": 1
+        },
+        "pubAssets_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/ess:enable",
+            "mode": "ui",
+            "note": "Publishes UI asset data (/assets/ess/ess_1)",
+            "table": "/assets/ess/ess_1",
+            "value": 1
+        },
+        "pubESS": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/ess:enable",
+            "mode": "naked",
+            "note": "Publishes ESS Controller data (/site/ess)",
+            "table": "/site/ess",
+            "value": 1
+        },
+        "runMonitor_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "RunMonitor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "aname": "ess",
+            "enable": "/config/ess:enable",
+            "monitor": "wake_monitor",
+            "note": "Periodically runs functions for variables defined in /schedule/wake_monitor/ess",
+            "value": 1
+        },
+        "updateHeartbeatWrite_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "CalculateVar",
+                                "inAv": "/status/ess:HeartbeatWrite"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/ess:enable",
+            "note": "Periodically updates the heartbeat write variable defined in /status/ess:HeartbeatWrite",
+            "value": 1
+        }
+    },
+    "/schedule/wake_monitor/ess": {
+        "/status/ess:IsAlarming": {
+            "amap": "ess",
+            "func": "CalculateVar"
+        },
+        "/status/ess:IsFaulted": {
+            "amap": "ess",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/ess": {
+        "AlarmCnt": 0,
+        "CommsOK": false,
+        "FaultCnt": 0,
+        "FaultShutdown": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/pcs:ActivePowerSetpoint"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/pcs:ReactivePowerSetpoint"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/pcs:Stop@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/pcs:Stop"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "value": false
+        },
+        "HeartbeatWrite": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/site/ess:heartbeat_from_ess"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/ess:enable",
+            "excludeFromDefaultSched": true,
+            "expression": "if (({1} >= 59), 0, ({1} + 1))",
+            "note": "Updates and then sends the heartbeat write value",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/ess:HeartbeatWrite"
+        },
+        "IsAlarming": {
+            "expression": "{1} or {2} or {3} > 0",
+            "numVars": 3,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/bms:IsAlarming",
+            "variable2": "/status/pcs:IsAlarming",
+            "variable3": "/status/ess:AlarmCnt"
+        },
+        "IsFaulted": {
+            "expression": "{1} or {2} or {3} > 0",
+            "numVars": 3,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/bms:IsFaulted",
+            "variable2": "/status/pcs:IsFaulted",
+            "variable3": "/status/ess:FaultCnt"
+        }
+    },
+    "/system/commands": {
+        "runOpts_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "note1": "Sets schedule variables (defined in /sched/ess) to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "options": [
+                {
+                    "aname": "ess",
+                    "every": 1,
+                    "uri": "/sched/ess:pubAssets_ess",
+                    "value": 1
+                },
+                {
+                    "aname": "ess",
+                    "every": 0.1,
+                    "uri": "/sched/ess:runMonitor_ess",
+                    "value": 1
+                },
+                {
+                    "aname": "ess",
+                    "every": 1,
+                    "uri": "/sched/ess:updateHeartbeatWrite_ess",
+                    "value": 1
+                },
+                {
+                    "aname": "ess",
+                    "every": 0.1,
+                    "uri": "/sched/ess:pubESS",
+                    "value": 1
+                },
+                {
+                    "aname": "ess",
+                    "every": 1,
+                    "uri": "/sched/ess:every1000ms_ess",
+                    "value": 1
+                }
+            ],
+            "targav": "/system/commands:run",
+            "value": false
+        }
+    }
+}

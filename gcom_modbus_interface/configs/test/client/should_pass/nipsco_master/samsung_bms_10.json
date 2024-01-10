@@ -1,0 +1,1919 @@
+{
+    "system": {
+        "id": "samsung_bms_10",
+        "ip_address": "192.168.1.119",
+        "port": 502,
+        "frequency": 1000,
+        "device_id": 1,
+        "off_by_one": true
+    },
+    "registers": [
+        {
+            "type": "Input Registers",
+            "starting_offset": 2,
+            "number_of_registers": 111,
+            "map": [
+                {
+                    "id": "system_voltage",
+                    "offset": 2,
+                    "scale": 10,
+                    "name": "system voltage"
+                },
+                {
+                    "id": "system_current",
+                    "offset": 3,
+                    "name": "system current",
+                    "signed": true
+                },
+                {
+                    "id": "system_faults",
+                    "offset": 15,
+                    "size": 4,
+                    "name": "System faults",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:15 Bit:2",
+                        "Reserved Address:15 Bit:3",
+                        "Reserved Address:15 Bit:4",
+                        "Reserved Address:15 Bit:5",
+                        "Reserved Address:15 Bit:6",
+                        "Reserved Address:15 Bit:7",
+                        "Reserved Address:15 Bit:8",
+                        "Reserved Address:15 Bit:9",
+                        "Reserved Address:15 Bit:10",
+                        "Reserved Address:15 Bit:11",
+                        "Reserved Address:15 Bit:12",
+                        "Reserved Address:15 Bit:13",
+                        "Reserved Address:15 Bit:14",
+                        "Reserved Address:15 Bit:15",
+                        "Reserved Address:15 Bit:16",
+                        "Reserved Address:15 Bit:17",
+                        "Reserved Address:15 Bit:18",
+                        "Reserved Address:15 Bit:19",
+                        "Reserved Address:15 Bit:20",
+                        "Reserved Address:15 Bit:21",
+                        "Reserved Address:15 Bit:22",
+                        "Reserved Address:15 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:15 Bit:32",
+                        "Reserved Address:15 Bit:33",
+                        "Reserved Address:15 Bit:34",
+                        "Reserved Address:15 Bit:35",
+                        "Reserved Address:15 Bit:36",
+                        "Reserved Address:15 Bit:37",
+                        "Reserved Address:15 Bit:38",
+                        "Reserved Address:15 Bit:39",
+                        "Reserved Address:15 Bit:40",
+                        "Reserved Address:15 Bit:41",
+                        "Reserved Address:15 Bit:42",
+                        "Reserved Address:15 Bit:43",
+                        "Reserved Address:15 Bit:44",
+                        "Reserved Address:15 Bit:45",
+                        "Reserved Address:15 Bit:46",
+                        "Reserved Address:15 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "system_alarms",
+                    "offset": 19,
+                    "name": "System alarms",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:19 Bit:2",
+                        "Reserved Address:19 Bit:3",
+                        "Reserved Address:19 Bit:4",
+                        "Reserved Address:19 Bit:5",
+                        "Reserved Address:19 Bit:6",
+                        "Reserved Address:19 Bit:7",
+                        "Reserved Address:19 Bit:8",
+                        "Reserved Address:19 Bit:9",
+                        "Reserved Address:19 Bit:10",
+                        "Reserved Address:19 Bit:11",
+                        "Reserved Address:19 Bit:12",
+                        "Reserved Address:19 Bit:13",
+                        "Reserved Address:19 Bit:14",
+                        "Reserved Address:19 Bit:15",
+                        "Reserved Address:19 Bit:16",
+                        "Reserved Address:19 Bit:17",
+                        "Reserved Address:19 Bit:18",
+                        "Reserved Address:19 Bit:19",
+                        "Reserved Address:19 Bit:20",
+                        "Reserved Address:19 Bit:21",
+                        "Reserved Address:19 Bit:22",
+                        "Reserved Address:19 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:19 Bit:32",
+                        "Reserved Address:19 Bit:33",
+                        "Reserved Address:19 Bit:34",
+                        "Reserved Address:19 Bit:35",
+                        "Reserved Address:19 Bit:36",
+                        "Reserved Address:19 Bit:37",
+                        "Reserved Address:19 Bit:38",
+                        "Reserved Address:19 Bit:39",
+                        "Reserved Address:19 Bit:40",
+                        "Reserved Address:19 Bit:41",
+                        "Reserved Address:19 Bit:42",
+                        "Reserved Address:19 Bit:43",
+                        "Reserved Address:19 Bit:44",
+                        "Reserved Address:19 Bit:45",
+                        "Reserved Address:19 Bit:46",
+                        "Reserved Address:19 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "rack_1_voltage",
+                    "offset": 41,
+                    "scale": 10,
+                    "name": "rack 1 voltage"
+                },
+                {
+                    "id": "rack_1_current_real",
+                    "offset": 46,
+                    "scale": 10,
+                    "name": "rack 1 current",
+                    "signed": true
+                },
+                {
+                    "id": "rack_1_current_avg",
+                    "offset": 49,
+                    "scale": 10,
+                    "name": "average rack 1 current",
+                    "signed": true
+                },
+                {
+                    "id": "rack_1_soc",
+                    "offset": 51,
+                    "scale": 10,
+                    "name": "rack 1 SOC"
+                },
+                {
+                    "id": "rack_1_soh",
+                    "offset": 52,
+                    "scale": 10,
+                    "name": "rack 1 SOH"
+                },
+                {
+                    "id": "rack_1_faults",
+                    "offset": 57,
+                    "name": "rack 1 faults",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:57 Bit:2",
+                        "Reserved Address:57 Bit:3",
+                        "Reserved Address:57 Bit:4",
+                        "Reserved Address:57 Bit:5",
+                        "Reserved Address:57 Bit:6",
+                        "Reserved Address:57 Bit:7",
+                        "Reserved Address:57 Bit:8",
+                        "Reserved Address:57 Bit:9",
+                        "Reserved Address:57 Bit:10",
+                        "Reserved Address:57 Bit:11",
+                        "Reserved Address:57 Bit:12",
+                        "Reserved Address:57 Bit:13",
+                        "Reserved Address:57 Bit:14",
+                        "Reserved Address:57 Bit:15",
+                        "Reserved Address:57 Bit:16",
+                        "Reserved Address:57 Bit:17",
+                        "Reserved Address:57 Bit:18",
+                        "Reserved Address:57 Bit:19",
+                        "Reserved Address:57 Bit:20",
+                        "Reserved Address:57 Bit:21",
+                        "Reserved Address:57 Bit:22",
+                        "Reserved Address:57 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:57 Bit:32",
+                        "Reserved Address:57 Bit:33",
+                        "Reserved Address:57 Bit:34",
+                        "Reserved Address:57 Bit:35",
+                        "Reserved Address:57 Bit:36",
+                        "Reserved Address:57 Bit:37",
+                        "Reserved Address:57 Bit:38",
+                        "Reserved Address:57 Bit:39",
+                        "Reserved Address:57 Bit:40",
+                        "Reserved Address:57 Bit:41",
+                        "Reserved Address:57 Bit:42",
+                        "Reserved Address:57 Bit:43",
+                        "Reserved Address:57 Bit:44",
+                        "Reserved Address:57 Bit:45",
+                        "Reserved Address:57 Bit:46",
+                        "Reserved Address:57 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "rack_1_alarms",
+                    "offset": 61,
+                    "name": "rack 1 alarms",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:61 Bit:2",
+                        "Reserved Address:61 Bit:3",
+                        "Reserved Address:61 Bit:4",
+                        "Reserved Address:61 Bit:5",
+                        "Reserved Address:61 Bit:6",
+                        "Reserved Address:61 Bit:7",
+                        "Reserved Address:61 Bit:8",
+                        "Reserved Address:61 Bit:9",
+                        "Reserved Address:61 Bit:10",
+                        "Reserved Address:61 Bit:11",
+                        "Reserved Address:61 Bit:12",
+                        "Reserved Address:61 Bit:13",
+                        "Reserved Address:61 Bit:14",
+                        "Reserved Address:61 Bit:15",
+                        "Reserved Address:61 Bit:16",
+                        "Reserved Address:61 Bit:17",
+                        "Reserved Address:61 Bit:18",
+                        "Reserved Address:61 Bit:19",
+                        "Reserved Address:61 Bit:20",
+                        "Reserved Address:61 Bit:21",
+                        "Reserved Address:61 Bit:22",
+                        "Reserved Address:61 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:61 Bit:32",
+                        "Reserved Address:61 Bit:33",
+                        "Reserved Address:61 Bit:34",
+                        "Reserved Address:61 Bit:35",
+                        "Reserved Address:61 Bit:36",
+                        "Reserved Address:61 Bit:37",
+                        "Reserved Address:61 Bit:38",
+                        "Reserved Address:61 Bit:39",
+                        "Reserved Address:61 Bit:40",
+                        "Reserved Address:61 Bit:41",
+                        "Reserved Address:61 Bit:42",
+                        "Reserved Address:61 Bit:43",
+                        "Reserved Address:61 Bit:44",
+                        "Reserved Address:61 Bit:45",
+                        "Reserved Address:61 Bit:46",
+                        "Reserved Address:61 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "rack_1_max_cell_1_voltage_value",
+                    "offset": 65,
+                    "scale": 1000,
+                    "name": "rack 1 max #1 cell voltage"
+                },
+                {
+                    "id": "rack_1_max_cell_1_voltage_position",
+                    "offset": 66,
+                    "name": "rack 1 max #1 cell voltage position"
+                },
+                {
+                    "id": "rack_1_max_cell_2_voltage_value",
+                    "offset": 67,
+                    "scale": 1000,
+                    "name": "rack 1 max #2 cell voltage"
+                },
+                {
+                    "id": "rack_1_max_cell_2_voltage_position",
+                    "offset": 68,
+                    "name": "rack 1 max #2 cell voltage position"
+                },
+                {
+                    "id": "rack_1_min_cell_2_voltage_value",
+                    "offset": 70,
+                    "scale": 1000,
+                    "name": "rack 1 min #2 cell voltage"
+                },
+                {
+                    "id": "rack_1_min_cell_2_voltage_position",
+                    "offset": 71,
+                    "name": "rack 1 min #2 cell voltage position"
+                },
+                {
+                    "id": "rack_1_min_cell_1_voltage_value",
+                    "offset": 72,
+                    "scale": 1000,
+                    "name": "rack 1 min #1 cell voltage"
+                },
+                {
+                    "id": "rack_1_min_cell_1_voltage_position",
+                    "offset": 73,
+                    "name": "rack 1 min #1 cell voltage position"
+                },
+                {
+                    "id": "rack_1_max_cell_1_temp_value",
+                    "offset": 74,
+                    "scale": 100,
+                    "name": "rack 1 max #1 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_1_max_cell_1_temp_position",
+                    "offset": 75,
+                    "name": "rack 1 max #1 cell temperature position"
+                },
+                {
+                    "id": "rack_1_max_cell_2_temp_value",
+                    "offset": 76,
+                    "scale": 100,
+                    "name": "rack 1 max #2 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_1_max_cell_2_temp_position",
+                    "offset": 77,
+                    "name": "rack 1 max #2 cell temperature position"
+                },
+                {
+                    "id": "rack_1_min_cell_2_temp_value",
+                    "offset": 79,
+                    "scale": 100,
+                    "name": "rack 1 min #2 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_1_min_cell_2_temp_position",
+                    "offset": 80,
+                    "name": "rack 1 min #2 cell temperature position"
+                },
+                {
+                    "id": "rack_1_min_cell_1_temp_value",
+                    "offset": 81,
+                    "scale": 100,
+                    "name": "rack 1 min #1 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_1_min_cell_1_temp_position",
+                    "offset": 82,
+                    "name": "rack 1 min #1 cell temperature position"
+                },
+                {
+                    "id": "rack_1_dc_switch_status",
+                    "offset": 85,
+                    "name": "rack 1 switch control info",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Grid SW"
+                    ]
+                },
+                {
+                    "id": "rack_1_dc_switch_position",
+                    "offset": 86,
+                    "name": "rack 1 switch sensor info",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "DC Switch 1 On",
+                        "DC Switch 2 On"
+                    ]
+                },
+                {
+                    "id": "rack_2_voltage",
+                    "offset": 101,
+                    "scale": 10,
+                    "name": "rack 2 voltage"
+                },
+                {
+                    "id": "rack_2_current_real",
+                    "offset": 106,
+                    "scale": 10,
+                    "name": "rack 2 current",
+                    "signed": true
+                },
+                {
+                    "id": "rack_2_current_avg",
+                    "offset": 109,
+                    "scale": 10,
+                    "name": "average rack 2 current",
+                    "signed": true
+                },
+                {
+                    "id": "rack_2_soc",
+                    "offset": 111,
+                    "scale": 10,
+                    "name": "rack 2 SOC"
+                },
+                {
+                    "id": "rack_2_soh",
+                    "offset": 112,
+                    "scale": 10,
+                    "name": "rack 2 SOH"
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 117,
+            "number_of_registers": 90,
+            "map": [
+                {
+                    "id": "rack_2_faults",
+                    "offset": 117,
+                    "name": "rack 2 faults",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:57 Bit:2",
+                        "Reserved Address:57 Bit:3",
+                        "Reserved Address:57 Bit:4",
+                        "Reserved Address:57 Bit:5",
+                        "Reserved Address:57 Bit:6",
+                        "Reserved Address:57 Bit:7",
+                        "Reserved Address:57 Bit:8",
+                        "Reserved Address:57 Bit:9",
+                        "Reserved Address:57 Bit:10",
+                        "Reserved Address:57 Bit:11",
+                        "Reserved Address:57 Bit:12",
+                        "Reserved Address:57 Bit:13",
+                        "Reserved Address:57 Bit:14",
+                        "Reserved Address:57 Bit:15",
+                        "Reserved Address:57 Bit:16",
+                        "Reserved Address:57 Bit:17",
+                        "Reserved Address:57 Bit:18",
+                        "Reserved Address:57 Bit:19",
+                        "Reserved Address:57 Bit:20",
+                        "Reserved Address:57 Bit:21",
+                        "Reserved Address:57 Bit:22",
+                        "Reserved Address:57 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:57 Bit:32",
+                        "Reserved Address:57 Bit:33",
+                        "Reserved Address:57 Bit:34",
+                        "Reserved Address:57 Bit:35",
+                        "Reserved Address:57 Bit:36",
+                        "Reserved Address:57 Bit:37",
+                        "Reserved Address:57 Bit:38",
+                        "Reserved Address:57 Bit:39",
+                        "Reserved Address:57 Bit:40",
+                        "Reserved Address:57 Bit:41",
+                        "Reserved Address:57 Bit:42",
+                        "Reserved Address:57 Bit:43",
+                        "Reserved Address:57 Bit:44",
+                        "Reserved Address:57 Bit:45",
+                        "Reserved Address:57 Bit:46",
+                        "Reserved Address:57 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "rack_2_alarms",
+                    "offset": 121,
+                    "name": "rack 2 alarms",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:61 Bit:2",
+                        "Reserved Address:61 Bit:3",
+                        "Reserved Address:61 Bit:4",
+                        "Reserved Address:61 Bit:5",
+                        "Reserved Address:61 Bit:6",
+                        "Reserved Address:61 Bit:7",
+                        "Reserved Address:61 Bit:8",
+                        "Reserved Address:61 Bit:9",
+                        "Reserved Address:61 Bit:10",
+                        "Reserved Address:61 Bit:11",
+                        "Reserved Address:61 Bit:12",
+                        "Reserved Address:61 Bit:13",
+                        "Reserved Address:61 Bit:14",
+                        "Reserved Address:61 Bit:15",
+                        "Reserved Address:61 Bit:16",
+                        "Reserved Address:61 Bit:17",
+                        "Reserved Address:61 Bit:18",
+                        "Reserved Address:61 Bit:19",
+                        "Reserved Address:61 Bit:20",
+                        "Reserved Address:61 Bit:21",
+                        "Reserved Address:61 Bit:22",
+                        "Reserved Address:61 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:61 Bit:32",
+                        "Reserved Address:61 Bit:33",
+                        "Reserved Address:61 Bit:34",
+                        "Reserved Address:61 Bit:35",
+                        "Reserved Address:61 Bit:36",
+                        "Reserved Address:61 Bit:37",
+                        "Reserved Address:61 Bit:38",
+                        "Reserved Address:61 Bit:39",
+                        "Reserved Address:61 Bit:40",
+                        "Reserved Address:61 Bit:41",
+                        "Reserved Address:61 Bit:42",
+                        "Reserved Address:61 Bit:43",
+                        "Reserved Address:61 Bit:44",
+                        "Reserved Address:61 Bit:45",
+                        "Reserved Address:61 Bit:46",
+                        "Reserved Address:61 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "rack_2_max_cell_1_voltage_value",
+                    "offset": 125,
+                    "scale": 1000,
+                    "name": "rack 2 max #1 cell voltage"
+                },
+                {
+                    "id": "rack_2_max_cell_1_voltage_position",
+                    "offset": 126,
+                    "name": "rack 2 max #1 cell voltage position"
+                },
+                {
+                    "id": "rack_2_max_cell_2_voltage_value",
+                    "offset": 127,
+                    "scale": 1000,
+                    "name": "rack 2 max #2 cell voltage"
+                },
+                {
+                    "id": "rack_2_max_cell_2_voltage_position",
+                    "offset": 128,
+                    "name": "rack 2 max #2 cell voltage position"
+                },
+                {
+                    "id": "rack_2_min_cell_2_voltage_value",
+                    "offset": 130,
+                    "scale": 1000,
+                    "name": "rack 2 min #2 cell voltage"
+                },
+                {
+                    "id": "rack_2_min_cell_2_voltage_position",
+                    "offset": 131,
+                    "name": "rack 2 min #2 cell voltage position"
+                },
+                {
+                    "id": "rack_2_min_cell_1_voltage_value",
+                    "offset": 132,
+                    "scale": 1000,
+                    "name": "rack 2 min #1 cell voltage"
+                },
+                {
+                    "id": "rack_2_min_cell_1_voltage_position",
+                    "offset": 133,
+                    "name": "rack 2 min #1 cell voltage position"
+                },
+                {
+                    "id": "rack_2_max_cell_1_temp_value",
+                    "offset": 134,
+                    "scale": 100,
+                    "name": "rack 2 max #1 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_2_max_cell_1_temp_position",
+                    "offset": 135,
+                    "name": "rack 2 max #1 cell temperature position"
+                },
+                {
+                    "id": "rack_2_max_cell_2_temp_value",
+                    "offset": 136,
+                    "scale": 100,
+                    "name": "rack 2 max #2 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_2_max_cell_2_temp_position",
+                    "offset": 137,
+                    "name": "rack 2 max #2 cell temperature position"
+                },
+                {
+                    "id": "rack_2_min_cell_2_temp_value",
+                    "offset": 139,
+                    "scale": 100,
+                    "name": "rack 2 min #2 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_2_min_cell_2_temp_position",
+                    "offset": 140,
+                    "name": "rack 2 min #2 cell temperature position"
+                },
+                {
+                    "id": "rack_2_min_cell_1_temp_value",
+                    "offset": 141,
+                    "scale": 100,
+                    "name": "rack 2 min #1 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_2_min_cell_1_temp_position",
+                    "offset": 142,
+                    "name": "rack 2 min #1 cell temperature position"
+                },
+                {
+                    "id": "rack_2_dc_switch_status",
+                    "offset": 145,
+                    "name": "rack 2 switch control info",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Grid SW"
+                    ]
+                },
+                {
+                    "id": "rack_2_dc_switch_position",
+                    "offset": 146,
+                    "name": "rack 2 switch sensor info",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "DC Switch 1 On",
+                        "DC Switch 2 On"
+                    ]
+                },
+                {
+                    "id": "rack_3_voltage",
+                    "offset": 161,
+                    "scale": 10,
+                    "name": "rack 3 voltage"
+                },
+                {
+                    "id": "rack_3_current_real",
+                    "offset": 166,
+                    "scale": 10,
+                    "name": "rack 3 current",
+                    "signed": true
+                },
+                {
+                    "id": "rack_3_current_avg",
+                    "offset": 169,
+                    "scale": 10,
+                    "name": "average rack 3 current",
+                    "signed": true
+                },
+                {
+                    "id": "rack_3_soc",
+                    "offset": 171,
+                    "scale": 10,
+                    "name": "rack 3 SOC"
+                },
+                {
+                    "id": "rack_3_soh",
+                    "offset": 172,
+                    "scale": 10,
+                    "name": "rack 3 SOH"
+                },
+                {
+                    "id": "rack_3_faults",
+                    "offset": 177,
+                    "name": "rack 3 faults",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:57 Bit:2",
+                        "Reserved Address:57 Bit:3",
+                        "Reserved Address:57 Bit:4",
+                        "Reserved Address:57 Bit:5",
+                        "Reserved Address:57 Bit:6",
+                        "Reserved Address:57 Bit:7",
+                        "Reserved Address:57 Bit:8",
+                        "Reserved Address:57 Bit:9",
+                        "Reserved Address:57 Bit:10",
+                        "Reserved Address:57 Bit:11",
+                        "Reserved Address:57 Bit:12",
+                        "Reserved Address:57 Bit:13",
+                        "Reserved Address:57 Bit:14",
+                        "Reserved Address:57 Bit:15",
+                        "Reserved Address:57 Bit:16",
+                        "Reserved Address:57 Bit:17",
+                        "Reserved Address:57 Bit:18",
+                        "Reserved Address:57 Bit:19",
+                        "Reserved Address:57 Bit:20",
+                        "Reserved Address:57 Bit:21",
+                        "Reserved Address:57 Bit:22",
+                        "Reserved Address:57 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:57 Bit:32",
+                        "Reserved Address:57 Bit:33",
+                        "Reserved Address:57 Bit:34",
+                        "Reserved Address:57 Bit:35",
+                        "Reserved Address:57 Bit:36",
+                        "Reserved Address:57 Bit:37",
+                        "Reserved Address:57 Bit:38",
+                        "Reserved Address:57 Bit:39",
+                        "Reserved Address:57 Bit:40",
+                        "Reserved Address:57 Bit:41",
+                        "Reserved Address:57 Bit:42",
+                        "Reserved Address:57 Bit:43",
+                        "Reserved Address:57 Bit:44",
+                        "Reserved Address:57 Bit:45",
+                        "Reserved Address:57 Bit:46",
+                        "Reserved Address:57 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "rack_3_alarms",
+                    "offset": 181,
+                    "name": "rack 3 alarms",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:61 Bit:2",
+                        "Reserved Address:61 Bit:3",
+                        "Reserved Address:61 Bit:4",
+                        "Reserved Address:61 Bit:5",
+                        "Reserved Address:61 Bit:6",
+                        "Reserved Address:61 Bit:7",
+                        "Reserved Address:61 Bit:8",
+                        "Reserved Address:61 Bit:9",
+                        "Reserved Address:61 Bit:10",
+                        "Reserved Address:61 Bit:11",
+                        "Reserved Address:61 Bit:12",
+                        "Reserved Address:61 Bit:13",
+                        "Reserved Address:61 Bit:14",
+                        "Reserved Address:61 Bit:15",
+                        "Reserved Address:61 Bit:16",
+                        "Reserved Address:61 Bit:17",
+                        "Reserved Address:61 Bit:18",
+                        "Reserved Address:61 Bit:19",
+                        "Reserved Address:61 Bit:20",
+                        "Reserved Address:61 Bit:21",
+                        "Reserved Address:61 Bit:22",
+                        "Reserved Address:61 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:61 Bit:32",
+                        "Reserved Address:61 Bit:33",
+                        "Reserved Address:61 Bit:34",
+                        "Reserved Address:61 Bit:35",
+                        "Reserved Address:61 Bit:36",
+                        "Reserved Address:61 Bit:37",
+                        "Reserved Address:61 Bit:38",
+                        "Reserved Address:61 Bit:39",
+                        "Reserved Address:61 Bit:40",
+                        "Reserved Address:61 Bit:41",
+                        "Reserved Address:61 Bit:42",
+                        "Reserved Address:61 Bit:43",
+                        "Reserved Address:61 Bit:44",
+                        "Reserved Address:61 Bit:45",
+                        "Reserved Address:61 Bit:46",
+                        "Reserved Address:61 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "rack_3_max_cell_1_voltage_value",
+                    "offset": 185,
+                    "scale": 1000,
+                    "name": "rack 3 max #1 cell voltage"
+                },
+                {
+                    "id": "rack_3_max_cell_1_voltage_position",
+                    "offset": 186,
+                    "name": "rack 3 max #1 cell voltage position"
+                },
+                {
+                    "id": "rack_3_max_cell_2_voltage_value",
+                    "offset": 187,
+                    "scale": 1000,
+                    "name": "rack 3 max #2 cell voltage"
+                },
+                {
+                    "id": "rack_3_max_cell_2_voltage_position",
+                    "offset": 188,
+                    "name": "rack 3 max #2 cell voltage position"
+                },
+                {
+                    "id": "rack_3_min_cell_2_voltage_value",
+                    "offset": 190,
+                    "scale": 1000,
+                    "name": "rack 3 min #2 cell voltage"
+                },
+                {
+                    "id": "rack_3_min_cell_2_voltage_position",
+                    "offset": 191,
+                    "name": "rack 3 min #2 cell voltage position"
+                },
+                {
+                    "id": "rack_3_min_cell_1_voltage_value",
+                    "offset": 192,
+                    "scale": 1000,
+                    "name": "rack 3 min #1 cell voltage"
+                },
+                {
+                    "id": "rack_3_min_cell_1_voltage_position",
+                    "offset": 193,
+                    "name": "rack 3 min #1 cell voltage position"
+                },
+                {
+                    "id": "rack_3_max_cell_1_temp_value",
+                    "offset": 194,
+                    "scale": 100,
+                    "name": "rack 3 max #1 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_3_max_cell_1_temp_position",
+                    "offset": 195,
+                    "name": "rack 3 max #1 cell temperature position"
+                },
+                {
+                    "id": "rack_3_max_cell_2_temp_value",
+                    "offset": 196,
+                    "scale": 100,
+                    "name": "rack 3 max #2 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_3_max_cell_2_temp_position",
+                    "offset": 197,
+                    "name": "rack 3 max #2 cell temperature position"
+                },
+                {
+                    "id": "rack_3_min_cell_2_temp_value",
+                    "offset": 199,
+                    "scale": 100,
+                    "name": "rack 3 min #2 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_3_min_cell_2_temp_position",
+                    "offset": 200,
+                    "name": "rack 3 min #2 cell temperature position"
+                },
+                {
+                    "id": "rack_3_min_cell_1_temp_value",
+                    "offset": 201,
+                    "scale": 100,
+                    "name": "rack 3 min #1 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_3_min_cell_1_temp_position",
+                    "offset": 202,
+                    "name": "rack 3 min #1 cell temperature position"
+                },
+                {
+                    "id": "rack_3_dc_switch_status",
+                    "offset": 205,
+                    "name": "rack 3 switch control info",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Grid SW"
+                    ]
+                },
+                {
+                    "id": "rack_3_dc_switch_position",
+                    "offset": 206,
+                    "name": "rack 3 switch sensor info",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "DC Switch 1 On",
+                        "DC Switch 2 On"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 221,
+            "number_of_registers": 81,
+            "map": [
+                {
+                    "id": "rack_4_voltage",
+                    "offset": 221,
+                    "scale": 10,
+                    "name": "rack 4 voltage"
+                },
+                {
+                    "id": "rack_4_current_real",
+                    "offset": 226,
+                    "scale": 10,
+                    "name": "rack 4 current",
+                    "signed": true
+                },
+                {
+                    "id": "rack_4_current_avg",
+                    "offset": 229,
+                    "scale": 10,
+                    "name": "average rack 4 current",
+                    "signed": true
+                },
+                {
+                    "id": "rack_4_soc",
+                    "offset": 231,
+                    "scale": 10,
+                    "name": "rack 4 SOC"
+                },
+                {
+                    "id": "rack_4_soh",
+                    "offset": 232,
+                    "scale": 10,
+                    "name": "rack 4 SOH"
+                },
+                {
+                    "id": "rack_4_faults",
+                    "offset": 237,
+                    "name": "rack 4 faults",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:57 Bit:2",
+                        "Reserved Address:57 Bit:3",
+                        "Reserved Address:57 Bit:4",
+                        "Reserved Address:57 Bit:5",
+                        "Reserved Address:57 Bit:6",
+                        "Reserved Address:57 Bit:7",
+                        "Reserved Address:57 Bit:8",
+                        "Reserved Address:57 Bit:9",
+                        "Reserved Address:57 Bit:10",
+                        "Reserved Address:57 Bit:11",
+                        "Reserved Address:57 Bit:12",
+                        "Reserved Address:57 Bit:13",
+                        "Reserved Address:57 Bit:14",
+                        "Reserved Address:57 Bit:15",
+                        "Reserved Address:57 Bit:16",
+                        "Reserved Address:57 Bit:17",
+                        "Reserved Address:57 Bit:18",
+                        "Reserved Address:57 Bit:19",
+                        "Reserved Address:57 Bit:20",
+                        "Reserved Address:57 Bit:21",
+                        "Reserved Address:57 Bit:22",
+                        "Reserved Address:57 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:57 Bit:32",
+                        "Reserved Address:57 Bit:33",
+                        "Reserved Address:57 Bit:34",
+                        "Reserved Address:57 Bit:35",
+                        "Reserved Address:57 Bit:36",
+                        "Reserved Address:57 Bit:37",
+                        "Reserved Address:57 Bit:38",
+                        "Reserved Address:57 Bit:39",
+                        "Reserved Address:57 Bit:40",
+                        "Reserved Address:57 Bit:41",
+                        "Reserved Address:57 Bit:42",
+                        "Reserved Address:57 Bit:43",
+                        "Reserved Address:57 Bit:44",
+                        "Reserved Address:57 Bit:45",
+                        "Reserved Address:57 Bit:46",
+                        "Reserved Address:57 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "rack_4_alarms",
+                    "offset": 241,
+                    "name": "rack 4 alarms",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:61 Bit:2",
+                        "Reserved Address:61 Bit:3",
+                        "Reserved Address:61 Bit:4",
+                        "Reserved Address:61 Bit:5",
+                        "Reserved Address:61 Bit:6",
+                        "Reserved Address:61 Bit:7",
+                        "Reserved Address:61 Bit:8",
+                        "Reserved Address:61 Bit:9",
+                        "Reserved Address:61 Bit:10",
+                        "Reserved Address:61 Bit:11",
+                        "Reserved Address:61 Bit:12",
+                        "Reserved Address:61 Bit:13",
+                        "Reserved Address:61 Bit:14",
+                        "Reserved Address:61 Bit:15",
+                        "Reserved Address:61 Bit:16",
+                        "Reserved Address:61 Bit:17",
+                        "Reserved Address:61 Bit:18",
+                        "Reserved Address:61 Bit:19",
+                        "Reserved Address:61 Bit:20",
+                        "Reserved Address:61 Bit:21",
+                        "Reserved Address:61 Bit:22",
+                        "Reserved Address:61 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:61 Bit:32",
+                        "Reserved Address:61 Bit:33",
+                        "Reserved Address:61 Bit:34",
+                        "Reserved Address:61 Bit:35",
+                        "Reserved Address:61 Bit:36",
+                        "Reserved Address:61 Bit:37",
+                        "Reserved Address:61 Bit:38",
+                        "Reserved Address:61 Bit:39",
+                        "Reserved Address:61 Bit:40",
+                        "Reserved Address:61 Bit:41",
+                        "Reserved Address:61 Bit:42",
+                        "Reserved Address:61 Bit:43",
+                        "Reserved Address:61 Bit:44",
+                        "Reserved Address:61 Bit:45",
+                        "Reserved Address:61 Bit:46",
+                        "Reserved Address:61 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "rack_4_max_cell_1_voltage_value",
+                    "offset": 245,
+                    "scale": 1000,
+                    "name": "rack 4 max #1 cell voltage"
+                },
+                {
+                    "id": "rack_4_max_cell_1_voltage_position",
+                    "offset": 246,
+                    "name": "rack 4 max #1 cell voltage position"
+                },
+                {
+                    "id": "rack_4_max_cell_2_voltage_value",
+                    "offset": 247,
+                    "scale": 1000,
+                    "name": "rack 4 max #2 cell voltage"
+                },
+                {
+                    "id": "rack_4_max_cell_2_voltage_position",
+                    "offset": 248,
+                    "name": "rack 4 max #2 cell voltage position"
+                },
+                {
+                    "id": "rack_4_min_cell_2_voltage_value",
+                    "offset": 250,
+                    "scale": 1000,
+                    "name": "rack 4 min #2 cell voltage"
+                },
+                {
+                    "id": "rack_4_min_cell_2_voltage_position",
+                    "offset": 251,
+                    "name": "rack 4 min #2 cell voltage position"
+                },
+                {
+                    "id": "rack_4_min_cell_1_voltage_value",
+                    "offset": 252,
+                    "scale": 1000,
+                    "name": "rack 4 min #1 cell voltage"
+                },
+                {
+                    "id": "rack_4_min_cell_1_voltage_position",
+                    "offset": 253,
+                    "name": "rack 4 min #1 cell voltage position"
+                },
+                {
+                    "id": "rack_4_max_cell_1_temp_value",
+                    "offset": 254,
+                    "scale": 100,
+                    "name": "rack 4 max #1 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_4_max_cell_1_temp_position",
+                    "offset": 255,
+                    "name": "rack 4 max #1 cell temperature position"
+                },
+                {
+                    "id": "rack_4_max_cell_2_temp_value",
+                    "offset": 256,
+                    "scale": 100,
+                    "name": "rack 4 max #2 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_4_max_cell_2_temp_position",
+                    "offset": 257,
+                    "name": "rack 4 max #2 cell temperature position"
+                },
+                {
+                    "id": "rack_4_min_cell_2_temp_value",
+                    "offset": 259,
+                    "scale": 100,
+                    "name": "rack 4 min #2 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_4_min_cell_2_temp_position",
+                    "offset": 260,
+                    "name": "rack 4 min #2 cell temperature position"
+                },
+                {
+                    "id": "rack_4_min_cell_1_temp_value",
+                    "offset": 261,
+                    "scale": 100,
+                    "name": "rack 4 min #1 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_4_min_cell_1_temp_position",
+                    "offset": 262,
+                    "name": "rack 4 min #1 cell temperature position"
+                },
+                {
+                    "id": "rack_4_dc_switch_status",
+                    "offset": 265,
+                    "name": "rack 4 switch control info",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Grid SW"
+                    ]
+                },
+                {
+                    "id": "rack_4_dc_switch_position",
+                    "offset": 266,
+                    "name": "rack 4 switch sensor info",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "DC Switch 1 On",
+                        "DC Switch 2 On"
+                    ]
+                },
+                {
+                    "id": "rack_5_voltage",
+                    "offset": 281,
+                    "scale": 10,
+                    "name": "rack 5 voltage"
+                },
+                {
+                    "id": "rack_5_current_real",
+                    "offset": 286,
+                    "scale": 10,
+                    "name": "rack 5 current",
+                    "signed": true
+                },
+                {
+                    "id": "rack_5_current_avg",
+                    "offset": 289,
+                    "scale": 10,
+                    "name": "average rack 5 current",
+                    "signed": true
+                },
+                {
+                    "id": "rack_5_soc",
+                    "offset": 291,
+                    "scale": 10,
+                    "name": "rack 5 SOC"
+                },
+                {
+                    "id": "rack_5_soh",
+                    "offset": 292,
+                    "scale": 10,
+                    "name": "rack 5 SOH"
+                },
+                {
+                    "id": "rack_5_faults",
+                    "offset": 297,
+                    "name": "rack 5 faults",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:57 Bit:2",
+                        "Reserved Address:57 Bit:3",
+                        "Reserved Address:57 Bit:4",
+                        "Reserved Address:57 Bit:5",
+                        "Reserved Address:57 Bit:6",
+                        "Reserved Address:57 Bit:7",
+                        "Reserved Address:57 Bit:8",
+                        "Reserved Address:57 Bit:9",
+                        "Reserved Address:57 Bit:10",
+                        "Reserved Address:57 Bit:11",
+                        "Reserved Address:57 Bit:12",
+                        "Reserved Address:57 Bit:13",
+                        "Reserved Address:57 Bit:14",
+                        "Reserved Address:57 Bit:15",
+                        "Reserved Address:57 Bit:16",
+                        "Reserved Address:57 Bit:17",
+                        "Reserved Address:57 Bit:18",
+                        "Reserved Address:57 Bit:19",
+                        "Reserved Address:57 Bit:20",
+                        "Reserved Address:57 Bit:21",
+                        "Reserved Address:57 Bit:22",
+                        "Reserved Address:57 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:57 Bit:32",
+                        "Reserved Address:57 Bit:33",
+                        "Reserved Address:57 Bit:34",
+                        "Reserved Address:57 Bit:35",
+                        "Reserved Address:57 Bit:36",
+                        "Reserved Address:57 Bit:37",
+                        "Reserved Address:57 Bit:38",
+                        "Reserved Address:57 Bit:39",
+                        "Reserved Address:57 Bit:40",
+                        "Reserved Address:57 Bit:41",
+                        "Reserved Address:57 Bit:42",
+                        "Reserved Address:57 Bit:43",
+                        "Reserved Address:57 Bit:44",
+                        "Reserved Address:57 Bit:45",
+                        "Reserved Address:57 Bit:46",
+                        "Reserved Address:57 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "rack_5_alarms",
+                    "offset": 301,
+                    "name": "rack 5 alarms",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:61 Bit:2",
+                        "Reserved Address:61 Bit:3",
+                        "Reserved Address:61 Bit:4",
+                        "Reserved Address:61 Bit:5",
+                        "Reserved Address:61 Bit:6",
+                        "Reserved Address:61 Bit:7",
+                        "Reserved Address:61 Bit:8",
+                        "Reserved Address:61 Bit:9",
+                        "Reserved Address:61 Bit:10",
+                        "Reserved Address:61 Bit:11",
+                        "Reserved Address:61 Bit:12",
+                        "Reserved Address:61 Bit:13",
+                        "Reserved Address:61 Bit:14",
+                        "Reserved Address:61 Bit:15",
+                        "Reserved Address:61 Bit:16",
+                        "Reserved Address:61 Bit:17",
+                        "Reserved Address:61 Bit:18",
+                        "Reserved Address:61 Bit:19",
+                        "Reserved Address:61 Bit:20",
+                        "Reserved Address:61 Bit:21",
+                        "Reserved Address:61 Bit:22",
+                        "Reserved Address:61 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:61 Bit:32",
+                        "Reserved Address:61 Bit:33",
+                        "Reserved Address:61 Bit:34",
+                        "Reserved Address:61 Bit:35",
+                        "Reserved Address:61 Bit:36",
+                        "Reserved Address:61 Bit:37",
+                        "Reserved Address:61 Bit:38",
+                        "Reserved Address:61 Bit:39",
+                        "Reserved Address:61 Bit:40",
+                        "Reserved Address:61 Bit:41",
+                        "Reserved Address:61 Bit:42",
+                        "Reserved Address:61 Bit:43",
+                        "Reserved Address:61 Bit:44",
+                        "Reserved Address:61 Bit:45",
+                        "Reserved Address:61 Bit:46",
+                        "Reserved Address:61 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 305,
+            "number_of_registers": 82,
+            "map": [
+                {
+                    "id": "rack_5_max_cell_1_voltage_value",
+                    "offset": 305,
+                    "scale": 1000,
+                    "name": "rack 5 max #1 cell voltage"
+                },
+                {
+                    "id": "rack_5_max_cell_1_voltage_position",
+                    "offset": 306,
+                    "name": "rack 5 max #1 cell voltage position"
+                },
+                {
+                    "id": "rack_5_max_cell_2_voltage_value",
+                    "offset": 307,
+                    "scale": 1000,
+                    "name": "rack 5 max #2 cell voltage"
+                },
+                {
+                    "id": "rack_5_max_cell_2_voltage_position",
+                    "offset": 308,
+                    "name": "rack 5 max #2 cell voltage position"
+                },
+                {
+                    "id": "rack_5_min_cell_2_voltage_value",
+                    "offset": 310,
+                    "scale": 1000,
+                    "name": "rack 5 min #2 cell voltage"
+                },
+                {
+                    "id": "rack_5_min_cell_2_voltage_position",
+                    "offset": 311,
+                    "name": "rack 5 min #2 cell voltage position"
+                },
+                {
+                    "id": "rack_5_min_cell_1_voltage_value",
+                    "offset": 312,
+                    "scale": 1000,
+                    "name": "rack 5 min #1 cell voltage"
+                },
+                {
+                    "id": "rack_5_min_cell_1_voltage_position",
+                    "offset": 313,
+                    "name": "rack 5 min #1 cell voltage position"
+                },
+                {
+                    "id": "rack_5_max_cell_1_temp_value",
+                    "offset": 314,
+                    "scale": 100,
+                    "name": "rack 5 max #1 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_5_max_cell_1_temp_position",
+                    "offset": 315,
+                    "name": "rack 5 max #1 cell temperature position"
+                },
+                {
+                    "id": "rack_5_max_cell_2_temp_value",
+                    "offset": 316,
+                    "scale": 100,
+                    "name": "rack 5 max #2 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_5_max_cell_2_temp_position",
+                    "offset": 317,
+                    "name": "rack 5 max #2 cell temperature position"
+                },
+                {
+                    "id": "rack_5_min_cell_2_temp_value",
+                    "offset": 319,
+                    "scale": 100,
+                    "name": "rack 5 min #2 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_5_min_cell_2_temp_position",
+                    "offset": 320,
+                    "name": "rack 5 min #2 cell temperature position"
+                },
+                {
+                    "id": "rack_5_min_cell_1_temp_value",
+                    "offset": 321,
+                    "scale": 100,
+                    "name": "rack 5 min #1 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_5_min_cell_1_temp_position",
+                    "offset": 322,
+                    "name": "rack 5 min #1 cell temperature position"
+                },
+                {
+                    "id": "rack_5_dc_switch_status",
+                    "offset": 325,
+                    "name": "rack 5 switch control info",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Grid SW"
+                    ]
+                },
+                {
+                    "id": "rack_5_dc_switch_position",
+                    "offset": 326,
+                    "name": "rack 5 switch sensor info",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "DC Switch 1 On",
+                        "DC Switch 2 On"
+                    ]
+                },
+                {
+                    "id": "rack_6_voltage",
+                    "offset": 341,
+                    "scale": 10,
+                    "name": "rack 6 voltage"
+                },
+                {
+                    "id": "rack_6_current_real",
+                    "offset": 346,
+                    "scale": 10,
+                    "name": "rack 6 current",
+                    "signed": true
+                },
+                {
+                    "id": "rack_6_current_avg",
+                    "offset": 349,
+                    "scale": 10,
+                    "name": "average rack 6 current",
+                    "signed": true
+                },
+                {
+                    "id": "rack_6_soc",
+                    "offset": 351,
+                    "scale": 10,
+                    "name": "rack 6 SOC"
+                },
+                {
+                    "id": "rack_6_soh",
+                    "offset": 352,
+                    "scale": 10,
+                    "name": "rack 6 SOH"
+                },
+                {
+                    "id": "rack_6_faults",
+                    "offset": 357,
+                    "name": "rack 6 faults",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:57 Bit:2",
+                        "Reserved Address:57 Bit:3",
+                        "Reserved Address:57 Bit:4",
+                        "Reserved Address:57 Bit:5",
+                        "Reserved Address:57 Bit:6",
+                        "Reserved Address:57 Bit:7",
+                        "Reserved Address:57 Bit:8",
+                        "Reserved Address:57 Bit:9",
+                        "Reserved Address:57 Bit:10",
+                        "Reserved Address:57 Bit:11",
+                        "Reserved Address:57 Bit:12",
+                        "Reserved Address:57 Bit:13",
+                        "Reserved Address:57 Bit:14",
+                        "Reserved Address:57 Bit:15",
+                        "Reserved Address:57 Bit:16",
+                        "Reserved Address:57 Bit:17",
+                        "Reserved Address:57 Bit:18",
+                        "Reserved Address:57 Bit:19",
+                        "Reserved Address:57 Bit:20",
+                        "Reserved Address:57 Bit:21",
+                        "Reserved Address:57 Bit:22",
+                        "Reserved Address:57 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:57 Bit:32",
+                        "Reserved Address:57 Bit:33",
+                        "Reserved Address:57 Bit:34",
+                        "Reserved Address:57 Bit:35",
+                        "Reserved Address:57 Bit:36",
+                        "Reserved Address:57 Bit:37",
+                        "Reserved Address:57 Bit:38",
+                        "Reserved Address:57 Bit:39",
+                        "Reserved Address:57 Bit:40",
+                        "Reserved Address:57 Bit:41",
+                        "Reserved Address:57 Bit:42",
+                        "Reserved Address:57 Bit:43",
+                        "Reserved Address:57 Bit:44",
+                        "Reserved Address:57 Bit:45",
+                        "Reserved Address:57 Bit:46",
+                        "Reserved Address:57 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "rack_6_alarms",
+                    "offset": 361,
+                    "name": "rack 6 alarms",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Module PCB Under Temperature",
+                        "Module PCB Over Temperature",
+                        "Reserved Address:61 Bit:2",
+                        "Reserved Address:61 Bit:3",
+                        "Reserved Address:61 Bit:4",
+                        "Reserved Address:61 Bit:5",
+                        "Reserved Address:61 Bit:6",
+                        "Reserved Address:61 Bit:7",
+                        "Reserved Address:61 Bit:8",
+                        "Reserved Address:61 Bit:9",
+                        "Reserved Address:61 Bit:10",
+                        "Reserved Address:61 Bit:11",
+                        "Reserved Address:61 Bit:12",
+                        "Reserved Address:61 Bit:13",
+                        "Reserved Address:61 Bit:14",
+                        "Reserved Address:61 Bit:15",
+                        "Reserved Address:61 Bit:16",
+                        "Reserved Address:61 Bit:17",
+                        "Reserved Address:61 Bit:18",
+                        "Reserved Address:61 Bit:19",
+                        "Reserved Address:61 Bit:20",
+                        "Reserved Address:61 Bit:21",
+                        "Reserved Address:61 Bit:22",
+                        "Reserved Address:61 Bit:23",
+                        "DCSW 1 sensing fault",
+                        "DCSW 2 sensing fault",
+                        "DCSW 1 fail",
+                        "DCSW 2 fail",
+                        "Fan fail",
+                        "Additional protection Fault",
+                        "Cell Charge Operation Limit Fault",
+                        "Cell Discharge Operation Limit Fault",
+                        "Reserved Address:61 Bit:32",
+                        "Reserved Address:61 Bit:33",
+                        "Reserved Address:61 Bit:34",
+                        "Reserved Address:61 Bit:35",
+                        "Reserved Address:61 Bit:36",
+                        "Reserved Address:61 Bit:37",
+                        "Reserved Address:61 Bit:38",
+                        "Reserved Address:61 Bit:39",
+                        "Reserved Address:61 Bit:40",
+                        "Reserved Address:61 Bit:41",
+                        "Reserved Address:61 Bit:42",
+                        "Reserved Address:61 Bit:43",
+                        "Reserved Address:61 Bit:44",
+                        "Reserved Address:61 Bit:45",
+                        "Reserved Address:61 Bit:46",
+                        "Reserved Address:61 Bit:47",
+                        "Module Under Temperature",
+                        "Module Over Voltageer Temperature",
+                        "Module Under Voltage",
+                        "Module Over Voltage",
+                        "Rack Voltage Imbalance",
+                        "Module Temperature Imbalance",
+                        "R-M Communication Failure",
+                        "R-S Communication Failure",
+                        "Rack Charge Over Current",
+                        "Rack Discharge Over Current",
+                        "Rack Under Voltage",
+                        "Rack Over Voltage",
+                        "Rack Voltage Sensing Difference",
+                        "Rack I sensor fail",
+                        "Rack Fuse Fail",
+                        "Permanent Under Voltage"
+                    ]
+                },
+                {
+                    "id": "rack_6_max_cell_1_voltage_value",
+                    "offset": 365,
+                    "scale": 1000,
+                    "name": "rack 6 max #1 cell voltage"
+                },
+                {
+                    "id": "rack_6_max_cell_1_voltage_position",
+                    "offset": 366,
+                    "name": "rack 6 max #1 cell voltage position"
+                },
+                {
+                    "id": "rack_6_max_cell_2_voltage_value",
+                    "offset": 367,
+                    "scale": 1000,
+                    "name": "rack 6 max #2 cell voltage"
+                },
+                {
+                    "id": "rack_6_max_cell_2_voltage_position",
+                    "offset": 368,
+                    "name": "rack 6 max #2 cell voltage position"
+                },
+                {
+                    "id": "rack_6_min_cell_2_voltage_value",
+                    "offset": 370,
+                    "scale": 1000,
+                    "name": "rack 6 min #2 cell voltage"
+                },
+                {
+                    "id": "rack_6_min_cell_2_voltage_position",
+                    "offset": 371,
+                    "name": "rack 6 min #2 cell voltage position"
+                },
+                {
+                    "id": "rack_6_min_cell_1_voltage_value",
+                    "offset": 372,
+                    "scale": 1000,
+                    "name": "rack 6 min #1 cell voltage"
+                },
+                {
+                    "id": "rack_6_min_cell_1_voltage_position",
+                    "offset": 373,
+                    "name": "rack 6 min #1 cell voltage position"
+                },
+                {
+                    "id": "rack_6_max_cell_1_temp_value",
+                    "offset": 374,
+                    "scale": 100,
+                    "name": "rack 6 max #1 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_6_max_cell_1_temp_position",
+                    "offset": 375,
+                    "name": "rack 6 max #1 cell temperature position"
+                },
+                {
+                    "id": "rack_6_max_cell_2_temp_value",
+                    "offset": 376,
+                    "scale": 100,
+                    "name": "rack 6 max #2 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_6_max_cell_2_temp_position",
+                    "offset": 377,
+                    "name": "rack 6 max #2 cell temperature position"
+                },
+                {
+                    "id": "rack_6_min_cell_2_temp_value",
+                    "offset": 379,
+                    "scale": 100,
+                    "name": "rack 6 min #2 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_6_min_cell_2_temp_position",
+                    "offset": 380,
+                    "name": "rack 6 min #2 cell temperature position"
+                },
+                {
+                    "id": "rack_6_min_cell_1_temp_value",
+                    "offset": 381,
+                    "scale": 100,
+                    "name": "rack 6 min #1 cell temperature",
+                    "signed": true
+                },
+                {
+                    "id": "rack_6_min_cell_1_temp_position",
+                    "offset": 382,
+                    "name": "rack 6 min #1 cell temperature position"
+                },
+                {
+                    "id": "rack_6_dc_switch_status",
+                    "offset": 385,
+                    "name": "rack 6 switch control info",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "Grid SW"
+                    ]
+                },
+                {
+                    "id": "rack_6_dc_switch_position",
+                    "offset": 386,
+                    "name": "rack 6 switch sensor info",
+                    "bit_field": true,
+                    "bit_strings": [
+                        "DC Switch 1 On",
+                        "DC Switch 2 On"
+                    ]
+                }
+            ]
+        }
+    ]
+}

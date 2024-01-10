@@ -24,19 +24,27 @@ def pytest_sessionstart(session):
     if len(pid) == 0:
         pytest.exit("dbi is not running")
 
+    clear_mongo()
+
+    print("startup check successful")
+
+# clears mongo so we have a clean slate before tests begin
+def clear_mongo():
     mongo = Mongo()
     mongo.client.drop_database('dbi')   # clear out databases
     mongo.client.drop_database('audit') 
     mongo.client.close()
 
-    print("startup check successful")
-
-
 def pytest_sessionfinish(session, exitstatus):
+    clear_tmpjsons()
+    print("\ntesting complete! executed %d queries to DBI." % pytest.send_count)
+
+# delete temporary json files
+def clear_tmpjsons():
     tmp_path = '%s/args/tmp' % os.getcwd()
     if os.path.exists(tmp_path):
         shutil.rmtree(tmp_path)
-    print("\ntesting complete! executed %d queries to DBI." % pytest.send_count)
+
 
 # globalized fields that can be accessed by all tests
 def pytest_configure(config):
@@ -68,8 +76,6 @@ def save_restore_state(request):
         file.close()
     else: # else save it
         state = send("get", "/dbi/%s" % frags[0])
-        if 'not found' in state:
-            state = "{}"
         state_path = tmp_json(state, '%s_prev' % frags[0])
 
     yield state # handoff

@@ -1,0 +1,12 @@
+{
+   "system":
+   {   "name":"Sungrow PCS",
+       "protocol": "Modbus TCP",
+       "id": "Sungrow PCS",
+       "ip_address": "192.168.112.13",
+       "port": 502 
+   },
+    "registers":
+     {
+    }
+}

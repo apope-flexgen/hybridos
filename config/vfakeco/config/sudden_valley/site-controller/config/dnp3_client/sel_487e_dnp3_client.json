@@ -1,0 +1,1604 @@
+{
+    "fileInfo": {
+        "outputFileCreated": "2022-10-04T17:27:36.161Z",
+        "outputFileName": "sel_487e_dnp3_client.json",
+        "outputFileType": "dnp3",
+        "sourceFileCreated": "2020-06-26T17:11:50.000Z",
+        "sourceFileCreatedBy": "Administrator",
+        "sourceFileLastModified": "2022-10-04T17:27:32.000Z",
+        "sourceFileLastModifiedBy": "Jasen Liu",
+        "sourceFileName": "SEL_487E.xlsx"
+    },
+    "registers": [
+        {
+            "map": [
+                {
+                    "id": "remote_bit_01",
+                    "name": "RB01",
+                    "offset": 0,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_02",
+                    "name": "RB02",
+                    "offset": 1,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_03",
+                    "name": "RB03",
+                    "offset": 2,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_04",
+                    "name": "RB04",
+                    "offset": 3,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_05",
+                    "name": "RB05",
+                    "offset": 4,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_06",
+                    "name": "RB06",
+                    "offset": 5,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_07",
+                    "name": "RB07",
+                    "offset": 6,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_08",
+                    "name": "RB08",
+                    "offset": 7,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_09",
+                    "name": "RB09",
+                    "offset": 8,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_10",
+                    "name": "RB10",
+                    "offset": 9,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_11",
+                    "name": "RB11",
+                    "offset": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_12",
+                    "name": "RB12",
+                    "offset": 11,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_13",
+                    "name": "RB13",
+                    "offset": 12,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_14",
+                    "name": "RB14",
+                    "offset": 13,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_15",
+                    "name": "RB15",
+                    "offset": 14,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_16",
+                    "name": "RB16",
+                    "offset": 15,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_17",
+                    "name": "RB17",
+                    "offset": 16,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_18",
+                    "name": "RB18",
+                    "offset": 17,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_19",
+                    "name": "RB19",
+                    "offset": 18,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_20",
+                    "name": "RB20",
+                    "offset": 19,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_21",
+                    "name": "RB21",
+                    "offset": 20,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_22",
+                    "name": "RB22",
+                    "offset": 21,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_23",
+                    "name": "RB23",
+                    "offset": 22,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_24",
+                    "name": "RB24",
+                    "offset": 23,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_25",
+                    "name": "RB25",
+                    "offset": 24,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_26",
+                    "name": "RB26",
+                    "offset": 25,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_27",
+                    "name": "RB27",
+                    "offset": 26,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_28",
+                    "name": "RB28",
+                    "offset": 27,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_29",
+                    "name": "RB29",
+                    "offset": 28,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_30",
+                    "name": "RB30",
+                    "offset": 29,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_31",
+                    "name": "RB31",
+                    "offset": 30,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "remote_bit_32",
+                    "name": "RB32",
+                    "offset": 31,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_open_cmd_term_s",
+                    "name": "OCS",
+                    "offset": 32,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_close_cmd_term_s",
+                    "name": "CCS",
+                    "offset": 33,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_open_cmd_term_t",
+                    "name": "OCT",
+                    "offset": 34,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_close_cmd_term_t",
+                    "name": "CCT",
+                    "offset": 35,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_open_cmd_term_u",
+                    "name": "OCU",
+                    "offset": 36,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_close_cmd_term_u",
+                    "name": "CCU",
+                    "offset": 37,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_open_cmd_term_w",
+                    "name": "OCW",
+                    "offset": 38,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_close_cmd_term_w",
+                    "name": "CCW",
+                    "offset": 39,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_open_cmd_term_x",
+                    "name": "OCX",
+                    "offset": 40,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_close_cmd_term_x",
+                    "name": "CCX",
+                    "offset": 41,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "open_disconnect_control_1",
+                    "name": "89OC01",
+                    "offset": 42,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "close_disconnect_control_1",
+                    "name": "89CC01",
+                    "offset": 43,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "open_disconnect_control_2",
+                    "name": "89OC02",
+                    "offset": 44,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "close_disconnect_control_2",
+                    "name": "89CC02",
+                    "offset": 45,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "open_disconnect_control_3",
+                    "name": "89OC03",
+                    "offset": 46,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "close_disconnect_control_3",
+                    "name": "89CC03",
+                    "offset": 47,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "open_disconnect_control_4",
+                    "name": "89OC04",
+                    "offset": 48,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "close_disconnect_control_4",
+                    "name": "89CC04",
+                    "offset": 49,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "open_disconnect_control_5",
+                    "name": "89OC05",
+                    "offset": 50,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "close_disconnect_control_5",
+                    "name": "89CC05",
+                    "offset": 51,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "open_disconnect_control_6",
+                    "name": "89OC06",
+                    "offset": 52,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "close_disconnect_control_6",
+                    "name": "89CC06",
+                    "offset": 53,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "open_disconnect_control_7",
+                    "name": "89OC07",
+                    "offset": 54,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "close_disconnect_control_7",
+                    "name": "89CC07",
+                    "offset": 55,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "open_disconnect_control_8",
+                    "name": "89OC08",
+                    "offset": 56,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "close_disconnect_control_8",
+                    "name": "89CC08",
+                    "offset": 57,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "open_disconnect_control_9",
+                    "name": "89OC09",
+                    "offset": 58,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "close_disconnect_control_9",
+                    "name": "89CC09",
+                    "offset": 59,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "open_disconnect_control_10",
+                    "name": "89OC10",
+                    "offset": 60,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "close_disconnect_control_10",
+                    "name": "89CC10",
+                    "offset": 61,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reset_targets",
+                    "name": "RSTTRGT",
+                    "offset": 62,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reset_fault_summary",
+                    "name": "RSTDNPE",
+                    "offset": 63,
+                    "uri": "/components/sel_487e_pri"
+                }
+            ],
+            "number_of_registers": 64,
+            "starting_offset": 0,
+            "type": "AnOPInt16"
+        },
+        {
+            "map": [
+                {
+                    "id": "bkr_s_op_counter",
+                    "name": "BKRSOP",
+                    "offset": 0,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "bkr_t_op_counter",
+                    "name": "BKRTOP",
+                    "offset": 1,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "bkr_u_op_counter",
+                    "name": "BKRUOP",
+                    "offset": 2,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "bkr_w_op_counter",
+                    "name": "BKRWOP",
+                    "offset": 3,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "bkr_x_op_counter",
+                    "name": "BKRXOP",
+                    "offset": 4,
+                    "uri": "/components/sel_487e_pri"
+                }
+            ],
+            "number_of_registers": 5,
+            "starting_offset": 0,
+            "type": "AnOPInt32"
+        },
+        {
+            "map": [
+                {
+                    "id": "current_phase_a_term_s_mag_1cycle",
+                    "name": "IASFMC",
+                    "offset": 0,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_a_term_s_angle_1cycle",
+                    "name": "IASFAC",
+                    "offset": 1,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_b_term_s_mag_1cycle",
+                    "name": "IBSFMC",
+                    "offset": 2,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_b_term_s_angle_1cycle",
+                    "name": "IBSFAC",
+                    "offset": 3,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_c_term_s_mag_1cycle",
+                    "name": "ICSFMC",
+                    "offset": 4,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_c_term_s_angle_1cycle",
+                    "name": "ICSFAC",
+                    "offset": 5,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_a_term_t_mag_1cycle",
+                    "name": "IATFMC",
+                    "offset": 6,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_a_term_t_angle_1cycle",
+                    "name": "IATFAC",
+                    "offset": 7,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_b_term_t_mag_1cycle",
+                    "name": "IBTFMC",
+                    "offset": 8,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_b_term_t_angle_1cycle",
+                    "name": "IBTFAC",
+                    "offset": 9,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_c_term_t_mag_1cycle",
+                    "name": "ICTFMC",
+                    "offset": 10,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_c_term_t_angle_1cycle",
+                    "name": "ICTFAC",
+                    "offset": 11,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_a_term_u_mag_1cycle",
+                    "name": "IAUFMC",
+                    "offset": 12,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_a_term_u_angle_1cycle",
+                    "name": "IAUFAC",
+                    "offset": 13,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_b_term_u_mag_1cycle",
+                    "name": "IBUFMC",
+                    "offset": 14,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_b_term_u_angle_1cycle",
+                    "name": "IBUFAC",
+                    "offset": 15,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_c_term_u_mag_1cycle",
+                    "name": "ICUFMC",
+                    "offset": 16,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_c_term_u_angle_1cycle",
+                    "name": "ICUFAC",
+                    "offset": 17,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_a_term_w_mag_1cycle",
+                    "name": "IAWFMC",
+                    "offset": 18,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_a_term_w_angle_1cycle",
+                    "name": "IAWFAC",
+                    "offset": 19,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_b_term_w_mag_1cycle",
+                    "name": "IBWFMC",
+                    "offset": 20,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_b_term_w_angle_1cycle",
+                    "name": "IBWFAC",
+                    "offset": 21,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_c_term_w_mag_1cycle",
+                    "name": "ICWFMC",
+                    "offset": 22,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_c_term_w_angle_1cycle",
+                    "name": "ICWFAC",
+                    "offset": 23,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_a_term_x_mag_1cycle",
+                    "name": "IAXFMC",
+                    "offset": 24,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_a_term_x_angle_1cycle",
+                    "name": "IAXFAC",
+                    "offset": 25,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_b_term_x_mag_1cycle",
+                    "name": "IBXFMC",
+                    "offset": 26,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_b_term_x_angle_1cycle",
+                    "name": "IBXFAC",
+                    "offset": 27,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_c_term_x_mag_1cycle",
+                    "name": "ICXFMC",
+                    "offset": 28,
+                    "scale": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "current_phase_c_term_x_angle_1cycle",
+                    "name": "ICXFAC",
+                    "offset": 29,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_phase_a_term_v_mag_1cycle",
+                    "name": "VAVFMC",
+                    "offset": 30,
+                    "scale": 0.01,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_phase_a_term_v_angle_1cycle",
+                    "name": "VAVFAC",
+                    "offset": 31,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_phase_b_term_v_mag_1cycle",
+                    "name": "VBVFMC",
+                    "offset": 32,
+                    "scale": 0.01,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_phase_b_term_v_angle_1cycle",
+                    "name": "VBVFAC",
+                    "offset": 33,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_phase_c_term_v_mag_1cycle",
+                    "name": "VCVFMC",
+                    "offset": 34,
+                    "scale": 0.01,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_phase_c_term_v_angle_1cycle",
+                    "name": "VCVFAC",
+                    "offset": 35,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_phase_a_term_z_mag_1cycle",
+                    "name": "VAZFMC",
+                    "offset": 36,
+                    "scale": 0.01,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_phase_a_term_z_angle_1cycle",
+                    "name": "VAZFAC",
+                    "offset": 37,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_phase_b_term_z_mag_1cycle",
+                    "name": "VBZFMC",
+                    "offset": 38,
+                    "scale": 0.01,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_phase_b_term_z_angle_1cycle",
+                    "name": "VBZFAC",
+                    "offset": 39,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_phase_c_term_z_mag_1cycle",
+                    "name": "VCZFMC",
+                    "offset": 40,
+                    "scale": 0.01,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_phase_c_term_z_angle_1cycle",
+                    "name": "VCZFAC",
+                    "offset": 41,
+                    "scale": 100,
+                    "signed": true,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_a_term_s_1cycle",
+                    "name": "PASFC",
+                    "offset": 42,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_b_term_s_1cycle",
+                    "name": "PBSFC",
+                    "offset": 43,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_c_term_s_1cycle",
+                    "name": "PCSFC",
+                    "offset": 44,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_a_term_t_1cycle",
+                    "name": "PATFC",
+                    "offset": 45,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_b_term_t_1cycle",
+                    "name": "PBTFC",
+                    "offset": 46,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_c_term_t_1cycle",
+                    "name": "PCTFC",
+                    "offset": 47,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_a_term_u_1cycle",
+                    "name": "PAUFC",
+                    "offset": 48,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_b_term_u_1cycle",
+                    "name": "PBUFC",
+                    "offset": 49,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_c_term_u_1cycle",
+                    "name": "PCUFC",
+                    "offset": 50,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_a_term_w_1cycle",
+                    "name": "PAWFC",
+                    "offset": 51,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_b_term_w_1cycle",
+                    "name": "PBWFC",
+                    "offset": 52,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_c_term_w_1cycle",
+                    "name": "PCWFC",
+                    "offset": 53,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_a_term_x_1cycle",
+                    "name": "PAXFC",
+                    "offset": 54,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_b_term_x_1cycle",
+                    "name": "PBXFC",
+                    "offset": 55,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_power_phase_c_term_x_1cycle",
+                    "name": "PCXFC",
+                    "offset": 56,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_a_term_s_1cycle",
+                    "name": "QASFC",
+                    "offset": 57,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_b_term_s_1cycle",
+                    "name": "QBSFC",
+                    "offset": 58,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_c_term_s_1cycle",
+                    "name": "QCSFC",
+                    "offset": 59,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_a_term_t_1cycle",
+                    "name": "QATFC",
+                    "offset": 60,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_b_term_t_1cycle",
+                    "name": "QBTFC",
+                    "offset": 61,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_c_term_t_1cycle",
+                    "name": "QCTFC",
+                    "offset": 62,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_a_term_u_1cycle",
+                    "name": "QAUFC",
+                    "offset": 63,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_b_term_u_1cycle",
+                    "name": "QBUFC",
+                    "offset": 64,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_c_term_u_1cycle",
+                    "name": "QCUFC",
+                    "offset": 65,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_a_term_w_1cycle",
+                    "name": "QAWFC",
+                    "offset": 66,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_b_term_w_1cycle",
+                    "name": "QBWFC",
+                    "offset": 67,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_c_term_w_1cycle",
+                    "name": "QCWFC",
+                    "offset": 68,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_a_term_x_1cycle",
+                    "name": "QAXFC",
+                    "offset": 69,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_b_term_x_1cycle",
+                    "name": "QBXFC",
+                    "offset": 70,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "reactive_power_phase_c_term_x_1cycle",
+                    "name": "QCXFC",
+                    "offset": 71,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "active_settings_group",
+                    "name": "Active Settings Group",
+                    "offset": 72,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "relay_temp",
+                    "name": "RLYTEMP",
+                    "offset": 73,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "frequency",
+                    "name": "Frequency",
+                    "offset": 74,
+                    "scale": 100,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "station_battery_dc_voltage",
+                    "name": "VDC",
+                    "offset": 75,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "fault_type",
+                    "name": "FTYPE",
+                    "offset": 76,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "fault_targets_1",
+                    "name": "FTAR1",
+                    "offset": 77,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "fault_targets_2",
+                    "name": "FTAR2",
+                    "offset": 78,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "fault_frequency",
+                    "name": "FFREQ",
+                    "offset": 79,
+                    "scale": 100,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "fault_active_settings_group",
+                    "name": "FGRP",
+                    "offset": 80,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "fault_time_h",
+                    "name": "FTIMEUH",
+                    "offset": 81,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "fault_time_m",
+                    "name": "FTIMEUM",
+                    "offset": 82,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "fault_time_l",
+                    "name": "FTIMEUL",
+                    "offset": 83,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "unread_faults",
+                    "name": "FUNR",
+                    "offset": 84,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_active_power_s",
+                    "name": "3-phase Active Power Terminal S",
+                    "offset": 85,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_active_power_t",
+                    "name": "3-phase Active Power Terminal T",
+                    "offset": 86,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_active_power_u",
+                    "name": "3-phase Active Power Terminal U",
+                    "offset": 87,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_active_power_w",
+                    "name": "3-phase Active Power Terminal W",
+                    "offset": 88,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_active_power_x",
+                    "name": "3-phase Active Power Terminal X",
+                    "offset": 89,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_reactive_power_s",
+                    "name": "3-phase Reactive Power Terminal S",
+                    "offset": 90,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_reactive_power_t",
+                    "name": "3-phase Reactive Power Terminal T",
+                    "offset": 91,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_reactive_power_u",
+                    "name": "3-phase Reactive Power Terminal U",
+                    "offset": 92,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_reactive_power_w",
+                    "name": "3-phase Reactive Power Terminal W",
+                    "offset": 93,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_reactive_power_x",
+                    "name": "3-phase Reactive Power Terminal X",
+                    "offset": 94,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_apparent_power_s",
+                    "name": "3-phase Apparent Power Terminal S",
+                    "offset": 95,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_apparent_power_t",
+                    "name": "3-phase Apparent Power Terminal T",
+                    "offset": 96,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_apparent_power_u",
+                    "name": "3-phase Apparent Power Terminal U",
+                    "offset": 97,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_apparent_power_w",
+                    "name": "3-phase Apparent Power Terminal W",
+                    "offset": 98,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "3p_apparent_power_x",
+                    "name": "3-phase Apparent Power Terminal X",
+                    "offset": 99,
+                    "uri": "/components/sel_487e_pri"
+                }
+            ],
+            "number_of_registers": 100,
+            "starting_offset": 0,
+            "type": "analog"
+        },
+        {
+            "map": [
+                {
+                    "id": "relay_disabled",
+                    "name": "RLYDIS",
+                    "offset": 0,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "trip_led",
+                    "name": "TRIPLED",
+                    "offset": 1,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "relay_diagnostic_fail",
+                    "name": "STFAIL",
+                    "offset": 2,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "relay_diagnostic_warn",
+                    "name": "STWARN",
+                    "offset": 3,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "settings_change_or_restarted",
+                    "name": "STSET",
+                    "offset": 4,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "unread_event",
+                    "name": "UNRDEV",
+                    "offset": 5,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_closed_term_s",
+                    "name": "52CLS",
+                    "offset": 6,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_alarm_term_s",
+                    "name": "52ALS",
+                    "offset": 7,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_closed_term_t",
+                    "name": "52CLT",
+                    "offset": 8,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_alarm_term_t",
+                    "name": "52ALT",
+                    "offset": 9,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_closed_term_u",
+                    "name": "52CLU",
+                    "offset": 10,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_alarm_term_u",
+                    "name": "52ALU",
+                    "offset": 11,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_closed_term_w",
+                    "name": "52CLW",
+                    "offset": 12,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_alarm_term_w",
+                    "name": "52ALW",
+                    "offset": 13,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_closed_term_x",
+                    "name": "52CLX",
+                    "offset": 14,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "brk_alarm_term_x",
+                    "name": "52ALX",
+                    "offset": 15,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_1_closed",
+                    "name": "89CL01",
+                    "offset": 16,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_1_alarm",
+                    "name": "89AL01",
+                    "offset": 17,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_2_closed",
+                    "name": "89CL02",
+                    "offset": 18,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_2_alarm",
+                    "name": "89AL02",
+                    "offset": 19,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_3_closed",
+                    "name": "89CL03",
+                    "offset": 20,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_3_alarm",
+                    "name": "89AL03",
+                    "offset": 21,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_4_closed",
+                    "name": "89CL04",
+                    "offset": 22,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_4_alarm",
+                    "name": "89AL04",
+                    "offset": 23,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_5_closed",
+                    "name": "89CL05",
+                    "offset": 24,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_5_alarm",
+                    "name": "89AL05",
+                    "offset": 25,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_6_closed",
+                    "name": "89CL06",
+                    "offset": 26,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_6_alarm",
+                    "name": "89AL06",
+                    "offset": 27,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_7_closed",
+                    "name": "89CL07",
+                    "offset": 28,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_7_alarm",
+                    "name": "89AL07",
+                    "offset": 29,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_8_closed",
+                    "name": "89CL08",
+                    "offset": 30,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_8_alarm",
+                    "name": "89AL08",
+                    "offset": 31,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_9_closed",
+                    "name": "89CL09",
+                    "offset": 32,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_9_alarm",
+                    "name": "89AL09",
+                    "offset": 33,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_10_closed",
+                    "name": "89CL10",
+                    "offset": 34,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "disconnect_10_alarm",
+                    "name": "89AL10",
+                    "offset": 35,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_1",
+                    "name": "TLED_1",
+                    "offset": 36,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_2",
+                    "name": "TLED_2",
+                    "offset": 37,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_3",
+                    "name": "TLED_3",
+                    "offset": 38,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_4",
+                    "name": "TLED_4",
+                    "offset": 39,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_5",
+                    "name": "TLED_5",
+                    "offset": 40,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_6",
+                    "name": "TLED_6",
+                    "offset": 41,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_7",
+                    "name": "TLED_7",
+                    "offset": 42,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_8",
+                    "name": "TLED_8",
+                    "offset": 43,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_9",
+                    "name": "TLED_9",
+                    "offset": 44,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_10",
+                    "name": "TLED_10",
+                    "offset": 45,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_11",
+                    "name": "TLED_11",
+                    "offset": 46,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_12",
+                    "name": "TLED_12",
+                    "offset": 47,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_13",
+                    "name": "TLED_13",
+                    "offset": 48,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_14",
+                    "name": "TLED_14",
+                    "offset": 49,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_15",
+                    "name": "TLED_15",
+                    "offset": 50,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_16",
+                    "name": "TLED_16",
+                    "offset": 51,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_17",
+                    "name": "TLED_17",
+                    "offset": 52,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_18",
+                    "name": "TLED_18",
+                    "offset": 53,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_19",
+                    "name": "TLED_19",
+                    "offset": 54,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_20",
+                    "name": "TLED_20",
+                    "offset": 55,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_21",
+                    "name": "TLED_21",
+                    "offset": 56,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_22",
+                    "name": "TLED_22",
+                    "offset": 57,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_23",
+                    "name": "TLED_23",
+                    "offset": 58,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "target_led_24",
+                    "name": "TLED_24",
+                    "offset": 59,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_alarm_term_v",
+                    "name": "VALARMV",
+                    "offset": 60,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "loss_of_potential_term_v",
+                    "name": "LOPV",
+                    "offset": 61,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "voltage_alarm_term_z",
+                    "name": "VALARMZ",
+                    "offset": 62,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "loss_of_potential_term_z",
+                    "name": "LOPZ",
+                    "offset": 63,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "in101",
+                    "name": "IN101",
+                    "offset": 64,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "in102",
+                    "name": "IN102",
+                    "offset": 65,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "in103",
+                    "name": "IN103",
+                    "offset": 66,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "in104",
+                    "name": "IN104",
+                    "offset": 67,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "in105",
+                    "name": "IN105",
+                    "offset": 68,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "in106",
+                    "name": "IN106",
+                    "offset": 69,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "in107",
+                    "name": "IN107",
+                    "offset": 70,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "out101",
+                    "name": "OUT101",
+                    "offset": 71,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "out102",
+                    "name": "OUT102",
+                    "offset": 72,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "out103",
+                    "name": "OUT103",
+                    "offset": 73,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "out104",
+                    "name": "OUT104",
+                    "offset": 74,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "out105",
+                    "name": "OUT105",
+                    "offset": 75,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "out106",
+                    "name": "OUT106",
+                    "offset": 76,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "out107",
+                    "name": "OUT107",
+                    "offset": 77,
+                    "uri": "/components/sel_487e_pri"
+                },
+                {
+                    "id": "out108",
+                    "name": "OUT108",
+                    "offset": 78,
+                    "uri": "/components/sel_487e_pri"
+                }
+            ],
+            "number_of_registers": 79,
+            "starting_offset": 0,
+            "type": "binary"
+        }
+    ],
+    "system": {
+        "data_bits": "Columns marked in green are REQUIRED",
+        "id": "sel_487e_pri",
+        "ip_address": "192.168.10.250",
+        "name": "SEL 487E Primary",
+        "port": 20001,
+        "protocol": "DNP3",
+        "version": "0.3"
+    }
+}

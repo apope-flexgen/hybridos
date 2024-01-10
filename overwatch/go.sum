@@ -5,11 +5,14 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/deepmap/oapi-codegen v1.8.2/go.mod h1:YLgSKSDv/bZQB7N4ws6luhozi3cEdRktEqrX88CvjIw=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
+github.com/flexgen-power/fims_codec v0.0.0-20230501152638-109039531c87 h1:rAR5N6AIEw3SyMe5Rqnr5AXz6qCqKxsbSr/y1tPnGb4=
+github.com/flexgen-power/fims_codec v0.0.0-20230501152638-109039531c87/go.mod h1:Sqk0pPYZh8bdDwUZ6//wG7TLIcsSjUS1ivQLhm/X5OA=
 github.com/flexgen-power/glog v1.0.0/go.mod h1:DcZQUOiOpHxXmlcjxreltuUGfbZLjXv5d39BoivjWiE=
 github.com/flexgen-power/go_flexgen v0.0.0-20220815181946-6c5f95925a31/go.mod h1:JrdGFivcmK9R+0YCT65p4xy88ZQ+Fhb2o9cdS0oYOBQ=
 github.com/flexgen-power/go_flexgen v0.0.0-20220928143027-2922ae5b733a/go.mod h1:vXEESlFMgcPOj6qx/Ow5bKqknNsvyYYgHZdimp7se7w=
-github.com/flexgen-power/go_flexgen v0.0.0-20221010181028-4d8ef60bacce h1:89Ux9sT72l6IjlPC6z/OlI2YwhelOw5gPX57QwndASQ=
-github.com/flexgen-power/go_flexgen v0.0.0-20221010181028-4d8ef60bacce/go.mod h1:vXEESlFMgcPOj6qx/Ow5bKqknNsvyYYgHZdimp7se7w=
+github.com/flexgen-power/go_flexgen v0.0.0-20221102195558-e0b45330cfdc/go.mod h1:vXEESlFMgcPOj6qx/Ow5bKqknNsvyYYgHZdimp7se7w=
+github.com/flexgen-power/go_flexgen v0.0.0-20230118202037-6dba88dd3c1b h1:3QDB0fADqJPy63Z3QmwD7O4B3ChNmK+cBsytcjD22Bk=
+github.com/flexgen-power/go_flexgen v0.0.0-20230118202037-6dba88dd3c1b/go.mod h1:vXEESlFMgcPOj6qx/Ow5bKqknNsvyYYgHZdimp7se7w=
 github.com/flexgen-power/influxdb_client v0.0.0-20221010181040-f80a456b37a6 h1:h4eNk06hn4a1KWZLTjW39BFzmvWAcPY3UrxbhmbBNUE=
 github.com/flexgen-power/influxdb_client v0.0.0-20221010181040-f80a456b37a6/go.mod h1:Pr/BVfAIXdCV0Cl+4uZcPORuEib3US94HiLryIEdd5k=
 github.com/flexgen-power/mongodb_client v0.0.0-20221010181048-147c5e08c801 h1:4IiSmAnAUEJPMUkyowXFRn0FplLn8Jkoo9oDGU6PcOc=

@@ -1,0 +1,41 @@
+{
+	"system":
+	{
+		"id": "apt_master",
+		"ip_address": "10.8.20.10",
+		"port": 502,
+		"frequency": 500,
+		"byte_swap": false
+	},
+	"registers":
+	[
+		{
+			"type": "Input Registers",
+			"starting_offset": 40701,
+			"number_of_registers": 1,
+			"map":
+			[
+				{
+					"id": "breaker_status",
+					"offset": 40701
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			"starting_offset": 41501,
+			"number_of_registers": 3,
+			"map":
+			[
+				{
+					"id": "master_start",
+					"offset": 41501
+				},
+				{
+					"id": "set_mode",
+					"offset": 41503
+				}
+			]
+		}
+	]
+}

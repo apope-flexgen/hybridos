@@ -405,6 +405,11 @@ func parseDBIMsg(uriParse bool, prefixURI string, msg string) (uri string, body 
 	//					  uri:			 /assets/ess/ess_1/maint_mode
 	if uriParse {
 		uri = fullUri[len(prefixURI):]
+		// First try to parse URIs with an explicit destination i.e. site setpoints
+		// If the destination is undefined, use the source as the destination as well i.e. scheduler
+		if uri == "" {
+			uri = prefixURI[len("/cops"):]
+		}
 	} else {
 		uri = prefixURI
 	}

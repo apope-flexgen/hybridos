@@ -56,25 +56,26 @@ func extract(node ast.Node) (vars []string, resultType DataType, err error) {
 		vars = []string{node.Name}
 		if node.Name == "true" || node.Name == "false" {
 			resultType = BOOL
-		} else if _, ok := Scope[node.Name]; ok {
+		} else if _, ok := InputScope[node.Name]; ok {
 			resultType = BOOL
-			for _, input := range Scope[node.Name] {
-				switch input.Type {
-				case "string":
-					resultType = getResultType(resultType, STRING)
-				case "bool":
-					resultType = getResultType(resultType, BOOL)
-				case "float":
-					resultType = getResultType(resultType, FLOAT)
-				case "int":
-					resultType = getResultType(resultType, INT)
-				case "uint":
-					resultType = getResultType(resultType, UINT)
+			for _, input := range InputScope[node.Name] {
+				resultType = getResultType(resultType, input.tag)
+			}
+		} else if _, ok := FilterScope[node.Name]; ok {
+			resultType = BOOL
+			
+			for _, inputName := range FilterScope[node.Name] {
+				if _, ok := InputScope[inputName]; ok {
+					for _, input := range InputScope[inputName] {
+						resultType = getResultType(resultType, input.tag)
+					}
 				}
 			}
-		} else if _, ok := allPossibleAttributes[node.Name]; ok {
+		}else if _, ok := allPossibleAttributes[node.Name]; ok {
 			resultType = BOOL
-		} else {
+		} else if node.Name == "value"{
+			resultType = BOOL
+		}else {
 			return []string{}, NIL, fmt.Errorf("cannot find variable %v in inputs or filters", node.Name)
 		}
 	case *ast.CallExpr: //function identifier
@@ -113,7 +114,7 @@ func extractFunc(node *ast.CallExpr) ([]string, DataType, error) {
 	var resultType DataType
 	stringArr := make([]string, 0)
 	tags := make([]DataType, 0)
-	tmp := make([]string, 0)
+	var tmp []string
 	var tag DataType
 	var err error
 	for _, expr := range node.Args {
@@ -131,11 +132,16 @@ func extractFunc(node *ast.CallExpr) ([]string, DataType, error) {
 			resultType = BOOL
 			for _, varName := range stringArr {
 				for _, attribute := range allPossibleAttributes[varName] {
-					attributeInput := Scope[attribute]
+					attributeInput := InputScope[attribute]
 					if len(attributeInput) > 0 {
-						resultType = getResultType(resultType, attributeInput[0].Value.tag)
+						resultType = getResultType(resultType, attributeInput[0].tag)
 					}
 				}
+			}
+		case "value":
+			resultType = tags[0]
+			for _, tag := range tags {
+				resultType = getResultType(resultType, tag)
 			}
 		case "sum", "add":
 			if len(tags) > 0 {
@@ -687,6 +693,15 @@ func extractFunc(node *ast.CallExpr) ([]string, DataType, error) {
 				}
 			}
 			resultType = FLOAT
+		case "count":
+			resultType = UINT
+		case "combinebits":
+			resultType = UINT
+		case "in":
+			if len(node.Args) < 2 {
+				return stringArr, NIL, fmt.Errorf("received %v arguments for In function; need at least 2 arguments (the value to check for and the list of arguments to look through)", len(node.Args))
+			}
+			resultType = BOOL
 		default:
 			return stringArr, NIL, fmt.Errorf("unrecognized function %v", id.Name)
 		}

@@ -1,0 +1,69 @@
+{
+    "/config/load": {
+        "catl_bms_init": {
+            "aname": "bms",
+            "file": "catl_bms_init",
+            "new_options": [
+                {
+                    "amname": "bms",
+                    "from": 1,
+                    "pname": "ess",
+                    "reps": [
+                        {
+                            "replace": "##BMS_ID##",
+                            "with": "bms_{:01d}"
+                        },
+                        {
+                            "replace": "##BMS_NUM##",
+                            "with": "{:01d}"
+                        },
+                        {
+                            "replace": "##PCS_ID##",
+                            "with": "pcs_{:01d}"
+                        },
+                        {
+                            "replace": "##ESS_ID##",
+                            "with": "ess_{:01d}"
+                        }
+                    ],
+                    "tmpls": [
+                        "catl_bms_manager",
+                        "catl_bms_manager_controls",
+                        "catl_bms_manager_faults",
+                        "catl_bms_manager_client_interface",
+                        "catl_bms_manager_server_interface",
+                        "catl_bms_manager_ui"
+                    ],
+                    "to": 1
+                },
+                {
+                    "ainame": "##RACK_ID##",
+                    "from": 1,
+                    "pname": "bms",
+                    "reps": [
+                        {
+                            "replace": "##RACK_ID##",
+                            "with": "rack_{:01d}"
+                        },
+                        {
+                            "replace": "##RACK_NUM##",
+                            "with": "{:01d}"
+                        }
+                    ],
+                    "tmpls": [
+                        "catl_bms_rack",
+                        "catl_bms_rack_controls",
+                        "catl_bms_rack_faults",
+                        "catl_bms_rack_client_interface",
+                        "catl_bms_rack_server_interface",
+                        "catl_bms_rack_ui"
+                    ],
+                    "to": 9
+                }
+            ],
+            "note": "Loads catl_bms_init first. Then, configs defined in new_options, if any, are loaded next",
+            "pname": "ess",
+            "value": false
+        }
+    }
+}

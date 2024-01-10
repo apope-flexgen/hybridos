@@ -45,7 +45,7 @@ test()
     res=`$get`
     echo $res
 
-    expect='{"float_output1":11.180339887498949,"float_output2":14.315755537905211}'
+    expect='{"float_output1":11.180339887498949,"float_output2":15.451171188311474,"value2_echo":4.56,"value3_echo":4.56}'
     get="fims_send -m get -r /$$ -u /some/output"
     runget $expect $get
 
@@ -71,7 +71,7 @@ test()
     res=`$get`
     echo $res
 
-    expect='{"float_output1":11.180339887498949,"float_output2":14.315755537905211}'
+    expect='{"float_output1":11.180339887498949,"float_output2":15.451171188311474,"value2_echo":-3,"value3_echo":-3}'
     get="fims_send -m get -r /$$ -u /some/output"
     runget $expect $get
 

@@ -34,6 +34,7 @@ import {
   UserAdmin,
   ErcotOverride,
   FleetManagerDashboard,
+  SystemStatus,
 } from 'src/pages';
 import QueryService from 'src/services/QueryService';
 import { ThemeProvider } from 'styled-components';
@@ -58,6 +59,7 @@ const PageDictionary = {
   SiteAdmin,
   UserAdmin,
   ErcotOverride,
+  SystemStatus,
 };
 
 export const SITE_CONTROLLER = 'SC';
@@ -172,14 +174,12 @@ const BaseApp = (): JSX.Element => {
   );
 
   useEffect(() => {
-    if (siteConfiguration && siteConfiguration.product !== FLEET_MANAGER) {
-      QueryService.getLayouts(handleNewMessage);
-    }
+    QueryService.getLayouts(handleNewMessage);
+  }, [handleNewMessage]);
 
-    return () => {
-      QueryService.cleanupSocket();
-    };
-  }, [handleNewMessage, siteConfiguration]);
+  useEffect(() => () => {
+    QueryService.cleanupSocket();
+  }, []);
 
   useEffect(() => {
     fetchData();

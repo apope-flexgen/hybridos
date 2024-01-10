@@ -1,0 +1,438 @@
+[0.000378169s] [info    ] [main_test_new_e]  >>>>>>>>>>>>>>>>>>>>>simdbi setup
+
+[0.00262952s] [info    ] [scheduler      ] hello scheduler [essSched]
+[0.00378815s] [info    ] [setVal         ] setVal setting lVal->valuestring to  [ess]
+[0.00476794s] [info    ] [setVal         ] setVal setting aVal->valuestring to  [ess]
+[0.00576937s] [info    ] [setFunc        ] Note: adding aname [ess] to funMap av 0x7ff0e4579080
+[0.00676804s] [info    ] [setFunc        ] Note: adding aname [bms] to funMap av 0x7ff0e4579080
+[0.00777265s] [info    ] [setFunc        ] Note: adding aname [pcs] to funMap av 0x7ff0e4579080
+tsc_ghz:2.8172061524093879
+rdns_latency: 30 tmp: 1799683217662585939
+[1.05831s  ] [info    ] [setFunc        ] Note: adding aname [flex] to funMap av 0x7ff0e45e0990
+[1.05954s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [decode value bits  into a number  of different values]
+[1.06044s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [decode value bits  into a number  of different values]
+[1.06177s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [set or clear a bit in an output var]
+[1.06255s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [set or clear a bit in an output var]
+[1.06331s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [decode a value into a number of different values]
+[1.06455s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [decode a value into a number of different values]
+[1.06541s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [forward a value to a different uri]
+[1.06633s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [forward a value to a different uri]
+[1.06727s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [set limits on a value]
+[1.0682s   ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [set limits on a value]
+[1.06921s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [run a func using an assetVar as an argument]
+[1.07012s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [run a func using an assetVar as an argument]
+[1.07183s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [use a bitmap to set the output variable]
+[1.07318s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [use a bitmap to set the output variable]
+[1.07408s  ] [info    ] [showVecList    ] [0] :: [/ess]
+[1.07492s  ] [info    ] [showVecList    ] [1] :: [/components]
+[1.07575s  ] [info    ] [showVecList    ] [2] :: [/assets]
+[1.07736s  ] [info    ] [showVecList    ] [3] :: [/system]
+[1.07801s  ] [info    ] [showVecList    ] [4] :: [/site]
+[1.0792s   ] [info    ] [showVecList    ] [5] :: [/reload]
+[1.08059s  ] [info    ] [showVecList    ] [6] :: [/misc2]
+[1.08143s  ] [info    ] [getVecListbyNam] no entry in vecs for [Subs]
+[1.08229s  ] [info    ] [main_test_new_e] recovered  [ess]  Subs [0x0] len  [0]
+[1.0831s   ] [info    ] [main_test_new_e]  flex_man >> No Subs found in flex config
+[1.08456s  ] [info    ] [fimsSetup      ] FIMSSETUP size of subs = 7
+[1.08567s  ] [info    ] [fimsSetup      ] name FlexSched connected to FIMS at attempt 0
+[1.08687s  ] [info    ] [fimsSetup      ] name FlexSched subscribed to FIMS [true] connected [true]
+[1.08801s  ] [info    ] [main_test_new_e]  flex_man >> p_fims [0x1f97ef0]  sched [0x1f97ef0]
+[1.08942s  ] [info    ] [write_cjson    ] Wrote 4014 bytes to file /var/log/ess_controller/run_configs/ess_after_assets.json
+[1.09049s  ] [info    ] [debugSystemLoad] Maps (should be ) with links and assets  cjbm 0x1fa8590 {
+	"/system/actions":	{
+		"actions":	{
+			"bitfield":	{
+				"value":	"decode value bits  into a number  of different values"
+			},
+			"bitmap":	{
+				"value":	"use a bitmap to set the output variable"
+			},
+			"bitset":	{
+				"value":	"set or clear a bit in an output var"
+			},
+			"enum":	{
+				"value":	"decode a value into a number of different values"
+			},
+			"func":	{
+				"value":	"run a func using an assetVar as an argument"
+			},
+			"limit":	{
+				"value":	"set limits on a value"
+			},
+			"remap":	{
+				"value":	"forward a value to a different uri"
+			}
+		}
+	},
+	"/system/functions":	{
+		"functions":	{
+			"AggregateManager":	{
+				"value":	true
+			},
+			"BalancePower":	{
+				"value":	true
+			},
+			"CalculateVar":	{
+				"value":	true
+			},
+			"CheckDbiResp":	{
+				"value":	true
+			},
+			"CheckDbiVar":	{
+				"value":	true
+			},
+			"CheckMonitorVar":	{
+				"value":	true
+			},
+			"CheckMonitorVar_v2":	{
+				"value":	true
+			},
+			"CheckTableVar":	{
+				"value":	true
+			},
+			"CloseContactors":	{
+				"value":	true
+			},
+			"DeratePower":	{
+				"value":	true
+			},
+			"DumpConfig":	{
+				"value":	true
+			},
+			"EssSystemInit":	{
+				"value":	true
+			},
+			"Every1000mS":	{
+				"value":	true
+			},
+			"Every100mSP1":	{
+				"value":	true
+			},
+			"Every100mSP2":	{
+				"value":	true
+			},
+			"Every100mSP3":	{
+				"value":	true
+			},
+			"FastPub":	{
+				"value":	true
+			},
+			"GPIOCalcResponse":	{
+				"value":	true
+			},
+			"HandleCmd":	{
+				"value":	true
+			},
+			"HandleCpuStats":	{
+				"value":	true
+			},
+			"HandlePowerCmd":	{
+				"value":	true
+			},
+			"HandlePowerEst":	{
+				"value":	true
+			},
+			"HandlePowerRackEst":	{
+				"value":	true
+			},
+			"HandleSchedItem":	{
+				"value":	true
+			},
+			"HandleSchedLoad":	{
+				"value":	true
+			},
+			"LoadClient":	{
+				"value":	true
+			},
+			"LoadConfig":	{
+				"value":	true
+			},
+			"LoadServer":	{
+				"value":	true
+			},
+			"LogDebug":	{
+				"value":	true
+			},
+			"LogError":	{
+				"value":	true
+			},
+			"LogInfo":	{
+				"value":	true
+			},
+			"LogIt":	{
+				"value":	true
+			},
+			"LogWarn":	{
+				"value":	true
+			},
+			"MakeLink":	{
+				"value":	true
+			},
+			"MathMovAvg":	{
+				"value":	true
+			},
+			"OpenContactors":	{
+				"value":	true
+			},
+			"RunAllALists":	{
+				"value":	true
+			},
+			"RunAllLinks":	{
+				"value":	true
+			},
+			"RunAllLinks2":	{
+				"value":	true
+			},
+			"RunAllVLinks":	{
+				"value":	true
+			},
+			"RunLinks":	{
+				"value":	true
+			},
+			"RunMonitor":	{
+				"value":	true
+			},
+			"RunMonitorList":	{
+				"value":	true
+			},
+			"RunPub":	{
+				"value":	true
+			},
+			"RunSched":	{
+				"value":	true
+			},
+			"RunScript":	{
+				"value":	true
+			},
+			"RunSysVec":	{
+				"value":	true
+			},
+			"RunSystemCmd":	{
+				"value":	true
+			},
+			"RunTpl":	{
+				"value":	true
+			},
+			"RunVLinks":	{
+				"value":	true
+			},
+			"SchedItemOpts":	{
+				"value":	true
+			},
+			"SendClearFaultCmd":	{
+				"value":	true
+			},
+			"SendDb":	{
+				"value":	true
+			},
+			"SendDbiVar":	{
+				"value":	true
+			},
+			"SendTime":	{
+				"value":	true
+			},
+			"SendTrue":	{
+				"value":	true
+			},
+			"SetDbiDoc":	{
+				"value":	true
+			},
+			"SetMapping":	{
+				"value":	true
+			},
+			"ShutdownBMS":	{
+				"value":	true
+			},
+			"ShutdownPCS":	{
+				"value":	true
+			},
+			"SimHandleBms":	{
+				"value":	true
+			},
+			"SimHandleHeartbeat":	{
+				"value":	true
+			},
+			"SimHandlePcs":	{
+				"value":	true
+			},
+			"SimHandleSbmu":	{
+				"value":	true
+			},
+			"SlewVal":	{
+				"value":	true
+			},
+			"SlowPub":	{
+				"value":	true
+			},
+			"SlowPubOne":	{
+				"value":	true
+			},
+			"StartupBMS":	{
+				"value":	true
+			},
+			"StartupPCS":	{
+				"value":	true
+			},
+			"StopSched":	{
+				"value":	true
+			},
+			"TestTriggerFunc":	{
+				"value":	true
+			},
+			"UpdateSysTime":	{
+				"value":	true
+			},
+			"UpdateToDbi":	{
+				"value":	true
+			},
+			"process_sys_alarm":	{
+				"value":	true
+			},
+			"runAllLocks":	{
+				"value":	true
+			}
+		}
+	},
+	"/system/name":	{
+		"name":	{
+			"ident":	{
+				"value":	"ess"
+			}
+		}
+	}
+} <<< done
+[1.09282s  ] [info    ] [sendEvent      ] sending event  xxx >>>>>>>>>>>>>>>> [{"source":"ess","message":"ess starting  at 0.000","severity":1}]
+[1.09378s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [ACO-45-Put-default-asset-controls-into-code]
+[1.09449s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [ACO-45-Put-default-asset-controls-into-code]
+[1.09559s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [3bd65a5]
+[1.09634s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [3bd65a5]
+[1.09698s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [v11.2.0-beta.3-262]
+[1.09759s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [v11.2.0-beta.3-262]
+[1.09843s  ] [info    ] [requestConfig  ]  fims send [/dbi/ess_controller/configs_ess/ess_init] reply [/ess/cfg/cfile/ess/ess_init] cfile [ess_init]
+[1.1055s   ] [info    ] [requestConfig  ]  >>>>>> no xname for [ess_init]
+[1.10704s  ] [info    ] [RunAv          ]  running schedvar [/schedule/ess:run_config] mapVal [runConfig]->[/config/control:ess_config]
+
+[1.10808s  ] [info    ] [runConfig      ]  requesting cfile [ess_init] 
+[1.10898s  ] [info    ] [requestCfile   ]  fims send fname [ess_init] simdbi [true] aname [ess] useConfigDoc [true]
+[1.11615s  ] [info    ] [requestCfile   ]  >>>>>> xname 0x0
+[1.11764s  ] [info    ] [requestCfile   ]  >>>>>> simdbi /usr/local/bin/fims_send -f ess_init.json -m set  -u /ess/cfg/cfile/ess/ess_init &
+[1.11859s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [ess_config]
+[1.11948s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [ess_config]
+[1.12045s  ] [info    ] [RunAv          ]  running schedvar [/schedule/ess:run_config] mapVal [runConfig]->[/config/control:ess_config]
+
+[1.12141s  ] [info    ] [handleCfile    ]  Running Loader 
+[1.12242s  ] [info    ] [setupControls  ] Created Fims var [/sched/fims:dummy]
+[1.12326s  ] [info    ] [setupControls  ] Created Runvar var [/control/ess:runTime]
+[1.12386s  ] [info    ] [setupControls  ] Created Stop var [/control/ess:stopTime]
+[1.12537s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/perf/ess:perf_SchedPerf]
+[1.1261s   ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/perf/ess:perf_SchedPerf]
+[1.12689s  ] [info    ] [schedThread    ] this is a replacement schedItem 0x1fab790 id ess_config uri /config/control:ess_config
+[1.12837s  ] [info    ] [schedThread    ] schedItem deleted, seting repTime to 0.0
+[5.21675s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/perf/ess:perf_/ess/sched/bms]
+[5.21778s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/perf/ess:perf_/ess/sched/bms]
+[5.21958s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [schedCloseContactors]
+[5.22023s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [schedCloseContactors]
+[5.22138s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [schedOpenContactors]
+[5.22241s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [schedOpenContactors]
+[5.46053s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/perf/ess:perf_/ess/config/bms]
+[5.46162s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/perf/ess:perf_/ess/config/bms]
+[5.46268s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/assets/bms/summary:alarms]
+[5.46349s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/assets/bms/summary:alarms]
+[5.46421s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/assets/bms/summary:faults]
+[5.4651s   ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/assets/bms/summary:faults]
+[5.46579s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [Normal]
+[5.46659s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [Normal]
+[5.46749s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [Normal]
+[5.46821s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [Normal]
+[5.68964s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/perf/ess:perf_/ess/status/bms]
+[5.69036s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/perf/ess:perf_/ess/status/bms]
+[5.69179s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [INIT]
+[5.69238s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [INIT]
+[5.94086s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/perf/ess:perf_/assets/bms/summary]
+[5.94146s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/perf/ess:perf_/assets/bms/summary]
+[5.94317s  ] [info    ] [LogInfo        ] [/assets/bms/summary:maint_mode] received a value of [false]
+[6.18084s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/perf/ess:perf_/ess/controls/bms]
+[6.18155s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/perf/ess:perf_/ess/controls/bms]
+[6.18243s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/reload/ess:HandleCmd_CloseContactors]
+[6.1829s   ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/reload/ess:HandleCmd_CloseContactors]
+[6.18341s  ] [info    ] [HandleCmd      ] reload first run [ess] [/controls/bms:CloseContactors]  reload 0
+[6.18388s  ] [info    ] [setupCmdParams ] Setting up params for [/controls/bms:CloseContactors]
+[6.18456s  ] [info    ] [HandleCmd      ] Adding [/controls/bms:CloseContactors] to amap in asset [ess]
+[6.18509s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/controls/ess:CloseContactors]
+[6.18566s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/controls/ess:CloseContactors]
+[6.18641s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/reload/ess:HandleCmd_OpenContactors]
+[6.18707s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/reload/ess:HandleCmd_OpenContactors]
+[6.18769s  ] [info    ] [HandleCmd      ] reload first run [ess] [/controls/bms:OpenContactors]  reload 0
+[6.18815s  ] [info    ] [setupCmdParams ] Setting up params for [/controls/bms:OpenContactors]
+[6.18886s  ] [info    ] [HandleCmd      ] Adding [/controls/bms:OpenContactors] to amap in asset [ess]
+[6.1895s   ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/controls/ess:OpenContactors]
+[6.19012s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/controls/ess:OpenContactors]
+[6.19088s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/reload/ess:HandleCmd_VerifyCloseContactors]
+[6.19143s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/reload/ess:HandleCmd_VerifyCloseContactors]
+[6.1919s   ] [info    ] [HandleCmd      ] reload first run [ess] [/controls/bms:VerifyCloseContactors]  reload 0
+[6.19267s  ] [info    ] [setupCmdParams ] Setting up params for [/controls/bms:VerifyCloseContactors]
+[6.19318s  ] [info    ] [HandleCmd      ] Adding [/controls/bms:VerifyCloseContactors] to amap in asset [ess]
+[6.19368s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/controls/ess:VerifyCloseContactors]
+[6.19456s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/controls/ess:VerifyCloseContactors]
+[6.1951s   ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/reload/ess:HandleCmd_VerifyOpenContactors]
+[6.19594s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/reload/ess:HandleCmd_VerifyOpenContactors]
+[6.19655s  ] [info    ] [HandleCmd      ] reload first run [ess] [/controls/bms:VerifyOpenContactors]  reload 0
+[6.19708s  ] [info    ] [setupCmdParams ] Setting up params for [/controls/bms:VerifyOpenContactors]
+[6.1978s   ] [info    ] [HandleCmd      ] Adding [/controls/bms:VerifyOpenContactors] to amap in asset [ess]
+[6.19855s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/controls/ess:VerifyOpenContactors]
+[6.19916s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/controls/ess:VerifyOpenContactors]
+[6.20523s  ] [info    ] [runConfig      ]  requesting cfile [ess_init] 
+[6.20593s  ] [info    ] [requestCfile   ]  fims send fname [ess_init] simdbi [true] aname [ess] useConfigDoc [true]
+[6.20969s  ] [info    ] [requestCfile   ]  >>>>>> xname 0x0
+[6.21021s  ] [info    ] [requestCfile   ]  >>>>>> simdbi /usr/local/bin/fims_send -f ess_init.json -m set  -u /ess/cfg/cfile/ess/ess_init &
+[6.35157s  ] [info    ] [getSchedDelay  ] deleted as [schedOpenContactors] runTime 5.367 endTime 0.001
+[6.35255s  ] [info    ] [getSchedDelay  ] deleted as [schedCloseContactors] runTime 5.368 endTime 0.001
+[6.41542s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/perf/ess:perf_/ess/components/bms]
+[6.41612s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/perf/ess:perf_/ess/components/bms]
+[6.41691s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [INIT]
+[6.41729s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [INIT]
+[6.42598s  ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/perf/ess:perf_/ess/config/bms/enable]
+[6.42637s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/perf/ess:perf_/ess/config/bms/enable]
+[10.779s   ] [info    ] [setVal         ] setVal setting lVal->valuestring to  [/perf/ess:perf_/assets/bms/summary/close_contactors]
+[10.7801s  ] [info    ] [setVal         ] setVal setting aVal->valuestring to  [/perf/ess:perf_/assets/bms/summary/close_contactors]
+[11.3306s  ] [info    ] [runConfig      ]  requesting cfile [ess_init] 
+[11.3316s  ] [info    ] [requestCfile   ]  fims send fname [ess_init] simdbi [true] aname [ess] useConfigDoc [true]
+[11.3367s  ] [info    ] [requestCfile   ]  >>>>>> xname 0x0
+[11.3372s  ] [info    ] [requestCfile   ]  >>>>>> simdbi /usr/local/bin/fims_send -f ess_init.json -m set  -u /ess/cfg/cfile/ess/ess_init &
+[16.456s   ] [info    ] [runConfig      ]  requesting cfile [ess_init] 
+[16.4568s  ] [info    ] [requestCfile   ]  fims send fname [ess_init] simdbi [true] aname [ess] useConfigDoc [true]
+[16.4627s  ] [info    ] [requestCfile   ]  >>>>>> xname 0x0
+[16.4635s  ] [info    ] [requestCfile   ]  >>>>>> simdbi /usr/local/bin/fims_send -f ess_init.json -m set  -u /ess/cfg/cfile/ess/ess_init &
+[21.5815s  ] [info    ] [runConfig      ]  requesting cfile [ess_init] 
+[21.5827s  ] [info    ] [requestCfile   ]  fims send fname [ess_init] simdbi [true] aname [ess] useConfigDoc [true]
+[21.5897s  ] [info    ] [requestCfile   ]  >>>>>> xname 0x0
+[21.5909s  ] [info    ] [requestCfile   ]  >>>>>> simdbi /usr/local/bin/fims_send -f ess_init.json -m set  -u /ess/cfg/cfile/ess/ess_init &
+[116.69s   ] [info    ] [signal_handler ] signal of type 2 caught.
+[116.701s  ] [info    ] [schedThread    ] shutting down
+[116.851s  ] [info    ] [sendEvent      ] sending event  xxx >>>>>>>>>>>>>>>> [{"source":"ess","message":"ess shutting down at 115.217","severity":1}]
+[116.86s   ] [info    ] [fimsThread     ] fims shutting down
+[116.862s  ] [info    ] [main_test_new_e] threads done cleaning up ...
+[116.863s  ] [info    ] [~asset_manager ] asset manager running cleanup
+[116.864s  ] [info    ] [cleanup        ] STARTING for ess
+[116.865s  ] [info    ] [cleanup        ] STARTING for ess amap.size 9
+[116.866s  ] [info    ] [cleanup        ] Running (no delete) for ess item [CloseContactors] 0x7ff0dc00f880
+[116.866s  ] [info    ] [cleanup        ] Running (no delete) for ess item [HandleCmd_CloseContactors] 0x7ff0dc00e580
+[116.867s  ] [info    ] [cleanup        ] Running (no delete) for ess item [HandleCmd_OpenContactors] 0x7ff0dc024930
+[116.868s  ] [info    ] [cleanup        ] Running (no delete) for ess item [HandleCmd_VerifyCloseContactors] 0x7ff0dc0296f0
+[116.868s  ] [info    ] [cleanup        ] Running (no delete) for ess item [HandleCmd_VerifyOpenContactors] 0x7ff0dc02c790
+[116.869s  ] [info    ] [cleanup        ] Running (no delete) for ess item [OpenContactors] 0x7ff0dc025b90
+[116.87s   ] [info    ] [cleanup        ] Running (no delete) for ess item [VerifyCloseContactors] 0x7ff0dc02a960
+[116.871s  ] [info    ] [cleanup        ] Running (no delete) for ess item [VerifyOpenContactors] 0x7ff0dc02da00
+[116.871s  ] [info    ] [cleanup        ] Running (no delete) for ess item [runConfig] 0x1faa140
+[116.872s  ] [info    ] [cleanup        ] ess assetMap.size 0
+[116.872s  ] [info    ] [cleanup        ] ess assetMap.size 0
+[116.873s  ] [info    ] [cleanup        ] vecs->size 0
+[116.874s  ] [info    ] [cleanup        ] DONE for ess
+[116.875s  ] [info    ] [main_test_new_e] things found in syscpVec ... 
+[116.876s  ] [info    ] [main_test_new_e] deleting remaining sched items ...
+[116.876s  ] [info    ] [show           ] sched id [ess_config] count [1140] aname [ess] uri [/config/control:ess_config] refTime 0.000 repTime 0.100 endTime 0.000
+[116.877s  ] [info    ] [show           ] sched id [schedCloseContactors] count [1043] aname [ess] uri [/sched/bms:schedCloseContactors] refTime 0.268 repTime 0.100 endTime 0.000
+[116.879s  ] [info    ] [~scheduler     ] shutdown scheduler start [essSched]
+[116.88s   ] [info    ] [~scheduler     ] shutdown scheduler [essSched] done
+~VarMapUtils >>>>>>>>>>>>>>>>>>>>>>> Shutting down VarMapUtils delmap size = 159
+~VarMapUtils >>>>>>>>>>>>>>>>>>>>>>> Shutting down VarMapUtils delmap size = 0

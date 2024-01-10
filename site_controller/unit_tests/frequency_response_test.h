@@ -97,7 +97,7 @@ TEST_F(frequency_response_test, pfr) {
         // set state
         fr_comp_mock.set_pfr_state(test.state);
         // set input. ess slew limits / rated power not used for calculations so they can be constant inputs
-        Frequency_Response_Inputs input = { 11.0F, 9.0F, 15.0F, test.input_frequency, { 1, 0 } };
+        Frequency_Response_Inputs input = { 0.0f, 11.0f, 9.0f, 15.0f, test.input_frequency, { 1, 0 } };
         // run test
         Frequency_Response_Outputs actual_result = fr_comp_mock.frequency_response(input);
         // check results. ess limits should never change in pfr
@@ -136,7 +136,7 @@ TEST_F(frequency_response_test, pfr_2) {
         fr_comp_mock.set_pfr_state(test.state);
         fr_comp_mock.set_freeze_kw_cmd_flag(test.freeze_kw_cmd);
         // set input. ess slew limits / rated power not used for calculations so they can be constant inputs
-        Frequency_Response_Inputs input = { 11.0F, 9.0F, 15.0F, test.input_frequency, { 1, 0 } };
+        Frequency_Response_Inputs input = { 0.0f, 11.0f, 9.0f, 15.0f, test.input_frequency, { 1, 0 } };
         // run test #1
         Frequency_Response_Outputs actual_result = fr_comp_mock.frequency_response(input);
         // append results. ess limits should never change in pfr
@@ -194,7 +194,7 @@ TEST_F(frequency_response_test, frrs) {
         // set state
         fr_comp_mock.set_frrs_state(test.state, test.active_cmd, test.inactive_cmd);
         // set input. ess slew limits / rated power not used for calculations so they can be constant inputs
-        Frequency_Response_Inputs input = { 11.0F, 9.0F, 15.0F, test.input_frequency, { 1, 0 } };
+        Frequency_Response_Inputs input = { 0.0f, 11.0f, 9.0f, 15.0f, test.input_frequency, { 1, 0 } };
         // run test
         Frequency_Response_Outputs actual_result = fr_comp_mock.frequency_response(input);
         // check results. ess limits should never change in frrs
@@ -215,6 +215,7 @@ TEST_F(frequency_response_test, ffr_recovery) {
         float output_power;
         bool output_in_recov;
         bool output_in_cool;
+        float input_demand;
     } ffr_test;
     //        state name                active_cmd  trig_freq  recov_freq  instant_freq  in_recov  recov_over  in_trig  trig_over  in_cool  cool_over
     ffr_state uf_no_trig_no_cool = { 10.0F, 59.0F, 59.0F, 60.0F, false, { 0, 0 }, false, { 0, 0 }, false, { 0, 0 } };
@@ -228,21 +229,25 @@ TEST_F(frequency_response_test, ffr_recovery) {
     ffr_state of_yes_trig_yes_recov = { -10.0F, 61.0F, 61.0F, 60.0F, true, { 0, 0 }, true, { 2, 0 }, false, { 0, 0 } };
 
     std::vector<ffr_test> tests = {
-        //  ID   state name             input_freq  out_pow     out_in_recov    out_in_cool
-        { 1, uf_no_trig_no_cool, 58.0F, 10.0F, false, false },    // uf no trig to trig
-        { 2, of_no_trig_no_cool, 62.0F, -10.0F, false, false },   // of no trig to trig
-        { 3, uf_no_trig_no_cool, 60.0F, 0.0F, false, false },     // uf no trig to no trig (no freq dev)
-        { 4, of_no_trig_no_cool, 60.0F, 0.0F, false, false },     // of no trig to no trig (no req dev)
-        { 5, uf_yes_trig_no_recov, 59.5F, 10.0F, true, false },   // uf trig to recov
-        { 6, of_yes_trig_no_recov, 60.5F, -10.0F, true, false },  // of trig to recov
-        { 7, uf_yes_trig_no_recov, 60.1F, 0.0F, false, true },    // uf trig to instant no trig
-        { 8, of_yes_trig_no_recov, 59.9F, 0.0F, false, true },    // of trig to instant no trig
-        { 9, uf_yes_trig_yes_recov, 59.5F, 0.0F, false, true },   // uf recov to no trig
-        { 10, of_yes_trig_yes_recov, 60.5F, 0.0F, false, true },  // of recov to no trig
-        { 11, uf_no_trig_yes_cool, 58.0F, 0.0F, false, true },    // uf no trig to no trig (in cooldown)
-        { 12, of_no_trig_yes_cool, 62.0F, 0.0F, false, true },    // of no trig to no trig (in cooldown)
-        { 13, uf_leaving_cool, 60.0F, 0.0F, false, false },       // uf cooldown no trig to no cooldown no trig
-        { 14, uf_leaving_cool, 58.0F, 10.0F, false, false }       // uf cooldown to trig
+        //  ID   state name             input_freq  out_pow     out_in_recov    out_in_cool input_demand
+        { 1, uf_no_trig_no_cool, 58.0f, 10.0f, false, false, 0.0f },    // uf no trig to trig
+        { 2, of_no_trig_no_cool, 62.0f, -10.0f, false, false, 0.0f },   // of no trig to trig
+        { 3, uf_no_trig_no_cool, 60.0f, 0.0f, false, false, 0.0f },     // uf no trig to no trig (no freq dev)
+        { 4, of_no_trig_no_cool, 60.0f, 0.0f, false, false, 0.0f },     // of no trig to no trig (no freq dev)
+        { 5, uf_yes_trig_no_recov, 59.5f, 10.0f, true, false, 0.0f },   // uf trig to recov
+        { 6, of_yes_trig_no_recov, 60.5f, -10.0f, true, false, 0.0f },  // of trig to recov
+        { 7, uf_yes_trig_no_recov, 60.1f, 0.0f, false, true, 0.0f },    // uf trig to instant no trig
+        { 8, of_yes_trig_no_recov, 59.9f, 0.0f, false, true, 0.0f },    // of trig to instant no trig
+        { 9, uf_yes_trig_yes_recov, 59.5f, 0.0f, false, true, 0.0f },   // uf recov to no trig
+        { 10, of_yes_trig_yes_recov, 60.5f, 0.0f, false, true, 0.0f },  // of recov to no trig
+        { 11, uf_no_trig_yes_cool, 58.0f, 0.0f, false, true, 0.0f },    // uf no trig to no trig (in cooldown)
+        { 12, of_no_trig_yes_cool, 62.0f, 0.0f, false, true, 0.0f },    // of no trig to no trig (in cooldown)
+        { 13, uf_leaving_cool, 60.0f, 0.0f, false, false, 0.0f },       // uf cooldown no trig to no cooldown no trig
+        { 14, uf_leaving_cool, 58.0f, 10.0f, false, false, 0.0f },      // uf cooldown to trig
+        { 15, uf_no_trig_no_cool, 58.0f, 10.0f, false, false, 5.0f },   // pos input demand
+        { 16, uf_no_trig_no_cool, 58.0f, 10.0f, false, false, -5.0f },  // neg input demand
+        { 17, uf_no_trig_no_cool, 60.0f, 0.0f, false, false, 5.0f },    // pos input demand (no freq dev)
+        { 18, uf_no_trig_no_cool, 60.0f, 0.0f, false, false, -5.0f },   // neg input demand (no freq dev)
     };
 
     for (auto& test : tests) {
@@ -251,7 +256,7 @@ TEST_F(frequency_response_test, ffr_recovery) {
         // set state
         fr_comp_mock.set_ffr_state(test.state);
         // set input. ess slew limits / rated power not used for calculations so they can be constant inputs
-        Frequency_Response_Inputs input = { 11.0F, 9.0F, 15.0F, test.input_frequency, { 1, 0 } };
+        Frequency_Response_Inputs input = { test.input_demand, 11.0f, 9.0f, 15.0f, test.input_frequency, { 1, 0 } };
         // run test
         Frequency_Response_Outputs actual_result = fr_comp_mock.frequency_response(input);
         // check results. ess limits should always be +/- rated power in ffr

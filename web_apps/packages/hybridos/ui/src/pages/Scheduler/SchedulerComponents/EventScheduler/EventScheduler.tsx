@@ -188,7 +188,7 @@ const EventScheduler = ({ setIsLoading, schedulerType }: EventSchedulerProps) =>
   };
 
   useEffect(() => {
-    if (siteId) {
+    if (siteId !== undefined) {
       const site: any = fmSites.find((obj: FleetManagerSite) => obj.id === siteId);
       if (site) changeSite(site.name);
     }

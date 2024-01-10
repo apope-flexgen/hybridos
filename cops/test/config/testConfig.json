@@ -12,6 +12,8 @@
     "otherCtrlrStaticIP": "172.16.2.82",
     "pduIP": "10.0.1.83",
     "otherCtrlrOutlet": "2",
+    "syswatch": true,
+    "allowActions": true,
     "processList": [
         {
             "name": "site_controller",
@@ -24,24 +26,9 @@
                 "/cops/site_controller/setpoints"
             ],
             "killOnHang": true,
+            "allowActions": false,
             "requiredForHealthyStatus": true,
-            "hangTimeAllowanceMS": 3000,
-            "configRestart": true
-        },
-        {
-            "name": "scheduler",
-            "uri": "/scheduler",
-            "writeOutC2C":
-            [
-                "/cops/scheduler/modes",
-                "/cops/scheduler/events",
-                "/cops/scheduler/configuration",
-                "/cops/scheduler/last_schedule_modification",
-                "/cops/scheduler/timezones"
-            ],
-            "killOnHang": true,
-            "requiredForHealthyStatus": true,
-            "hangTimeAllowanceMS": 3000,
+            "hangtimeallowanceMS": 3000,
             "configRestart": true
         }
     ]

@@ -1,0 +1,25 @@
+{
+    "features": 
+    {
+        "ercotAs":
+        { 
+            "defaultControls": {
+                "emergency_down_ramp_rate_gen_actual": 99.9,
+                "emergency_down_ramp_rate_load_actual": 99.9,
+                "emergency_up_ramp_rate_gen_actual": 99.9,
+                "emergency_up_ramp_rate_load_actual": 99.9,
+                "normal_down_ramp_rate_gen_actual": 21.0,
+                "normal_down_ramp_rate_load_actual": 21.0,
+                "normal_up_ramp_rate_gen_actual": 21.0,
+                "normal_up_ramp_rate_load_actual": 21.0,
+	        	"inactive_cmd_min_limit_mw": -99.9,
+                "inactive_cmd_max_limit_mw": 99.9,
+                "baseload_cmd_min_limit_mw": -99.9,
+                "baseload_cmd_max_limit_mw": 99.9,
+                "pfr_enable_revised_capacity": false
+            },
+            "sudden_valley":{},
+            "lima":{}
+        }
+    }
+}

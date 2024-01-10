@@ -1,150 +1,147 @@
 {
-	"connection":
-	{
-		"name": "shared_poi",
-		"ip_address": "172.3.27.2",
-		"port": 10002,
-		"off_by_one": false,
-		"device_id": 1,
-		"max_num_connections": 5
-	},
-	"components":
-	[
-		{
-			"id": "shared_poi",
-			"offset_time": 20,
-			"add_timings":false,
-			"frequency": 500,
-			"registers":
-			[
-				{
-					"type": "Holding Registers",
-					"map": [
-						{
-                            "id": "grid_voltage_l1",
-                            "offset": 1000,
-                            "name": "Grid Voltage L1",
+    "components": [
+        {
+            "add_timings": false,
+            "frequency": 500,
+            "id": "shared_poi",
+            "offset_time": 20,
+            "registers": [
+                {
+                    "map": [
+                        {
                             "echo_id": "/components/twins_shared_poi/v1",
-							"float": true,
-							"size": 2
+                            "float": true,
+                            "id": "grid_voltage_l1",
+                            "name": "Grid Voltage L1",
+                            "offset": 1000,
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "grid_voltage_l2",
-                            "offset": 1002,
                             "name": "Grid Voltage L2",
-							"float": true,
-							"size": 2
+                            "offset": 1002,
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "grid_voltage_l3",
-                            "offset": 1004,
                             "name": "Grid Voltage L3",
-							"float": true,
-							"size": 2
+                            "offset": 1004,
+                            "size": 2
                         },
-						{
-                            "id": "frequency",
-                            "offset": 1006,
-                            "name": "Frequency",
+                        {
                             "echo_id": "/components/twins_shared_poi/f1",
-							"float": true,
-							"size": 2
+                            "float": true,
+                            "id": "frequency",
+                            "name": "Frequency",
+                            "offset": 1006,
+                            "size": 2
                         },
-						{
-                            "id": "current_l1",
-                            "offset": 1008,
-                            "name": "Current L1",
+                        {
                             "echo_id": "/components/twins_shared_poi/i",
-							"float": true,
-							"size": 2
+                            "float": true,
+                            "id": "current_l1",
+                            "name": "Current L1",
+                            "offset": 1008,
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "current_l2",
-                            "offset": 1010,
                             "name": "Current L2",
-							"float": true,
-							"size": 2
+                            "offset": 1010,
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "current_l3",
-                            "offset": 1012,
                             "name": "Current L3",
-							"float": true,
-							"size": 2
+                            "offset": 1012,
+                            "size": 2
                         },
-						{
+                        {
+                            "float": true,
                             "id": "voltage_l1",
-                            "offset": 1014,
                             "name": "Voltage L1",
-							"float": true,
-							"size": 2
+                            "offset": 1014,
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "voltage_l2",
-                            "offset": 1016,
                             "name": "Voltage L2",
-							"float": true,
-							"size": 2
+                            "offset": 1016,
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "voltage_l3",
-                            "offset": 1018,
                             "name": "Voltage L3",
-							"float": true,
-							"size": 2
+                            "offset": 1018,
+                            "size": 2
                         },
                         {
-							"id": "active_power",
-							"offset": 1020,
-							"name": "Active Power",
-							"echo_id": "/components/twins_shared_poi/p",
-							"float": true,
-							"size": 2
-						},
-						{
-							"id": "reactive_power",
-							"offset": 1022,
-							"name": "Reactive Power",
-							"echo_id": "/components/twins_shared_poi/q",
-							"float": true,
-							"size": 2
-						},
-						{
-							"id": "apparent_power",
-							"offset": 1024,
-							"name": "Apparent Power",
-							"echo_id": "/components/twins_shared_poi/s",
-							"float": true,
-							"size": 2
-						},
-						{
-							"id": "power_factor",
-							"offset": 1026,
-							"name": "Power Factor",
-							"echo_id": "/components/twins_shared_poi/pf",
-							"float": true,
-							"size": 2
-						},
-						{
+                            "echo_id": "/components/twins_shared_poi/p",
+                            "float": true,
+                            "id": "active_power",
+                            "name": "Active Power",
+                            "offset": 1020,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_shared_poi/q",
+                            "float": true,
+                            "id": "reactive_power",
+                            "name": "Reactive Power",
+                            "offset": 1022,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_shared_poi/s",
+                            "float": true,
+                            "id": "apparent_power",
+                            "name": "Apparent Power",
+                            "offset": 1024,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_shared_poi/pf",
+                            "float": true,
+                            "id": "power_factor",
+                            "name": "Power Factor",
+                            "offset": 1026,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_shared_poi/ctrlword1",
                             "id": "breaker_control",
-                            "offset": 1028,
                             "name": "Breaker Control",
-                            "echo_id": "/components/twins_shared_poi/ctrlword1"
+                            "offset": 1028
                         }
-					]
-				},
-				{
-					"type": "Discrete Inputs",
-					"map": [
-						{
+                    ],
+                    "type": "Holding Registers"
+                },
+                {
+                    "map": [
+                        {
+                            "echo_id": "/components/twins_shared_poi/closed",
                             "id": "breaker_status",
-                            "offset": 2000,
                             "name": "Breaker Status",
-                            "echo_id": "/components/twins_shared_poi/closed"
+                            "offset": 2000
                         }
-					]
-				}
-			]
-		}
-	]
+                    ],
+                    "type": "Discrete Inputs"
+                }
+            ]
+        }
+    ],
+    "connection": {
+        "device_id": 1,
+        "ip_address": "172.3.27.2",
+        "max_num_connections": 5,
+        "name": "shared_poi",
+        "off_by_one": false,
+        "port": 10002
+    }
 }

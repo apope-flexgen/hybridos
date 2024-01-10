@@ -15,6 +15,9 @@ from typing import Dict
 from argparse import ArgumentParser, RawTextHelpFormatter
 from vsaap import launch_sites
 
+from hybridos_stop import stop_hybridos
+
+
 pid = os.getpid()
 sleeptime = 1
 bin_dir = "/usr/local/bin"
@@ -135,14 +138,6 @@ def symlink_machine_config_dir(src_dir):
     if os.path.exists(machine_config_dir_symlink):
         run(['/usr/bin/sudo', 'unlink', machine_config_dir_symlink])
     run(['/usr/bin/sudo', 'ln', '-sf', src_dir, machine_config_dir_symlink])
-
-
-def stop_hybridos():
-    stop_path = os.path.join(os.path.dirname(__file__), "./hybridos_stop.sh")
-    if os.path.exists(stop_path):
-        run(stop_path, shell=True)
-    else:
-        print(f"Failed to stop: could not find stop script {stop_path}", file=sys.stderr)
 
 
 def check_environment():

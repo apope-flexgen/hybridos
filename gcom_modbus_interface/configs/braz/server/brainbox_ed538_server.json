@@ -1,0 +1,3 @@
+{"system":   {   "name":"brainbox_ed538",       "protocol": "Modbus TCP",      
+     "id": "brainbox_ed538",       "ip_address": "0.0.0.0", 
+          "port": 502    },    "registers":     {      "discrete_inputs":       [          { "name":"intrusion_detection","id":"intrusion_detection","offset":0,"uri":"/components/brainbox_ed538" },          { "name":"HVAC_normally_open","id":"HVAC_normally_open","offset":1,"uri":"/components/brainbox_ed538" },          { "name":"HVAC_normally_close","id":"HVAC_normally_close","offset":2,"uri":"/components/brainbox_ed538" }       ]    }}

@@ -1,0 +1,20 @@
+{
+    "char1": "[CODEC MARKED INVALID STRING]",
+    "char2": "[CODEC MARKED INVALID STRING]",
+    "char3": "[CODEC MARKED INVALID STRING]",
+    "mapslice":
+    [
+        {
+            "value": 0,
+            "string": "[CODEC MARKED INVALID STRING]"
+        },
+        {
+            "value": 1,
+            "string": "[CODEC MARKED INVALID STRING]"
+        },
+        {
+            "value": 2,
+            "string": "[CODEC MARKED INVALID STRING]"
+        }
+    ]
+}

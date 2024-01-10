@@ -1,819 +1,790 @@
 {
-    "sequences":
-    {
-        "Init":
-        {
-            "sequence_name": "Init",
-            "paths":
-            [
+    "sequences": {
+        "Init": {
+            "paths": [
                 {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
                     "path_name": "Init",
                     "return_id": "Init",
-                    "active_faults":
-                    [
+                    "steps": [
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Set State Variables"
+                        }
+                    ]
+                }
+            ],
+            "sequence_name": "Init"
+        },
+        "Ready": {
+            "paths": [
+                {
+                    "active_faults": [
                         {
                             "name": "/bypass"
                         }
                     ],
-                    "steps":
-                    [
-                        {
-                            "step_name": "Set State Variables",
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true,
-                                "debounce_timer": 1000
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        "Ready":
-        {
-            "sequence_name": "Ready",
-            "paths":
-            [
-		{
                     "path_name": "Ready",
                     "return_id": "Ready",
-                    "active_faults":
-                    [
+                    "steps": [
                         {
-                            "name": "/bypass"
-                        }
-                    ],
-                    "steps":
-                    [
-                        {
-                            "step_name": "Check for auto-start",
-                            "path_switch": true,
-                            "next_path": 1,
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "/bypass",
                                 "value": true
                             },
-                            "exit_conditions":
-                            {
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
                                 "route": "/reserved/bool_15",
                                 "value": false
-                            }
+                            },
+                            "next_path": 1,
+                            "path_switch": true,
+                            "step_name": "Check for auto-start"
                         },
                         {
-                            "step_name": "Wait for Start Site Command",
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "/bypass",
                                 "value": true
                             },
-                            "exit_conditions":
-                            {
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
                                 "route": "/bypass",
-                                "value": true,
-                                "debounce_timer": 1000
-                            }
+                                "value": true
+                            },
+                            "step_name": "Wait for Start Site Command"
                         }
                     ]
                 },
                 {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
                     "path_name": "Auto Ready -> Startup",
                     "return_id": "Startup",
-                    "active_faults":
-                    [
+                    "steps": [
                         {
-                            "name": "/bypass"
-                        }
-                    ],
-                    "steps":
-                    [
-                        {
-                            "step_name": "Bypass",
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "/bypass",
                                 "value": true
                             },
-                            "exit_conditions":
-                            {
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
                                 "route": "/bypass",
-                                "value": true,
-                                "debounce_timer": 1000
-                            }
+                                "value": true
+                            },
+                            "step_name": "Bypass"
                         }
                     ]
                 }
-            ]
+            ],
+            "sequence_name": "Ready"
         },
-        "Startup":
-        {
-            "sequence_name": "Startup",
-            "paths":
-            [
+        "RunMode1": {
+            "paths": [
                 {
-                    "path_name": "Startup - Grid-Tied",
-                    "return_id": "RunMode1",
-                    "timeout": 45,
-                    "active_faults":
-                    [
+                    "active_faults": [
                         {
                             "name": "/bypass"
                         }
                     ],
-                    "steps":
-                    [
-			            {
-                            "step_name": "Close the POI Breaker",
-                            "entry_actions":
-                            {
-                                "route": "/feeder/set_poi_feeder_state_closed",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Prevent assets auto-start",
-                            "entry_actions":
-                            [
-                                {
-                                "route": "/gen/allow_auto_restart",
-                                "value": false
-                                },
-                                {
-                                "route": "/solar/allow_auto_restart",
-                                "value": false
-                                },
-                                {
-                                "route": "/ess/allow_auto_restart",
-                                "value": false
-                                }
-                            ],
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true,
-				                "debounce_timer": 1000
-                            }
-                        },
-                        {
-                            "step_name": "Get Utility Status",
-                            "path_switch": true,
-                            "next_path": 1,
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/feed_1/get_utility_status",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Catch faults",
-                            "path_switch": true,
-                            "next_path": 3,
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                            "route": "/ess/has_faults",
-                            "value": false
-                            }
-                        },
-                        {
-                            "step_name": "Allow Solar auto-start",
-                            "entry_actions":
-                            {
-				                "comment": "Use this to prevent Solar from starting. Here for first time run without shutdown.",
-                                "route": "/solar/allow_auto_restart",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Allow Ess auto-start",
-                            "entry_actions":
-                            {
-				                "comment": "Use this to prevent ESS from starting. Here for first time run without shutdown.",
-                                "route": "/ess/allow_auto_restart",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-                        { 
-                            "step_name": "Start Solar", 
-                            "entry_actions":  
-                            { 
-                                "route": "/solar/start_all_solar", 
-                                "value": true 
-                            }, 
-                            "exit_conditions":  
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            } 
-                        },
-                        {
-                            "step_name": "Set ESS to Grid-Following Mode",
-                            "entry_actions": 
-                            {
-                                "route": "/ess/set_all_ess_grid_follow",
-                                "value": true
-                            },
-                            "exit_conditions": 
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Start ESS",
-                            "entry_actions":
-                            {
-                                "route": "/ess/start_all_ess",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true,
-				                "debounce_timer": 1000
-                            }
-                        },
-                        {
-                            "step_name": "Check ESS",
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/ess/get_num_ess_running",
-                                "value": 1,
-				                "tolerance": 10
-                            }
-                        },
-                        {
-                            "step_name": "Check Solar",
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/solar/get_num_solar_running",
-                                "value": 2,
-				                "tolerance": 10
-                            }
-                        }
-                    ]
-                },
-                {
-                    "path_name": "Startup - Islanded",
-                    "return_id": "RunMode2",
-                    "timeout": 45,
-                    "active_faults": 
-                    [
-                        {
-                            "name": "/bypass"
-                        }
-                    ],
-                    "steps":
-                    [
-			            {
-                            "step_name": "Open POI Breaker",
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/feeder/set_poi_feeder_state_open",
-                                "value": true,
-				                "debounce_timer": 1000
-                            }
-                        },
-			            {
-                            "step_name": "Clear Faults on loss of utility",
-                            "entry_actions":
-                            {
-                                "route": "/config/clear_faults",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true,
-				                "debounce_timer": 1000
-                            }
-                        },
-			            {
-                            "step_name": "Let fault resurface",
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true,
-				                "debounce_timer": 1000
-                            }
-                        },
-			            {
-                            "step_name": "Check for persisting ESS Fault",
-                            "path_switch": true,
-                            "next_path": 2,
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-				                "comment": "Check for faults",
-                                "route": "/ess/has_faults",
-                                "value": false
-                            }
-                        },
-                        {
-                            "step_name": "Allow Generator auto-start",
-                            "entry_actions":
-                            {
-                                "route": "/gen/allow_auto_restart",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Allow Solar auto-start",
-                            "entry_actions":
-                            {
-				                "comment": "Use this to prevent generator from starting. Here for first time run without shutdown.",
-                                "route": "/solar/allow_auto_restart",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Allow ESS auto-start",
-                            "entry_actions":
-                            {
-				                "comment": "Use this to prevent generator from starting. Here for first time run without shutdown.",
-                                "route": "/ess/allow_auto_restart",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-			            {
-                            "step_name": "Set ESS Grid-Forming",
-                            "entry_actions":
-                            {
-                                "route": "/ess/set_all_ess_grid_form",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Start ESS",
-                            "entry_actions":
-                            {
-                                "route": "/ess/start_all_ess",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/ess/get_num_ess_running",
-				                "tolerance": 10,
-                                "value": 1,
-				                "debounce_timer": 1000
-                            }
-                        },
-			            {
-                            "step_name": "Set Gen Grid-Following",
-                            "entry_actions":
-                            {
-                                "route": "/gen/set_all_gen_grid_follow",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Start Solar",
-                            "entry_actions":
-                            {
-                                "route": "/solar/start_all_solar",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/solar/get_num_solar_running",
-				                "tolerance": 10,
-                                "value": 2,
-				                "debounce_timer": 1000
-                            }
-                        },
-                        {
-                            "step_name": "Enable LDSS for Runmode2 Islanded",
-                            "entry_actions":
-                            {
-                                "route": "/features/enable_ldss",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        }
-                    ]
-                },
-                {
-                    "path_name": "Startup - Faulted",
-                    "return_id": "RunMode2",
-                    "timeout": 45,
-                    "active_faults": 
-                    [
-                        {
-                            "name": "/bypass"
-                        }
-                    ],
-                    "steps":
-                    [
-			            {
-                            "step_name": "Catch faults",
-                            "path_switch": true,
-                            "next_path": 3,
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                            "route": "/gen/has_faults",
-                            "value": false
-                            }
-                        },
-                        {
-                            "step_name": "Allow Generator auto-start",
-                            "entry_actions":
-                            {
-                                "route": "/gen/allow_auto_restart",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-			            {
-                            "step_name": "Set Generator to Grid-Forming",
-                            "entry_actions": 
-                            {
-                                "route": "/gen/set_all_gen_grid_form",
-                                "value": true
-                            },
-                            "exit_conditions": 
-                            {
-                                "route": "/bypass",
-                                "value": true,
-                                "debounce_timer": 1000
-                            }
-                        },
-                        {
-                            "step_name": "Start Gen",
-                            "entry_actions": 
-                            {
-                                "route": "/gen/start_all_gen",
-                                "value": true
-                            },
-                            "exit_conditions": 
-                            {
-                                "route": "/gen/get_num_gen_running",
-                                "value": 1,
-                                "tolerance": 10,
-                                "debounce_timer": 1000
-                            }
-                        }
-                    ]
-                },
-                {
-                    "path_name": "GOTO SHUTDOWN",
-                    "return_id": "Shutdown",
-                    "active_faults":
-                    [
-                        {
-                            "name": "/bypass"
-                        }
-                    ],
-                    "steps":
-                    [
-                        {
-                            "step_name": "Bypass",
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true,
-				                "debounce_timer": 3000
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        "RunMode1":
-        {
-            "sequence_name": "Runmode1",
-            "paths":
-            [
-                {
                     "path_name": "Running - Grid-Tied",
                     "return_id": "Shutdown",
-                    "active_faults":
-                    [
-			    {
-				    "name": "/bypass"
-			    }
-                    ],
-                    "steps":
-                    [
+                    "steps": [
                         {
-                            "step_name": "RunMode1",
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "/bypass",
                                 "value": true
                             },
-                            "exit_conditions":
-                            [
+                            "exit_conditions": [
                                 {
-                                "route": "/feed_1/get_utility_status",
-                                "value": false
-                                },
-                                {
-                                "route": "/ess/has_faults",
-                                "value": true
+                                    "route": "/feed_1/get_utility_status",
+                                    "value": false
                                 }
-                            ]
+                            ],
+                            "step_name": "RunMode1"
                         }
                     ]
                 }
-            ]
+            ],
+            "sequence_name": "Runmode1"
         },
-        "RunMode2":
-        {
-            "sequence_name": "Runmode2",
-            "paths":
-            [
+        "RunMode2": {
+            "paths": [
                 {
-                    "path_name": "Running - Islanded",
-                    "return_id": "Shutdown",
-                    "active_faults":
-                    [
+                    "active_faults": [
                         {
                             "name": "/bypass"
                         }
                     ],
-                    "steps":
-		            [
+                    "path_name": "Running - Islanded",
+                    "return_id": "Shutdown",
+                    "steps": [
                         {
-                            "step_name": "RunMode2 - determine variant",
-                            "path_switch": true,
-                            "next_path": 1,
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "/bypass",
                                 "value": true
                             },
-                            "exit_conditions":
-                            {
+                            "exit_conditions": {
                                 "route": "/ess/get_num_ess_running",
                                 "value": 1
-                            }
-                        },                   
+                            },
+                            "next_path": 1,
+                            "path_switch": true,
+                            "step_name": "RunMode2 - determine variant"
+                        },
                         {
-                            "step_name": "RunMode2",
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "/bypass",
                                 "value": true
                             },
-                            "exit_conditions":
-                            [
+                            "exit_conditions": [
                                 {
                                     "route": "/feed_1/get_utility_status",
                                     "value": true
                                 },
-				                {
+                                {
                                     "route": "/ess/has_faults",
                                     "value": true
-				                }
-                            ]
+                                }
+                            ],
+                            "step_name": "RunMode2"
                         }
                     ]
                 },
                 {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
                     "path_name": "Running - Gen Solo",
                     "return_id": "Shutdown",
-                    "active_faults":
-                    [
-			            {
-				            "name": "/bypass"
-			            }
-                    ],
-                    "steps":
-		            [
+                    "steps": [
                         {
-                            "step_name": "RunMode2 - Gen Solo",
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "/bypass",
                                 "value": true
                             },
-                            "exit_conditions":
-                            [
+                            "exit_conditions": [
                                 {
                                     "route": "/gen/has_faults",
                                     "value": true
                                 }
-                            ]
+                            ],
+                            "step_name": "RunMode2 - Gen Solo"
                         }
                     ]
                 }
-            ]
+            ],
+            "sequence_name": "Runmode2"
         },
-        "Standby":
-        {
-            "sequence_name": "Standby",
-            "paths":
-            [
+        "Shutdown": {
+            "paths": [
                 {
-                    "path_name": "Standby",
-                    "return_id": "Standby",
-                    "active_faults":
-                    [
+                    "active_faults": [
                         {
                             "name": "/bypass"
                         }
                     ],
-                    "steps":
-                    [
-                        {
-                            "step_name": "Standby",
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        "Shutdown":
-        {
-            "sequence_name": "Shutdown",
-            "paths":
-            [
-                {
-                    "path_name": "Shutdown",
+                    "path_name": "Full Shutdown",
                     "return_id": "Ready",
-                    "active_faults":
-                    [
+                    "steps": [
                         {
-                            "name": "/bypass"
-                        }
-                    ],
-                    "steps":
-                    [
-                        {
-                            "step_name": "Set State Variables",
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true,
-                                "debounce_timer": 1000
-                            }
-                        },
-                        {
-                            "step_name": "Stop ESS",
-                            "entry_actions":
-                            {
-                                "route": "/ess/stop_all_ess",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Stop Gen",
-                            "entry_actions":
-                            {
-                                "route": "/gen/stop_all_gen",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Stop Solar",
-                            "entry_actions":
-                            {
-                                "route": "/solar/stop_all_solar",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Disable LDSS for all modes",
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "/features/enable_ldss",
                                 "value": false
                             },
-                            "exit_conditions":
-                            {
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
                                 "route": "/bypass",
                                 "value": true
-                            }
+                            },
+                            "step_name": "Disable LDSS"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Set State Variables"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/gen/get_num_gen_running",
+                                "value": 1
+                            },
+                            "next_path": 1,
+                            "path_switch": true,
+                            "step_name": "Skip Gen Shutdown If Not Running"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/gen/stop_all_gen",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 5000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Stop Gen"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/ess/stop_all_ess",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Stop ESS"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/solar/stop_all_solar",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 10000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Stop Solar"
+                        }
+                    ]
+                },
+                {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "path_name": "Shutdown Without Gen",
+                    "return_id": "Ready",
+                    "steps": [
+                        {
+                            "entry_actions": {
+                                "route": "/ess/stop_all_ess",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 10000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Stop ESS"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/solar/stop_all_solar",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 10000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Stop Solar"
                         }
                     ]
                 }
-            ]
+            ],
+            "sequence_name": "Shutdown"
+        },
+        "Standby": {
+            "paths": [
+                {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "path_name": "Standby",
+                    "return_id": "Standby",
+                    "steps": [
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Standby"
+                        }
+                    ]
+                }
+            ],
+            "sequence_name": "Standby"
+        },
+        "Startup": {
+            "paths": [
+                {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "path_name": "Startup - Grid-Tied",
+                    "return_id": "RunMode1",
+                    "steps": [
+                        {
+                            "entry_actions": {
+                                "route": "/feeder/set_poi_feeder_state_closed",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Close the POI Breaker"
+                        },
+                        {
+                            "entry_actions": [
+                                {
+                                    "route": "/gen/allow_auto_restart",
+                                    "value": false
+                                },
+                                {
+                                    "route": "/solar/allow_auto_restart",
+                                    "value": false
+                                },
+                                {
+                                    "route": "/ess/allow_auto_restart",
+                                    "value": false
+                                }
+                            ],
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Prevent assets auto-start"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/feed_1/get_utility_status",
+                                "value": true
+                            },
+                            "next_path": 1,
+                            "path_switch": true,
+                            "step_name": "Get Utility Status"
+                        },
+                        {
+                            "entry_actions": {
+                                "comment": "Use this to prevent Solar from starting. Here for first time run without shutdown.",
+                                "route": "/solar/allow_auto_restart",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Allow Solar auto-start"
+                        },
+                        {
+                            "entry_actions": {
+                                "comment": "Use this to prevent ESS from starting. Here for first time run without shutdown.",
+                                "route": "/ess/allow_auto_restart",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Allow Ess auto-start"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/solar/start_all_solar",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Start Solar"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/ess/set_all_ess_grid_follow",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Set ESS to Grid-Following Mode"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/config/clear_faults",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 5000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Clear Faults Before ESS Start"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 5000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Let fault resurface"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/ess/start_all_ess",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 15000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Start ESS"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Check ESS"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Check Solar"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/features/enable_ldss",
+                                "value": false
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Disable LDSS for Runmode1"
+                        }
+                    ],
+                    "timeout": 75
+                },
+                {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "path_name": "Startup - Islanded",
+                    "return_id": "RunMode2",
+                    "steps": [
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/feeder/set_poi_feeder_state_open",
+                                "value": true
+                            },
+                            "step_name": "Open POI Breaker"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/ess/set_all_ess_grid_form",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 5000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Set ESS Grid-Forming"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/config/clear_faults",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 5000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Clear Faults on loss of utility, before ESS start"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 15000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Let fault resurface"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "comment": "Check for faults",
+                                "debounce_timer": 1000,
+                                "route": "/ess/has_faults",
+                                "value": false
+                            },
+                            "next_path": 2,
+                            "path_switch": true,
+                            "step_name": "Check for persisting ESS Fault"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/gen/allow_auto_restart",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Allow Generator auto-start"
+                        },
+                        {
+                            "entry_actions": {
+                                "comment": "Use this to prevent generator from starting. Here for first time run without shutdown.",
+                                "route": "/solar/allow_auto_restart",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Allow Solar auto-start"
+                        },
+                        {
+                            "entry_actions": {
+                                "comment": "Use this to prevent generator from starting. Here for first time run without shutdown.",
+                                "route": "/ess/allow_auto_restart",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Allow ESS auto-start"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/ess/start_all_ess",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 15000,
+                                "route": "/ess/get_num_ess_running",
+                                "tolerance": 10,
+                                "value": 1
+                            },
+                            "step_name": "Start ESS"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/gen/set_all_gen_grid_follow",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Set Gen Grid-Following"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/solar/start_all_solar",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 2000,
+                                "route": "/bypass",
+                                "tolerance": 10,
+                                "value": true
+                            },
+                            "step_name": "Start Solar"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/features/enable_ldss",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Enable LDSS for Runmode2 Islanded"
+                        }
+                    ],
+                    "timeout": 75
+                },
+                {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "path_name": "Startup - Faulted",
+                    "return_id": "RunMode2",
+                    "steps": [
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/gen/has_faults",
+                                "value": false
+                            },
+                            "next_path": 3,
+                            "path_switch": true,
+                            "step_name": "Catch faults"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/gen/allow_auto_restart",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Allow Generator auto-start"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/gen/set_all_gen_grid_form",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Set Generator to Grid-Forming"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/gen/start_all_gen",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 30000,
+                                "route": "/gen/get_num_gen_running",
+                                "tolerance": 10,
+                                "value": 1
+                            },
+                            "step_name": "Start Gen"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/features/enable_ldss",
+                                "value": false
+                            },
+                            "exit_conditions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Disable LDSS for Runmode2 Faulted"
+                        }
+                    ],
+                    "timeout": 75
+                },
+                {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "path_name": "GOTO SHUTDOWN",
+                    "return_id": "Shutdown",
+                    "steps": [
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Bypass"
+                        }
+                    ]
+                }
+            ],
+            "sequence_name": "Startup"
         }
     }
 }

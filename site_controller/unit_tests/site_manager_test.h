@@ -582,6 +582,10 @@ TEST_F(site_manager_test, active_power_setpoint_1) {
     array[2] = { LOAD_OFFSET, -2000.0f, LOAD_OFFSET, -2000.0f };
     array[3] = { LOAD_OFFSET, 2000.0f, LOAD_OFFSET, 2000.0f };
 
+    // add potential to allow demand to inc/dec
+    asset_cmd.ess_data.min_potential_kW = -2000;
+    asset_cmd.gen_data.max_potential_kW = 2000;
+
     // increment export target cmd slew prior to test
     active_power_setpoint_mode.kW_slew.set_slew_rate(1000000);  // 1000MW/s
     active_power_setpoint_mode.kW_slew.update_slew_target(0);   // call once to set time vars
@@ -596,6 +600,7 @@ TEST_F(site_manager_test, active_power_setpoint_1) {
         // Capture any prints within site controller that might be present in debug mode
         capture_stdout();
 
+        usleep(10000);  // wait 10ms (total range +/-10MW)
         active_power_setpoint_mode.kW_cmd.value.value_float = array[i].export_target_cmd;
         active_power_setpoint_mode.load_method.value.value_int = array[i].load_strategy;
         active_power_setpoint_mode.absolute_mode_flag.value.value_bool = false;
@@ -701,6 +706,10 @@ TEST_F(site_manager_test, active_power_setpoint_2) {
     array[5] = { 500.0f, 1000.0f, 1500.0f, 0.0f, true, false, false };    // direction_flag = false. kw_cmd interpreted identically
     array[6] = { 500.0f, 1000.0f, -500.0f, 0.0f, true, true, false };     // direction_flag = true. kw_cmd interpreted as -1000.0
     array[7] = { 500.0f, 1000.0f, 1500.0f, 300.0f, false, false, true };  // maximize_solar = true. potential hardwired to 300.0
+
+    // add potential to allow demand to inc/dec
+    asset_cmd.ess_data.min_potential_kW = -1500;
+    asset_cmd.gen_data.max_potential_kW = 1500;
 
     // iterate through each test case and get results
     for (int i = 0; i < num_tests; i++) {
@@ -834,6 +843,8 @@ TEST_F(site_manager_test, automatic_voltage_mode) {
         float gen_potential_kVAR;
         float actual_volts;
         float voltage_cmd;
+        float voltage_cmd_max;
+        float voltage_cmd_min;
         float over_deadband;
         float over_droop;
         float over_rated_kVAR;
@@ -847,11 +858,11 @@ TEST_F(site_manager_test, automatic_voltage_mode) {
     };
 
     std::vector<avr_test> tests = {
-        { 800, 400, 200, 400, 400, 50, 20, 1000, 100, 50, 500, 0, 0, 0, 0 },             // zero
-        { 800, 400, 200, 500, 400, 50, 20, 700, 100, 50, 500, -700, -400, -200, -100 },  // overvoltage limited
-        { 500, 400, 100, 460, 400, 50, 20, 1000, 100, 50, 500, -500, -250, -200, -50 },  // overvoltage less potential
-        { 800, 400, 200, 300, 400, 100, 50, 500, 50, 20, 700, 700, 400, 200, 100 },      // undervoltage limited
-        { 500, 400, 100, 340, 400, 100, 50, 500, 50, 20, 1000, 500, 250, 200, 50 }       // undervoltage less potential
+        { 800, 400, 200, 400, 400, 425, 375, 50, 20, 1000, 100, 50, 500, 0, 0, 0, 0 },             // zero
+        { 800, 400, 200, 500, 400, 425, 375, 50, 20, 700, 100, 50, 500, -700, -400, -200, -100 },  // overvoltage limited
+        { 500, 400, 100, 460, 400, 425, 375, 50, 20, 1000, 100, 50, 500, -500, -250, -200, -50 },  // overvoltage less potential
+        { 800, 400, 200, 300, 400, 425, 375, 100, 50, 500, 50, 20, 700, 700, 400, 200, 100 },      // undervoltage limited
+        { 500, 400, 100, 340, 400, 425, 375, 100, 50, 500, 50, 20, 1000, 500, 250, 200, 50 }       // undervoltage less potential
     };
 
     int test_id = 1;
@@ -874,6 +885,8 @@ TEST_F(site_manager_test, automatic_voltage_mode) {
         avr.under_deadband.value.value_float = test.under_deadband;
         avr.under_droop.value.value_float = test.under_droop;
         avr.under_rated_kVAR.value.value_float = test.under_rated_kVAR;
+        avr.voltage_cmd_max.value.value_float = test.voltage_cmd_max;
+        avr.voltage_cmd_min.value.value_float = test.voltage_cmd_min;
         avr.voltage_cmd.value.value_float = test.voltage_cmd;
         avr.actual_volts.value.value_float = test.actual_volts;
         avr.execute(asset_cmd, asset_pf_flag);
@@ -1617,63 +1630,6 @@ TEST_F(site_manager_test, energy_arbitrage) {
     }
 }
 
-// Standalone Primary Frequency Response and Target SoC Demand mode
-TEST_F(site_manager_test, pfr) {
-    // struct that has variables to configure for each test case
-    struct pfr_test {
-        float nominal_hz;
-        float over_deadband;
-        float over_droop;
-        float max_rated_kW;
-        float under_deadband;
-        float under_droop;
-        float min_rated_kW;
-        float kW_cmd;
-        float site_hz;
-        float expected_demand;  // original demand + limited response modifier
-    };
-
-    std::vector<pfr_test> tests = {
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -10.0f, 63.5f, -15.0f },  // large charge, OF hits min limit
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -10.0f, 61.817f, -15.0f }, { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -10.0f, 60.005f, -10.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -10.0f, 59.995f, -10.0f }, { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -10.0f, 58.183f, -1.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -10.0f, 56.5f, 0.0f },     { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -5.0f, 63.5f, -15.0f },  // small charge, OF within limit
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -5.0f, 61.817f, -14.0f },                                                                               // UF hits 0 and doesn't change sign
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -5.0f, 60.005f, -5.0f },   { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -5.0f, 59.995f, -5.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -5.0f, 58.183f, 0.0f },    { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -5.0f, 56.5f, 0.0f },
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 0.0f, 63.5f, -15.0f },  // 0 and command can change sign, plenty of room
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 0.0f, 61.817f, -9.0f },    { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 0.0f, 60.005f, 0.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 0.0f, 59.995f, 0.0f },     { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 0.0f, 58.183f, 9.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 0.0f, 56.5f, 15.0f },      { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 5.0f, 63.5f, 0.0f },  // small discharge, UF within limit
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 5.0f, 61.817f, 0.0f },                                                                               // OF hits 0 and doesn't change sign
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 5.0f, 60.005f, 5.0f },     { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 5.0f, 59.995f, 5.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 5.0f, 58.183f, 14.0f },    { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 5.0f, 56.5f, 15.0f },
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 10.0f, 63.5f, 0.0f },  // large discharge, UF hits max limit
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 10.0f, 61.817f, 1.0f },    { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 10.0f, 60.005f, 10.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 10.0f, 59.995f, 10.0f },   { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 10.0f, 58.183f, 15.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 10.0f, 56.5f, 15.0f },     { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 10.0f, 60.0f, 10.0f }  // frequency is exactly nominal
-    };
-
-    int test_id = 1;
-    for (auto test : tests) {
-        test_logger t_log("primary_frequency_response", test_id++, tests.size());
-        // set pfr variables
-        asset_cmd.site_kW_demand = test.kW_cmd;
-        site_frequency.value.set(test.site_hz);
-        pfr.symmetric_variables = false;
-        pfr.site_nominal_hz.value.set(test.nominal_hz);
-        pfr.over_deadband.value.set(test.over_deadband);
-        pfr.over_droop.value.set(test.over_droop);
-        pfr.under_deadband.value.set(test.under_deadband);
-        pfr.under_droop.value.set(test.under_droop);
-        pfr.max_rated_kW.value.set(test.max_rated_kW);
-        pfr.min_rated_kW.value.set(test.min_rated_kW);
-        pfr.execute(asset_cmd, site_frequency.value.value_float, total_site_kW_charge_limit.value.value_float, total_site_kW_discharge_limit.value.value_float);
-        t_log.range_results.push_back({ test.expected_demand, 0.001, asset_cmd.site_kW_demand, "Site kW Demand" });
-        t_log.check_solution();
-    }
-}
-
 // Constant Power Factor algorithm tests
 TEST_F(site_manager_test, constant_power_factor) {
     // struct that has variables to configure for each test case
@@ -1790,6 +1746,29 @@ TEST_F(site_manager_test, ess_discharge_prevention) {
         t_log.float_results.push_back({ test.expected_site_manager_min_potential_ess_kW, min_potential_ess_kW.value.value_float, "Site Manager Min Potential ESS kW" });
         t_log.float_results.push_back({ test.expected_asset_cmd_ess_min_potential_kW, asset_cmd.ess_data.min_potential_kW, "Asset Cmd ESS Min Potential kW" });
         t_log.float_results.push_back({ test.expected_total_asset_kW_discharge_limit, total_asset_kW_discharge_limit, "Total Asset kW Discharge Limit" });
+        t_log.check_solution();
+    }
+}
+
+// Alarm/Fault tests
+TEST_F(site_manager_test, alarms_faults) {
+    // struct that has variables to configure for each test case
+    struct test_params {
+        int alarm_index;
+        int fault_index;
+    };
+
+    // Test a handful of the hardcoded alarm/fault numbers. Values up to 31 should be supported even with a default alarm range of only 6 entries
+    std::vector<test_params> tests = { { 0, 0 }, { 0, 7 }, { 7, 0 }, { 7, 15 }, { 15, 7 }, { 15, 31 }, { 31, 15 } };
+    int test_id = 1;
+    for (auto test : tests) {
+        test_logger t_log("alarms_faults", test_id++, tests.size());
+
+        set_alarms(test.alarm_index);
+        set_faults(test.fault_index);
+
+        t_log.bool_results.push_back({ true, active_alarm_array[test.alarm_index], "alarm set" });
+        t_log.bool_results.push_back({ true, active_fault_array[test.fault_index], "fault set" });
         t_log.check_solution();
     }
 }

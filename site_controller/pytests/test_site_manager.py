@@ -10,7 +10,7 @@ from pytests.cases.active_clc import test_fr_clc, test_ess_tsoc_clc, test_solar_
 from pytests.cases.reactive_clc import test_reactive_setpoint_clc, test_reactive_clc_zero_bypass
 from pytests.cases.reactive_power_poi_lims import test_reactive_poi_lims
 from pytests.cases.constant_power_factor import test_constant_power_factor
-from pytests.cases.active_power_poi_lims import test_fr_poi_lims, test_ess_tsoc_poi_lims
+from pytests.cases.active_power_poi_lims import test_fr_poi_lims, test_ess_tsoc_poi_lims, test_active_power_setpoint_ess_solar_poi_lims
 from pytests.cases.reactive_setpoint import test_reactive_power_setpoint
 from pytests.cases.site_state import test_site_state
 from pytests.cases.sequences import test_init, test_watchdog_fault, test_num_ess_transitions, test_auto_restart_prevention, test_auto_restart_prevention_agt, test_agt_sequences
@@ -22,20 +22,18 @@ from pytests.cases.manual_mode import test_manual_solar_slew_rate_1, test_manual
 from pytests.cases.templating_revamp import test_ranged, test_traditional
 from pytests.cases.persistent_settings import test_persistent_contactors, test_persistent_autobalancing, test_persistent_setpoint
 from pytests.cases.assets_state import test_default_local_mode, test_asset_bit_field_local_mode, test_local_bit_field_local_mode
-from pytests.cases.avr import test_avr_overvoltage_symmetric, test_avr_undervoltage_symmetric, test_avr_overvoltage_asymmetric, test_avr_undervoltage_asymmetric, test_avr_positive_poi_limits, test_avr_negative_poi_limits
-from pytests.cases.standalone_pfr import test_pfr_untracked_load, test_pfr_offset_load, test_pfr_minimum_load, test_pfr_untracked_load_poi_lim, test_pfr_offset_load_poi_lim, test_pfr_minimum_load_poi_lim, test_pfr_asymmetric_configs
-
+from pytests.cases.avr import test_avr_overvoltage_symmetric, test_avr_undervoltage_symmetric, test_avr_overvoltage_asymmetric, test_avr_undervoltage_asymmetric, test_avr_positive_poi_limits, test_avr_negative_poi_limits, test_avr_voltage_setpoint_limits
+from pytests.cases.standalone_fr import test_pfr_untracked_load, test_pfr_offset_load, test_pfr_minimum_load, test_pfr_untracked_load_poi_lim, test_pfr_offset_load_poi_lim, test_pfr_minimum_load_poi_lim, test_pfr_asymmetric_configs
+from pytests.cases.maint_mode import test_min_charge_discharge, test_maint_soc_limits, test_maint_cell_volt_limits, test_maint_rack_volt_limits
+from pytests.cases.ess_calibration import test_ess_cali
+from pytests.cases.enable_flags import test_enable_flags
 
 # Test runner AKA main() for each individual test
 @ parametrize("current_test", [
-    test_reactive_poi_lims,
-    test_fr_poi_lims,
-    test_ess_tsoc_poi_lims,
-    test_constant_power_factor,
-    test_reactive_power_setpoint,
-    test_fr_clc,
-    test_ess_tsoc_clc,
-    test_solar_tsoc_clc,
+
+    #
+    # config_dev
+    #
     test_active_clc_zero_bypass,
     test_agt_runmode1,
     test_reactive_setpoint_clc,
@@ -74,13 +72,30 @@ from pytests.cases.standalone_pfr import test_pfr_untracked_load, test_pfr_offse
     test_avr_undervoltage_asymmetric,
     test_avr_positive_poi_limits,
     test_avr_negative_poi_limits,
+    test_avr_voltage_setpoint_limits, 
     test_pfr_untracked_load,
     test_pfr_offset_load,
     test_pfr_minimum_load,
     test_pfr_untracked_load_poi_lim,
     test_pfr_offset_load_poi_lim,
     test_pfr_minimum_load_poi_lim,
-    test_pfr_asymmetric_configs
+    test_pfr_asymmetric_configs,
+    test_active_power_setpoint_ess_solar_poi_lims,
+    test_min_charge_discharge,
+    test_maint_soc_limits,
+    test_maint_cell_volt_limits,
+    test_maint_rack_volt_limits,
+    test_ess_cali,
+    test_enable_flags,
+    test_fr_poi_lims,
+    test_fr_clc
+
+    #
+    # config_dev_slow_slews
+    # TODO find a way to make these tests run automatically under different configs rather than just commenting out :(
+    #
+    # test_active_clc_zero_bypass
+    # test_fr_clc
 ])
 def test_site_manager(request: pytest.FixtureRequest, current_test: Steps):
     # Extract the pytest id

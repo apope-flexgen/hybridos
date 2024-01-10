@@ -1,0 +1,1236 @@
+{
+	"system":
+	{
+		"id": "sungrow_ess_2",
+		"ip_address": "10.201.112.175",
+		"port": 502,
+		"device_id": 1,
+		"frequency": 100,
+		"off_by_one": true,
+		"byte_swap": true
+	},
+	"registers": 
+	[
+		{
+			"type": "Holding Registers",
+			"starting_offset": 10056,
+			"number_of_registers": 72,
+			"map":
+			[
+				{
+					"id": "control_word_1",
+					"offset": 10056,
+					"comment": "1 = start, 2 = stop"
+				},
+				{
+					"id": "control_word_2",
+					"offset": 10057,
+					"comment": "1 = Open DC Contacts, 2 = Close contacts, 3 = Reset BMS"
+				},
+				{
+					"id":"reactive_power_mode",
+					"offset":10060,
+					"comment": "0x55 = off, 0xA1 = pf mode, 0xA2 = reactive power setpoint mode, 0xA4 = volt-var"
+				},
+				{
+					"id":"standby_mode",
+					"offset":10061,
+					"comment": "0xAA = standby active, 0x55 = exit standby"
+				},
+				{
+					"id": "hvac_low_temp_setpoint",
+					"offset": 10065,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "hvac_high_temp_setpoint",
+					"offset": 10066,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "power_factor_setpoint",
+					"offset": 10103,
+					"signed": true,
+					"scale": 1000
+				},
+				{
+					"id": "reactive_power_setpoint",
+					"offset": 10104,
+					"signed": true
+				},
+				{
+					"id": "active_power_setpoint",
+					"offset": 10127,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			"starting_offset": 10313,
+			"number_of_registers": 12,
+			"map":
+			[
+				{
+					"id": "upper_soc_limit_2",
+					"offset": 10313,
+					"scale": 10
+				},
+				{
+					"id": "upper_soc_limit_1",
+					"offset": 10314,
+					"scale": 10
+				},
+				{
+					"id": "upper_soc_recovery_limit_2",
+					"offset": 10315,
+					"scale": 10
+				},
+				{
+					"id": "upper_soc_recovery_limit_1",
+					"offset": 10316,
+					"scale": 10
+				},
+				{
+					"id": "lower_soc_limit_1",
+					"offset": 10317,
+					"scale": 10
+				},
+				{
+					"id": "lower_soc_limit_2",
+					"offset": 10318,
+					"scale": 10
+				},
+				{
+					"id": "lower_soc_recovery_limit_1",
+					"offset": 10319,
+					"scale": 10
+				},
+				{
+					"id": "lower_soc_recovery_limit_2",
+					"offset": 10320,
+					"scale": 10
+				},
+				{
+					"id": "soc_limit_2_timeout",
+					"offset": 10324
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 10053,
+			"number_of_registers": 30,
+			"map":
+			[
+				{
+					"id":"voltage_ac",
+					"offset": 10053,
+					"scale": 10
+				},
+				{
+					"id": "frequency",
+					"offset": 10054,
+					"scale": 100
+				},
+				{
+					"id": "system_chargeable_power",
+					"offset": 10055,
+					"size": 2
+				},
+				{
+					"id": "system_dischargeable_power",
+					"offset": 10057,
+					"size": 2
+				},
+				{
+					"id": "system_chargeable_energy",
+					"offset": 10059,
+					"size": 2
+				},
+				{
+					"id": "system_dischargeable_energy",
+					"offset": 10061,
+					"size": 2
+				},
+				{
+					"id": "grid_status",
+					"offset": 10072
+				},
+				{
+					"id": "status",
+					"offset": 10073,
+					"bit_field": true,
+					"size": 2,
+					"bit_strings" : 
+					[
+						"Self-checking",
+						"Microgrid power supply starting",
+						"Grid power supply starting",
+						"Microgrid power supply running",
+						"Grid power supply running",
+						"Fault",
+						"Stopping",
+						"Stop",
+						"Emergency Stop"
+					]
+				},
+				{
+					"id": "faults",
+					"offset": 10075,
+					"bit_field": true,
+					"size": 4,
+					"bit_strings" : 
+					[
+						"PCS Fault",
+						"PCS Communication Fault",
+						"PCS Address Conflict",
+						"Reserved", "Reserved", "Reserved", "Reserved", "Reserved",
+						"Reserved", "Reserved", "Reserved", "Reserved",	"Reserved",
+						"Reserved", "Reserved",
+						"Self Check Fail",
+						"Self Check Timeout",
+						"Micro Grid Start Timeout",
+						"Micro Grid Start Fail",
+						"Grid Start Timeout",
+						"Grid Start Fail",
+						"Reserved", "Reserved",
+						"Stop Timeout",
+						"Reserved", "Reserved","Reserved", "Reserved",
+						"Host PCS setting abnormal",
+						"PC Comm Fault",
+						"PCS not ready fault",
+						"Reserved",
+						"Node 1 Fault",
+						"Node 2 Fault",
+						"Node 3 Fault",
+						"Node 4 Fault",
+						"Node 5 Fault",
+						"Node 6 Fault",
+						"Node 7 Fault",
+						"Node 8 Fault"
+					]
+				},
+				{
+					"id": "alarms",
+					"offset": 10079,
+					"bit_field": true,
+					"size": 4,
+					"bit_strings" : 
+					[
+						"PCS Fault Alarm",
+						"PCS Communication Fault Alarm",
+						"Reserved", "Reserved", "Reserved", "Reserved",
+						"Grid-side Contact Alarm",
+						"One or More Low Battery Level 1",
+						"One or More High Battery Level 1",
+						"BMS/BCP Communication Fault Alarm",
+						"BMS Fault Alarm",
+						"BMS Alarm",
+						"Reserved", "Reserved", "Reserved", "Reserved", "Reserved",
+						"Reserved", "Reserved",
+						"Node Collector Communication Fault Alarm",
+						"Node 1 Alarm",
+						"Node 2 Alarm",
+						"Node 3 Alarm",
+						"Node 4 Alarm",
+						"Node 5 Alarm",
+						"Node 6 Alarm",
+						"Node 7 Alarm",
+						"Node 8 Alarm",
+						"One or More Low Battery Level 2",
+						"One or More High Battery Level 2",
+						"BCP Alarm",
+						"Node Collector Node Abnormal",
+						"PCS DC voltage difference abnormal in subsystem",
+						"PCS not ready",
+						"Battery DC voltage difference abnormal in group",
+						"HVAC Temp Abnormal",
+						"Host PCS setting abnormal",
+						"Low online rack num",
+						"Battery system stop alarm"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 10147,
+			"number_of_registers": 44,
+			"map":
+			[
+				{
+					"id": "active_power",
+					"offset": 10147,
+					"size": 2,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "reactive_power",
+					"offset": 10149,
+					"size": 2,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "power_factor",
+					"offset": 10151,
+					"signed": true,
+					"scale": 1000
+				},
+				{
+					"id": "voltage_dc",
+					"offset": 10184,
+					"scale": 10
+				},
+				{
+					"id": "soc",
+					"offset": 10187,
+					"scale": 10
+				},
+				{
+					"id": "soh",
+					"offset": 10190,
+					"scale": 10
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 10226,
+			"number_of_registers": 25,
+			"map":
+			[
+				{
+					"id": "pcs1_dc_voltage",
+					"offset": 10226,
+					"scale": 10
+				},
+				{
+					"id": "pcs1_dc_current",
+					"offset": 10227,
+					"scale": 10
+				},
+				{
+					"id": "pcs1_dc_power",
+					"offset": 10228,
+					"scale": 10
+				},
+				{
+					"id": "pcs1_voltage_ab",
+					"offset": 10229,
+					"scale": 10
+				},
+				{
+					"id": "pcs1_voltage_bc",
+					"offset": 10230,
+					"scale": 10
+				},
+				{
+					"id": "pcs1_voltage_ca",
+					"offset": 10231,
+					"scale": 10
+				},
+				{
+					"id": "pcs1_frequency",
+					"offset": 10232,
+					"scale": 100
+				},
+				{
+					"id": "pcs1_current_l1",
+					"offset": 10233,
+					"scale": 10
+				},
+				{
+					"id": "pcs1_current_l2",
+					"offset": 10234,
+					"scale": 10
+				},
+				{
+					"id": "pcs1_current_l3",
+					"offset": 10235,
+					"scale": 10
+				},
+				{
+					"id": "pcs1_active_power",
+					"offset": 10236,
+					"scale": 10,
+					"signed": true
+				},
+				{
+					"id": "pcs1_reactive_power",
+					"offset": 10237,
+					"scale": 10,
+					"signed": true
+				},
+				{
+					"id": "pcs1_power_factor",
+					"offset": 10238,
+					"scale": 1000,
+					"signed": true
+				},
+				{
+					"id": "pcs1_status",
+					"offset": 10245,
+					"bit_field": true,
+					"size": 2,
+					"bit_strings" :
+					[
+						"Initializing",
+						"Emergency Stop",
+						"Standby",
+						"Constant Current Charge",
+						"Constant Voltage Charge",
+						"Constant Power Charge (DC)",
+						"Constant Power Charge (AC)",
+						"Reserved",
+						"Constant Current Discharge",
+						"Constant Voltage Discharge",
+						"Constant Power Discharge (DC)",
+						"Constant Power Discharge (AC)",
+						"Reserved",
+						"Reserved",
+						"Reserved",
+						"Reserved",
+						"Fault",
+						"Stop"
+					]
+				},
+				{
+					"id": "pcs1_faults",
+					"offset": 10247,
+					"bit_field": true,
+					"size": 4,
+					"bit_strings" :
+					[
+						"DC over-voltage",
+						"DC under-voltage",
+						"DC over-current",
+						"Grid over-voltage",
+						"Grid under-voltage",
+						"Grid over-frequency",
+						"Grid under-frequency",
+						"AC over-current",
+						"AC leakage current protection",
+						"Islanding protection",
+						"Phase anomaly",
+						"reserved",
+						"AC Voltage unbalance",
+						"reserved",
+						"Over temperature",
+						"Module A1 over temperature",
+						"Module B1 over temperature",
+						"Module C1 over temperature",
+						"Transformer over temperature",
+						"Reactor 1 over temperature",
+						"Reactor 2 over temperature",
+						"Module fault",
+						"Fan fault",
+						"reserved",
+						"AC main contactor fault",
+						"DC main contactor fault",
+						"Phase A current sampling channel fault",
+						"Phase B current sampling channel fault",
+						"Phase C current sampling channel fault",
+						"reserved", "reserved", "reserved",
+						"reserved",
+						"reserved",
+						"reserved",
+						"DC SPD fault",
+						"reserved",
+						"reserved",
+						"reserved",
+						"reserved",
+						"reserved",
+						"Battery Fault",
+						"DSP Communication Fault",
+						"Battery Communication Fault",
+						"Module A3 over temperature",
+						"Module B3 over temperature",
+						"Module C3 over temperature",
+						"Module A2 over temperature",
+						"Module B2 over temperature",
+						"Module C2 over temperature",
+						"AC SPD Fault",
+						"DC Fuse Fault",
+						"AC Power Fault",
+						"Polarity reversed",
+						"reserved",
+						"Sync Fault",
+						"Parallel set fault",
+						"reserved",
+						"Control cabinet over temperature",
+						"PC Communication fault",
+						"Heartbeat fault"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 10259,
+			"number_of_registers": 25,
+			"map":
+			[			
+				{
+					"id": "pcs2_dc_voltage",
+					"offset": 10259,
+					"scale": 10
+				},
+				{
+					"id": "pcs2_dc_current",
+					"offset": 10260,
+					"scale": 10
+				},
+				{
+					"id": "pcs2_dc_power",
+					"offset": 10261,
+					"scale": 10
+				},
+				{
+					"id": "pcs2_voltage_ab",
+					"offset": 10262,
+					"scale": 10
+				},
+				{
+					"id": "pcs2_voltage_bc",
+					"offset": 10263,
+					"scale": 10
+				},
+				{
+					"id": "pcs2_voltage_ca",
+					"offset": 10264,
+					"scale": 10
+				},
+				{
+					"id": "pcs2_frequency",
+					"offset": 10265,
+					"scale": 100
+				},
+				{
+					"id": "pcs2_current_l1",
+					"offset": 10266,
+					"scale": 10
+				},
+				{
+					"id": "pcs2_current_l2",
+					"offset": 10267,
+					"scale": 10
+				},
+				{
+					"id": "pcs2_current_l3",
+					"offset": 10268,
+					"scale": 10
+				},
+				{
+					"id": "pcs2_active_power",
+					"offset": 10269,
+					"scale": 10,
+					"signed": true
+				},
+				{
+					"id": "pcs2_reactive_power",
+					"offset": 10270,
+					"scale": 10,
+					"signed": true
+				},
+				{
+					"id": "pcs2_power_factor",
+					"offset": 10271,
+					"scale": 1000,
+					"signed": true
+				},
+				{
+					"id": "pcs2_status",
+					"offset": 10278,
+					"bit_field": true,
+					"size": 2,
+					"bit_strings" :
+					[
+						"Initializing",
+						"Emergency Stop",
+						"Standby",
+						"Constant Current Charge",
+						"Constant Voltage Charge",
+						"Constant Power Charge (DC)",
+						"Constant Power Charge (AC)",
+						"Reserved",
+						"Constant Current Discharge",
+						"Constant Voltage Discharge",
+						"Constant Power Discharge (DC)",
+						"Constant Power Discharge (AC)",
+						"Reserved",
+						"Reserved",
+						"Reserved",
+						"Reserved",
+						"Fault",
+						"Stop"
+					]
+				},
+				{
+					"id": "pcs2_faults",
+					"offset": 10280,
+					"bit_field": true,
+					"size": 4,
+					"bit_strings" :
+					[
+						"DC over-voltage",
+						"DC under-voltage",
+						"DC over-current",
+						"Grid over-voltage",
+						"Grid under-voltage",
+						"Grid over-frequency",
+						"Grid under-frequency",
+						"AC over-current",
+						"AC leakage current protection",
+						"Islanding protection",
+						"Phase anomaly",
+						"reserved",
+						"AC Voltage unbalance",
+						"reserved",
+						"Over temperature",
+						"Module A1 over temperature",
+						"Module B1 over temperature",
+						"Module C1 over temperature",
+						"Transformer over temperature",
+						"Reactor 1 over temperature",
+						"Reactor 2 over temperature",
+						"Module fault",
+						"Fan fault",
+						"reserved",
+						"AC main contactor fault",
+						"DC main contactor fault",
+						"Phase A current sampling channel fault",
+						"Phase B current sampling channel fault",
+						"Phase C current sampling channel fault",
+						"reserved", "reserved", "reserved",
+						"reserved",
+						"reserved",
+						"reserved",
+						"DC SPD fault",
+						"reserved",
+						"reserved",
+						"reserved",
+						"reserved",
+						"reserved",
+						"Battery Fault",
+						"DSP Communication Fault",
+						"Battery Communication Fault",
+						"Module A3 over temperature",
+						"Module B3 over temperature",
+						"Module C3 over temperature",
+						"Module A2 over temperature",
+						"Module B2 over temperature",
+						"Module C2 over temperature",
+						"AC SPD Fault",
+						"DC Fuse Fault",
+						"AC Power Fault",
+						"Polarity reversed",
+						"reserved",
+						"Sync Fault",
+						"Parallel set fault",
+						"reserved",
+						"Control cabinet over temperature",
+						"PC Communication fault",
+						"Heartbeat fault"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 13602,
+			"number_of_registers": 43,
+			"map":
+			[
+				{
+					"id": "bms1_racks_in_service",
+					"offset": 13602
+				},
+				{
+					"id": "bms1_dc_voltage",
+					"offset": 13606,
+					"scale": 10
+				},
+				{
+					"id": "bms1_dc_current",
+					"offset": 13607,
+					"signed": true
+				},
+				{
+					"id": "bms1_soc",
+					"offset": 13608,
+					"scale": 10
+				},
+				{
+					"id": "bms1_soh",
+					"offset": 13609,
+					"scale": 10
+				},
+				{
+					"id": "bms1_status",
+					"offset": 13610,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"E-Stop SPD",
+						"E-Stop Protection",
+						"E-Stop Partial",
+						"reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"Ready",
+						"Idle",
+						"Offline",
+						"DC Close Feedback Signal",
+						"[CMD] Main SW Off",
+						"[CMD] Main SW On",
+						"Discharge",
+						"Charge"
+					]
+				},
+				{
+					"id": "bms1_max_cell_voltage",
+					"offset": 13611,
+					"scale": 1000
+				},
+				{
+					"id": "bms1_min_cell_voltage",
+					"offset": 13612,
+					"scale": 1000
+				},
+				{
+					"id": "bms1_max_cell_temp",
+					"offset": 13613,
+					"scale": 100,
+					"signed": true
+				},
+				{
+					"id": "bms1_min_cell_temp",
+					"offset": 13614,
+					"scale": 100,
+					"signed": true
+				},
+				{
+					"id": "bms1_faults",
+					"offset": 13618,
+					"bit_field": true,
+					"size": 4,
+					"bit_strings":
+					[
+						"Additional protection Fault",
+						"DCSW count fail",
+						"Fan Fail",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved",
+						"Fuse or DCSW sensing fail",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 or DCSW 2 sensing fault",
+						"DCSW 3 sensing fault",
+						"DCSW 1 or DCSW 2 fail",
+						"DCSW 3 fail",
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack Current sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "bms1_alarms",
+					"offset": 13622,
+					"bit_field": true,
+					"size": 4,
+					"bit_strings":
+					[
+						"Additional protection Fault",
+						"DCSW count fail",
+						"Fan Fail",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved",
+						"Fuse or DCSW sensing fail",
+						"Rest Cell Balancing",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 or DCSW 2 sensing fault",
+						"DCSW 3 sensing fault",
+						"DCSW 1 or DCSW 2 fail",
+						"DCSW 3 fail",
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack Current Sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "bms1_discharge_current_limit",
+					"offset": 13626,
+					"scale" : 10
+				},
+				{
+					"id": "bms1_charge_current_limit",
+					"offset": 13627,
+					"scale" : 10
+				},
+				{
+					"id": "bms1_alarm_status",
+					"offset": 13628,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"String Count Imbalance Alarm",
+						"reserved", "reserved", "reserved",
+						"Disconnect TCP(502) Warning",
+						"Disconnect TCP(502) Fault",
+						"Disconnect TCP(602) Warning",
+						"Disconnect TCP(602) Fault",
+						"reserved", "reserved",
+						"String Voltage Imbalance",
+						"System Stop",
+						"reserved", "reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "bcp1_status",
+					"offset": 13631,
+					"bit_field": true,
+					"size": 2,
+					"bit_strings":
+					[
+						"Idle",
+						"Charge",
+						"Discharge",
+						"Fault",
+						"Emergency"
+					]
+				},
+				{
+					"id": "bcp1_faults",
+					"offset": 13633,
+					"bit_field": true,
+					"size": 2,
+					"bit_strings":
+					[
+						"Battery Fault",
+						"BMS Communication Fault",
+						"DC Fuse",
+						"Power Trans. Over temperature",
+						"1# trans over temperature",
+						"1# trans over temperature",
+						"reserved", "reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"BCP out temperature fail",
+						"Smoke alarm",
+						"FFS action",
+						"Fire alarm"
+					]
+				},
+				{
+					"id": "bcp1_alarms",
+					"offset": 13635,
+					"bit_field": true,
+					"size": 2,
+					"bit_strings":
+					[
+						"Battery Alarm",
+						"HVAC Communication Fault",
+						"HVAC Fault",
+						"reserved", "reserved", "reserved", "reserved", "reserved",
+						"1# SPD Fail",
+						"2# SPD Fail",
+						"No power supply",
+						"DC Breaker off",
+						"reserved",
+						"reserved",
+						"HVAC breaker off",
+						"Security Door",
+						"Ambient over temperature",
+						"reserved",
+						"reserved",
+						"FFS Fail",
+						"UPS Fail",
+						"UPS Alarm",
+						"UPS Battery Low",
+						"UPS Utility Failure"
+					]
+				},
+				{
+					"id": "bcp1_hvac1_status",
+					"offset": 13639
+				},
+				{
+					"id": "bcp1_hvac1_in_temp",
+					"offset": 13640,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "bcp1_hvac2_status",
+					"offset": 13641
+				},
+				{
+					"id": "bcp1_hvac2_in_temp",
+					"offset": 13642,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "bcp1_hvac3_status",
+					"offset": 13643
+				},
+				{
+					"id": "bcp1_hvac3_in_temp",
+					"offset": 13644,
+					"signed": true,
+					"scale": 10
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 13692,
+			"number_of_registers": 43,
+			"map":
+			[
+				{
+					"id": "bms2_racks_in_service",
+					"offset": 13692
+				},
+				{
+					"id": "bms2_dc_voltage",
+					"offset": 13696,
+					"scale": 10
+				},
+				{
+					"id": "bms2_dc_current",
+					"offset": 13697,
+					"signed": true
+				},
+				{
+					"id": "bms2_soc",
+					"offset": 13698,
+					"scale": 10
+				},
+				{
+					"id": "bms2_soh",
+					"offset": 13699,
+					"scale": 10
+				},
+				{
+					"id": "bms2_status",
+					"offset": 13700,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"E-Stop SPD",
+						"E-Stop Protection",
+						"E-Stop Partial",
+						"reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"Ready",
+						"Idle",
+						"Offline",
+						"DC Close Feedback Signal",
+						"[CMD] Main SW Off",
+						"[CMD] Main SW On",
+						"Discharge",
+						"Charge"
+					]
+				},
+				{
+					"id": "bms2_max_cell_voltage",
+					"offset": 13701,
+					"scale": 1000
+				},
+				{
+					"id": "bms2_min_cell_voltage",
+					"offset": 13702,
+					"scale": 1000
+				},
+				{
+					"id": "bms2_max_cell_temp",
+					"offset": 13703,
+					"scale": 100,
+					"signed": true
+				},
+				{
+					"id": "bms2_min_cell_temp",
+					"offset": 13704,
+					"scale": 100,
+					"signed": true
+				},
+				{
+					"id": "bms2_faults",
+					"offset": 13708,
+					"bit_field": true,
+					"size": 4,
+					"bit_strings":
+					[
+						"Additional protection Fault",
+						"DCSW count fail",
+						"Fan Fail",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved",
+						"Fuse or DCSW sensing fail",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 or DCSW 2 sensing fault",
+						"DCSW 3 sensing fault",
+						"DCSW 1 or DCSW 2 fail",
+						"DCSW 3 fail",
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack Current sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "bms2_alarms",
+					"offset": 13712,
+					"bit_field": true,
+					"size": 4,
+					"bit_strings":
+					[
+						"Additional protection Fault",
+						"DCSW count fail",
+						"Fan Fail",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved",
+						"Fuse or DCSW sensing fail",
+						"Rest Cell Balancing",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 or DCSW 2 sensing fault",
+						"DCSW 3 sensing fault",
+						"DCSW 1 or DCSW 2 fail",
+						"DCSW 3 fail",
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack Current Sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "bms2_discharge_current_limit",
+					"offset": 13716,
+					"scale" : 10
+				},
+				{
+					"id": "bms2_charge_current_limit",
+					"offset": 13717,
+					"scale" : 10
+				},
+				{
+					"id": "bms2_alarm_status",
+					"offset": 13718,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"String Count Imbalance Alarm",
+						"reserved", "reserved", "reserved",
+						"Disconnect TCP(502) Warning",
+						"Disconnect TCP(502) Fault",
+						"Disconnect TCP(602) Warning",
+						"Disconnect TCP(602) Fault",
+						"reserved", "reserved",
+						"String Voltage Imbalance",
+						"System Stop",
+						"reserved", "reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "bcp2_status",
+					"offset": 13721,
+					"bit_field": true,
+					"size": 2,
+					"bit_strings":
+					[
+						"Idle",
+						"Charge",
+						"Discharge",
+						"Fault",
+						"Emergency"
+					]
+				},
+				{
+					"id": "bcp2_faults",
+					"offset": 13723,
+					"bit_field": true,
+					"size": 2,
+					"bit_strings":
+					[
+						"Battery Fault",
+						"BMS Communication Fault",
+						"DC Fuse",
+						"Power Trans. Over temperature",
+						"1# trans over temperature",
+						"1# trans over temperature",
+						"reserved", "reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"BCP out temperature fail",
+						"Smoke alarm",
+						"FFS action",
+						"Fire alarm"
+					]
+				},
+				{
+					"id": "bcp2_alarms",
+					"offset": 13725,
+					"bit_field": true,
+					"size": 2,
+					"bit_strings":
+					[
+						"Battery Alarm",
+						"HVAC Communication Fault",
+						"HVAC Fault",
+						"reserved", "reserved", "reserved", "reserved", "reserved",
+						"1# SPD Fail",
+						"2# SPD Fail",
+						"No power supply",
+						"DC Breaker off",
+						"reserved",
+						"reserved",
+						"HVAC breaker off",
+						"Security Door",
+						"Ambient over temperature",
+						"reserved",
+						"reserved",
+						"FFS Fail",
+						"UPS Fail",
+						"UPS Alarm",
+						"UPS Battery Low",
+						"UPS Utility Failure"
+					]
+				},
+				{
+					"id": "bcp2_hvac1_status",
+					"offset": 13729
+				},
+				{
+					"id": "bcp2_hvac1_in_temp",
+					"offset": 13730,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "bcp2_hvac2_status",
+					"offset": 13731
+				},
+				{
+					"id": "bcp2_hvac2_in_temp",
+					"offset": 13732,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "bcp2_hvac3_status",
+					"offset": 13733
+				},
+				{
+					"id": "bcp2_hvac3_in_temp",
+					"offset": 13734,
+					"signed": true,
+					"scale": 10
+				}
+			]
+		}
+	]
+}

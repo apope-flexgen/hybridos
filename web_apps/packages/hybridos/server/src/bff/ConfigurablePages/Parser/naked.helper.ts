@@ -18,7 +18,6 @@ import {
   controlComponentStateInfo,
   ControlTypes,
 } from '../configurablePages.types';
-import { scan } from 'rxjs';
 import { SiteConfiguration } from 'src/webuiconfig/webUIConfig.interface';
 
 // TODO: finalize this method

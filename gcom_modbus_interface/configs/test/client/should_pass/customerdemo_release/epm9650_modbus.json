@@ -1,0 +1,121 @@
+{
+	"system":
+	{
+		"id": "pv_aux_epm9650",
+		"ip_address": "192.168.0.137",
+		"port": 502,
+		"frequency": 500,
+		"off_by_one": false,
+		"byte_swap": false
+	},
+	"registers": 
+	[
+		{
+			"type": "Input Registers",
+			"starting_offset": 131,
+			"number_of_registers": 44,
+			"map":
+			[
+				{
+					"id": "current_a",
+					"offset": 131,
+					"size": 2,
+					"scale": 65536
+				},
+				{
+					"id": "current_b",
+					"offset": 133,
+					"size": 2,
+					"scale": 65536
+				},
+				{
+					"id": "current_c",
+					"offset": 135,
+					"size": 2,
+					"scale": 65536
+				},
+				{
+					"id": "voltage_ab",
+					"offset": 139,
+					"size": 2,
+					"scale": 65536
+				},
+				{
+					"id": "voltage_bc",
+					"offset": 141,
+					"size": 2,
+					"scale": 65536
+				},
+				{
+					"id": "voltage_ca",
+					"offset": 143,
+					"size": 2,
+					"scale": 65536
+				},
+				{
+					"id": "reactive_power",
+					"offset": 159,
+					"size": 2,
+					"signed": true,
+					"scale": 65536
+				},
+				{
+					"id": "active_power",
+					"offset": 167,
+					"size": 2,
+					"signed": true,
+					"scale": 65536
+				},
+				{
+					"id": "frequency",
+					"offset": 169,
+					"size": 2,
+					"scale": 65536
+				},
+				{
+					"id": "power_factor",
+					"offset": 174,
+					"scale": 1000
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 384,
+			"number_of_registers": 6,
+			"map":
+			[
+				{
+					"id": "thd_v_l1",
+					"offset": 384,
+					"scale": 100
+				},
+				{
+					"id": "thd_v_l2",
+					"offset": 385,
+					"scale": 100
+				},
+				{
+					"id": "thd_v_l3",
+					"offset": 386,
+					"scale": 100
+				},
+				{
+					"id": "thd_i_l1",
+					"offset": 387,
+					"scale": 100
+				},
+				{
+					"id": "thd_i_l2",
+					"offset": 388,
+					"scale": 100
+				},
+				{
+					"id": "thd_i_l3",
+					"offset": 389,
+					"scale": 100
+				}
+			]
+		}
+	]
+}

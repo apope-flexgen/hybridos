@@ -10,8 +10,9 @@ import (
 )
 
 type Config struct {
-	Name   string
-	Influx InfluxConfig `json:"destination"`
+	Name           string
+	Mode           string
+	RecordSettings RecordConfig `json:"record_settings"`
 
 	Mem     MemCollector
 	CPU     CPUCollector
@@ -22,9 +23,9 @@ type Config struct {
 }
 
 // struct for influx/destinaton configuration
-type InfluxConfig struct {
-	Active           bool `json:"influx"`
+type RecordConfig struct {
 	Interval         int
+	Directory        string `json:"archive_directory"`
 	Db               string `json:"database"`
 	Address          string
 	Timeout          int
@@ -67,9 +68,7 @@ func configureDefaults(configFile string) error {
 
 	defaultConf := Config{
 		Name: name,
-		Influx: InfluxConfig{
-			Active: false,
-		},
+		Mode: "fims",
 		Mem: MemCollector{
 			DataMan: defaultDataMan,
 			Stats:   []string{"MemAvailable", "MemTotal", "MemFree", "Active", "Dirty"},

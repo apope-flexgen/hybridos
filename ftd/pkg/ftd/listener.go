@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	log "github.com/flexgen-power/go_flexgen/logger"
+	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 	"golang.org/x/sync/errgroup"
 )
 

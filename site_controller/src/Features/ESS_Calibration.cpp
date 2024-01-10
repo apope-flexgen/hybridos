@@ -7,7 +7,8 @@
 
 features::ESS_Calibration::ESS_Calibration() {
     feature_vars = {
-        &kW_cmd, &soc_limits_enable, &min_soc_limit, &max_soc_limit, &voltage_limits_enable, &min_voltage_limit, &max_voltage_limit, &num_setpoint, &num_limited, &num_zero,
+        &kW_cmd,       &soc_limits_enable, &min_soc_limit, &max_soc_limit, &cell_voltage_limits_enable, &min_cell_voltage_limit, &max_cell_voltage_limit, &rack_voltage_limits_enable, &min_rack_voltage_limit, &max_rack_voltage_limit,
+        &num_setpoint, &num_limited,       &num_zero,
     };
 
     variable_ids = {
@@ -16,9 +17,12 @@ features::ESS_Calibration::ESS_Calibration() {
         { &soc_limits_enable, "ess_calibration_soc_limits_enable" },
         { &min_soc_limit, "ess_calibration_min_soc_limit" },
         { &max_soc_limit, "ess_calibration_max_soc_limit" },
-        { &voltage_limits_enable, "ess_calibration_voltage_limits_enable" },
-        { &min_voltage_limit, "ess_calibration_min_voltage_limit" },
-        { &max_voltage_limit, "ess_calibration_max_voltage_limit" },
+        { &cell_voltage_limits_enable, "ess_calibration_cell_voltage_limits_enable" },
+        { &min_cell_voltage_limit, "ess_calibration_min_cell_voltage_limit" },
+        { &max_cell_voltage_limit, "ess_calibration_max_cell_voltage_limit" },
+        { &rack_voltage_limits_enable, "ess_calibration_rack_voltage_limits_enable" },
+        { &min_rack_voltage_limit, "ess_calibration_min_rack_voltage_limit" },
+        { &max_rack_voltage_limit, "ess_calibration_max_rack_voltage_limit" },
         { &num_setpoint, "ess_calibration_num_setpoint" },
         { &num_limited, "ess_calibration_num_limited" },
         { &num_zero, "ess_calibration_num_zero" },
@@ -57,8 +61,10 @@ features::ESS_Calibration::External_Outputs features::ESS_Calibration::execute_h
 
 void features::ESS_Calibration::handle_fims_set(std::string uri_endpoint, const cJSON& msg_value) {
     if (msg_value.type == cJSON_Number) {
-        min_voltage_limit.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
-        max_voltage_limit.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
+        min_cell_voltage_limit.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
+        max_cell_voltage_limit.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
+        min_rack_voltage_limit.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
+        max_rack_voltage_limit.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
         kW_cmd.set_fims_float(uri_endpoint.c_str(), msg_value.valuedouble);
 
         // write if valid % range
@@ -69,6 +75,7 @@ void features::ESS_Calibration::handle_fims_set(std::string uri_endpoint, const 
     } else if (msg_value.type == cJSON_True || msg_value.type == cJSON_False) {
         bool value_bool = msg_value.type != cJSON_False;
         soc_limits_enable.set_fims_bool(uri_endpoint.c_str(), value_bool);
-        voltage_limits_enable.set_fims_bool(uri_endpoint.c_str(), value_bool);
+        cell_voltage_limits_enable.set_fims_bool(uri_endpoint.c_str(), value_bool);
+        rack_voltage_limits_enable.set_fims_bool(uri_endpoint.c_str(), value_bool);
     }
 }

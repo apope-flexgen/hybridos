@@ -1,0 +1,55 @@
+[
+    {"/components/comp_sel_2440/door_latch":{"value": true}},
+    {"/components/comp_sel_2440/test_id":{"value": 10021}},
+
+    
+    { "/components/comp_sel_2440/door_latch":"true"},
+    { "/components/comp_sel_2440/hold_2_2":1234},
+    { "/components/comp_sel_2440/hold_1_4":123400},
+
+
+    { "/components/comp_sel_2440/test_id":10021},
+    { "/components/comp_sel_2440/hold_1_1":-400},
+    { "/components/comp_sel_2440/hold_1_4":{"value":400}},
+    { "/components/comp_sel_2440/shold_1_4":{"value":-400}},
+
+    { "/components/comp_sel_2440/hold_1_4":{"value":500.34}},
+    { "/components/comp_sel_2440/shold_1_4":-500.67},
+
+    { "/components/comp_sel_2440/fhold_1_2":500.34},
+    { "/components/comp_sel_2440/fhold_1_4":-600.67},
+    { "/components/comp_sel_2440/fshold_1_4":{"value":-600.67}},
+
+    {"note":"shift / scale and check all bit stuff"},
+    { "/components/comp_sel_2440/scale_1_1":{"value":200}},
+    { "/components/comp_sel_2440/scale_1_2":{"value":200}},
+    { "/components/comp_sel_2440/scale_1_4":{"value":200}},
+    { "/components/comp_sel_2440/shift_1_1":{"value":200}},
+    { "/components/comp_sel_2440/shift_1_2":{"value":200}},
+    { "/components/comp_sel_2440/shift_1_4":{"value":200}},
+    { "/components/comp_sel_2440/test_id":{"value":10022}},
+
+
+    { "/components/comp_sel_2440/scale_1_1/_force":{"value":300}},
+
+    { "/components/comp_sel_2440/scale_1_1":{"value":100}},
+    { "/components/comp_sel_2440/scale_1_1/_unforce":{"value":150}},
+
+
+    { "/components/comp_sel_2440/inv_1_16":{"value":0}},
+    { "/components/comp_sel_2440/inv_1_16":{"value":255}},
+    { "/components/comp_sel_2440/inv_1_4":{"value":0}},
+    { "/components/comp_sel_2440/inv_1_4":{"value":128}},
+
+
+
+
+
+    {"/components/comp_sel_2440":{"multi_1":1,"multi_2":2,"multi_3":3,"multi_4":4}},
+
+
+    {"/components/comp_sel_2440/multi_1":{"value":0}},
+
+    {"/components/comp_sel_2440/scale_1_1": {"value": 200}},
+    {"/components/comp_sel_2440/scale_1_1/_unforce": {"value": 150}}
+]

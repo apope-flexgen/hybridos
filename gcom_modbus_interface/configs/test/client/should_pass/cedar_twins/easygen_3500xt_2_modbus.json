@@ -1,0 +1,273 @@
+{
+	"system":
+	{
+		"id": "easygen_3500xt_2",
+		"ip_address": "10.239.2.18",
+		"port": 502,
+		"frequency": 200,
+		"device_id": 1
+	},
+	"registers":
+	[
+		{
+			"type": "Holding Registers",
+			 "starting_offset": 50099,
+			 "number_of_registers": 16,
+			 "map":
+			 [
+				{
+					"id": "control_status",
+					"offset": 50099
+				},		
+				{
+					"id": "starting_status",
+					"offset": 50103,
+					"individual_bits": true,
+					"bit_strings":
+					[
+						"status_bit_0",
+						"status_bit_1",
+						"status_bit_2",
+						null,
+						null,
+						"status_bit_5",
+						"status_bit_6",
+						"status_bit_7",
+						"status_bit_8",
+						"status_bit_9",
+						"status_bit_10",
+						"status_bit_11",
+						"status_bit_12",
+						"status_bit_13",
+						null,
+						"status_bit_15"
+					]
+				},
+				{
+					"id": "run_status",
+					"offset": 50104,
+					"individual_bits": true,
+					"bit_strings":
+					[
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						"run_bit"
+					]
+				},
+				{
+					"id": "stop_status",
+					"offset": 50108,
+					"individual_bits": true,
+					"bit_strings":
+					[
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						"stop_bit"
+					]
+				},
+				{
+					"id": "fault_bits_1",
+					"offset": 50114,
+					"individual_bits": true,
+					"bit_strings":
+					[
+						null,
+						null,
+						"class_C_alarm",
+						"class_D_alarm",
+						"class_E_alarm",
+						"class_F_alarm",
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					]
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			 "starting_offset": 50139,
+			 "number_of_registers": 1,
+			 "map":
+			 [
+				{
+					"id": "fault_bits_2",
+					"offset": 50139,
+					"individual_bits": true,
+					"bit_strings":
+					[
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						"engine_fault",
+						null,
+						null,
+						null,
+						null
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 50201,
+			"number_of_registers": 1,
+			"map":
+			[
+				{
+					"id": "engine_speed",
+					"offset": 50201,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 50009,
+			"number_of_registers": 4,
+			"map":
+			[
+				{
+					"id": "frequency",
+					"offset": 50009,
+					"signed": true,
+					"scale": 100
+				},
+				{
+					"id": "power_factor",
+					"offset": 50012,
+					"signed": true,
+					"scale": 1000
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 50410,
+			"number_of_registers": 36,
+			"map":
+			[
+				{
+					"id": "active_power",
+					"offset": 50410,
+					"signed": true,
+					"scale": 1000,
+					"size": 2
+				},
+				{
+					"id": "reactive_power",
+					"offset": 50412,
+					"signed": true,
+					"scale": 1000,
+					"size": 2
+				},
+				{
+					"id": "apparent_power",
+					"offset": 50414,
+					"signed": true,
+					"scale": 1000,
+					"size": 2
+				},
+				{
+					"id": "ac_current_l1",
+					"offset": 50424,
+					"signed": true,
+					"scale": 1000,
+					"size": 2
+				},
+				{
+					"id": "ac_current_l2",
+					"offset": 50426,
+					"signed": true,
+					"scale": 1000,
+					"size": 2
+				},
+				{
+					"id": "ac_current_l3",
+					"offset": 50428,
+					"signed": true,
+					"scale": 1000,
+					"size": 2
+				},
+				{
+					"id": "ac_voltage_l1_l2",
+					"offset": 50434,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "ac_voltage_l2_l3",
+					"offset": 50436,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "ac_voltage_l3_l1",
+					"offset": 50438,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "ac_voltage_l1",
+					"offset": 50440,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "ac_voltage_l2",
+					"offset": 50442,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "ac_voltage_l3",
+					"offset": 50444,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				}
+			]
+		}
+	]
+}

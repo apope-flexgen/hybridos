@@ -2527,7 +2527,7 @@ var AndTests = []TestCase{
 		errorExpected:   false,
 	},
 	TestCase{
-		testDescription: "len(inputs) = 1, input = uint(0)",
+		testDescription: "len(inputs) = 1, input = uint64(0)",
 		inputs:          []Union{Union{tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
@@ -2785,7 +2785,7 @@ var OrTests = []TestCase{
 		errorExpected:   false,
 	},
 	TestCase{
-		testDescription: "len(inputs) = 1, input = uint(0)",
+		testDescription: "len(inputs) = 1, input = uint64(0)",
 		inputs:          []Union{Union{tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
@@ -3079,7 +3079,7 @@ var NotTests = []TestCase{
 		errorExpected:      false,
 	},
 	TestCase{
-		testDescription:    "len(inputs) = 1, input = uint(0)",
+		testDescription:    "len(inputs) = 1, input = uint64(0)",
 		inputs:             []Union{Union{tag: UINT, ui: 0}},
 		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
 		errorExpected:      false,
@@ -7341,7 +7341,7 @@ func TestFloor(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -7581,7 +7581,7 @@ func TestCeil(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -7827,7 +7827,7 @@ func TestSqrt(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range test.expectedOutputList {
+			for i := range test.expectedOutputList {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output[i], test.expectedOutputList[i])
 				}
@@ -8427,7 +8427,7 @@ func TestAbs(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -8673,7 +8673,7 @@ func TestRound(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -8793,7 +8793,7 @@ func TestBool(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -8913,7 +8913,7 @@ func TestInt(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -9039,7 +9039,7 @@ func TestUInt(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -9141,7 +9141,7 @@ func TestFloat(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -9213,7 +9213,7 @@ func TestString(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -9269,7 +9269,7 @@ func TestIntegrate(t *testing.T) {
 	}
 
 	state := make(map[string][]Union, 0)
-	output, err = Integrate(Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 1.0 / (3600 * 1000)}, Union{tag: INT, i: -1}, Union{tag: INT, i: 0}, &state)
+	output, _ = Integrate(Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 1.0 / (3600 * 1000)}, Union{tag: INT, i: -1}, Union{tag: INT, i: 0}, &state)
 	state["value"] = []Union{output}
 	time.Sleep(100 * time.Millisecond)
 	output, err = Integrate(Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 1.0 / (3600 * 1000)}, Union{tag: INT, i: -1}, Union{tag: INT, i: 0}, &state)
@@ -10443,7 +10443,7 @@ func TestCompare(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -11654,6 +11654,326 @@ func TestValueChanged(t *testing.T) {
 		t0 := time.Now()
 		ValueChanged(test.inputs[0], &(test.state))
 		output, err = ValueChanged(test.inputs[1], &(test.state))
+		duration := time.Since(t0)
+		if testing.Verbose() {
+			fmt.Printf("%-50s\t%5d ns\n", test.testDescription, duration)
+		}
+		if output != test.expectedOutput {
+			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutput)
+		}
+		if err == nil && test.errorExpected {
+			t.Errorf("%s: no error when there should have been\n", test.testDescription)
+		} else if err != nil && !test.errorExpected {
+			t.Errorf("%s: got an err when there should not have been an error\n", test.testDescription)
+		}
+	}
+}
+
+var CountTests = []TestCase{
+	TestCase{
+		testDescription: "len(inputs) = 0",
+		inputs:          []Union{},
+		expectedOutput:  Union{tag:UINT, ui:0},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 1, input = bool (true)",
+		inputs:          []Union{Union{tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: UINT, ui:1},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 1, input = bool (false)",
+		inputs:          []Union{Union{tag: BOOL, b: false}},
+		expectedOutput:  Union{tag: UINT, ui: 1},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 1, input = int",
+		inputs:          []Union{Union{tag: INT, i: -5}},
+		expectedOutput:  Union{tag: UINT, ui: 1},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 1, input = uint",
+		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		expectedOutput:  Union{tag: UINT, ui: 1},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 1, input = float",
+		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		expectedOutput:  Union{tag: UINT, ui: 1},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 1, input = string",
+		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		expectedOutput:  Union{tag: UINT, ui: 1},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,true",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: UINT, ui: 2},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = false,false",
+		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		expectedOutput:  Union{tag: UINT, ui: 2},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		expectedOutput:  Union{tag: UINT, ui: 2},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
+		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		expectedOutput:  Union{tag: UINT, ui: 2},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		expectedOutput:  Union{tag: UINT, ui: 2},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		expectedOutput:  Union{tag: UINT, ui: 2},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		expectedOutput:  Union{tag: UINT, ui: 2},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
+		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		expectedOutput: Union{tag: UINT, ui: 3},
+		errorExpected:   false,
+	},
+}
+
+func TestCount(t *testing.T) {
+	var output Union
+	var err error
+	for _, test := range CountTests {
+		t0 := time.Now()
+		output, err = Count(test.inputs)
+		duration := time.Since(t0)
+		if testing.Verbose() {
+			fmt.Printf("%-50s\t%5d ns\n", test.testDescription, duration)
+		}
+		if output != test.expectedOutput {
+			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutput)
+		}
+		if err == nil && test.errorExpected {
+			t.Errorf("%s: no error when there should have been\n", test.testDescription)
+		} else if err != nil && !test.errorExpected {
+			t.Errorf("%s: got an err when there should not have been an error\n", test.testDescription)
+		}
+	}
+}
+
+var CombineBitsTests = []TestCase{
+	TestCase{
+		testDescription: "len(inputs) = 0",
+		inputs:          []Union{},
+		expectedOutput:  Union{tag:UINT, ui:0},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 1, input = bool (true)",
+		inputs:          []Union{Union{tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: UINT, ui:2},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 1, input = bool (false)",
+		inputs:          []Union{Union{tag: BOOL, b: false}},
+		expectedOutput:  Union{tag: UINT, ui: 1},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 1, input = int",
+		inputs:          []Union{Union{tag: INT, i: -5}},
+		expectedOutput:  Union{tag: UINT, ui: 0},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 1, input = uint",
+		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		expectedOutput:  Union{tag: UINT, ui: uint64(1<<5)},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 1, input = float",
+		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		expectedOutput:  Union{tag: UINT, ui: uint64(1<<5)},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 1, input = string",
+		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		expectedOutput:  Union{tag: UINT, ui: 0},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,true",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: UINT, ui: 4},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = false,false",
+		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		expectedOutput:  Union{tag: UINT, ui: 2},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		expectedOutput:  Union{tag: UINT, ui: 4},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
+		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		expectedOutput:  Union{tag: UINT, ui: 3},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		expectedOutput:  Union{tag: UINT, ui: 2},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		expectedOutput:  Union{tag: UINT, ui: uint64(2 + (1<<5))},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		expectedOutput:  Union{tag: UINT, ui: 2},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
+		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		expectedOutput: Union{tag: UINT, ui: uint64(4+(1<<5))},
+		errorExpected:   false,
+	},
+}
+
+func TestCombineBits(t *testing.T) {
+	var output Union
+	var err error
+	for _, test := range CombineBitsTests {
+		t0 := time.Now()
+		output, err = CombineBits(test.inputs)
+		duration := time.Since(t0)
+		if testing.Verbose() {
+			fmt.Printf("%-50s\t%5d ns\n", test.testDescription, duration)
+		}
+		if output != test.expectedOutput {
+			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutput)
+		}
+		if err == nil && test.errorExpected {
+			t.Errorf("%s: no error when there should have been\n", test.testDescription)
+		} else if err != nil && !test.errorExpected {
+			t.Errorf("%s: got an err when there should not have been an error\n", test.testDescription)
+		}
+	}
+}
+
+
+var InTests = []TestCase{
+	TestCase{
+		testDescription: "len(inputs) = 1, input = bool (true)",
+		inputs:          []Union{Union{tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: BOOL, b:false},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,true",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: BOOL, b:true},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = false,false",
+		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		expectedOutput:  Union{tag: BOOL, b:true},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,false",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		expectedOutput:  Union{tag: BOOL, b:false},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
+		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		expectedOutput:  Union{tag: BOOL, b:false},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(1)",
+		inputs:          []Union{Union{tag: UINT, ui:1}, Union{tag: UINT, ui: 1}},
+		expectedOutput:  Union{tag: BOOL, b:true},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(1)",
+		inputs:          []Union{Union{tag: UINT, ui:1}, Union{tag: INT, i: 1}},
+		expectedOutput:  Union{tag: BOOL, b:false},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = STRING(\"hello\"),STRING(\"goodbye\")",
+		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "goodbye"}},
+		expectedOutput:  Union{tag: BOOL, b:false},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 2, inputs = STRING(\"hello\"),STRING(\"hello\")",
+		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hello"}},
+		expectedOutput:  Union{tag: BOOL, b:true},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
+		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		expectedOutput: Union{tag: BOOL, b:false},
+		errorExpected:   false,
+	},
+	TestCase{
+		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),UINT(1)",
+		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: UINT, ui: 1}},
+		expectedOutput: Union{tag: BOOL, b:true},
+		errorExpected:   false,
+	},
+}
+
+func TestIn(t *testing.T) {
+	var output Union
+	var err error
+	
+	for _, test := range InTests {
+		t0 := time.Now()
+		output, err = In(test.inputs[0], test.inputs[1:])
 		duration := time.Since(t0)
 		if testing.Verbose() {
 			fmt.Printf("%-50s\t%5d ns\n", test.testDescription, duration)

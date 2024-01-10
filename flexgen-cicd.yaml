@@ -6,20 +6,32 @@ Parameters:
     Description: 'Format: vX.X, e.g. `v11.1`. This tells the pipeline which version of HybridOS to build and push when a tag is created.'
     AllowedPattern: ^v(?:[1-9]|[1-2][0-9])\.(?:[0-9]|[1-2][0-9])$
 
-  GitHubBranch:
-    Type: String
-    Description: The branch of the GitHub repository to monitor for changes.
-
   BuildImage:
     Type: String
     Description: 'The Docker image to use for building the components. Format: flexgen/<image>:<tag>'
     AllowedPattern: ^flexgen\/[^:]+:[^-]+(?:-.+)?$
+
+  ArtifactBucket:
+    Type: String
+    Description: 'The Artifact bucket where source is pulled from the GitHub repository and build artifacts are stored.'
+    Default: hybridos-cicd-release-tags
   
   GitHubRepo:
     Type: String
     Description: The GitHub repository to monitor for changes.
     Default: flexgen-power/hybridos
     AllowedPattern: ^flexgen-power\/[^\/]+$
+
+  LogsBucketArn:
+    Type: String
+    Description: The ARN for the S3 bucket that will store the logs for the CodeBuild projects.
+    Default: arn:aws:s3:::flexgen-cicd
+    AllowedPattern: ^arn:aws:s3:::[^:]+$
+
+  LogsBucketPath:
+    Type: String
+    Description: The path in the S3 bucket that will store the logs for the CodeBuild projects.
+    Default: codebuild-logs
 
   DockerHubSecretArn:
     Type: String
@@ -51,13 +63,15 @@ Metadata:
       - Label:
           default: Supply for each new stack
         Parameters:
-          - MajorReleaseVersion
-          - GitHubBranch
           - BuildImage
+          - MajorReleaseVersion
       - Label:
           default: Default values generally OK
         Parameters:
+          - ArtifactBucket
           - GitHubRepo
+          - LogsBucketArn
+          - LogsBucketPath
           - DockerHubSecretArn
           - ArtifactorySecretArn
           - SshPrivateKeySecretArn
@@ -65,10 +79,10 @@ Metadata:
     ParameterLabels:
       MajorReleaseVersion:
         default: 'Major Release Version'
-      GitHubBranch:
-        default: 'GitHub Branch'
       BuildImage:
         default: 'Build Image'
+      ArtifactBucket:
+        default: 'Artifact S3 Bucket'
       GitHubRepo:
         default: 'GitHub Repo'
       DockerHubSecretArn:
@@ -81,12 +95,6 @@ Metadata:
         default: 'SSH Public Key Secrets Manager Secret ARN'
 
 Resources:
-  ArtifactBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      VersioningConfiguration:
-        Status: Enabled
-
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -103,7 +111,7 @@ Resources:
       Policies:
         - PolicyName: code-build-policy
           PolicyDocument:
-            Version: 2012-10-17
+            Version: "2012-10-17"
             Statement:
               - Resource: "*"
                 Effect: Allow
@@ -113,6 +121,15 @@ Resources:
                   - logs:PutLogEvents
               - Resource:
                   - !Sub arn:${AWS::Partition}:s3:::${ArtifactBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+              - Resource:
+                  - !Sub ${LogsBucketArn}/*
                 Effect: Allow
                 Action:
                   - s3:PutObject
@@ -141,6 +158,11 @@ Resources:
                 Effect: Allow
                 Action:
                   - ecr:GetAuthorizationToken
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
 
   CodePipelineServiceRole:
     Type: AWS::IAM::Role
@@ -175,6 +197,15 @@ Resources:
                   - s3:GetBucketVersioning
                   - s3:ListBucket
               - Resource:
+                  - !Sub ${LogsBucketArn}/*
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+              - Resource:
                   - arn:aws:s3:::*
                 Effect: Allow
                 Action:
@@ -189,68 +220,6 @@ Resources:
                 Effect: Allow
                 Action:
                   - lambda:*
-
-  BranchTriggerProject:
-    Type: AWS::CodeBuild::Project
-    Properties:
-      Name: !Sub ${AWS::StackName}-branch-trigger
-      Source:
-        Type: GITHUB
-        Location: !Sub https://github.com/${GitHubRepo}.git
-        GitCloneDepth: 0 # 0 indicates full clone
-        BuildSpec: !Sub |
-          version: 0.1
-          phases:
-            build:
-              commands:
-                - ARTIFACT_S3_BUCKET=${ArtifactBucket} ARTIFACT_S3_KEY="pipeline-source/${AWS::StackName}/build-pipeline/raw-source.zip" ./cicd-scripts/triggers/branch_trigger/build.sh
-      Triggers:
-        BuildType: BUILD
-        Webhook: True
-        FilterGroups:
-          - - Type: EVENT
-              Pattern: PUSH
-            - Type: HEAD_REF
-              Pattern: !Sub ^refs/heads/${GitHubBranch}$
-              ExcludeMatchedPattern: false
-      ServiceRole: !Ref CodeBuildServiceRole
-      Artifacts:
-        Type: NO_ARTIFACTS
-      Environment:
-        Type: LINUX_CONTAINER
-        ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/standard:6.0
-
-  TagTriggerProject:
-    Type: AWS::CodeBuild::Project
-    Properties:
-      Name: !Sub ${AWS::StackName}-tag-trigger
-      Source:
-        Type: GITHUB
-        Location: !Sub https://github.com/${GitHubRepo}.git
-        GitCloneDepth: 0 # 0 indicates full clone
-        BuildSpec: !Sub |
-          version: 0.1
-          phases:
-            build:
-              commands:
-                - ARTIFACT_S3_BUCKET=${ArtifactBucket} ARTIFACT_S3_KEY="pipeline-source/${AWS::StackName}/build-and-push-pipeline/raw-source.zip" ./cicd-scripts/triggers/tag_trigger/build.sh
-      Triggers:
-        BuildType: BUILD
-        Webhook: True
-        FilterGroups:
-          - - Type: EVENT
-              Pattern: PUSH
-            - Type: HEAD_REF
-              Pattern: !Sub ^refs\/tags\/${MajorReleaseVersion}\..*$
-              ExcludeMatchedPattern: false
-      ServiceRole: !Ref CodeBuildServiceRole
-      Artifacts:
-        Type: NO_ARTIFACTS
-      Environment:
-        Type: LINUX_CONTAINER
-        ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/standard:6.0
 
   BuildProject:
     Type: AWS::CodeBuild::Project
@@ -278,6 +247,10 @@ Resources:
             Value: !Ref SshPublicKeySecretArn
       Name: !Sub ${AWS::StackName}-build
       ServiceRole: !Ref CodeBuildServiceRole
+      LogsConfig:
+        S3Logs:
+          Location: !Sub ${LogsBucketArn}/${LogsBucketPath}
+          Status: ENABLED
   
   PackageProject:
     Type: AWS::CodeBuild::Project
@@ -305,6 +278,10 @@ Resources:
         Type: LINUX_CONTAINER
       Name: !Sub ${AWS::StackName}-package
       ServiceRole: !Ref CodeBuildServiceRole
+      LogsConfig:
+        S3Logs:
+          Location: !Sub ${LogsBucketArn}/${LogsBucketPath}
+          Status: ENABLED
 
 
   TestProject:
@@ -340,6 +317,10 @@ Resources:
         PrivilegedMode: true
       Name: !Sub ${AWS::StackName}-test
       ServiceRole: !Ref CodeBuildServiceRole
+      LogsConfig:
+        S3Logs:
+          Location: !Sub ${LogsBucketArn}/${LogsBucketPath}
+          Status: ENABLED
 
   ArtifactoryProject:
     Type: AWS::CodeBuild::Project
@@ -370,6 +351,10 @@ Resources:
         Type: LINUX_CONTAINER
       Name: !Sub ${AWS::StackName}-artifactory
       ServiceRole: !Ref CodeBuildServiceRole
+      LogsConfig:
+        S3Logs:
+          Location: !Sub ${LogsBucketArn}/${LogsBucketPath}
+          Status: ENABLED
 
   DockerProject:
     Type: AWS::CodeBuild::Project
@@ -405,76 +390,10 @@ Resources:
         Type: LINUX_CONTAINER
       Name: !Sub ${AWS::StackName}-docker
       ServiceRole: !Ref CodeBuildServiceRole
-
-  BuildPipeline:
-    Type: AWS::CodePipeline::Pipeline
-    Properties:
-      Name: !Sub ${AWS::StackName}-build
-      RoleArn: !GetAtt CodePipelineServiceRole.Arn
-      ArtifactStore:
-        Type: S3
-        Location: !Ref ArtifactBucket
-      Stages:
-        - Name: Source
-          Actions:
-            - Name: Source
-              ActionTypeId:
-                Category: Source
-                Owner: AWS
-                Version: "1"
-                Provider: S3
-              Configuration:
-                S3Bucket: !Ref ArtifactBucket
-                S3ObjectKey: !Sub pipeline-source/${AWS::StackName}/build-pipeline/raw-source.zip
-                PollForSourceChanges: true
-              OutputArtifacts:
-                - Name: HybridOs
-              RunOrder: 1
-        - Name: Build
-          Actions:
-            - Name: Build
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: "1"
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref BuildProject
-              InputArtifacts:
-                - Name: HybridOs
-              OutputArtifacts:
-                - Name: HybridOsBuild
-              RunOrder: 1
-        - Name: Package
-          Actions:
-            - Name: Package
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: "1"
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref PackageProject
-              InputArtifacts:
-                - Name: HybridOsBuild
-              OutputArtifacts:
-                - Name: HybridOsPackage
-              RunOrder: 1
-        - Name: Test
-          Actions:
-            - Name: Test
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: "1"
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref TestProject
-              InputArtifacts:
-                - Name: HybridOsPackage
-              OutputArtifacts:
-                - Name: HybridOsTestResult
-              RunOrder: 1
+      LogsConfig:
+        S3Logs:
+          Location: !Sub ${LogsBucketArn}/${LogsBucketPath}
+          Status: ENABLED
   
   BuildAndPushPipeline:
     Type: AWS::CodePipeline::Pipeline
@@ -495,7 +414,7 @@ Resources:
                 Provider: S3
               Configuration:
                 S3Bucket: !Ref ArtifactBucket
-                S3ObjectKey: !Sub pipeline-source/${AWS::StackName}/build-and-push-pipeline/raw-source.zip
+                S3ObjectKey: !Sub pipeline-source/${MajorReleaseVersion}/tag-trigger/raw-source.zip
                 PollForSourceChanges: true
               OutputArtifacts:
                 - Name: HybridOs

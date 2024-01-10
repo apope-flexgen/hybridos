@@ -1,12 +1,11 @@
 {
-	"processes": 
-	[
-		{
-			"name":"/usr/local/bin/cops",
-			"args": [
-				"--logCfg=/usr/local/etc/config/logging/cops/cops_verbose.json"
-			],
-			"max_restarts": -1
-		}
-	]
+    "processes": [
+        {
+            "args": [
+                "--logCfg=/usr/local/etc/config/logging/cops/cops_verbose.json"
+            ],
+            "max_restarts": -1,
+            "name": "/usr/local/bin/cops"
+        }
+    ]
 }

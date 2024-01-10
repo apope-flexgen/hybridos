@@ -1,0 +1,73 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/flexgen_ess_02",
+			"publishRate": 100,
+			"heartbeat": "heartbeat_from_ess",
+			"inputs": [
+				{
+					"uri": "/components/pcs_2",
+					"registers": {
+						"active_power_setpoint": "pcmd",
+						"reactive_power_setpoint": "qcmd",
+						"start_stop_standby_command": "ctrlword1",
+						"pcs_active_power": "p",
+						"pcs_apparent_power": "s",
+						"bms_dc_current": "idc",
+						"pcs_l1_current": "iac",
+						"pcs_l2_current": "iac",
+						"pcs_l3_current": "iac",
+						"pcs_frequency": "f",
+						"pcs_power_factor": "pf",
+						"pcs_reactive_power": "q",
+						"pcs_system_state": "status_0_value",
+						"pcs_l1_l2_voltage": "vac",
+						"pcs_l2_l3_voltage": "vac",
+						"pcs_l3_l1_voltage": "vac"
+					}
+				},
+				{
+					"uri": "/components/bms_2",
+					"registers": {
+						"bms_dc_contactor_control": "ctrlword1",
+						"bms_avg_cell_temp": "avgcelltemp",
+						"bms_avg_cell_voltage": "avgcellvolt",
+						"bms_max_cell_temp": "maxcelltemp_value",
+						"bms_max_cell_voltage": "maxcellvolt_value",
+						"bms_min_cell_temp": "mincelltemp_value",
+						"bms_min_cell_voltage": "mincellvolt_value",
+						"bms_dc_power": "p",
+						"bms_poweron": "status_0_value",
+						"bms_soc": "soc_value",
+						"bms_soh": "soh",
+						"bms_status": "status_0_value",
+						"bms_chargeable_energy": "echarge",
+						"ess_max_charge_power": "pcharge",
+						"bms_dc_contactors_closed": "dccontactor",
+						"bms_dischargeable_energy": "edischarge",
+						"ess_max_discharge_power": "pdischarge",
+						"bms_num_racks_online": "numracks",
+						"bms_dc_voltage": "vdc_value"
+					}
+				}
+			],
+			"echo": {
+				"clear_faults": 0,
+				"heartbeat_to_ess": 0,
+				"heartbeat_from_ess": 0,
+				"on_off_grid_mode_setting": 0,
+				"run_mode": 0,
+				"bms_monitor_alarms": 0,
+				"bms_monitor_faults": 0,
+				"com_status": 0,
+				"ems_alarms": 0,
+				"ess_alarms": 0,
+				"ess_faults": 0,
+				"pcs_monitor_alarms": 0,
+				"pcs_monitor_faults": 0,
+				"pcs_grid_mode": 0,
+				"pcs_num_modules_online": 6
+			}
+		}
+	]
+}

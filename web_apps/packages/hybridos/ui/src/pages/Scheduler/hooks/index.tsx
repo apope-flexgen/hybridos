@@ -238,12 +238,14 @@ export default function useScheduler(currentUser: { role: string }, product: str
       ],
       handleDataOnSocket,
     );
+  }, [axiosInstance, updateConfigurationData, handleDataOnSocket]);
 
+  useEffect(()=> {
     return () => {
       QueryService.cleanupSocket();
     };
-  }, [axiosInstance, updateConfigurationData, handleDataOnSocket]);
-
+  }, [])
+  
   return {
     contextValue,
     displayTabs,

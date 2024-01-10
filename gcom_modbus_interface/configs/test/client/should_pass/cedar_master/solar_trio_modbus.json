@@ -1,0 +1,101 @@
+{
+	"system":
+	{
+		"id": "solar_trio",
+		"ip_address": "10.8.20.23",
+		"port": 502,
+		"frequency": 500,
+		"byte_swap": false
+	},
+	"registers":
+	[
+		{
+			"type": "Input Registers",
+			"starting_offset": 30010,
+			"number_of_registers": 35,
+			"map":
+			[
+				{
+					"id": "ac_voltage_l1",
+					"offset": 30010,
+					"scale": 10
+				},
+				{
+					"id": "ac_voltage_l2",
+					"offset": 30011,
+					"scale": 10
+				},
+				{
+					"id": "ac_voltage_l3",
+					"offset": 30012,
+					"scale": 10
+				},
+				{
+					"id": "ac_current_l1",
+					"offset": 30013,
+					"scale": 10
+				},
+				{
+					"id": "ac_current_l2",
+					"offset": 30014,
+					"scale": 10
+				},
+				{
+					"id": "ac_current_l3",
+					"offset": 30015,
+					"scale": 10
+				},
+				{
+					"id": "active_power",
+					"offset": 30016,
+					"scale": 10
+				},
+				{
+					"id": "reactive_power",
+					"offset": 30017,
+					"scale": 10
+				},
+				{
+					"id": "frequency",
+					"offset": 30018,
+					"scale": 10
+				},
+				{
+					"id": "dc_voltage",
+					"offset": 30019,
+					"scale": 10
+				},
+				{
+					"id": "ambient_temp",
+					"offset": 30025,
+					"scale": 10
+				},
+				{
+					"id": "dc_current",
+					"offset": 30032,
+					"scale": 10
+				}
+			]
+		},
+        {
+            "type": "Holding Registers",
+            "starting_offset": 40010,
+            "number_of_registers": 4,
+            "map":
+            [
+                {
+                    "id": "reactive_power_setpoint",
+                    "offset": 40010
+                },
+                {
+                    "id": "active_power_setpoint",
+                    "offset": 40012
+                },
+                {
+                    "id": "run_control",
+                    "offset": 40014
+                }
+            ]
+        }
+	]
+}

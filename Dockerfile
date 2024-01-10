@@ -15,6 +15,11 @@ RUN yum install -y mongodb-org-6.0.4 mongodb-org-database-6.0.4 mongodb-org-data
 RUN yum install -y $productName-$verNum
 # do not edit this <<<
 
+# upgrade pip to be able to install pyyaml for bootstrap
+RUN pip3 install --upgrade setuptools
+RUN python3 -m pip install -U pip
+RUN pip3 install pyyaml
+
 # copy over scripts
 COPY ./bootstrap/ /home/scripts/
 WORKDIR /home/scripts/

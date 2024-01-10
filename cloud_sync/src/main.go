@@ -129,9 +129,14 @@ func main() {
 		go newClient.clear()
 		log.Infof("Started: clear   (%s)", newClient.name)
 
-		// launch one retry thread for each server for which the client is configured.
-		// attempts to send files that have previously failed
 		for _, serv := range newClient.connectedServers {
+			// setup connection for each server the client is configured to send to
+			err = serv.setupConnection(newClient)
+			if err != nil {
+				log.Fatalf("Failed setting up connection from %s to %s: %v", newClient.name, serv.name, err)
+			}
+			// launch one retry thread for each server for which the client is configured.
+			// attempts to send files that have previously failed
 			go newClient.retry(serv)
 			log.Infof("Started: retry   (%s-%s)", newClient.name, serv.name)
 		}

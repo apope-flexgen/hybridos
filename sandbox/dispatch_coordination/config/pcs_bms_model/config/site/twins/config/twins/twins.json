@@ -1,0 +1,920 @@
+{
+    "updateRate":10,
+    "publishRate":10,
+    "timeMultiplier":1,
+    "manualTick":false,
+    "grids":[
+        {
+            "id":"grid", 
+            "v": 115000,
+            "f": 60
+        }
+    ],
+    "feeds":[
+        {
+            "id":"twins_shared_poi",
+            "pmax":31000,
+            "qmax":31000,
+            "smax":31000,
+            "polrev":true,
+            "ctrlwordenabled":true,
+            "ctrlword1":1,
+            "ctrlword1cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "closecmd", "value": true },
+                        { "field": "opencmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "opencmd", "value": true },
+                        { "field": "closecmd", "value": false }
+                    ]
+                }
+            ]
+        },
+        {
+            "id":"twins_split_feeder",
+            "pmax":31000,
+            "qmax":31000,
+            "smax":31000,
+            "polrev":true,
+            "closecmd":true
+        },
+        {
+            "id":"twins_bess_aux",
+            "pmax":13000,
+            "qmax":13000,
+            "smax":13000,
+            "polrev":true,
+            "closecmd":true
+        },
+        {
+            "id":"twins_control_cabinet",
+            "pmax":1000,
+            "qmax":1000,
+            "smax":1000,
+            "polrev":true,
+            "closecmd":true
+        }
+    ],
+    "gen":[ 
+        { 
+            "id":"twins_easygen_3500xt", 
+            "pramp":100000, 
+            "qramp":100000,
+            "ctlwordenabled":true,
+            "ctrlword1":0, 
+            "ctrlword1cfg":[ 
+                { 
+                    "value": 1467, 
+                    "controls": [ 
+                        { "field": "oncmd", "value": true }, 
+                        { "field": "offcmd", "value": false } 
+                    ] 
+                }, 
+                { 
+                    "value": 381, 
+                    "controls": [ 
+                        { "field": "offcmd", "value": true }, 
+                        { "field": "oncmd", "value": false } 
+                    ] 
+                }, 
+                { 
+                    "value": 1749, 
+                    "controls": [ 
+                        { "field": "offcmd", "value": true }, 
+                        { "field": "oncmd", "value": false } 
+                    ] 
+                } 
+            ], 
+            "ctrlword2":0, 
+            "ctrlword2cfg":[ 
+                { 
+                    "value": 0, 
+                    "controls": [ 
+                        { "field": "gridfollowingcmd", "value": true }, 
+                        { "field": "gridformingcmd", "value": false } 
+                    ] 
+                }, 
+                { 
+                    "value": 1, 
+                    "controls": [ 
+                        { "field": "gridfollowingcmd", "value": false }, 
+                        { "field": "gridformingcmd", "value": true } 
+                    ] 
+                } 
+            ], 
+            "statuscfg":[ 
+                { 
+                    "value":0, 
+                    "string":"Running", 
+                    "field":"on" 
+                }, 
+                { 
+                    "value":1, 
+                    "string":"Stopped", 
+                    "field":"on", 
+                    "invert":true 
+                } 
+            ]
+        }         
+    ], 
+    "solar":[
+        {
+            "id":"twins_pv_1",
+            "pramp":100000,
+            "qramp":100000,
+            "phigh":2500,
+            "plim": 2500,
+            "pcmd": 2000,
+            "percentcmd":false,
+            "pfcmd":0.8,
+            "ctrlword2":1072,
+            "ctrlwordenabled":true,
+            "ctrlword1cfg":[
+                {
+                    "value": 1467,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 381,
+                    "controls": [
+                        { "field": "offcmd", "value": true },
+                        { "field": "oncmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 1749,
+                    "controls": [
+                        { "field": "offcmd", "value": true },
+                        { "field": "oncmd", "value": false }
+                    ]
+                }
+            ],
+            "ctrlword2cfg":[
+                {
+                    "value": 1075,
+                    "controls": [
+                        { "field": "pfmode", "value": true }
+                    ]
+                },
+                {
+                    "value": 1072,
+                    "controls": [
+                        { "field": "pfmode", "value": false }
+                    ]
+                }
+            ],
+            "statuscfg":[
+                {
+                    "value":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "value":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ]
+        },
+		{
+            "id":"twins_pv_2",
+            "pramp":100000,
+            "qramp":100000,
+            "phigh":2500,
+            "plim": 2500,
+            "pcmd": 2000,
+            "percentcmd":false,
+            "pfcmd":0.8,
+            "ctrlword2":1072,
+            "ctrlwordenabled":true,
+            "ctrlword1cfg":[
+                {
+                    "value": 1467,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 381,
+                    "controls": [
+                        { "field": "offcmd", "value": true },
+                        { "field": "oncmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 1749,
+                    "controls": [
+                        { "field": "offcmd", "value": true },
+                        { "field": "oncmd", "value": false }
+                    ]
+                }
+            ],
+            "ctrlword2cfg":[
+                {
+                    "value": 1075,
+                    "controls": [
+                        { "field": "pfmode", "value": true }
+                    ]
+                },
+                {
+                    "value": 1072,
+                    "controls": [
+                        { "field": "pfmode", "value": false }
+                    ]
+                }
+            ],
+            "statuscfg":[
+                {
+                    "value":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "value":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ]
+        }
+    ],
+    "bms":[
+        {
+            "id": "bms_1",
+            "cap": 17916,
+            "racks": 9,
+            "soc":{
+                "value": 50.0,
+                "faulthighthreshold": 100,
+                "alarmhighthreshold": 98,
+                "alarmlowthreshold": 2,
+                "faultlowthreshold": 0
+            },
+            "vnom": 1330,
+            "inom": 2517,
+            "vdcprofile": [1282, 1320, 1330],
+            "socprofile": [20, 67, 100],
+            "pmax": 5750,
+            "idleloss": 1.75,
+            "rte": 95.6,
+            "dccontactor": true,
+            "dccontactorclosecmd": true,
+            "oncmd": true,
+            "ctrlword1cfg":[
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 3,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "value":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ],
+            "faultcfg": [
+                {
+                    "value":1,
+                    "string":"SOC High",
+                    "field":"soc_faulthigh"
+                },
+                {
+                    "value":2,
+                    "string":"SOC Low",
+                    "field":"soc_faultlow"
+                },
+                {
+                    "value":8,
+                    "string":"Cell Voltage High",
+                    "field":"maxcellvolt_faulthigh"
+                }
+            ],
+            "caprange": 0.005,
+            "lossrange": 0.005,
+            "cellvoltrange": 0.005,
+            "sbmu": [
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    }
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "bms_2",
+            "cap": 17916,
+            "racks": 9,
+            "soc":{
+                "value": 50.0,
+                "faulthighthreshold": 100,
+                "alarmhighthreshold": 98,
+                "alarmlowthreshold": 2,
+                "faultlowthreshold": 0
+            },
+            "vnom": 1330,
+            "inom": 2517,
+            "vdcprofile": [1282, 1320, 1330],
+            "socprofile": [20, 67, 100],
+            "pmax": 5750,
+            "idleloss": 1.75,
+            "rte": 95.6,
+            "dccontactor": true,
+            "dccontactorclosecmd": true,
+            "oncmd": true,
+            "ctrlword1cfg":[
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 3,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "value":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ],
+            "faultcfg": [
+                {
+                    "value":1,
+                    "string":"SOC High",
+                    "field":"soc_faulthigh"
+                },
+                {
+                    "value":2,
+                    "string":"SOC Low",
+                    "field":"soc_faultlow"
+                },
+                {
+                    "value":8,
+                    "string":"Cell Voltage High",
+                    "field":"maxcellvolt_faulthigh"
+                }
+            ],
+            "caprange": 0.005,
+            "lossrange": 0.005,
+            "cellvoltrange": 0.005,
+            "sbmu": [
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    }
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ]
+                }
+            ]
+        }
+    ],
+    "pcs":[
+        {
+            "id": "pcs_1",
+            "plim": 5500,
+            "qlim": 5500,
+            "noise": 101,
+            "PRampStart": 10,
+            "PRampStop": 10,
+            "PRampRise": 10,
+            "PRampDrop": 10,
+            "QRampStart": 10,
+            "QRampStop": 10,
+            "QRampRise": 10,
+            "QRampDrop": 10,
+            "idleloss": 1.75,
+            "rte": 95.6,
+            "ctrlword1cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false },
+                        { "field": "standbycmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 0,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true },
+                        { "field": "standbycmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": false },
+                        { "field": "standbycmd", "value": true }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value":1,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                },
+                {
+                    "value":4,
+                    "string":"Standby",
+                    "field":"on",
+                    "invert":true
+                },
+                {
+                    "value":2,
+                    "string":"Running",
+                    "field":"on",
+                    "invert":false
+                }
+            ]
+        },
+        {
+            "id": "pcs_2",
+            "plim": 5500,
+            "qlim": 5500,
+            "noise": 101,
+            "PRampStart": 10,
+            "PRampStop": 10,
+            "PRampRise": 10,
+            "PRampDrop": 10,
+            "QRampStart": 10,
+            "QRampStop": 10,
+            "QRampRise": 10,
+            "QRampDrop": 10,
+            "idleloss": 1.75,
+            "rte": 95.6,
+            "ctrlword1cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false },
+                        { "field": "standbycmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 0,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true },
+                        { "field": "standbycmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": false },
+                        { "field": "standbycmd", "value": true }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value":1,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                },
+                {
+                    "value":4,
+                    "string":"Standby",
+                    "field":"on",
+                    "invert":true
+                },
+                {
+                    "value":2,
+                    "string":"Running",
+                    "field":"on",
+                    "invert":false
+                }
+            ]
+        }
+    ],
+    "loads":[
+        {
+            "id":"biomass_plant_load",
+            "on":true,
+            "pramp":10000,
+            "qramp":10000,
+            "pcmd":0.0,
+            "qcmd":0.0
+        },
+        {
+            "id":"bess_aux_load",
+            "on":true,
+            "pramp":10000,
+            "qramp":10000,
+            "pcmd":-500.0,
+            "qcmd":-500.0,
+            "ctrlword1": 1,
+            "ctrlword1cfg": [
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                }
+            ]
+        },
+        {
+            "id":"control_cabinet_load",
+            "on":true,
+            "pramp":100,
+            "qramp":100,
+            "pcmd":0.0,
+            "qcmd":0.0
+        }
+    ],
+    "transformers":[
+        {
+            "id":"tx_grid",
+            "sn":23000,
+            "vn":15000,
+            "zpu":7.86,
+            "xor":7.1,
+            "n":1.202887
+        },
+        {
+            "id":"tx_aux",
+            "sn":500,
+            "vn":12470,
+            "zpu":7.86,
+            "xor":7.1,
+            "n":25.979167
+        },
+        {
+            "id":"tx_control_cabinet",
+            "sn":15,
+            "vn":12470,
+            "zpu":7.86,
+            "xor":7.1,
+            "n":103.916667
+        }
+    ],
+    "root":{
+        "id":"grid",
+        "children":[
+            {
+                "id":"twins_shared_poi",
+                "children":[
+                    {
+                        "id": "tx_grid",
+                        "children":[
+                            {
+                                "id": "biomass_plant_load"
+                            },
+                            {
+                                "id": "twins_split_feeder",
+                                "children":[
+                                    {
+                                        "id":"pcs_1",
+                                        "children":[
+                                            {
+                                                "id": "bms_1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id":"pcs_2",
+                                        "children":[
+                                            {
+                                                "id": "bms_2"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id":"twins_pv_1"
+                                    },
+                                    {
+                                        "id":"twins_pv_2"
+                                    },
+                                    {
+                                        "id":"twins_easygen_3500xt"
+                                    },
+                                    {
+                                        "id": "twins_bess_aux",
+                                        "children":[
+                                            {
+                                                "id": "bess_aux_load"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "twins_control_cabinet",
+                                        "children":[
+                                            {
+                                                "id": "tx_control_cabinet",
+                                                "children":[
+                                                    {
+                                                        "id": "control_cabinet_load"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+

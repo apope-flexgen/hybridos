@@ -112,7 +112,7 @@ Config_Validation_Result Type_Configurator::check_name_and_id(int index, cJSON* 
     cJSON* asset_name = cJSON_GetObjectItem(array_entry, "name");
     cJSON* asset_id = cJSON_GetObjectItem(array_entry, "id");
     // If the name or id are not defined, try to continue on with a placeholder name to check for other config errors
-    if (!asset_name || !asset_name->valuestring) {
+    if ((asset_name == nullptr) || (asset_name->valuestring == nullptr)) {
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: name is missing for asset entry {}.", p_manager->get_asset_type_id(), index)));
         current_asset_name = fmt::format("{}_{}", p_manager->get_asset_type_id(), index);
@@ -145,18 +145,25 @@ Config_Validation_Result Type_Configurator::configure_asset_array_entry(int inde
 
     asset_config.asset_instance_root = array_entry;  // Set the asset instance root to the array entry
     std::pair<int, Config_Validation_Result> template_config_result = entry_is_template(asset_config.asset_instance_root);
+    // Continue to gather more configuration errors
     if (template_config_result.first == TEMPLATING_ERROR) {
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: error processing templating", p_manager->get_asset_type_id())));
     }
     validation_result.absorb(template_config_result.second);
 
-    asset_config.asset_name_to_asset_number_map.insert(std::pair<std::string, std::map<int, bool>>(current_asset_name, std::map<int, bool>()));
-    asset_config.asset_id_to_asset_number_map.insert(std::pair<std::string, std::map<int, bool>>(current_asset_id, std::map<int, bool>()));
+    // Place the asset name <ess_#> and create a map for it's asset numbering
+    asset_config.asset_name_to_asset_number_map.emplace(current_asset_name, std::map<int, bool>());
+    // Place the asset id <ess_#> and create a map for it's asset numbering
+    asset_config.asset_id_to_asset_number_map.emplace(current_asset_id, std::map<int, bool>());
 
     Config_Validation_Result asset_config_result = Config_Validation_Result(true);
     switch (template_config_result.first) {
         case NON_TEMPLATE:
+            asset_config_result = configure_single_asset();
+            break;
         case TEMPLATING_ERROR:
+            // Passing this to gather more errors
+            // Others just call configure_single_asset() in a loop anyway
             asset_config_result = configure_single_asset();
             break;
         case TRADITIONAL:
@@ -187,32 +194,36 @@ Config_Validation_Result Type_Configurator::configure_asset_array_entry(int inde
 Config_Validation_Result Type_Configurator::configure_traditional_templated_asset() {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
 
+    // get the number of instances represented by the template
     int num_instances_represented = extract_num_asset_instances_represented(asset_config.asset_instance_root);
     if (num_instances_represented >= 1) {
         for (int j = 0; j < num_instances_represented; ++j) {
             // Insert number into range map
-            auto check_name = (&asset_config.asset_name_to_asset_number_map[current_asset_name])->insert(std::pair<int, bool>(j + 1, false));
-            auto check_id = (&asset_config.asset_id_to_asset_number_map[current_asset_id])->insert(std::pair<int, bool>(j + 1, false));
+            auto check_name = (&asset_config.asset_name_to_asset_number_map[current_asset_name])->emplace(std::pair<int, bool>(j + 1, false));
+            auto check_id = (&asset_config.asset_id_to_asset_number_map[current_asset_id])->emplace(std::pair<int, bool>(j + 1, false));
 
-            if (!check_id.second || !check_name.second) {
+            if (!check_id.second || !check_name.second) {  // You just tried to insert a duplicate asset number which is not allowed
                 validation_result.is_valid_config = false;
                 validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: template entry {} with index {} overlaps with existing entries.", p_manager->get_asset_type_id(), current_asset_name, j + 1)));
                 // This is a templated entry where all values are the same for each asset,
                 // so only try to configure a single asset when overlapping entries are found
+                // this prevents the same error from being reported multiple times
                 if (j > 0) {
                     break;
                 }
             }
             asset_config.asset_num = j + 1;
 
+            // Acutally configure the asset by calling configure_single_asset()
             Config_Validation_Result asset_config_result = configure_single_asset();
+            // Verify
             if (!asset_config_result.is_valid_config) {
                 validation_result.is_valid_config = false;
                 validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure template entry {}.", current_asset_name, j + 1)));
             }
             validation_result.absorb(asset_config_result);
         }
-    } else {
+    } else {  // Why are you configuring a template with no instances?
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid number_of_instances provided for templated asset. Expected positive integer, but got {}.", current_asset_name, num_instances_represented)));
     }
@@ -230,13 +241,14 @@ Config_Validation_Result Type_Configurator::configure_traditional_templated_asse
 Config_Validation_Result Type_Configurator::configure_ranged_templated_asset() {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
 
+    // We generate the list and then iterate through this is the range <1, 5, 7, 9> etc.
     std::pair<std::vector<int>, Config_Validation_Result> instance_config_result = generate_list_of_asset_instances_represented(asset_config.asset_instance_root);
 
     // Insert all asset instances into map.
     for (const auto& asset_num : instance_config_result.first) {
         asset_config.asset_num = asset_num;
-        auto check_name = asset_config.asset_name_to_asset_number_map[current_asset_name].insert(std::pair<int, bool>(asset_config.asset_num, false));
-        auto check_id = asset_config.asset_id_to_asset_number_map[current_asset_id].insert(std::pair<int, bool>(asset_config.asset_num, false));
+        auto check_name = asset_config.asset_name_to_asset_number_map[current_asset_name].emplace(std::pair<int, bool>(asset_config.asset_num, false));
+        auto check_id = asset_config.asset_id_to_asset_number_map[current_asset_id].emplace(std::pair<int, bool>(asset_config.asset_num, false));
         // This means you are trying to re-configure ess_02 twice for example.
         if (!check_id.second || !check_name.second) {
             validation_result.is_valid_config = false;
@@ -244,11 +256,13 @@ Config_Validation_Result Type_Configurator::configure_ranged_templated_asset() {
 
             // This is a templated entry where all values are the same for each asset,
             // so only try to configure a single asset when overlapping entries are found
+            // this prevents the same error from being reported multiple times
             if (asset_num > instance_config_result.first[0]) {
                 break;
             }
         }
 
+        // Actually configure the asset by calling configure_single_asset()
         Config_Validation_Result asset_config_result = configure_single_asset();
         if (!asset_config_result.is_valid_config) {
             validation_result.is_valid_config = false;
@@ -256,7 +270,7 @@ Config_Validation_Result Type_Configurator::configure_ranged_templated_asset() {
         }
         validation_result.absorb(asset_config_result);
     }
-    if (instance_config_result.first.empty()) {
+    if (instance_config_result.first.empty()) {  // broken range?
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid range provided for templated asset. Expected a positive number of assets, but got zero.", current_asset_name)));
     }
@@ -271,13 +285,14 @@ Config_Validation_Result Type_Configurator::configure_ranged_templated_asset() {
 Config_Validation_Result Type_Configurator::configure_single_asset(void) {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
 
+    // Here is the allocation of memory for the asset
     Asset* asset = p_manager->build_new_asset();
     if (asset == NULL) {
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: error allocating memory for new asset instance.", p_manager->get_asset_type_id())));
     }
 
-    Config_Validation_Result asset_config_result = asset->configure(this);  // progress
+    Config_Validation_Result asset_config_result = asset->configure(this);  // Call the asset's configure function different for each asset type
     if (!asset_config_result.is_valid_config) {
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure asset.", p_manager->get_asset_type_id())));
@@ -346,7 +361,7 @@ std::pair<int, Config_Validation_Result> Type_Configurator::gather_assets(cJSON*
             case NON_TEMPLATE:
                 instances = 1;
                 break;
-            default:
+            default:  // This is the TEMPLATING_ERROR case
                 instances = 1;
                 validation_result.is_valid_config = false;
                 validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid template type when gathering assets.", p_manager->get_asset_type_id())));
@@ -383,6 +398,7 @@ std::pair<int, Config_Validation_Result> Type_Configurator::count_ranged_templat
         std::pair<std::vector<int>, Config_Validation_Result> instances_config_result = generate_list_of_asset_instances_represented(entry);
         return std::make_pair(instances_config_result.first.size(), instances_config_result.second);
     }
+    // You've provided an invalid config
     return std::make_pair(-1, Config_Validation_Result(false));
 }
 
@@ -399,7 +415,7 @@ std::pair<int, Config_Validation_Result> Type_Configurator::entry_is_template(cJ
     // Struct to aggregate and report on all asset type configuration issues
     Config_Validation_Result validation_result = Config_Validation_Result(true);
 
-    int ranged_template = false;
+    bool ranged_template = false;
     asset_config.is_template_flag = false;
     // If number_of_instances field does not exist, this is a concrete entry and only represents one asset instance
     cJSON* num_instances_obj = cJSON_GetObjectItem(asset_array_entry, "number_of_instances");
@@ -559,7 +575,7 @@ std::pair<std::vector<int>, Config_Validation_Result> Type_Configurator::generat
  * @param asset_array_entry: The asset array entry
  * @return int 0 if no range provided, 1 if range provided and valid
  */
-int Type_Configurator::range_provided(cJSON* asset_array_entry) {
+bool Type_Configurator::range_provided(cJSON* asset_array_entry) {
     // Get the range array and make sure it's size > 0
     cJSON* range = cJSON_GetObjectItem(asset_array_entry, "range");
     return range != NULL ? (cJSON_GetArraySize(range) > 0) : 0;  // 0 if no range provided, 1 if range provided and valid

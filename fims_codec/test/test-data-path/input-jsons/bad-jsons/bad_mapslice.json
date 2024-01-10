@@ -1,0 +1,19 @@
+{
+    "mapslice1": [
+        {
+            "value": "1",
+            "string": "value is a string"
+        }
+    ],
+    "mapslice2": [
+        {
+            "value": true,
+            "string": "value is a bool"
+        }
+    ],
+    "mapslice3": [
+        {
+            "value": 0
+        }
+    ]
+}

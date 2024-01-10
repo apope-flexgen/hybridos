@@ -45,6 +45,8 @@ private:
         float ess_kW_request;
         float gen_kW_request;
         float solar_kW_request;
+        float total_available_kW_discharge;
+        float total_available_kW_charge;
     };
     struct External_Outputs {
         float solar_kW_request;

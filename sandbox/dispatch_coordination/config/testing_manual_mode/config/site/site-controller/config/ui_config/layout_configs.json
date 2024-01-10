@@ -1,25 +1,25 @@
 {
-  "_doc": "layout",
-  "data": [
-    {
-      "info": {
-        "key": "ess_tab",
-        "name": "ESS"
-      }
-    },
-    {
-      "info": {
-        "key": "gen_tab",
-        "name": "Gen",
-        "icon": "Storage"
-      }
-    },
-    {
-      "info": {
-        "key": "solar_tab",
-        "name": "Solar",
-        "icon": "SpaceDashboard"
-      }
-    }
-  ]
+    "_doc": "layout",
+    "data": [
+        {
+            "info": {
+                "key": "ess_tab",
+                "name": "ESS"
+            }
+        },
+        {
+            "info": {
+                "icon": "Storage",
+                "key": "gen_tab",
+                "name": "Gen"
+            }
+        },
+        {
+            "info": {
+                "icon": "SpaceDashboard",
+                "key": "solar_tab",
+                "name": "Solar"
+            }
+        }
+    ]
 }

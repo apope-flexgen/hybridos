@@ -1,0 +1,265 @@
+{
+    "components": [
+        {
+            "device_id": 98,
+            "frequency": 100,
+            "id": "sel_351_2",
+            "offset_time": 20,
+            "registers": [
+                {
+                    "map": [
+                        {
+                            "echo_id": "/components/psm_sel_351_2/i",
+                            "id": "current_l1",
+                            "name": null,
+                            "offset": 0
+                        },
+                        {
+                            "id": "current_angle_l1",
+                            "name": null,
+                            "offset": 1,
+                            "scale": 100,
+                            "signed": true
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/i",
+                            "id": "current_l2",
+                            "name": null,
+                            "offset": 2
+                        },
+                        {
+                            "id": "current_angle_l2",
+                            "name": null,
+                            "offset": 3,
+                            "scale": 100,
+                            "signed": true
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/i",
+                            "id": "current_l3",
+                            "name": null,
+                            "offset": 4
+                        },
+                        {
+                            "id": "current_angle_l3",
+                            "name": null,
+                            "offset": 5,
+                            "scale": 100,
+                            "signed": true
+                        },
+                        {
+                            "id": "current_g",
+                            "name": null,
+                            "offset": 6
+                        },
+                        {
+                            "id": "current_angle_g",
+                            "name": null,
+                            "offset": 7,
+                            "scale": 100,
+                            "signed": true
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/i",
+                            "id": "current_n",
+                            "name": null,
+                            "offset": 8
+                        },
+                        {
+                            "id": "current_angle_n",
+                            "name": null,
+                            "offset": 9,
+                            "scale": 100,
+                            "signed": true
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/v1",
+                            "id": "voltage_l1",
+                            "name": null,
+                            "offset": 10,
+                            "size": 2
+                        },
+                        {
+                            "id": "voltage_angle_l1",
+                            "name": null,
+                            "offset": 12,
+                            "scale": 100,
+                            "signed": true
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/v1",
+                            "id": "voltage_l2",
+                            "name": null,
+                            "offset": 13,
+                            "size": 2
+                        },
+                        {
+                            "id": "voltage_angle_l2",
+                            "name": null,
+                            "offset": 15,
+                            "scale": 100,
+                            "signed": true
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/v1",
+                            "id": "voltage_l3",
+                            "name": null,
+                            "offset": 16,
+                            "size": 2
+                        },
+                        {
+                            "id": "voltage_angle_l3",
+                            "name": null,
+                            "offset": 18,
+                            "scale": 100,
+                            "signed": true
+                        },
+                        {
+                            "id": "voltage_synch",
+                            "name": null,
+                            "offset": 19,
+                            "size": 2
+                        },
+                        {
+                            "id": "voltage_synch_angle",
+                            "name": null,
+                            "offset": 21,
+                            "scale": 100,
+                            "signed": true
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/p",
+                            "id": "active_power",
+                            "name": null,
+                            "offset": 22,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/q",
+                            "id": "reactive_power",
+                            "name": null,
+                            "offset": 24,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/pf",
+                            "id": "power_factor",
+                            "name": null,
+                            "offset": 26,
+                            "scale": 100,
+                            "signed": true
+                        },
+                        {
+                            "id": "power_factor_leading",
+                            "name": null,
+                            "offset": 27,
+                            "signed": true
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/f1",
+                            "id": "frequency",
+                            "name": null,
+                            "offset": 28,
+                            "scale": 100,
+                            "signed": true
+                        },
+                        {
+                            "id": "station_battery_voltage",
+                            "name": null,
+                            "offset": 29,
+                            "scale": 10
+                        },
+                        {
+                            "id": "real_energy_received",
+                            "name": null,
+                            "offset": 30,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "real_energy_delivered",
+                            "name": null,
+                            "offset": 32,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "reactive_energy_received",
+                            "name": null,
+                            "offset": 34,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "reactive_energy_delivered",
+                            "name": null,
+                            "offset": 36,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "active_settings_group",
+                            "name": null,
+                            "offset": 38
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/v1",
+                            "id": "voltage_l1_l2",
+                            "name": null,
+                            "offset": 43,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/v1",
+                            "id": "voltage_l2_l3",
+                            "name": null,
+                            "offset": 45,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_sel_351_2/v1",
+                            "id": "voltage_l3_l1",
+                            "name": null,
+                            "offset": 47,
+                            "size": 2
+                        }
+                    ],
+                    "number_of_registers": 49,
+                    "starting_offset": 0,
+                    "type": "Input Registers"
+                },
+                {
+                    "map": [
+                        {
+                            "echo_id": "/components/psm_sel_351_2/closed",
+                            "id": "breaker_status",
+                            "name": null,
+                            "offset": 298
+                        }
+                    ],
+                    "number_of_registers": 1,
+                    "starting_offset": 298,
+                    "type": "Discrete Inputs"
+                }
+            ]
+        }
+    ],
+    "connection": {
+        "device id": 1,
+        "ip_address": "192.168.10.250",
+        "name": "SEL 351 2",
+        "port": 10002
+    },
+    "fileInfo": {
+        "outputFileCreated": "2022-10-04T19:13:01.093Z",
+        "outputFileName": "sel_351_2_client.json",
+        "outputFileType": "client",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModified": "2022-10-04T19:12:55.000Z",
+        "sourceFileLastModifiedBy": "Jasen Liu",
+        "sourceFileName": "sel_351_2_client.xlsx"
+    }
+}

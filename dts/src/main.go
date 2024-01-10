@@ -7,11 +7,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/flexgen-power/dts/pkg/dts"
-	build "github.com/flexgen-power/go_flexgen/buildinfo"
-	"github.com/flexgen-power/go_flexgen/fileops"
-	"github.com/flexgen-power/go_flexgen/flexservice"
-	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/flexgen-power/hybridos/dts/pkg/dts"
+	build "github.com/flexgen-power/hybridos/go_flexgen/buildinfo"
+	"github.com/flexgen-power/hybridos/go_flexgen/fileops"
+	"github.com/flexgen-power/hybridos/go_flexgen/flexservice"
+	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 	"golang.org/x/sync/errgroup"
 )
 

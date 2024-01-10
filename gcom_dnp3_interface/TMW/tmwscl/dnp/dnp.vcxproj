@@ -1,0 +1,383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E76A880B-5374-887C-DCEF-9E7C48F8937C}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>dnp</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>Debug\</OutDir>
+    <IntDir>Debug\Win32\</IntDir>
+    <TargetName>dnp</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>Debug\</OutDir>
+    <IntDir>Debug\x64\</IntDir>
+    <TargetName>dnp</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>Release\</OutDir>
+    <IntDir>Release\Win32\</IntDir>
+    <TargetName>dnp</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>Release\</OutDir>
+    <IntDir>Release\x64\</IntDir>
+    <TargetName>dnp</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>DEBUG;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;TMWCNFG_INCLUDE_ASSERTS;TMW_WTK_TARGET;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\tmwtarg\winiotarg;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>DEBUG;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;TMWCNFG_INCLUDE_ASSERTS;TMW_WTK_TARGET;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\tmwtarg\winiotarg;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;TMWCNFG_INCLUDE_ASSERTS;TMW_WTK_TARGET;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\tmwtarg\winiotarg;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;TMWCNFG_INCLUDE_ASSERTS;TMW_WTK_TARGET;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\tmwtarg\winiotarg;..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="dnpauth.h" />
+    <ClInclude Include="dnpbncfg.h" />
+    <ClInclude Include="dnpchnl.h" />
+    <ClInclude Include="dnpcnfg.h" />
+    <ClInclude Include="dnpdata.h" />
+    <ClInclude Include="dnpdefs.h" />
+    <ClInclude Include="dnpdiag.h" />
+    <ClInclude Include="dnpdtime.h" />
+    <ClInclude Include="dnplink.h" />
+    <ClInclude Include="dnpmem.h" />
+    <ClInclude Include="dnpsesn.h" />
+    <ClInclude Include="dnpstat.h" />
+    <ClInclude Include="dnptprt.h" />
+    <ClInclude Include="dnputil.h" />
+    <ClInclude Include="mdnpbrm.h" />
+    <ClInclude Include="mdnpcnfg.h" />
+    <ClInclude Include="mdnpdata.h" />
+    <ClInclude Include="mdnpdiag.h" />
+    <ClInclude Include="mdnpfile.h" />
+    <ClInclude Include="mdnpfsim.h" />
+    <ClInclude Include="mdnpmem.h" />
+    <ClInclude Include="mdnpo000.h" />
+    <ClInclude Include="mdnpo001.h" />
+    <ClInclude Include="mdnpo002.h" />
+    <ClInclude Include="mdnpo003.h" />
+    <ClInclude Include="mdnpo004.h" />
+    <ClInclude Include="mdnpo010.h" />
+    <ClInclude Include="mdnpo011.h" />
+    <ClInclude Include="mdnpo012.h" />
+    <ClInclude Include="mdnpo013.h" />
+    <ClInclude Include="mdnpo020.h" />
+    <ClInclude Include="mdnpo021.h" />
+    <ClInclude Include="mdnpo022.h" />
+    <ClInclude Include="mdnpo023.h" />
+    <ClInclude Include="mdnpo030.h" />
+    <ClInclude Include="mdnpo031.h" />
+    <ClInclude Include="mdnpo032.h" />
+    <ClInclude Include="mdnpo033.h" />
+    <ClInclude Include="mdnpo034.h" />
+    <ClInclude Include="mdnpo040.h" />
+    <ClInclude Include="mdnpo041.h" />
+    <ClInclude Include="mdnpo042.h" />
+    <ClInclude Include="mdnpo043.h" />
+    <ClInclude Include="mdnpo050.h" />
+    <ClInclude Include="mdnpo051.h" />
+    <ClInclude Include="mdnpo052.h" />
+    <ClInclude Include="mdnpo070.h" />
+    <ClInclude Include="mdnpo080.h" />
+    <ClInclude Include="mdnpo085.h" />
+    <ClInclude Include="mdnpo086.h" />
+    <ClInclude Include="mdnpo087.h" />
+    <ClInclude Include="mdnpo088.h" />
+    <ClInclude Include="mdnpo091.h" />
+    <ClInclude Include="mdnpo110.h" />
+    <ClInclude Include="mdnpo111.h" />
+    <ClInclude Include="mdnpo113.h" />
+    <ClInclude Include="mdnpo114.h" />
+    <ClInclude Include="mdnpo115.h" />
+    <ClInclude Include="mdnpo120.h" />
+    <ClInclude Include="mdnpsesn.h" />
+    <ClInclude Include="mdnpsesp.h" />
+    <ClInclude Include="mdnpsim.h" />
+    <ClInclude Include="mdnptarg.h" />
+    <ClInclude Include="sdnpcnfg.h" />
+    <ClInclude Include="sdnpdata.h" />
+    <ClInclude Include="sdnpdiag.h" />
+    <ClInclude Include="sdnpevnt.h" />
+    <ClInclude Include="sdnpfsim.h" />
+    <ClInclude Include="sdnpmem.h" />
+    <ClInclude Include="sdnpo000.h" />
+    <ClInclude Include="sdnpo001.h" />
+    <ClInclude Include="sdnpo002.h" />
+    <ClInclude Include="sdnpo003.h" />
+    <ClInclude Include="sdnpo004.h" />
+    <ClInclude Include="sdnpo010.h" />
+    <ClInclude Include="sdnpo011.h" />
+    <ClInclude Include="sdnpo012.h" />
+    <ClInclude Include="sdnpo013.h" />
+    <ClInclude Include="sdnpo020.h" />
+    <ClInclude Include="sdnpo021.h" />
+    <ClInclude Include="sdnpo022.h" />
+    <ClInclude Include="sdnpo023.h" />
+    <ClInclude Include="sdnpo030.h" />
+    <ClInclude Include="sdnpo031.h" />
+    <ClInclude Include="sdnpo032.h" />
+    <ClInclude Include="sdnpo033.h" />
+    <ClInclude Include="sdnpo034.h" />
+    <ClInclude Include="sdnpo040.h" />
+    <ClInclude Include="sdnpo041.h" />
+    <ClInclude Include="sdnpo042.h" />
+    <ClInclude Include="sdnpo043.h" />
+    <ClInclude Include="sdnpo050.h" />
+    <ClInclude Include="sdnpo051.h" />
+    <ClInclude Include="sdnpo060.h" />
+    <ClInclude Include="sdnpo070.h" />
+    <ClInclude Include="sdnpo080.h" />
+    <ClInclude Include="sdnpo085.h" />
+    <ClInclude Include="sdnpo086.h" />
+    <ClInclude Include="sdnpo087.h" />
+    <ClInclude Include="sdnpo088.h" />
+    <ClInclude Include="sdnpo110.h" />
+    <ClInclude Include="sdnpo111.h" />
+    <ClInclude Include="sdnpo112.h" />
+    <ClInclude Include="sdnpo113.h" />
+    <ClInclude Include="sdnpo114.h" />
+    <ClInclude Include="sdnpo115.h" />
+    <ClInclude Include="sdnpo120.h" />
+    <ClInclude Include="sdnprbe.h" />
+    <ClInclude Include="sdnpsesn.h" />
+    <ClInclude Include="sdnpsesp.h" />
+    <ClInclude Include="sdnpsim.h" />
+    <ClInclude Include="sdnptarg.h" />
+    <ClInclude Include="sdnpunsl.h" />
+    <ClInclude Include="sdnputil.h" />
+    <ClInclude Include="sdnpxml.h" />
+    <ClInclude Include="sdnpxml2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dnpbncfg.c" />
+    <ClCompile Include="dnpchnl.c" />
+    <ClCompile Include="dnpdiag.c" />
+    <ClCompile Include="dnpdtime.c" />
+    <ClCompile Include="dnplink.c" />
+    <ClCompile Include="dnpmem.c" />
+    <ClCompile Include="dnpsesn.c" />
+    <ClCompile Include="dnpstat.c" />
+    <ClCompile Include="dnptprt.c" />
+    <ClCompile Include="dnputil.c" />
+    <ClCompile Include="mdnpbrm.c" />
+    <ClCompile Include="mdnpdata.c" />
+    <ClCompile Include="mdnpdiag.c" />
+    <ClCompile Include="mdnpfile.c" />
+    <ClCompile Include="mdnpfsim.c" />
+    <ClCompile Include="mdnpmem.c" />
+    <ClCompile Include="mdnpo000.c" />
+    <ClCompile Include="mdnpo001.c" />
+    <ClCompile Include="mdnpo002.c" />
+    <ClCompile Include="mdnpo003.c" />
+    <ClCompile Include="mdnpo004.c" />
+    <ClCompile Include="mdnpo010.c" />
+    <ClCompile Include="mdnpo011.c" />
+    <ClCompile Include="mdnpo012.c" />
+    <ClCompile Include="mdnpo013.c" />
+    <ClCompile Include="mdnpo020.c" />
+    <ClCompile Include="mdnpo021.c" />
+    <ClCompile Include="mdnpo022.c" />
+    <ClCompile Include="mdnpo023.c" />
+    <ClCompile Include="mdnpo030.c" />
+    <ClCompile Include="mdnpo031.c" />
+    <ClCompile Include="mdnpo032.c" />
+    <ClCompile Include="mdnpo033.c" />
+    <ClCompile Include="mdnpo034.c" />
+    <ClCompile Include="mdnpo040.c" />
+    <ClCompile Include="mdnpo041.c" />
+    <ClCompile Include="mdnpo042.c" />
+    <ClCompile Include="mdnpo043.c" />
+    <ClCompile Include="mdnpo050.c" />
+    <ClCompile Include="mdnpo051.c" />
+    <ClCompile Include="mdnpo052.c" />
+    <ClCompile Include="mdnpo070.c" />
+    <ClCompile Include="mdnpo080.c" />
+    <ClCompile Include="mdnpo085.c" />
+    <ClCompile Include="mdnpo086.c" />
+    <ClCompile Include="mdnpo087.c" />
+    <ClCompile Include="mdnpo088.c" />
+    <ClCompile Include="mdnpo091.c" />
+    <ClCompile Include="mdnpo110.c" />
+    <ClCompile Include="mdnpo111.c" />
+    <ClCompile Include="mdnpo113.c" />
+    <ClCompile Include="mdnpo114.c" />
+    <ClCompile Include="mdnpo115.c" />
+    <ClCompile Include="mdnpsesn.c" />
+    <ClCompile Include="mdnpsim.c" />
+    <ClCompile Include="sdnpdata.c" />
+    <ClCompile Include="sdnpdiag.c" />
+    <ClCompile Include="sdnpevnt.c" />
+    <ClCompile Include="sdnpfsim.c" />
+    <ClCompile Include="sdnpmem.c" />
+    <ClCompile Include="sdnpo000.c" />
+    <ClCompile Include="sdnpo001.c" />
+    <ClCompile Include="sdnpo002.c" />
+    <ClCompile Include="sdnpo003.c" />
+    <ClCompile Include="sdnpo004.c" />
+    <ClCompile Include="sdnpo010.c" />
+    <ClCompile Include="sdnpo011.c" />
+    <ClCompile Include="sdnpo012.c" />
+    <ClCompile Include="sdnpo013.c" />
+    <ClCompile Include="sdnpo020.c" />
+    <ClCompile Include="sdnpo021.c" />
+    <ClCompile Include="sdnpo022.c" />
+    <ClCompile Include="sdnpo023.c" />
+    <ClCompile Include="sdnpo030.c" />
+    <ClCompile Include="sdnpo031.c" />
+    <ClCompile Include="sdnpo032.c" />
+    <ClCompile Include="sdnpo033.c" />
+    <ClCompile Include="sdnpo034.c" />
+    <ClCompile Include="sdnpo040.c" />
+    <ClCompile Include="sdnpo041.c" />
+    <ClCompile Include="sdnpo042.c" />
+    <ClCompile Include="sdnpo043.c" />
+    <ClCompile Include="sdnpo050.c" />
+    <ClCompile Include="sdnpo051.c" />
+    <ClCompile Include="sdnpo060.c" />
+    <ClCompile Include="sdnpo070.c" />
+    <ClCompile Include="sdnpo080.c" />
+    <ClCompile Include="sdnpo085.c" />
+    <ClCompile Include="sdnpo086.c" />
+    <ClCompile Include="sdnpo087.c" />
+    <ClCompile Include="sdnpo088.c" />
+    <ClCompile Include="sdnpo110.c" />
+    <ClCompile Include="sdnpo111.c" />
+    <ClCompile Include="sdnpo112.c" />
+    <ClCompile Include="sdnpo113.c" />
+    <ClCompile Include="sdnpo114.c" />
+    <ClCompile Include="sdnpo115.c" />
+    <ClCompile Include="sdnprbe.c" />
+    <ClCompile Include="sdnpsesn.c" />
+    <ClCompile Include="sdnpsim.c" />
+    <ClCompile Include="sdnpunsl.c" />
+    <ClCompile Include="sdnputil.c" />
+    <ClCompile Include="sdnpxml.c" />
+    <ClCompile Include="sdnpxml2.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

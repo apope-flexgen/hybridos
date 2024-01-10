@@ -1,0 +1,28 @@
+{
+    "system":
+    {
+        "id": "pv_6_dc_command",
+        "ip_address": "192.168.0.145",
+        "port": 502,
+        "device_id": 3,
+        "frequency": 1000,
+        "off_by_one": false,
+        "byte_swap": false
+    },
+    "registers": 
+    [
+        {
+            "type": "Holding Registers",
+            "starting_offset": 1203,
+            "number_of_registers": 1,
+            "map": 
+            [
+                {
+                    "id": "pdc",
+                    "offset": 1203,
+                    "size": 1
+                }
+            ]
+        }
+    ]
+}

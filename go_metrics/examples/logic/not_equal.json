@@ -43,7 +43,7 @@
             "id": "dummy",
             "type": "bool", 
             "outputs": "bool_output5",
-            "expression": "string1 != float1",
+            "expression": "string1 != value1",
             "note": "this will ALWAYS be true -- strings don't get reinterpreted unless done so explicitly"
         }
     ]

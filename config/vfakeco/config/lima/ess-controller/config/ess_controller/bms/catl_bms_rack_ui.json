@@ -1,0 +1,224 @@
+{
+    "/assets/bms/##RACK_ID##": {
+        "alarms": {
+            "options": [],
+            "value": 0
+        },
+        "avg_cell_temp": {
+            "value": 0
+        },
+        "avg_cell_voltage": {
+            "value": 0
+        },
+        "cell_temp_delta": {
+            "value": 0
+        },
+        "cell_voltage_delta": {
+            "value": 0
+        },
+        "clear_faults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##RACK_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##RACK_ID##:ClearFaults@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##RACK_ID##:ClearFaults"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to initiate clear faults command routine",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "dc_contactors_closed": {
+            "value": false
+        },
+        "dc_current": {
+            "value": 0
+        },
+        "dc_power": {
+            "value": 0
+        },
+        "dc_voltage": {
+            "value": 0
+        },
+        "faults": {
+            "options": [],
+            "value": 0
+        },
+        "maint_mode": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##RACK_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/bms/##RACK_ID##:clear_faults@enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note": "UI control variable used to set the current asset in maintenance mode",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "max_cell_temp": {
+            "value": 0
+        },
+        "max_cell_voltage": {
+            "value": 0
+        },
+        "max_charge_current": {
+            "value": 0
+        },
+        "max_charge_power": {
+            "value": 0
+        },
+        "max_discharge_current": {
+            "value": 0
+        },
+        "max_discharge_power": {
+            "value": 0
+        },
+        "min_cell_temp": {
+            "value": 0
+        },
+        "min_cell_voltage": {
+            "value": 0
+        },
+        "soc": {
+            "value": 0
+        },
+        "soh": {
+            "value": 0
+        },
+        "status": {
+            "value": "INIT"
+        }
+    },
+    "/vlinks/##RACK_ID##": {
+        "ui_avg_cell_temp": {
+            "value": "/assets/bms/##RACK_ID##:avg_cell_temp",
+            "vlink": "/status/##RACK_ID##:AvgCellTemp"
+        },
+        "ui_avg_cell_voltage": {
+            "value": "/assets/bms/##RACK_ID##:avg_cell_voltage",
+            "vlink": "/status/##RACK_ID##:AvgCellVoltage"
+        },
+        "ui_cell_temp_delta": {
+            "value": "/assets/bms/##RACK_ID##:cell_temp_delta",
+            "vlink": "/status/##RACK_ID##:CellTempDelta"
+        },
+        "ui_cell_voltage_delta": {
+            "value": "/assets/bms/##RACK_ID##:cell_voltage_delta",
+            "vlink": "/status/##RACK_ID##:CellVoltageDelta"
+        },
+        "ui_dc_contactors_closed": {
+            "value": "/assets/bms/##RACK_ID##:dc_contactors_closed",
+            "vlink": "/status/##RACK_ID##:DCClosed"
+        },
+        "ui_dc_current": {
+            "value": "/assets/bms/##RACK_ID##:dc_current",
+            "vlink": "/status/##RACK_ID##:DCCurrent"
+        },
+        "ui_dc_power": {
+            "value": "/assets/bms/##RACK_ID##:dc_power",
+            "vlink": "/status/##RACK_ID##:DCPower"
+        },
+        "ui_dc_voltage": {
+            "value": "/assets/bms/##RACK_ID##:dc_voltage",
+            "vlink": "/status/##RACK_ID##:DCVoltage"
+        },
+        "ui_max_cell_temp": {
+            "value": "/assets/bms/##RACK_ID##:max_cell_temp",
+            "vlink": "/status/##RACK_ID##:MaxCellTemp"
+        },
+        "ui_max_cell_voltage": {
+            "value": "/assets/bms/##RACK_ID##:max_cell_voltage",
+            "vlink": "/status/##RACK_ID##:MaxCellVoltage"
+        },
+        "ui_max_charge_current": {
+            "value": "/assets/bms/##RACK_ID##:max_charge_current",
+            "vlink": "/limits/##RACK_ID##:ChargeCurrentLimit"
+        },
+        "ui_max_charge_power": {
+            "value": "/assets/bms/##RACK_ID##:max_charge_power",
+            "vlink": "/limits/##RACK_ID##:ChargePowerLimit"
+        },
+        "ui_max_discharge_current": {
+            "value": "/assets/bms/##RACK_ID##:max_discharge_current",
+            "vlink": "/limits/##RACK_ID##:DischargeCurrentLimit"
+        },
+        "ui_max_discharge_power": {
+            "value": "/assets/bms/##RACK_ID##:max_discharge_power",
+            "vlink": "/limits/##RACK_ID##:DischargePowerLimit"
+        },
+        "ui_min_cell_temp": {
+            "value": "/assets/bms/##RACK_ID##:min_cell_temp",
+            "vlink": "/status/##RACK_ID##:MinCellTemp"
+        },
+        "ui_min_cell_voltage": {
+            "value": "/assets/bms/##RACK_ID##:min_cell_voltage",
+            "vlink": "/status/##RACK_ID##:MinCellVoltage"
+        },
+        "ui_soc": {
+            "value": "/assets/bms/##RACK_ID##:soc",
+            "vlink": "/status/##RACK_ID##:SOC"
+        },
+        "ui_soh": {
+            "value": "/assets/bms/##RACK_ID##:soh",
+            "vlink": "/status/##RACK_ID##:SOH"
+        },
+        "ui_status": {
+            "value": "/assets/bms/##RACK_ID##:status",
+            "vlink": "/status/##RACK_ID##:Status"
+        }
+    }
+}

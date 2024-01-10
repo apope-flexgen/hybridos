@@ -41,8 +41,10 @@ public:
     std::set<std::string> asset_name_collision_set;
     std::map<std::string, std::map<int, bool>> asset_id_to_asset_number_map;
     std::set<std::string> asset_id_collision_set;
-    std::map<std::string, std::map<int, bool>> asset_component_to_asset_number_map;
-    std::set<std::string> asset_component_collision_set;
+
+    // use multi here to allow for duplicates
+    std::map<std::string, std::multimap<int, bool>> asset_component_to_asset_number_map;
+    std::multiset<std::string> asset_component_collision_set;
 };
 
 class Type_Configurator {
@@ -64,7 +66,7 @@ private:
     Config_Validation_Result check_name_and_id(int index, cJSON* array_entry);
     int extract_num_asset_instances_represented(cJSON* asset_array_entry);
     std::pair<std::vector<int>, Config_Validation_Result> generate_list_of_asset_instances_represented(cJSON* asset_array_entry);
-    int range_provided(cJSON* asset_array_entry);
+    bool range_provided(cJSON* asset_array_entry);
     std::pair<int, Config_Validation_Result> count_num_asset_instances(cJSON* asset_array);
     Config_Validation_Result configure_asset_array_entry(int index, cJSON* array_entry);
     Config_Validation_Result configure_traditional_templated_asset();

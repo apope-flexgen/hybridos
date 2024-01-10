@@ -1,0 +1,210 @@
+{
+    "system": {
+        "name": "dnp3_client",
+        "format": "full",
+        "protocol": "DNP3",
+        "version": "0.2",
+        "base_uri": "/sites",
+        "id": "hoth",
+        "debug": 0,
+        "unsol": 1,
+        "ip_address": "172.17.0.3",
+        "master_address": 3,
+        "station_address": 4,
+        "local_uri": "/local_test",
+        "port": 20000,
+        "event_pub": true,
+        "frequency": 100,
+        "component_heartbeat_write_uri": "/testcli/TestHeartbeat/TestHeartbeat",
+        "component_heartbeat_write_reference": "/test/analog/analog_2",
+        "component_heartbeat_write_freq": 1000,  
+        "component_heartbeat_min": 0,
+        "component_heartbeat_max": 10,
+        "component_heartbeat_incr": 1,  
+        "component_watchdog_read_uri": "/test/analog/analog_1",
+        "component_watchdog_status_uri": "/test/watchdog/status",
+        "component_watchdog_status_freq": 1000,
+        "component_watchdog_warning_timeout": 2000,
+        "component_watchdog_fault_timeout": 2000,
+        "component_watchdog_recovery_timeout": 500
+    },
+    "registers": [
+        {
+            "type": "AnOPInt32",
+            "map": [
+                {
+                    "id": "TestOPI32toSite",
+                    "offset": 0,
+                    "name": "Test OUTPut To Site",
+                    "unit": "MW",
+                    "signed": true,
+                    "uri": "/testcli/testop"
+                },
+                {
+                    "id": "TestOPI32toSiteCl",
+                    "offset": 1,
+                    "name": "Test OUTPut To Site",
+                    "unit": "MW",
+                    "format": "clothed",
+                    "signed": true,
+                    "uri": "/testcli/testop"
+                },
+                {
+                    "id": "TestHeartbeat",
+                    "offset": 100,
+                    "name": "Test OUTPut To Heartbeat",
+                    "min": 0,
+                    "max": 500,
+                    "increment": 1,
+                    "uri": "/testcli/TestHeartbeat"
+                }, 
+                {
+                    "id": "analog_2",
+                    "offset": 200,
+                    "scale": 1,
+                    "Xformat": "clothed",
+                    "timeout": 0,
+                    "clazz": 1,
+                    "uri": "/test/analog",
+                    "name": "analog_2"
+                }
+            ]
+        },
+        {
+            "type": "AnOPInt16",
+            "map": [
+                {
+                    "id": "TestOPI16toSite",
+                    "offset": 2,
+                    "name": "Test OUTPut To Site",
+                    "unit": "MW",
+                    "events": 1,
+                    "signed": true,
+                    "uri": "/testcli/testop"
+                },
+                {
+                    "id": "TestOPI16toSiteCl",
+                    "offset": 3,
+                    "name": "Test OUTPut To Site",
+                    "unit": "MW",
+                    "format": "clothed",
+                    "signed": true,
+                    "uri": "/testcli/testop"
+                }
+            ]
+        },
+        {
+            "type": "AnOPF32",
+            "map": [
+                {
+                    "id": "TestOPF32toSite",
+                    "offset": 4,
+                    "name": "Test OUTPut F32 To Site",
+                    "unit": "MW",
+                    "signed": true,
+                    "uri": "/testcli/testop"
+                },
+                {
+                    "id": "TestOPF32toSiteCl",
+                    "offset": 5,
+                    "name": "Test OUTPut F32 To Site",
+                    "unit": "MW",
+                    "format": "clothed",
+                    "signed": true,
+                    "uri": "/testcli/testop"
+                }
+            ]
+        },
+        {
+            "type": "CROB",
+            "starting_offset": 100,
+            "number_of_registers": 1,
+            "map": [
+                {
+                    "id": "breaker_close",
+                    "idx": 0,
+                    "name": "Main Breaker Close Command",
+                    "uri": "/testcli/testop"
+                },
+                {
+                    "id": "breaker_closeCl",
+                    "crob_string": false,
+                    "crob_true": "LATCH_ON",
+                    "crob_false": "LATCH_OFF",
+                    "xformat": "clothed",
+                    "idx": 1,
+                    "name": "Main Breaker Close Command",
+                    "uri": "/testcli/testop"
+                }
+            ]
+        },
+        {
+            "type": "binaryOS",
+            "map": [
+                {
+                    "id": "binaryOS_10v2",
+                    "offset": 2,
+                    "scale": -1,
+                    "xformat": "clothed",
+                    "timeout": 0,
+                    "variation": "Group10Var2",
+                    "uri": "/test/binaryOS",
+                    "name": "BinaryOSG10V2"
+                },
+                {
+                    "id": "binaryOS_10v2_timeout",
+                    "offset": 3,
+                    "scale": 1,
+                    "timeout": 2000,
+                    "xformat": "clothed",
+                    "variation": "Group10Var2",
+                    "uri": "/test/binaryOS",
+                    "name": "BinaryOSG10V2_TO"
+                }
+            ]
+        },
+        {
+            "type": "binary",
+            "map": [
+                {
+                    "id": "binary_1",
+                    "offset": 0,
+                    "scale": 1,
+                    "xformat": "clothed",
+                    "timeout": 0,
+                    "clazz": 1,
+                    "evariation": "Group2Var3",
+                    "uri": "/test/binary",
+                    "name": "BinaryG10V2"
+                },
+                {
+                    "id": "binary_1_timeout",
+                    "offset": 1,
+                    "scale": 1,
+                    "timeout": 2000,
+                    "xformat": "clothed",
+                    "xvariation": "Group10Var2",
+                    "uri": "/test/binary",
+                    "name": "Binary_1_TO"
+                }
+            ]
+        },
+        {
+            "type": "analog",
+            "map": [
+                {
+                    "id": "analog_1",
+                    "offset": 0,
+                    "scale": 1,
+                    "Xformat": "clothed",
+                    "timeout": 0,
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "clazz": 1,
+                    "uri": "/test/analog",
+                    "name": "analog_1"
+                }
+            ]
+        }
+    ]
+}

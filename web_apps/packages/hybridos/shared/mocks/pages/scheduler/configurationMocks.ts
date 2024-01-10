@@ -34,7 +34,7 @@ import { Configuration } from '../../../../../hybridos/shared/types/dtos/schedul
 //     scheduler_type: 'FM',
 //     local_schedule: {
 //         id: 'fleet_id',
-//         name: 'Horizon Power Fleet',
+//         name: 'VFakeCo Fleet',
 //     },
 //     web_sockets: {
 //         clients: [

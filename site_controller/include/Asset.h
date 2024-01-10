@@ -160,7 +160,7 @@ public:
 
     // FIMS
     bool handle_get(fims_message* pmsg);
-    bool add_asset_data_to_buffer(fmt::memory_buffer& buf, bool clothed);
+    bool add_asset_data_to_buffer(fmt::memory_buffer& buf);
     bool add_variable_to_buffer(std::string uri, const char* variable, fmt::memory_buffer& buf);
     virtual bool handle_set(std::string uri, cJSON& body) = 0;
     bool handle_generic_asset_controls_set(std::string uri, cJSON& body);

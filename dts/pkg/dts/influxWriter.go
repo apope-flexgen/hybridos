@@ -9,7 +9,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	log "github.com/flexgen-power/go_flexgen/logger"
+	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 	influx "github.com/flexgen-power/influxdb_client/v1.7"
 	"golang.org/x/sync/errgroup"
 )

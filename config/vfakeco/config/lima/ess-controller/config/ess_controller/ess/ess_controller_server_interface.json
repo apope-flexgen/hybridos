@@ -1,0 +1,119 @@
+{
+    "/schedule/wake_monitor/ess": {
+        "/site/ess:heartbeat_to_ess": {
+            "amap": "ess",
+            "func": "CheckMonitorVar"
+        }
+    },
+    "/site/ess": {
+        "clear_faults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": 1,
+                                "outValue": true,
+                                "uri": "/controls/bms:ClearFaults@triggerCmd"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": 1,
+                                "uri": "/controls/bms:ClearFaults"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": true,
+                                "uri": "/controls/pcs:ClearFaults@triggerCmd"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": 0,
+                                "uri": "/controls/pcs:ClearFaults"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/ess:enable",
+            "ifChanged": false,
+            "name": "Clear Faults Command",
+            "note": "Initiates BMS/PCS clear faults command routines and clears ESS Controller alarms/faults",
+            "type": "control",
+            "value": 0
+        },
+        "comms_faults": {
+            "bit0": "PCS Communication Failure",
+            "bit1": "BMS Commnuication Failure",
+            "name": "Comms Faults",
+            "type": "bitfield",
+            "value": 0
+        },
+        "ess_alarm_active": {
+            "name": "ESS Alarm Active",
+            "type": "status",
+            "value": false
+        },
+        "ess_fault_active": {
+            "name": "ESS Fault Active",
+            "type": "status",
+            "value": false
+        },
+        "ess_max_charge_power": {
+            "name": "ESS Max Charge Power",
+            "signed": true,
+            "type": "status",
+            "units": "kW",
+            "value": 0
+        },
+        "ess_max_discharge_power": {
+            "name": "ESS Max Discharge Power",
+            "type": "status",
+            "units": "kW",
+            "value": 0
+        },
+        "heartbeat_from_ess": {
+            "name": "Heartbeat From ESS Controller",
+            "type": "status",
+            "value": 0
+        },
+        "heartbeat_to_ess": {
+            "AlarmTimeout": 10,
+            "EnableCommsCheck": true,
+            "EnableStateCheck": true,
+            "FaultTimeout": 10,
+            "RecoverTimeout": 0.1,
+            "Type": "int",
+            "name": "Heartbeat To ESS Controller",
+            "note": "Checks if the ESS Controller is communicating with other processes (e.g. EMS, ESS Controller)",
+            "type": "control",
+            "value": 0
+        }
+    },
+    "/vlinks/ess": {
+        "site_ess_alarm_active": {
+            "value": "/site/ess:ess_alarm_active",
+            "vlink": "/status/ess:IsAlarming"
+        },
+        "site_ess_fault_active": {
+            "value": "/site/ess:ess_fault_active",
+            "vlink": "/status/ess:IsFaulted"
+        },
+        "site_ess_max_charge_power": {
+            "value": "/site/ess:ess_max_charge_power",
+            "vlink": "/limits/ess:MaxChargePower"
+        },
+        "site_ess_max_discharge_power": {
+            "value": "/site/ess:ess_max_discharge_power",
+            "vlink": "/limits/ess:MaxDischargePower"
+        }
+    }
+}

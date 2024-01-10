@@ -1,0 +1,82 @@
+{
+    "system":
+    {
+        "id": "emax-smart-breaker",
+		"ip_address": "10.8.20.201",
+        "port": 502,
+        "frequency": 500,
+        "byte_swap": false
+    },
+    "registers":
+    [       
+        {
+            "type": "Discrete Inputs",
+            "starting_offset": 4,
+            "number_of_registers": 2,
+            "map":
+            [
+                {
+                    "id": "breaker_status",
+                    "offset": 4
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 1,
+            "number_of_registers": 44,
+            "map":
+            [
+                {
+                    "id": "ac_current_l1",
+                    "offset": 100
+                },
+                {
+                    "id": "ac_current_l2",
+                    "offset": 102
+                },
+                {
+                    "id": "ac_current_l3",
+                    "offset": 104
+                },
+                {
+                    "id": "voltage_l1",
+                    "offset": 150
+                },
+                {
+                    "id": "voltage_l2",
+                    "offset": 151
+                },
+                {
+                    "id": "voltage_l3",
+                    "offset": 152
+                },
+                {
+                    "id": "active_power",
+                    "offset": 206,
+                    "signed": true
+                },
+                {
+                    "id": "reactive_power",
+                    "offset": 214,
+                    "signed": true
+                },
+                {
+					"id": "apparent_power",
+					"offset": 222,
+					"signed": true
+				},
+                {
+                    "id": "power_factor",
+                    "offset": 253,
+                    "scale": 100
+                },
+                {
+                    "id": "frequency",
+                    "offset": 254,
+                    "scale": 100
+                }
+            ]
+        }
+    ]
+}

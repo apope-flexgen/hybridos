@@ -1,0 +1,4 @@
+version: 11.3.0.alpha.3
+
+dts: 
+  dts.json: {influx: influx-container, mongo: mongo-container}

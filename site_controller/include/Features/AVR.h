@@ -23,6 +23,8 @@ public:
     Fims_Object under_droop;       // response to apply per V deviation in undervoltage event
     Fims_Object under_rated_kVAR;  // rated kVAR for calculating response kVAR in undervoltage event
     Fims_Object voltage_cmd;       // nominal voltage target
+    Fims_Object voltage_cmd_max;   // nominal voltage target maximum limit
+    Fims_Object voltage_cmd_min;   // nominal voltage target minimum limit
     Fims_Object actual_volts;      // actual measured voltage to calculate deviation with
     Fims_Object status_flag;       // true flag when response is nonzero
     Fims_Object request;           // request produced in response to voltage deviation

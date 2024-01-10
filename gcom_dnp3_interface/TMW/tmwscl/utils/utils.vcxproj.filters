@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="tmwtarg">
+      <UniqueIdentifier>{0B1D10EC-77FC-8E87-8014-1A5EEC72F5E8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tmwtarg\winiotarg">
+      <UniqueIdentifier>{2E50EB56-9A66-E9EC-E3DD-740E4F33BA74}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tmwappl.h" />
+    <ClInclude Include="tmwchnl.h" />
+    <ClInclude Include="tmwcnfg.h" />
+    <ClInclude Include="tmwcrypto.h" />
+    <ClInclude Include="tmwdb.h" />
+    <ClInclude Include="tmwdefs.h" />
+    <ClInclude Include="tmwdiag.h" />
+    <ClInclude Include="tmwdlist.h" />
+    <ClInclude Include="tmwdtime.h" />
+    <ClInclude Include="tmwlink.h" />
+    <ClInclude Include="tmwmem.h" />
+    <ClInclude Include="tmwmsim.h" />
+    <ClInclude Include="tmwphys.h" />
+    <ClInclude Include="tmwphysd.h" />
+    <ClInclude Include="tmwpltmr.h" />
+    <ClInclude Include="tmwscl.h" />
+    <ClInclude Include="tmwsctr.h" />
+    <ClInclude Include="tmwsesn.h" />
+    <ClInclude Include="tmwsim.h" />
+    <ClInclude Include="tmwtarg.h" />
+    <ClInclude Include="tmwtargp.h" />
+    <ClInclude Include="tmwtimer.h" />
+    <ClInclude Include="tmwtprt.h" />
+    <ClInclude Include="tmwtypes.h" />
+    <ClInclude Include="tmwvrsn.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\tmwtarg\winiotarg\mdnptarg.c">
+      <Filter>tmwtarg\winiotarg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tmwtarg\winiotarg\sdnptarg.c">
+      <Filter>tmwtarg\winiotarg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tmwtarg\winiotarg\tmwtarg.c">
+      <Filter>tmwtarg\winiotarg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tmwtarg\winiotarg\tmwtargp.c">
+      <Filter>tmwtarg\winiotarg</Filter>
+    </ClCompile>
+    <ClCompile Include="tmwappl.c" />
+    <ClCompile Include="tmwchnl.c" />
+    <ClCompile Include="tmwdb.c" />
+    <ClCompile Include="tmwdiag.c" />
+    <ClCompile Include="tmwdlist.c" />
+    <ClCompile Include="tmwdtime.c" />
+    <ClCompile Include="tmwlink.c" />
+    <ClCompile Include="tmwmem.c" />
+    <ClCompile Include="tmwmsim.c" />
+    <ClCompile Include="tmwphys.c" />
+    <ClCompile Include="tmwphysd.c" />
+    <ClCompile Include="tmwpltmr.c" />
+    <ClCompile Include="tmwsctr.c" />
+    <ClCompile Include="tmwsesn.c" />
+    <ClCompile Include="tmwsim.c" />
+    <ClCompile Include="tmwtimer.c" />
+    <ClCompile Include="tmwtprt.c" />
+    <ClCompile Include="tmwvrsn.c" />
+  </ItemGroup>
+</Project>

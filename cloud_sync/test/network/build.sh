@@ -5,7 +5,7 @@ cd "${0%/*}"
 cd ../../
 
 # build dependencies
-./package_utility/build.sh
+../package_utility/build.sh
 ./test/mock_archive/build.sh
 
 # set working directory to the directory of this file

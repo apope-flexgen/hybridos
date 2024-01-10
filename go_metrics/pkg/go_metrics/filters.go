@@ -14,27 +14,29 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 	wasError := false
 	discardFilter := false
 	output := make(map[string]Filter, len(filters))
+	if FilterScope == nil {
+		FilterScope = make(map[string][]string, 0)
+	}
 	currentJsonLocation := make([]JsonAccessor, 0)
 	currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "filters", JType: simdjson.TypeObject})
 	// get the filter expressions
 	for filter_name, filter := range filters {
 		currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: filter_name, JType: simdjson.TypeObject})
-		if _, ok := Scope[filter_name]; ok {
+		if _, ok := InputScope[filter_name]; ok {
 			logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("filter variable name '%s' already exists in scope; discarding filter", filter_name))
 			wasError = true
 			continue
 		}
 		inputs := make([]string, 0)
-		for key := range Scope {
+		for key := range InputScope {
 			inputs = append(inputs, key)
 		}
 		var filterObject Filter
 		filterObject.StaticFilterExpressions = make([]Expression, 0)
 		filterObject.DynamicFilterExpressions = make([]Expression, 0)
-		switch filter.(type) {
+		switch x := filter.(type) {
 		case string:
-			str_filter, _ := filter.(string)
-			stringExpressions := strings.Split(str_filter, "|")
+			stringExpressions := strings.Split(x, "|")
 			err := getFilterExpressions(stringExpressions, &filterObject)
 			if err != nil {
 				discardFilter = true
@@ -42,8 +44,7 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 				wasError = true
 			}
 		case []string:
-			stringExpressions, _ := filter.([]string)
-			err := getFilterExpressions(stringExpressions, &filterObject)
+			err := getFilterExpressions(x, &filterObject)
 			if err != nil {
 				discardFilter = true
 				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; discarding filter", err))
@@ -115,15 +116,17 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 
 		// set the intermediate inputs as the first round of dynamic inputs
 		filterObject.DynamicInputs = make([][]string, len(filterObject.DynamicFilterExpressions)+1)
-		for i, _ := range filterObject.DynamicFilterExpressions {
+		for i:= range filterObject.DynamicFilterExpressions {
 			filterObject.DynamicInputs[i] = make([]string, len(intermediateInputs))
 		}
 		filterObject.DynamicInputs[0] = intermediateInputs
 		output[filter_name] = filterObject
-		Scope[filter_name] = make([]Input, 0)
+		InputScope[filter_name] = make([]Union, 0)
 		for _, inputName := range intermediateInputs {
-			Scope[filter_name] = append(Scope[filter_name], Scope[inputName]...)
+			InputScope[filter_name] = append(InputScope[filter_name], InputScope[inputName]...)
 		}
+		FilterScope[filter_name] = make([]string, len(intermediateInputs))
+		copy(FilterScope[filter_name], intermediateInputs)
 		currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
 	}
 
@@ -173,7 +176,7 @@ func EvaluateRegexFilter(filter string, inputs []string) ([]string, error) {
 	output := make([]string, 0)
 	regEx, err := regexp.Compile(filter)
 	if err != nil {
-		return nil, fmt.Errorf("Could not parse regular expression. See https://github.com/google/re2/wiki/Syntax for help constructing.")
+		return nil, fmt.Errorf("could not parse regular expression. See https://github.com/google/re2/wiki/Syntax for help constructing")
 	}
 
 	for _, input := range inputs {
@@ -197,10 +200,8 @@ func EvaluateTypeFilter(filter string, inputs []string) ([]string, error) {
 		return nil, fmt.Errorf("invalid type filter; must be one of string, int, uint, float, or bool")
 	}
 	for _, input := range inputs {
-		for _, inputVal := range Scope[input] {
-			if inputVal.Type == filter {
-				output = append(output, inputVal.Name)
-			}
+		if MetricsConfig.Inputs[input].Type == filter {
+			output = append(output, MetricsConfig.Inputs[input].Name)
 		}
 	}
 

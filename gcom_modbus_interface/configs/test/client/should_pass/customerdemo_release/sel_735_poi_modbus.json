@@ -1,0 +1,63 @@
+{
+	"system":
+	{
+		"id": "sel_735_poi",
+		"ip_address": "192.168.0.2",
+		"port": 502,
+		"device_id": 1,
+		"frequency": 500,
+		"byte_swap": false
+	},
+	"registers": 
+	[
+		{
+		    "type": "Input Registers",
+		    "starting_offset": 364,
+		    "number_of_registers": 8,
+		    "map":
+			[
+				{
+					"id": "voltage_ab",
+					"offset": 364,
+					"size": 2,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "voltage_bc",
+					"offset": 366,
+					"size": 2,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "voltage_ca",
+					"offset": 368,
+					"size": 2,
+					"scale":100,
+					"signed": true
+				},
+				{
+				    "id": "active_power",
+				    "signed": true,
+				    "offset": 370,
+					"size": 2
+				}
+			]
+		},
+		{
+		    "type": "Input Registers",
+		    "starting_offset": 900,
+		    "number_of_registers": 2,
+		    "map":
+			[
+				{
+					"id": "frequency",
+					"size": 2,
+					"offset": 900,
+					"scale": 100
+				}
+			]
+		}
+	]
+}

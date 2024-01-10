@@ -1,0 +1,12 @@
+version: 11.3.0.alpha.3
+
+modbus_server: 
+  acuvim_aux_modbus_server.json: { ip: 0.0.0.0, port: 502}
+  apc_ups_modbus_server.json: { ip: 0.0.0.0, port: 503}
+  ess_1_bms_modbus_server.json: { ip: 0.0.0.0, port: 504}
+  ess_1_pcs_modbus_server.json: { ip: 0.0.0.0, port: 505}
+  ess_2_modbus_server.json: { ip: 0.0.0.0, port: 506}
+  ess_3_modbus_server.json: { ip: 0.0.0.0, port: 507}
+  sel_2440_modbus_server.json: { ip: 0.0.0.0, port: 508}
+  sel_651r_modbus_server.json: { ip: 0.0.0.0, port: 509}
+  sel_735_modbus_server.json: { ip: 0.0.0.0, port: 510}

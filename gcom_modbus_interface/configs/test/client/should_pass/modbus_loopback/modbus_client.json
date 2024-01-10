@@ -1,0 +1,73 @@
+{
+    "connection":
+    {
+        "name": "Modbus Test Client",
+        "ip_address": "127.0.0.1",
+        "port": 502
+    },
+    "components":
+    [
+        {
+            "id":"modbus_test_client",
+            "device_id": 1,
+            "frequency": 100,
+            "off_by_one": false,
+            "byte_swap": false,
+            "registers": 
+            [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 0,
+                    "number_of_registers": 1,
+                    "map": 
+                    [
+                        {
+                            "id": "input_register",
+                            "offset": 0,
+                            "size": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 0,
+                    "number_of_registers": 1,
+                    "map": 
+                    [
+                        {
+                            "id": "holding_register",
+                            "offset": 0,
+                            "size": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "Coils",
+                    "starting_offset": 0,
+                    "number_of_registers": 1,
+                    "map": 
+                    [
+                        {
+                            "id": "coil",
+                            "offset": 0,
+                            "size": 1
+                        }
+                    ]
+                },
+                {
+                    "type": "Discrete Inputs",
+                    "starting_offset": 0,
+                    "number_of_registers": 1,
+                    "map": 
+                    [
+                        {
+                            "id": "discrete_input",
+                            "offset": 0,
+                            "size": 1
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

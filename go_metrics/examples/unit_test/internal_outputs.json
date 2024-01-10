@@ -1,0 +1,32 @@
+{
+        "inputs": {
+            "external_input"      : {"uri": "/some/uri/external_input"            , "type": "int", "default": 0},
+            "internal_input" : {"internal": true       , "type": "int", "default": 0},
+            "second_internal_input" : {"internal": true       , "type": "int", "default": 0}
+        },
+        "outputs": {
+            "first_external_output"         : {"uri": "/test/output" },
+            "second_external_output": {"uri": "/test/output"}
+        },
+        "metrics": [
+            {
+                "id": "external_input_echo",
+                "type": "int", 
+                "internal_output": "internal_input",
+                "expression": "external_input"
+            },
+            {
+                "id": "internal_input_echo",
+                "type": "int", 
+                "outputs": "first_external_output",
+                "internal_output": "second_internal_input",
+                "expression": "internal_input"
+            },
+            {
+                "id": "internal_input_echo",
+                "type": "int", 
+                "outputs": "second_external_output",
+                "expression": "second_internal_input"
+            }
+        ]
+}

@@ -1,0 +1,95 @@
+{
+	"system":
+	{
+		"id": "sel_751",
+		"ip_address": "10.201.112.135",
+		"port": 502,
+		"frequency": 100,
+		"off_by_one": false,
+		"byte_swap": false
+	},
+	"registers":
+	[
+		{
+			"type": "Input Registers",
+			"starting_offset": 313,
+			"number_of_registers": 64,
+			"map":
+			[
+				{
+					"id": "relay_status",
+					"offset": 313
+				},
+				{
+					"id": "ac_current_l1",
+					"offset": 320
+				},
+				{
+					"id": "ac_current_l2",
+					"offset": 322
+				},
+				{
+					"id": "ac_current_l3",
+					"offset": 324
+				},
+				{
+					"id": "voltage_ab",
+					"offset": 335
+				},
+				{
+					"id": "voltage_bc",
+					"offset": 337
+				},
+				{
+					"id": "voltage_ca",
+					"offset": 339
+				},
+				{
+					"id": "active_power",
+					"signed": true,
+					"offset": 372
+				},
+				{
+					"id": "reactive_power",
+					"signed": true,
+					"offset": 373
+				},
+				{
+					"id": "power_factor",
+					"signed": true,
+					"offset": 375,
+					"scale": 100
+				},
+				{
+					"id": "frequency",
+					"offset": 376,
+					"scale": 100
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			"starting_offset": 98,
+			"number_of_registers": 1,
+			"map":
+			[
+				{
+					"id": "relay_command",
+					"offset": 98
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			"starting_offset": 261,
+			"number_of_registers": 1,
+			"map":
+			[
+				{
+					"id": "relay_reset",
+					"offset": 261
+				}
+			]
+		}
+	]
+}

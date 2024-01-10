@@ -39,7 +39,6 @@ func setupMockProcess(name, uri string, killOnHang bool, hangTimeAllowance int) 
 	processEntry.replyToURI = path.Join("/cops", name)
 	processEntry.alive = true
 	processEntry.healthStats.lastConfirmedAlive = beginningTime
-	processEntry.healthStats.lastRestart = beginningTime
 	processEntry.healthStats.totalRestarts = -1 // First startup will increment this to zero
 	return &processEntry
 }

@@ -7,3 +7,6 @@ output
 !cicd-scripts/*
 
 *_meta*
+
+# .vscode
+**/.vscode/settings.json

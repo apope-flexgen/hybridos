@@ -114,128 +114,30 @@ var EvalFilterTests = []EvalFilterTest{
 }
 
 func TestEvalFilter(t *testing.T) {
-	Scope = map[string][]Input{
-		"input1": []Input{
-			Input{
-				Type:          "bool",
-				Value:         Union{tag: BOOL, b: true},
-				Attributes:    []string{"enabled", "scale"},
-				AttributesMap: map[string]string{"enabled": "input1@enabled", "scale": "input1@scale"},
-			},
+	InputScope = map[string][]Union{
+		"input1": []Union{{tag: BOOL, b: true}},
+		"input2": []Union{{tag: BOOL, b: true}},
+		"input4": []Union{{tag: BOOL, b: true}},
+		"bool1":  []Union{{tag: BOOL, b: true}},
+		"bool2": []Union{{tag: BOOL, b: false}},
+		"uint1": []Union{{tag: UINT, ui: 5}},
+		"uint2": []Union{{tag: UINT, ui: 7}},
+		"int1": []Union{{tag: INT, i: 6}},
+		"int2": []Union{{tag: INT, i: 8}},
+		"float1": []Union{{tag: FLOAT, f: 5.3}},
+		"float2": []Union{{tag: FLOAT, f: 7.3}},
+		"string1": []Union{{tag: STRING, s: "hello"}},
+		"string2": []Union{{tag: STRING, s: ""}},
+		"noval": []Union{},
+		"multival": []Union{
+			{tag: INT, i: 9},{tag: INT, i: 11},
 		},
-		"input2": []Input{
-			Input{
-				Type:          "bool",
-				Value:         Union{tag: BOOL, b: true},
-				Attributes:    []string{"enabled", "scale"},
-				AttributesMap: map[string]string{"enabled": "input2@enabled", "scale": "input2@scale"},
-			},
-		},
-		"input4": []Input{
-			Input{
-				Type:          "bool",
-				Value:         Union{tag: BOOL, b: true},
-				Attributes:    []string{"enabled", "scale"},
-				AttributesMap: map[string]string{"enabled": "input4@enabled", "scale": "input4@scale"},
-			},
-		},
-		"bool1": []Input{
-			Input{
-				Type:  "bool",
-				Value: Union{tag: BOOL, b: true},
-			},
-		},
-		"bool2": []Input{
-			Input{
-				Type:  "bool",
-				Value: Union{tag: BOOL, b: false},
-			},
-		},
-		"uint1": []Input{
-			Input{
-				Type:  "uint",
-				Value: Union{tag: UINT, ui: 5},
-			},
-		},
-		"uint2": []Input{
-			Input{
-				Type:  "uint",
-				Value: Union{tag: UINT, ui: 7},
-			},
-		},
-		"int1": []Input{
-			Input{
-				Type:  "int",
-				Value: Union{tag: INT, i: 6},
-			},
-		},
-		"int2": []Input{
-			Input{
-				Type:  "int",
-				Value: Union{tag: INT, i: 8},
-			},
-		},
-		"float1": []Input{
-			Input{
-				Type:  "float",
-				Value: Union{tag: FLOAT, f: 5.3},
-			},
-		},
-		"float2": []Input{
-			Input{
-				Type:  "float",
-				Value: Union{tag: FLOAT, f: 7.3},
-			},
-		},
-		"string1": []Input{
-			Input{
-				Type:  "string",
-				Value: Union{tag: STRING, s: "hello"},
-			},
-		},
-		"string2": []Input{
-			Input{
-				Type:  "string",
-				Value: Union{tag: STRING, s: ""},
-			},
-		},
-		"noval": []Input{},
-		"multival": []Input{
-			Input{
-				Type:  "int",
-				Value: Union{tag: INT, i: 9},
-			},
-			Input{
-				Type:  "int",
-				Value: Union{tag: INT, i: 11},
-			},
-		},
-		"input1@enabled": []Input{
-			Input{
-				Type:  "bool",
-				Value: Union{tag: BOOL, b: true},
-			},
-		},
-		"input2@enabled": []Input{
-			Input{
-				Type:  "bool",
-				Value: Union{tag: BOOL, b: true},
-			},
-		},
-		"input4@enabled": []Input{},
-		"input1@scale": []Input{
-			Input{
-				Type:  "float",
-				Value: Union{tag: FLOAT, f: 5},
-			},
-		},
-		"input2@scale": []Input{
-			Input{
-				Type:  "float",
-				Value: Union{tag: FLOAT, f: 0.001},
-			},
-		},
-		"input4@scale": []Input{},
+		"input1@enabled": []Union{{tag: BOOL, b: true}},
+		"input2@enabled": []Union{{tag: BOOL, b: true}},
+		"input4@enabled": []Union{{}},
+		"input1@scale": []Union{{tag: FLOAT, f: 5}},
+		"input2@scale": []Union{{tag: FLOAT, f: 0.001}},
+		"input4@scale": []Union{{}},
 	}
 	allPossibleAttributes = make(map[string][]string, 0)
 	allPossibleAttributes["enabled"] = []string{"input1@enabled", "input2@enabled", "input4@enabled"}
@@ -267,7 +169,7 @@ func TestEvalFilter(t *testing.T) {
 		},
 	}
 	inputs := make([]string, 0)
-	for key, _ := range Scope {
+	for key := range InputScope {
 		inputs = append(inputs, key)
 	}
 	var output []string
@@ -286,7 +188,7 @@ func TestEvalFilter(t *testing.T) {
 		if len(output) != len(test.expectedOutput) {
 			t.Errorf("%s: output var %v not equal to expected var %v\n", test.inputExpression, output, test.expectedOutput)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutput[i] {
 					t.Errorf("%s: output var %v not equal to expected var %v\n", test.inputExpression, output, test.expectedOutput)
 				}

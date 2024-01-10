@@ -5,6 +5,7 @@ export class SiteConfiguration {
     gen: boolean
     solar: boolean
     site_status_bar?: boolean
+    system_status?: boolean
     met_station: boolean
     tracker: boolean
     feeders: boolean
