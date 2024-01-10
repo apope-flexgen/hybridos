@@ -126,6 +126,8 @@ FUNC_OBJECTS += CheckValueChanged.o
 FUNC_OBJECTS += BalancePower.o
 FUNC_OBJECTS += OutputHandler.o
 FUNC_OBJECTS += InputHandler.o
+FUNC_OBJECTS += ScheduledEnableFunctions.o
+
 
 
 #$(FUNC_LIST)
@@ -145,6 +147,9 @@ ESS_OBJECTS += dbi_funcs.o
 ESS_OBJECTS += AssetSetupUtility.o
 ESS_OBJECTS += FunctionUtility.o
 ESS_OBJECTS += InfoMessageUtility.o
+ESS_OBJECTS += DataUtility.o
+ESS_OBJECTS += SiteCommandUtility.o
+ESS_OBJECTS += BatteryBalancingUtility.o
 
 
 
@@ -293,6 +298,15 @@ $(OBJ_DIR)FunctionUtility.o:	$(SRC_DIR)/FunctionUtility.cpp
 	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
 $(OBJ_DIR)InfoMessageUtility.o:	$(SRC_DIR)/InfoMessageUtility.cpp 
+	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)DataUtility.o: $(SRC_DIR)/DataUtility.cpp 
+	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)SiteCommandUtility.o:	$(SRC_DIR)/SiteCommandUtility.cpp 
+	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)BatteryBalancingUtility.o: $(SRC_DIR)/BatteryBalancingUtility.cpp 
 	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
 $(OBJ_DIR)ess_controller.o:	$(SRC_DIR)/ess_controller.cpp 
