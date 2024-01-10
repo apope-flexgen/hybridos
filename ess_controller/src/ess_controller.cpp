@@ -398,6 +398,7 @@ void initFuncs(asset_manager* am)
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "SiteRunCmd",        (void*)&InputHandler::SiteRunCmd);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "SiteBMSContactorControl",        (void*)&InputHandler::SiteBMSContactorControl);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "SitePCSStatusControl",        (void*)&InputHandler::SitePCSStatusControl);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "BatteryRackBalanceCoarse",        (void*)&InputHandler::BatteryRackBalanceCoarse);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "CloseContactorsEnable",        (void*)&ScheduledEnableFunctions::CloseContactorsEnable);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "OpenContactorsEnable",        (void*)&ScheduledEnableFunctions::OpenContactorsEnable);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "StartEnable",        (void*)&ScheduledEnableFunctions::StartEnable);

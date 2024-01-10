@@ -19,7 +19,7 @@ namespace BatteryBalancingUtility
     * 
     * @param racks 
     */
-    VoltageArbitrationResult VoltageArbitration(double deadband, const std::vector<RackInfoObject>& racks)
+    VoltageArbitrationResult VoltageArbitration(double deadband, const std::vector<RackInfoObject> racks)
     {
 
 // ==================== Closed Rack Check ====================

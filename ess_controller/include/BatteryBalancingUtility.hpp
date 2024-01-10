@@ -37,7 +37,7 @@ namespace BatteryBalancingUtility
 
     };
 
-    VoltageArbitrationResult VoltageArbitration(const std::vector<RackInfoObject>& racks);
+    VoltageArbitrationResult VoltageArbitration(const std::vector<RackInfoObject> racks);
 }
  
 #endif

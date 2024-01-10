@@ -200,7 +200,6 @@ namespace FunctionUtility
         FunctionUtility::FunctionReturnObj returnObject = outputHandlerFunction(vmap, amap, aname, p_fims, aV, siteUri.c_str());
         int returnValue = returnObject.statusIndicator;
         std::string message = returnObject.message;
-
         FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName.c_str(), siteUri.c_str(), message.c_str());
 
         return returnValue;

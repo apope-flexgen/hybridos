@@ -13,6 +13,7 @@
 #include "InfoMessageUtility.hpp"
 #include "SiteCommandUtility.hpp"
 #include "DataUtility.hpp"
+#include "BatteryBalancingUtility.hpp"
 
 
 
@@ -519,7 +520,7 @@ namespace InputHandler
     void BatteryRackBalanceCoarse(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{}", __func__);
        
 
         int reload = 0;
@@ -543,11 +544,21 @@ namespace InputHandler
         // Set up
         if (reload == 0)
         {
+
+            FPS_PRINT_INFO("reload == 0");
             linkVals(*vm, vmap, amap, aname, "/reload", reload, relname);
+            FPS_PRINT_INFO("1");
             essAv = amap[relname];
+            FPS_PRINT_INFO("2");
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /site/ess/start_stop
+                DataUtility::AssetVarInfo("/sched/ess", "battery_rack_balance_coarse", assetVar::ATypes::ABOOL),
+                // /site/ess/start_stop
                 DataUtility::AssetVarInfo("/assets/ess/summary", "battery_rack_balance_coarse", assetVar::ATypes::ABOOL),
+                // /config/bms/NumRacks
+                DataUtility::AssetVarInfo("/config/bms", "NumRacks", assetVar::ATypes::AINT),
+                // // /status/bms/NumRacksTotal
+                // DataUtility::AssetVarInfo("/status/bms", "NumRacksTotal", assetVar::ATypes::AINT),
                 // /status/bms/DCVoltage
                 DataUtility::AssetVarInfo("/status/bms", "DCVoltage", assetVar::ATypes::AFLOAT),
                 // /status/bms/SOC
@@ -557,22 +568,59 @@ namespace InputHandler
                 // /status/bms/IsFaulted
                 DataUtility::AssetVarInfo("/status/bms", "IsFaulted", "IsFaulted_BMS", assetVar::ATypes::ABOOL),
                 // /status/pcs/IsFaulted
-                DataUtility::AssetVarInfo("/status/pcs", "IsFaulted", "IsFaulted_PCS", assetVar::ATypes::ABOOL)
+                DataUtility::AssetVarInfo("/status/pcs", "IsFaulted", "IsFaulted_PCS", assetVar::ATypes::ABOOL),
+                // /controls/pcs/ActivePowerSetpoint
+                DataUtility::AssetVarInfo("/controls/pcs", "ActivePowerSetpoint", assetVar::ATypes::AFLOAT)
             };
 
+            FPS_PRINT_INFO("3");
+
             // TODO populate all the /status/bms/rack_(1-x):IsConnected
+            // int numRacks = amap["NumRacks"]->getiVal();
+            // for (int i = 1; i > numRacks; i++) {
+            //     std::string rackUri = fmt::format("/status/bms/rack_{}", i);
+            //     std::string isConnectedName = fmt::format("IsConnected_rack_{}", i);
+            //     assetVarVector.push_back(
+            //         DataUtility::AssetVarInfo(rackUri.c_str(), "IsConnected", isConnectedName.c_str(), assetVar::ATypes::ABOOL)
+            //     );
+
+            // } 
+            FPS_PRINT_INFO("4");
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
+            FPS_PRINT_INFO("5");
+
+            //populating rack info vector to be sent to algorithm
+            // std::vector<BatteryBalancingUtility::RackInfoObject> racks = {};
+            // for (int i = 1; i > numRacks; i++) {
+            //     BatteryBalancingUtility::RackInfoObject rackInfo;
+            //     rackInfo.rackNum = i;
+            //     rackInfo.voltage =0.0;
+            //     if(amap[fmt::format("IsConnected_rack_{}", i)]->getbVal()){
+            //         rackInfo.contactorStatus = BatteryBalancingUtility::ContactorStatus::CLOSED;
+            //     } else {
+            //         rackInfo.contactorStatus = BatteryBalancingUtility::ContactorStatus::OPEN;
+            //     }
+            //     racks.push_back(rackInfo);
+            // } 
+            
+
             reload = 1;
             essAv->setVal(reload);
+            
             return;
         }
 
         // Fault Checking
         if (reload == 1)
         {
+            FPS_PRINT_INFO("reload == 1");
 
+            if(amap[uri.c_str()]->getbVal() == false) {
+                FunctionUtility::PullOffScheduler(amap, aV, uri.c_str());
+                return;
+            }
 
             if(amap["IsFaulted_BMS"]->getbVal()) {
                 std::string message = fmt::format(
@@ -602,6 +650,7 @@ namespace InputHandler
 
         //Start BMS
         if(reload == 2){
+            FPS_PRINT_INFO("reload == 2");
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
@@ -614,6 +663,7 @@ namespace InputHandler
             if(returnValue == SUCCESS) {
                 aV->setParam("endTime", 0);
                 reload = 3;
+                essAv->setVal(reload);
                 returnValue = IN_PROGRESS;
             }
 
@@ -635,33 +685,68 @@ namespace InputHandler
             if(returnValue == SUCCESS) {
                 aV->setParam("endTime", 0);
                 reload = 4;
+                essAv->setVal(reload);
                 returnValue = IN_PROGRESS;
             }
 
-
+            amap["ActivePowerSetpoint"]->setVal(-100);
 
         }
 
         //Set Active Power Setpoint
         // TODO make this function
+        if(reload == 4){
+
+            double currentActivePowerSetpoint = amap["ActivePowerSetpoint"]->getdVal();
+
+            if(currentActivePowerSetpoint >= 100){
+                reload = 5;
+                essAv->setVal(reload);
+            } else {
+
+                // double controlRate = amap["battery_rack_balance_coarse"]->getdParam("every");
+                // double controlRate = amap["battery_rack_balance_coarse"]->getdParam("ControlRate");
+                double gain = amap["battery_rack_balance_coarse"]->getdParam("Gain");
+                double newActivePowerSetpoint = currentActivePowerSetpoint + gain;
+
+                amap["ActivePowerSetpoint"]->setVal(newActivePowerSetpoint);
+            }
+
+        }
+
+        //Stop PCS
         if(reload == 5){
 
-            // amap[siteUri.c_str()]->setParam("every", aV->getdParam("every"));
+            amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
+
+            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StopPCS(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
+            returnValue = returnObject.statusIndicator;
+            message = returnObject.message;
 
 
-            // FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StartPCS(vmap, amap, aname, p_fims, aV);
-            // returnValue = returnObject.statusIndicator;
-            // message = returnObject.message;
+            if(returnValue == SUCCESS) {
+                aV->setParam("endTime", 0);
+                reload = 6;
+                essAv->setVal(reload);
+                returnValue = IN_PROGRESS;
+            }
 
+        }
 
-            // if(returnValue == SUCCESS) {
-            //     aV->setParam("endTime", 0);
-            //     reload = 4;
-            //     returnValue = IN_PROGRESS;
-            // }
+        //Stop BMS
+        if(reload == 5){
 
+            amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
+            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::OpenContactors(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
+            returnValue = returnObject.statusIndicator;
+            message = returnObject.message;
 
+        }
+
+        if(returnValue == SUCCESS || returnValue == IN_PROGRESS) {
+            reload = 1;
+            essAv->setVal(reload);
         }
 
         FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, uri.c_str(), message.c_str());

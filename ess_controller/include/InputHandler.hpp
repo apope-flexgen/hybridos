@@ -15,6 +15,8 @@ namespace InputHandler
     void SiteRunCmd(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*aV);
     void SiteBMSContactorControl(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
     void SitePCSStatusControl(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
+    void BatteryRackBalanceCoarse(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
+
 }
  
 #endif
