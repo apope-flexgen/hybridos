@@ -311,7 +311,10 @@ func collapseConfig() {
 // TODO GB: this is needed because the expected initial shallow copy from configMap to expressions currently does not work as intended
 // after the expression evaluation step, some evaluated expressions do not appear in configMap, so replace them all manually here.
 // once that issue is fixed then this entire step can be skipped and this function is written as such. 
+// Update 1/10/2024: now this function also detects nil entries in expMap and deletes the corresponding expression in cfgMap so the default will be picked. 
 func replaceExpressions(cfgMap map[string]interface{}, expMap map[string]map[string][]interface{}) {
+	// fmt.Println("Trying to print expMap")
+	// printMap(expMap)
 	for k,v := range cfgMap { //k: asset type, v: slice of assets
 		if _, ok := v.([]interface{}); !ok {
 			continue //we're looking for the asset objects, which contain slices as their value. Other objects like updateRate should be skipped here. 
@@ -329,11 +332,33 @@ func replaceExpressions(cfgMap map[string]interface{}, expMap map[string]map[str
 				continue
 			}
 			for variable, exp := range varMap {
+				// fmt.Println(exp)
 				var astVar map[string]interface{}
 				if astVar, ok = astMap[variable].(map[string]interface{}); !ok {
 					continue
 				}
-				astVar["expression"] = exp	//equivalent to configMap[k].([]interface{})[i].(map[string]interface{})[variable].(map[string]interface{})["expression"] = exp 
+				badExp := false
+				//if the parsed expression returned NaN (not a number) for any reason, then don't use that expression and instead use the variable's default value from the psm_dflt.json
+				for _, expcheck := range exp { //exp can be a slice of length > 1. If any slice member is NaN, then the whole expression should be tossed
+					var tmp float64
+					var success bool
+					if tmp, success = expcheck.(float64); !success {
+						continue
+					}
+					// fmt.Println(tmp)
+					if math.IsNaN(tmp) || math.IsInf(tmp,0) {
+						log.Println("WARNING: expression not parsed properly for asset", astID, "Variable:", variable)
+						log.Println("Deleting expression",astVar["expression"], " from astVar", astVar)
+						delete(astVar, "expression") // delete from configMap
+						delete(varMap, variable) // delete from expressions Map
+						// fmt.Println("astVar after delete", astVar)
+						badExp = true
+						break
+					}
+				}
+				if !badExp {
+					astVar["expression"] = exp	//equivalent to configMap[k].([]interface{})[i].(map[string]interface{})[variable].(map[string]interface{})["expression"] = exp 
+				}
 			}
 		}
 	}
@@ -594,11 +619,12 @@ func findAssetRecurse(asset_id string, tree treeCfgNode, parent treeCfgNode, rel
 	}
 	return res
 }
+
 //accepts a split variable containing e.g. ["this", "plim"] or a special variable. Looks through pwrTree to understand asset familiar relationships,
 //And calls varHandler again if needed if encountering another $variable when trying to unpack.
 func findVar(varsplit []string, asset_id string, depth int) (interface{}) {
-	var relatives []treeCfgNode //Will contain a reference to the asset's parent, children, or self if needed. If parent or self(this) then len(relative) will always be 1. 
-	relatives = findAssetRecurse(asset_id, pwrTree, treeCfgNode{}, varsplit[0]) //find the assets referenced by the $variable (parents children or this asset itself).
+	//var relatives []treeCfgNode Will contain a reference to the asset's parent, children, or self if needed. If parent or self(this) then len(relative) will always be 1.
+	relatives := findAssetRecurse(asset_id, pwrTree, treeCfgNode{}, varsplit[0]) //find the assets referenced by the $variable (parents children or this asset itself).
 	variables := make([]interface{}, len(relatives))
 	if len(varsplit) < 2 {
 		//if we have this or parent without a . then it's a misconfiguration
@@ -644,7 +670,9 @@ func findVar(varsplit []string, asset_id string, depth int) (interface{}) {
 				if _, okay := valmap["expression"]; !okay {
 					value, success := valmap["default"]
 					if !success {
-						log.Println("[findVar] Could not find value field of variable", varsplit[1], "from asset", relatives[i].ID,"Please check configs. Using default for this configuration")
+						if verbose {
+							log.Println("[findVar] Could not find value field of variable", varsplit[1], "from asset", relatives[i].ID,"Please check configs. Using default for this configuration")
+						}
 						continue
 					} else {
 						variables[i] = value
@@ -654,8 +682,8 @@ func findVar(varsplit []string, asset_id string, depth int) (interface{}) {
 					//at this point, we've referenced a variable that itself is an expression. Attempt to replace variables in that expression
 					//then assign the referenced expression to the variable. Later when this expression is parsed it will reflect correctly
 					//wherever referenced due to the shallow copy. 
-					var exp interface{}
-					exp = expressions[relatives[i].ID][varName]
+					//var exp interface{}
+					exp := expressions[relatives[i].ID][varName]
 					res := varHandler(exp, relatives[i].ID, depth+1) //we're going deeper
 					if reflect.ValueOf(res).Kind() != reflect.Slice {
 						continue //TODO GB: logging. 
@@ -673,6 +701,10 @@ func findVar(varsplit []string, asset_id string, depth int) (interface{}) {
 	//flatten variables if returning a single value. Makes later processing easier. 
 	//variables = deNest(variables)
 	//TODO GB: Should this be done on return from this function instead? There are other cases to care about too e.g. many 2-dimentional variables passed to a function need to have their slices combined. 
+	// fmt.Println("Variables:", variables)
+	if len(variables) == 0{
+		return nil
+	}
 	if len(variables) < 2 {
 		return variables[0]
 	} else {
@@ -749,7 +781,6 @@ func replaceVars() {
 			}
 		}
 	}
-	return
 }
 
 // Finds expressions potentially containing variables in configMap

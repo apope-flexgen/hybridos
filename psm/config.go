@@ -524,6 +524,8 @@ func createPwrTree() {
 //Creates the config struct from combined configurations by first marshalling the data in configMap into a json blob then unmarshalling into the config struct
 func createStruct() {
 	bytes, err := json.Marshal(configMap)
+	// fmt.Println(configMap)
+	// printMap(configMap)
 	if err != nil {
 		log.Print("Error reading configurations after combination. Not able to be marshaled")
 		if verbose { 

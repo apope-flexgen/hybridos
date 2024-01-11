@@ -76,6 +76,7 @@ var verbose bool
 var fromFile bool
 var fromDBI bool
 var verboseFlags []string
+//var expressions map[string]map[string][]interface{} - declared in evaluate.go at global scope but recorded here for posterity
 
 func handleFlags() {
 	log.SetPrefix("PSM: ")

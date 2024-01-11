@@ -20,6 +20,8 @@ fi
 #default config
 FILES=$(find $dir -maxdepth 3 -type f -name 'psm_dflt.json') 
 #echo -e $FILES
+# echo -n "Found these files:"
+# echo -e $FILES
 
 for f in $FILES; do
     fName=$(basename ${f})
@@ -31,7 +33,7 @@ done
 
 #update config
 FILES=$(find $dir -maxdepth 3 -type f -name 'psm_*_updt.json') 
-#echo -e $FILES
+# echo -e $FILES
 
 for f in $FILES; do
     fName=$(basename ${f})
@@ -42,7 +44,7 @@ for f in $FILES; do
 done
 
 FILES=$(find $dir -maxdepth 3 -type f -name 'psm_tree.json') 
-#echo -e $FILES
+# echo -e $FILES
 
 for f in $FILES; do
     fName=$(basename ${f})

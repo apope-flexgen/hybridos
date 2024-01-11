@@ -28,7 +28,7 @@ func add(nums ...float64) float64 {
 	}
 	var total float64 = 0
 	for _, num := range nums {
-		if num == math.NaN() {
+		if math.IsNaN(num) {
 			return math.NaN()
 		}
 		total += num
