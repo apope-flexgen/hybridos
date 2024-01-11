@@ -17,7 +17,7 @@ namespace ScheduledEnableFunctions
 
 // ==================== Enable Functions ====================
 
-    /**
+ /**
     * @brief Function that can be put on the scheduler and uses logic to enable /ess/controls/bms/CloseContactors
     * 
     * @param vmap the global data map shared by all assets/asset managers
@@ -50,8 +50,8 @@ namespace ScheduledEnableFunctions
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
-        if (reload < 2)
-        {
+
+        if(reload == 0){
 
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
             cAv = amap[relname];
@@ -73,42 +73,38 @@ namespace ScheduledEnableFunctions
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
-            if (reload == 0)
-            {
-
-            }
-            reload = 2;
+            reload = 1;
             cAv->setVal(reload);
         }
 
+        if(reload == 1){
 
+            std::string message = "";
 
-        bool maintMode = amap["maint_mode"]->getbVal();
-        bool dcClosed = amap["DCClosed"]->getbVal();
-        bool isFaulted = amap["IsFaulted"]->getbVal();
+            if (!amap["DCClosed"]->getbVal() && amap["maint_mode"]->getbVal() && !amap["IsFaulted"]->getbVal()) {
+                message += "CloseContactorsEnable TRUE";
+                amap["close_contactors"]->setParam("enabled", true);
+                amap["CloseContactorsEnabled"]->setVal(true);
+                cAv->setVal(reload);
+            } else {
+                message += fmt::format(
+                    " ---> Condition(s): [{}:{}] == false && [{}:{}] == true && [{}:{}] == false",
+                    amap["DCClosed"]->getfName(), 
+                    amap["DCClosed"]->getbVal(),
+                    amap["maint_mode"]->getfName(), 
+                    amap["maint_mode"]->getbVal(),
+                    amap["IsFaulted"]->getfName(), 
+                    amap["IsFaulted"]->getbVal()
+                );
+                DataUtility::UpdateEnabledLogicMessage("close_contactors", message);
+                amap["close_contactors"]->setParam("enabled", false);
+                amap["CloseContactorsEnabled"]->setVal(false);
+                cAv->setVal(reload);
+            }
 
-        std::string message = "";
+            if(0)FPS_PRINT_INFO("{}", message);
 
-        if (!dcClosed && maintMode && !isFaulted) {
-            message += "CloseContactorsEnable TRUE";
-            amap["close_contactors"]->setParam("enabled", true);
-            amap["CloseContactorsEnabled"]->setVal(true);
-        } else {
-            message += fmt::format(
-                "CloseContactorsEnable FALSE ---> Condition(s): [{}:{}] == false && [{}:{}] == true && [{}:{}] == false",
-                amap["DCClosed"]->getfName(), 
-                amap["DCClosed"]->getbVal(),
-                amap["maint_mode"]->getfName(), 
-                amap["maint_mode"]->getbVal(),
-                amap["IsFaulted"]->getfName(), 
-                amap["IsFaulted"]->getbVal()
-            );
-            amap["close_contactors"]->setParam("enabled", false);
-            amap["CloseContactorsEnabled"]->setVal(false);
         }
-
-        if(0)FPS_PRINT_INFO("{}", message);
-
 
     }
 
@@ -146,8 +142,7 @@ namespace ScheduledEnableFunctions
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
-        if (reload < 2)
-        {
+        if(reload == 0){
 
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
             cAv = amap[relname];
@@ -169,39 +164,34 @@ namespace ScheduledEnableFunctions
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
-            if (reload == 0)
-            {
-
-            }
-            reload = 2;
+            reload = 1;
             cAv->setVal(reload);
         }
 
+        if(reload == 1){
+            std::string message = "";
 
+            if (amap["DCClosed_BMS"]->getbVal() && !amap["DCClosed_PCS"]->getbVal() && amap["maint_mode"]->getbVal()) {
+                message += fmt::format("{} TRUE", __func__);
+                amap["open_contactors"]->setParam("enabled", true);
+                amap["OpenContactorsEnabled"]->setVal(true);
+            } else {
+                message += fmt::format(
+                    " ---> Condition(s): [{}:{}] == true && [{}:{}] == false && [{}:{}] == true",
+                    amap["DCClosed_BMS"]->getfName(), 
+                    amap["DCClosed_BMS"]->getbVal(),
+                    amap["DCClosed_PCS"]->getfName(), 
+                    amap["DCClosed_PCS"]->getbVal(),
+                    amap["maint_mode"]->getfName(), 
+                    amap["maint_mode"]->getbVal()
+                );
+                DataUtility::UpdateEnabledLogicMessage("open_contactors", message);
+                amap["open_contactors"]->setParam("enabled", false);
+                amap["OpenContactorsEnabled"]->setVal(false);
+            }
 
-        std::string message = "";
-
-        if (amap["DCClosed_BMS"]->getbVal() && !amap["DCClosed_PCS"]->getbVal() && amap["maint_mode"]->getbVal()) {
-            message += fmt::format("{} TRUE", __func__);
-            amap["open_contactors"]->setParam("enabled", true);
-            amap["OpenContactorsEnabled"]->setVal(true);
-        } else {
-            message += fmt::format(
-                "{} FALSE ---> Condition(s): [{}:{}] == true && [{}:{}] == false && [{}:{}] == true",
-                __func__,
-                amap["DCClosed_BMS"]->getfName(), 
-                amap["DCClosed_BMS"]->getbVal(),
-                amap["DCClosed_PCS"]->getfName(), 
-                amap["DCClosed_PCS"]->getbVal(),
-                amap["maint_mode"]->getfName(), 
-                amap["maint_mode"]->getbVal()
-            );
-            amap["open_contactors"]->setParam("enabled", false);
-            amap["OpenContactorsEnabled"]->setVal(false);
+            if(0)FPS_PRINT_INFO("{}", message);
         }
-
-        if(0)FPS_PRINT_INFO("{}", message);
-
 
     }
 
@@ -238,8 +228,7 @@ namespace ScheduledEnableFunctions
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
-        if (reload < 2)
-        {
+        if(reload == 0){
 
             linkVals(*vm, vmap, amap, pcsch, "/reload", reload, relname);
             cAv = amap[relname];
@@ -264,58 +253,54 @@ namespace ScheduledEnableFunctions
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
-            if (reload == 0)
-            {
-
-            }
-            reload = 2;
+            reload = 1;
             cAv->setVal(reload);
         }
 
+        if(reload == 1){
+            char* systemStateStatus = amap["SystemState"]->getcVal();
 
-        char* systemStateStatus = amap["SystemState"]->getcVal();
+            bool systemState = false;
 
-        bool systemState = false;
-
-        if(!(systemStateStatus == nullptr)){
-            std::string compareString = systemStateStatus;
-            systemState = (compareString == "Stop" || compareString == "Standby");
-        }
-
-
-        std::string message = "";
-
-        if (amap["DCClosed"]->getbVal() && amap["maint_mode"]->getbVal() && (systemState) && !amap["IsFaulted"]->getbVal()) {
-            message += fmt::format("{} TRUE", __func__);
-            amap["start"]->setParam("enabled", true);
-            amap["StartEnabled"]->setVal(true);
-        } else {
-
-            std::string systemStateVal = "";
-            if(amap["SystemState"]->getcVal() == nullptr) {
-                systemStateVal += "nullptr";
-            } else {
-                systemStateVal += amap["SystemState"]->getcVal();
+            if(!(systemStateStatus == nullptr)){
+                std::string compareString = systemStateStatus;
+                systemState = (compareString == "Stop" || compareString == "Standby");
             }
 
-            message += fmt::format(
-                "{} FALSE ---> Condition(s): [{}:{}] == true && [{}:{}] == true && [{}:{}] == (Stop or Standby) && [{}:{}] == false",
-                __func__,
-                amap["DCClosed"]->getfName(), 
-                amap["DCClosed"]->getbVal(),
-                amap["maint_mode"]->getfName(), 
-                amap["maint_mode"]->getbVal(),
-                amap["SystemState"]->getfName(), 
-                systemStateVal,
-                amap["IsFaulted"]->getfName(), 
-                amap["IsFaulted"]->getbVal()
-            );
-            amap["start"]->setParam("enabled", false);
-            amap["StartEnabled"]->setVal(false);
+
+            std::string message = "";
+
+            if (amap["DCClosed"]->getbVal() && amap["maint_mode"]->getbVal() && (systemState) && !amap["IsFaulted"]->getbVal()) {
+                message += fmt::format("{} TRUE", __func__);
+                amap["start"]->setParam("enabled", true);
+                amap["StartEnabled"]->setVal(true);
+            } else {
+
+                std::string systemStateVal = "";
+                if(amap["SystemState"]->getcVal() == nullptr) {
+                    systemStateVal += "nullptr";
+                } else {
+                    systemStateVal += amap["SystemState"]->getcVal();
+                }
+
+                message += fmt::format(
+                    " ---> Condition(s): [{}:{}] == true && [{}:{}] == true && [{}:{}] == (Stop or Standby) && [{}:{}] == false",
+                    amap["DCClosed"]->getfName(), 
+                    amap["DCClosed"]->getbVal(),
+                    amap["maint_mode"]->getfName(), 
+                    amap["maint_mode"]->getbVal(),
+                    amap["SystemState"]->getfName(), 
+                    systemStateVal,
+                    amap["IsFaulted"]->getfName(), 
+                    amap["IsFaulted"]->getbVal()
+                );
+                DataUtility::UpdateEnabledLogicMessage("start", message);
+                amap["start"]->setParam("enabled", false);
+                amap["StartEnabled"]->setVal(false);
+            }
+
+            if(0)FPS_PRINT_INFO("{}", message);
         }
-
-        if(0)FPS_PRINT_INFO("{}", message);
-
 
     }
 
@@ -352,8 +337,7 @@ namespace ScheduledEnableFunctions
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
-        if (reload < 2)
-        {
+        if(reload == 0){
 
             linkVals(*vm, vmap, amap, pcsch, "/reload", reload, relname);
             cAv = amap[relname];
@@ -374,53 +358,49 @@ namespace ScheduledEnableFunctions
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
-            if (reload == 0)
-            {
-
-            }
-            reload = 2;
+            reload = 1;
             cAv->setVal(reload);
         }
 
+        if(reload == 1){
+            char* systemStateStatus = amap["SystemState"]->getcVal();
 
-        char* systemStateStatus = amap["SystemState"]->getcVal();
+            bool systemState = false;
 
-        bool systemState = false;
-
-        if(!(systemStateStatus == nullptr)){
-            std::string compareString = systemStateStatus;
-            systemState = (compareString != "Stop");
-        }
-
-        std::string message = "";
-
-        if (amap["maint_mode"]->getbVal() && systemState) {
-            message += fmt::format("{} TRUE", __func__);
-            amap["stop"]->setParam("enabled", true);
-            amap["StopEnabled"]->setVal(true);
-        } else {
-
-            std::string systemStateVal = "";
-            if(amap["SystemState"]->getcVal() == nullptr) {
-                systemStateVal += "nullptr";
-            } else {
-                systemStateVal += amap["SystemState"]->getcVal();
+            if(!(systemStateStatus == nullptr)){
+                std::string compareString = systemStateStatus;
+                systemState = (compareString != "Stop");
             }
 
-            message += fmt::format(
-                "{} FALSE ---> Condition(s): [{}:{}] == true && [{}:{}] != Stop",
-                __func__,
-                amap["maint_mode"]->getfName(), 
-                amap["maint_mode"]->getbVal(),
-                amap["SystemState"]->getfName(), 
-                systemStateVal
-            );
-            amap["stop"]->setParam("enabled", false);
-            amap["StopEnabled"]->setVal(false);
+            std::string message = "";
+
+            if (amap["maint_mode"]->getbVal() && systemState) {
+                message += fmt::format("{} TRUE", __func__);
+                amap["stop"]->setParam("enabled", true);
+                amap["StopEnabled"]->setVal(true);
+            } else {
+
+                std::string systemStateVal = "";
+                if(amap["SystemState"]->getcVal() == nullptr) {
+                    systemStateVal += "nullptr";
+                } else {
+                    systemStateVal += amap["SystemState"]->getcVal();
+                }
+
+                message += fmt::format(
+                    " ---> Condition(s): [{}:{}] == true && [{}:{}] != Stop",
+                    amap["maint_mode"]->getfName(), 
+                    amap["maint_mode"]->getbVal(),
+                    amap["SystemState"]->getfName(), 
+                    systemStateVal
+                );
+                DataUtility::UpdateEnabledLogicMessage("stop", message);
+                amap["stop"]->setParam("enabled", false);
+                amap["StopEnabled"]->setVal(false);
+            }
+
+            if(0)FPS_PRINT_INFO("{}", message);
         }
-
-        if(0)FPS_PRINT_INFO("{}", message);
-
 
     }
 
@@ -457,8 +437,7 @@ namespace ScheduledEnableFunctions
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
-        if (reload < 2)
-        {
+        if(reload == 0){
 
             linkVals(*vm, vmap, amap, pcsch, "/reload", reload, relname);
             cAv = amap[relname];
@@ -481,60 +460,57 @@ namespace ScheduledEnableFunctions
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
-            if (reload == 0)
-            {
-
-            }
-            reload = 2;
+            reload = 1;
             cAv->setVal(reload);
         }
 
-        char* systemStateStatus = amap["SystemState"]->getcVal();
+        if(reload == 1){
+            char* systemStateStatus = amap["SystemState"]->getcVal();
 
-        bool systemState = false;
-
-
-        if(!(systemStateStatus == nullptr)){
-            std::string compareString = systemStateStatus;
-            systemState = (compareString == "Stop" || compareString == "Run");
-        }
-
-        std::string message = "";
+            bool systemState = false;
 
 
-        if (amap["DCClosed"]->getbVal() && amap["maint_mode"]->getbVal() && (systemState)) {
-            message += fmt::format("{} TRUE", __func__);
-            amap["standby"]->setParam("enabled", true);
-            amap["StandbyEnabled"]->setVal(true);
-        } else {
-
-            std::string systemStateVal = "";
-            if(amap["SystemState"]->getcVal() == nullptr) {
-                systemStateVal += "nullptr";
-            } else {
-                systemStateVal += amap["SystemState"]->getcVal();
+            if(!(systemStateStatus == nullptr)){
+                std::string compareString = systemStateStatus;
+                systemState = (compareString == "Stop" || compareString == "Run");
             }
 
-            message += fmt::format(
-                "{} FALSE ---> Condition(s): [{}:{}] == true && [{}:{}] == true && [{}:{}] == (Stop or Run)",
-                __func__,
-                amap["DCClosed"]->getfName(), 
-                amap["DCClosed"]->getbVal(),
-                amap["maint_mode"]->getfName(), 
-                amap["maint_mode"]->getbVal(),
-                amap["SystemState"]->getfName(), 
-                systemStateVal
-            );
+            std::string message = "";
 
-            amap["standby"]->setParam("enabled", false);
-            amap["StandbyEnabled"]->setVal(false);
+
+            if (amap["DCClosed"]->getbVal() && amap["maint_mode"]->getbVal() && (systemState)) {
+                message += fmt::format("{} TRUE", __func__);
+                amap["standby"]->setParam("enabled", true);
+                amap["StandbyEnabled"]->setVal(true);
+            } else {
+
+                std::string systemStateVal = "";
+                if(amap["SystemState"]->getcVal() == nullptr) {
+                    systemStateVal += "nullptr";
+                } else {
+                    systemStateVal += amap["SystemState"]->getcVal();
+                }
+
+                message += fmt::format(
+                    " ---> Condition(s): [{}:{}] == true && [{}:{}] == true && [{}:{}] == (Stop or Run)",
+                    amap["DCClosed"]->getfName(), 
+                    amap["DCClosed"]->getbVal(),
+                    amap["maint_mode"]->getfName(), 
+                    amap["maint_mode"]->getbVal(),
+                    amap["SystemState"]->getfName(), 
+                    systemStateVal
+                );
+
+                DataUtility::UpdateEnabledLogicMessage("standby", message);
+
+                amap["standby"]->setParam("enabled", false);
+                amap["StandbyEnabled"]->setVal(false);
+            }
+
+            if(0)FPS_PRINT_INFO("{}", message);
         }
 
-        if(0)FPS_PRINT_INFO("{}", message);
-
     }
-
-
 
 
 

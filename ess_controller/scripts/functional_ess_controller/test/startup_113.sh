@@ -1,5 +1,5 @@
-cfg_dir=/home/docker/config/vfakeco/config/lima/ess-controller/config
-psm_dir=/home/docker/config/vfakeco/config/lima/psm/config
+cfg_dir=/home/docker/hybridos/config/AC-POD/vfakeco/config/lima/ess-controller/config
+psm_dir=/home/docker/hybridos/config/AC-POD/vfakeco/config/lima/psm/config
 # cfg_dir=config_psm
 scripts_dir=/home/docker/hybridos/ess_controller/scripts/functional_ess_controller/test
 bin_dir=/usr/local/bin
