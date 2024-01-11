@@ -545,11 +545,8 @@ namespace InputHandler
         if (reload == 0)
         {
 
-            FPS_PRINT_INFO("reload == 0");
             linkVals(*vm, vmap, amap, aname, "/reload", reload, relname);
-            FPS_PRINT_INFO("1");
             essAv = amap[relname];
-            FPS_PRINT_INFO("2");
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /site/ess/start_stop
                 DataUtility::AssetVarInfo("/sched/ess", "battery_rack_balance_coarse", assetVar::ATypes::ABOOL),
@@ -573,7 +570,6 @@ namespace InputHandler
                 DataUtility::AssetVarInfo("/controls/pcs", "ActivePowerSetpoint", assetVar::ATypes::AFLOAT)
             };
 
-            FPS_PRINT_INFO("3");
 
             // TODO populate all the /status/bms/rack_(1-x):IsConnected
             // int numRacks = amap["NumRacks"]->getiVal();
@@ -585,11 +581,9 @@ namespace InputHandler
             //     );
 
             // } 
-            FPS_PRINT_INFO("4");
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
-            FPS_PRINT_INFO("5");
 
             //populating rack info vector to be sent to algorithm
             // std::vector<BatteryBalancingUtility::RackInfoObject> racks = {};
@@ -615,7 +609,6 @@ namespace InputHandler
         // Fault Checking
         if (reload == 1)
         {
-            FPS_PRINT_INFO("reload == 1");
 
             if(amap[uri.c_str()]->getbVal() == false) {
                 FunctionUtility::PullOffScheduler(amap, aV, uri.c_str());
@@ -645,16 +638,16 @@ namespace InputHandler
 
             reload = 2;
             essAv->setVal(reload);
+            return;
             
         }
 
         //Start BMS
         if(reload == 2){
-            FPS_PRINT_INFO("reload == 2");
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
-
+            FPS_PRINT_INFO("CLOSE CONTACTORS");
             FunctionUtility::FunctionReturnObj returnObject = OutputHandler::CloseContactors(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
             returnValue = returnObject.statusIndicator;
             message = returnObject.message;
@@ -667,7 +660,7 @@ namespace InputHandler
                 returnValue = IN_PROGRESS;
             }
 
-
+            return;
 
         }
 
@@ -676,7 +669,7 @@ namespace InputHandler
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
-
+            FPS_PRINT_INFO("START PCS");
             FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StartPCS(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
             returnValue = returnObject.statusIndicator;
             message = returnObject.message;
@@ -690,6 +683,7 @@ namespace InputHandler
             }
 
             amap["ActivePowerSetpoint"]->setVal(-100);
+            return;
 
         }
 
@@ -709,9 +703,10 @@ namespace InputHandler
                 double gain = amap["battery_rack_balance_coarse"]->getdParam("Gain");
                 double newActivePowerSetpoint = currentActivePowerSetpoint + gain;
 
+                FPS_PRINT_INFO("SET ACTIVE POWER");
                 amap["ActivePowerSetpoint"]->setVal(newActivePowerSetpoint);
             }
-
+            return;
         }
 
         //Stop PCS
@@ -719,6 +714,7 @@ namespace InputHandler
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
+            FPS_PRINT_INFO("STOP PCS");
             FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StopPCS(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
             returnValue = returnObject.statusIndicator;
             message = returnObject.message;
@@ -730,21 +726,23 @@ namespace InputHandler
                 essAv->setVal(reload);
                 returnValue = IN_PROGRESS;
             }
+            return;
 
         }
 
         //Stop BMS
-        if(reload == 5){
+        if(reload == 6){
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
+            FPS_PRINT_INFO("OPEN CONTACTORS");
             FunctionUtility::FunctionReturnObj returnObject = OutputHandler::OpenContactors(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
             returnValue = returnObject.statusIndicator;
             message = returnObject.message;
 
         }
 
-        if(returnValue == SUCCESS || returnValue == IN_PROGRESS) {
+        if(returnValue == SUCCESS || returnValue == FAILURE) {
             reload = 1;
             essAv->setVal(reload);
         }
