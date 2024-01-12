@@ -86,6 +86,7 @@ type bms struct {
 	DisableFault bool    // Disable fault behavior
 	// Droop Parameters
 	Dvoltage droop
+	faultskip bool 		// non public parameter. Skip the first fault detection instance in updateMode() to prevent nuisance faults. 
 }
 
 func (b *bms) Init() {
@@ -370,6 +371,8 @@ func (b *bms) Init() {
 		log.Println("[", b.ID, "] Incorrect vector lengths for chargeable and dischargeable power limits. Reverting to default behavior")
 		b.DisableLUTs = true
 	}
+
+	b.faultskip = true // skip fault detection for the first iteration. 
 }
 
 // BMS UpdateMode() processes commands either through control words or direct
@@ -383,7 +386,7 @@ func (b *bms) UpdateMode(input terminal) (output terminal) {
 	// fmt.Println(b.DcContactor, b.DcContactorOpenCmd, b.DcContactorCloseCmd, b.On, b.Oncmd, b.Offcmd)
 
 	// Update measurement fault and alarm states with the updateMeasurements function call
-	if !b.DisableFault {
+	if !b.DisableFault && !b.faultskip {
 		if b.Reset {
 			b.Fault, b.Warning = false, false
 		}
@@ -396,7 +399,7 @@ func (b *bms) UpdateMode(input terminal) (output terminal) {
 	} else {
 		b.Fault, b.Warning, b.Reset = false, false, false
 	}
-
+	b.faultskip = false // this variable is only used to skip the fault detection upon first pass through. 
 	// Control DC contactor
 	// ContactorControl allows discrete control over DC and AC contactors
 	// If not set, only Oncmd or Offcmd are needed
