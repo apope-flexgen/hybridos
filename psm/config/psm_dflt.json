@@ -47,10 +47,6 @@
         },
         "ctrlwordenabled": {
             "default": false
-        },
-        "V": {
-            "default": 480,
-            "expression": [{"MAX":["$parent.V", "$parent.Vcmd", "$parent.Vn"]}]
         }
     },
     "ess": {

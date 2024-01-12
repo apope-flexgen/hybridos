@@ -174,7 +174,7 @@ func (f *feed) UpdateState(input terminal, dt float64) (output terminal) {
 	}
 	f.Pf = pf(f.P, f.Q, f.S)
 	//TODO GB: Why do these use f.V instead of f.V1?
-	f.I, f.Di, f.Qi = sToI(f.S, f.V), sToI(f.P, f.V), sToI(f.Q, f.V)
+	f.I, f.Di, f.Qi = sToI(f.S, f.V2), sToI(f.P, f.V2), sToI(f.Q, f.V2)
 	f.V1LN = f.V1 / sqrt3
 	f.V2LN = f.V2 / sqrt3
 	// Return un-reversed polarity for solver
@@ -198,5 +198,5 @@ func (f *feed) GetAliases() []string {
 }
 
 func (f *feed) Term() terminal {
-	return terminal{f.V, 0, f.P, f.Q, f.S, f.F2, f.Ph, f.Dactive, f.Dreactive, droop{}}
+	return terminal{f.V2, 0, f.P, f.Q, f.S, f.F2, f.Ph, f.Dactive, f.Dreactive, droop{}}
 }
