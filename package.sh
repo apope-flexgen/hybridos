@@ -191,8 +191,8 @@ for i in "${meta[@]}"; do
         deps=("${site_controller_meta[@]}")
     elif [ "$i" == "fleet_manager_meta" ]; then
         deps=("${fleet_manager_meta[@]}")
-    elif [ "$i" == "twins_meta" ]; then
-        deps=("${twins_meta[@]}")
+    elif [ "$i" == "psm_meta" ]; then
+        deps=("${psm_meta[@]}")
     fi
 
     DEPS=""
