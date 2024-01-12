@@ -2452,6 +2452,70 @@ func GetPubTickers() {
 	}
 }
 
+func joinMaps(interface1, interface2 interface{}) map[string]interface{} {
+	joinedMaps := map[string]interface{}{}
+	map1, ok1 := interface1.(map[string]interface{})
+	map2, ok2 := interface2.(map[string]interface{})
+	if ok1 && ok2 {
+		for key, value1 := range map1 {
+			if value2, ok := map2[key]; !ok {
+				joinedMaps[key] = value1
+			} else {
+				map1next, ok1 := value1.(map[string]interface{})
+				map2next, ok2 := value2.(map[string]interface{})
+				if ok1 && ok2 {
+					joinedMaps[key] = joinMaps(map1next, map2next)
+				} else if ok1 {
+					map1next[""] = value2
+					joinedMaps[key] = map1next
+				} else if ok2 {
+					map2next[""] = value1
+					joinedMaps[key] = map2next
+				}
+			}
+		}
+		for key, value2 := range map2 {
+			if _, ok := map1[key]; !ok {
+				joinedMaps[key] = value2
+			}
+		}
+		return joinedMaps
+	} else if ok1 {
+		map1[""] = interface2
+		return map1
+	} else if ok2 {
+		map2[""] = interface1
+		return map2
+	} else {
+		joinedMaps[""] = []interface{}{interface1, interface2}
+		return joinedMaps
+	}
+	return joinedMaps
+}
+
+func addUriFrags(completeUri string, uriFragList []string, uriMap map[string]interface{}) map[string]interface{} {
+	uriFrag := uriFragList[0]
+	if uriFrag == "" && len(uriFragList) > 1 {
+		uriFragList = uriFragList[1:]
+		uriFrag = uriFragList[0]
+	}
+	completeUri += "/" + uriFrag
+	if _, ok := uriMap[uriFrag]; !ok {
+		uriMap[uriFrag] = map[string]interface{}{}
+	}
+	uriMap2, ok := uriMap[uriFrag].(map[string]interface{})
+	if ok && len(uriFragList) > 1 {
+		uriMap2 = addUriFrags(completeUri, uriFragList[1:], uriMap2)
+	}
+	uriMap[uriFrag] = uriMap2
+	if _,ok:= UriElements[completeUri]; !ok {
+		UriElements[completeUri] = uriMap2
+	} else {
+		UriElements[completeUri] = joinMaps(UriElements[completeUri], uriMap2)
+	}
+	return uriMap
+}
+
 func GetSubscribeUris() {
 	if MetricsConfig.Meta == nil { // shouldn't happen if things are properly initialized, but just in case...
 		MetricsConfig.Meta = make(map[string]interface{}, 0)
@@ -2552,81 +2616,67 @@ func GetSubscribeUris() {
 
 	// map each parent uri to its children components that we'll need to fetch
 	// from that parent uri
-	UriElements = make(map[string][][]string, 0)
+	UriElements = make(map[string]interface{}, 0)
 	for _, input := range MetricsConfig.Inputs {
 		uriFrags := strings.Split(input.Uri, "/")
-		for i := 1; i < len(uriFrags)-1; i++ {
-			if _, ok := UriElements[strings.Join(uriFrags[:i+1], "/")]; !ok {
-				UriElements[strings.Join(uriFrags[:i+1], "/")] = make([][]string, 0)
-			}
-			UriElements[strings.Join(uriFrags[:i+1], "/")] = append(UriElements[strings.Join(uriFrags[:i+1], "/")], uriFrags[i+1:])
-		}
-		UriElements[input.Uri] = make([][]string, 0)
+		UriElements = addUriFrags("",uriFrags,UriElements)
 		if len(input.Attributes) > 0 {
 			for _, attributeName := range input.Attributes {
-				UriElements[input.Uri+"/"+attributeName] = make([][]string, 0)
-				UriElements[input.Uri+"@"+attributeName] = make([][]string, 0)
+				uriFrags2 := append(uriFrags, attributeName)
+				UriElements = addUriFrags("",uriFrags2,UriElements)
 			}
 			for _, attributeName := range input.Attributes {
-				if _, ok := UriElements[strings.Join(uriFrags[:len(uriFrags)-1], "/")+"/"+attributeName]; !ok {
-					UriElements[strings.Join(uriFrags[:len(uriFrags)-1], "/")+"/"+attributeName] = make([][]string, 0)
-					UriElements[strings.Join(uriFrags[:len(uriFrags)-1], "/")+"@"+attributeName] = make([][]string, 0)
-				}
+				uriFrags := strings.Split(input.Uri, "/")
+				uriFrags[len(uriFrags)-1] = uriFrags[len(uriFrags)-1] + "@" + attributeName
+				UriElements = addUriFrags("",uriFrags,UriElements)
 			}
 		}
 	}
 
 	// do the same for echo inputs
 	for _, echoObject := range MetricsConfig.Echo {
+		publishUriFrags := strings.Split(echoObject.PublishUri, "/")
 		for _, echoInput := range echoObject.Inputs {
 			if len(echoInput.Uri) > 0 {
 				uriFrags := strings.Split(echoInput.Uri, "/")
-				for _, oldVar := range echoInput.Registers {
+				for newVar, oldVar := range echoInput.Registers {
 					uriFrags2 := append(uriFrags, oldVar)
-					for i := 1; i < len(uriFrags2)-1; i++ {
-						if _, ok := UriElements[strings.Join(uriFrags2[:i+1], "/")]; !ok {
-							UriElements[strings.Join(uriFrags2[:i+1], "/")] = make([][]string, 0)
-						}
-						UriElements[strings.Join(uriFrags2[:i+1], "/")] = append(UriElements[strings.Join(uriFrags2[:i+1], "/")], uriFrags2[i+1:])
-					}
-					UriElements[strings.Join(uriFrags2, "/")] = make([][]string, 0)
+					UriElements = addUriFrags("",uriFrags2, UriElements)
+					uriFrags3 := append(publishUriFrags, newVar)
+					UriElements = addUriFrags("",uriFrags3, UriElements)
 				}
 			}
+		}
+		for register := range echoObject.Echo {
+			uriFrags2 := append(publishUriFrags, register)
+			UriElements = addUriFrags("",uriFrags2, UriElements)
 		}
 	}
 
 	// do the same for outputs
 	// map each parent uri to its children components that we'll need to fetch
 	// from that parent uri
-	OutputUriElements = make(map[string][][]string, 0)
 	for outputName, output := range MetricsConfig.Outputs {
+		if len(output.Uri) > 0{
 		uriFrags := strings.Split(output.Uri, "/")
 		if len(output.Name) > 0 {
 			uriFrags = append(uriFrags, output.Name)
 		} else {
 			uriFrags = append(uriFrags, outputName)
 		}
-		for i := 1; i < len(uriFrags)-1; i++ {
-			if _, ok := OutputUriElements[strings.Join(uriFrags[:i+1], "/")]; !ok {
-				OutputUriElements[strings.Join(uriFrags[:i+1], "/")] = make([][]string, 0)
-			}
-			OutputUriElements[strings.Join(uriFrags[:i+1], "/")] = append(OutputUriElements[strings.Join(uriFrags[:i+1], "/")], uriFrags[i+1:])
-		}
-		outputUri := strings.Join(uriFrags, "/")
-		OutputUriElements[outputUri] = make([][]string, 0)
+		UriElements = addUriFrags("",uriFrags, UriElements)
 		if len(output.Attributes) > 0 {
 			for attributeName := range output.Attributes {
-				OutputUriElements[outputUri+"/"+attributeName] = make([][]string, 0)
-				OutputUriElements[outputUri+"@"+attributeName] = make([][]string, 0)
-			}
-			for attributeName := range output.Attributes {
-				if _, ok := OutputUriElements[outputUri+"/"+attributeName]; !ok {
-					OutputUriElements[strings.Join(uriFrags[:len(uriFrags)-1], "/")+"/"+attributeName] = make([][]string, 0)
-					OutputUriElements[strings.Join(uriFrags[:len(uriFrags)-1], "/")+"@"+attributeName] = make([][]string, 0)
-				}
+				uriFrags = append(uriFrags, attributeName)
+				UriElements = addUriFrags("",uriFrags, UriElements)
 			}
 		}
 	}
+	}
+
+	iterMap = make(map[string]*simdjson.Iter, 0)
+    objMap = make(map[string]*simdjson.Object, 0)
+    elemMap = make(map[string]*simdjson.Iter, 0)
 
 	// //leaving this here in case we need it again (maybe a command-line option or query?)
 	// fmt.Println("Looking for elements:")

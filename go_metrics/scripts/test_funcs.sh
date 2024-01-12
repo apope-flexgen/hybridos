@@ -18,7 +18,11 @@ fi
 #timeout=20
 #timeused=0
 
-dir=unit_test
+dir=echo
+dir=$(basename $(dirname "$0"))
+echo "dir is $dir_name"
+
+
 # if [ $# -gt 0 ] ; then 
 #   dir=$1
 # fi
@@ -26,9 +30,11 @@ dir=unit_test
 cfgname=examples/$dir/$logname
 timeout=20
 timeused=0
+PASS=0
+FAIL=0
 
 gitdir=$(cd `dirname $0` && cd .. && pwd)
-gitdir='/home/docker/hybridos/go_metrics'
+#gitdir='/home/docker/hybridos/go_metrics'
 echo "gitdir #2 is $gitdir"
 #. $gitdir/scripts/test_finctions.sh
 declare -a cmds
@@ -69,7 +75,8 @@ start ()
     timeout $timeout go_metrics ${gitdir}/${cfgname}.json > ${gitdir}/logs/run/$logname 2>&1&
     echo "timeout $timeout go_metrics ${gitdir}/${cfgname}.json log  ${gitdir}/logs/run/$logname"
     test
-
+    echo "Passed tests: $PASS"
+    echo "Failed tests: $FAIL"
 }
 
 usetime()
@@ -96,10 +103,12 @@ runget ()
     if [[ "$res" == "$expect" ]] ; then
       #echo $res
       echo "                    Pass"
+      ((PASS++))
     else
       echo ' expect '
       echo $expect
       echo "==================> Fail"
+      ((FAIL++))
     fi
 }
 

@@ -16,8 +16,7 @@ var SubscribeUris []string        // the uris to subscribe to
 var InputScope map[string][]Union // this holds a map[string][]Input for when we want to go and evaluate things...
 var FilterScope map[string][]string
 var OutputScope map[string][]Union          // this holds a map[string][]Input for when we want to go and evaluate things...
-var UriElements map[string][][]string       // if we decompose a uri, use this to get the elements of that uri that we're interested in -- used for inputs
-var OutputUriElements map[string][][]string // if we decompose a uri, use this to get the elements of that uri that we're interested in -- used for outputs (for 'get' requests)
+var UriElements map[string]interface{}       // if we decompose a uri, use this to get the elements of that uri that we're interested in -- used for inputs
 var PublishUris map[string][]string         // the uri's to publish to and the vars to publish to each uri
 var PubUriFlags map[string][]string         // the uri's to publish to and the flags contained within that publish uri (either local or global)
 var ConfigErrorsFile string                 // the file location to save the error report after parsing the config document
@@ -99,6 +98,9 @@ var iter simdjson.Iter
 var elementValue interface{}
 var msgBodyIn interface{}
 var msgBodyInMutex sync.RWMutex
+var iterMap map[string]*simdjson.Iter
+var objMap map[string]*simdjson.Object
+var elemMap map[string]*simdjson.Iter
 
 // timing variables
 var processFimsTiming Timing

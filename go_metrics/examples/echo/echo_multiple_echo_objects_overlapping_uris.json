@@ -1,0 +1,120 @@
+{
+    "echo": [
+        {
+            "uri": "/some/output/uri",
+            "publishRate": 1000,
+            "null_value_default":0,
+            "inputs": [
+                {
+                    "uri": "/some/input/uri",
+                    "registers": {
+                        "a": "accontactor",
+                        "b": "p",
+                        "c": "plim",
+                        "d": "pramprise",
+                        "e": "p"
+                    }
+                },
+                {
+                    "uri": "/another/input/uri",
+                    "registers": {
+                        "f": "accontactor",
+                        "g": "p",
+                        "h": "plim",
+                        "i": "pramprise",
+                        "j": "accontactor"
+                    }
+                }
+            ],
+            "echo": {
+                "k":0,
+                "l":0,
+                "m":0,
+                "n":0,
+                "o":0,
+                "p":0
+            }
+        },
+        {
+            "uri": "/another/output/uri",
+            "publishRate": 1000,
+            "null_value_default":0,
+            "inputs": [
+                {
+                    "uri": "/some/input/uri",
+                    "registers": {
+                        "a": "accontactor",
+                        "b": "p",
+                        "c": "plim",
+                        "d": "pramprise",
+                        "e": "p"
+                    }
+                },
+                {
+                    "uri": "/another/input/uri",
+                    "registers": {
+                        "f": "accontactor",
+                        "g": "p",
+                        "h": "plim",
+                        "i": "pramprise",
+                        "j": "accontactor"
+                    }
+                },
+                {
+                    "uri": "/another/input/uri/sub_uri",
+                    "registers": {
+                        "k": "accontactor",
+                        "l": "p",
+                        "m": "plim",
+                        "n": "pramprise",
+                        "o": "accontactor"
+                    }
+                }
+            ],
+            "echo": {
+                "p":0,
+                "q":0,
+                "r":0,
+                "s":0,
+                "t":0,
+                "u":0
+            }
+        },
+        {
+            "uri": "/some/output/uri/sub",
+            "publishRate": 1000,
+            "null_value_default":0,
+            "inputs": [
+                {
+                    "uri": "/new/some/input/uri",
+                    "registers": {
+                        "a": "accontactor",
+                        "b": "p",
+                        "c": "plim",
+                        "d": "pramprise",
+                        "e": "p"
+                    }
+                },
+                {
+                    "uri": "/new/another/input/uri",
+                    "registers": {
+                        "f": "accontactor",
+                        "g": "p",
+                        "h": "plim",
+                        "i": "pramprise",
+                        "j": "accontactor"
+                    }
+                }
+            ],
+            "echo": {
+                "k":0,
+                "l":0,
+                "m":0,
+                "n":0,
+                "o":0,
+                "p":0
+            }
+        }
+    ]
+
+}

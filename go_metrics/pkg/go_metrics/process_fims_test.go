@@ -107,8 +107,8 @@ type ProcessFimsTestsGlobal struct {
 	uriToInputNameMap        map[string][]string
 	uriToEchoObjectInputMap  map[string]map[int]int
 	uriToOutputNameMap       map[string]string
-	uriElements              map[string][][]string
-	outputUriElements        map[string][][]string
+	uriElements              map[string]interface{}
+	allPossibleAttributes	map[string][]string
 }
 type ProcessFimsTest struct {
 	inputMsg                    fims.FimsMsgRaw
@@ -123,22 +123,114 @@ type ProcessFimsTest struct {
 }
 
 var GlobalConstants = ProcessFimsTestsGlobal{
-	uriElements: map[string][][]string{
-		"/test":                  [][]string{[]string{"input1"}, []string{"input1@attribute"}, []string{"input1", "attribute"}, []string{"attribute"}, []string{"input2"}},
-		"/test/input1":           [][]string{},
-		"/test/input1/attribute": [][]string{},
-		"/test/input1@attribute": [][]string{},
-		"/test/attribute":        [][]string{},
-		"/test/input2":           [][]string{},
-		"/echo":                  [][]string{[]string{"test1", "input1", "v1"}, []string{"test1", "input1", "v2"}, []string{"test2", "input2", "f1"}, []string{"test2", "input2", "f2"}},
-		"/echo/test1":            [][]string{[]string{"input1", "v1"}, []string{"input1", "v2"}},
-		"/echo/test2":            [][]string{[]string{"input2", "f1"}, []string{"input2", "f2"}},
-		"/echo/test1/input1":     [][]string{[]string{"v1"}, []string{"v2"}},
-		"/echo/test2/input2":     [][]string{[]string{"f1"}, []string{"f2"}},
-		"/echo/test1/input1/v1":  [][]string{},
-		"/echo/test2/input2/f1":  [][]string{},
-		"/echo/test1/input1/v2":  [][]string{},
-		"/echo/test2/input2/f2":  [][]string{},
+	uriElements: map[string]interface{}{
+		"": map[string]interface{}{
+			"test": map[string]interface{}{
+				"input1": map[string]interface{} {
+					"attribute": map[string]interface{}{},
+				},
+				"input2": map[string]interface{} {
+					
+				},
+			},
+			"echo": map[string]interface{}{
+				"test": map[string]interface{}{
+					"input1": map[string]interface{} {
+						"v1": map[string]interface{}{},
+						"v2": map[string]interface{}{},
+					},
+					"input2": map[string]interface{} {
+						
+					},
+				},
+			},
+		},
+		"/": map[string]interface{}{
+			"test": map[string]interface{}{
+				"input1": map[string]interface{} {
+					"attribute": map[string]interface{}{},
+				},
+				"input2": map[string]interface{} {
+					
+				},
+			},
+			"echo": map[string]interface{}{
+				"test": map[string]interface{}{
+					"input1": map[string]interface{} {
+						"v1": map[string]interface{}{},
+						"v2": map[string]interface{}{},
+					},
+					"input2": map[string]interface{} {
+						
+					},
+				},
+			},
+		},
+		"test": map[string]interface{}{
+			"input1": map[string]interface{} {
+				"attribute": map[string]interface{}{},
+			},
+			"input2": map[string]interface{} {
+				
+			},
+		},
+		"/test": map[string]interface{}{
+			"input1": map[string]interface{} {
+				"attribute": map[string]interface{}{},
+			},
+			"input2": map[string]interface{} {
+				
+			},
+		},
+		"/test/input1": map[string]interface{}{
+			"attribute": map[string]interface{}{},
+		},
+		"/test/input1/attribute": map[string]interface{}{
+		},
+		"/test/input1@attribute": map[string]interface{}{
+		},
+		"/test/input2": map[string]interface{}{
+		},
+		"/echo": map[string]interface{}{
+			"test1": map[string]interface{}{
+				"input1": map[string]interface{} {
+					"v1": map[string]interface{}{},
+					"v2": map[string]interface{}{},
+				},
+				"input2": map[string]interface{} {
+					
+				},
+			},
+		},
+		"echo": map[string]interface{}{
+			"test1": map[string]interface{}{
+				"input1": map[string]interface{} {
+					"v1": map[string]interface{}{},
+					"v2": map[string]interface{}{},
+				},
+				"input2": map[string]interface{} {
+					
+				},
+			},
+		},
+		"/echo/test1": map[string]interface{}{
+			"input1": map[string]interface{} {
+				"v1": map[string]interface{}{},
+				"v2": map[string]interface{}{},
+			},
+			"input2": map[string]interface{} {
+			},
+		},
+		"/echo/test1/input1":map[string]interface{} {
+			"v1": map[string]interface{}{},
+			"v2": map[string]interface{}{},
+		},
+		"/echo/test1/input2":map[string]interface{} {
+		},
+		"/echo/test1/input1/v1":map[string]interface{} {
+		},
+		"/echo/test1/input1/v2":map[string]interface{} {
+		},
 	},
 	inputToFilterExpression: map[string][]string{
 		"input1":           []string{"filter1"},
@@ -162,7 +254,9 @@ var GlobalConstants = ProcessFimsTestsGlobal{
 		"/echo/test2/input2": map[int]int{0: 1},
 	},
 	uriToOutputNameMap: map[string]string{},
-	outputUriElements:  map[string][][]string{},
+	allPossibleAttributes: map[string][]string {
+		"attribute":[]string{"input1@attribute"},
+	},
 }
 
 var ProcessFimsTests = []ProcessFimsTest{
@@ -258,56 +352,6 @@ var ProcessFimsTests = []ProcessFimsTest{
 			Uri:    "/test/input1@attribute",
 			Body:   []byte("5"),
 			Frags:  []string{"test", "input1@attribute"},
-		},
-		startingMetricsInputs: map[string]Input{
-			"input1": Input{
-				Name:       "input1",
-				Uri:        "/test/input1",
-				Value:      Union{tag: INT, i: 0},
-				Attributes: []string{"attribute"},
-				AttributesMap: map[string]string{
-					"attribute": "input1@attribute",
-				},
-			},
-		},
-		startingScope: map[string][]Union{
-			"input1": []Union{{tag: INT, i: 0}},
-			"input1@attribute": []Union{{}},
-		},
-		startingExpressionNeedsEval: map[int]bool{
-			0: false,
-			1: false,
-			2: false,
-			3: false,
-		},
-		endingMetricsInputs: map[string]Input{
-			"input1": Input{
-				Name:       "input1",
-				Uri:        "/test/input1",
-				Value:      Union{tag: INT, i: 0},
-				Attributes: []string{"attribute"},
-				AttributesMap: map[string]string{
-					"attribute": "input1@attribute",
-				},
-			},
-		},
-		endingScope: map[string][]Union{
-			"input1": []Union{{tag: INT, i: 0}},
-			"input1@attribute": []Union{{tag: FLOAT, f: 5}},
-		},
-		endingExpressionNeedsEval: map[int]bool{
-			0: false,
-			1: true,
-			2: true,
-			3: true,
-		},
-	},
-	ProcessFimsTest{ // fims_send -m set -u /test/attribute 5
-		inputMsg: fims.FimsMsgRaw{
-			Method: "set",
-			Uri:    "/test/attribute",
-			Body:   []byte("5"),
-			Frags:  []string{"test", "attribute"},
 		},
 		startingMetricsInputs: map[string]Input{
 			"input1": Input{
@@ -488,56 +532,6 @@ var ProcessFimsTests = []ProcessFimsTest{
 			3: true,
 		},
 	},
-	ProcessFimsTest{ // fims_send -m set -u /test '{"attribute":5}'
-		inputMsg: fims.FimsMsgRaw{
-			Method: "set",
-			Uri:    "/test",
-			Body:   []byte("{\"attribute\":5}"),
-			Frags:  []string{"test"},
-		},
-		startingMetricsInputs: map[string]Input{
-			"input1": Input{
-				Name:       "input1",
-				Uri:        "/test/input1",
-				Value:      Union{tag: INT, i: 0},
-				Attributes: []string{"attribute"},
-				AttributesMap: map[string]string{
-					"attribute": "input1@attribute",
-				},
-			},
-		},
-		startingScope: map[string][]Union{
-			"input1": []Union{{tag: INT, i: 0}},
-			"input1@attribute": []Union{{}},
-		},
-		startingExpressionNeedsEval: map[int]bool{
-			0: false,
-			1: false,
-			2: false,
-			3: false,
-		},
-		endingMetricsInputs: map[string]Input{
-			"input1": Input{
-				Name:       "input1",
-				Uri:        "/test/input1",
-				Value:      Union{tag: INT, i: 0},
-				Attributes: []string{"attribute"},
-				AttributesMap: map[string]string{
-					"attribute": "input1@attribute",
-				},
-			},
-		},
-		endingScope: map[string][]Union{
-			"input1": []Union{{tag: INT, i: 0}},
-			"input1@attribute": []Union{{tag: INT, i: 5}},
-		},
-		endingExpressionNeedsEval: map[int]bool{
-			0: false,
-			1: true,
-			2: true,
-			3: true,
-		},
-	},
 	ProcessFimsTest{ // fims_send -m set -u /test '{"input1": {"value":5, "attribute":5}}'
 		inputMsg: fims.FimsMsgRaw{
 			Method: "set",
@@ -652,138 +646,6 @@ var ProcessFimsTests = []ProcessFimsTest{
 			3: false,
 			4: true,
 			5: true,
-		},
-	},
-	ProcessFimsTest{ // fims_send -m set -u /test '{"input1": 25, "input2": 30, "attribute":50}'
-		inputMsg: fims.FimsMsgRaw{
-			Method: "set",
-			Uri:    "/test",
-			Body:   []byte("{\"input1\":25, \"input2\":30, \"attribute\": 50}"),
-			Frags:  []string{"test"},
-		},
-		startingMetricsInputs: map[string]Input{
-			"input1": Input{
-				Name:       "input1",
-				Uri:        "/test/input1",
-				Value:      Union{tag: INT, i: 0},
-				Attributes: []string{"attribute"},
-				AttributesMap: map[string]string{
-					"attribute": "input1@attribute",
-				},
-			},
-			"input2": Input{
-				Name:  "input2",
-				Uri:   "/test/input2",
-				Value: Union{tag: FLOAT, f: 0},
-			},
-		},
-		startingScope: map[string][]Union{
-			"input1": []Union{{tag: INT, i: 0}},
-			"input2": []Union{{tag: FLOAT, f: 0}},
-			"input1@attribute": []Union{{}},
-		},
-		startingExpressionNeedsEval: map[int]bool{
-			0: false,
-			1: false,
-			2: false,
-			3: false,
-			4: false,
-			5: false,
-		},
-		endingMetricsInputs: map[string]Input{
-			"input1": Input{
-				Name:       "input1",
-				Uri:        "/test/input1",
-				Value:      Union{tag: INT, i: 0},
-				Attributes: []string{"attribute"},
-				AttributesMap: map[string]string{
-					"attribute": "input1@attribute",
-				},
-			},
-			"input2": Input{
-				Name:  "input2",
-				Uri:   "/test/input2",
-				Value: Union{tag: FLOAT, f: 0},
-			},
-		},
-		endingScope: map[string][]Union{
-			"input1": []Union{{tag: INT, i: 25}},
-			"input1@attribute": []Union{{tag: INT, i: 50}},
-			"input2": []Union{{tag: FLOAT, f: 30}},
-		},
-		endingExpressionNeedsEval: map[int]bool{
-			0: true,
-			1: true,
-			2: true,
-			3: true,
-			4: true,
-			5: true,
-		},
-	},
-	ProcessFimsTest{ // fims_send -m set -u /test '{"attribute":55}'
-		inputMsg: fims.FimsMsgRaw{
-			Method: "set",
-			Uri:    "/test",
-			Body:   []byte("{\"attribute\": 55}"),
-			Frags:  []string{"test"},
-		},
-		startingMetricsInputs: map[string]Input{
-			"input1": Input{
-				Name:       "input1",
-				Uri:        "/test/input1",
-				Value:      Union{tag: INT, i: 0},
-				Attributes: []string{"attribute"},
-				AttributesMap: map[string]string{
-					"attribute": "input1@attribute",
-				},
-			},
-			"input2": Input{
-				Name:  "input2",
-				Uri:   "/test/input2",
-				Value: Union{tag: FLOAT, f: 0},
-			},
-		},
-		startingScope: map[string][]Union{
-			"input1": []Union{{tag: INT, i: 0}},
-			"input1@attribute": []Union{{}},
-			"input2": []Union{{tag: FLOAT, f: 0}},
-		},
-		startingExpressionNeedsEval: map[int]bool{
-			0: false,
-			1: false,
-			2: false,
-			3: false,
-			4: false,
-			5: false,
-		},
-		endingMetricsInputs: map[string]Input{
-			"input1": Input{
-				Name:       "input1",
-				Uri:        "/test/input1",
-				Value:      Union{tag: INT, i: 0},
-				Attributes: []string{"attribute"},
-				AttributesMap: map[string]string{
-					"attribute": "input1@attribute",
-				},
-			},
-			"input2": Input{
-				Name:  "input2",
-				Uri:   "/test/input2",
-				Value: Union{tag: FLOAT, f: 0},
-			},
-		},
-		endingScope: map[string][]Union{
-			"input1": []Union{{tag: INT, i: 0}},
-			"input1@attribute": []Union{{tag: INT, i: 55}},
-			"input2": []Union{{tag: FLOAT, f: 0}},
-		},
-		endingExpressionNeedsEval: map[int]bool{
-			0: false,
-			1: true,
-			2: true,
-			3: true,
-			4: false,
-			5: false,
 		},
 	},
 	ProcessFimsTest{ // fims_send -m set -u /echo/test1/input1/v1 5
@@ -959,8 +821,8 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 			Echo: map[string]interface{}{
-				"voltage1":   map[string]interface{}{"value": int64(8)},
-				"voltage2":   map[string]interface{}{"value": int64(9)},
+				"voltage1":   int64(8),
+				"voltage2":   int64(9),
 				"frequency1": nil,
 				"frequency2": nil,
 			},
@@ -1021,8 +883,8 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 			Echo: map[string]interface{}{
-				"voltage1":   map[string]interface{}{"value": int64(8)},
-				"voltage2":   map[string]interface{}{"value": int64(9)},
+				"voltage1":   int64(8),
+				"voltage2":   int64(9),
 				"frequency1": nil,
 				"frequency2": nil,
 			},
@@ -1207,7 +1069,7 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 			Echo: map[string]interface{}{
-				"voltage1":   map[string]interface{}{"value": int64(33)},
+				"voltage1":   int64(33),
 				"voltage2":   nil,
 				"frequency1": nil,
 				"frequency2": nil,
@@ -1267,7 +1129,7 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 			Echo: map[string]interface{}{
-				"voltage1":   map[string]interface{}{"value": int64(31)},
+				"voltage1":   int64(31),
 				"voltage2":   nil,
 				"frequency1": nil,
 				"frequency2": nil,
@@ -1281,12 +1143,12 @@ func TestProcessFims(t *testing.T) {
 		MetricsConfig = MetricsFile{}
 		testName := fmt.Sprintf("fims_send -m %s -u %s %s", strings.ToLower(test.inputMsg.Method), test.inputMsg.Uri, test.inputMsg.Body)
 		UriElements = GlobalConstants.uriElements
+		allPossibleAttributes = GlobalConstants.allPossibleAttributes
 		MetricsConfig.Echo = []EchoObject{test.startingEcho}
 		uriToEchoObjectInputMap = GlobalConstants.uriToEchoObjectInputMap
 		uriToInputNameMap = GlobalConstants.uriToInputNameMap
 		uriToOutputNameMap = GlobalConstants.uriToOutputNameMap
 		MetricsConfig.Inputs = test.startingMetricsInputs
-		OutputUriElements = GlobalConstants.outputUriElements
 		InputScope = test.startingScope
 		inputToFilterExpression = GlobalConstants.inputToFilterExpression
 		inputToMetricsExpression = GlobalConstants.inputToMetricsExpression
@@ -1307,7 +1169,7 @@ func TestProcessFims(t *testing.T) {
 			} else {
 				for i, input := range inputs {
 					if input != expectedInputs[i] {
-						t.Errorf("%s: resulting input '%d' in scope[%s] not as expected", testName, i, key)
+						t.Errorf("%s: resulting input '%d' in scope[%s] not as expected. Got %v. Wanted %v.", testName, i, key, input, expectedInputs[i])
 					}
 				}
 			}

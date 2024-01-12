@@ -126,6 +126,7 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 		go func(echoIndex int) {
 			for {
 				<-MetricsConfig.Echo[echoIndex].Ticker.C
+					echoMutex.RLock()
 					if len(MetricsConfig.Echo[echoIndex].Heartbeat) > 0 {
 						MetricsConfig.Echo[echoIndex].Echo[MetricsConfig.Echo[echoIndex].Heartbeat] = float64(time.Since(t0)) / 1000000000.0
 					}
@@ -183,7 +184,7 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 							Body:   MetricsConfig.Echo[echoIndex].Echo,
 						})
 					}
-				
+					echoMutex.RUnlock()
 			}
 		}(echoIdx)
 	}

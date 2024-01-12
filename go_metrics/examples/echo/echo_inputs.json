@@ -1,0 +1,32 @@
+{
+        "echo": [
+            {
+                "uri": "/some/output/uri",
+                "publishRate": 1000,
+                "null_value_default":0,
+                "inputs": [
+                    {
+                        "uri": "/some/input/uri",
+                        "registers": {
+                            "a": "accontactor",
+                            "b": "p",
+                            "c": "plim",
+                            "d": "pramprise",
+                            "e": "p"
+                        }
+                    },
+                    {
+                        "uri": "/another/input/uri",
+                        "registers": {
+                            "f": "accontactor",
+                            "g": "p",
+                            "h": "plim",
+                            "i": "pramprise",
+                            "j": "accontactor"
+                        }
+                    }
+                ]
+            }
+        ]
+
+}

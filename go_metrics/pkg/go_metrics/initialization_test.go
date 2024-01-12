@@ -6626,126 +6626,344 @@ func TestGetSubscribeUris(t *testing.T) {
 		"/some/status/output/enum_output":     "enum_output",
 		"/some/status/output/bitfield_output": "bitfield_output",
 	}
-	expectedUriElements := map[string][][]string{
-		"": [][]string{},
-		"/components": [][]string{
-			[]string{"bms_74b", "vnom"},
-			[]string{"bms_74b", "vnom"},
-			[]string{"feeder_52m1", "v1"},
-			[]string{"feeder_52m1", "id"},
-			[]string{"feeder_52u1", "pmax"},
-			[]string{"bms_74b", "id"},
-			[]string{"feeder1", "frequency1"},
-			[]string{"feeder2", "frequency2"},
-		},
-		"/components/bms_74b":            [][]string{[]string{"vnom"}, []string{"vnom"}, []string{"id"}},
-		"/components/feeder_52m1":        [][]string{[]string{"v1"}, []string{"id"}},
-		"/components/feeder_52u1":        [][]string{[]string{"pmax"}},
-		"/components/feeder1":            [][]string{[]string{"frequency1"}},
-		"/components/feeder2":            [][]string{[]string{"frequency2"}},
-		"/components/bms_74b/vnom":       [][]string{},
-		"/components/bms_74b/id":         [][]string{},
-		"/components/bms_74b/id/enabled": [][]string{},
-		"/components/bms_74b/id@enabled": [][]string{},
-		"/components/bms_74b/enabled":    [][]string{},
-		"/components/bms_74b@enabled":    [][]string{},
-		"/components/bms_74b/id/scale":   [][]string{},
-		"/components/bms_74b/id@scale":   [][]string{},
-		"/components/bms_74b/scale":      [][]string{},
-		"/components/bms_74b@scale":      [][]string{},
-		"/components/feeder_52m1/v1":     [][]string{},
-		"/components/feeder_52m1/id":     [][]string{},
-		"/components/feeder_52u1/pmax":   [][]string{},
-		"/components/feeder1/frequency1": [][]string{},
-		"/components/feeder2/frequency2": [][]string{},
-	}
-	expectedOutputUriElements := map[string][][]string{
-		"/some": [][]string{
-			[]string{"output1", "output1_cheetah"},
-			[]string{"output1", "output1_bobcat"},
-			[]string{"output1", "output1_lion"},
-			[]string{"output2", "output2_cheetah"},
-			[]string{"output2", "output2_bobcat"},
-			[]string{"output2", "output2_lion"},
-			[]string{"output3", "output3_cheetah"},
-			[]string{"output3", "output3_bobcat"},
-			[]string{"output3", "output3_lion"},
-			[]string{"output1", "timestamp"},
-			[]string{"output2", "timestamp"},
-			[]string{"output3", "timestamp"},
-			[]string{"level2", "level2_output"},
-			[]string{"status", "output", "status"},
-			[]string{"status", "output", "status2"},
-		},
-		"/some/output1": [][]string{
-			[]string{"output1_cheetah"},
-			[]string{"output1_bobcat"},
-			[]string{"output1_lion"},
-			[]string{"timestamp"},
-		},
-		"/some/output2": [][]string{
-			[]string{"output2_cheetah"},
-			[]string{"output2_bobcat"},
-			[]string{"output2_lion"},
-			[]string{"timestamp"},
-		},
-		"/some/output3": [][]string{
-			[]string{"output3_cheetah"},
-			[]string{"output3_bobcat"},
-			[]string{"output3_lion"},
-			[]string{"timestamp"},
-		},
-		"/some/level2": [][]string{[]string{"level2_output"}},
-		"/some/status": [][]string{
-			[]string{"output", "status"},
-			[]string{"output", "status2"},
-		},
-		"/some/output1/output1_cheetah": [][]string{},
-		"/some/output1/output1_bobcat":  [][]string{},
-		"/some/output1/output1_lion":    [][]string{},
-		"/some/output1/timestamp":       [][]string{},
-		"/some/output2/output2_cheetah": [][]string{},
-		"/some/output2/output2_bobcat":  [][]string{},
-		"/some/output2/output2_lion":    [][]string{},
-		"/some/output2/timestamp":       [][]string{},
-		"/some/output3/output3_cheetah": [][]string{},
-		"/some/output3/output3_bobcat":  [][]string{},
-		"/some/output3/output3_lion":    [][]string{},
-		"/some/output3/timestamp":       [][]string{},
-		"/some/level2/level2_output":    [][]string{},
-		"/some/status/output": [][]string{
-			[]string{"status"},
-			[]string{"status2"},
-		},
-		"/some/status/output/status":          [][]string{},
-		"/some/status/output/status2":         [][]string{},
-		"/some/output1/output1_cheetah/scale": [][]string{},
-		"/some/output1/output1_bobcat/scale":  [][]string{},
-		"/some/output1/output1_lion/scale":    [][]string{},
-		"/some/output2/output2_cheetah/scale": [][]string{},
-		"/some/output2/output2_bobcat/scale":  [][]string{},
-		"/some/output2/output2_lion/scale":    [][]string{},
-		"/some/output3/output3_cheetah/scale": [][]string{},
-		"/some/output3/output3_bobcat/scale":  [][]string{},
-		"/some/output3/output3_lion/scale":    [][]string{},
-		"/some/output1/output1_cheetah@scale": [][]string{},
-		"/some/output1/output1_bobcat@scale":  [][]string{},
-		"/some/output1/output1_lion@scale":    [][]string{},
-		"/some/output2/output2_cheetah@scale": [][]string{},
-		"/some/output2/output2_bobcat@scale":  [][]string{},
-		"/some/output2/output2_lion@scale":    [][]string{},
-		"/some/output3/output3_cheetah@scale": [][]string{},
-		"/some/output3/output3_bobcat@scale":  [][]string{},
-		"/some/output3/output3_lion@scale":    [][]string{},
-		"/output1_cheetah@scale":              [][]string{},
-		"/output1_bobcat@scale":               [][]string{},
-		"/output1_lion@scale":                 [][]string{},
-		"/output2_cheetah@scale":              [][]string{},
-		"/output2_bobcat@scale":               [][]string{},
-		"/output2_lion@scale":                 [][]string{},
-		"/output3_cheetah@scale":              [][]string{},
-		"/output3_bobcat@scale":               [][]string{},
-		"/output3_lion@scale":                 [][]string{},
+	expectedUriElements := map[string]interface{}{
+			"": map[string]interface{}{
+				"components": map[string]interface{}{
+					"bms_74b": map[string]interface{}{
+						"vnom": map[string]interface{}{},
+						"id":   map[string]interface{}{},
+					},
+					"feeder_52m1": map[string]interface{}{
+						"v1": map[string]interface{}{},
+						"id": map[string]interface{}{},
+					},
+					"feeder_52u1": map[string]interface{}{
+						"pmax": map[string]interface{}{},
+					},
+					"feeder1": map[string]interface{}{
+						"frequency1": map[string]interface{}{},
+					},
+					"feeder2": map[string]interface{}{
+						"frequency2": map[string]interface{}{},
+					},
+					"sel_735": map[string]interface{}{
+						"voltage_l3_l1": map[string]interface{}{},
+						"f": map[string]interface{}{},
+						"f1": map[string]interface{}{},
+						"f2": map[string]interface{}{},
+					},
+				},
+				"some": map[string]interface{}{
+					"output1": map[string]interface{}{
+						"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+						"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+						"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+						"timestamp":       map[string]interface{}{},
+					},
+					"output2": map[string]interface{}{
+						"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+						"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+						"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+						"timestamp":       map[string]interface{}{},
+					},
+					"output3": map[string]interface{}{
+						"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+						"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+						"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+						"timestamp":       map[string]interface{}{},
+					},
+					"level2": map[string]interface{}{
+						"level2_output": map[string]interface{}{},
+					},
+					"status": map[string]interface{}{
+						"output": map[string]interface{}{
+							"status":  map[string]interface{}{},
+							"status2": map[string]interface{}{},
+						},
+					},
+				},
+			},
+			"/":map[string]interface{}{
+				"components": map[string]interface{}{
+					"bms_74b": map[string]interface{}{
+						"vnom": map[string]interface{}{},
+						"id":   map[string]interface{}{},
+					},
+					"feeder_52m1": map[string]interface{}{
+						"v1": map[string]interface{}{},
+						"id": map[string]interface{}{},
+					},
+					"feeder_52u1": map[string]interface{}{
+						"pmax": map[string]interface{}{},
+					},
+					"feeder1": map[string]interface{}{
+						"frequency1": map[string]interface{}{},
+					},
+					"feeder2": map[string]interface{}{
+						"frequency2": map[string]interface{}{},
+					},
+					"sel_735": map[string]interface{}{
+						"voltage_l3_l1": map[string]interface{}{},
+						"f": map[string]interface{}{},
+						"f1": map[string]interface{}{},
+						"f2": map[string]interface{}{},
+					},
+				},
+				"some": map[string]interface{}{
+					"output1": map[string]interface{}{
+						"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+						"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+						"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+						"timestamp":       map[string]interface{}{},
+					},
+					"output2": map[string]interface{}{
+						"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+						"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+						"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+						"timestamp":       map[string]interface{}{},
+					},
+					"output3": map[string]interface{}{
+						"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+						"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+						"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+						"timestamp":       map[string]interface{}{},
+					},
+					"level2": map[string]interface{}{
+						"level2_output": map[string]interface{}{},
+					},
+					"status": map[string]interface{}{
+						"output": map[string]interface{}{
+							"status":  map[string]interface{}{},
+							"status2": map[string]interface{}{},
+						},
+					},
+				},
+			},
+			"/components": map[string]interface{}{
+				"bms_74b": map[string]interface{}{
+					"vnom": map[string]interface{}{},
+					"id":   map[string]interface{}{},
+				},
+				"feeder_52m1": map[string]interface{}{
+					"v1": map[string]interface{}{},
+					"id": map[string]interface{}{},
+				},
+				"feeder_52u1": map[string]interface{}{
+					"pmax": map[string]interface{}{},
+				},
+				"feeder1": map[string]interface{}{
+					"frequency1": map[string]interface{}{},
+				},
+				"feeder2": map[string]interface{}{
+					"frequency2": map[string]interface{}{},
+				},
+				"sel_735": map[string]interface{}{
+					"voltage_l3_l1": map[string]interface{}{},
+					"f": map[string]interface{}{},
+						"f1": map[string]interface{}{},
+						"f2": map[string]interface{}{},
+				},
+			},
+			"components": map[string]interface{}{
+				"bms_74b": map[string]interface{}{
+					"vnom": map[string]interface{}{},
+					"id":   map[string]interface{}{},
+				},
+				"feeder_52m1": map[string]interface{}{
+					"v1": map[string]interface{}{},
+					"id": map[string]interface{}{},
+				},
+				"feeder_52u1": map[string]interface{}{
+					"pmax": map[string]interface{}{},
+				},
+				"feeder1": map[string]interface{}{
+					"frequency1": map[string]interface{}{},
+				},
+				"feeder2": map[string]interface{}{
+					"frequency2": map[string]interface{}{},
+				},
+				"sel_735": map[string]interface{}{
+					"voltage_l3_l1": map[string]interface{}{},
+					"f": map[string]interface{}{},
+						"f1": map[string]interface{}{},
+						"f2": map[string]interface{}{},
+				},
+			},
+			"/components/sel_735": map[string]interface{}{
+				"voltage_l3_l1": map[string]interface{}{},
+				"f": map[string]interface{}{},
+					"f1": map[string]interface{}{},
+					"f2": map[string]interface{}{},
+			},
+			"/components/sel_735/voltage_l3_l1": map[string]interface{}{},
+			"/components/sel_735/f": map[string]interface{}{},
+			"/components/sel_735/f1": map[string]interface{}{},
+			"/components/sel_735/f2": map[string]interface{}{},
+			"/components/bms_74b": map[string]interface{}{
+				"vnom": map[string]interface{}{},
+				"id":   map[string]interface{}{
+					"enabled":map[string]interface{}{},
+					"scale":map[string]interface{}{},
+				},
+			},
+			"/components/feeder_52m1": map[string]interface{}{
+				"v1": map[string]interface{}{},
+				"id": map[string]interface{}{},
+			},
+			"/components/feeder_52m1/v1": map[string]interface{}{},
+			"/components/feeder_52m1/id": map[string]interface{}{},
+			"/components/feeder_52u1": map[string]interface{}{
+				"pmax": map[string]interface{}{},
+			},
+			"/components/feeder_52u1/pmax": map[string]interface{}{},
+			"/components/feeder1": map[string]interface{}{
+				"frequency1": map[string]interface{}{},
+			},
+			"/components/feeder1/frequency1": map[string]interface{}{},
+			"/components/feeder2": map[string]interface{}{
+				"frequency2": map[string]interface{}{},
+			},
+			"/components/feeder2/frequency2": map[string]interface{}{},
+			"/components/bms_74b/vnom": map[string]interface{}{},
+			"/components/bms_74b/id": map[string]interface{}{
+				"enabled":map[string]interface{}{},
+				"scale":map[string]interface{}{},
+			},
+		"/components/bms_74b/id/enabled": map[string]interface{}{},
+		"/components/bms_74b/id@enabled":map[string]interface{}{},
+		"/components/bms_74b/id/scale":map[string]interface{}{},
+		"/components/bms_74b/id@scale":map[string]interface{}{},
+			"/some": map[string]interface{}{
+				"output1": map[string]interface{}{
+					"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+					"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+					"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+					"timestamp":       map[string]interface{}{},
+				},
+				"output2": map[string]interface{}{
+					"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+					"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+					"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+					"timestamp":       map[string]interface{}{},
+				},
+				"output3": map[string]interface{}{
+					"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+					"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+					"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+					"timestamp":       map[string]interface{}{},
+				},
+				"level2": map[string]interface{}{
+					"level2_output": map[string]interface{}{},
+				},
+				"status": map[string]interface{}{
+					"output": map[string]interface{}{
+						"status":  map[string]interface{}{},
+						"status2": map[string]interface{}{},
+					},
+				},
+			},
+			"some": map[string]interface{}{
+				"output1": map[string]interface{}{
+					"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+					"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+					"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+					"timestamp":       map[string]interface{}{},
+				},
+				"output2": map[string]interface{}{
+					"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+					"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+					"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+					"timestamp":       map[string]interface{}{},
+				},
+				"output3": map[string]interface{}{
+					"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+					"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+					"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+					"timestamp":       map[string]interface{}{},
+				},
+				"level2": map[string]interface{}{
+					"level2_output": map[string]interface{}{},
+				},
+				"status": map[string]interface{}{
+					"output": map[string]interface{}{
+						"status":  map[string]interface{}{},
+						"status2": map[string]interface{}{},
+					},
+				},
+			},
+			"/some/level2":map[string]interface{}{
+				"level2_output": map[string]interface{}{},
+			},
+			"/some/level2/level2_output": map[string]interface{}{},
+			"/some/status":map[string]interface{}{
+				"output": map[string]interface{}{
+					"status":  map[string]interface{}{},
+					"status2": map[string]interface{}{},
+				},
+			},
+			"/some/status/output":map[string]interface{}{
+				"status":  map[string]interface{}{},
+				"status2": map[string]interface{}{},
+			},
+			"/some/status/output/status":map[string]interface{}{},
+			"/some/status/output/status2":map[string]interface{}{},
+			"/some/output1": map[string]interface{}{
+				"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+				"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+				"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+				"timestamp":       map[string]interface{}{},
+			},
+			"/some/output2": map[string]interface{}{
+				"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+				"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+				"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+				"timestamp":       map[string]interface{}{},
+			},
+			"/some/output3": map[string]interface{}{
+				"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
+				"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
+				"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+				"timestamp":       map[string]interface{}{},
+			},
+			"/some/output1/output1_cheetah": map[string]interface{}{
+				"scale": map[string]interface{}{},
+			},
+			"/some/output1/output1_bobcat": map[string]interface{}{
+				"scale": map[string]interface{}{},
+			},
+			"/some/output1/output1_lion": map[string]interface{}{
+				"scale": map[string]interface{}{},
+			},	
+			"/some/output1/timestamp": map[string]interface{}{},
+			"/some/output2/output2_cheetah": map[string]interface{}{
+				"scale": map[string]interface{}{},
+			},
+			"/some/output2/output2_bobcat": map[string]interface{}{
+				"scale": map[string]interface{}{},
+			},
+			"/some/output2/output2_lion": map[string]interface{}{
+				"scale": map[string]interface{}{},
+			},	
+			"/some/output2/timestamp": map[string]interface{}{},
+			"/some/output3/output3_cheetah": map[string]interface{}{
+				"scale": map[string]interface{}{},
+			},
+			"/some/output3/output3_bobcat": map[string]interface{}{
+				"scale": map[string]interface{}{},
+			},
+			"/some/output3/output3_lion": map[string]interface{}{
+				"scale": map[string]interface{}{},
+			},	
+			"/some/output3/timestamp": map[string]interface{}{},	
+			"/some/output1/output1_cheetah/scale": map[string]interface{}{},
+			"/some/output1/output1_bobcat/scale": map[string]interface{}{},
+			"/some/output1/output1_lion/scale": map[string]interface{}{},
+			"/some/output2/output2_cheetah/scale": map[string]interface{}{},
+			"/some/output2/output2_bobcat/scale": map[string]interface{}{},
+			"/some/output2/output2_lion/scale": map[string]interface{}{},
+			"/some/output3/output3_cheetah/scale": map[string]interface{}{},
+			"/some/output3/output3_bobcat/scale": map[string]interface{}{},
+			"/some/output3/output3_lion/scale": map[string]interface{}{},
 	}
 
 	GetSubscribeUris()
@@ -6837,78 +7055,16 @@ func TestGetSubscribeUris(t *testing.T) {
 	if len(UriElements) != len(expectedUriElements) {
 		t.Errorf("Expected %d uri elements but only got %d\n", len(expectedUriElements), len(UriElements))
 	}
-	for subUri, subList := range expectedUriElements {
-		if subList2, ok := UriElements[subUri]; !ok {
+	for subUri := range expectedUriElements {
+		if _, ok := UriElements[subUri]; !ok {
 			t.Errorf("Expected subscribe URI [%s] in uriElements but did not get\n", subUri)
-		} else {
-			if len(subList) != len(subList2) {
-				t.Errorf("Expected %d elements for [%s] but only got %d\n", len(subList), subUri, len(subList2))
-			} else {
-				for _, pathList := range subList {
-					match := false
-					for q := range subList2 {
-						all_match := true
-						if len(pathList) == len(subList2[q]) {
-							{
-								for j, pathElement := range pathList {
-									if pathElement != subList2[q][j] {
-										all_match = false
-										break
-									}
-								}
-							}
-							if all_match {
-								match = true
-								break
-							}
-						}
-					}
-					if !match {
-						t.Errorf("Expected uri:input [%s : %v] in UriElements but did not get\n", subUri, pathList)
-					}
-				}
-			}
+		} 
+	}
+	for subUri := range UriElements {
+		if _, ok := expectedUriElements[subUri]; !ok {
+			t.Errorf("Unexpected subscribe URI [%s] in UriElements\n", subUri)
 		}
 	}
-
-	if len(OutputUriElements) != len(expectedOutputUriElements) {
-		t.Errorf("Expected %d uri elements but only got %d\n", len(expectedOutputUriElements), len(OutputUriElements))
-	}
-
-	for subUri, subList := range expectedOutputUriElements {
-		if subList2, ok := OutputUriElements[subUri]; !ok {
-			t.Errorf("Expected subscribe URI [%s] in OutputUriElements but did not get\n", subUri)
-		} else {
-			if len(subList) != len(subList2) {
-				t.Errorf("Expected %d elements for [%s] but only got %d\n", len(subList), subUri, len(subList2))
-			} else {
-				for _, pathList := range subList {
-					match := false
-					for q := range subList2 {
-						all_match := true
-						if len(pathList) == len(subList2[q]) {
-							{
-								for j, pathElement := range pathList {
-									if pathElement != subList2[q][j] {
-										all_match = false
-										break
-									}
-								}
-							}
-							if all_match {
-								match = true
-								break
-							}
-						}
-					}
-					if !match {
-						t.Errorf("Expected uri:input [%s : %v] in UriElements but did not get\n", subUri, pathList)
-					}
-				}
-			}
-		}
-	}
-
 }
 
 func Quiet() func() {
