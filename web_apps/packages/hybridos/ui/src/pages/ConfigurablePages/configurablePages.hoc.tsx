@@ -12,6 +12,7 @@ import {
   DisplayGroupFunctions,
   AlertState,
   MaintModeState,
+  MaintActionsControlState,
 } from './configurablePages.types';
 
 export interface ConfigurablePagesProps extends PageProps {
@@ -22,6 +23,8 @@ export interface ConfigurablePagesProps extends PageProps {
   };
   allControlsState?: any;
   maintModeState?: MaintModeState;
+  maintenanceActionsState?: any;
+  maintActionsControlState?: MaintActionsControlState;
 }
 
 const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
@@ -30,8 +33,10 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
 ) => (props: Omit<T, keyof ConfigurablePagesProps>) => {
     const [componentState, setComponentState] = useState<ConfigurablePageStateStructure>({});
     const [allControlsState, setAllControlsState] = useState<boolean>(false);
+    const [maintenanceActionsState, setMaintenanceActionsState] = useState<boolean>(false);
     const [alertState, setAlertState] = useState<AlertState>({});
     const [maintModeState, setMaintModeState] = useState<MaintModeState>({});
+    const [maintActionsControlState, setMaintActionsControlState] = useState<MaintActionsControlState>({});
     const [isLoading, setIsLoading] = useState<any>(false);
 
     const [componentFunctions, setComponentFunctions] = useState<{
@@ -39,10 +44,21 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
     }>({});
 
     const updateStateFromNewData = (data: ConfigurablePageDTO['displayGroups']) => {
-      const [updatedComponentState, updatedAlertState, updatedMaintModeState] = getUpdatedStates(data);
+      const [
+        updatedComponentState,
+        updatedAlertState,
+        updatedMaintModeState,
+        updatedMaintActionsControlState,
+      ] = getUpdatedStates(data);
+
       setMaintModeState((prevMaintModeState) => ({
         ...prevMaintModeState,
         ...updatedMaintModeState,
+      }));
+
+      setMaintActionsControlState((prevMaintActionsControlState) => ({
+        ...prevMaintActionsControlState,
+        ...updatedMaintActionsControlState,
       }));
 
       setComponentState((prevComponentState) => ({
@@ -69,6 +85,7 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
       updateStateFromNewData(data.displayGroups);
 
       setAllControlsState(data.hasAllControls || false);
+      setMaintenanceActionsState(data.hasMaintenanceActions || false);
 
       if (!data.hasStatic) return;
 
@@ -96,6 +113,8 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
           {...(props as T)}
           allControlsState={allControlsState}
           maintModeState={maintModeState}
+          maintenanceActionsState={maintenanceActionsState}
+          maintActionsControlState={maintActionsControlState}
           componentState={componentState}
           alertState={alertState}
           componentFunctions={componentFunctions}

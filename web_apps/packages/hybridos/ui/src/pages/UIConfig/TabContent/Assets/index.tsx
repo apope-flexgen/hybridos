@@ -117,7 +117,7 @@ const Assets = () => {
           },
         };
       }),
-    [],
+    [layouts],
   );
 
   const fetchData = useCallback(async () => {

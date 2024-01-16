@@ -11,7 +11,7 @@ import {
 import { useTheme } from 'styled-components';
 import AssetControl from './AssetControl';
 import AssetStatus from './AssetStatus';
-import { tabsAndStatusContainerSx, tabsContainerSx, internalTabsAndStatusContainerSx, } from './assetsPage.styles';
+import { tabsAndStatusContainerSx, tabsContainerSx, internalTabsAndStatusContainerSx } from './assetsPage.styles';
 
 export type AssetsPageLayoutProps = {
   tabValue: string;

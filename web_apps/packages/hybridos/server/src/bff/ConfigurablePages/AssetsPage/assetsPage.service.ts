@@ -138,6 +138,18 @@ export class AssetsPageService {
           `found initial metadata for ${queryUri} but no info found in the metadata, getting initial data will fail`,
         );
       }
+
+      // if the metadata includes the hasMaintenanceActions field
+      // add a new control to the metadata for the maintenanceActions control
+      if (individualMetadata?.info.hasMaintenanceActions) {
+        const maintenanceActionControl = {
+          inputType: 'maint-action',
+          name: 'Start Maintenance Action',
+          uri: '/actions/control',
+        };
+
+        individualMetadata.controls.push(maintenanceActionControl)
+      }
   
       let extension = individualMetadata.info.extension ?? '';
       const maybeNumber = Number(individualMetadata.info.numberOfItems);
@@ -290,6 +302,7 @@ export class AssetsPageService {
     });
 
     const hasAllControls = dbiMetadata?.[0].info.hasAllControls;
+    const hasMaintenanceActions = dbiMetadata?.[0].info.hasMaintenanceActions;
 
     let uriSpecificObservables = URIs.map((assetID) => {
       return this.getUriSpecificObservable(
@@ -300,6 +313,7 @@ export class AssetsPageService {
         isClothed,
         false,
         hasAllControls,
+        hasMaintenanceActions,
       );
     });
 
@@ -313,6 +327,7 @@ export class AssetsPageService {
           false,
           true,
           hasAllControls,
+          hasMaintenanceActions,
         ),
       );
     }
@@ -397,12 +412,12 @@ export class AssetsPageService {
   ): Promise<ConfigurablePageDTO> => {
     const returnWithMetadata: ConfigurablePageDTO = {
       hasStatic: true,
-      hasAllControls: dbiMetadata && dbiMetadata[0].info.hasAllControls ? true : false,
+      hasAllControls: dbiMetadata?.[0].info.hasAllControls ? true : false,
+      hasMaintenanceActions: dbiMetadata?.[0].info.hasMaintenanceActions ? true : false,
       displayGroups: {},
     };
 
     URIs.forEach((uri) => {
-
       const parsedData: DisplayGroupDTO = isClothed
         ? parseClothedData(
             summaryData[uri],
@@ -464,12 +479,20 @@ export class AssetsPageService {
     isClothed: boolean,
     isSummary: boolean = false,
     hasAllControls: boolean = false,
+    hasMaintenanceActions: boolean = false,
   ): Observable<ConfigurablePageDTO> => {
     const fimsSubscribe = this.fimsService.subscribe(uri);
 
     const observableForMeta: Observable<ConfigurablePageDTO> = fimsSubscribe.pipe(
       map((event) => {
         const assetURI = uri.substring(uri.lastIndexOf("/") + 1, uri.length);
+
+        // if this event body contains information about maintenance actions
+        // and this page is configured to show maintenance actions
+        // send action data to frontend
+        // otherwise, send empty object
+        const maintenanceActions = hasMaintenanceActions ? (event.body.actions || {}) : {}
+
         const parsedData = isSummary
           ? parseSummaryData(
               this.getIndividualAssetMetadata(assetURI, dbiMetadata),
@@ -497,10 +520,12 @@ export class AssetsPageService {
         return {
           hasStatic: false,
           hasAllControls: hasAllControls,
+          hasMaintenanceActions: hasMaintenanceActions,
           displayGroups: {
             [uri]: {
               ...parsedData,
               displayName: name || uri,
+              maintenanceActions: maintenanceActions,
             },
           },
         };

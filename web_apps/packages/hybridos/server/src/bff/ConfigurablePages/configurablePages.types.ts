@@ -34,6 +34,7 @@ export interface metadataFromDBI {
     assetKey: string;
     hasSummary: boolean;
     hasAllControls?: boolean;
+    hasMaintenanceActions?: boolean;
     baseURI: string;
     sourceURI: string;
     itemName?: string;

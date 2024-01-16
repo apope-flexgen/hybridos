@@ -229,6 +229,7 @@ export const nakedTestCases = {
             extension: '/ess_',
             faultFields: ['faults', 'bms_fault', 'emmu_fault', 'ess_faults'],
             hasAllControls: true,
+            hasMaintenanceActions: false,
             hasSummary: false,
             itemName: 'BESS Inverter Block',
             name: 'ESS_New',

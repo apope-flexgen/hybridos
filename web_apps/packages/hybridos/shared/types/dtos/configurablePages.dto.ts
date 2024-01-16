@@ -1,6 +1,7 @@
 export type ConfigurablePageDTO = {
   hasStatic: boolean;
   hasAllControls?: boolean;
+  hasMaintenanceActions?: boolean;
   displayGroups: {
     [displayGroupID: string]: DisplayGroupDTO;
   };
@@ -17,8 +18,22 @@ export type DisplayGroupDTO = {
   control?: {
     [componentID: string]: ControlComponentDTO;
   };
+  maintenanceActions?: {
+    [componentID: string]: MaintenanceActionDTO;
+  }
   fault?: string[];
   alarm?: string[];
+};
+
+export type MaintenanceActionDTO = {
+  name?: string;
+  path_name?: string;
+  step_name?: string;
+  path_index?: number;
+	step_index?: number;
+  seconds_left_in_step?: number;
+  seconds_left_in_action?: number;
+  status?: string;
 };
 
 export type StatusComponentDTO = {

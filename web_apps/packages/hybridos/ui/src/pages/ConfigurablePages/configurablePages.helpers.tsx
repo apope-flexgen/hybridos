@@ -16,6 +16,7 @@ import {
   ConfigurablePageStateStructure,
   DisplayGroupFunctions,
   DisplayGroupStateStructure,
+  MaintActionsControlState,
   MaintModeState,
 } from './configurablePages.types';
 
@@ -44,6 +45,12 @@ const getControlStateForDisplayGroup: (
 ) => DisplayGroupStateStructure['control'] = (control) => {
   if (control === undefined) return {};
 
+  // do not include maintenance action control in this group
+  // will be handled seperately 
+  if (control['actions/control']) {
+    delete control['actions/control']
+  }
+  
   return Object.entries(control).reduce(
     (controlState: DisplayGroupStateStructure['control'], [componentID, component]) => {
       const { state } = component;
@@ -62,10 +69,11 @@ const getControlStateForDisplayGroup: (
 
 export const getUpdatedStates: (
   data: ConfigurablePageDTO['displayGroups'],
-) => [ConfigurablePageStateStructure, AlertState, MaintModeState] = (data) => {
+) => [ConfigurablePageStateStructure, AlertState, MaintModeState, MaintActionsControlState] = (data) => {
   const updatedComponentState: ConfigurablePageStateStructure = {};
   const updatedAlertState: AlertState = {};
   const updatedMaintModeState: MaintModeState = {};
+  const updatedMaintActionsControlState: MaintActionsControlState = {};
 
   Object.entries(data).forEach(([displayGroupID, displayGroup]) => {
     updatedComponentState[displayGroupID] = {
@@ -81,9 +89,13 @@ export const getUpdatedStates: (
     updatedMaintModeState[displayGroupID] = {
       value: Boolean(displayGroup?.control?.maint_mode?.state?.value) || false,
     };
+
+    updatedMaintActionsControlState[displayGroupID] = {
+      value: Boolean(displayGroup?.control?.['actions/control']?.state?.value) || false,
+    };
   });
 
-  return [updatedComponentState, updatedAlertState, updatedMaintModeState];
+  return [updatedComponentState, updatedAlertState, updatedMaintModeState, updatedMaintActionsControlState];
 };
 
 const generateDataPointComponentFunction: (
@@ -201,6 +213,12 @@ const getControlComponentFunctions: (
   displayGroupID: string,
 ) => ConfigurableComponentFunction[] = (control, displayGroupID) => {
   if (control === undefined) return [];
+
+  // do not include maintenance action control in this group
+  // will be handled seperately 
+  if (control['actions/control']) {
+    delete control['actions/control']
+  }
 
   return Object.entries(control).reduce(
     (controlFunctions: ConfigurableComponentFunction[], [componentID, component]) => {

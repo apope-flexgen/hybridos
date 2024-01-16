@@ -28,6 +28,7 @@ export class Info {
   range?: string[]
   faultFields?: string[]
   hasAllControls?: boolean
+  hasMaintenanceActions?: boolean
   hasSummary?: boolean
   icon?: string
   itemName?: string

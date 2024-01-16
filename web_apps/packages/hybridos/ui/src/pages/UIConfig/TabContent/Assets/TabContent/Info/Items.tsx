@@ -23,6 +23,7 @@ import {
   NAME_HELPER_TEXT,
   SOURCE_URI,
   RANGE,
+  HAS_MAINTENANCE_ACTIONS,
 } from './helpers/constants';
 import { ColumnLeft, Row } from './styles';
 
@@ -246,6 +247,18 @@ const Items = () => {
         />
       </Row>
       <Divider orientation="horizontal" variant="fullWidth" />
+      <Row>
+        <ColumnLeft>
+          <Typography text={HAS_MAINTENANCE_ACTIONS} variant="bodyL" />
+        </ColumnLeft>
+        <Checkbox
+          color="primary"
+          label={HAS_MAINTENANCE_ACTIONS}
+          id="hasMaintenanceActions"
+          onChange={handleCheckboxChange}
+          value={!!selectedAsset?.info.hasMaintenanceActions}
+        />
+      </Row>
     </>
   );
 };
