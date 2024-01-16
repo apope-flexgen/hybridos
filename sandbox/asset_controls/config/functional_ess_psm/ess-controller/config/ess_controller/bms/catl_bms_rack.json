@@ -1,0 +1,179 @@
+{
+    "/config/##RACK_ID##": {
+        "AlarmDestination": "/assets/bms/##RACK_ID##:alarms",
+        "FaultDestination": "/assets/bms/##RACK_ID##:faults",
+        "NoAlarmMsg": "Normal",
+        "NoFaultMsg": "Normal",
+        "enable": false,
+        "enum_opt": false
+    },
+    "/links/##RACK_ID##": {
+        "ChargeCurrentLimit": {
+            "value": "/limits/##RACK_ID##:ChargeCurrentLimit"
+        },
+        "ChargePowerLimit": {
+            "value": "/limits/##RACK_ID##:ChargePowerLimit"
+        },
+        "DischargeCurrentLimit": {
+            "value": "/limits/##RACK_ID##:DischargeCurrentLimit"
+        },
+        "DischargePowerLimit": {
+            "value": "/limits/##RACK_ID##:DischargePowerLimit"
+        }
+    },
+    "/sched/##RACK_ID##": {
+        "pubAssets_##RACK_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##RACK_ID##",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##RACK_ID##:enable",
+            "mode": "ui",
+            "note": "Publishes UI asset data (/assets/bms/##RACK_ID##)",
+            "table": "/assets/bms/##RACK_ID##",
+            "value": 1
+        },
+        "runMonitor_##RACK_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##RACK_ID##",
+                                "func": "RunMonitor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "aname": "##RACK_ID##",
+            "enable": "/config/##RACK_ID##:enable",
+            "monitor": "wake_monitor",
+            "note": "Periodically runs functions for variables defined in /schedule/wake_monitor/##RACK_ID##",
+            "value": 1
+        }
+    },
+    "/schedule/wake_monitor/##RACK_ID##": {
+        "/status/##RACK_ID##:CellTempDelta_Calculated": {
+            "amap": "##RACK_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##RACK_ID##:CellVoltageDelta_Calculated": {
+            "amap": "##RACK_ID##",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/##RACK_ID##": {
+        "CellTempDelta_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/##RACK_ID##:CellTempDelta"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "expression": "{2} - {1}",
+            "note": "Calculates the difference between the max and min cell temperatures",
+            "numVars": 2,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##RACK_ID##:MinCellTemp",
+            "variable2": "/status/##RACK_ID##:MaxCellTemp"
+        },
+        "CellVoltageDelta_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/##RACK_ID##:CellVoltageDelta"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "expression": "{2} - {1}",
+            "note": "Calculates the difference between the max and min cell voltages",
+            "numVars": 2,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##RACK_ID##:MinCellVoltage",
+            "variable2": "/status/##RACK_ID##:MaxCellVoltage"
+        },
+        "DCClosed": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/##RACK_ID##:DCCurrent@EnableMaxValCheck"
+                            },
+                            {
+                                "uri": "/status/##RACK_ID##:DCCurrent@EnableMinValCheck"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##RACK_ID##:enable",
+            "note1": "Enables/disables monitoring variables if BMS DC contactors are closed/opened",
+            "note2": "Also reports the BMS DC contactor status to the UI",
+            "note3": "TODO: Decode or calculate DC contactors closed status and remap/link value to this variable",
+            "value": false
+        },
+        "Status": "INIT"
+    },
+    "/system/commands": {
+        "runOpts_rack": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##RACK_ID##",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "note1": "Sets schedule variables (defined in /sched/##RACK_ID##) to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "options": [
+                {
+                    "aname": "##RACK_ID##",
+                    "every": 1,
+                    "uri": "/sched/##RACK_ID##:pubAssets_##RACK_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##RACK_ID##",
+                    "every": 0.1,
+                    "uri": "/sched/##RACK_ID##:runMonitor_##RACK_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##RACK_ID##",
+                    "every": 1,
+                    "uri": "/sched/##RACK_ID##:checkInputs_##RACK_ID##",
+                    "value": 1
+                }
+            ],
+            "targav": "/system/commands:run",
+            "value": false
+        }
+    }
+}

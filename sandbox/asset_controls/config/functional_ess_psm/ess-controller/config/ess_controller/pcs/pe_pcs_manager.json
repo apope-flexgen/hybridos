@@ -1,0 +1,544 @@
+{
+    "/config/pcs": {
+        "AlarmDestination": "/assets/pcs/summary:alarms",
+        "FaultDestination": "/assets/pcs/summary:faults",
+        "FrequencySetpointMargin": 5,
+        "NoAlarmMsg": "Normal",
+        "NoFaultMsg": "Normal",
+        "PowerSetpointMargin": 5,
+        "RampRateMargin": 5,
+        "RatedActivePower": 4200,
+        "RatedApparentPower": 4200,
+        "RatedPowerFactor": 0.8,
+        "RatedReactivePower": 2100,
+        "VoltageSetpointMargin": 5,
+        "enable": false,
+        "enum_opt": false
+    },
+    "/links/pcs": {
+        "ActivePowerCmdReal": {
+            "value": "/controls/pcs:ActivePowerCmdReal"
+        },
+        "ActivePowerSetpoint": {
+            "value": "/controls/pcs:ActivePowerSetpoint"
+        },
+        "MaxPCSChargePower": {
+            "value": "/limits/pcs:MaxPCSChargePower"
+        },
+        "MaxPCSDischargePower": {
+            "value": "/limits/pcs:MaxPCSDischargePower"
+        },
+        "RatedActivePower": {
+            "value": "/limits/pcs:RatedActivePower"
+        },
+        "RatedApparentPower": {
+            "value": "/limits/pcs:RatedApparentPower"
+        },
+        "RatedReactivePower": {
+            "value": "/limits/pcs:RatedReactivePower"
+        },
+        "ReactivePowerCmdReal": {
+            "value": "/controls/pcs:ReactivePowerCmdReal"
+        },
+        "ReactivePowerSetpoint": {
+            "value": "/controls/pcs:ReactivePowerSetpoint"
+        }
+    },
+    "/sched/pcs": {
+        "handlePowerCmd_pcs": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "HandlePowerCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bms": "bms",
+            "ess": "ess",
+            "note": "Processes active and reactive power commands before they are sent",
+            "pcs": "pcs",
+            "value": 1
+        },
+        "pubAssetsSummary_pcs": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "mode": "ui",
+            "note": "Publishes UI summary data (/assets/pcs/summary)",
+            "table": "/assets/pcs/summary",
+            "value": 1
+        },
+        "runMonitor_pcs": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "RunMonitor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "aname": "pcs",
+            "enable": "/config/pcs:enable",
+            "monitor": "wake_monitor",
+            "note": "Periodically runs functions for variables defined in /schedule/wake_monitor/pcs",
+            "value": 1
+        },
+        "updateHeartbeatWrite_pcs": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "CalculateVar",
+                                "inAv": "/status/pcs:HeartbeatWrite"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "note": "Periodically updates the heartbeat write variable defined in /status/pcs:HeartbeatWrite",
+            "value": 1
+        },
+        "LocalStartPCS": {
+            "every": 0.5,
+            "value":    "LocalStartPCS",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LocalStartPCS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "LocalStopPCS": {
+            "every": 0.5,
+            "value":    "LocalStopPCS",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LocalStopPCS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "LocalStandbyPCS": {
+            "every": 0.5,
+            "value":    "LocalStandbyPCS",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LocalStandbyPCS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "StartEnable": {
+            "value":    "StartEnable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "StartEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "StopEnable": {
+            "value":    "StopEnable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "StopEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "StandbyEnable": {
+            "value":    "StandbyEnable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "StandbyEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/schedule/wake_monitor/pcs": {
+        "/status/pcs:AvgLineVoltage": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/pcs": {
+        "AvgLineVoltage": {
+            "expression": "({1} + {2} + {3}) / 3",
+            "note": "Calculates the average grid line voltage",
+            "numVars": 3,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/pcs:L1L2Voltage",
+            "variable2": "/status/pcs:L2L3Voltage",
+            "variable3": "/status/pcs:L3L1Voltage"
+        },
+        "CommsOK": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": true,
+                                "uri": "/site/ess:comms_faults[0]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Updates the UI/EMS communication status variables (ONLINE/OFFLINE) depending on the current status of the communications monitoring variable",
+            "value": true
+        },
+        "DCClosed": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/pcs:DCVoltage@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/bms:Voltage@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/pcs:NumModulesOnline@EnableMinValCheck"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "note": "Enables/disables monitoring variables if PCS DC contactors are closed/opened",
+            "value": false
+        },
+        "GridMode": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "FollowPQ",
+                                "note": "Bit 0 - FollowPQ",
+                                "outValue": 1,
+                                "uri": "/site/ess:pcs_grid_mode"
+                            },
+                            {
+                                "inValue": "FormVF",
+                                "note": "Bit 1 - FormVF",
+                                "outValue": 2,
+                                "uri": "/site/ess:pcs_grid_mode"
+                            },
+                            {
+                                "inValue": "FormVSG",
+                                "note": "Bit 2 - FormVSG",
+                                "outValue": 4,
+                                "uri": "/site/ess:pcs_grid_mode"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "note1": "Contains the PCS's current grid mode, which can be one of the following: FollowPQ, FormVF, FormVSG",
+            "value": "INIT"
+        },
+        "HeartbeatWrite": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "fims": "set",
+                                "uri": "/components/pcs:heartbeat_write"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "excludeFromDefaultSched": true,
+            "expression": "if (({1} >= 59), 0, ({1} + 1))",
+            "note": "Updates and then sends the heartbeat write value",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/pcs:HeartbeatWrite"
+        },
+        "NumModulesTotal": 6,
+        "Status": "INIT",
+        "SystemState": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Stop",
+                                "outValue": false,
+                                "uri": "/status/pcs:DCClosed"
+                            },
+                            {
+                                "inValue": "Run",
+                                "outValue": true,
+                                "uri": "/status/pcs:DCClosed"
+                            },
+                            {
+                                "inValue": "Fault",
+                                "outValue": false,
+                                "uri": "/status/pcs:DCClosed"
+                            },
+                            {
+                                "inValue": "Standby",
+                                "outValue": true,
+                                "uri": "/status/pcs:DCClosed"
+                            },
+                            {
+                                "inValue": "Stop",
+                                "outValue": false,
+                                "uri": "/status/pcs:IsRunning"
+                            },
+                            {
+                                "inValue": "Run",
+                                "outValue": true,
+                                "uri": "/status/pcs:IsRunning"
+                            },
+                            {
+                                "inValue": "Fault",
+                                "outValue": false,
+                                "uri": "/status/pcs:IsRunning"
+                            },
+                            {
+                                "inValue": "Standby",
+                                "outValue": false,
+                                "uri": "/status/pcs:IsRunning"
+                            },
+                            {
+                                "inValue": "Stop",
+                                "outValue": false,
+                                "uri": "/status/pcs:SystemFault"
+                            },
+                            {
+                                "inValue": "Run",
+                                "outValue": false,
+                                "uri": "/status/pcs:SystemFault"
+                            },
+                            {
+                                "inValue": "Fault",
+                                "outValue": true,
+                                "uri": "/status/pcs:SystemFault"
+                            },
+                            {
+                                "inValue": "Standby",
+                                "outValue": false,
+                                "uri": "/status/pcs:SystemFault"
+                            },
+                            {
+                                "inValue": "Stop",
+                                "note": "Bit 0 - Stop",
+                                "outValue": 1,
+                                "uri": "/site/ess:pcs_system_state"
+                            },
+                            {
+                                "inValue": "Run",
+                                "note": "Bit 1 - Run",
+                                "outValue": 2,
+                                "uri": "/site/ess:pcs_system_state"
+                            },
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 2 - Fault",
+                                "outValue": 4,
+                                "uri": "/site/ess:pcs_system_state"
+                            },
+                            {
+                                "inValue": "Standby",
+                                "note": "Bit 3 - Standby",
+                                "outValue": 8,
+                                "uri": "/site/ess:pcs_system_state"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "note1": "Contains the PCS's current state, which can be one of the following: Stop, Run, Fault, Standby",
+            "note2": "Updates various PCS status variables depending on this variable's value",
+            "value": "INIT"
+        }
+    },
+    "/system/commands": {
+        "runOpts_pcs": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "note1": "Sets schedule variables (defined in /sched/pcs) to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "options": [
+                {
+                    "aname": "pcs",
+                    "every": 1,
+                    "uri": "/sched/pcs:pubAssetsSummary_pcs",
+                    "value": 1
+                },
+                {
+                    "aname": "pcs",
+                    "every": 0.1,
+                    "uri": "/sched/pcs:runMonitor_pcs",
+                    "value": 1
+                },
+                {
+                    "aname": "pcs",
+                    "every": 1,
+                    "uri": "/sched/pcs:checkInputs_pcs",
+                    "value": 1
+                },
+                {
+                    "aname": "pcs",
+                    "every": 1,
+                    "uri": "/sched/pcs:updateHeartbeatWrite_pcs",
+                    "value": 1
+                },
+                {
+                    "aname": "pcs",
+                    "every": 0.1,
+                    "uri": "/sched/pcs:handlePowerCmd_pcs",
+                    "value": 1
+                },
+                {
+                    "aname": "pcs",
+                    "value":0, 
+                    "uri":"/sched/pcs:LocalStartPCS",
+                    "every":0,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "pcs",
+                    "value":0, 
+                    "uri":"/sched/pcs:LocalStopPCS",
+                    "every":0,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "pcs",
+                    "value":0, 
+                    "uri":"/sched/pcs:LocalStandbyPCS",
+                    "every":0,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "pcs",
+                    "value":0, 
+                    "uri":"/sched/pcs:StartEnable",
+                    "every":0.1,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "pcs",
+                    "value":0, 
+                    "uri":"/sched/pcs:StopEnable",
+                    "every":0.1,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "pcs",
+                    "value":0, 
+                    "uri":"/sched/pcs:StandbyEnable",
+                    "every":0.1,
+                    "offset":0,
+                    "debug":0
+                }
+            ],
+            "targav": "/system/commands:run",
+            "value": false
+        }
+    }
+}
