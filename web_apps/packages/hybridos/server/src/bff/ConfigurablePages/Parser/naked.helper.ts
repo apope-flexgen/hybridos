@@ -112,7 +112,7 @@ const parseNakedBodyControl = (
   metaData.controls.forEach((control: controlDataFromNakedBody) => {
     const componentID = control.uri.slice(1);
 
-    if (!rawData[componentID]) {
+    if (rawData[componentID] === undefined || rawData[componentID] === null) {
       return;
     }
 
@@ -120,42 +120,40 @@ const parseNakedBodyControl = (
       state: {
         enabled: setControlEnabled(
           enableAssetPageControls,
-          (rawData[componentID] as controlObjectForNakedBody).enabled,
+          (rawData[componentID] as controlObjectForNakedBody).enabled === undefined ? true : (rawData[componentID] as controlObjectForNakedBody).enabled,
         ),
       },
     };
 
-    let trueScalar = 1;
-    if (rawData[componentID].hasOwnProperty('value')) {
-      const rawValue = rawData[componentID];
+    let trueScalar = 1
+    const rawValue = rawData[componentID];
 
-      const computeValue: ValueType =
-        rawValue !== null && typeof rawValue === 'object' ? rawValue.value : rawValue;
+    const computeValue: ValueType =
+      (rawValue !== null && typeof rawValue === 'object' && rawData[componentID].hasOwnProperty('value')) ? rawValue.value : rawValue;
 
-      const scalar =
-        control.scalar && (typeof control.scalar === 'number' || !isNaN(Number(control.scalar)))
-          ? Number(control.scalar)
-          : 1;
+    const scalar =
+      control.scalar && (typeof control.scalar === 'number' || !isNaN(Number(control.scalar)))
+        ? Number(control.scalar)
+        : 1;
 
-      if (includeStatic) {
-        // first run
-        const { scalar: newScalar } =
-          control.inputType === 'number'
-            ? computeNakedValue(undefined, scalar, control.units ?? '')
-            : { scalar: trueScalar };
-        trueScalar = newScalar;
-        aggregatedDTOs[componentID].state.value = computeValue;
-      } else {
-        const { value: trueValue, scalar: newScalar } =
-          typeof computeValue === 'number'
-            ? computeNakedValue(computeValue, scalar, control.units ?? '')
-            : { value: computeValue, scalar: trueScalar };
+    if (includeStatic) {
+      // first run
+      const { scalar: newScalar } =
+        control.inputType === 'number'
+          ? computeNakedValue(undefined, scalar, control.units ?? '')
+          : { scalar: trueScalar };
+      trueScalar = newScalar;
+      aggregatedDTOs[componentID].state.value = computeValue;
+    } else {
+      const { value: trueValue, scalar: newScalar } =
+        typeof computeValue === 'number'
+          ? computeNakedValue(computeValue, scalar, control.units ?? '')
+          : { value: computeValue, scalar: trueScalar };
 
-        aggregatedDTOs[componentID].state.value = trueValue;
-        trueScalar = newScalar;
-      }
+      aggregatedDTOs[componentID].state.value = trueValue;
+      trueScalar = newScalar;
     }
-
+    
     if (!includeStatic) {
       return;
     }
