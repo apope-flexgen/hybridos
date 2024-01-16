@@ -298,11 +298,25 @@ func GetCPUandMemStats(data map[string]interface{}, processName string) (cpu, me
 		if strings.Contains(k, processName) {
 			// process_cpupct
 			if strings.Contains(k, "cpu") {
-				cpu = v.(float64)
+				switch val := v.(type) {
+				case float64:
+					cpu = v.(float64)
+				case float32:
+					cpu = float64(v.(float32))
+				default:
+					return 0, 0, fmt.Errorf("unrecognized type for cpu pct: %v, %T", val, v)
+				}
 			}
 			// process_mempct
 			if strings.Contains(k, "mem") {
-				mem = v.(float64)
+				switch val := v.(type) {
+				case float64:
+					mem = v.(float64)
+				case float32:
+					mem = float64(v.(float32))
+				default:
+					return 0, 0, fmt.Errorf("unrecognized type for mem pct: %v, %T", val, v)
+				}
 			}
 		}
 	}

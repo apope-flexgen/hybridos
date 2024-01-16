@@ -25,7 +25,7 @@ func (dataman *DataManager) start(coll Collector) {
 	for {
 		scrape := coll.scrape()
 		if len(scrape) == 1 {
-			log.Errorf("did not receive scrape scrape from %v", scrape["collector"])
+			log.Infof("did not receive scrape from %v collector", scrape["collector"])
 			continue
 		}
 
