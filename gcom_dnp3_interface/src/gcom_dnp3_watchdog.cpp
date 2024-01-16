@@ -190,6 +190,7 @@ bool setupWatchdogTimer(GcomSystem &sys)
         return true;
     }
 
+    // frequency is in milliseconds
     FPS_INFO_LOG("Setting up watchdog for point [%s] every %f seconds", sys.watchdog->id, sys.watchdog->frequency/1000.0);
     {
         std::unique_lock<std::mutex> lk{sys.main_mutex};
@@ -206,6 +207,7 @@ bool setupWatchdogTimer(GcomSystem &sys)
     sys.watchdog->state_str = "INIT";
     sys.watchdog->pChannel = sys.protocol_dependencies->dnp3.pChannel;
     sys.watchdog->pSession = sys.protocol_dependencies->dnp3.pSession;
+    // timer reads in milliseconds
     tmwtimer_start(&sys.watchdog->watchdog_timer, sys.watchdog->frequency, sys.protocol_dependencies->dnp3.pChannel, watchdogCallback, sys.watchdog);
     return true;
 }

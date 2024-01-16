@@ -545,17 +545,17 @@ bool pub_stats_thread(GcomSystem &sys) noexcept
             dnp3_sys.timings->direct_operates.mutex.lock();
             FORMAT_TO_BUF(send_buf, R"("average_direct_operate_response_time_milli": {:g}, )", dnp3_sys.timings->direct_operates.average);
             FORMAT_TO_BUF(send_buf, R"("min_direct_operate_response_time_milli": {}, )", ((dnp3_sys.timings->direct_operates.count == 0) ? 0 : dnp3_sys.timings->direct_operates.min));
-            FORMAT_TO_BUF(send_buf, R"("max_direct_operate_response_time_milli": {} )", dnp3_sys.timings->direct_operates.max);
+            FORMAT_TO_BUF(send_buf, R"("max_direct_operate_response_time_milli": {}, )", dnp3_sys.timings->direct_operates.max);
             dnp3_sys.timings->direct_operates.mutex.unlock();
             dnp3_sys.timings->binary_direct_operates.mutex.lock();
             FORMAT_TO_BUF(send_buf, R"("average_binary_direct_operate_response_time_milli": {:g}, )", dnp3_sys.timings->binary_direct_operates.average);
             FORMAT_TO_BUF(send_buf, R"("min_binary_direct_operate_response_time_milli": {}, )", ((dnp3_sys.timings->binary_direct_operates.count == 0) ? 0 : dnp3_sys.timings->binary_direct_operates.min));
-            FORMAT_TO_BUF(send_buf, R"("max_binary_direct_operate_response_time_milli": {} )", dnp3_sys.timings->binary_direct_operates.max);
+            FORMAT_TO_BUF(send_buf, R"("max_binary_direct_operate_response_time_milli": {}, )", dnp3_sys.timings->binary_direct_operates.max);
             dnp3_sys.timings->binary_direct_operates.mutex.unlock();
             dnp3_sys.timings->analog_direct_operates.mutex.lock();
             FORMAT_TO_BUF(send_buf, R"("average_analog_direct_operate_response_time_milli": {:g}, )", dnp3_sys.timings->analog_direct_operates.average);
             FORMAT_TO_BUF(send_buf, R"("min_analog_direct_operate_response_time_milli": {}, )", ((dnp3_sys.timings->analog_direct_operates.count == 0) ? 0 : dnp3_sys.timings->analog_direct_operates.min));
-            FORMAT_TO_BUF(send_buf, R"("max_analog_direct_operate_response_time_milli": {} )", dnp3_sys.timings->analog_direct_operates.max);
+            FORMAT_TO_BUF(send_buf, R"("max_analog_direct_operate_response_time_milli": {}, )", dnp3_sys.timings->analog_direct_operates.max);
             dnp3_sys.timings->analog_direct_operates.mutex.unlock();
         }
         else
@@ -564,17 +564,17 @@ bool pub_stats_thread(GcomSystem &sys) noexcept
             dnp3_sys.timings->unsolicited_responses.mutex.lock();
             FORMAT_TO_BUF(send_buf, R"("average_unsolicited_response_confirm_time_milli": {:g}, )", dnp3_sys.timings->unsolicited_responses.average);
             FORMAT_TO_BUF(send_buf, R"("min_unsolicited_response_confirm_time_milli": {}, )", ((dnp3_sys.timings->unsolicited_responses.count == 0) ? 0 : dnp3_sys.timings->unsolicited_responses.min));
-            FORMAT_TO_BUF(send_buf, R"("max_unsolicited_response_confirm_time_milli": {})", dnp3_sys.timings->unsolicited_responses.max);
+            FORMAT_TO_BUF(send_buf, R"("max_unsolicited_response_confirm_time_milli": {},)", dnp3_sys.timings->unsolicited_responses.max);
             dnp3_sys.timings->unsolicited_responses.mutex.unlock();
         }
 
         sys.error_mutex.lock();
-        FORMAT_TO_BUF(send_buf, R"("fims_message_parse_errors": {}, )", sys.parse_errors);
-        FORMAT_TO_BUF(send_buf, R"("point_errors": {}, )", sys.point_errors);
-        FORMAT_TO_BUF(send_buf, R"("fims_errors": {},)", sys.fims_errors);
-        FORMAT_TO_BUF(send_buf, R"("comms_errors": {},)", sys.comms_errors);
-        FORMAT_TO_BUF(send_buf, R"("heartbeat_errors": {},)", sys.heartbeat_errors);
-        FORMAT_TO_BUF(send_buf, R"("watchdog_errors": {})", sys.watchdog_errors);
+        FORMAT_TO_BUF(send_buf, R"("fims_message_parse_log_message_count": {}, )", sys.parse_errors);
+        FORMAT_TO_BUF(send_buf, R"("point_log_message_count": {}, )", sys.point_errors);
+        FORMAT_TO_BUF(send_buf, R"("fims_log_message_count": {},)", sys.fims_errors);
+        FORMAT_TO_BUF(send_buf, R"("comms_log_message_counts": {},)", sys.comms_errors);
+        FORMAT_TO_BUF(send_buf, R"("heartbeat_log_message_count": {},)", sys.heartbeat_errors);
+        FORMAT_TO_BUF(send_buf, R"("watchdog_log_message_count": {})", sys.watchdog_errors);
         sys.error_mutex.unlock();
 
         send_buf.push_back('}');

@@ -2,7 +2,7 @@
 #include <cstring>
 #include "gcom_dnp3_init.h"
 
-// As of 10/5/2023, these functions aren't currently used for anything...
+// As of 1/4/2024, these functions aren't currently used for anything...
 
 int contains_flag(int argc, char *argv[], const char *flag)
 {

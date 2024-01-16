@@ -9,7 +9,14 @@
         "local_uri": "/local_client",
         "port": 20000,
         "frequency": 100,
-        "event_pub": false
+        "event_pub": false,
+        "component_heartbeat_read_uri": "analog_in_4",
+        "component_heartbeat_write_uri": "analog_out_4",
+        "heartbeat_enabled": true,
+        "component_heartbeat_timeout_ms":3000,
+        "component_heartbeat_frequency_ms":1000,
+        "stats_pub_frequency":1000,
+        "stats_pub_uri": "/stats"
     },
     "registers": [
         {

@@ -65,7 +65,7 @@ void heartbeatCallback(void *pHeartbeat)
 
                     heartbeat->state_frozen = true;
                     heartbeat->state_str = "FROZEN";
-                    std::string message = fmt::format("Read heartbeat [%s] has entered the [FROZEN] state.)", ((FlexPoint *)(io_read_point->flexPointHandle))->name.c_str());
+                    std::string message = fmt::format("Read heartbeat [{}] has entered the [FROZEN] state.)", heartbeat->heartbeat_read_uri);
                     if(!spam_limit(sys, sys->heartbeat_errors))
                     {
                         FPS_ERROR_LOG("%s", message.c_str());
@@ -82,8 +82,8 @@ void heartbeatCallback(void *pHeartbeat)
                 {
 
                     heartbeat->state_fault = true;
-                    heartbeat->state_str = "FAULT";
-                    std::string message = fmt::format("Read heartbeat [%s] has entered the [TIMEOUT] state.)", ((FlexPoint *)(io_read_point->flexPointHandle))->name.c_str());
+                    heartbeat->state_str = "TIMEOUT";
+                    std::string message = fmt::format("Read heartbeat [{}] has entered the [TIMEOUT] state.)", heartbeat->heartbeat_read_uri);
                     if(!spam_limit(sys, sys->heartbeat_errors))
                     {
                         FPS_ERROR_LOG("%s", message.c_str());
@@ -109,7 +109,7 @@ void heartbeatCallback(void *pHeartbeat)
                     heartbeat->state_normal = true;
                     heartbeat->state_str = "NORMAL";
 
-                    std::string message = fmt::format("Read heartbeat [%s] has entered the [NORMAL] state.)", ((FlexPoint *)(io_read_point->flexPointHandle))->name.c_str());
+                    std::string message = fmt::format("Read heartbeat [{}] has entered the [NORMAL] state.)", heartbeat->heartbeat_read_uri);
                     if(!spam_limit(sys, sys->heartbeat_errors))
                     {
                         FPS_INFO_LOG("%s", message.c_str());
@@ -122,7 +122,6 @@ void heartbeatCallback(void *pHeartbeat)
                 heartbeat->state_normal = false;
             }
         }
-
 
         heartbeat->value = raw_val + 1;
 
@@ -162,7 +161,7 @@ void heartbeatCallback(void *pHeartbeat)
         }
     }
     heartbeat->mtx.unlock();
-    tmwtimer_start(&heartbeat->heartbeat_timer, heartbeat->frequency, heartbeat->pChannel, heartbeatCallback, heartbeat);
+    tmwtimer_start(&heartbeat->heartbeat_timer, heartbeat->frequency*1000, heartbeat->pChannel, heartbeatCallback, heartbeat);
 }
 /// @brief 
 /// @param sys 
@@ -179,13 +178,15 @@ bool setupHeartbeatTimer(GcomSystem &sys)
                            { return sys.start_signal; });
     }
 
+    // frequency is in seconds
     if(sys.heartbeat->heartbeat_write_point)
-        FPS_INFO_LOG("Setting up heartbeat_write for [%s] every %f seconds", sys.heartbeat->heartbeat_write_uri, sys.heartbeat->frequency/1000.0);
+        FPS_INFO_LOG("Setting up heartbeat_write for [%s] every %f seconds", sys.heartbeat->heartbeat_write_uri, sys.heartbeat->frequency);
     if(sys.heartbeat->heartbeat_read_point)
-        FPS_INFO_LOG("Setting up heartbeat_read for [%s] every %f seconds", sys.heartbeat->heartbeat_read_uri, sys.heartbeat->frequency/1000.0);
+        FPS_INFO_LOG("Setting up heartbeat_read for [%s] every %f seconds", sys.heartbeat->heartbeat_read_uri, sys.heartbeat->frequency);
     
     sys.heartbeat->pChannel = sys.protocol_dependencies->dnp3.pChannel;
     sys.heartbeat->pSession = sys.protocol_dependencies->dnp3.pSession;
-    tmwtimer_start(&sys.heartbeat->heartbeat_timer, sys.heartbeat->frequency, sys.protocol_dependencies->dnp3.pChannel, heartbeatCallback, sys.heartbeat);
+    // timer reads in milliseconds
+    tmwtimer_start(&sys.heartbeat->heartbeat_timer, sys.heartbeat->frequency*1000, sys.protocol_dependencies->dnp3.pChannel, heartbeatCallback, sys.heartbeat);
     return true;
 }

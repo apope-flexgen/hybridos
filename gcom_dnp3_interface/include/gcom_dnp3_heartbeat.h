@@ -36,7 +36,7 @@ struct Heartbeat
     u64 value = 0;
     u64 last_val = 0;
     int count;
-    double frequency = 1000; // milliseconds
+    double frequency = 1000; // seconds (divided by 1000 at config read time)
     int timeout; // in seconds
     int offset_time = 0;
     int max_value_int = 4096;

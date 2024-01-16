@@ -106,7 +106,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         {
             while (sdnpsim_anlgOutGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogOutput(dbHandle, 1, DNPDEFS_DBAS_FLAG_RESTART, 0);
+                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0);
                 dbPoint->enabled = false; // do this by default until we find the point we want
             }
             dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetPoint(dbHandle, offset);
@@ -121,7 +121,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         {
             while (sdnpsim_anlgOutGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogOutput(dbHandle, 1, DNPDEFS_DBAS_FLAG_RESTART, 0);
+                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0);
                 dbPoint->enabled = false; // do this by default until we find the point we want
             }
             dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetPoint(dbHandle, offset);
@@ -136,7 +136,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         {
             while (sdnpsim_anlgOutGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogOutput(dbHandle, 1, DNPDEFS_DBAS_FLAG_RESTART, 0.0);
+                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0.0);
                 dbPoint->enabled = false; // do this by default until we find the point we want
             }
             dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetPoint(dbHandle, offset);
@@ -151,7 +151,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         {
             while (sdnpsim_anlgOutGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogOutput(dbHandle, 1, DNPDEFS_DBAS_FLAG_RESTART, 0.0);
+                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0.0);
                 dbPoint->enabled = false; // do this by default until we find the point we want
             }
             dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetPoint(dbHandle, offset);
@@ -166,7 +166,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         {
             while (sdnpsim_anlgInGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogInput(dbHandle, 1, DNPDEFS_DBAS_FLAG_RESTART, 0, 0.0);
+                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogInput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0, 0.0);
                 dbPoint->enabled = false; // do this by default until we find the point we want
             }
             dbPoint = (TMWSIM_POINT *)sdnpsim_anlgInGetPoint(dbHandle, offset);
@@ -181,7 +181,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         {
             while (sdnpsim_binOutGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addBinaryOutput(dbHandle, 1, DNPDEFS_DBAS_FLAG_RESTART, 0, 15);
+                dbPoint = (TMWSIM_POINT *)sdnpsim_addBinaryOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0, 15);
                 dbPoint->enabled = false; // do this by default until we find the point we want
             }
             dbPoint = (TMWSIM_POINT *)sdnpsim_binOutGetPoint(dbHandle, offset);
@@ -196,7 +196,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         {
             while (sdnpsim_binInGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addBinaryInput(dbHandle, 1, DNPDEFS_DBAS_FLAG_RESTART, false);
+                dbPoint = (TMWSIM_POINT *)sdnpsim_addBinaryInput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, false);
                 dbPoint->enabled = false; // do this by default until we find the point we want
             }
             dbPoint = (TMWSIM_POINT *)sdnpsim_binInGetPoint(dbHandle, offset);
@@ -211,7 +211,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         {
             while (sdnpsim_binOutGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addBinaryOutput(dbHandle, 1, DNPDEFS_DBAS_FLAG_RESTART, 0, 15);
+                dbPoint = (TMWSIM_POINT *)sdnpsim_addBinaryOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0, 15);
                 dbPoint->enabled = false; // do this by default until we find the point we want
             }
             dbPoint = (TMWSIM_POINT *)sdnpsim_binOutGetPoint(dbHandle, offset);
@@ -921,10 +921,124 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
 
     if (ret)
     {
+        ret = getCJstr(cj, "id", sys.id, true);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'id' must be a string.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJint(cj, "port", sys.protocol_dependencies->port, false);
+        if (!ret || sys.protocol_dependencies->port < 0)
+        {
+            FPS_ERROR_LOG("Error: 'port' must be an integer greater than 0.\n");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJstr(cj, "ip_address", sys.protocol_dependencies->ip_address, true);
+        if (ret && strcmp(sys.protocol_dependencies->ip_address, "0.0.0.0") == 0)
+        {
+            strncpy(sys.protocol_dependencies->ip_address, "*.*.*.*", sizeof("*.*.*.*"));
+        }
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'ip_address' must be a string.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJint(cj, "master_address", sys.protocol_dependencies->master_address, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'master_address' must be an integer.\n");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJint(cj, "station_address", sys.protocol_dependencies->station_address, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'station_address' must be an integer.\n");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJstr(cj, "base_uri", tmp_uri, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'base_uri' must be a string.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJstr(cj, "local_uri", sys.local_uri, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'local_uri' must be a string.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
         ret = getCJint(cj, "frequency", sys.protocol_dependencies->frequency, false);
         if (!ret || sys.protocol_dependencies->frequency < 0)
         {
             FPS_ERROR_LOG("Error: 'frequency' must be an integer greater than 0.\n");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJbool(cj, "unsol", sys.protocol_dependencies->dnp3.unsolUpdate, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'unsol' must be a boolean.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJint(cj, "debug", sys.debug, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'debug' must be an integer.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJdouble(cj, "deadband", sys.protocol_dependencies->deadband, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'deadband' must be a double.");
             final_ret = false;
             ret = true;
         }
@@ -974,10 +1088,16 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
 
     if (ret)
     {
-        ret = getCJint(cj, "port", sys.protocol_dependencies->port, false);
-        if (!ret || sys.protocol_dependencies->port < 0)
+        ret = getCJdouble(cj, "timeout", sys.protocol_dependencies->timeout, false);
+        if(sys.protocol_dependencies->timeout > 0){
+            sys.protocol_dependencies->timeout *= 1000; // convert to milliseconds (e.g. timeout = 5 s ----> 5000 ms)
+        }
+        if(sys.protocol_dependencies->timeout == 0){
+            ret = getCJdouble(cj, "timeoutmS", sys.protocol_dependencies->timeout, false);
+        }
+        if (!ret)
         {
-            FPS_ERROR_LOG("Error: 'port' must be an integer greater than 0.\n");
+            FPS_ERROR_LOG("Error: 'timeout' must be a double.");
             final_ret = false;
             ret = true;
         }
@@ -985,10 +1105,10 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
 
     if (ret)
     {
-        ret = getCJint(cj, "master_address", sys.protocol_dependencies->master_address, false);
+        ret = getCJdouble(cj, "respTime", sys.protocol_dependencies->respTime, false);
         if (!ret)
         {
-            FPS_ERROR_LOG("Error: 'master_address' must be an integer.\n");
+            FPS_ERROR_LOG("Error: 'respTime' must be a double.");
             final_ret = false;
             ret = true;
         }
@@ -996,13 +1116,50 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
 
     if (ret)
     {
-        ret = getCJint(cj, "station_address", sys.protocol_dependencies->station_address, false);
+        char *tmp_fmt = nullptr;
+        ret = getCJstr(cj, "format", tmp_fmt, false);
         if (!ret)
         {
-            FPS_ERROR_LOG("Error: 'station_address' must be an integer.\n");
+            FPS_ERROR_LOG("Error: 'format' must be a string (clothed, full, or naked).");
             final_ret = false;
             ret = true;
         }
+        if (tmp_fmt != nullptr)
+        {
+            if (strcmp(tmp_fmt, "clothed") == 0)
+            {
+                sys.fims_dependencies->format = FimsFormat::Clothed;
+            }
+            else if (strcmp(tmp_fmt, "full") == 0)
+            {
+                sys.fims_dependencies->format = FimsFormat::Full;
+            }
+            else // defaults to naked
+            {
+                sys.fims_dependencies->format = FimsFormat::Naked;
+            }
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJbool(cj, "event_pub", sys.protocol_dependencies->dnp3.event_pub, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'event_pub' must be a boolean.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJint(cj, "event_buffer", sys.protocol_dependencies->dnp3.event_buffer, false);
+    if (sys.protocol_dependencies->dnp3.event_buffer <= 0)
+    {
+        FPS_ERROR_LOG("Invalid  event buffer  %d  setting to default 100", sys.protocol_dependencies->dnp3.event_buffer);
+        sys.protocol_dependencies->dnp3.event_buffer = 100;
+    }
     }
 
     if (ret)
@@ -1015,16 +1172,62 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
             ret = true;
         }
     }
+
     if (ret)
     {
-        ret = getCJstr(cj, "id", sys.id, true);
+        ret = getCJint(cj, "stats_pub_frequency", sys.protocol_dependencies->dnp3.stats_pub_frequency, false);
         if (!ret)
         {
-            FPS_ERROR_LOG("Error: 'id' must be a string.");
+            FPS_ERROR_LOG("Error: 'stats_pub_frequency' must be an integer.");
             final_ret = false;
             ret = true;
         }
     }
+    
+    if (ret)
+    {
+        ret = getCJint(cj, "batch_set_rate", sys.protocol_dependencies->dnp3.batch_set_rate, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'batch_set_rate' must be an integer.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJint(cj, "interval_set_rate", sys.protocol_dependencies->dnp3.interval_set_rate, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'interval_set_rate' must be an integer.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJint(cj, "batch_pub_rate", sys.protocol_dependencies->dnp3.batch_pub_rate, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'batch_pub_rate' must be an integer.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJint(cj, "interval_pub_rate", sys.protocol_dependencies->dnp3.interval_pub_rate, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'interval_pub_rate' must be an integer.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+    
     if (ret)
     {
         char *protocol_str = nullptr;
@@ -1042,63 +1245,11 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
             free(protocol_str);
         }
     }
-    if (ret)
-    {
-        ret = getCJstr(cj, "ip_address", sys.protocol_dependencies->ip_address, true);
-        if (ret && strcmp(sys.protocol_dependencies->ip_address, "0.0.0.0") == 0)
-        {
-            strncpy(sys.protocol_dependencies->ip_address, "*.*.*.*", sizeof("*.*.*.*"));
-        }
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'ip_address' must be a string.");
-            final_ret = false;
-            ret = true;
-        }
-    }
-    if (ret)
-    {
-        ret = getCJint(cj, "debug", sys.debug, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'debug' must be an integer.");
-            final_ret = false;
-            ret = true;
-        }
-    }
+    
+    
 
-    if (ret)
-    {
-        ret = getCJstr(cj, "base_uri", tmp_uri, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'base_uri' must be a string.");
-            final_ret = false;
-            ret = true;
-        }
-    }
-
-    if (ret)
-    {
-        ret = getCJstr(cj, "local_uri", sys.local_uri, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'local_uri' must be a string.");
-            final_ret = false;
-            ret = true;
-        }
-    }
-
-    if (ret)
-    {
-        ret = getCJdouble(cj, "deadband", sys.protocol_dependencies->deadband, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'deadband' must be a double.");
-            final_ret = false;
-            ret = true;
-        }
-    }
+    
+    
     // conn type:
     if (ret)
     {
@@ -1192,160 +1343,9 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
             final_ret = false;
             ret = true;
         }
-    }
+    }  
 
-    if (ret)
-    {
-        ret = getCJdouble(cj, "timeout", sys.protocol_dependencies->timeout, false);
-        if(sys.protocol_dependencies->timeout > 0){
-            sys.protocol_dependencies->timeout *= 1000; // convert to milliseconds (e.g. timeout = 5 s ----> 5000 ms)
-        }
-        if(sys.protocol_dependencies->timeout == 0){
-            ret = getCJdouble(cj, "timeoutmS", sys.protocol_dependencies->timeout, false);
-        }
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'timeout' must be a double.");
-            final_ret = false;
-            ret = true;
-        }
-    }
-
-    if (ret)
-    {
-        ret = getCJbool(cj, "event_pub", sys.protocol_dependencies->dnp3.event_pub, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'event_pub' must be a boolean.");
-            final_ret = false;
-            ret = true;
-        }
-    }
-
-    // if (ret)
-    // {
-    //     ret = getCJbool(cj, "signed", sys.protocol_dependencies->dnp3.sign, false);
-    //     if (!ret)
-    //     {
-    //         FPS_ERROR_LOG("Error: 'signed' must be a boolean.");
-    //         final_ret = false;
-    //         ret = true;
-    //     }
-    // }
-
-    if (ret)
-    {
-        ret = getCJdouble(cj, "respTime", sys.protocol_dependencies->respTime, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'respTime' must be a double.");
-            final_ret = false;
-            ret = true;
-        }
-    }
-
-    if (ret)
-    {
-        ret = getCJint(cj, "maxElapsed", sys.protocol_dependencies->maxElapsed, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'maxElapsed' must be an integer.");
-            final_ret = false;
-            ret = true;
-        }
-    }
-
-    if (ret)
-    {
-        ret = getCJint(cj, "stats_pub_frequency", sys.protocol_dependencies->dnp3.stats_pub_frequency, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'stats_pub_frequency' must be an integer.");
-            final_ret = false;
-            ret = true;
-        }
-    }
-    if (ret)
-    {
-        char *tmp_fmt = nullptr;
-        ret = getCJstr(cj, "format", tmp_fmt, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'format' must be a string (clothed, full, or naked).");
-            final_ret = false;
-            ret = true;
-        }
-        if (tmp_fmt != nullptr)
-        {
-            if (strcmp(tmp_fmt, "clothed") == 0)
-            {
-                sys.fims_dependencies->format = FimsFormat::Clothed;
-            }
-            else if (strcmp(tmp_fmt, "full") == 0)
-            {
-                sys.fims_dependencies->format = FimsFormat::Full;
-            }
-            else // defaults to naked
-            {
-                sys.fims_dependencies->format = FimsFormat::Naked;
-            }
-        }
-    }
-
-    if (ret)
-    {
-        ret = getCJbool(cj, "unsol", sys.protocol_dependencies->dnp3.unsolUpdate, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'unsol' must be a boolean.");
-            final_ret = false;
-            ret = true;
-        }
-    }
-
-    if (ret)
-    {
-        ret = getCJint(cj, "batch_set_rate", sys.protocol_dependencies->dnp3.batch_set_rate, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'batch_set_rate' must be an integer.");
-            final_ret = false;
-            ret = true;
-        }
-    }
-
-    if (ret)
-    {
-        ret = getCJint(cj, "interval_set_rate", sys.protocol_dependencies->dnp3.interval_set_rate, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'interval_set_rate' must be an integer.");
-            final_ret = false;
-            ret = true;
-        }
-    }
-
-    if (ret)
-    {
-        ret = getCJint(cj, "batch_pub_rate", sys.protocol_dependencies->dnp3.batch_pub_rate, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'batch_pub_rate' must be an integer.");
-            final_ret = false;
-            ret = true;
-        }
-    }
-
-    if (ret)
-    {
-        ret = getCJint(cj, "interval_pub_rate", sys.protocol_dependencies->dnp3.interval_pub_rate, false);
-        if (!ret)
-        {
-            FPS_ERROR_LOG("Error: 'interval_pub_rate' must be an integer.");
-            final_ret = false;
-            ret = true;
-        }
-    }
+    
 
     // heartbeat stuff:
     if (ret)
@@ -1355,7 +1355,7 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
         ret = getCJstr(cj, "component_heartbeat_read_uri", sys.heartbeat->heartbeat_read_uri, false);
         if (!ret)
         {
-            FPS_ERROR_LOG("Error: 'component_heartbeat_write_reference' must be a string.");
+            FPS_ERROR_LOG("Error: 'component_heartbeat_read_uri' must be a string.");
             final_ret = false;
             ret = true;
         }
@@ -1389,8 +1389,6 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
             sys.heartbeat = nullptr;
         }
     }
-
-    
 
     if (ret && sys.heartbeat)
     {
@@ -1515,16 +1513,6 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
         }
     }
 
-    if (ret)
-    {
-        ret = getCJint(cj, "event_buffer", sys.protocol_dependencies->dnp3.event_buffer, false);
-    if (sys.protocol_dependencies->dnp3.event_buffer <= 0)
-    {
-        FPS_ERROR_LOG("Invalid  event buffer  %d  setting to default 100", sys.protocol_dependencies->dnp3.event_buffer);
-        sys.protocol_dependencies->dnp3.event_buffer = 100;
-    }
-    }
-
     // fixup base_uri
     char tmp[1024];
     const char *sys_id = sys.id;
@@ -1638,6 +1626,9 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
         // linkback = cJSON_GetObjectItem(obj, "linkback");
         // linkuri = cJSON_GetObjectItem(obj, "linkuri");
         class_num = cJSON_GetObjectItem(obj, "class");
+        if(!class_num){
+            class_num = cJSON_GetObjectItem(obj, "clazz");
+        }
         //sign = cJSON_GetObjectItem(obj, "signed");
         scale = cJSON_GetObjectItem(obj, "scale");
         deadband = cJSON_GetObjectItem(obj, "deadband");
@@ -1913,6 +1904,8 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
             if (deadband)
             {
                 dbPoint->data.analog.deadband = deadband->valuedouble;
+            } else {
+                dbPoint->data.analog.deadband = sys.protocol_dependencies->deadband;
             }
 
             if (cjtout)

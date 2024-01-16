@@ -609,7 +609,11 @@ struct fmt::formatter<TMWSIM_POINT>
         if (dbPoint.type == TMWSIM_TYPE_ANALOG)
         {
             fmt::format_to(ctx.out(), R"("raw_value": {}, )", dbPoint.data.analog.value);
-            fmt::format_to(ctx.out(), R"("scaled_value": {}, )", dbPoint.data.analog.value / flexPoint->scale);
+            if(flexPoint->scale == 0){
+                fmt::format_to(ctx.out(), R"("scaled_value": {}, )", dbPoint.data.analog.value);
+            } else {
+                fmt::format_to(ctx.out(), R"("scaled_value": {}, )", dbPoint.data.analog.value / flexPoint->scale);
+            }
             fmt::format_to(ctx.out(), R"("deadband": {}, )", dbPoint.data.analog.deadband);
         }
         else
