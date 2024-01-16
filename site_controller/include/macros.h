@@ -17,6 +17,7 @@
 #define ESS_TYPE_ID ("ess")
 #define FEEDERS_TYPE_ID ("feeders")
 #define GENERATORS_TYPE_ID ("generators")
+#define SOLAR_TYPE_ID ("solar")
 #define LONG_MSG_LEN (1024)
 #define MAX_COMPS (32)
 #define MAX_MODE_NAME_LENGTH (32)
@@ -39,5 +40,4 @@
 #define ONE_SECOND_IN_TERMS_OF_NS (1000000000)
 #define RESERVED_BOOL_FAULTS_OFFSET (15)
 #define SHORT_MSG_LEN (256)
-#define SOLAR_TYPE_ID ("solar")
 #define STATE_MACHINE_INTERVAL_uS (10000)

@@ -556,7 +556,7 @@ Asset* Solar_Manager::build_new_asset(void) {
 }
 
 void Solar_Manager::append_new_asset(Asset* asset) {
-    pSolar.push_back((Asset_Solar*)asset);
+    pSolar.push_back(dynamic_cast<Asset_Solar*>(asset));
 }
 
 // After configuring individual asset instances, this function finishes configuring the Solar Manager

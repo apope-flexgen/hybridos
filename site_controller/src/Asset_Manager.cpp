@@ -8,7 +8,6 @@
 /* C Standard Library Dependencies */
 #include <cstring>
 /* C++ Standard Library Dependencies */
-#include <iterator>
 #include <map>
 #include <vector>
 /* External Dependencies */
@@ -281,7 +280,7 @@ void Asset_Manager::handle_get(fims_message* pmsg) {
     // error checking
     if ((strncmp(pmsg->pfrags[0], "assets", strlen("assets")) != 0 || pmsg->replyto == NULL) || !*is_primary)
         return;
-    if (pmsg->nfrags < 1 || pmsg->nfrags > 4) {
+    if (pmsg->nfrags < 1 || pmsg->nfrags > 5) {
         p_fims->Send("set", pmsg->replyto, NULL, "Invalid number of URI fragments.");
         return;
     }
@@ -310,30 +309,38 @@ void Asset_Manager::handle_get(fims_message* pmsg) {
     }
 }
 
+inline bool is_action_set(fims_message& msg) {
+    return (msg.nfrags == 6 && strncmp(msg.pfrags[3], "actions", 7) == 0);
+}
+
 /**
  * @brief Handles SETs to URIs beginning with /assets.
  * @param msg FIMS SET message.
  */
 void Asset_Manager::handle_set(fims_message& msg) {
     // if SET is to something other than "assets" (example: "components"), do not process it here
-    if (strncmp(msg.pfrags[0], "assets", strlen("assets")) != 0)
+    if (strncmp(msg.pfrags[0], "assets", strlen("assets")) != 0) {
         return;
+    }
     FPS_DEBUG_LOG("Received SET to %s.", msg.uri);
 
     // only SETs to specific variables are supported so expected URI format is /assets/{asset type}/{instance ID}/{variable ID}
-    if (msg.nfrags != 4) {
-        FPS_ERROR_LOG("Received SET to %s, but URIs beginning with /assets are expected to have exactly 4 fragments.", msg.uri);
-        if (msg.replyto != NULL)
+    // caveat for actions endpoints of length 6 (/assets/ess/ess_1/actions/<action_name>/start)
+    if (msg.nfrags != 4 && !is_action_set(msg)) {
+        FPS_ERROR_LOG("Received SET to %s, but URIs beginning with /assets are expected to have either exactly 4 or 6 fragments.", msg.uri);
+        if (msg.replyto != NULL) {
             p_fims->Send("set", msg.replyto, NULL, "Invalid URI");
-        return;
+        }
+        return; // early return because of msg failure
     }
 
     // URI starts with /assets/<asset type>. determine which Type Manager should handle the SET
     Type_Manager* manager = get_type_manager(msg.pfrags[1]);
     if (manager == NULL) {
         FPS_ERROR_LOG("Invalid asset type '%s' in SET to URI %s.", msg.pfrags[1], msg.uri);
-        if (msg.replyto != NULL)
+        if (msg.replyto != NULL) {
             p_fims->Send("set", msg.replyto, NULL, "Invalid Asset Type");
+        }
         return;
     }
 
@@ -386,30 +393,33 @@ void Asset_Manager::send_all_asset_data(char* uri) {
     return;
 }
 
-/****************************************************************************************/
 /*
-    This function, asset_create, is called from site_controller.cpp during initial
-    configuration. It is passed a pointer to the cJSON object parsed from assets.json.
-    The function breaks the large assets object up into its constituent asset type
-    cJSON objects: generators, feeders, ess, solar. It passes these cJSON objects to
-    the Type Managers which continue the configuration process.
-
-    @param primary_controller pointer to the bool indicating whether the system is currently
-                              the primary controller. This pointer will be passed to Site_Manager
-                              and down to the Asset Instances, and can be modified through the
-                              fims endpoint /site/operation/primary_controller true/false
-                              Testing will now require this pointer to be set.
+ * @brief This function, asset_create, is called from site_controller.cpp during initial 
+ *      configuration. It is passed a pointer to the cJSON object parsed from assets.json.
+ *      The function breaks the large assets object up into its constituent asset type 
+ *      cJSON objects: generators, feeders, ess, solar. It passes these cJSON objects to 
+ *      the Type Managers which continue the configuration process.
+ *
+ * @param assetsRoot (assets.json)
+ * @param actionsRoot (actions.json)
+ * @param primary_controller pointer to the bool indicating whether the system is currently
+ *      the primary controller. This pointer will be passed to Site_Manager 
+ *      and down to the Asset Instances, and can be modified through the 
+ *      fims endpoint /site/operation/primary_controller true/false 
+ *      Testing will now require this pointer to be set.
+ * @return success (bool)
 */
-bool Asset_Manager::asset_create(cJSON* pJsonRoot, bool* primary_controller) {
+bool Asset_Manager::asset_create(cJSON* assetsRoot, cJSON* actionsRoot, bool* primary_controller) {
     is_primary = primary_controller;
 
     if (!build_configurators()) {
         FPS_ERROR_LOG("There is something wrong with this build. Error when allocating memory for Type Configurators");
         exit(1);
     }
+    cJSON* jsonActions = cJSON_GetObjectItem(actionsRoot, "actions");
 
     // Extract the large "assets" cJSON object
-    cJSON* jsonAssets = cJSON_GetObjectItem(pJsonRoot, "assets");
+    cJSON* jsonAssets = cJSON_GetObjectItem(assetsRoot, "assets");
     if (jsonAssets == NULL) {
         FPS_ERROR_LOG("Failed to get object item 'assets' in JSON");
         return false;
@@ -442,8 +452,21 @@ bool Asset_Manager::asset_create(cJSON* pJsonRoot, bool* primary_controller) {
 
     // Extract the "ess" cJSON object and pass it to ESS Manager for configuration
     ess_configurator->asset_type_root = cJSON_GetObjectItem(jsonAssets, "ess");
+    ess_configurator->actions_root = jsonActions;
     if (ess_configurator->asset_type_root != NULL) {
-        Config_Validation_Result ess_config_result = ess_configurator->create_assets();
+        Config_Validation_Result ess_config_result;
+
+        // if actions present configure them
+        if (jsonActions != nullptr) {
+            ess_config_result = ess_configurator->create_actions();
+            if (!ess_config_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details("Failed to configure ESS actions"));
+            }
+            validation_result.absorb(ess_config_result);
+        }
+
+        ess_config_result = ess_configurator->create_assets();
         if (!ess_config_result.is_valid_config) {
             validation_result.is_valid_config = false;
             validation_result.ERROR_details.push_back(Result_Details("Failed to configure ESS."));

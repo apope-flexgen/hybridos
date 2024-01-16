@@ -119,4 +119,10 @@ struct ESS_Calibration_Settings {
     float raw_feature_setpoint;
 };
 
+// One type for each asset + site
+enum class Sequence_Type { Site, Asset_ESS, Asset_Solar, Asset_Generator, Asset_Feeder };
+
+// This is used to report the status of an action. (actions.json)
+enum ACTION_STATUS_STATE {INACTIVE, IN_PROGRESS, COMPLETED, FAILED, ABORTED};
+
 #endif

@@ -44,6 +44,7 @@ class Steps():
         report_steps(self.set_steps)
         report_steps(self.pub_steps)
         [k() for k in kill_commands]  # Kill pub threads
+        # TODO should pre lambda be before the steps
         [l(*self.args, **self.kwargs) for l in self.pre_lambda]
         # Check and report results
         self.get_result()
@@ -105,6 +106,38 @@ class Steps():
             "/assets/ess/ess_01/maint_mode": False,
             "/assets/ess/ess_02/maint_mode": False,
         }
+
+    @staticmethod
+    def config_dev_place_assets_in_maint():
+        return {
+            "/assets/solar/solar_1/maint_mode": True,
+            "/assets/solar/solar_2/maint_mode": True,
+            "/assets/generators/gen_1/maint_mode": True,
+            "/assets/ess/ess_1/maint_mode": True,
+            "/assets/ess/ess_2/maint_mode": True,
+        }
+
+    @staticmethod
+    def ess_1_disable_all_maint_feats():
+        return {
+            "/assets/ess/ess_1/maint_active_power_setpoint": 0,
+            "/assets/ess/ess_1/maint_soc_protection_buffers_disable": False,
+            "/assets/ess/ess_1/maint_soc_limits_enable": False,
+            "/assets/ess/ess_1/maint_cell_voltage_limits_enable": False,
+            "/assets/ess/ess_1/maint_rack_voltage_limits_enable": False,
+            "/assets/ess/ess_1/maint_min_charge_discharge_enable": False,
+            }
+
+    @staticmethod
+    def config_dev_remove_assets_from_maint():
+        return {
+            "/assets/solar/solar_1/maint_mode": False,
+            "/assets/solar/solar_2/maint_mode": False,
+            "/assets/generators/gen_1/maint_mode": False,
+            "/assets/ess/ess_1/maint_mode": False,
+            "/assets/ess/ess_2/maint_mode": False,
+        }
+
 
 
 # Child class for setup behavior

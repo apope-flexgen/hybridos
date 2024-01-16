@@ -3,7 +3,6 @@ import pytest
 # Site Manager Pytests
 from pytest_cases import parametrize
 
-
 from pytests.pytest_framework import Site_Controller_Instance
 from pytests.pytest_steps import Steps
 from pytests.cases.active_clc import test_fr_clc, test_ess_tsoc_clc, test_solar_tsoc_clc, test_active_clc_zero_bypass
@@ -27,6 +26,7 @@ from pytests.cases.standalone_fr import test_pfr_untracked_load, test_pfr_offset
 from pytests.cases.maint_mode import test_min_charge_discharge, test_maint_soc_limits, test_maint_cell_volt_limits, test_maint_rack_volt_limits
 from pytests.cases.ess_calibration import test_ess_cali
 from pytests.cases.enable_flags import test_enable_flags
+from pytests.cases.automated_actions import test_completed_automated_action, test_aborted_automated_action, test_silent_automated_action, test_path_switch_automated_action, test_failed_automated_action, test_alarm_automated_action
 
 # Test runner AKA main() for each individual test
 @ parametrize("current_test", [
@@ -88,8 +88,13 @@ from pytests.cases.enable_flags import test_enable_flags
     test_ess_cali,
     test_enable_flags,
     test_fr_poi_lims,
-    test_fr_clc
-
+    test_fr_clc,
+    test_completed_automated_action,
+    test_aborted_automated_action,
+    test_silent_automated_action,
+    test_path_switch_automated_action,
+    test_failed_automated_action,
+    test_alarm_automated_action
     #
     # config_dev_slow_slews
     # TODO find a way to make these tests run automatically under different configs rather than just commenting out :(

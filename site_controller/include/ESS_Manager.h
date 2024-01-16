@@ -93,7 +93,7 @@ public:
     void configure_base_class_list(void) override;
     Config_Validation_Result configure_type_manager(Type_Configurator* configurator) override;
     Asset* build_new_asset(void) override;
-    void append_new_asset(Asset*) override;
+    void append_new_asset(Asset* asset) override;
 
     int get_num_ess_startable(void);
     int get_num_ess_controllable(void);

@@ -9,15 +9,13 @@
 #define ASSET_H_
 
 /* C Standard Library Dependencies */
+#include <cstdint>
 #include <cstdio>
-#include <cmath>
-#include <limits>
 /* C++ Standard Library Dependencies */
 #include <map>
 #include <list>
 #include <unordered_map>
-#include <iterator>
-#include <algorithm>
+#include <vector>
 /* External Dependencies */
 #include <cjson/cJSON.h>
 /* System Internal Dependencies */
@@ -29,6 +27,7 @@
 #include <macros.h>
 #include <Types.h>
 #include <Config_Validation_Result.h>
+#include <Action.h>
 class Type_Configurator;
 
 struct statusData {
@@ -56,7 +55,6 @@ struct fimsCtl {
     bool configured;
 };
 
-// TODO: move this section into separate header files
 void build_on_off_option(fmt::memory_buffer&);
 void build_yes_no_option(fmt::memory_buffer&);
 void build_close_option(fmt::memory_buffer&);
@@ -91,6 +89,7 @@ class Asset {
 public:
     Asset();
     virtual ~Asset() = default;
+    std::vector<Action> actions;
 
     // configuration
     Config_Validation_Result configure(Type_Configurator* configurator);
@@ -100,6 +99,12 @@ public:
     std::string get_id(void);
     const char* get_asset_type(void) const;
     const std::string get_comp_name(int) const;
+
+    // actions status
+    Action_Status action_status;
+    // These are for actions specifically they will only pub if they are active/"have bits high"
+    Fims_Object actions_faults;
+    Fims_Object actions_alarms;
 
     bool is_available(void);
     bool is_running(void);
@@ -149,6 +154,7 @@ public:
 
     // internal functions
     virtual void process_asset();  // process incoming component data
+    void process_asset_actions(void);
     virtual void set_raw_status() = 0;
     virtual const char* get_status_string() const = 0;
     bool process_watchdog_status();
@@ -162,8 +168,13 @@ public:
     bool handle_get(fims_message* pmsg);
     bool add_asset_data_to_buffer(fmt::memory_buffer& buf);
     bool add_variable_to_buffer(std::string uri, const char* variable, fmt::memory_buffer& buf);
+    bool list_action_info(fmt::memory_buffer& buf);
+    bool list_specific_action(fmt::memory_buffer& buf, std::string action_name);
+    bool list_reduced_action_info(fmt::memory_buffer& buf);
     virtual bool handle_set(std::string uri, cJSON& body) = 0;
     bool handle_generic_asset_controls_set(std::string uri, cJSON& body);
+    bool handle_actions_set(fims_message& msg);
+    void handle_actions_alerts_for_pub(fmt::memory_buffer& buf);
     virtual bool generate_asset_ui(fmt::memory_buffer& buf, const char* const var = NULL) = 0;
 
 protected:
@@ -181,6 +192,7 @@ protected:
                                                        bool comes_from_component = true, const char* var_name = "", const char* var_units = "", int var_scaler = 1);
     void update_fims_var(Fims_Object* fims_var, valueType type, float default_float, int default_int, bool default_bool, const char* var_id = "", const char* var_name = "", const char* var_units = "", int var_scaler = 1);
     Config_Validation_Result configure_watchdog_vars();
+    Config_Validation_Result configure_actions_fims_objects();
     Config_Validation_Result configure_component_local_mode_vars(Type_Configurator* configurator);
     void add_dynamic_variables_to_maps(Type_Configurator* configurator);
     virtual Config_Validation_Result configure_typed_asset_fims_vars(Type_Configurator* configurator) = 0;
@@ -225,7 +237,7 @@ protected:
     statusType local_mode_status_type;  // local mode status type is not required for the local mode feature to be used
     Fims_Object local_mode_signal;
     Fims_Object local_mode_status;
-
+    
     std::vector<std::string> compNames;
 
     uint32_t numAssetComponents;
@@ -312,9 +324,10 @@ public:
     int get_num_active_alarms(void) const;
     int get_num_active_faults(void) const;
     bool is_newly_faulted(void) const;
-    bool check_alert(std::string& id, uint64_t& mask);
-    bool check_fault(std::string& id, uint64_t& mask);
-    bool check_alarm(std::string& id, uint64_t& mask);
+    bool check_alert(std::string& id, uint64_t mask);
+    bool check_fault(std::string& id, uint64_t mask);
+    bool check_alarm(std::string& id, uint64_t mask);
+    void set_actions_alarm(std::string id, uint64_t mask);
 
 protected:
     void lower_alert_bits(void);

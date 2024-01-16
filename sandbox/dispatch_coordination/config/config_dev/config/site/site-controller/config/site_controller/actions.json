@@ -1,0 +1,430 @@
+{
+    "actions": {
+        "ESS_Cali": {
+            "action_name": "Calibration1",
+            "asset_types": [
+                "ess"
+            ],
+            "paths": [
+                {
+                    "path_name": "ESS Calibration",
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "steps": [
+                        {
+                            "step_name": "Start ESS",
+                            "entry_actions": {
+                                "route": "/start",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/is_running",
+                                "value": true,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Setup limits",
+                            "entry_actions": {
+                                "route": "/set_maint_max_soc_limit",
+                                "value": 80
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_max_soc_limit",
+                                "value": 80,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Enable limits",
+                            "entry_actions": {
+                                "route": "/set_maint_soc_limits_enable_flag",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_soc_limits_enable_flag",
+                                "value": true,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Set Maint Active Power",
+                            "entry_actions": {
+                                "route": "/set_maint_active_power_setpoint",
+                                "value": -5500
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_active_power_setpoint",
+                                "value": -5500,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Charge to 80%",
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/get_active_power",
+                                "value": 0
+                            }
+                        },
+                        {
+                            "step_name": "Set Maint Active Power 0",
+                            "entry_actions": {
+                                "route": "/set_maint_active_power_setpoint",
+                                "value": 0
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_active_power_setpoint",
+                                "value": 0,
+                                "debounce_timer": 5000
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "ESS_Cali_2": {
+            "action_name": "Calibration2",
+            "asset_types": [
+                "ess"
+            ],
+            "paths": [
+                {
+                    "path_name": "ESS Calibration (Charge to top)",
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "steps": [
+                        {
+                            "step_name": "Determine Charge Direction",
+                            "path_switch": true,
+                            "next_path": 1,
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/soc_less_than",
+                                "value": 80,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Start ESS",
+                            "entry_actions": {
+                                "route": "/start",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/is_running",
+                                "value": true,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Setup limits",
+                            "entry_actions": {
+                                "route": "/set_maint_max_soc_limit",
+                                "value": 80
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_max_soc_limit",
+                                "value": 80,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Enable limits",
+                            "entry_actions": {
+                                "route": "/set_maint_soc_limits_enable_flag",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_soc_limits_enable_flag",
+                                "value": true,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Set Maint Active Power",
+                            "entry_actions": {
+                                "route": "/set_maint_active_power_setpoint",
+                                "value": -5500
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_active_power_setpoint",
+                                "value": -5500,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Charge to 80%",
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/get_active_power",
+                                "value": 0							}
+                        },
+                        {
+                            "step_name": "Set Maint Active Power 0",
+                            "entry_actions": {
+                                "route": "/set_maint_active_power_setpoint",
+                                "value": 0
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_active_power_setpoint",
+                                "value": 0,
+                                "debounce_timer": 5000
+                            }
+                        }
+                    ]
+                },
+                {
+                    "path_name": "ESS Calibration (Discharge to bottom)",
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "steps": [
+                        {
+                            "step_name": "Start ESS",
+                            "entry_actions": {
+                                "route": "/start",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/is_running",
+                                "value": true,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Setup limits",
+                            "entry_actions": {
+                                "route": "/set_maint_min_soc_limit",
+                                "value": 20
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_min_soc_limit",
+                                "value": 20,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Enable limits",
+                            "entry_actions": {
+                                "route": "/set_maint_soc_limits_enable_flag",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_soc_limits_enable_flag",
+                                "value": true,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Set Maint Active Power",
+                            "entry_actions": {
+                                "route": "/set_maint_active_power_setpoint",
+                                "value": 5500
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_active_power_setpoint",
+                                "value": 5500,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Discharge to 20%",
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/get_active_power",
+                                "value": 0							}
+                        },
+                        {
+                            "step_name": "Set Maint Active Power 0",
+                            "entry_actions": {
+                                "route": "/set_maint_active_power_setpoint",
+                                "value": 0
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_active_power_setpoint",
+                                "value": 0,
+                                "debounce_timer": 5000
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "ESS_Cali_3": {
+            "action_name": "Calibration3",
+            "asset_types": [
+                "ess"
+            ],
+            "paths": [
+                {
+                    "path_name": "ESS Calibration 3",
+                    "active_faults": [
+                        {
+                            "name": "/test_fault"
+                        }
+                    ],
+                    "steps": [
+                        {
+                            "step_name": "Pub Fault",
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/bypass",
+                                "value": true,
+                                "debounce_timer": 5000
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "ESS_Cali_4": {
+            "action_name": "Calibration4",
+            "asset_types": [
+                "ess"
+            ],
+            "paths": [
+                {
+                    "path_name": "ESS Calibration 4",
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "active_alarms": [
+                        {
+                            "name": "/test_alarm"
+                        }
+                    ],
+                    "steps": [
+                        {
+                            "step_name": "Pub Alarm",
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/bypass",
+                                "value": true,
+                                "debounce_timer": 5000
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "ESS_Cali_5": {
+            "action_name": "Calibration5",
+            "asset_types": [
+                "ess"
+            ],
+            "paths": [
+                {
+                    "path_name": "ESS Calibration",
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "steps": [
+                        {
+                            "step_name": "Start ESS",
+                            "entry_actions": {
+                                "route": "/start",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/is_running",
+                                "value": true,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Setup limits",
+                            "entry_actions": {
+                                "route": "/set_maint_max_soc_limit",
+                                "value": 80
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_max_soc_limit",
+                                "value": 80,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Enable limits",
+                            "entry_actions": {
+                                "route": "/set_maint_soc_limits_enable_flag",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_soc_limits_enable_flag",
+                                "value": true,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Set Maint Active Power",
+                            "entry_actions": {
+                                "route": "/set_maint_active_power_setpoint",
+                                "value": -5500
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_active_power_setpoint",
+                                "value": -5500,
+                                "debounce_timer": 5000
+                            }
+                        },
+                        {
+                            "step_name": "Charge to 80%",
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/get_active_power",
+                                "value": 0,
+				"debounce_timer": 1000
+                            }
+                        },
+                        {
+                            "step_name": "Set Maint Active Power 0",
+                            "entry_actions": {
+                                "route": "/set_maint_active_power_setpoint",
+                                "value": 0
+                            },
+                            "exit_conditions": {
+                                "route": "/get_maint_active_power_setpoint",
+                                "value": 0,
+                                "debounce_timer": 5000
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

@@ -8,7 +8,6 @@
 /* C Standard Library Dependencies */
 #include <cmath>
 #include <cstring>
-#include <iterator>
 #include "Types.h"
 /* C++ Standard Library Dependencies */
 /* External Dependencies */
@@ -390,7 +389,6 @@ void Asset_ESS::set_voltage_slew_setpoint(float setpoint) {
  */
 Config_Validation_Result Asset_ESS::configure_typed_asset_instance_vars(Type_Configurator* configurator) {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
-
     Asset_Configurator* asset_config = &configurator->asset_config;
 
     // Set flag if component will be providing chargeable/dischargeable energy values via Modbus
@@ -768,106 +766,110 @@ bool Asset_ESS::handle_set(std::string uri, cJSON& body) {
     // For instance, sets that modify the system state should not persist as they will default to the published component state on restart
     bool persistent_setpoint = false;
 
-    if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "clear_faults"))) {
+    if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "clear_faults")) != nullptr) {
         clear_alerts();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "stop")) && inMaintenance) {
+    } else if (((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "stop")) != nullptr) && inMaintenance) {
         stop();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "start")) && inMaintenance) {
+    } else if (((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "start")) != nullptr) && inMaintenance) {
         start();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "enter_standby")) && inMaintenance) {
+    } else if (((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "enter_standby")) != nullptr) && inMaintenance) {
         enter_standby();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "exit_standby")) && inMaintenance) {
+    } else if (((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "exit_standby")) != nullptr) && inMaintenance) {
         exit_standby();
-    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "soc_protection_buffers_disable"))) {
-        if ((value = cJSON_GetObjectItem(current_setpoint, "value"))) {
-            soc_protection_buffers_disable_flag = (bool)value->valueint;
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "soc_protection_buffers_disable")) != nullptr) {
+        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) != nullptr) {
+            soc_protection_buffers_disable_flag = static_cast<bool>(value->valueint);
             persistent_setpoint = true;
         }
-    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_soc_protection_buffers_disable"))) {
-        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
-            maint_soc_protection_buffers_disable_flag = (bool)value->valueint;
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_soc_protection_buffers_disable")) != nullptr) {
+        if (((value = cJSON_GetObjectItem(current_setpoint, "value")) != nullptr) && inMaintenance) {
+            maint_soc_protection_buffers_disable_flag = static_cast<bool>(value->valueint);
             persistent_setpoint = true;
         }
-    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_soc_limits_enable"))) {
-        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
-            maint_soc_limits_enable_flag = (bool)value->valueint;
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_soc_limits_enable")) != nullptr) {
+        if (((value = cJSON_GetObjectItem(current_setpoint, "value")) != nullptr) && inMaintenance) {
+            maint_soc_limits_enable_flag = static_cast<bool>(value->valueint);
             persistent_setpoint = true;
         }
-    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_cell_voltage_limits_enable"))) {
-        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
-            maint_cell_voltage_limits_enable_flag = (bool)value->valueint;
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_cell_voltage_limits_enable")) != nullptr) {
+        if (((value = cJSON_GetObjectItem(current_setpoint, "value")) != nullptr) && inMaintenance) {
+            maint_cell_voltage_limits_enable_flag = static_cast<bool>(value->valueint);
             persistent_setpoint = true;
         }
-    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_rack_voltage_limits_enable"))) {
-        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
-            maint_rack_voltage_limits_enable_flag = (bool)value->valueint;
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_rack_voltage_limits_enable")) != nullptr) {
+        if (((value = cJSON_GetObjectItem(current_setpoint, "value")) != nullptr) && inMaintenance) {
+            maint_rack_voltage_limits_enable_flag = static_cast<bool>(value->valueint);
             persistent_setpoint = true;
         }
-    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_min_charge_discharge_enable"))) {
-        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
-            maint_min_charge_discharge_enable_flag = (bool)value->valueint;
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_min_charge_discharge_enable")) != nullptr) {
+        if (((value = cJSON_GetObjectItem(current_setpoint, "value")) != nullptr) && inMaintenance) {
+            maint_min_charge_discharge_enable_flag = static_cast<bool>(value->valueint);
             persistent_setpoint = true;
         }
-    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_soc_limits_enable"))) {
-        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
-            maint_soc_limits_enable_flag = (bool)value->valueint;
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_soc_limits_enable")) != nullptr) {
+        if (((value = cJSON_GetObjectItem(current_setpoint, "value")) != nullptr) && inMaintenance) {
+            maint_soc_limits_enable_flag = static_cast<bool>(value->valueint);
             persistent_setpoint = true;
         }
-    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_min_charge_discharge_enable"))) {
-        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
-            maint_min_charge_discharge_enable_flag = (bool)value->valueint;
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_min_charge_discharge_enable")) != nullptr) {
+        if (((value = cJSON_GetObjectItem(current_setpoint, "value")) != nullptr) && inMaintenance) {
+            maint_min_charge_discharge_enable_flag = static_cast<bool>(value->valueint);
             persistent_setpoint = true;
         }
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "autobalancing_enable")) && inMaintenance) {
+    } else if (((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "autobalancing_enable")) != nullptr) && inMaintenance) {
         // Write the autobalancing status (enabled) to the component register
         // Since enable and disable share the same register, a single function will write for both controls
         set_autobalancing(true);
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "autobalancing_disable")) && inMaintenance) {
+    } else if (((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "autobalancing_disable")) != nullptr) && inMaintenance) {
         // Write the autobalancing status (enabled) to the component register
         // Since enable and disable share the same register, a single function will write for both controls
         set_autobalancing(false);
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_active_power_setpoint"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_active_power_setpoint")) != nullptr) {
         maint_active_power_setpoint = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint")) != nullptr) {
         maint_reactive_power_setpoint = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_chargeable_min_limit"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_chargeable_min_limit")) != nullptr) {
         maint_chargeable_min_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_dischargeable_min_limit"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_dischargeable_min_limit")) != nullptr) {
         maint_dischargeable_min_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_min_soc_limit"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_min_soc_limit")) != nullptr) {
         maint_min_soc_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_soc_limit"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_soc_limit")) != nullptr) {
         maint_max_soc_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_min_cell_voltage_limit"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_min_cell_voltage_limit")) != nullptr) {
         maint_min_cell_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_cell_voltage_limit"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_cell_voltage_limit")) != nullptr) {
         maint_max_cell_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_min_rack_voltage_limit"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_min_rack_voltage_limit")) != nullptr) {
         maint_min_rack_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_rack_voltage_limit"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_rack_voltage_limit")) != nullptr) {
         maint_max_rack_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "open_dc_contactors"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "open_dc_contactors")) != nullptr) {
         open_bms_contactors();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "close_dc_contactors"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "close_dc_contactors")) != nullptr) {
         close_bms_contactors();
     }
 
     // if target setpoint was found, back it up to DBI if it is a persistent setpoint.
     // otherwise, send it to the generic controls handler
-    if (!current_setpoint)
+    if (current_setpoint == nullptr) {
         return handle_generic_asset_controls_set(uri, body);
-    if (!persistent_setpoint)
+    }
+
+    if (!persistent_setpoint) {
         return true;
+    }
+
     return Asset::send_setpoint(uri, current_setpoint);
 }
 
@@ -1005,6 +1007,9 @@ const char* Asset_ESS::get_status_string() const {
 void Asset_ESS::process_asset() {
     set_raw_status();
     Asset::process_asset();
+    if (!actions.empty()) {
+        Asset::process_asset_actions();
+    }
 
     // Local variables used for calculation to preserve values configured
     float _minRawSoc = minRawSoc;
@@ -1135,6 +1140,8 @@ void Asset_ESS::process_asset() {
 }
 
 void Asset_ESS::update_asset(void) {
+    // tick the clock
+    clock_gettime(CLOCK_MONOTONIC, &action_status.current_time);
     // override setpoints in maintenance mode
     if (inMaintenance) {
         set_power_mode(powerMode::REACTIVEPWR);  // only allow reactive power mode while in maintenance
@@ -1208,4 +1215,152 @@ float Asset_ESS::process_soc(float rawSoc) {
         scaledSocInternal = 0;
 
     return (scaledSocInternal);
+}
+
+/**
+ * @brief Call ESS specific asset functions coming from actions.json entry and exit conditions.
+ *
+ * @param cmd (const char*) the function name.
+ * @param value (Value_Object*) the expected return value.
+ * @param tolerance_percent (int) allows for a tolerance percent. 
+ * @return success (bool)
+ */
+bool Asset_ESS::call_action_functions(const char* cmd, Value_Object* value, int tolerance_percent) {
+    bool command_found = true;
+    bool return_value = true;
+
+    // this cmd will pass and move to next step
+    if (strcmp(cmd, "bypass") == 0) {
+        return true;
+        // this cmd will move to next path (requires step to have path switch
+    }
+    if (strcmp(cmd, "new_path") == 0) {
+        return false;
+        // all generic boolean and floats for site-specific configuration
+    }
+
+    // ##### Here are the setters #####
+    if (strcmp(cmd, "start") == 0) {
+        start();
+    } else if (strcmp(cmd, "stop") == 0) {
+        stop();
+    } else if (strcmp(cmd, "set_maint_active_power_setpoint") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_active_power function for ess in asset.cpp");
+        maint_active_power_setpoint = value->value_float;
+    } else if (strcmp(cmd, "set_maint_reactive_power_setpoint") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_reactive_power function for ess in asset.cpp");
+        maint_reactive_power_setpoint = value->value_float;
+    } else if (strcmp(cmd, "set_maint_chargeable_min_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_chargeable_min_limit function for ess in asset.cpp");
+        maint_chargeable_min_limit = value->value_float;
+    } else if (strcmp(cmd, "set_maint_dischargeable_min_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_dischargeable_min_limit function for ess in asset.cpp");
+        maint_dischargeable_min_limit = value->value_float;
+    } else if (strcmp(cmd, "set_maint_min_soc_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_min_soc_limit function for ess in asset.cpp");
+        maint_min_soc_limit = value->value_float;
+    } else if (strcmp(cmd, "set_maint_max_soc_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_max_soc_limit function for ess in asset.cpp");
+        maint_max_soc_limit = value->value_float;
+    } else if (strcmp(cmd, "set_maint_soc_protection_buffers_disable_flag") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_soc_protection_buffers_disable_flag function for ess in asset.cpp");
+        maint_soc_protection_buffers_disable_flag = value->value_bool;
+    } else if (strcmp(cmd, "set_maint_soc_limits_enable_flag") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_soc_limits_enable_flag function for ess in asset.cpp");
+        maint_soc_limits_enable_flag = value->value_bool;
+    } else if (strcmp(cmd, "set_maint_cell_voltage_limits_enable_flag") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_cell_voltage_limits_enable_flag function for ess in asset.cpp");
+        maint_cell_voltage_limits_enable_flag = value->value_bool;
+    } else if (strcmp(cmd, "set_maint_rack_voltage_limits_enable_flag") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_rack_voltage_limits_enable_flag function for ess in asset.cpp");
+        maint_rack_voltage_limits_enable_flag = value->value_bool;
+    } else if (strcmp(cmd, "set_maint_min_charge_discharge_enable_flag") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_min_charge_discharge_enable_flag function for ess in asset.cpp");
+        maint_min_charge_discharge_enable_flag = value->value_bool;
+    } else if (strcmp(cmd, "set_maint_min_cell_voltage_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_min_cell_voltage_limit function for ess in asset.cpp");
+        maint_min_cell_voltage_limit = value->value_float;
+    } else if (strcmp(cmd, "set_maint_max_cell_voltage_limit") == 0) {
+        maint_max_cell_voltage_limit = value->value_float;
+    } else if (strcmp(cmd, "set_maint_min_rack_voltage_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_min_rack_voltage_limit function for ess in asset.cpp");
+        maint_min_rack_voltage_limit = value->value_float;
+    } else if (strcmp(cmd, "set_maint_max_rack_voltage_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_max_rack_voltage_limit function for ess in asset.cpp");
+        maint_max_rack_voltage_limit = value->value_float;
+    }
+
+    // ##### Here are the getters #####
+    else if (strcmp(cmd, "get_maint_active_power_setpoint") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_active_power_setpoint function for ess in asset.cpp");
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, maint_active_power_setpoint, tolerance_percent));
+    } else if (strcmp(cmd, "get_maint_reactive_power_setpoint") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_reactive_power function for ess in asset.cpp");
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, maint_reactive_power_setpoint, tolerance_percent));
+    } else if (strcmp(cmd, "get_maint_chargeable_min_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_chargeable_min_limit function for ess in asset.cpp");
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, maint_chargeable_min_limit, tolerance_percent));
+    } else if (strcmp(cmd, "get_maint_dischargeable_min_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_dischargeable_min_limit function for ess in asset.cpp");
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, maint_dischargeable_min_limit, tolerance_percent));
+    } else if (strcmp(cmd, "get_maint_min_soc_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_min_soc_limit function for ess in asset.cpp");
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, maint_min_soc_limit, tolerance_percent));
+    } else if (strcmp(cmd, "get_maint_max_soc_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_max_soc_limit function for ess in asset.cpp");
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, maint_max_soc_limit, tolerance_percent));
+    } else if (strcmp(cmd, "get_maint_soc_protection_buffers_disable_flag") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_soc_protection_buffers_disable_flag function for ess in asset.cpp");
+        return_value = (maint_soc_protection_buffers_disable_flag == value->value_bool);
+    } else if (strcmp(cmd, "get_maint_soc_limits_enable_flag") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_soc_limits_enable_flag function for ess in asset.cpp");
+        return_value = (maint_soc_limits_enable_flag == value->value_bool);
+    } else if (strcmp(cmd, "get_maint_cell_voltage_limits_enable_flag") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_cell_voltage_limits_enable_flag function for ess in asset.cpp");
+        return_value = (maint_cell_voltage_limits_enable_flag == value->value_bool);
+    } else if (strcmp(cmd, "get_maint_rack_voltage_limits_enable_flag") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_rack_voltage_limits_enable_flag function for ess in asset.cpp");
+        return_value = (maint_rack_voltage_limits_enable_flag == value->value_bool);
+    } else if (strcmp(cmd, "get_maint_min_charge_discharge_enable_flag") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_min_charge_discharge_enable_flag function for ess in asset.cpp");
+        return_value = (maint_min_charge_discharge_enable_flag == value->value_bool);
+    } else if (strcmp(cmd, "get_maint_min_cell_voltage_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_min_cell_voltage_limit function for ess in asset.cpp");
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, maint_min_cell_voltage_limit, tolerance_percent));
+    } else if (strcmp(cmd, "get_maint_max_cell_voltage_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_max_cell_voltage_limit function for ess in asset.cpp");
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, maint_max_cell_voltage_limit, tolerance_percent));
+    } else if (strcmp(cmd, "get_maint_min_rack_voltage_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_min_rack_voltage_limit function for ess in asset.cpp");
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, maint_min_rack_voltage_limit, tolerance_percent));
+    } else if (strcmp(cmd, "get_maint_max_rack_voltage_limit") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_maint_max_rack_voltage_limit function for ess in asset.cpp");
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, maint_max_rack_voltage_limit, tolerance_percent));
+    } else if (strcmp(cmd, "get_soc") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_soc function for ess in asset.cpp");
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, soc.value.value_float, tolerance_percent));
+    } else if (strcmp(cmd, "get_active_power") == 0) {
+        FPS_DEBUG_LOG("You have reached the get_soc function for ess in asset.cpp");
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, active_power.value.value_float, tolerance_percent));
+    } else if (strcmp(cmd, "is_running") == 0) {
+        return_value = (value->type == Bool) && is_running();
+    } else if (strcmp(cmd, "is_stopped") == 0) {
+        return_value = (value->type == Bool) && !is_running();
+    } else if (strcmp(cmd, "is_faulted") == 0) {
+        return_value = is_faulted.value.value_bool;
+    } else if (strcmp(cmd, "soc_greater_than") == 0) {
+        return_value = (value->type == Float) && (get_soc() > (value->value_float));
+    } else if (strcmp(cmd, "soc_less_than") == 0) {
+        return_value = (value->type == Float) && (get_soc() < (value->value_float));
+    } else {
+        command_found = false;
+    }
+
+    // no command executed
+    if (!command_found) {
+        FPS_ERROR_LOG("Error when running an action.json cmd attached to an ESS. cmd: %s", cmd);
+        return false;
+    }
+
+    return return_value;
 }

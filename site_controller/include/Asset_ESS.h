@@ -26,6 +26,9 @@ public:
     bool enter_standby(void);
     bool exit_standby(void);
 
+    // handle actions
+    bool call_action_functions(const char* cmd, Value_Object* value, int tolerance_percent);
+
     bool close_bms_contactors(void);
     bool open_bms_contactors(void);
 
@@ -81,7 +84,7 @@ public:
     void update_asset(void);
     void send_to_components(void) override;
     bool handle_set(std::string uri, cJSON& body);
-    bool generate_asset_ui(fmt::memory_buffer&, const char* const var = NULL) override;
+    bool generate_asset_ui(fmt::memory_buffer& buf, const char* const var = NULL) override;
 
 protected:
     // configuration

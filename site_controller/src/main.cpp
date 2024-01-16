@@ -11,6 +11,7 @@
 #include <Asset_Manager.h>
 #include <Site_Manager.h>
 #include <version.h>
+#include "Types.h"
 
 #ifdef FPS_TEST_MODE
 #include "hybridos_test.h"
@@ -186,6 +187,7 @@ int main(int argc, char** argv) {
     bool read_from_storage = false;
 
     char sequencesFilePath[256];
+    char actionsFilePath[256];
     char variablesFilePath[256];
     char assetsFilePath[256];
 
@@ -197,6 +199,8 @@ int main(int argc, char** argv) {
     else {
         // get path to sequences file
         snprintf(sequencesFilePath, 256, "%s/sequences.json", argv[1]);
+        // get path to "actions.json"
+        snprintf(actionsFilePath, 256, "%s/actions.json", argv[1]);
         // get path to variables file
         snprintf(variablesFilePath, 256, "%s/variables.json", argv[1]);
         // get path to "assets.json"
@@ -205,8 +209,9 @@ int main(int argc, char** argv) {
 
     char* subscriptions[NUM_CONTROLLER_SUBS];
     int num_subs = NUM_CONTROLLER_SUBS;
-    cJSON* jSonRoot;
+    cJSON* assetsRoot;
     cJSON* sequenceRoot;
+    cJSON* actionsRoot;
     cJSON* varRoot;
     int rtn_val = 0;
     bool rtn_val_bool = false;
@@ -257,29 +262,37 @@ int main(int argc, char** argv) {
             rtn_val = 1;
             goto cleanup;
         }
+        sequenceRoot = (read_from_storage) ? parseJSONConfig(p_fims, "sequences") : parseJSONConfig(sequencesFilePath);
+        actionsRoot = (read_from_storage) ? parseJSONConfig(p_fims, "actions") : parseJSONConfig(actionsFilePath);
+        varRoot = (read_from_storage) ? parseJSONConfig(p_fims, "variables") : parseJSONConfig(variablesFilePath);
+        assetsRoot = (read_from_storage) ? parseJSONConfig(p_fims, "assets") : parseJSONConfig(assetsFilePath);
+
         // Parsing dependent on the configuration type (storage/file)
-        if ((read_from_storage && (jSonRoot = parseJSONConfig(p_fims, "assets")) == NULL) || (!read_from_storage && (jSonRoot = parseJSONConfig(assetsFilePath)) == NULL)) {
+        if (assetsRoot == NULL) {
             FPS_ERROR_LOG("Failed to create JSON map.");
             emit_event("Site", "Failed to read assets from configuration", FAULT_ALERT);
             rtn_val = 1;
             goto cleanup;
         }
-        if (!assetMgr->asset_create(jSonRoot, primary_controller)) {
+        if (!assetMgr->asset_create(assetsRoot, actionsRoot, primary_controller)) {
             FPS_ERROR_LOG("Failed to create asset instance(s).");
             emit_event("Site", "Failed to initialize assets from configuration", FAULT_ALERT);
-            cJSON_Delete(jSonRoot);
+            cJSON_Delete(assetsRoot);
+            cJSON_Delete(actionsRoot);
             rtn_val = 1;
             goto cleanup;
         }
-        cJSON_Delete(jSonRoot);
         // call site_manager.configure to pass asset and fims pointers to site manager
         // Parsing dependent on the configuration type (storage/file)
-        sequenceRoot = (read_from_storage) ? parseJSONConfig(p_fims, "sequences") : parseJSONConfig(sequencesFilePath);
-        varRoot = (read_from_storage) ? parseJSONConfig(p_fims, "variables") : parseJSONConfig(variablesFilePath);
         rtn_val_bool = siteMgr->configure(assetMgr, p_fims, sequenceRoot, varRoot, primary_controller);
+
+        // clean up cJSON calls
         cJSON_Delete(sequenceRoot);
         cJSON_Delete(varRoot);
-        if (rtn_val_bool == false) {
+        cJSON_Delete(assetsRoot);
+        cJSON_Delete(actionsRoot);
+
+        if (!rtn_val_bool) {
             FPS_ERROR_LOG("Site Manager Failed to configure properly.");
             emit_event("Site", "Failed to initialize system from configuration", FAULT_ALERT);
             rtn_val = 1;

@@ -22,6 +22,7 @@
 #include <Fims_Object.h>
 #include <Types.h>
 #include <Reference_Configs.h>
+#include "Action.h"
 class Type_Manager;
 
 class Asset_Configurator {
@@ -51,9 +52,11 @@ class Type_Configurator {
 public:
     // functions
     Type_Configurator(Type_Manager* pMan, std::map<std::string, std::vector<Fims_Object*>>* pCVM, bool* pc);
-    Config_Validation_Result create_assets(void);
+    Config_Validation_Result create_assets(); // assets.json
+    Config_Validation_Result create_actions(); // actions.json
     // variables
     cJSON* asset_type_root;
+    cJSON* actions_root;
     Asset_Configurator asset_config;
     Type_Manager* p_manager;
     std::map<std::string, std::vector<Fims_Object*>>* pCompVarMap;
@@ -61,6 +64,8 @@ public:
     std::string current_asset_name;  // holds the id of the asset currently being configured
     std::string current_asset_id;    // holds the name of the asset currently being configured
     bool config_validation;          // flag to improve readability. removing config validation allows only necessary components to be configured in unit tests
+    std::vector<Action> actions;     // vector of asset specific automated actions (actions.json)
+
 private:
     // functions
     Config_Validation_Result check_name_and_id(int index, cJSON* array_entry);

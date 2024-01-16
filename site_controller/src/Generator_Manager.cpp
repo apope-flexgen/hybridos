@@ -492,7 +492,7 @@ Asset* Generator_Manager::build_new_asset(void) {
 }
 
 void Generator_Manager::append_new_asset(Asset* asset) {
-    pGens.push_back((Asset_Generator*)asset);
+    pGens.push_back(dynamic_cast<Asset_Generator*>(asset));
 }
 
 // After configuring individual asset instances, this function finishes configuring the Generator Manager

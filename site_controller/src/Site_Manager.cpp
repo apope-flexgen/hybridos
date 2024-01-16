@@ -7,13 +7,13 @@
 
 /* C Standard Library Dependencies */
 #include "Types.h"
+#include <cstddef>
+#include <cstdint>
 #include <cstring>
 #include <unistd.h>
 #include <sys/types.h>
 /* C++ Standard Library Dependencies */
-#include <stdexcept>
 #include <string>
-#include <limits>
 #include <vector>
 #include <set>
 /* External Dependencies */
@@ -36,11 +36,6 @@ Site_Manager::Site_Manager(Version* release_version) {
         release_version_build.value.set(release_version->get_build());
     }
 
-    current_state = Init;
-    check_current_state = Init;
-    step_change = true;
-    path_change = true;
-    sequence_reset = true;
     pAssets = NULL;
     pFims = NULL;
     standby_ess_latch = false;
@@ -74,8 +69,8 @@ Site_Manager::Site_Manager(Version* release_version) {
     num_path_faults = 0;
     num_path_alarms = 0;
 
-    clock_gettime(CLOCK_MONOTONIC, &current_time);
-    clock_gettime(CLOCK_MONOTONIC, &exit_target_time);
+    clock_gettime(CLOCK_MONOTONIC, &sequences_status.current_time);
+    clock_gettime(CLOCK_MONOTONIC, &sequences_status.exit_target_time);
     clock_gettime(CLOCK_MONOTONIC, &time_to_clear_fault_status_flags);
 
     clear_fault_status_flags = false;
@@ -473,10 +468,10 @@ void Site_Manager::build_JSON_site_input_sources(fmt::memory_buffer& buf, const 
  * gets called from HybridOS_Control.  Has Asset_Manager pointer and sequences and variables file pointers
  *
  * @param primary_controller pointer to the bool indicating whether the system is currently
-                            the primary controller. This pointer will be passed to Site_Manager
-                            and down to the Asset Instances, and can be modified through the
-                            fims endpoint /site/operation/primary_controller true/false
-                            Testing will now require this pointer to be set.
+ the primary controller. This pointer will be passed to Site_Manager
+ and down to the Asset Instances, and can be modified through the
+ fims endpoint /site/operation/primary_controller true/false
+ Testing will now require this pointer to be set.
  */
 bool Site_Manager::configure(Asset_Manager* man, fims* fim, cJSON* sequenceRoot, cJSON* varRoot, bool* primary_controller) {
     pAssets = man;
@@ -505,7 +500,7 @@ bool Site_Manager::configure(Asset_Manager* man, fims* fim, cJSON* sequenceRoot,
             sequences.emplace_back(this);
             Sequence& current_sequence = sequences.back();
 
-            if (!current_sequence.parse_sequence(JSON_single_sequence, (states)i)) {
+            if (!current_sequence.parse(JSON_single_sequence, (states)(i))) {
                 FPS_ERROR_LOG("Failed to parse %s sequence.\n", state_name[i]);
                 return false;
             }
@@ -1027,7 +1022,7 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         reserved_float_8.set_fims_float(msg->pfrags[2], body_float);
                         should_writeout_setpoint = true;
                     } else if (strcmp(msg->pfrags[1], "debug") == 0) {
-                        if ((strcmp(msg->pfrags[2], "state") == 0) && (static_cast<states>(body_int) != current_state)) {
+                        if ((strcmp(msg->pfrags[2], "state") == 0) && (static_cast<states>(body_int) != sequences_status.current_state)) {
                             set_state(static_cast<states>(body_int));
                             should_writeout_setpoint = true;
                         }
@@ -1231,7 +1226,7 @@ void Site_Manager::get_values() {
     FPS_DEBUG_LOG("Getting Asset Manager Values; Site_Manager::get_values.\n");
 
     // update clock for any timers
-    clock_gettime(CLOCK_MONOTONIC, &current_time);
+    clock_gettime(CLOCK_MONOTONIC, &sequences_status.current_time);
 
     // update site/feature control variables based on values received from local/remote source
     read_site_feature_controls();
@@ -1374,7 +1369,7 @@ void Site_Manager::set_values() {
     FPS_DEBUG_LOG("Setting Asset Manager Values; Site_Manager::set_values.\n");
 
     // if Clear Faults button was pressed a second ago, clear the flags now. Delayed to give Asset Manager time to clear component faults
-    if (clear_fault_status_flags && check_expired_time(current_time, time_to_clear_fault_status_flags)) {
+    if (clear_fault_status_flags && check_expired_time(sequences_status.current_time, time_to_clear_fault_status_flags)) {
         clear_fault_registers();
     }
 
@@ -1535,11 +1530,11 @@ void Site_Manager::ui_configuration(void) {
         set_enable_flag(false);
     } else {
         // hide start button if not in ready state
-        enable_flag.ui_enabled = (current_state == Ready);
+        enable_flag.ui_enabled = (sequences_status.current_state == Ready);
         // Manually set the enable flag false for all states except Init
         // This allows a persistent settings set to be received on startup but all other redundant enable sets to be ignored
         // In most cases a persistent settings start should be delayed 10 seconds, but this provides additional tolerance if it's sent too early
-        set_enable_flag(enable_flag.value.value_bool && current_state == Init);
+        set_enable_flag(enable_flag.value.value_bool && sequences_status.current_state == Init);
     }
 
     disable_flag.ui_enabled = true;
@@ -2022,9 +2017,9 @@ void Site_Manager::set_alarms(int alarm_number) {
 }
 
 /*
-    If there are asset alarms/faults that are cleared but still flagged, this function can unflag them
-    If the cleared asset alarms/faults are the only site alarms, this function will also clear site alarm flag
-*/
+   If there are asset alarms/faults that are cleared but still flagged, this function can unflag them
+   If the cleared asset alarms/faults are the only site alarms, this function will also clear site alarm flag
+   */
 void Site_Manager::clear_alarms(int alarm_number) {
     active_alarm_array[alarm_number] = false;
     if (!get_alarms()) {
@@ -2128,8 +2123,8 @@ void Site_Manager::build_active_alarms() {
 
 bool Site_Manager::set_state(states state_request) {
     FPS_INFO_LOG("Site Manager function 'set_state' called \n");
-    if (state_request != current_state)
-        current_state = state_request;
+    if (state_request != sequences_status.current_state)
+        sequences_status.current_state = state_request;
     return true;
 }
 
@@ -2137,231 +2132,258 @@ void Site_Manager::set_site_status(const char* message) {
     site_status.value.set(std::string(message));
 }
 
+void Site_Manager::handle_reserved_variable_sequence_functions(const char* cmd, Value_Object* value, int tolerance_percent, bool& command_found, bool& return_value) {
+    if (strcmp(cmd, "bool_1") == 0) {
+        return_value = (reserved_bool_1.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_2") == 0) {
+        return_value = (reserved_bool_2.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_3") == 0) {
+        return_value = (reserved_bool_3.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_4") == 0) {
+        return_value = (reserved_bool_4.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_5") == 0) {
+        return_value = (reserved_bool_5.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_6") == 0) {
+        return_value = (reserved_bool_6.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_7") == 0) {
+        return_value = (reserved_bool_7.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_8") == 0) {
+        return_value = (reserved_bool_8.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_9") == 0) {
+        return_value = (reserved_bool_9.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_10") == 0) {
+        return_value = (reserved_bool_10.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_11") == 0) {
+        return_value = (reserved_bool_11.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_12") == 0) {
+        return_value = (reserved_bool_12.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_13") == 0) {
+        return_value = (reserved_bool_13.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_14") == 0) {
+        return_value = (reserved_bool_14.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_15") == 0) {
+        return_value = (reserved_bool_15.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "bool_16") == 0) {
+        return_value = (reserved_bool_16.value.value_bool == value->value_bool);
+    } else if (strcmp(cmd, "float_1") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_1.value.value_float, tolerance_percent));
+    } else if (strcmp(cmd, "float_2") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_2.value.value_float, tolerance_percent));
+    } else if (strcmp(cmd, "float_3") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_3.value.value_float, tolerance_percent));
+    } else if (strcmp(cmd, "float_4") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_4.value.value_float, tolerance_percent));
+    } else if (strcmp(cmd, "float_5") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_5.value.value_float, tolerance_percent));
+    } else if (strcmp(cmd, "float_6") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_6.value.value_float, tolerance_percent));
+    } else if (strcmp(cmd, "float_7") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_7.value.value_float, tolerance_percent));
+    } else if (strcmp(cmd, "float_8") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_8.value.value_float, tolerance_percent));
+    } else {
+        command_found = false;
+    }
+}
+void Site_Manager::handle_ess_sequence_functions(const char* cmd, Value_Object* value, int tolerance_percent, bool& command_found, bool& return_value) {
+    if (strcmp(cmd, "get_num_ess_available") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, num_ess_available, tolerance_percent));
+    } else if (strcmp(cmd, "get_num_ess_running") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, num_ess_running, tolerance_percent));
+    } else if (strcmp(cmd, "get_num_ess_controllable") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, num_ess_controllable, tolerance_percent));
+    } else if (strcmp(cmd, "get_ess_active_power") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, ess_actual_kW.value.value_float, tolerance_percent));
+    } else if (strcmp(cmd, "start_all_ess") == 0) {
+        return_value = pAssets->start_all_ess();
+    } else if (strcmp(cmd, "stop_all_ess") == 0) {
+        return_value = pAssets->stop_all_ess();
+    } else if (strcmp(cmd, "set_all_ess_grid_form") == 0) {
+        pAssets->set_all_ess_grid_form();
+    } else if (strcmp(cmd, "set_all_ess_grid_follow") == 0) {
+        pAssets->set_all_ess_grid_follow();
+    } else if (strcmp(cmd, "set_voltage_slope") == 0) {
+        pAssets->set_grid_forming_voltage_slew(value->value_float);
+    } else if (strcmp(cmd, "open_contactors") == 0) {
+        pAssets->open_all_bms_contactors();
+    } else if (strcmp(cmd, "close_contactors") == 0) {
+        pAssets->close_all_bms_contactors();
+    } else if (strcmp(cmd, "synchronize_ess") == 0) {
+        return_value = synchronize_ess();
+    } else if (strcmp(cmd, "has_faults") == 0) {
+        return_value = ((pAssets->get_num_active_faults(ESS) > 0) == value->value_bool);
+    } else if (strcmp(cmd, "allow_auto_restart") == 0) {
+        allow_ess_auto_restart.value.set(value->value_bool);
+    } else if (strcmp(cmd, "controllable_soc_above") == 0) {
+        return_value = ((value->type == Float) && soc_avg_running.value.value_float > value->value_float);
+    } else if (strcmp(cmd, "controllable_soc_below") == 0) {
+        return_value = ((value->type == Float) && soc_avg_running.value.value_float < value->value_float);
+    } else if (strcmp(cmd, "all_soc_above") == 0) {
+        return_value = ((value->type == Float) && soc_avg_all.value.value_float > value->value_float);
+    } else if (strcmp(cmd, "all_soc_below") == 0) {
+        return_value = ((value->type == Float) && soc_avg_all.value.value_float < value->value_float);
+    } else {
+        command_found = false;
+    }
+}
+
+void Site_Manager::handle_gen_sequence_functions(const char* cmd, Value_Object* value, int tolerance_percent, bool& command_found, bool& return_value) {
+    if (strcmp(cmd, "get_num_gen_available") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, num_gen_available, tolerance_percent));
+    } else if (strcmp(cmd, "get_num_gen_running") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, num_gen_running, tolerance_percent));
+    } else if (strcmp(cmd, "get_num_gen_active") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, num_gen_active, tolerance_percent));
+    } else if (strcmp(cmd, "min_generators_active") == 0) {
+        pAssets->set_min_generators_active(value->value_float);
+    } else if (strcmp(cmd, "direct_start_gen") == 0) {
+        return_value = pAssets->direct_start_gen();
+    } else if (strcmp(cmd, "start_all_gen") == 0) {
+        return_value = true;
+        pAssets->start_all_gen();
+    } else if (strcmp(cmd, "stop_all_gen") == 0) {
+        return_value = pAssets->stop_all_gen();
+    } else if (strcmp(cmd, "set_all_gen_grid_follow") == 0) {
+        pAssets->set_all_gen_grid_follow();
+    } else if (strcmp(cmd, "set_all_gen_grid_form") == 0) {
+        pAssets->set_all_gen_grid_form();
+    } else if (strcmp(cmd, "has_faults") == 0) {
+        return_value = ((pAssets->get_num_active_faults(GENERATORS) > 0) == value->value_bool);
+    } else if (strcmp(cmd, "allow_auto_restart") == 0) {
+        allow_gen_auto_restart.value.set(value->value_bool);  // set the config bool for set_values
+    } else {
+        command_found = false;
+    }
+}
+
+void Site_Manager::handle_solar_sequence_functions(const char* cmd, Value_Object* value, int tolerance_percent, bool& command_found, bool& return_value) {
+    if (strcmp(cmd, "get_num_solar_available") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, num_solar_available, tolerance_percent));
+    } else if (strcmp(cmd, "get_num_solar_running") == 0) {
+        return_value = ((value->type == Float) && get_tolerance(value->value_float, num_solar_running, tolerance_percent));
+    } else if (strcmp(cmd, "start_all_solar") == 0) {
+        return_value = pAssets->start_all_solar();
+    } else if (strcmp(cmd, "stop_all_solar") == 0) {
+        return_value = pAssets->stop_all_solar();
+    } else if (strcmp(cmd, "has_faults") == 0) {
+        return_value = ((pAssets->get_num_active_faults(SOLAR) > 0) == value->value_bool);
+    } else if (strcmp(cmd, "allow_auto_restart") == 0) {
+        allow_solar_auto_restart.value.set(value->value_bool);
+    } else {
+        command_found = false;
+    }
+}
+
+void Site_Manager::handle_feed_sequence_functions(const char* cmd, Value_Object* value, bool& command_found, bool& return_value) {
+    // sync breaker state
+    if (strcmp(cmd, "get_sync_feeder_state") == 0) {
+        return_value = pAssets->get_sync_feeder_status() ? (value->type == Bool) && (value->value_bool) : (value->type == Bool) && (!value->value_bool);
+        // get poi breaker state
+    } else if (strcmp(cmd, "get_poi_feeder_state") == 0) {
+        bool poi_state = pAssets->get_poi_feeder_state();  // DEBUG
+        return_value = (value->type == Bool) && (value->value_bool == poi_state);
+    }
+    // set poi breaker state open
+    else if (strcmp(cmd, "set_poi_feeder_state_open") == 0) {
+        return_value = pAssets->set_poi_feeder_state_open();
+        // set poi breaker state closed
+    } else if (strcmp(cmd, "set_poi_feeder_state_closed") == 0) {
+        return_value = pAssets->set_poi_feeder_state_closed();
+    } else if (strcmp(cmd, "set_sync_feeder_close_permissive_remove") == 0) {
+        return_value = pAssets->set_sync_feeder_close_permissive_remove();
+    } else if (strcmp(cmd, "set_sync_feeder_close_permissive") == 0) {
+        return_value = pAssets->set_sync_feeder_close_permissive();
+    } else {
+        command_found = false;
+    }
+}
+
+void Site_Manager::handle_config_sequence_functions(const char* cmd, Value_Object* value, bool& command_found, bool& return_value) {
+    if (strcmp(cmd, "clear_faults") == 0) {
+        clear_faults();
+    } else if (strcmp(cmd, "get_standby_flag") == 0) {
+        return_value = standby_flag.value.value_bool == value->value_bool;  // get standby flag status
+    } else {
+        command_found = false;
+    }
+}
+
+void Site_Manager::handle_feat_sequence_functions(const char* cmd, Value_Object* value, bool& command_found) {
+    if (strcmp(cmd, "reset_load_shed") == 0) {
+        int configured_shed_value = static_cast<int>(value->value_float);
+        if (configured_shed_value < load_shed.load_shed_min_value.value.value_int || configured_shed_value > load_shed.load_shed_max_value.value.value_int) {
+            FPS_ERROR_LOG("Invalid load shed value %d provided, must be between %d and %d\n", configured_shed_value, load_shed.load_shed_min_value.value.value_int, load_shed.load_shed_max_value.value.value_int);
+            command_found = false;
+        } else {
+            load_shed.load_shed_value.value.set(configured_shed_value);
+            load_shed.load_shed_calculator.offset = configured_shed_value;
+        }
+    } else if (strcmp(cmd, "enable_ldss") == 0) {
+        ldss.enable_flag.value.set(value->value_bool);
+    } else {
+        command_found = false;
+    }
+}
+
+void Site_Manager::handle_specific_feed_sequence_functions(const char* cmd, Value_Object* value, const char* target_asset, bool& command_found, bool& return_value) {
+    // specific feeder id is used in place of target_asset
+    Asset_Feeder* found_feeder = pAssets->validate_feeder_id(target_asset);
+    if (found_feeder == nullptr) {
+        FPS_ERROR_LOG("feeder ID: %s was not found in the assets list\n", target_asset);
+        command_found = false;
+    } else {
+        // set_feeder_state_open
+        if (strcmp(cmd, "set_feeder_state_open") == 0) {
+            return_value = pAssets->set_feeder_state_open(found_feeder);
+        }
+        // set_feeder_state_closed
+        else if (strcmp(cmd, "set_feeder_state_closed") == 0) {
+            return_value = pAssets->set_feeder_state_closed(found_feeder);
+        }
+        // get_feeder_state : return feeder (as target_asset) state as true for closed (on) and false for open (off)
+        else if (strcmp(cmd, "get_feeder_state") == 0) {
+            bool fdr_state = pAssets->get_feeder_state(found_feeder);
+            return_value = (value->type == Bool) && (value->value_bool == fdr_state);
+        }
+        // get_feeder_utility_status : return feeder (as target_asset) utility status as true for online and false for offline
+        else if (strcmp(cmd, "get_utility_status") == 0) {
+            bool fdr_state = pAssets->get_feeder_utility_status(found_feeder);
+            return_value = (value->type == Bool) && (value->value_bool == fdr_state);
+        } else {
+            command_found = false;
+        }
+    }
+}
+
 bool Site_Manager::call_sequence_functions(const char* target_asset, const char* cmd, Value_Object* value, int tolerance_percent) {
     bool command_found = true;
     bool return_value = true;
 
     // this cmd will pass and move to next step
-    if (strcmp(target_asset, "bypass") == 0)
+    if (strcmp(target_asset, "bypass") == 0) {
         return true;
-    // this cmd will move to next path (requires step to have path switch
-    else if (strcmp(target_asset, "new_path") == 0)
+        // this cmd will move to next path (requires step to have path switch
+    }
+    if (strcmp(target_asset, "new_path") == 0) {
         return false;
-    // all generic boolean and floats for site-specific configuration
-    else if (strcmp(target_asset, "reserved") == 0) {
-        if (strcmp(cmd, "bool_1") == 0)
-            return_value = (reserved_bool_1.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_2") == 0)
-            return_value = (reserved_bool_2.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_3") == 0)
-            return_value = (reserved_bool_3.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_4") == 0)
-            return_value = (reserved_bool_4.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_5") == 0)
-            return_value = (reserved_bool_5.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_6") == 0)
-            return_value = (reserved_bool_6.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_7") == 0)
-            return_value = (reserved_bool_7.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_8") == 0)
-            return_value = (reserved_bool_8.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_9") == 0)
-            return_value = (reserved_bool_9.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_10") == 0)
-            return_value = (reserved_bool_10.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_11") == 0)
-            return_value = (reserved_bool_11.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_12") == 0)
-            return_value = (reserved_bool_12.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_13") == 0)
-            return_value = (reserved_bool_13.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_14") == 0)
-            return_value = (reserved_bool_14.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_15") == 0)
-            return_value = (reserved_bool_15.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "bool_16") == 0)
-            return_value = (reserved_bool_16.value.value_bool == value->value_bool);
-        else if (strcmp(cmd, "float_1") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_1.value.value_float, tolerance_percent));
-        else if (strcmp(cmd, "float_2") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_2.value.value_float, tolerance_percent));
-        else if (strcmp(cmd, "float_3") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_3.value.value_float, tolerance_percent));
-        else if (strcmp(cmd, "float_4") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_4.value.value_float, tolerance_percent));
-        else if (strcmp(cmd, "float_5") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_5.value.value_float, tolerance_percent));
-        else if (strcmp(cmd, "float_6") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_6.value.value_float, tolerance_percent));
-        else if (strcmp(cmd, "float_7") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_7.value.value_float, tolerance_percent));
-        else if (strcmp(cmd, "float_8") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_8.value.value_float, tolerance_percent));
-        else
-            command_found = false;
+        // all generic boolean and floats for site-specific configuration
     }
-    // put all ess commands here
-    else if (strcmp(target_asset, "ess") == 0) {
-        if (strcmp(cmd, "get_num_ess_available") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, num_ess_available, tolerance_percent));
-        else if (strcmp(cmd, "get_num_ess_running") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, num_ess_running, tolerance_percent));
-        else if (strcmp(cmd, "get_num_ess_controllable") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, num_ess_controllable, tolerance_percent));
-        else if (strcmp(cmd, "get_ess_active_power") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, ess_actual_kW.value.value_float, tolerance_percent));
-        else if (strcmp(cmd, "start_all_ess") == 0)
-            return_value = pAssets->start_all_ess();
-        else if (strcmp(cmd, "stop_all_ess") == 0)
-            return_value = pAssets->stop_all_ess();
-        else if (strcmp(cmd, "set_all_ess_grid_form") == 0)
-            pAssets->set_all_ess_grid_form();
-        else if (strcmp(cmd, "set_all_ess_grid_follow") == 0)
-            pAssets->set_all_ess_grid_follow();
-        else if (strcmp(cmd, "set_voltage_slope") == 0)
-            pAssets->set_grid_forming_voltage_slew(value->value_float);
-        else if (strcmp(cmd, "open_contactors") == 0)
-            pAssets->open_all_bms_contactors();
-        else if (strcmp(cmd, "close_contactors") == 0)
-            pAssets->close_all_bms_contactors();
-        else if (strcmp(cmd, "synchronize_ess") == 0)
-            return_value = synchronize_ess();
-        else if (strcmp(cmd, "has_faults") == 0)
-            return_value = ((pAssets->get_num_active_faults(ESS) > 0) == value->value_bool);
-        else if (strcmp(cmd, "allow_auto_restart") == 0)
-            allow_ess_auto_restart.value.set(value->value_bool);
-        else if (strcmp(cmd, "controllable_soc_above") == 0)
-            return_value = ((value->type == Float) && soc_avg_running.value.value_float > value->value_float);
-        else if (strcmp(cmd, "controllable_soc_below") == 0)
-            return_value = ((value->type == Float) && soc_avg_running.value.value_float < value->value_float);
-        else if (strcmp(cmd, "all_soc_above") == 0)
-            return_value = ((value->type == Float) && soc_avg_all.value.value_float > value->value_float);
-        else if (strcmp(cmd, "all_soc_below") == 0)
-            return_value = ((value->type == Float) && soc_avg_all.value.value_float < value->value_float);
-        else
-            command_found = false;
-    } else if (strcmp(target_asset, "gen") == 0) {
-        // put all gen commands here
-        if (strcmp(cmd, "get_num_gen_available") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, num_gen_available, tolerance_percent));
-        else if (strcmp(cmd, "get_num_gen_running") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, num_gen_running, tolerance_percent));
-        else if (strcmp(cmd, "get_num_gen_active") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, num_gen_active, tolerance_percent));
-        else if (strcmp(cmd, "min_generators_active") == 0)
-            pAssets->set_min_generators_active(value->value_float);
-        else if (strcmp(cmd, "direct_start_gen") == 0) {
-            return_value = pAssets->direct_start_gen();
-        } else if (strcmp(cmd, "start_all_gen") == 0) {
-            return_value = true;
-            pAssets->start_all_gen();
-        } else if (strcmp(cmd, "stop_all_gen") == 0)
-            return_value = pAssets->stop_all_gen();
-        else if (strcmp(cmd, "set_all_gen_grid_follow") == 0)
-            pAssets->set_all_gen_grid_follow();
-        else if (strcmp(cmd, "set_all_gen_grid_form") == 0)
-            pAssets->set_all_gen_grid_form();
-        else if (strcmp(cmd, "has_faults") == 0)
-            return_value = ((pAssets->get_num_active_faults(GENERATORS) > 0) == value->value_bool);
-        else if (strcmp(cmd, "allow_auto_restart") == 0)
-            allow_gen_auto_restart.value.set(value->value_bool);  // set the config bool for set_values
-        else
-            command_found = false;
-    }
-    // put all solar commands here
-    else if (strcmp(target_asset, "solar") == 0) {
-        if (strcmp(cmd, "get_num_solar_available") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, num_solar_available, tolerance_percent));
-        else if (strcmp(cmd, "get_num_solar_running") == 0)
-            return_value = ((value->type == Float) && get_tolerance(value->value_float, num_solar_running, tolerance_percent));
-        else if (strcmp(cmd, "start_all_solar") == 0)
-            return_value = pAssets->start_all_solar();
-        else if (strcmp(cmd, "stop_all_solar") == 0)
-            return_value = pAssets->stop_all_solar();
-        else if (strcmp(cmd, "has_faults") == 0)
-            return_value = ((pAssets->get_num_active_faults(SOLAR) > 0) == value->value_bool);
-        else if (strcmp(cmd, "allow_auto_restart") == 0)
-            allow_solar_auto_restart.value.set(value->value_bool);
-        else
-            command_found = false;
-    }
-    // put all GENERAL feeder commands here
-    else if (strcmp(target_asset, "feeder") == 0) {
-        // sync breaker state
-        if (strcmp(cmd, "get_sync_feeder_state") == 0)
-            return_value = pAssets->get_sync_feeder_status() ? (value->type == Bool) && (value->value_bool == true) : (value->type == Bool) && (value->value_bool == false);
-        // get poi breaker state
-        else if (strcmp(cmd, "get_poi_feeder_state") == 0) {
-            bool poi_state = pAssets->get_poi_feeder_state();  // DEBUG
-            return_value = (value->type == Bool) && (value->value_bool == poi_state);
-        }
-        // set poi breaker state open
-        else if (strcmp(cmd, "set_poi_feeder_state_open") == 0)
-            return_value = pAssets->set_poi_feeder_state_open();
-        // set poi breaker state closed
-        else if (strcmp(cmd, "set_poi_feeder_state_closed") == 0)
-            return_value = pAssets->set_poi_feeder_state_closed();
-        else if (strcmp(cmd, "set_sync_feeder_close_permissive_remove") == 0)
-            return_value = pAssets->set_sync_feeder_close_permissive_remove();
-        else if (strcmp(cmd, "set_sync_feeder_close_permissive") == 0)
-            return_value = pAssets->set_sync_feeder_close_permissive();
-        else
-            command_found = false;
-    }
-    // put all site state/operation commands here
-    else if (strcmp(target_asset, "config") == 0) {
-        if (strcmp(cmd, "clear_faults") == 0)
-            clear_faults();
-        else if (strcmp(cmd, "get_standby_flag") == 0)
-            return_value = standby_flag.value.value_bool == value->value_bool;  // get standby flag status
-        else
-            command_found = false;
-    }
-    // feature commands
-    else if (strcmp(target_asset, "features") == 0) {
-        if (strcmp(cmd, "reset_load_shed") == 0) {
-            int configured_shed_value = int(value->value_float);
-            if (configured_shed_value < load_shed.load_shed_min_value.value.value_int || configured_shed_value > load_shed.load_shed_max_value.value.value_int) {
-                FPS_ERROR_LOG("Invalid load shed value %d provided, must be between %d and %d\n", configured_shed_value, load_shed.load_shed_min_value.value.value_int, load_shed.load_shed_max_value.value.value_int);
-                command_found = false;
-            } else {
-                load_shed.load_shed_value.value.set(configured_shed_value);
-                load_shed.load_shed_calculator.offset = configured_shed_value;
-            }
-        } else if (strcmp(cmd, "enable_ldss") == 0)
-            ldss.enable_flag.value.set(value->value_bool);
-        else
-            command_found = false;
-    }
-
-    // check for specific feeder id for setting and getting specific feeder states
-    else {
-        // specific feeder id is used in place of target_asset
-        Asset_Feeder* found_feeder = pAssets->validate_feeder_id(target_asset);
-        if (found_feeder == nullptr) {
-            FPS_ERROR_LOG("feeder ID: %s was not found in the assets list\n", target_asset);
-            command_found = false;
-        } else {
-            // set_feeder_state_open
-            if (strcmp(cmd, "set_feeder_state_open") == 0) {
-                return_value = pAssets->set_feeder_state_open(found_feeder);
-            }
-            // set_feeder_state_closed
-            else if (strcmp(cmd, "set_feeder_state_closed") == 0) {
-                return_value = pAssets->set_feeder_state_closed(found_feeder);
-            }
-            // get_feeder_state : return feeder (as target_asset) state as true for closed (on) and false for open (off)
-            else if (strcmp(cmd, "get_feeder_state") == 0) {
-                bool fdr_state = pAssets->get_feeder_state(found_feeder);
-                return_value = (value->type == Bool) && (value->value_bool == fdr_state);
-            }
-            // get_feeder_utility_status : return feeder (as target_asset) utility status as true for online and false for offline
-            else if (strcmp(cmd, "get_utility_status") == 0) {
-                bool fdr_state = pAssets->get_feeder_utility_status(found_feeder);
-                return_value = (value->type == Bool) && (value->value_bool == fdr_state);
-            } else
-                command_found = false;
-        }
+    if (strcmp(target_asset, "reserved") == 0) {
+        handle_reserved_variable_sequence_functions(cmd, value, tolerance_percent, command_found, return_value);
+    } else if (strcmp(target_asset, "ess") == 0) {  // ###### ESS SECTION ######
+        handle_ess_sequence_functions(cmd, value, tolerance_percent, command_found, return_value);
+    } else if (strcmp(target_asset, "gen") == 0) {  // ###### GENERATOR SECTION ######
+        handle_gen_sequence_functions(cmd, value, tolerance_percent, command_found, return_value);
+    } else if (strcmp(target_asset, "solar") == 0) {  // ###### SOLAR SECTION ######
+        handle_solar_sequence_functions(cmd, value, tolerance_percent, command_found, return_value);
+    } else if (strcmp(target_asset, "feeder") == 0) {  // ###### FEEDER SECTION ######
+        handle_feed_sequence_functions(cmd, value, command_found, return_value);
+    } else if (strcmp(target_asset, "config") == 0) {  // ###### state/operation commands here ######
+        handle_config_sequence_functions(cmd, value, command_found, return_value);
+    } else if (strcmp(target_asset, "features") == 0) {  // ###### feature commands here ######
+        handle_feat_sequence_functions(cmd, value, command_found);
+    } else {  // check for specific feeder id for setting and getting specific feeder states
+        handle_specific_feed_sequence_functions(cmd, value, target_asset, command_found, return_value);
     }
 
     // no command executed
@@ -2374,35 +2396,35 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
 }
 
 void Site_Manager::check_state(void) {
-    Sequence current_sequence = sequences[current_state];
+    Sequence current_sequence = sequences[sequences_status.current_state];
+    Path current_path = current_sequence.paths[current_sequence.current_path_index];
 
     // if faulted or shutdown cmd, enter shutdown state
-    if (current_state != Init && (current_sequence.check_faults() || (disable_flag.value.value_bool)))
-        current_state = Shutdown;
+    if (sequences_status.current_state != Init && (current_sequence.check_faults() || (disable_flag.value.value_bool))) {
+        sequences_status.current_state = Shutdown;
+    }
 
     // check if alarms are present
     current_sequence.check_alarms();
-
-    Path current_path = current_sequence.paths[current_sequence.current_path_index];
 
     // count number of asset faults and asset alarms
     num_path_faults = current_path.num_active_faults;
     num_path_alarms = current_path.num_active_alarms;
 
     // boolean running status check
-    running_status_flag.value.set((current_state == RunMode1) || current_state == RunMode2);
+    running_status_flag.value.set((sequences_status.current_state == RunMode1) || sequences_status.current_state == RunMode2);
 
     // if new state detected, init vars as needed
-    if (check_current_state != current_state) {
+    if (sequences_status.check_current_state != sequences_status.current_state) {
         char event_message[SHORT_MSG_LEN];
-        FPS_INFO_LOG("Site Manager state change to: %s", state_name[current_state]);
-        snprintf(event_message, SHORT_MSG_LEN, "State changed to %s", state_name[current_state]);
+        FPS_INFO_LOG("Site Manager state change to: %s", state_name[sequences_status.current_state]);
+        snprintf(event_message, SHORT_MSG_LEN, "State changed to %s", state_name[sequences_status.current_state]);
         emit_event("Site", event_message, STATUS_ALERT);
-        sequences[check_current_state].sequence_bypass = false;  // ensure previous state executes next time its called
-        check_current_state = current_state;
-        site_state.value.set(state_name[current_state]);
-        site_state_enum.value.set(current_state);
-        sequence_reset = true;
+        sequences[sequences_status.check_current_state].sequence_bypass = false;  // ensure previous state executes next time its called
+        sequences_status.check_current_state = sequences_status.current_state;
+        site_state.value.set(state_name[sequences_status.current_state]);
+        site_state_enum.value.set(sequences_status.current_state);
+        sequences_status.sequence_reset = true;
     }
 }
 
@@ -2425,7 +2447,7 @@ void Site_Manager::process_state(void) {
 
     // confirm connection with master controller (if this feature is enabled)
     if (watchdog_feature.enable_flag.value.value_bool) {
-        if (watchdog_feature.should_bark(current_time)) {
+        if (watchdog_feature.should_bark(sequences_status.current_time)) {
             dogbark();
         }
     }
@@ -2434,10 +2456,10 @@ void Site_Manager::process_state(void) {
     check_state();
 
     // run the sequence for the current state
-    sequences[current_state].call_sequence();
+    sequences[sequences_status.current_state].call_sequence(sequences_status);
 
     // run the current state function
-    switch (current_state) {
+    switch (sequences_status.current_state) {
         // run the current state function
         case Init:
             init_state();
@@ -2464,7 +2486,7 @@ void Site_Manager::process_state(void) {
             error_state();
             break;
         default:
-            current_state = Error;
+            sequences_status.current_state = Error;
     }
 
     // set all interface variables
@@ -2475,7 +2497,7 @@ void Site_Manager::process_state(void) {
 void Site_Manager::init_state(void) {
     // FPS_ERROR_LOG("site manager Init State executed \n");
     emit_event("Site", "System initialized", INFO_ALERT);
-    current_state = Ready;
+    sequences_status.current_state = Ready;
 
     // set internal vars to 0
     ess_kW_cmd.value.set(0.0f);
@@ -2551,14 +2573,12 @@ void Site_Manager::ready_state(void) {
     // if enable cmd is true and disable cmd is false, move to startup state
     if (enable_flag.value.value_bool && !disable_flag.value.value_bool) {
         FPS_INFO_LOG("site manager received enable command \n");
-        current_state = Startup;
+        sequences_status.current_state = Startup;
     }
 }
 
 // startup state - all startup logic triggered from sequences
-void Site_Manager::startup_state(void) {
-    return;
-}
+void Site_Manager::startup_state(void) {}
 
 /**
  * Run Mode 1 is one of two running modes and is typically considered to be the "grid tied"
@@ -2590,7 +2610,7 @@ void Site_Manager::runmode1_state(void) {
 
     // FR MODE (frequency response) - output or absorb additional power if frequency deviates by a set amount
     else if (frequency_response.enable_flag.value.value_bool) {
-        frequency_response.execute(asset_cmd, get_ess_total_rated_active_power(), site_frequency.value.value_float, current_time);
+        frequency_response.execute(asset_cmd, get_ess_total_rated_active_power(), site_frequency.value.value_float, sequences_status.current_time);
     }
 
     // limit power values based on the amount of power that the POI can legally/physically handle
@@ -2661,7 +2681,7 @@ void Site_Manager::runmode1_state(void) {
     if (standby_flag.value.value_bool) {
         standby_ess_latch = false;
         standby_solar_latch = false;
-        current_state = Standby;
+        sequences_status.current_state = Standby;
     }
 }
 
@@ -2734,10 +2754,8 @@ void Site_Manager::standby_state(void) {
         pAssets->exit_standby_all_solar();
 
         // TODO:future consideration - is logic needed to determine which RunMode to enter
-        current_state = RunMode1;
+        sequences_status.current_state = RunMode1;
     }
-
-    return;
 }
 
 // shutdown state - occurs when shutdown cmd or fault occur
@@ -2776,7 +2794,7 @@ void Site_Manager::shutdown_state(void) {
     }
 
     if (sequences[Shutdown].sequence_bypass == true)
-        current_state = Ready;
+        sequences_status.current_state = Ready;
 
     // set all inputs to enable_flag to false
     clear_faults_flag.value.set(false);
@@ -2788,8 +2806,6 @@ void Site_Manager::shutdown_state(void) {
     asset_cmd.ess_data.start_first_flag = false;
     asset_cmd.gen_data.start_first_flag = false;
     asset_cmd.solar_data.start_first_flag = false;
-
-    return;
     // FPS_ERROR_LOG("site manager Shutdown State executed \n");
 }
 

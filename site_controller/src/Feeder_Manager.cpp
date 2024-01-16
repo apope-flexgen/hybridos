@@ -15,6 +15,7 @@
 #include <Feeder_Manager.h>
 #include <Configurator.h>
 #include <Site_Controller_Utils.h>
+#include <Types.h>
 
 extern fims* p_fims;
 
@@ -262,7 +263,7 @@ Asset* Feeder_Manager::build_new_asset(void) {
 }
 
 void Feeder_Manager::append_new_asset(Asset* asset) {
-    pFeeder.push_back((Asset_Feeder*)asset);
+    pFeeder.push_back(dynamic_cast<Asset_Feeder*>(asset));
 }
 
 // After configuring individual asset instances, this function finishes configuring the Feeder Manager

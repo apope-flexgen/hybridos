@@ -99,7 +99,8 @@
                     "alarms",
                     "com_status",
                     "ess_alarms",
-                    "local_mode_alarm"
+                    "local_mode_alarm",
+                    "actions_alarms"
                 ],
                 "assetKey": "ess_tab",
                 "baseURI": "/ess",
@@ -109,7 +110,8 @@
                     "bms_fault",
                     "emmu_fault",
                     "ess_faults",
-                    "watchdog_fault"
+                    "watchdog_fault",
+                    "actions_faults"
                 ],
                 "hasAllControls": true,
                 "hasMaintenanceActions": true,

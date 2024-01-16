@@ -142,20 +142,25 @@ void Type_Manager::handle_set(fims_message& msg) {
     // Parse the JSON body
     cJSON* cur_body = cJSON_Parse(msg.body);
     if (cur_body == NULL) {
-        FPS_ERROR_LOG("Error parsing body.");
+        FPS_ERROR_LOG("Error parsing body. %s.", msg.uri);
         if (msg.replyto != NULL)
             p_fims->Send("set", msg.replyto, NULL, "Error parsing JSON object.");
         return;
     }
-    defer { cJSON_Delete(cur_body); };
+    defer { cJSON_Delete(cur_body); }; 
 
     // Wrap the JSON body in a key-value pair where the key is the variable ID
     cJSON* new_body = cJSON_CreateObject();
     cJSON_AddItemToObject(new_body, msg.pfrags[3], cur_body);
     cur_body = new_body;
 
+    bool success = false;
     // Have the asset instance handle the SET
-    bool success = target_asset->handle_set(msg.uri, *cur_body);
+    if (strncmp(msg.pfrags[3], "actions", 7) != 0) {
+        success = target_asset->handle_set(msg.uri, *cur_body);
+    } else {
+        success = target_asset->handle_actions_set(msg);
+    }
 
     // If the user has hit the Start Next button on a generator, we must handle it at or above the Generator Manager level so we can access all generators to adjust priorities
     cJSON* start_next_obj = cJSON_GetObjectItem(cur_body, "start_next");

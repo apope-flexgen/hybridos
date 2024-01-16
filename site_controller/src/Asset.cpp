@@ -6,10 +6,14 @@
  */
 
 /* C Standard Library Dependencies */
+#include <climits>
+#include <cstdint>
 #include <cstring>
 /* C++ Standard Library Dependencies */
+#include <algorithm>
 #include <sstream>
 #include <iomanip>
+#include <string>
 /* External Dependencies */
 /* System Internal Dependencies */
 #include <Logger.h>
@@ -18,8 +22,11 @@
 #include <Data_Endpoint.h>
 #include <Site_Controller_Utils.h>
 #include <Configurator.h>
+#include <Types.h>
+#include "Asset_Feeder.h"
+#include "Fims_Object.h"
+#include "Step.h"
 
-extern fims* p_fims;
 extern Data_Endpoint* data_endpoint;
 
 Write_Rate_Throttle::Write_Rate_Throttle() {
@@ -506,6 +513,38 @@ Config_Validation_Result Asset::configure(Type_Configurator* configurator) {
     }
     validation_result.absorb(variables_config_result);
 
+    // add any actions if they exist
+    // have to cast here to set up the actions
+    for (auto& action : configurator->actions) {
+        if(strcmp(get_asset_type(), ESS_TYPE_ID) == 0) {
+            action.sequence_type = Sequence_Type::Asset_ESS;
+            action.asset_ess = dynamic_cast<Asset_ESS*>(this);
+            for (auto & path : action.paths) {
+                path.asset_ess = dynamic_cast<Asset_ESS*>(this); // pass the asset* to every path so it can call sequence functions
+            }
+        } else if (strcmp(get_asset_type(), FEEDERS_TYPE_ID) == 0) {
+            action.sequence_type = Sequence_Type::Asset_Feeder;
+            action.asset_feeder = dynamic_cast<Asset_Feeder*>(this);
+            for (auto & path : action.paths) {
+                path.asset_feeder = dynamic_cast<Asset_Feeder*>(this); // pass the asset* to every path so it can call sequence functions
+            }
+        } else if (strcmp(get_asset_type(), GENERATORS_TYPE_ID) == 0) {
+            action.sequence_type = Sequence_Type::Asset_Generator;
+            action.asset_generator = dynamic_cast<Asset_Generator*>(this);
+            for (auto & path : action.paths) {
+                path.asset_generator = dynamic_cast<Asset_Generator*>(this); // pass the asset* to every path so it can call sequence functions
+            }
+        } else if (strcmp(get_asset_type(), SOLAR_TYPE_ID) == 0) {
+            action.sequence_type = Sequence_Type::Asset_Solar;
+            action.asset_solar = dynamic_cast<Asset_Solar*>(this);
+            for (auto & path : action.paths) {
+                path.asset_solar = dynamic_cast<Asset_Solar*>(this); // pass the asset* to every path so it can call sequence functions
+            }
+        }
+
+        this->actions.push_back(action);
+    }
+
     // Check configured component variables against list of required component variables to ensure all were found and configured
     // non-POI feeders don't have any required variables. POI feeder does but it will be checked separately
     // Duplicate assets do not need any additional config validation as the configuration will have been checked in the first entry
@@ -764,7 +803,7 @@ Config_Validation_Result Asset::configure_component_vars(Type_Configurator* conf
             configurator->asset_config.asset_component_to_asset_number_map.emplace(comp_id->valuestring, std::multimap<int, bool>());
         }
         // Check if there was already a component with this id configured for another asset
-        if (configurator->asset_config.asset_component_to_asset_number_map[comp_id->valuestring].count(configurator->asset_config.asset_num > 0)) {
+        if (configurator->asset_config.asset_component_to_asset_number_map[comp_id->valuestring].count(configurator->asset_config.asset_num) > 0) {
             validation_result.WARNING_details.push_back(
                 Result_Details(fmt::format("{}: component {} with id {} was already configured for another asset. \
                             Are you sure this is correct?",
@@ -844,6 +883,8 @@ Config_Validation_Result Asset::configure_common_asset_fims_vars(Type_Configurat
     validation_result.absorb(configure_watchdog_vars());
     // Configure local/remote status of the component
     validation_result.absorb(configure_component_local_mode_vars(configurator));
+    // Configure the actions faults/alarms fims objects
+    validation_result.absorb(configure_actions_fims_objects());
 
     return validation_result;
 }
@@ -960,7 +1001,6 @@ Config_Validation_Result Asset::configure_single_fims_var(Fims_Object* fims_var,
 /**
  * @brief Configure watchdog specific variables.
  *
- * @param asset_var_map: The map of asset variables
  * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
 Config_Validation_Result Asset::configure_watchdog_vars() {
@@ -990,6 +1030,53 @@ Config_Validation_Result Asset::configure_watchdog_vars() {
     watchdog_fault.options_name.insert(watchdog_fault.options_name.begin(), "Watchdog Component Disconnected");
     watchdog_fault.options_value.insert(watchdog_fault.options_value.begin(), 0);
     latched_faults[watchdog_fault.get_variable_id()] = 0;
+    return validation_result;
+}
+
+/**
+ * @brief Configure actions faults/alarms hardcoded fims_objects.
+ *
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+Config_Validation_Result Asset::configure_actions_fims_objects() {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
+    // TODO(Jud): do nothing if no actions
+    /*
+    if (no actions)
+        return validation_result;
+    */
+
+    // Manually configure additional actions fault fields
+    actions_faults.is_primary = is_primary;
+    actions_faults.set_ui_type("fault");
+    actions_faults.set_variable_id("actions_faults");
+    actions_faults.set_value_type(Int);
+    actions_faults.num_options = 2;
+
+    // test fault
+    actions_faults.options_name.push_back("Test fault issued from actions.json");
+    actions_faults.options_value.push_back(0);
+
+    // exit_timer_fault
+    actions_faults.options_name.push_back("exit_timer_fault issued from actions.json");
+    actions_faults.options_value.push_back(1);
+
+    // init to zero
+    actions_faults.value.value_bit_field = 0;
+
+    // Manually configure additional actions alarm fields
+    actions_alarms.is_primary = is_primary;
+    actions_alarms.set_ui_type("alarm");
+    actions_alarms.set_variable_id("actions_alarms");
+    actions_alarms.set_value_type(Int);
+    actions_alarms.num_options = 1;
+    actions_alarms.options_name.push_back("test_alarm");
+    actions_alarms.options_value.push_back(0);
+
+    // init to zero
+    actions_alarms.value.value_bit_field = 0;
+
     return validation_result;
 }
 
@@ -1116,6 +1203,12 @@ void Asset::lower_alert_bits(void) {
     for (auto&& saved_alarm : saved_alarms) {
         saved_alarm.second = 0;
     }
+
+    // Clear any actions faults
+    actions_faults.value.value_bit_field = 0x0;
+
+    // Clear any actions alarms
+    actions_alarms.value.value_bit_field = 0x0;
 }
 
 /**
@@ -1152,11 +1245,49 @@ bool Asset::handle_get(fims_message* pmsg) {
         return send_buffer_to(pmsg->replyto, send_FIMS_buf);
     }
 
+    // A request for asset actions information has been made
+    // TODO: provide gets on an individual action
+    if (strncmp(pmsg->pfrags[3],"actions", strlen("actions")) == 0) {
+        FPS_DEBUG_LOG("A get was sent on the actions endpoint of an asset.");
+        if (pmsg->nfrags == 4) {
+            if (!list_action_info(send_FIMS_buf)) {
+                FPS_ERROR_LOG("Failed to list action info.");
+                return false;
+            }
+        } else if (pmsg->nfrags == 5) {
+            if (!list_specific_action(send_FIMS_buf, pmsg->pfrags[4])) {
+                FPS_ERROR_LOG("Could not find specific action");
+                return false;
+            }
+        } else {
+            FPS_ERROR_LOG("Unreachable API request made: there is no actions endpoint with this number of uri fragments.");
+            return false;
+        }
+        return send_buffer_to(pmsg->replyto, send_FIMS_buf);
+    }
+
     // URI must be /assets/<asset type>/<asset ID>/<variable ID>
     if (!add_variable_to_buffer(pmsg->uri, pmsg->pfrags[3], send_FIMS_buf)) {
         return false;
     }
     return send_buffer_to(pmsg->replyto, send_FIMS_buf);
+}
+
+/**
+ * @brief check some hard-coded actions faults.
+ * These faults only pub when they are there they are not full fledged fims_objects
+ *
+ * @param buf the buffer
+ * @param fims_object: some fims_object we can use to build the faults
+ */
+void Asset::handle_actions_alerts_for_pub(fmt::memory_buffer& buf) {
+    if (actions_faults.value.value_bit_field != 0x0) {
+        actions_faults.add_to_JSON_buffer(buf);
+    }
+
+    if (actions_alarms.value.value_bit_field != 0x0) {
+        actions_alarms.add_to_JSON_buffer(buf);
+    }
 }
 
 /**
@@ -1192,7 +1323,125 @@ bool Asset::add_asset_data_to_buffer(fmt::memory_buffer& buf) {
         variable.second->add_to_JSON_buffer(buf, NULL, false);
     }
 
+    // if the asset contains actions
+    if (!actions.empty()) {
+        // if there are any actions faults/alarms
+        handle_actions_alerts_for_pub(buf);
+
+        // if the assets actions_status has changed publish that as well
+        if (action_status.should_pub) {
+            FPS_DEBUG_LOG("pubbing actions");
+            list_reduced_action_info(buf);
+            action_status.should_pub = false;
+        }
+    }
+
     // End asset instance object with closing curly brace
+    bufJSON_EndObjectNoComma(buf);
+    return true;
+}
+
+/**
+ * @brief List the reduced action info for each action. 
+ * Intended to be used for pubs. 
+ *
+ * @param action (fmt::memory_buffer&) The buffer to write to.
+ * @return (bool) success
+ */
+bool Asset::list_reduced_action_info(fmt::memory_buffer& buf) {
+    bufJSON_AddId(buf, "actions");
+    bufJSON_StartObject(buf); // actions : {
+    for (auto& action : actions) {
+        bufJSON_AddId(buf, action.sequence_name.c_str());
+        bufJSON_StartObject(buf);
+        bufJSON_AddString(buf, "path_name", action.paths[action.current_path_index].path_name.c_str());
+        if (action.current_step_index >= action.paths[action.current_path_index].steps.size()) {
+            bufJSON_AddString(buf, "step_name", "Completed");
+        } else {
+            bufJSON_AddString(buf, "step_name", action.paths[action.current_path_index].steps[action.current_step_index].get_name().c_str());
+        }       
+        bufJSON_AddNumber(buf, "path_index", action.current_path_index);
+        bufJSON_AddNumber(buf, "step_index", action.current_step_index);
+        bufJSON_AddNumber(buf, "time_left_in_step_s", action.collect_seconds_remaining_in_current_step());
+        bufJSON_AddNumber(buf, "time_left_in_action_s", action.collect_seconds_remaining_in_action());
+        bufJSON_AddString(buf, "status", action.status_string().c_str());
+        bufJSON_EndObject(buf);
+    }
+    bufJSON_RemoveTrailingComma(buf);
+    bufJSON_EndObjectNoComma(buf); // end actions:
+    return true;
+}
+
+/**
+ * @brief This will add the entirety of the json info for automated actions. 
+ * Intended to be used as a get response over fims. 
+ * @param buf (fmt::memory_buffer&) The buffer to add to.
+ * @param action_name the action we want to return
+ * @return success (bool)
+ */
+bool Asset::list_specific_action(fmt::memory_buffer& buf, std::string action_name) {
+    for (auto& action : actions) {
+        if (action.sequence_name == action_name) {
+            bufJSON_StartObject(buf);
+            bufJSON_AddString(buf, "path_name", action.paths[action.current_path_index].path_name.c_str());
+            if (action.current_step_index >= action.paths[action.current_path_index].steps.size()) {
+                bufJSON_AddString(buf, "step_name", "Completed");
+            } else {
+                bufJSON_AddString(buf, "step_name", action.paths[action.current_path_index].steps[action.current_step_index].get_name().c_str());
+            }
+            bufJSON_AddNumber(buf, "path_index", action.current_path_index);
+            bufJSON_AddNumber(buf, "step_index", action.current_step_index);
+            bufJSON_AddNumber(buf, "time_left_in_step_s", action.collect_seconds_remaining_in_current_step());
+            bufJSON_AddNumber(buf, "time_left_in_action_s", action.collect_seconds_remaining_in_action());
+            bufJSON_AddString(buf, "status", action.status_string().c_str());
+            bufJSON_EndObjectNoComma(buf);
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * @brief This will add the entirety of the json info for automated actions. 
+ * Intended to be used as a get response over fims. 
+ * @param buf (fmt::memory_buffer&) The buffer to add to.
+ * @return success (bool)
+ */
+bool Asset::list_action_info(fmt::memory_buffer& buf) {
+    bufJSON_StartObject(buf);
+    for (Action& action : actions) {
+        bufJSON_AddId(buf, action.sequence_name.c_str());
+        bufJSON_StartObject(buf);
+        bufJSON_AddNumber(buf, "path_index", action.current_path_index);
+        bufJSON_AddNumber(buf, "step_index", action.current_step_index);
+        bufJSON_AddString(buf, "status", action.status_string().c_str());
+        // deal with paths
+        bufJSON_AddId(buf, "paths");
+        bufJSON_StartArray(buf);
+        for (Path& path : action.paths) {
+            bufJSON_StartObject(buf);
+            bufJSON_AddString(buf, "path_name", path.path_name.c_str());
+            bufJSON_AddNumber(buf, "estimated_duration", path.collect_seconds_in_path());
+            // deal with steps
+            bufJSON_AddId(buf, "steps");
+            bufJSON_StartArray(buf);
+            for (Step& step : path.steps) {
+                bufJSON_StartObject(buf);
+                bufJSON_AddString(buf, "step_name", step.get_name().c_str());
+                bufJSON_AddNumber(buf, "estimated_duration", step.collect_seconds_in_step());
+                bufJSON_EndObject(buf);
+            }
+            bufJSON_RemoveTrailingComma(buf);
+            bufJSON_EndArray(buf);
+            bufJSON_RemoveTrailingComma(buf);
+            bufJSON_EndObject(buf);
+        }
+        bufJSON_RemoveTrailingComma(buf);
+        bufJSON_EndArray(buf);
+        bufJSON_RemoveTrailingComma(buf);
+        bufJSON_EndObject(buf);
+    }
+    bufJSON_RemoveTrailingComma(buf);
     bufJSON_EndObjectNoComma(buf);
     return true;
 }
@@ -1237,6 +1486,67 @@ bool Asset::add_variable_to_buffer(std::string uri, const char* variable_id, fmt
         return false;
     }
     return true;
+}
+
+/**
+ * @brief Called by an asset when it gets a set on /assets/<asset type>/<asset instance>/actions/<action name>/<cmd>
+ *
+ * @param msg (fims_message&) the set.
+ * @return True on success, false on failure.
+ */
+bool Asset::handle_actions_set(fims_message& msg) {
+    FPS_DEBUG_LOG("Handle actions set func");
+
+    // double check the msg is valid
+    if (msg.nfrags != 6) {
+        FPS_ERROR_LOG("Invalid number of fragments");
+        return false;
+    }
+
+    std::vector<std::string> split_uri = split(msg.uri, std::string("/"));
+    // get the action_id
+    std::string action_id = split_uri[4];
+    // get the desired action
+    std::string desired_action = split_uri[5];
+
+    for (Action& action: actions) {
+        if (action.sequence_name == action_id) {
+            action_status.should_pub = true; // anytime an api call is made just pub up the info
+            if (desired_action == "start") {
+                if (!action_status.current_sequence_name.empty()) {
+                    FPS_WARNING_LOG("This asset is already in use. Current automated action is: %s", action_status.current_sequence_name);
+                    //emit_event();
+                    return true;
+                } 
+
+                if (in_maint_mode()) {
+                    action.enter_automation(action_status, action_id);
+                } else {
+                    FPS_WARNING_LOG("Action requested (%s), but no action taken because asset is not in maintenance mode.", msg.uri);
+                }
+ 
+                //emit_event();
+            } else if (desired_action == "stop") {
+                if (action_status.current_sequence_name == action_id && action.status == ACTION_STATUS_STATE::IN_PROGRESS) {
+                    action.exit_automation(action_status, ACTION_STATUS_STATE::ABORTED); 
+                    //emit_event();
+                }
+            } else {
+                FPS_WARNING_LOG("Unsupported action requested (%s) no action taken.", msg.uri);
+            }
+            return true;
+        }
+    }
+
+    // error state couldn't find the action
+    std::string error_ids;
+    for (const auto& action: actions) {
+        error_ids.append(action.sequence_name);
+    }
+    FPS_ERROR_LOG("Could not find the action id.");
+    FPS_ERROR_LOG("Available IDs: %s", error_ids);
+    FPS_ERROR_LOG("Your Action ID: %s", action_id);
+    return false;
 }
 
 /**
@@ -1411,6 +1721,32 @@ void Asset::process_local_mode_status() {
         emit_event("Assets", event_msg, ALARM_ALERT);
     } else if (alarm_it->second == 1 && !local_mode_status.value.value_bool) {
         alarm_it->second = 0;
+    }
+}
+
+/**
+ * @brief If there is a current sequence active, 
+ * this function handles call_sequence() and 
+ * performs faults and alarms checks. 
+ */
+void Asset::process_asset_actions() {
+    // if we have an active sequence
+    if (!action_status.current_sequence_name.empty()) {
+        // find the correct action
+        for (auto& action : actions) {
+            if (action.sequence_name == action_status.current_sequence_name) {
+                // if the action has faulted "shutdown" the action
+                if (action.check_faults()) {
+                    action.check_alarms();
+                    // goto failed state
+                    action.exit_automation(action_status, ACTION_STATUS_STATE::FAILED);
+
+                } else {
+                    action.check_alarms(); // update alarms
+                    action.call_sequence(action_status); // call the sequence functions
+                }
+            }
+        }
     }
 }
 
@@ -1598,20 +1934,26 @@ uint64_t Asset::get_status(void) const {
 
 /**
  * @brief Iterates across all saved alarm values and counts how many are active.
+ * Also include any actions alarms.
  *
  * @return Number of active alarms.
  */
 int Asset::get_num_active_alarms(void) const {
     int num_alarms = 0;
     for (auto&& name_value_pair : saved_alarms) {
-        if (name_value_pair.second > 0)
+        if (name_value_pair.second > 0) {
             ++num_alarms;
+        }
+    }
+    if (actions_alarms.value.value_bit_field != static_cast<uint64_t>(0x0)) {
+        ++num_alarms;
     }
     return num_alarms;
 }
 
 /**
  * @brief Iterates across all latched fault values and counts how many are active.
+ * Also include any actions faults.
  *
  * @return Number of active faults.
  */
@@ -1621,6 +1963,9 @@ int Asset::get_num_active_faults(void) const {
         if (name_value_pair.second > 0) {
             ++num_faults;
         }
+    }
+    if (actions_faults.value.value_bit_field != static_cast<uint64_t>(0x0)) {
+        ++num_faults;
     }
     return num_faults;
 }
@@ -1640,7 +1985,7 @@ bool Asset::is_newly_faulted(void) const {
  * @param mask: 64-bit mask to apply to the alert value.
  * @return True if there is an alert with the given ID and its masked value is non-zero, indicating it is active. False otherwise.
  */
-bool Asset::check_alert(std::string& id, uint64_t& mask) {
+bool Asset::check_alert(std::string& id, uint64_t mask) {
     return check_fault(id, mask) || check_alarm(id, mask);
 }
 
@@ -1651,7 +1996,7 @@ bool Asset::check_alert(std::string& id, uint64_t& mask) {
  * @param mask: 64-bit mask to apply to the fault value.
  * @return True if there is a fault with the given ID and its masked value is non-zero, indicating it is active. False otherwise.
  */
-bool Asset::check_fault(std::string& id, uint64_t& mask) {
+bool Asset::check_fault(std::string& id, uint64_t mask) {
     auto fault = latched_faults.find(id);
     if (fault != latched_faults.end()) {
         return fault->second & mask;
@@ -1666,7 +2011,7 @@ bool Asset::check_fault(std::string& id, uint64_t& mask) {
  * @param mask: 64-bit mask to apply to the alarm value.
  * @return True if there is an alarm with the given ID and its masked value is non-zero, indicating it is active. False otherwise.
  */
-bool Asset::check_alarm(std::string& id, uint64_t& mask) {
+bool Asset::check_alarm(std::string& id, uint64_t mask) {
     auto alarm = saved_alarms.find(id);
     if (alarm != saved_alarms.end()) {
         return alarm->second & mask;

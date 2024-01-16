@@ -9,7 +9,6 @@
 
 /* C Standard Library Dependencies */
 /* C++ Standard Library Dependencies */
-#include <memory>
 /* External Dependencies */
 #include <spdlog/fmt/fmt.h>
 /* System Internal Dependencies */
@@ -23,6 +22,7 @@
 #include <Fims_Object.h>
 #include <Sequence.h>
 #include <macros.h>
+#include <Types.h>
 #include <version.h>
 #include <Config_Validation_Result.h>
 #include <Features/Feature.h>
@@ -51,7 +51,6 @@
 #include <Features/ESS_Calibration.h>
 #include <Features/Generator_Charge.h>
 #include <Features/Manual.h>
-
 class Site_Manager {
     ////////////////////////////////////////////////////////////////////////////////////////
     //                              SITE MANAGER CONFIGURATION                            //
@@ -122,12 +121,23 @@ protected:
     ////////////////////////////////////////////////////////////////////////////////////////
 public:
     void process_state();
+
+    // Sequence functions and helpers
     bool call_sequence_functions(const char* target_asset, const char* asset_cmd, Value_Object* value, int tolerance_percent);
+    void handle_reserved_variable_sequence_functions(const char* cmd, Value_Object* value, int tolerance_percent, bool& command_found, bool& return_value);
+    void handle_ess_sequence_functions(const char* cmd, Value_Object* value, int tolerance_percent, bool& command_found, bool& return_value);
+    void handle_solar_sequence_functions(const char* cmd, Value_Object* value, int tolerance_percent, bool& command_found, bool& return_value);
+    void handle_gen_sequence_functions(const char* cmd, Value_Object* value, int tolerance_percent, bool& command_found, bool& return_value);
+    void handle_feed_sequence_functions(const char* cmd, Value_Object* value, bool& command_found, bool& return_value);
+    void handle_config_sequence_functions(const char* cmd, Value_Object* value, bool& command_found, bool& return_value);
+    void handle_feat_sequence_functions(const char* cmd, Value_Object* value, bool& command_found);
+    void handle_specific_feed_sequence_functions(const char* cmd, Value_Object* value, const char* target_asset, bool& command_found, bool& return_value);
+
     void set_site_status(const char*);
-    timespec current_time, exit_target_time;
-    states current_state, check_current_state;
-    bool step_change, path_change;  // true whenever a step or path changes
-    bool sequence_reset;            // indication that current sequence has changed. used to handle interrupted sequences
+
+    // Sequences_Status contains (times, states, and other sequences info)
+    Sequences_Status sequences_status;
+
     Fims_Object get_reserved_bool_1();
     Fims_Object get_reserved_bool_2();
     Fims_Object get_reserved_bool_3();

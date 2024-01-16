@@ -32,7 +32,7 @@ public:
     ~Asset_Manager();
 
     // init methods
-    bool asset_create(cJSON* pJsonRoot, bool* primary_controller);
+    bool asset_create(cJSON* assetsRoot, cJSON* actionsRoot, bool* primary_controller);
 
     void set_min_generators_active(int);
 

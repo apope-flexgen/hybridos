@@ -11,7 +11,10 @@
 /* External Dependencies */
 /* System Internal Dependencies */
 /* Local Internal Dependencies */
+#include "Config_Validation_Result.h"
+#include "Logger.h"
 #include "Types.h"
+#include "Action.h"
 #include <Configurator.h>
 #include <Type_Manager.h>
 #include <Asset.h>
@@ -34,11 +37,93 @@ Type_Configurator::Type_Configurator(Type_Manager* pMan, std::map<std::string, s
 }
 
 /**
+ * @brief Since it's config and performance literally doesn't matter. For readability perform all 
+ * config validation ahead of use.
+ *
+ * @param actionsJSON (cJSON*) the json object to verify.
+ * @param validation (Config_Validation_Result&) a higher level Config_Validation_Result so that I don't need to call absorb.
+ */
+void check_for_action_misconfig(cJSON* actionsJSON, Config_Validation_Result& validation) {
+    if (actionsJSON == nullptr) {
+        // early return
+        validation.is_valid_config = false;
+        validation.ERROR_details.push_back(Result_Details(fmt::format("null json provided for actions.json")));
+    }
+    cJSON* child = actionsJSON->child;
+    if (child == nullptr) {
+        // early return
+        validation.is_valid_config = false;
+        validation.ERROR_details.push_back(Result_Details(fmt::format("Missing child.")));
+    } else {
+        while (child != NULL) {
+            cJSON* asset_types = cJSON_GetObjectItem(child, "asset_types");
+            if (cJSON_IsArray(asset_types) != 0) {
+                cJSON* type = asset_types->child;
+                while (type != NULL) {
+                    if (cJSON_IsString(type) == 0) {
+                        validation.is_valid_config = false;
+                        validation.ERROR_details.push_back(Result_Details(fmt::format("There is a non-string in the asset_types field of an action config")));
+                    }
+                    type = type->next;
+                }
+            } else {
+                validation.is_valid_config = false;
+                validation.ERROR_details.push_back(Result_Details(fmt::format("asset_types field is not an array in actions.json")));
+                validation.ERROR_details.push_back(Result_Details(fmt::format("asset_types: {}", cJSON_Print(asset_types))));
+            }
+            child = child->next;
+        }
+    }
+}
+
+/**
+ * @brief Digests actions.json and create actions.
+ *
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+Config_Validation_Result Type_Configurator::create_actions() {
+    actions.clear(); // clear the actions array to ensure empty
+    // do config validation early
+    Config_Validation_Result actions_result = Config_Validation_Result(true);
+    check_for_action_misconfig(actions_root, actions_result);
+    if (!actions_result.is_valid_config) {
+        FPS_ERROR_LOG("actions.json is not valid config.");
+        return actions_result;
+    }
+
+    std::string asset_type = p_manager->get_asset_type_id();
+    /* // useful for debugging
+    char* debug_string = cJSON_Print(actionsJSON);
+    FPS_INFO_LOG("%s", debug_string);
+    free(debug_string);
+    */
+    cJSON* child = actions_root->child;
+    while (child != NULL) {
+        cJSON* asset_types = cJSON_GetObjectItem(child, "asset_types");
+        cJSON* type = asset_types->child;
+        while (type != NULL) {
+            if (type->valuestring == asset_type) {
+                Action current_action = Action();
+                if (!current_action.parse(child)) {
+                    FPS_ERROR_LOG("Failed to parse action.");
+                    return false;
+                }
+                actions.push_back(current_action);
+                break;  // you found the asset type and configured the action. Your are done. Proceed to next action.
+            }
+            type = type->next;
+        }
+        child = child->next;
+    }
+    return actions_result;
+}
+
+/**
  * @brief Extracts asset type variables for this type and configures all asset instances of this type
  *
  * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-Config_Validation_Result Type_Configurator::create_assets(void) {
+Config_Validation_Result Type_Configurator::create_assets() {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
 
     // The "asset_instances" array in assets.json is a mix of concrete asset instances and template-defined asset instances
@@ -287,6 +372,7 @@ Config_Validation_Result Type_Configurator::configure_single_asset(void) {
 
     // Here is the allocation of memory for the asset
     Asset* asset = p_manager->build_new_asset();
+
     if (asset == NULL) {
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: error allocating memory for new asset instance.", p_manager->get_asset_type_id())));
@@ -300,6 +386,7 @@ Config_Validation_Result Type_Configurator::configure_single_asset(void) {
     validation_result.absorb(asset_config_result);
 
     p_manager->append_new_asset(asset);
+
     return validation_result;
 }
 

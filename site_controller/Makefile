@@ -5,7 +5,7 @@ $(info MAKEFILE_LIST="$(MAKEFILE_LIST)")
 
 BINS = site_controller Site_Controller_Utils.so
 OBJECTS = main.o Asset.o Asset_ESS.o Asset_Feeder.o Asset_Solar.o Asset_Generator.o Asset_Manager.o Value_Object.o 
-OBJECTS += Fims_Object.o Sequence.o Slew_Object.o Variable_Regulator.o Step.o Path.o Asset_Cmd_Object.o Site_Manager.o
+OBJECTS += Fims_Object.o Sequence.o Action.o Slew_Object.o Variable_Regulator.o Step.o Path.o Asset_Cmd_Object.o Site_Manager.o
 OBJECTS += Feature.o
 OBJECTS += Active_Power_Setpoint.o Frequency_Response.o Energy_Arbitrage.o Freq_Resp_Component.o Target_SOC.o ESS_Calibration.o Generator_Charge.o Manual.o
 OBJECTS += AVR.o Watt_Var.o Reactive_Setpoint.o Direct_Power_Factor.o Constant_Power_Factor.o

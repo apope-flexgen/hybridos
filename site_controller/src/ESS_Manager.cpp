@@ -15,6 +15,7 @@
 #include <ESS_Manager.h>
 #include <Configurator.h>
 #include <Site_Controller_Utils.h>
+#include "Path.h"
 
 extern fims* p_fims;
 
@@ -742,7 +743,7 @@ Asset* ESS_Manager::build_new_asset(void) {
 }
 
 void ESS_Manager::append_new_asset(Asset* asset) {
-    pEss.push_back((Asset_ESS*)asset);
+    pEss.push_back(dynamic_cast<Asset_ESS*>(asset));
 }
 
 // After configuring individual asset instances, this function finishes configuring the ESS Manager
