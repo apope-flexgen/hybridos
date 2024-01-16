@@ -703,12 +703,6 @@ namespace InputHandler
                 double gain = amap["battery_rack_balance_coarse"]->getdParam("Gain");
                 double newActivePowerSetpoint = currentActivePowerSetpoint + gain;
 
-
-                FPS_PRINT_INFO("currentActivePowerSetpoint - {}", currentActivePowerSetpoint);
-                FPS_PRINT_INFO("gain                       - {}", gain);
-
-                FPS_PRINT_INFO("newActivePowerSetpoint     - {}", newActivePowerSetpoint);
-
                 FPS_PRINT_INFO("SET ACTIVE POWER");
                 amap["ActivePowerSetpoint"]->setVal(newActivePowerSetpoint);
             }
