@@ -18,7 +18,7 @@ def rm_docker_containers(keyword):
     # output is a table of attributes for running containers, where the first row is column labels
     # and columns 0 and 1 are ids and names respectively (it is assumed that the name has no whitespace)
     attributes = [line.split() for line in docker_ps_output.split('\n')[1:]]
-    ids = [ row[0] for row in attributes if len(row) >= 2 and row[1].find(keyword) != -1 ]
+    ids = [ row[0] for row in attributes if any(keyword in attr for attr in row) ]
     if len(ids) > 0:
         print(f'Stopping containers matching {keyword}: {ids}')
         run(['docker', 'container', 'rm', '-f'] + ids, stdout=subprocess.DEVNULL)

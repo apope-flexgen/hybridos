@@ -123,7 +123,7 @@
                     "steps": [
                         {
                             "entry_actions": {
-                                "route": "bypass",
+                                "route": "/bypass",
                                 "value": true
                             },
                             "exit_conditions": {

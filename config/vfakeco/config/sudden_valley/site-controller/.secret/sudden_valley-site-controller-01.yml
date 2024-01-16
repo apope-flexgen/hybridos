@@ -1,4 +1,4 @@
-version: 11.3.0.alpha.3
+version: 11.3.0.beta.4
 
 dnp3_client: 
   sel_411l_dnp3_client.json: { ip: 192.168.12.250, port: 502}

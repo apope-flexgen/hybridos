@@ -1,5 +1,6 @@
 #!/bin/python3
 
+from distutils.command.config import config
 import os
 import shutil
 import sys
@@ -7,16 +8,12 @@ from subprocess import DEVNULL, run
 import time
 
 cfg_path = "/usr/local/etc/config/"
-test_cfg_path = os.path.expanduser("~") + "/test_config/"
 vsaap_network = "vsaap_network"
-initial_test_delay = 5
-additional_container_delay = 0.25
-
 
 class Run_Cmd:
-    def __init__(self, name, config, ip, ports, image, detached, delay=0):
+    def __init__(self, name, config, ip, ports, image, detached):
         self.name = name
-        self.volume_mounts = [config+':/home/config/', config+':/usr/local/etc/config/', '/usr/local/bin/:/home/bin']
+        self.volume_mounts = [ config+':/home/config' ]
         self.ip = ip
         self.ports = ports
         self.image = image
@@ -24,8 +21,6 @@ class Run_Cmd:
             self.detached = 'd'
         else:
             self.detached = ''
-        # Prepend any custom commands received from the caller
-        self.delay = delay
         self.update_cmd()
 
     def update_cmd(self):
@@ -39,29 +34,20 @@ class Run_Cmd:
         self.cmd.append(self.image)
 
     def execute(self):
-        # Wait for site container pytests to modify twins config before starting twins container
-        if self.delay > 0:
-            pid = os.fork()
-            if pid == 0:
-                time.sleep(self.delay)
-                run(self.cmd, stdout=DEVNULL)
-                sys.exit()
-        else:
-            run(self.cmd, stdout=DEVNULL)
+        run(self.cmd, stdout=DEVNULL)
 
     def print_cmd(self):
         print(' '.join(self.cmd))
 
 
 class Twins:
-    def __init__(self, site_num, version_num, image_suffix, test_mode, detached=True, delay=0):
-        self.name = 'twins_{i:d}'.format(i=site_num)
-        self.config = test_cfg_path if test_mode else cfg_path  # Point config at shared volume if test
-        self.config += "test_sites/site_{i:d}/twins/".format(i=site_num)
+    def __init__(self, site_num, version_num, image_suffix, base_cfg=cfg_path, site_name="", detached=True):
+        self.name = f"{site_name}_twins"
+        self.config = os.path.join(base_cfg, "twins/config")
         self.ip = '172.3.27.{o:d}'.format(o=200+site_num)
         self.ports = []
-        self.image = f'flexgen/twins{image_suffix}:{version_num}'
-        self.run_cmd = Run_Cmd(self.name, self.config, self.ip, self.ports, self.image, detached, delay=delay)
+        self.image = f'flexgen/psm{image_suffix}:{version_num}'
+        self.run_cmd = Run_Cmd(self.name, self.config, self.ip, self.ports, self.image, detached)
 
     def launch(self):
         self.run_cmd.print_cmd()
@@ -69,14 +55,11 @@ class Twins:
 
 
 class Site:
-    def __init__(self, site_num, version_num, image_suffix, test_mode, detached=True):
-        self.name = 'site_{i:d}'.format(i=site_num)
-        self.config = test_cfg_path if test_mode else cfg_path  # Point config at shared volume if test
-        self.config += 'test_sites/site_{i:d}/'.format(i=site_num)
+    def __init__(self, site_num, version_num, image_suffix, base_cfg=cfg_path, site_name="", detached=True):
+        self.name = f"{site_name}_site"
+        self.config = os.path.join(base_cfg, "site-controller/config")
         self.ip = '172.3.27.{o:d}'.format(o=100+site_num)
-        self.ports = []
-        if not test_mode:
-            self.ports = ['{ip:d}:443'.format(ip=10000+site_num)]
+        self.ports = ['{ip:d}:443'.format(ip=10000+site_num)]
         self.image = f'flexgen/site_controller{image_suffix}:{version_num}'
         self.run_cmd = Run_Cmd(self.name, self.config, self.ip, self.ports, self.image, detached)
 
@@ -86,27 +69,27 @@ class Site:
 
 
 class Vsaap:
-    def __init__(self, site_num, image_tag, image_suffix, test_mode, site_detached=True):
-        self.twins = Twins(site_num, image_tag, image_suffix, test_mode, delay=initial_test_delay+additional_container_delay*site_num) if test_mode\
-            else Twins(site_num, image_tag, image_suffix, test_mode)
-        self.site = Site(site_num, image_tag, image_suffix, test_mode, site_detached)
-        self.test_mode = test_mode
+    def __init__(self, site_num, image_tag, image_suffix, site_detached=True, base_cfg=cfg_path, site_name=""):
+        self.twins = Twins(site_num, image_tag, image_suffix, base_cfg, site_name)
+        self.site = Site(site_num, image_tag, image_suffix, base_cfg, site_name, site_detached)
 
     def launch(self):
         self.twins.launch()
-        if not self.test_mode:
-            run(['cp', '-rf', self.site.config+'web_server/permissions_copy.json', self.site.config+'web_server/permissions.json'])
+        run(['cp', '-rf', os.path.join(self.site.config, 'web_server/permissions_copy.json'), os.path.join(self.site.config, 'web_server/permissions.json')])
         self.site.launch()
 
 
-def launch_sites(num_sites, image_tag, image_suffix, test_mode=False, site_detached=True):
+def launch_sites(num_sites, base_cfg, image_tag, image_suffix, site_detached=True):
     run(['sudo', 'docker', 'network', 'create', '--subnet=172.3.27.0/24', vsaap_network], stdout=DEVNULL)
-    # Test mode needs to share data between the containers, but not outside them
-    if test_mode:
-        # Create a test directory with config to be removed on termination
-        shutil.copytree(cfg_path, test_cfg_path)
+    # TODO: this is a quick workaround that reads any directory not called "fleet-manager" as a separate site
+    # decide whether to switch entirely to docker compose, or cleanup this approach as needed
+    site_names = []
+    for entry in os.scandir(base_cfg):
+        if entry.is_dir() and entry != "fleet-manager":
+            site_names.append(entry.name)
     for i in range(1, num_sites+1):
-        site_controller = Vsaap(i, image_tag, image_suffix, test_mode, site_detached)
+        site_cfg_path = os.path.join(base_cfg, site_names[i-1])
+        site_controller = Vsaap(i, image_tag, image_suffix, site_detached, site_cfg_path, site_names[i-1])
         site_controller.launch()
 
 

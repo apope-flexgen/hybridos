@@ -1,4 +1,5 @@
 {
+    "allowActions": true,
     "briefingFrequencyMS": 5000,
     "c2cMsgFrequencyMS": 50,
     "controllerName": "controller 1",
@@ -8,10 +9,15 @@
     "otherCtrlrStaticIP": "172.16.2.82",
     "patrolFrequencyMS": 1000,
     "pduIP": "10.0.1.83",
-    "primaryIP": "192.168.1.1",
-    "primaryNetworkInterface": "eno10",
+    "primaryIP": [
+        "192.168.1.1"
+    ],
+    "primaryNetworkInterface": [
+        "eno10"
+    ],
     "processList": [
         {
+            "allowActions": true,
             "configRestart": true,
             "hangTimeAllowanceMS": 3000,
             "killOnHang": true,
@@ -26,6 +32,7 @@
             ]
         },
         {
+            "allowActions": true,
             "configRestart": true,
             "hangTimeAllowanceMS": 3000,
             "killOnHang": true,
@@ -42,5 +49,6 @@
         }
     ],
     "statsPubFrequencySeconds": 1,
+    "syswatch": false,
     "thisCtrlrStaticIP": "172.16.1.80"
 }

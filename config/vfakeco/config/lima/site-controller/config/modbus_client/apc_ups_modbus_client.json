@@ -35,7 +35,7 @@
                                 "Overload State",
                                 "Maintenance Mode"
                             ],
-                            "echo_id": "/components/psm_apc_ups/status",
+                            "echo_id": "/components/twins_apc_ups/status",
                             "id": "status",
                             "name": "UPS Status",
                             "offset": 0,
@@ -327,7 +327,7 @@
                             "signed": true
                         },
                         {
-                            "echo_id": "/components/psm_apc_ups/p",
+                            "echo_id": "/components/twins_apc_ups/p",
                             "id": "active_power",
                             "name": "Active Power",
                             "offset": 136,
@@ -340,21 +340,21 @@
                             "scale": 189600
                         },
                         {
-                            "echo_id": "/components/psm_apc_ups/s",
+                            "echo_id": "/components/twins_apc_ups/s",
                             "id": "apparent_power",
                             "name": "Apparent Power",
                             "offset": 138,
                             "scale": 177700
                         },
                         {
-                            "echo_id": "/components/psm_apc_ups/ap2",
+                            "echo_id": "/components/twins_apc_ups/ap2",
                             "id": "apparent_power_2",
                             "name": "Apparent Power Phase 2",
                             "offset": 139,
                             "scale": 177700
                         },
                         {
-                            "echo_id": "/components/psm_apc_ups/i",
+                            "echo_id": "/components/twins_apc_ups/i",
                             "id": "output_current",
                             "name": "Output Current",
                             "offset": 140,
@@ -379,7 +379,7 @@
                             "scale": 64
                         },
                         {
-                            "echo_id": "/components/psm_apc_ups/f1",
+                            "echo_id": "/components/twins_apc_ups/f1",
                             "id": "output_frequency",
                             "name": "Output frequency",
                             "offset": 144,

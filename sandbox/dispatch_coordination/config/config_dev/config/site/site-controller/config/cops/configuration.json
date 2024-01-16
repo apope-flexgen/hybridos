@@ -1,6 +1,5 @@
 {
     "allowActions": true,
-    "syswatch" : true,
     "briefingFrequencyMS": 5000,
     "c2cMsgFrequencyMS": 50,
     "controllerName": "controller 1",
@@ -50,5 +49,6 @@
         }
     ],
     "statsPubFrequencySeconds": 1,
+    "syswatch": true,
     "thisCtrlrStaticIP": "172.16.1.80"
 }

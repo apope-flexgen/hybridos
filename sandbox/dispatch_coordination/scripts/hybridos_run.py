@@ -366,7 +366,7 @@ def start_fleet_manager():
     # launch site controller
     num_sites = len(site_to_machine_to_config_dir) - 1 # subtract 1 entry used by fleet manager
     print("Starting {n:d} Site Controller container(s).".format(n=num_sites))
-    launch_sites(num_sites, hybridos_image_tag, hybridos_image_suffix)
+    launch_sites(num_sites, config_usecase_dir, hybridos_image_tag, hybridos_image_suffix)
     print("Waiting 15 seconds to give Site Controller container(s) time to boot.")
     time.sleep(sleeptime*15)
     print("Done starting Site Controller container(s).")

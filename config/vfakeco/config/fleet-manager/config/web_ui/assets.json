@@ -1,0 +1,1264 @@
+{
+  "data": [
+    {
+      "alarms": {
+        "alarmFields": [],
+        "faultFields": []
+      },
+      "allControls": [],
+      "controls": [
+        {
+          "inputType": "switch",
+          "name": "Start Site Command",
+          "units": "",
+          "scalar": "",
+          "uri": "/remote_enable_flag"
+        },
+        {
+          "inputType": "switch",
+          "name": "Disable Site Command",
+          "units": "",
+          "scalar": "",
+          "uri": "/remote_disable_flag"
+        },
+        {
+          "inputType": "switch",
+          "name": "Clear Faults Command",
+          "units": "",
+          "scalar": "",
+          "uri": "/remote_clear_faults"
+        },
+        {
+          "inputType": "number",
+          "name": "Frequency Response Enable Word",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_response_enable_mask"
+        },
+        {
+          "inputType": "number",
+          "name": "Baseload Power Command",
+          "scalar": "1000",
+          "units": "MW",
+          "uri": "/fr_baseload_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "FFR Inactive Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_ffr_inactive_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "FRRS UF Inactive Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_up_inactive_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "FRRS OF Inactive Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_down_inactive_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "FRRS Up Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_up_active_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "FRRS Down Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_down_active_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "FFR Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_ffr_active_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "Auto-PFR Up Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_pfr_up_active_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "Auto-PFR Down Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_pfr_down_active_cmd_mw"
+        }
+      ],
+      "info": {
+        "alarmFields": [],
+        "assetKey": "sites_tab",
+        "baseURI": "",
+        "extension": "/lima",
+        "faultFields": [],
+        "hasAllControls": false,
+        "hasSummary": false,
+        "itemName": "Lima",
+        "name": "",
+        "numberOfItems": "1",
+        "sourceURI": "/sites"
+      },
+      "statuses": [
+        {
+          "name": "Site - Active Power Total Gross",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/ess_total_active_power"
+        },
+        {
+          "name": "Site - Reactive Power Total Gross",
+          "units": "MVAR",
+          "scalar": "1000",
+          "uri": "/ess_total_reactive_power"
+        },
+        {
+          "name": "Site - Apparent Power Total Gross",
+          "units": "MVA",
+          "scalar": "1000",
+          "uri": "/ess_total_apparent_power"
+        },
+        {
+          "name": "Site - Active Power Total Net",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/active_power"
+        },
+        {
+          "name": "Site - Reactive Power Total Net",
+          "units": "MVAR",
+          "scalar": "1000",
+          "uri": "/reactive_power"
+        },
+        {
+          "name": "Site - Apparent Power Total Net",
+          "units": "MVA",
+          "scalar": "1000",
+          "uri": "/apparent_power"
+        },
+        {
+          "name": "Site - Frequency",
+          "units": "hz",
+          "scalar": "",
+          "uri": "/frequency"
+        },
+        {
+          "name": "Site - Voltage L1-L2",
+          "units": "V",
+          "scalar": "",
+          "uri": "/grid_voltage_l1_l2"
+        },
+        {
+          "name": "Site - Voltage L2-L3",
+          "units": "V",
+          "scalar": "",
+          "uri": "/grid_voltage_l2_l3"
+        },
+        {
+          "name": "Site - Voltage L3-L1",
+          "units": "V",
+          "scalar": "",
+          "uri": "/grid_voltage_l3_l1"
+        },
+        {
+          "name": "Battery - State of Charge %",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_average_soc"
+        },
+        {
+          "name": "Battery - Chargable Energy MWh",
+          "units": "MWh",
+          "scalar": "1000",
+          "uri": "/ess_chargeable_energy"
+        },
+        {
+          "name": "Battery - Dischargeable energy MWh",
+          "units": "MWh",
+          "scalar": "1000",
+          "uri": "/ess_dischargeable_energy"
+        },
+        {
+          "name": "Battery - Chargeable Power MW",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/ess_chargeable_power"
+        },
+        {
+          "name": "Battery - Dischargeable Power MW",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/ess_dischargeable_power"
+        },
+        {
+          "name": "Battery - Number ESS Available",
+          "units": "",
+          "scalar": "",
+          "uri": "/num_ess_available"
+        },
+        {
+          "name": "Battery - Number ESS Online",
+          "units": "",
+          "scalar": "",
+          "uri": "/running_ess_num"
+        },
+        {
+          "name": "Heartbeat Counter",
+          "units": "",
+          "scalar": "",
+          "uri": "/heartbeat_counter"
+        },
+        {
+          "name": "BESS Container #1 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_1_status"
+        },
+        {
+          "name": "BESS Container #1 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_1_soc"
+        },
+        {
+          "name": "BESS Container #1 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_1_racks"
+        },
+        {
+          "name": "BESS Container #2 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_2_status"
+        },
+        {
+          "name": "BESS Container #2 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_2_soc"
+        },
+        {
+          "name": "BESS Container #2 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_2_racks"
+        },
+        {
+          "name": "BESS Container #3 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_3_status"
+        },
+        {
+          "name": "BESS Container #3 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_3_soc"
+        },
+        {
+          "name": "BESS Container #3 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_3_racks"
+        },
+        {
+          "name": "Site - MWh Delivered",
+          "units": "MWh",
+          "scalar": "1000",
+          "uri": "/mwh_delivered"
+        },
+        {
+          "name": "Site - MWh Received",
+          "units": "MWh",
+          "scalar": "1000",
+          "uri": "/mwh_received"
+        },
+        {
+          "name": "Frequency Response Enable Word",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_response_enable_mask_in"
+        },
+        {
+          "name": "Baseload Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_baseload_cmd_mw_in"
+        },
+        {
+          "name": "FFR Inactive Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_ffr_inactive_cmd_mw_in"
+        },
+        {
+          "name": "FRRS UF Inactive Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_up_inactive_cmd_mw_in"
+        },
+        {
+          "name": "FRRS OF Inactive Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_down_inactive_cmd_mw_in"
+        },
+        {
+          "name": "FRRS Up Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_up_active_cmd_mw_in"
+        },
+        {
+          "name": "FRRS Down Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_down_active_cmd_mw_in"
+        },
+        {
+          "name": "FFR Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_ffr_active_cmd_mw_in"
+        },
+        {
+          "name": "Auto-PFR Up Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_pfr_up_active_cmd_mw_in"
+        },
+        {
+          "name": "Auto-PFR Down Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_pfr_down_active_cmd_mw_in"
+        },
+        {
+          "name": "Site Active Power Charge Limit",
+          "units": "MW",
+          "scalar": "-1000",
+          "uri": "/site_chargeable_mw"
+        },
+        {
+          "name": "Site Active Power Discharge Limit",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/site_dischargeable_mw"
+        },
+        {
+          "name": "Auxiliary Load Active Power",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/aux_load_active_power"
+        },
+        {
+          "name": "Auxiliary Load Reactive Power",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/aux_load_reactive_power"
+        },
+        {
+          "name": "Main Breaker Closed",
+          "units": "",
+          "scalar": "",
+          "uri": "/breaker_status"
+        },
+        {
+          "name": "Running Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/running_status_flag"
+        },
+        {
+          "name": "Alarm Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/alarm_status_flag"
+        },
+        {
+          "name": "Fault Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fault_status_flag"
+        },
+        {
+          "name": "FFR UF Response Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_ffr_status_flag"
+        },
+        {
+          "name": "FFR UF Cooldown Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_ffr_cooldown_status"
+        },
+        {
+          "name": "PFR UF Response Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_pfr_up_status_flag"
+        },
+        {
+          "name": "PFR UF Cooldown Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_pfr_up_cooldown_status"
+        },
+        {
+          "name": "PFR OF Response Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_pfr_down_status_flag"
+        },
+        {
+          "name": "PFR OF Cooldown Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_pfr_down_cooldown_status"
+        },
+        {
+          "name": "BESS Container #1 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_1_faults"
+        },
+        {
+          "name": "BESS Container #1 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_1_alarms"
+        },
+        {
+          "name": "BESS Container #2 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_2_faults"
+        },
+        {
+          "name": "BESS Container #2 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_2_alarms"
+        },
+        {
+          "name": "BESS Container #3 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_3_faults"
+        },
+        {
+          "name": "BESS Container #3 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_3_alarms"
+        },
+        {
+          "name": "FRRS UF Response Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_frrs_up_status_flag"
+        },
+        {
+          "name": "FRRS UF Cooldown Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_frrs_up_cooldown_status"
+        },
+        {
+          "name": "FRRS OF Response Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_frrs_down_status_flag"
+        },
+        {
+          "name": "FRRS OF Cooldown Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_frrs_down_cooldown_status"
+        }
+      ],
+      "summary": [],
+      "summaryControls": []
+    },
+    {
+      "alarms": {
+        "alarmFields": [],
+        "faultFields": []
+      },
+      "allControls": [],
+      "controls": [
+        {
+          "inputType": "switch",
+          "name": "Start Site Command",
+          "units": "",
+          "scalar": "",
+          "uri": "/remote_enable_flag"
+        },
+        {
+          "inputType": "switch",
+          "name": "Disable Site Command",
+          "units": "",
+          "scalar": "",
+          "uri": "/remote_disable_flag"
+        },
+        {
+          "inputType": "switch",
+          "name": "Clear Faults Command",
+          "units": "",
+          "scalar": "",
+          "uri": "/remote_clear_faults"
+        },
+        {
+          "inputType": "number",
+          "name": "Frequency Response Enable Word",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_response_enable_mask"
+        },
+        {
+          "inputType": "number",
+          "name": "Baseload Power Command",
+          "scalar": "1000",
+          "units": "MW",
+          "uri": "/fr_baseload_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "FFR Inactive Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_ffr_inactive_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "FRRS UF Inactive Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_up_inactive_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "FRRS OF Inactive Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_down_inactive_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "FRRS Up Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_up_active_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "FRRS Down Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_down_active_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "FFR Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_ffr_active_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "Auto-PFR Up Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_pfr_up_active_cmd_mw"
+        },
+        {
+          "inputType": "number",
+          "name": "Auto-PFR Down Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_pfr_down_active_cmd_mw"
+        }
+      ],
+      "info": {
+        "alarmFields": [],
+        "assetKey": "sites_tab",
+        "baseURI": "",
+        "extension": "/sudden_valley",
+        "faultFields": [],
+        "hasAllControls": false,
+        "hasSummary": false,
+        "itemName": "Sudden Valley",
+        "name": "",
+        "numberOfItems": "1",
+        "sourceURI": "/sites"
+      },
+      "statuses": [
+        {
+          "name": "Site - Active Power Total Gross",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/ess_total_active_power"
+        },
+        {
+          "name": "Site - Reactive Power Total Gross",
+          "units": "MVAR",
+          "scalar": "1000",
+          "uri": "/ess_total_reactive_power"
+        },
+        {
+          "name": "Site - Apparent Power Total Gross",
+          "units": "MVA",
+          "scalar": "1000",
+          "uri": "/ess_total_apparent_power"
+        },
+        {
+          "name": "Site - Active Power Total Net",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/active_power"
+        },
+        {
+          "name": "Site - Reactive Power Total Net",
+          "units": "MVAR",
+          "scalar": "1000",
+          "uri": "/reactive_power"
+        },
+        {
+          "name": "Site - Apparent Power Total Net",
+          "units": "MVA",
+          "scalar": "1000",
+          "uri": "/apparent_power"
+        },
+        {
+          "name": "Site - Frequency",
+          "units": "hz",
+          "scalar": "",
+          "uri": "/frequency"
+        },
+        {
+          "name": "Site - Voltage L1-L2",
+          "units": "V",
+          "scalar": "",
+          "uri": "/grid_voltage_l1_l2"
+        },
+        {
+          "name": "Site - Voltage L2-L3",
+          "units": "V",
+          "scalar": "",
+          "uri": "/grid_voltage_l2_l3"
+        },
+        {
+          "name": "Site - Voltage L3-L1",
+          "units": "V",
+          "scalar": "",
+          "uri": "/grid_voltage_l3_l1"
+        },
+        {
+          "name": "Battery - State of Charge %",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_average_soc"
+        },
+        {
+          "name": "Battery - Chargable Energy MWh",
+          "units": "MWh",
+          "scalar": "1000",
+          "uri": "/ess_chargeable_energy"
+        },
+        {
+          "name": "Battery - Dischargeable energy MWh",
+          "units": "MWh",
+          "scalar": "1000",
+          "uri": "/ess_dischargeable_energy"
+        },
+        {
+          "name": "Battery - Chargeable Power MW",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/ess_chargeable_power"
+        },
+        {
+          "name": "Battery - Dischargeable Power MW",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/ess_dischargeable_power"
+        },
+        {
+          "name": "Battery - Number ESS Available",
+          "units": "",
+          "scalar": "",
+          "uri": "/num_ess_available"
+        },
+        {
+          "name": "Battery - Number ESS Online",
+          "units": "",
+          "scalar": "",
+          "uri": "/running_ess_num"
+        },
+        {
+          "name": "Heartbeat Counter",
+          "units": "",
+          "scalar": "",
+          "uri": "/heartbeat_counter"
+        },
+        {
+          "name": "BESS Container #1 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_1_status"
+        },
+        {
+          "name": "BESS Container #1 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_1_soc"
+        },
+        {
+          "name": "BESS Container #1 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_1_racks"
+        },
+        {
+          "name": "BESS Container #2 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_2_status"
+        },
+        {
+          "name": "BESS Container #2 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_2_soc"
+        },
+        {
+          "name": "BESS Container #2 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_2_racks"
+        },
+        {
+          "name": "BESS Container #3 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_3_status"
+        },
+        {
+          "name": "BESS Container #3 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_3_soc"
+        },
+        {
+          "name": "BESS Container #3 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_3_racks"
+        },
+        {
+          "name": "BESS Container #4 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_4_status"
+        },
+        {
+          "name": "BESS Container #4 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_4_soc"
+        },
+        {
+          "name": "BESS Container #4 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_4_racks"
+        },
+        {
+          "name": "BESS Container #5 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_5_status"
+        },
+        {
+          "name": "BESS Container #5 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_5_soc"
+        },
+        {
+          "name": "BESS Container #5 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_5_racks"
+        },
+        {
+          "name": "BESS Container #6 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_6_status"
+        },
+        {
+          "name": "BESS Container #6 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_6_soc"
+        },
+        {
+          "name": "BESS Container #6 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_6_racks"
+        },
+        {
+          "name": "BESS Container #7 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_7_status"
+        },
+        {
+          "name": "BESS Container #7 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_7_soc"
+        },
+        {
+          "name": "BESS Container #7 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_7_racks"
+        },
+        {
+          "name": "BESS Container #8 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_8_status"
+        },
+        {
+          "name": "BESS Container #8 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_8_soc"
+        },
+        {
+          "name": "BESS Container #8 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_8_racks"
+        },
+        {
+          "name": "BESS Container #9 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_9_status"
+        },
+        {
+          "name": "BESS Container #9 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_9_soc"
+        },
+        {
+          "name": "BESS Container #9 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_9_racks"
+        },
+        {
+          "name": "BESS Container #10 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_10_status"
+        },
+        {
+          "name": "BESS Container #10 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_10_soc"
+        },
+        {
+          "name": "BESS Container #10 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_10_racks"
+        },
+        {
+          "name": "BESS Container #11 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_11_status"
+        },
+        {
+          "name": "BESS Container #11 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_11_soc"
+        },
+        {
+          "name": "BESS Container #11 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_11_racks"
+        },
+        {
+          "name": "BESS Container #12 System Mode",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_12_status"
+        },
+        {
+          "name": "BESS Container #12 System SOC",
+          "units": "%",
+          "scalar": "",
+          "uri": "/ess_12_soc"
+        },
+        {
+          "name": "BESS Container #12 Number of Active Racks",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_12_racks"
+        },
+        {
+          "name": "Site - MWh Delivered",
+          "units": "MWh",
+          "scalar": "1000",
+          "uri": "/mwh_delivered"
+        },
+        {
+          "name": "Site - MWh Received",
+          "units": "MWh",
+          "scalar": "1000",
+          "uri": "/mwh_received"
+        },
+        {
+          "name": "Frequency Response Enable Word",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_response_enable_mask_in"
+        },
+        {
+          "name": "Baseload Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_baseload_cmd_mw_in"
+        },
+        {
+          "name": "FFR Inactive Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_ffr_inactive_cmd_mw_in"
+        },
+        {
+          "name": "FRRS UF Inactive Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_up_inactive_cmd_mw_in"
+        },
+        {
+          "name": "FRRS OF Inactive Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_down_inactive_cmd_mw_in"
+        },
+        {
+          "name": "FRRS Up Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_up_active_cmd_mw_in"
+        },
+        {
+          "name": "FRRS Down Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_frrs_down_active_cmd_mw_in"
+        },
+        {
+          "name": "FFR Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_ffr_active_cmd_mw_in"
+        },
+        {
+          "name": "Auto-PFR Up Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_pfr_up_active_cmd_mw_in"
+        },
+        {
+          "name": "Auto-PFR Down Active Power Command",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/fr_pfr_down_active_cmd_mw_in"
+        },
+        {
+          "name": "Site Active Power Charge Limit",
+          "units": "MW",
+          "scalar": "-1000",
+          "uri": "/site_chargeable_mw"
+        },
+        {
+          "name": "Site Active Power Discharge Limit",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/site_dischargeable_mw"
+        },
+        {
+          "name": "Auxiliary Load Active Power",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/aux_load_active_power"
+        },
+        {
+          "name": "Auxiliary Load Reactive Power",
+          "units": "MW",
+          "scalar": "1000",
+          "uri": "/aux_load_reactive_power"
+        },
+        {
+          "name": "Main Breaker Closed",
+          "units": "",
+          "scalar": "",
+          "uri": "/breaker_status"
+        },
+        {
+          "name": "Running Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/running_status_flag"
+        },
+        {
+          "name": "Alarm Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/alarm_status_flag"
+        },
+        {
+          "name": "Fault Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fault_status_flag"
+        },
+        {
+          "name": "FFR UF Response Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_ffr_status_flag"
+        },
+        {
+          "name": "FFR UF Cooldown Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_ffr_cooldown_status"
+        },
+        {
+          "name": "PFR UF Response Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_pfr_up_status_flag"
+        },
+        {
+          "name": "PFR UF Cooldown Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_pfr_up_cooldown_status"
+        },
+        {
+          "name": "PFR OF Response Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_pfr_down_status_flag"
+        },
+        {
+          "name": "PFR OF Cooldown Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_pfr_down_cooldown_status"
+        },
+        {
+          "name": "BESS Container #1 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_1_faults"
+        },
+        {
+          "name": "BESS Container #1 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_1_alarms"
+        },
+        {
+          "name": "BESS Container #2 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_2_faults"
+        },
+        {
+          "name": "BESS Container #2 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_2_alarms"
+        },
+        {
+          "name": "BESS Container #3 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_3_faults"
+        },
+        {
+          "name": "BESS Container #3 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_3_alarms"
+        },
+        {
+          "name": "BESS Container #4 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_4_faults"
+        },
+        {
+          "name": "BESS Container #4 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_4_alarms"
+        },
+        {
+          "name": "BESS Container #5 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_5_faults"
+        },
+        {
+          "name": "BESS Container #5 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_5_alarms"
+        },
+        {
+          "name": "BESS Container #6 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_6_faults"
+        },
+        {
+          "name": "BESS Container #6 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_6_alarms"
+        },
+        {
+          "name": "BESS Container #7 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_7_faults"
+        },
+        {
+          "name": "BESS Container #7 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_7_alarms"
+        },
+        {
+          "name": "BESS Container #8 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_8_faults"
+        },
+        {
+          "name": "BESS Container #8 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_8_alarms"
+        },
+        {
+          "name": "BESS Container #9 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_9_faults"
+        },
+        {
+          "name": "BESS Container #9 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_9_alarms"
+        },
+        {
+          "name": "BESS Container #10 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_10_faults"
+        },
+        {
+          "name": "BESS Container #10 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_10_alarms"
+        },
+        {
+          "name": "BESS Container #11 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_11_faults"
+        },
+        {
+          "name": "BESS Container #11 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_11_alarms"
+        },
+        {
+          "name": "BESS Container #12 Fault Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_12_faults"
+        },
+        {
+          "name": "BESS Container #12 Alarm Flag",
+          "units": "",
+          "scalar": "",
+          "uri": "/ess_12_alarms"
+        },
+        {
+          "name": "FRRS UF Response Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_frrs_up_status_flag"
+        },
+        {
+          "name": "FRRS UF Cooldown Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_frrs_up_cooldown_status"
+        },
+        {
+          "name": "FRRS OF Response Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_frrs_down_status_flag"
+        },
+        {
+          "name": "FRRS OF Cooldown Status",
+          "units": "",
+          "scalar": "",
+          "uri": "/fr_frrs_down_cooldown_status"
+        }
+      ],
+      "summary": [],
+      "summaryControls": []
+    }
+  ]
+}

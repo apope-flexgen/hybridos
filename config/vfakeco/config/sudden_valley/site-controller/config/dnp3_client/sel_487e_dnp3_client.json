@@ -1595,7 +1595,7 @@
     "system": {
         "data_bits": "Columns marked in green are REQUIRED",
         "id": "sel_487e_pri",
-        "ip_address": "192.168.10.250",
+        "ip_address": "192.168.12.250",
         "name": "SEL 487E Primary",
         "port": 20001,
         "protocol": "DNP3",

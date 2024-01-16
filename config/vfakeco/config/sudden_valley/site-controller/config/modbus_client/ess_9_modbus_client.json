@@ -704,7 +704,7 @@
         }
     ],
     "connection": {
-        "ip_address": "192.168.10.250",
+        "ip_address": "192.168.12.250",
         "name": "FlexGen ESS Controller 9",
         "port": 10013
     }

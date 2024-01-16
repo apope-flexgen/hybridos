@@ -24,49 +24,49 @@
                     "id": "uf_ffr_inactive_cmd_kw",
                     "name": "FFR Inactive Power Command",
                     "offset": 3,
-                    "uri": "/features/active_power"
+                    "uri": "/features/standalone_power"
                 },
                 {
                     "id": "uf_frrs_inactive_cmd_kw",
                     "name": "UF FRRS Inactive Power Command",
                     "offset": 4,
-                    "uri": "/features/active_power"
+                    "uri": "/features/standalone_power"
                 },
                 {
                     "id": "of_frrs_inactive_cmd_kw",
                     "name": "FRRS Inactive Power Command",
                     "offset": 5,
-                    "uri": "/features/active_power"
+                    "uri": "/features/standalone_power"
                 },
                 {
                     "id": "uf_frrs_active_cmd_kw",
                     "name": "UF FRRS Active Power Command",
                     "offset": 6,
-                    "uri": "/features/active_power"
+                    "uri": "/features/standalone_power"
                 },
                 {
                     "id": "of_frrs_active_cmd_kw",
                     "name": "OF FRRS Active Power Command",
                     "offset": 7,
-                    "uri": "/features/active_power"
+                    "uri": "/features/standalone_power"
                 },
                 {
                     "id": "uf_ffr_active_cmd_kw",
                     "name": "FFR Active Power Command",
                     "offset": 8,
-                    "uri": "/features/active_power"
+                    "uri": "/features/standalone_power"
                 },
                 {
                     "id": "uf_pfr_active_cmd_kw",
                     "name": "UF PFR Active Power Command",
                     "offset": 9,
-                    "uri": "/features/active_power"
+                    "uri": "/features/standalone_power"
                 },
                 {
                     "id": "of_pfr_active_cmd_kw",
                     "name": "OF PFR Active Power Command",
                     "offset": 10,
-                    "uri": "/features/active_power"
+                    "uri": "/features/standalone_power"
                 },
                 {
                     "id": "FM_timestamp",

@@ -99,7 +99,7 @@
                 {
                     "id": "runmode1_kVAR_mode_cmd_dnp3",
                     "name": "Mode Select - Run Mode 1 Reactive Power",
-                    "offset": 13,
+                    "offset": 14,
                     "uri": "/features/reactive_power"
                 }
             ],
@@ -444,6 +444,216 @@
                     "offset": 47,
                     "uri": "/assets/ess/ess_02",
                     "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #3 System Mode",
+                    "offset": 48,
+                    "uri": "/assets/ess/ess_03",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #3 System SOC",
+                    "offset": 49,
+                    "uri": "/assets/ess/ess_03",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #3 Number of Active Racks",
+                    "offset": 50,
+                    "uri": "/assets/ess/ess_03",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #4 System Mode",
+                    "offset": 51,
+                    "uri": "/assets/ess/ess_04",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #4 System SOC",
+                    "offset": 52,
+                    "uri": "/assets/ess/ess_04",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #4 Number of Active Racks",
+                    "offset": 53,
+                    "uri": "/assets/ess/ess_04",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #5 System Mode",
+                    "offset": 54,
+                    "uri": "/assets/ess/ess_05",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #2 System SOC",
+                    "offset": 55,
+                    "uri": "/assets/ess/ess_05",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #5 Number of Active Racks",
+                    "offset": 56,
+                    "uri": "/assets/ess/ess_05",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #6 System Mode",
+                    "offset": 57,
+                    "uri": "/assets/ess/ess_06",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #6 System SOC",
+                    "offset": 58,
+                    "uri": "/assets/ess/ess_06",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #6 Number of Active Racks",
+                    "offset": 59,
+                    "uri": "/assets/ess/ess_06",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #7 System Mode",
+                    "offset": 60,
+                    "uri": "/assets/ess/ess_07",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #7 System SOC",
+                    "offset": 61,
+                    "uri": "/assets/ess/ess_07",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #7 Number of Active Racks",
+                    "offset": 62,
+                    "uri": "/assets/ess/ess_07",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #8 System Mode",
+                    "offset": 63,
+                    "uri": "/assets/ess/ess_08",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #8 System SOC",
+                    "offset": 64,
+                    "uri": "/assets/ess/ess_08",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #8 Number of Active Racks",
+                    "offset": 65,
+                    "uri": "/assets/ess/ess_08",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #9 System Mode",
+                    "offset": 66,
+                    "uri": "/assets/ess/ess_09",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #9 System SOC",
+                    "offset": 67,
+                    "uri": "/assets/ess/ess_09",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #9 Number of Active Racks",
+                    "offset": 68,
+                    "uri": "/assets/ess/ess_09",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #10 System Mode",
+                    "offset": 69,
+                    "uri": "/assets/ess/ess_10",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #10 System SOC",
+                    "offset": 70,
+                    "uri": "/assets/ess/ess_10",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #10 Number of Active Racks",
+                    "offset": 71,
+                    "uri": "/assets/ess/ess_10",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #11 System Mode",
+                    "offset": 72,
+                    "uri": "/assets/ess/ess_11",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #11 System SOC",
+                    "offset": 73,
+                    "uri": "/assets/ess/ess_11",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #11 Number of Active Racks",
+                    "offset": 74,
+                    "uri": "/assets/ess/ess_11",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #12 System Mode",
+                    "offset": 75,
+                    "uri": "/assets/ess/ess_12",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #12 System SOC",
+                    "offset": 76,
+                    "uri": "/assets/ess/ess_12",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #12 Number of Active Racks",
+                    "offset": 77,
+                    "uri": "/assets/ess/ess_12",
+                    "variation": "Group30Var5"
                 }
             ],
             "number_of_registers": 70,
@@ -577,10 +787,128 @@
                     "name": "ESS Container #2 Alarm Flag",
                     "offset": 20,
                     "uri": "/assets/ess/ess_02"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #3 Fault Flag",
+                    "offset": 21,
+                    "uri": "/assets/ess/ess_03"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #3 Alarm Flag",
+                    "offset": 22,
+                    "uri": "/assets/ess/ess_03"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #4 Fault Flag",
+                    "offset": 23,
+                    "uri": "/assets/ess/ess_04"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #4 Alarm Flag",
+                    "offset": 24,
+                    "uri": "/assets/ess/ess_04"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #5 Fault Flag",
+                    "offset": 25,
+                    "uri": "/assets/ess/ess_05"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #5 Alarm Flag",
+                    "offset": 26,
+                    "uri": "/assets/ess/ess_05"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #6 Fault Flag",
+                    "offset": 27,
+                    "uri": "/assets/ess/ess_06"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #6 Alarm Flag",
+                    "offset": 28,
+                    "uri": "/assets/ess/ess_06"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #7 Fault Flag",
+                    "offset": 29,
+                    "uri": "/assets/ess/ess_07"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #7 Alarm Flag",
+                    "offset": 30,
+                    "uri": "/assets/ess/ess_07"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #8 Fault Flag",
+                    "offset": 31,
+                    "uri": "/assets/ess/ess_08"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #8 Alarm Flag",
+                    "offset": 32,
+                    "uri": "/assets/ess/ess_08"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #09 Fault Flag",
+                    "offset": 33,
+                    "uri": "/assets/ess/ess_09"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #09 Alarm Flag",
+                    "offset": 34,
+                    "uri": "/assets/ess/ess_09"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #10 Fault Flag",
+                    "offset": 35,
+                    "uri": "/assets/ess/ess_10"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #10 Alarm Flag",
+                    "offset": 36,
+                    "uri": "/assets/ess/ess_10"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #11 Fault Flag",
+                    "offset": 37,
+                    "uri": "/assets/ess/ess_11"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #11 Alarm Flag",
+                    "offset": 38,
+                    "uri": "/assets/ess/ess_11"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #12 Fault Flag",
+                    "offset": 39,
+                    "uri": "/assets/ess/ess_12"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #12 Alarm Flag",
+                    "offset": 40,
+                    "uri": "/assets/ess/ess_12"
                 }
             ],
-            "number_of_registers": 83,
-            "starting_offset": 0,
             "type": "binary"
         },
         {
@@ -604,8 +932,6 @@
                     "uri": "/site/operation"
                 }
             ],
-            "number_of_registers": 3,
-            "starting_offset": 0,
             "type": "CROB"
         }
     ],

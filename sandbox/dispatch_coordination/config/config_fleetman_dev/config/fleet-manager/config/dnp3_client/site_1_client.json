@@ -9,7 +9,8 @@
         "ip_address": "172.3.27.101",
         "local_uri": "/local",
         "port": 20000,
-        "frequency": 500
+        "frequency": 500,
+        "pub_outputs": true
     },
     "registers": [
         {

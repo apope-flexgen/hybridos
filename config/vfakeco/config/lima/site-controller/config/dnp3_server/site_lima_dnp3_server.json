@@ -99,7 +99,7 @@
                 {
                     "id": "runmode1_kVAR_mode_cmd_dnp3",
                     "name": "Mode Select - Run Mode 1 Reactive Power",
-                    "offset": 13,
+                    "offset": 14,
                     "uri": "/features/reactive_power"
                 }
             ],
@@ -445,6 +445,28 @@
                     "uri": "/assets/ess/ess_02",
                     "variation": "Group30Var5"
                 }
+                ,
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #3 System Mode",
+                    "offset": 48,
+                    "uri": "/assets/ess/ess_03",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #3 System SOC",
+                    "offset": 49,
+                    "uri": "/assets/ess/ess_03",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #3 Number of Active Racks",
+                    "offset": 50,
+                    "uri": "/assets/ess/ess_03",
+                    "variation": "Group30Var5"
+                }
             ],
             "number_of_registers": 70,
             "starting_offset": 0,
@@ -577,6 +599,18 @@
                     "name": "ESS Container #2 Alarm Flag",
                     "offset": 20,
                     "uri": "/assets/ess/ess_02"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #3 Fault Flag",
+                    "offset": 21,
+                    "uri": "/assets/ess/ess_03"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #3 Alarm Flag",
+                    "offset": 22,
+                    "uri": "/assets/ess/ess_03"
                 }
             ],
             "number_of_registers": 83,

@@ -8,6 +8,7 @@
     "gen": false,
     "inspectorComponentsName": "test_controller",
     "met_station": false,
+    "product": "SC",
     "scheduler": true,
     "site": true,
     "site_name": "Gargantua",

@@ -1,4 +1,4 @@
-version: 11.3.0.alpha.3
+version: 11.3.0.beta.4
 
 modbus_client: 
   ess_1_bms_modbus_client.json: { ip: 192.168.11.5, port: 504}

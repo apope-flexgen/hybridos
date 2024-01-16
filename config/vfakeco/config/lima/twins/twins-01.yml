@@ -1,0 +1,24 @@
+version: 11.3.0.alpha.3
+
+modbus_server: 
+  apc_ups_modbus_server.json:
+    ip: 0.0.0.0
+    port: 10000
+  ess_1_bms_modbus_server.json:
+    ip: 0.0.0.0
+    port: 5030
+  ess_1_pcs_modbus_server.json:
+    ip: 0.0.0.0
+    port: 5031
+  ess_2_modbus_server.json:
+    ip: 0.0.0.0
+    port: 10006
+  ess_3_modbus_server.json:
+    ip: 0.0.0.0
+    port: 10007
+  sel_651r_modbus_server.json:
+    ip: 0.0.0.0
+    port: 20000
+  sel_735_modbus_client.json:
+    ip: 192.168.10.250
+    port: 10003

@@ -1,1 +1,14 @@
-version: 11.3.0.alpha.3
+version: 11.3.0.beta.4
+
+modbus_client: 
+  ess_1_bms_modbus_client.json:
+    ip: 192.168.10.250
+    port: 5030
+  ess_1_pcs_modbus_client.json:
+    ip: 192.168.10.10
+    port: 5031
+
+modbus_server:
+  ess_1_modbus_server.json:
+    ip: 0.0.0.0
+    port: 502

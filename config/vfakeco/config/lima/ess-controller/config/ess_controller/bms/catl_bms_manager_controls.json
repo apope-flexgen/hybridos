@@ -33,16 +33,15 @@
             },
             "checkCmdTimeout": 3,
             "cmdVar": "/components/catl_ems_bms_rw:ems_cmd",
-            "expression": "not {1} and {2} == Stop and not {3}",
+            "expression": "{1} == Stop and not {2}",
             "note1": "Close DC contactors command to send to BMS if DC contactors are open, the PCS is in Stop, and the BMS does not have any faults",
             "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
             "numVars": 3,
             "sendCmdTimeout": 3,
             "useExpr": true,
             "value": 2,
-            "variable1": "/status/bms:DCClosed",
-            "variable2": "/status/pcs:SystemState",
-            "variable3": "/status/bms:IsFaulted"
+            "variable1": "/status/pcs:SystemState",
+            "variable2": "/status/bms:IsFaulted"
         },
         "CloseContactorsEnable": {
             "actions": {
