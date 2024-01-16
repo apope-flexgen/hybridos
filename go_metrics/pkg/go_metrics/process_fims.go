@@ -476,9 +476,7 @@ func handleDecodedMetricsInputValue(inputName string) {
 	InputScope[inputName] = union_array
 	inputScopeMutex.Unlock()
 	if containedInValChanged[inputName] || inputYieldsDirectSet[inputName] {
-		inputScopeMutex.Lock()
 		ProcessDirectSets()
-		inputScopeMutex.Unlock()
 	}
 }
 

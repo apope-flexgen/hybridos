@@ -45,18 +45,24 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 	evalExpressionsTiming.init()
 	go func() {
 		for {
-			ProcessFims(<-fimsMap) // this is blocking, so we won't create a bajillion instances of the goroutine below
+			if f.Connected() {
+				ProcessFims(<-fimsMap) // this is blocking, so we won't create a bajillion instances of the goroutine below
+			} else{
+				break
+			}
 		}
 	}()
+
 	t0 := time.Now()
 	MDOtick := time.NewTicker(10000 * time.Millisecond)
 	for j := 0; j < len(tickers); j += 1 {
 		go func(tickerIndex int) {
 			for {
+				if !f.Connected(){
+					break
+				}
 				<-tickers[tickerIndex].C
-					inputScopeMutex.Lock()
 					EvaluateExpressions()
-					inputScopeMutex.Unlock()
 					pubDataChangedMutex.Lock()
 					for _, pubUri := range tickerPubs[tickerIndex] {
 						pubDataChanged[pubUri] = true
@@ -125,6 +131,9 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 	for echoIdx := range MetricsConfig.Echo {
 		go func(echoIndex int) {
 			for {
+				if !f.Connected(){
+					break
+				}
 				<-MetricsConfig.Echo[echoIndex].Ticker.C
 					echoMutex.RLock()
 					if len(MetricsConfig.Echo[echoIndex].Heartbeat) > 0 {
@@ -190,6 +199,9 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 	}
 
 	for {
+		if !f.Connected(){
+			break
+		}
 		<-MDOtick.C
 			mdoBuf.Reset()
 			if len(MdoFile) > 0 {
@@ -332,9 +344,8 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 }
 
 func ProcessDirectSets() {
-	// inputsMutex.Lock()
 	EvaluateExpressions()
-	// inputsMutex.Unlock()
+	inputScopeMutex.Lock()
 	directSetMutex.Lock()
 	for directSetUriGroup, active := range uriToDirectSetActive {
 		if active {
@@ -373,6 +384,7 @@ func ProcessDirectSets() {
 		}
 	}
 	directSetMutex.Unlock()
+	inputScopeMutex.Unlock()
 }
 
 func addFilterVars(filterName string) []Union {
@@ -390,6 +402,7 @@ func addFilterVars(filterName string) []Union {
 }
 
 func EvaluateExpressions() {
+	inputScopeMutex.Lock()
 	evalExpressionsTiming.start()
 	filterNeedsEvalMutex.RLock()
 	filterNeedsEvalCopy := make(map[string]bool, len(filterNeedsEval))
@@ -556,6 +569,7 @@ func EvaluateExpressions() {
 		}
 	}
 	evalExpressionsTiming.stop()
+	inputScopeMutex.Unlock()
 }
 
 /**
