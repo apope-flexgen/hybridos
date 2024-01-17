@@ -527,6 +527,12 @@ namespace InputHandler
         asset_manager * am = aV->am;
         VarMapUtils* vm = am->vm;
 
+        const char *bmsch = (const char*)"bms_1";
+        if (aV->gotParam("bms"))
+        {
+            bmsch = aV->getcParam("bms");
+        }
+
         int returnValue = -1;
         std::string message = "";
 
@@ -534,7 +540,7 @@ namespace InputHandler
         std::string uri = "battery_rack_balance_coarse";
 
 
-        auto relname = fmt::format("{}_{}", __func__, "ess").c_str() ;
+        auto relname = fmt::format("{}_{}_{}", __func__, "ess", bmsch).c_str() ;
         assetVar* essAv = amap[relname];
         if (!essAv || (reload = essAv->getiVal()) == 0)
         {
@@ -571,33 +577,21 @@ namespace InputHandler
             };
 
 
-            // TODO populate all the /status/bms/rack_(1-x):IsConnected
-            // int numRacks = amap["NumRacks"]->getiVal();
-            // for (int i = 1; i > numRacks; i++) {
-            //     std::string rackUri = fmt::format("/status/bms/rack_{}", i);
-            //     std::string isConnectedName = fmt::format("IsConnected_rack_{}", i);
-            //     assetVarVector.push_back(
-            //         DataUtility::AssetVarInfo(rackUri.c_str(), "IsConnected", isConnectedName.c_str(), assetVar::ATypes::ABOOL)
-            //     );
+            int numRacks = amap["NumRacks"]->getiVal();
+            for (int i = 1; i > numRacks; i++) {
+                std::string rackUri = fmt::format("/status/{}_rack_{}", bmsch, i);
+                std::string dcClosedName = fmt::format("DCClosed_rack_{}", i);
+                std::string dcVoltageName = fmt::format("DCVoltage_rack_{}", i);
+                assetVarVector.push_back(
+                    DataUtility::AssetVarInfo(rackUri.c_str(), "DCClosed", dcClosedName.c_str(), assetVar::ATypes::ABOOL)
+                );
+                assetVarVector.push_back(
+                    DataUtility::AssetVarInfo(rackUri.c_str(), "DCVoltage", dcVoltageName.c_str(), assetVar::ATypes::AFLOAT)
+                );
 
-            // } 
+            } 
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
-
-
-            //populating rack info vector to be sent to algorithm
-            // std::vector<BatteryBalancingUtility::RackInfoObject> racks = {};
-            // for (int i = 1; i > numRacks; i++) {
-            //     BatteryBalancingUtility::RackInfoObject rackInfo;
-            //     rackInfo.rackNum = i;
-            //     rackInfo.voltage =0.0;
-            //     if(amap[fmt::format("IsConnected_rack_{}", i)]->getbVal()){
-            //         rackInfo.contactorStatus = BatteryBalancingUtility::ContactorStatus::CLOSED;
-            //     } else {
-            //         rackInfo.contactorStatus = BatteryBalancingUtility::ContactorStatus::OPEN;
-            //     }
-            //     racks.push_back(rackInfo);
-            // } 
             
 
             reload = 1;
@@ -638,8 +632,7 @@ namespace InputHandler
 
             reload = 2;
             essAv->setVal(reload);
-            return;
-            
+            return;  
         }
 
         //Start BMS
@@ -682,7 +675,7 @@ namespace InputHandler
                 returnValue = IN_PROGRESS;
             }
 
-            amap["ActivePowerSetpoint"]->setVal(-100);
+            // amap["ActivePowerSetpoint"]->setVal(-100);
             return;
 
         }
@@ -691,27 +684,37 @@ namespace InputHandler
         // TODO make this function
         if(reload == 4){
 
-            double currentActivePowerSetpoint = amap["ActivePowerSetpoint"]->getdVal();
+            // double currentActivePowerSetpoint = amap["ActivePowerSetpoint"]->getdVal();
 
-            if(currentActivePowerSetpoint >= 100){
+            // if(currentActivePowerSetpoint >= 100){
+            //     reload = 5;
+            //     essAv->setVal(reload);
+            // } else {
+
+            //     // double controlRate = amap["battery_rack_balance_coarse"]->getdParam("every");
+            //     // double controlRate = amap["battery_rack_balance_coarse"]->getdParam("ControlRate");
+            //     double gain = amap["battery_rack_balance_coarse"]->getdParam("Gain");
+            //     double newActivePowerSetpoint = currentActivePowerSetpoint + gain;
+
+            //     amap["ActivePowerSetpoint"]->setVal(newActivePowerSetpoint);
+            // }
+
+            double deadband = amap["battery_rack_balance_coarse"]->getdParam("targetVoltageDeadband");
+            //TODO make getting rack info a 1 time thing
+            std::vector<BatteryBalancingUtility::RackInfoObject> racks = BatteryBalancingUtility::GetRackInfoList(amap);
+            BatteryBalancingUtility::VoltageArbitrationResult result = BatteryBalancingUtility::VoltageArbitration(deadband, racks);
+
+            if(result.balancingNeeded){
+                
+                BatteryBalancingUtility::ActivePowerBalancingInput inputs = BatteryBalancingUtility::GetActivePowerBalancingInfo(amap, result);
+                double setpoint = BatteryBalancingUtility::ActivePowerBalancing(inputs);
+                amap["ActivePowerSetpoint"]->setVal(setpoint);
+
+            } else {
                 reload = 5;
                 essAv->setVal(reload);
-            } else {
-
-                // double controlRate = amap["battery_rack_balance_coarse"]->getdParam("every");
-                // double controlRate = amap["battery_rack_balance_coarse"]->getdParam("ControlRate");
-                double gain = amap["battery_rack_balance_coarse"]->getdParam("Gain");
-                double newActivePowerSetpoint = currentActivePowerSetpoint + gain;
-
-
-                FPS_PRINT_INFO("currentActivePowerSetpoint - {}", currentActivePowerSetpoint);
-                FPS_PRINT_INFO("gain                       - {}", gain);
-
-                FPS_PRINT_INFO("newActivePowerSetpoint     - {}", newActivePowerSetpoint);
-
-                FPS_PRINT_INFO("SET ACTIVE POWER");
-                amap["ActivePowerSetpoint"]->setVal(newActivePowerSetpoint);
             }
+
             return;
         }
 

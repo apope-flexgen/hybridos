@@ -73,7 +73,6 @@
             "unit": "",
             "scaler": 0,
             "enabled": true,
-            "note": "Enabled conditions: ![/status/bms/DCClosed] && [/assets/bms/summary/maint_mode] && ![/status/bms/IsFaulted]",
             "ui_type": "control",
             "type": "enum_button",   
             "aname": "bms",
@@ -89,7 +88,11 @@
                 }]
             },
             "ControlRate": "use every above for this",
-            "Gain": 10
+            "Gain": 10,
+            "targetVoltageDeadband": 5,
+            "rampStartDeadband": 10,
+            "powerVsDeltaVoltageSlope": 1,
+            "maxPowerForBalancing": 1000
         }
     }
 }
