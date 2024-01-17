@@ -1,7 +1,7 @@
-cfg_dir=/home/docker/config/vfakeco/config/lima/ess-controller/config
-psm_dir=/home/docker/config/vfakeco/config/lima/psm/config
+cfg_dir=/home/docker/hybridos/sandbox/asset_controls/config/functional_ess_psm/ess-controller/config
+psm_dir=/home/docker/hybridos/sandbox/asset_controls/config/functional_ess_psm/psm
 # cfg_dir=config_psm
-scripts_dir=/home/docker/hybridos/ess_controller/scripts/functional_ess_controller/test
+scripts_dir=/home/docker/hybridos/sandbox/asset_controls/scripts
 bin_dir=/usr/local/bin
 # psm_dir=integration_dev/config/psm/config
 
