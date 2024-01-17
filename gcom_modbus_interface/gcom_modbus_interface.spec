@@ -27,11 +27,11 @@ GCOM Modbus Interface to FIMS
 install --directory %{buildroot}%{bin_dir}
 install --directory %{buildroot}%{systemd_dir}
 
-install -m 0755 release/gcom_modbus_server %{buildroot}%{bin_dir}
-install -m 0755 release/gcom_modbus_client %{buildroot}%{bin_dir}
+install -m 0755 gcom_modbus_server %{buildroot}%{bin_dir}
+install -m 0755 gcom_modbus_client %{buildroot}%{bin_dir}
 
-install -m 0644 release/gcom_modbus_client@.service %{buildroot}%{systemd_dir}
-install -m 0644 release/gcom_modbus_server@.service %{buildroot}%{systemd_dir}
+install -m 0644 gcom_modbus_client@.service %{buildroot}%{systemd_dir}
+install -m 0644 gcom_modbus_server@.service %{buildroot}%{systemd_dir}
 
 %clean
 rm -rf %{buildroot}
