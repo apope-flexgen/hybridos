@@ -371,7 +371,10 @@ func (b *bms) Init() {
 		log.Println("[", b.ID, "] Incorrect vector lengths for chargeable and dischargeable power limits. Reverting to default behavior")
 		b.DisableLUTs = true
 	}
-
+	if len(b.SocChargeVec) == 0 || len(b.SocDischargeVec) == 0 {
+		log.Println("[", b.ID, "] zero length vector for chargeable or dischargeable power limits. Reverting to default behavior")
+		b.DisableLUTs = true
+	}
 	b.faultskip = true // skip fault detection for the first iteration. 
 }
 
