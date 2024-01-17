@@ -520,7 +520,7 @@ namespace InputHandler
     void BatteryRackBalanceCoarse(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
-        if(1)FPS_PRINT_INFO("{}", __func__);
+        if(0)FPS_PRINT_INFO("{}", __func__);
        
 
         int reload = 0;
@@ -548,9 +548,9 @@ namespace InputHandler
             linkVals(*vm, vmap, amap, aname, "/reload", reload, relname);
             essAv = amap[relname];
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
-                // /site/ess/start_stop
-                DataUtility::AssetVarInfo("/sched/ess", "battery_rack_balance_coarse", assetVar::ATypes::ABOOL),
-                // /site/ess/start_stop
+                // /sched/ess/BatteryRackBalanceCoarse
+                DataUtility::AssetVarInfo("/sched/ess", "BatteryRackBalanceCoarse", assetVar::ATypes::ABOOL),
+                // /assets/ess/summary/battery_rack_balance_coarse
                 DataUtility::AssetVarInfo("/assets/ess/summary", "battery_rack_balance_coarse", assetVar::ATypes::ABOOL),
                 // /config/bms/NumRacks
                 DataUtility::AssetVarInfo("/config/bms", "NumRacks", assetVar::ATypes::AINT),
@@ -647,10 +647,10 @@ namespace InputHandler
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
-            FPS_PRINT_INFO("CLOSE CONTACTORS");
-            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::CloseContactors(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
-            returnValue = returnObject.statusIndicator;
-            message = returnObject.message;
+            returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, uri, __func__, "CloseContactors");
+            // FunctionUtility::FunctionReturnObj returnObject = OutputHandler::CloseContactors(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
+            // returnValue = returnObject.statusIndicator;
+            // message = returnObject.message;
 
 
             if(returnValue == SUCCESS) {
@@ -669,10 +669,10 @@ namespace InputHandler
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
-            FPS_PRINT_INFO("START PCS");
-            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StartPCS(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
-            returnValue = returnObject.statusIndicator;
-            message = returnObject.message;
+            returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, uri, __func__, "Start");
+            // FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StartPCS(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
+            // returnValue = returnObject.statusIndicator;
+            // message = returnObject.message;
 
 
             if(returnValue == SUCCESS) {
@@ -703,6 +703,12 @@ namespace InputHandler
                 double gain = amap["battery_rack_balance_coarse"]->getdParam("Gain");
                 double newActivePowerSetpoint = currentActivePowerSetpoint + gain;
 
+
+                FPS_PRINT_INFO("currentActivePowerSetpoint - {}", currentActivePowerSetpoint);
+                FPS_PRINT_INFO("gain                       - {}", gain);
+
+                FPS_PRINT_INFO("newActivePowerSetpoint     - {}", newActivePowerSetpoint);
+
                 FPS_PRINT_INFO("SET ACTIVE POWER");
                 amap["ActivePowerSetpoint"]->setVal(newActivePowerSetpoint);
             }
@@ -714,10 +720,10 @@ namespace InputHandler
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
-            FPS_PRINT_INFO("STOP PCS");
-            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StopPCS(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
-            returnValue = returnObject.statusIndicator;
-            message = returnObject.message;
+            returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, uri, __func__, "Stop");
+            // FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StopPCS(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
+            // returnValue = returnObject.statusIndicator;
+            // message = returnObject.message;
 
 
             if(returnValue == SUCCESS) {
@@ -735,10 +741,10 @@ namespace InputHandler
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
-            FPS_PRINT_INFO("OPEN CONTACTORS");
-            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::OpenContactors(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
-            returnValue = returnObject.statusIndicator;
-            message = returnObject.message;
+            returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, uri, __func__, "OpenContactors");
+            // FunctionUtility::FunctionReturnObj returnObject = OutputHandler::OpenContactors(vmap, amap, aname, p_fims, aV, "battery_rack_balance_coarse");
+            // returnValue = returnObject.statusIndicator;
+            // message = returnObject.message;
 
         }
 
@@ -747,7 +753,7 @@ namespace InputHandler
             essAv->setVal(reload);
         }
 
-        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, uri.c_str(), message.c_str());
+        // FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, uri.c_str(), message.c_str());
 
     }
 

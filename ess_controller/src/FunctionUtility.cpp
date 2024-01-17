@@ -161,12 +161,12 @@ namespace FunctionUtility
     
     }
 
-    int SharedInputHandlerRemoteFunction(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, std::string siteUri, std::string scheduledFuncName, std::string outputHandlerFuncName) {
+    int SharedInputHandlerRemoteFunction(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, std::string uri, std::string scheduledFuncName, std::string outputHandlerFuncName) {
         
         if(0)FPS_PRINT_INFO("{}", __func__);
 
-        asset_manager * am = aV->am;
-        VarMapUtils* vm = am->vm;
+        // asset_manager * am = aV->am;
+        // VarMapUtils* vm = am->vm;
 
         std::function<FunctionUtility::FunctionReturnObj(varsmap&, varmap&, const char*, fims*, assetVar*, const char*)> outputHandlerFunction;
 
@@ -186,21 +186,21 @@ namespace FunctionUtility
         }
 
     
-        std::vector<DataUtility::AssetVarInfo> assetVarVector = {
-            DataUtility::AssetVarInfo("/site/ess", siteUri.c_str(), assetVar::ATypes::AINT)
-        };
-        amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
+        // std::vector<DataUtility::AssetVarInfo> assetVarVector = {
+        //     DataUtility::AssetVarInfo("/site/ess", siteUri.c_str(), assetVar::ATypes::AINT)
+        // };
+        // amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
 
         // "every" in /ess/sched/bms/LocalStartPCS -> "every" in /assets/pcs/summary/start
-        amap[siteUri.c_str()]->setParam("every", aV->getdParam("every"));
+        amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
 
 
-        FunctionUtility::FunctionReturnObj returnObject = outputHandlerFunction(vmap, amap, aname, p_fims, aV, siteUri.c_str());
+        FunctionUtility::FunctionReturnObj returnObject = outputHandlerFunction(vmap, amap, aname, p_fims, aV, uri.c_str());
         int returnValue = returnObject.statusIndicator;
         std::string message = returnObject.message;
-        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName.c_str(), siteUri.c_str(), message.c_str());
+        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName.c_str(), uri.c_str(), message.c_str());
 
         return returnValue;
 

@@ -33,7 +33,7 @@ namespace OutputHandler {
     FunctionUtility::FunctionReturnObj OpenContactors(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
 
         FunctionUtility::FunctionReturnObj returnObject; 
 
@@ -118,7 +118,7 @@ namespace OutputHandler {
     FunctionUtility::FunctionReturnObj CloseContactors(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
 
  
         FunctionUtility::FunctionReturnObj returnObject; 
@@ -196,7 +196,7 @@ namespace OutputHandler {
     FunctionUtility::FunctionReturnObj StartPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
 
         FunctionUtility::FunctionReturnObj returnObject; 
 
@@ -273,7 +273,7 @@ namespace OutputHandler {
     FunctionUtility::FunctionReturnObj StopPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
 
         FunctionUtility::FunctionReturnObj returnObject; 
 
@@ -352,7 +352,7 @@ namespace OutputHandler {
     FunctionUtility::FunctionReturnObj StandbyPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
 
         FunctionUtility::FunctionReturnObj returnObject; 
 
