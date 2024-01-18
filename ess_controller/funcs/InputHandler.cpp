@@ -165,9 +165,9 @@ namespace InputHandler
             essAv = amap[relname];
 
             linkVals(*vm, vmap, amap, aname, "/reload", reload, bmsRelName);
-            bmsAv = amap[relname];
+            bmsAv = amap[bmsRelName];
             linkVals(*vm, vmap, amap, aname, "/reload", reload, pcsRelName);
-            pcsAv = amap[relname];
+            pcsAv = amap[pcsRelName];
 
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /site/ess/start_stop
@@ -520,7 +520,7 @@ namespace InputHandler
     void BatteryRackBalanceCoarse(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{}", __func__);
        
 
         int reload = 0;
@@ -539,20 +539,28 @@ namespace InputHandler
 
         std::string uri = "battery_rack_balance_coarse";
 
-
-        auto relname = fmt::format("{}_{}_{}", __func__, "ess", bmsch).c_str() ;
+        FPS_PRINT_INFO("1");
+        auto relname = fmt::format("{}_{}_{}", __func__, "ess", bmsch).c_str();
+        FPS_PRINT_INFO("2");
         assetVar* essAv = amap[relname];
+        FPS_PRINT_INFO("3");
         if (!essAv || (reload = essAv->getiVal()) == 0)
         {
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
+        FPS_PRINT_INFO("4");
 
         // Set up
         if (reload == 0)
         {
 
             linkVals(*vm, vmap, amap, aname, "/reload", reload, relname);
+            FPS_PRINT_INFO("5");
             essAv = amap[relname];
+            FPS_PRINT_INFO("6");
+
+
+
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /sched/ess/BatteryRackBalanceCoarse
                 DataUtility::AssetVarInfo("/sched/ess", "BatteryRackBalanceCoarse", assetVar::ATypes::ABOOL),
@@ -576,27 +584,39 @@ namespace InputHandler
                 DataUtility::AssetVarInfo("/controls/pcs", "ActivePowerSetpoint", assetVar::ATypes::AFLOAT)
             };
 
+            amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
+
 
             int numRacks = amap["NumRacks"]->getiVal();
-            for (int i = 1; i > numRacks; i++) {
-                std::string rackUri = fmt::format("/status/{}_rack_{}", bmsch, i);
-                std::string dcClosedName = fmt::format("DCClosed_rack_{}", i);
-                std::string dcVoltageName = fmt::format("DCVoltage_rack_{}", i);
-                assetVarVector.push_back(
-                    DataUtility::AssetVarInfo(rackUri.c_str(), "DCClosed", dcClosedName.c_str(), assetVar::ATypes::ABOOL)
-                );
-                assetVarVector.push_back(
-                    DataUtility::AssetVarInfo(rackUri.c_str(), "DCVoltage", dcVoltageName.c_str(), assetVar::ATypes::AFLOAT)
-                );
+            FPS_PRINT_INFO("8 - numRacks[{}]", numRacks);
+            if(numRacks > 0) {
+                 std::vector<DataUtility::AssetVarInfo> rackVector = {};
+                for (int i = 1; i > numRacks; i++) {
+                    std::string rackUri = fmt::format("/status/{}_rack_{}", bmsch, i);
+                    std::string dcClosedName = fmt::format("DCClosed_rack_{}", i);
+                    std::string dcVoltageName = fmt::format("DCVoltage_rack_{}", i);
 
-            } 
+                    // FPS_PRINT_INFO("rackUri - {}", rackUri);
+                    // FPS_PRINT_INFO("dcClosedName - {}", dcClosedName);
+                    // FPS_PRINT_INFO("dcVoltageName - {}", dcVoltageName);
 
-            amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
+                    rackVector.push_back(
+                        DataUtility::AssetVarInfo(rackUri.c_str(), "DCClosed", dcClosedName.c_str(), assetVar::ATypes::ABOOL)
+                    );
+                    rackVector.push_back(
+                        DataUtility::AssetVarInfo(rackUri.c_str(), "DCVoltage", dcVoltageName.c_str(), assetVar::ATypes::AFLOAT)
+                    );
+
+                } 
+
+                amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, rackVector);
+
+                reload = 1;
+                essAv->setVal(reload);
+
+            }
             
 
-            reload = 1;
-            essAv->setVal(reload);
-            
             return;
         }
 

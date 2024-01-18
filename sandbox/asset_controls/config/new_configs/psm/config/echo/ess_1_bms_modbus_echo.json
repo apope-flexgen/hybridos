@@ -1,0 +1,507 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/catl_ems_bms_rw",
+			"publishRate": 1000,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"ems_cmd": "ctrlword1",
+						"ems_rtc_day": "heart_day",
+						"ems_rtc_hour": "heart_hour",
+						"ems_rtc_minute": "heart_minute",
+						"ems_rtc_month": "heart_month",
+						"ems_rtc_second": "heart_second",
+						"ems_rtc_year": "heart_year"
+					}
+				}
+			],
+			"echo": {
+				"ems_status": 0,
+				"fault_clear_cmd": 0,
+				"ems_heartbeat": 0
+			}
+		},
+		{
+			"uri": "/components/catl_mbmu_sum_r",
+			"publishRate": 1000,
+			"inputs": [],
+			"echo": {
+				"mbmu_warning_1": 0,
+				"mbmu_warning_21": 0,
+				"mbmu_warning_22": 0
+			}
+		},
+		{
+			"uri": "/components/catl_mbmu_stat_r",
+			"publishRate": 100,
+			"inputs": [],
+			"echo": {
+				"mbmu_status": 0
+			}
+		},
+		{
+			"uri": "/components/catl_mbmu_summary_r",
+			"publishRate": 100,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"mbmu_avg_cell_temperature": "avgcelltemp",
+						"mbmu_avg_cell_voltage": "avgcellvolt",
+						"mbmu_current": "idc_value",
+						"mbmu_max_cell_temperature": "maxcelltemp_value",
+						"mbmu_max_cell_voltage": "maxcellvolt_value",
+						"mbmu_max_charge_current": "icharge",
+						"mbmu_max_discharge_current": "idischarge",
+						"mbmu_min_cell_temperature": "mincelltemp_value",
+						"mbmu_min_cell_voltage": "mincellvolt_value",
+						"mbmu_soc": "soc_value",
+						"mbmu_soh": "soh",
+						"mbmu_voltage": "vdc_value",
+						"mbmu_power": "p"
+					}
+				}
+			],
+			"echo": {}
+		},
+		{
+			"uri": "/components/catl_bms_ems_r",
+			"publishRate": 1000,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"bms_heartbeat": "heart_heartbeat",
+						"bms_poweron": "status_0_value",
+						"bms_remain_charge_energy": "echarge",
+						"bms_remain_discharge_energy": "edischarge",
+						"bms_max_charge_allowed": "pmax",
+						"bms_max_discharge_allowed": "pmax",
+						"num_hv_subsystem": "numracks"
+					}
+				}
+			],
+			"echo": {
+				"bms_limit_charge_hv": 0,
+				"bms_limit_discharge_hv": 0,
+				"bms_status": 0
+			}
+		},
+		{
+			"uri": "/components/catl_rack_1",
+			"publishRate": 2000,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"sbmu_avg_cell_temp": "sbmu_0_avgcelltemp",
+						"sbmu_avg_cell_voltage": "sbmu_0_avgcellvolt",
+						"sbmu_current": "sbmu_0_idc_value",
+						"sbmu_master_negative": "sbmu_0_dccontactor",
+						"sbmu_master_positive": "sbmu_0_dccontactor",
+						"sbmu_max_cell_temp": "sbmu_0_maxcelltemp_value",
+						"sbmu_max_cell_voltage": "sbmu_0_maxcellvolt_value",
+						"sbmu_max_charge_current": "sbmu_0_icharge",
+						"sbmu_max_discharge_current": "sbmu_0_idischarge",
+						"sbmu_min_cell_temp": "sbmu_0_mincelltemp_value",
+						"sbmu_min_cell_voltage": "sbmu_0_mincellvolt_value",
+						"sbmu_soc": "sbmu_0_soc_value",
+						"sbmu_soh": "sbmu_0_soh",
+						"sbmu_voltage": "sbmu_0_vdc"
+					}
+				}
+			],
+			"echo": {
+				"sbmu_ambient_temp": 0,
+				"sbmu_balance_status": 0,
+				"sbmu_door_state": 0,
+				"sbmu_fan_in_box": 0,
+				"sbmu_max_cell_temp_position": 0,
+				"sbmu_max_cell_voltage_position": 0,
+				"sbmu_min_cell_temp_position": 0,
+				"sbmu_min_cell_voltage_position": 0,
+				"sbmu_precharge_status": 0,
+				"sbmu_sum_cells": 0,
+				"sbmu_tms_demand_power": 0,
+				"sbmu_tms_fault_code": 0,
+				"sbmu_tms_mode_command": 0,
+				"sbmu_tms_real_mode": 0,
+				"sbmu_tms_temp_setting": 0,
+				"sbmu_warning_1": 0,
+				"sbmu_warning_21": 0,
+				"sbmu_warning_22": 0,
+				"sbmu_warning_23": 0
+			}
+		},
+		{
+			"uri": "/components/catl_rack_2",
+			"publishRate": 2000,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"sbmu_avg_cell_temp": "sbmu_1_avgcelltemp",
+						"sbmu_avg_cell_voltage": "sbmu_1_avgcellvolt",
+						"sbmu_current": "sbmu_1_idc_value",
+						"sbmu_master_negative": "sbmu_1_dccontactor",
+						"sbmu_master_positive": "sbmu_1_dccontactor",
+						"sbmu_max_cell_temp": "sbmu_1_maxcelltemp_value",
+						"sbmu_max_cell_voltage": "sbmu_1_maxcellvolt_value",
+						"sbmu_max_charge_current": "sbmu_1_icharge",
+						"sbmu_max_discharge_current": "sbmu_1_idischarge",
+						"sbmu_min_cell_temp": "sbmu_1_mincelltemp_value",
+						"sbmu_min_cell_voltage": "sbmu_1_mincellvolt_value",
+						"sbmu_soc": "sbmu_1_soc_value",
+						"sbmu_soh": "sbmu_1_soh",
+						"sbmu_voltage": "sbmu_1_vdc"
+					}
+				}
+			],
+			"echo": {
+				"sbmu_ambient_temp": 0,
+				"sbmu_balance_status": 0,
+				"sbmu_door_state": 0,
+				"sbmu_fan_in_box": 0,
+				"sbmu_max_cell_temp_position": 0,
+				"sbmu_max_cell_voltage_position": 0,
+				"sbmu_min_cell_temp_position": 0,
+				"sbmu_min_cell_voltage_position": 0,
+				"sbmu_precharge_status": 0,
+				"sbmu_sum_cells": 0,
+				"sbmu_tms_demand_power": 0,
+				"sbmu_tms_fault_code": 0,
+				"sbmu_tms_mode_command": 0,
+				"sbmu_tms_real_mode": 0,
+				"sbmu_tms_temp_setting": 0,
+				"sbmu_warning_1": 0,
+				"sbmu_warning_21": 0,
+				"sbmu_warning_22": 0,
+				"sbmu_warning_23": 0
+			}
+		},
+		{
+			"uri": "/components/catl_rack_3",
+			"publishRate": 2000,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"sbmu_avg_cell_temp": "sbmu_2_avgcelltemp",
+						"sbmu_avg_cell_voltage": "sbmu_2_avgcellvolt",
+						"sbmu_current": "sbmu_2_idc_value",
+						"sbmu_master_negative": "sbmu_2_dccontactor",
+						"sbmu_master_positive": "sbmu_2_dccontactor",
+						"sbmu_max_cell_temp": "sbmu_2_maxcelltemp_value",
+						"sbmu_max_cell_voltage": "sbmu_2_maxcellvolt_value",
+						"sbmu_max_charge_current": "sbmu_2_icharge",
+						"sbmu_max_discharge_current": "sbmu_2_idischarge",
+						"sbmu_min_cell_temp": "sbmu_2_mincelltemp_value",
+						"sbmu_min_cell_voltage": "sbmu_2_mincellvolt_value",
+						"sbmu_soc": "sbmu_2_soc_value",
+						"sbmu_soh": "sbmu_2_soh",
+						"sbmu_voltage": "sbmu_2_vdc"
+					}
+				}
+			],
+			"echo": {
+				"sbmu_ambient_temp": 0,
+				"sbmu_balance_status": 0,
+				"sbmu_door_state": 0,
+				"sbmu_fan_in_box": 0,
+				"sbmu_max_cell_temp_position": 0,
+				"sbmu_max_cell_voltage_position": 0,
+				"sbmu_min_cell_temp_position": 0,
+				"sbmu_min_cell_voltage_position": 0,
+				"sbmu_precharge_status": 0,
+				"sbmu_sum_cells": 0,
+				"sbmu_tms_demand_power": 0,
+				"sbmu_tms_fault_code": 0,
+				"sbmu_tms_mode_command": 0,
+				"sbmu_tms_real_mode": 0,
+				"sbmu_tms_temp_setting": 0,
+				"sbmu_warning_1": 0,
+				"sbmu_warning_21": 0,
+				"sbmu_warning_22": 0,
+				"sbmu_warning_23": 0
+			}
+		},
+		{
+			"uri": "/components/catl_rack_4",
+			"publishRate": 2000,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"sbmu_avg_cell_temp": "sbmu_3_avgcelltemp",
+						"sbmu_avg_cell_voltage": "sbmu_3_avgcellvolt",
+						"sbmu_current": "sbmu_3_idc_value",
+						"sbmu_master_negative": "sbmu_3_dccontactor",
+						"sbmu_master_positive": "sbmu_3_dccontactor",
+						"sbmu_max_cell_temp": "sbmu_3_maxcelltemp_value",
+						"sbmu_max_cell_voltage": "sbmu_3_maxcellvolt_value",
+						"sbmu_max_charge_current": "sbmu_3_icharge",
+						"sbmu_max_discharge_current": "sbmu_3_idischarge",
+						"sbmu_min_cell_temp": "sbmu_3_mincelltemp_value",
+						"sbmu_min_cell_voltage": "sbmu_3_mincellvolt_value",
+						"sbmu_soc": "sbmu_3_soc_value",
+						"sbmu_soh": "sbmu_3_soh",
+						"sbmu_voltage": "sbmu_3_vdc"
+					}
+				}
+			],
+			"echo": {
+				"sbmu_ambient_temp": 0,
+				"sbmu_balance_status": 0,
+				"sbmu_door_state": 0,
+				"sbmu_fan_in_box": 0,
+				"sbmu_max_cell_temp_position": 0,
+				"sbmu_max_cell_voltage_position": 0,
+				"sbmu_min_cell_temp_position": 0,
+				"sbmu_min_cell_voltage_position": 0,
+				"sbmu_precharge_status": 0,
+				"sbmu_sum_cells": 0,
+				"sbmu_tms_demand_power": 0,
+				"sbmu_tms_fault_code": 0,
+				"sbmu_tms_mode_command": 0,
+				"sbmu_tms_real_mode": 0,
+				"sbmu_tms_temp_setting": 0,
+				"sbmu_warning_1": 0,
+				"sbmu_warning_21": 0,
+				"sbmu_warning_22": 0,
+				"sbmu_warning_23": 0
+			}
+		},
+		{
+			"uri": "/components/catl_rack_5",
+			"publishRate": 2000,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"sbmu_avg_cell_temp": "sbmu_4_avgcelltemp",
+						"sbmu_avg_cell_voltage": "sbmu_4_avgcellvolt",
+						"sbmu_current": "sbmu_4_idc_value",
+						"sbmu_master_negative": "sbmu_4_dccontactor",
+						"sbmu_master_positive": "sbmu_4_dccontactor",
+						"sbmu_max_cell_temp": "sbmu_4_maxcelltemp_value",
+						"sbmu_max_cell_voltage": "sbmu_4_maxcellvolt_value",
+						"sbmu_max_charge_current": "sbmu_4_icharge",
+						"sbmu_max_discharge_current": "sbmu_4_idischarge",
+						"sbmu_min_cell_temp": "sbmu_4_mincelltemp_value",
+						"sbmu_min_cell_voltage": "sbmu_4_mincellvolt_value",
+						"sbmu_soc": "sbmu_4_soc_value",
+						"sbmu_soh": "sbmu_4_soh",
+						"sbmu_voltage": "sbmu_4_vdc"
+					}
+				}
+			],
+			"echo": {
+				"sbmu_ambient_temp": 0,
+				"sbmu_balance_status": 0,
+				"sbmu_door_state": 0,
+				"sbmu_fan_in_box": 0,
+				"sbmu_max_cell_temp_position": 0,
+				"sbmu_max_cell_voltage_position": 0,
+				"sbmu_min_cell_temp_position": 0,
+				"sbmu_min_cell_voltage_position": 0,
+				"sbmu_precharge_status": 0,
+				"sbmu_sum_cells": 0,
+				"sbmu_tms_demand_power": 0,
+				"sbmu_tms_fault_code": 0,
+				"sbmu_tms_mode_command": 0,
+				"sbmu_tms_real_mode": 0,
+				"sbmu_tms_temp_setting": 0,
+				"sbmu_warning_1": 0,
+				"sbmu_warning_21": 0,
+				"sbmu_warning_22": 0,
+				"sbmu_warning_23": 0
+			}
+		},
+		{
+			"uri": "/components/catl_rack_6",
+			"publishRate": 2000,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"sbmu_avg_cell_temp": "sbmu_5_avgcelltemp",
+						"sbmu_avg_cell_voltage": "sbmu_5_avgcellvolt",
+						"sbmu_current": "sbmu_5_idc_value",
+						"sbmu_master_negative": "sbmu_5_dccontactor",
+						"sbmu_master_positive": "sbmu_5_dccontactor",
+						"sbmu_max_cell_temp": "sbmu_5_maxcelltemp_value",
+						"sbmu_max_cell_voltage": "sbmu_5_maxcellvolt_value",
+						"sbmu_max_charge_current": "sbmu_5_icharge",
+						"sbmu_max_discharge_current": "sbmu_5_idischarge",
+						"sbmu_min_cell_temp": "sbmu_5_mincelltemp_value",
+						"sbmu_min_cell_voltage": "sbmu_5_mincellvolt_value",
+						"sbmu_soc": "sbmu_5_soc_value",
+						"sbmu_soh": "sbmu_5_soh",
+						"sbmu_voltage": "sbmu_5_vdc"
+					}
+				}
+			],
+			"echo": {
+				"sbmu_ambient_temp": 0,
+				"sbmu_balance_status": 0,
+				"sbmu_door_state": 0,
+				"sbmu_fan_in_box": 0,
+				"sbmu_max_cell_temp_position": 0,
+				"sbmu_max_cell_voltage_position": 0,
+				"sbmu_min_cell_temp_position": 0,
+				"sbmu_min_cell_voltage_position": 0,
+				"sbmu_precharge_status": 0,
+				"sbmu_sum_cells": 0,
+				"sbmu_tms_demand_power": 0,
+				"sbmu_tms_fault_code": 0,
+				"sbmu_tms_mode_command": 0,
+				"sbmu_tms_real_mode": 0,
+				"sbmu_tms_temp_setting": 0,
+				"sbmu_warning_1": 0,
+				"sbmu_warning_21": 0,
+				"sbmu_warning_22": 0,
+				"sbmu_warning_23": 0
+			}
+		},
+		{
+			"uri": "/components/catl_rack_7",
+			"publishRate": 2000,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"sbmu_avg_cell_temp": "sbmu_6_avgcelltemp",
+						"sbmu_avg_cell_voltage": "sbmu_6_avgcellvolt",
+						"sbmu_current": "sbmu_6_idc_value",
+						"sbmu_master_negative": "sbmu_6_dccontactor",
+						"sbmu_master_positive": "sbmu_6_dccontactor",
+						"sbmu_max_cell_temp": "sbmu_6_maxcelltemp_value",
+						"sbmu_max_cell_voltage": "sbmu_6_maxcellvolt_value",
+						"sbmu_max_charge_current": "sbmu_6_icharge",
+						"sbmu_max_discharge_current": "sbmu_6_idischarge",
+						"sbmu_min_cell_temp": "sbmu_6_mincelltemp_value",
+						"sbmu_min_cell_voltage": "sbmu_6_mincellvolt_value",
+						"sbmu_soc": "sbmu_6_soc_value",
+						"sbmu_soh": "sbmu_6_soh",
+						"sbmu_voltage": "sbmu_6_vdc"
+					}
+				}
+			],
+			"echo": {
+				"sbmu_ambient_temp": 0,
+				"sbmu_balance_status": 0,
+				"sbmu_door_state": 0,
+				"sbmu_fan_in_box": 0,
+				"sbmu_max_cell_temp_position": 0,
+				"sbmu_max_cell_voltage_position": 0,
+				"sbmu_min_cell_temp_position": 0,
+				"sbmu_min_cell_voltage_position": 0,
+				"sbmu_precharge_status": 0,
+				"sbmu_sum_cells": 0,
+				"sbmu_tms_demand_power": 0,
+				"sbmu_tms_fault_code": 0,
+				"sbmu_tms_mode_command": 0,
+				"sbmu_tms_real_mode": 0,
+				"sbmu_tms_temp_setting": 0,
+				"sbmu_warning_1": 0,
+				"sbmu_warning_21": 0,
+				"sbmu_warning_22": 0,
+				"sbmu_warning_23": 0
+			}
+		},
+		{
+			"uri": "/components/catl_rack_8",
+			"publishRate": 2000,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"sbmu_avg_cell_temp": "sbmu_7_avgcelltemp",
+						"sbmu_avg_cell_voltage": "sbmu_7_avgcellvolt",
+						"sbmu_current": "sbmu_7_idc_value",
+						"sbmu_master_negative": "sbmu_7_dccontactor",
+						"sbmu_master_positive": "sbmu_7_dccontactor",
+						"sbmu_max_cell_temp": "sbmu_7_maxcelltemp_value",
+						"sbmu_max_cell_voltage": "sbmu_7_maxcellvolt_value",
+						"sbmu_max_charge_current": "sbmu_7_icharge",
+						"sbmu_max_discharge_current": "sbmu_7_idischarge",
+						"sbmu_min_cell_temp": "sbmu_7_mincelltemp_value",
+						"sbmu_min_cell_voltage": "sbmu_7_mincellvolt_value",
+						"sbmu_soc": "sbmu_7_soc_value",
+						"sbmu_soh": "sbmu_7_soh",
+						"sbmu_voltage": "sbmu_7_vdc"
+					}
+				}
+			],
+			"echo": {
+				"sbmu_ambient_temp": 0,
+				"sbmu_balance_status": 0,
+				"sbmu_door_state": 0,
+				"sbmu_fan_in_box": 0,
+				"sbmu_max_cell_temp_position": 0,
+				"sbmu_max_cell_voltage_position": 0,
+				"sbmu_min_cell_temp_position": 0,
+				"sbmu_min_cell_voltage_position": 0,
+				"sbmu_precharge_status": 0,
+				"sbmu_sum_cells": 0,
+				"sbmu_tms_demand_power": 0,
+				"sbmu_tms_fault_code": 0,
+				"sbmu_tms_mode_command": 0,
+				"sbmu_tms_real_mode": 0,
+				"sbmu_tms_temp_setting": 0,
+				"sbmu_warning_1": 0,
+				"sbmu_warning_21": 0,
+				"sbmu_warning_22": 0,
+				"sbmu_warning_23": 0
+			}
+		},
+		{
+			"uri": "/components/catl_rack_9",
+			"publishRate": 2000,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"sbmu_avg_cell_temp": "sbmu_8_avgcelltemp",
+						"sbmu_avg_cell_voltage": "sbmu_8_avgcellvolt",
+						"sbmu_current": "sbmu_8_idc_value",
+						"sbmu_master_negative": "sbmu_8_dccontactor",
+						"sbmu_master_positive": "sbmu_8_dccontactor",
+						"sbmu_max_cell_temp": "sbmu_8_maxcelltemp_value",
+						"sbmu_max_cell_voltage": "sbmu_8_maxcellvolt_value",
+						"sbmu_max_charge_current": "sbmu_8_icharge",
+						"sbmu_max_discharge_current": "sbmu_8_idischarge",
+						"sbmu_min_cell_temp": "sbmu_8_mincelltemp_value",
+						"sbmu_min_cell_voltage": "sbmu_8_mincellvolt_value",
+						"sbmu_soc": "sbmu_8_soc_value",
+						"sbmu_soh": "sbmu_8_soh",
+						"sbmu_voltage": "sbmu_8_vdc"
+					}
+				}
+			],
+			"echo": {
+				"sbmu_ambient_temp": 0,
+				"sbmu_balance_status": 0,
+				"sbmu_door_state": 0,
+				"sbmu_fan_in_box": 0,
+				"sbmu_max_cell_temp_position": 0,
+				"sbmu_max_cell_voltage_position": 0,
+				"sbmu_min_cell_temp_position": 0,
+				"sbmu_min_cell_voltage_position": 0,
+				"sbmu_precharge_status": 0,
+				"sbmu_sum_cells": 0,
+				"sbmu_tms_demand_power": 0,
+				"sbmu_tms_fault_code": 0,
+				"sbmu_tms_mode_command": 0,
+				"sbmu_tms_real_mode": 0,
+				"sbmu_tms_temp_setting": 0,
+				"sbmu_warning_1": 0,
+				"sbmu_warning_21": 0,
+				"sbmu_warning_22": 0,
+				"sbmu_warning_23": 0
+			}
+		}
+	]
+}

@@ -1,0 +1,925 @@
+{
+    "/config/pcs": {
+        "AlarmDestination": "/assets/pcs/summary:alarms",
+        "FaultDestination": "/assets/pcs/summary:faults",
+        "FrequencySetpointMargin": 5,
+        "NoAlarmMsg": "Normal",
+        "NoFaultMsg": "Normal",
+        "PowerSetpointMargin": 5,
+        "RampRateMargin": 5,
+        "RatedActivePower": 1200,
+        "RatedApparentPower": 1350,
+        "RatedPowerFactor": 0.8,
+        "RatedReactivePower": 1100,
+        "VoltageSetpointMargin": 5,
+        "enable": false,
+        "enum_opt": false
+    },
+    "/controls/pcs": {
+        "ActivePowerCmdReal": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total active power command reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:ActivePowerCmdReal"
+        },
+        "ActivePowerSetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/pcs_1:ActivePowerSetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "note": "Used to forward value to children setpoint variables",
+            "value": 0
+        },
+        "ReactivePowerCmdReal": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total reactive power command reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:ReactivePowerCmdReal"
+        },
+        "ReactivePowerSetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/pcs_1:ReactivePowerSetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "note": "Used to forward value to children setpoint variables",
+            "value": 0
+        }
+    },
+    "/limits/pcs": {
+        "MaxPCSChargePower": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total max charge power reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:MaxPCSChargePower"
+        },
+        "MaxPCSDischargePower": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total max discharge power reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:MaxPCSDischargePower"
+        },
+        "RatedActivePower": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total rated active power reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:RatedActivePower"
+        },
+        "RatedApparentPower": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total rated apparent power reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:RatedApparentPower"
+        },
+        "RatedReactivePower": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total rated reactive power reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:RatedReactivePower"
+        }
+    },
+    "/links/pcs": {
+        "ActivePowerCmdReal": {
+            "value": "/controls/pcs:ActivePowerCmdReal"
+        },
+        "ActivePowerSetpoint": {
+            "value": "/controls/pcs:ActivePowerSetpoint"
+        },
+        "MaxPCSChargePower": {
+            "value": "/limits/pcs:MaxPCSChargePower"
+        },
+        "MaxPCSDischargePower": {
+            "value": "/limits/pcs:MaxPCSDischargePower"
+        },
+        "RatedActivePower": {
+            "value": "/limits/pcs:RatedActivePower"
+        },
+        "RatedApparentPower": {
+            "value": "/limits/pcs:RatedApparentPower"
+        },
+        "RatedReactivePower": {
+            "value": "/limits/pcs:RatedReactivePower"
+        },
+        "ReactivePowerCmdReal": {
+            "value": "/controls/pcs:ReactivePowerCmdReal"
+        },
+        "ReactivePowerSetpoint": {
+            "value": "/controls/pcs:ReactivePowerSetpoint"
+        }
+    },
+    "/sched/pcs": {
+        "LocalStartPCS": {
+            "every": 0.5,
+            "value":    "LocalStartPCS",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LocalStartPCS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "LocalStopPCS": {
+            "every": 0.5,
+            "value":    "LocalStopPCS",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LocalStopPCS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "LocalStandbyPCS": {
+            "every": 0.5,
+            "value":    "LocalStandbyPCS",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LocalStandbyPCS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "pubAssetsSummary_pcs": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "mode": "ui",
+            "note": "Publishes UI summary data (/assets/pcs/summary)",
+            "table": "/assets/pcs/summary",
+            "value": 1
+        },
+        "runMonitor_pcs": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "RunMonitor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "aname": "pcs",
+            "enable": "/config/pcs:enable",
+            "monitor": "wake_monitor",
+            "note": "Periodically runs functions for variables defined in /schedule/wake_monitor/pcs",
+            "value": 1
+        },
+        "StartEnable": {
+            "value":    "StartEnable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "StartEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "StopEnable": {
+            "value":    "StopEnable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "StopEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "StandbyEnable": {
+            "value":    "StandbyEnable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "StandbyEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "updateHeartbeatWrite_pcs": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "CalculateVar",
+                                "inAv": "/status/pcs:HeartbeatWrite"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "note": "Periodically updates the heartbeat write variable defined in /status/pcs:HeartbeatWrite",
+            "value": 1
+        }
+    },
+    "/schedule/wake_monitor/pcs": {
+        "/controls/pcs:ActivePowerCmdReal": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/controls/pcs:ReactivePowerCmdReal": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/limits/pcs:MaxPCSChargePower": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/limits/pcs:MaxPCSDischargePower": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/limits/pcs:RatedActivePower": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/limits/pcs:RatedApparentPower": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/limits/pcs:RatedReactivePower": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:ActivePowerRampRateFeedback": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:ActivePowerSetpointFeedback": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:ActivePower_Calculated": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:ApparentPower": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:AvgLineVoltage": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:CommsOK": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:DCClosed": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:DCCurrent": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:DCPower": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:DCVoltage_Calculated": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:Frequency": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:FrequencySetpointFeedback": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:L1Current": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:L1L2Voltage": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:L2Current": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:L2L3Voltage": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:L3Current": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:L3L1Voltage": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:MaxIGBTTemperature": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:PowerFactor": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:ReactivePower": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:ReactivePowerRampRateFeedback": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:ReactivePowerSetpointFeedback": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        },
+        "/status/pcs:VoltageSetpointFeedback": {
+            "amap": "pcs",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/pcs": {
+        "ActivePowerRampRateFeedback": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total active power ramp rate feedback reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:ActivePowerRampRateFeedback"
+        },
+        "ActivePowerSetpointFeedback": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total active power setpoint feedback reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:ActivePowerSetpointFeedback"
+        },
+        "ActivePower_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/pcs:ActivePower"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total active power reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:ActivePower"
+        },
+        "ApparentPower": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total apparent power reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:ApparentPower"
+        },
+        "AvgLineVoltage": {
+            "enable": "/config/pcs:enable",
+            "expression": "({1} + {2} + {3}) / 3",
+            "note": "Calculates the average grid line voltage",
+            "numVars": 3,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/pcs:L1L2Voltage",
+            "variable2": "/status/pcs:L2L3Voltage",
+            "variable3": "/status/pcs:L3L1Voltage"
+        },
+        "CommsOK": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": true,
+                                "uri": "/site/ess:comms_faults[0]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "note": "Updates the UI/EMS communication status variables (ONLINE/OFFLINE) depending on the current status of the communications monitoring variable",
+            "numVars": 1,
+            "operation": "and",
+            "value": true,
+            "variable1": "pcs:CommsOK"
+        },
+        "DCClosed": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/pcs:DCVoltage@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/bms:Voltage@EnableMinValCheck"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "note": "Enables/disables monitoring variables if PCS DC contactors are closed/opened",
+            "numVars": 1,
+            "operation": "and",
+            "value": false,
+            "variable1": "pcs:DCClosed"
+        },
+        "DCCurrent": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the average DC current reported by all PCS instances",
+            "numVars": 1,
+            "operation": "avg",
+            "value": 0,
+            "variable1": "pcs:DCCurrent"
+        },
+        "DCPower": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the average DC power reported by all PCS instances",
+            "numVars": 1,
+            "operation": "avg",
+            "value": 0,
+            "variable1": "pcs:DCPower"
+        },
+        "DCVoltage_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/pcs:DCVoltage"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the average DC voltage reported by all PCS instances",
+            "numVars": 1,
+            "operation": "avg",
+            "value": 0,
+            "variable1": "pcs:DCVoltage"
+        },
+        "Frequency": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the average frequency reported by all PCS instances",
+            "numVars": 1,
+            "operation": "avg",
+            "value": 0,
+            "variable1": "pcs:Frequency"
+        },
+        "FrequencySetpointFeedback": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total frequency setpoint feedback reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:FrequencySetpointFeedback"
+        },
+        "GridMode": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "FollowPQ",
+                                "note": "Bit 0 - FollowPQ",
+                                "outValue": 1,
+                                "uri": "/site/ess:pcs_grid_mode"
+                            },
+                            {
+                                "inValue": "FormVF",
+                                "note": "Bit 1 - FormVF",
+                                "outValue": 2,
+                                "uri": "/site/ess:pcs_grid_mode"
+                            },
+                            {
+                                "inValue": "FormVSG",
+                                "note": "Bit 2 - FormVSG",
+                                "outValue": 4,
+                                "uri": "/site/ess:pcs_grid_mode"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "note1": "Contains the PCS's current grid mode, which can be one of the following: FollowPQ, FormVF, FormVSG",
+            "value": "INIT"
+        },
+        "HeartbeatWrite": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "fims": "set",
+                                "uri": "/components/pcs:heartbeat_write"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "excludeFromDefaultSched": true,
+            "expression": "if (({1} >= 59), 0, ({1} + 1))",
+            "note": "Updates and then sends the heartbeat write value",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/pcs:HeartbeatWrite"
+        },
+        "L1Current": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total AC L1 current reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:L1Current"
+        },
+        "L1L2Voltage": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the average AC L1-L2 voltage reported by all PCS instances",
+            "numVars": 1,
+            "operation": "avg",
+            "value": 0,
+            "variable1": "pcs:L1L2Voltage"
+        },
+        "L2Current": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total AC L2 current reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:L2Current"
+        },
+        "L2L3Voltage": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the average AC L2-L3 voltage reported by all PCS instances",
+            "numVars": 1,
+            "operation": "avg",
+            "value": 0,
+            "variable1": "pcs:L2L3Voltage"
+        },
+        "L3Current": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total AC L3 current reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:L3Current"
+        },
+        "L3L1Voltage": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the average AC L3-L1 voltage reported by all PCS instances",
+            "numVars": 1,
+            "operation": "avg",
+            "value": 0,
+            "variable1": "pcs:L3L1Voltage"
+        },
+        "MaxIGBTTemperature": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the max IGBT temperature reported by all PCS instances",
+            "numVars": 1,
+            "operation": "max",
+            "value": 0,
+            "variable1": "pcs:MaxIGBTTemperature"
+        },
+        "PowerFactor": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the average power factor reported by all PCS instances",
+            "numVars": 1,
+            "operation": "avg",
+            "value": 0,
+            "variable1": "pcs:PowerFactor"
+        },
+        "ReactivePower": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total reactive power reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:ReactivePower"
+        },
+        "ReactivePowerRampRateFeedback": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total reactive power ramp rate feedback reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:ReactivePowerRampRateFeedback"
+        },
+        "ReactivePowerSetpointFeedback": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total reactive power setpoint feedback reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:ReactivePowerSetpointFeedback"
+        },
+        "Status": "INIT",
+        "SystemState": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Stop",
+                                "outValue": false,
+                                "uri": "/status/pcs:DCClosed"
+                            },
+                            {
+                                "inValue": "Run",
+                                "outValue": true,
+                                "uri": "/status/pcs:DCClosed"
+                            },
+                            {
+                                "inValue": "Fault",
+                                "outValue": false,
+                                "uri": "/status/pcs:DCClosed"
+                            },
+                            {
+                                "inValue": "Standby",
+                                "outValue": true,
+                                "uri": "/status/pcs:DCClosed"
+                            },
+                            {
+                                "inValue": "Stop",
+                                "outValue": false,
+                                "uri": "/status/pcs:IsRunning"
+                            },
+                            {
+                                "inValue": "Run",
+                                "outValue": true,
+                                "uri": "/status/pcs:IsRunning"
+                            },
+                            {
+                                "inValue": "Fault",
+                                "outValue": false,
+                                "uri": "/status/pcs:IsRunning"
+                            },
+                            {
+                                "inValue": "Standby",
+                                "outValue": false,
+                                "uri": "/status/pcs:IsRunning"
+                            },
+                            {
+                                "inValue": "Stop",
+                                "outValue": false,
+                                "uri": "/status/pcs:SystemFault"
+                            },
+                            {
+                                "inValue": "Run",
+                                "outValue": false,
+                                "uri": "/status/pcs:SystemFault"
+                            },
+                            {
+                                "inValue": "Fault",
+                                "outValue": true,
+                                "uri": "/status/pcs:SystemFault"
+                            },
+                            {
+                                "inValue": "Standby",
+                                "outValue": false,
+                                "uri": "/status/pcs:SystemFault"
+                            },
+                            {
+                                "inValue": "Stop",
+                                "note": "Bit 0 - Stop",
+                                "outValue": 1,
+                                "uri": "/site/ess:pcs_system_state"
+                            },
+                            {
+                                "inValue": "Run",
+                                "note": "Bit 1 - Run",
+                                "outValue": 2,
+                                "uri": "/site/ess:pcs_system_state"
+                            },
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 2 - Fault",
+                                "outValue": 4,
+                                "uri": "/site/ess:pcs_system_state"
+                            },
+                            {
+                                "inValue": "Standby",
+                                "note": "Bit 3 - Standby",
+                                "outValue": 8,
+                                "uri": "/site/ess:pcs_system_state"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "note1": "Contains the PCS's current state, which can be one of the following: Stop, Run, Fault, Standby",
+            "note2": "Updates various PCS status variables depending on this variable's value",
+            "value": "INIT"
+        },
+        "VoltageSetpointFeedback": {
+            "enable": "/config/pcs:enable",
+            "note": "Calculates the total voltage setpoint feedback reported by all PCS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "pcs:VoltageSetpointFeedback"
+        }
+    },
+    "/system/commands": {
+        "runOpts_pcs": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "note1": "Sets schedule variables (defined in /sched/pcs) to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "options": [
+                {
+                    "aname": "pcs",
+                    "every": 1,
+                    "uri": "/sched/pcs:pubAssetsSummary_pcs",
+                    "value": 1
+                },
+                {
+                    "aname": "pcs",
+                    "every": 0.1,
+                    "uri": "/sched/pcs:runMonitor_pcs",
+                    "value": 1
+                },
+                {
+                    "aname": "pcs",
+                    "every": 1,
+                    "uri": "/sched/pcs:checkInputs_pcs",
+                    "value": 1
+                },
+                {
+                    "aname": "pcs",
+                    "every": 1,
+                    "uri": "/sched/pcs:updateHeartbeatWrite_pcs",
+                    "value": 1
+                },
+                {
+                    "aname": "pcs",
+                    "value":0, 
+                    "uri":"/sched/pcs:LocalStartPCS",
+                    "every":0,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "pcs",
+                    "value":0, 
+                    "uri":"/sched/pcs:LocalStopPCS",
+                    "every":0,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "pcs",
+                    "value":0, 
+                    "uri":"/sched/pcs:LocalStandbyPCS",
+                    "every":0,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "pcs",
+                    "value":0, 
+                    "uri":"/sched/pcs:StartEnable",
+                    "every":0.1,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "pcs",
+                    "value":0, 
+                    "uri":"/sched/pcs:StopEnable",
+                    "every":0.1,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "pcs",
+                    "value":0, 
+                    "uri":"/sched/pcs:StandbyEnable",
+                    "every":0.1,
+                    "offset":0,
+                    "debug":0
+                }
+            ],
+            "targav": "/system/commands:run",
+            "value": false
+        }
+    }
+}

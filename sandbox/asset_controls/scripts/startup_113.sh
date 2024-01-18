@@ -1,5 +1,5 @@
-cfg_dir=/home/docker/hybridos/sandbox/asset_controls/config/functional_ess_psm/ess-controller/config
-psm_dir=/home/docker/hybridos/sandbox/asset_controls/config/functional_ess_psm/psm/config
+cfg_dir=/home/docker/hybridos/sandbox/asset_controls/config/new_configs/ess-controller/config
+psm_dir=/home/docker/hybridos/sandbox/asset_controls/config/new_configs/psm/config
 # cfg_dir=config_psm
 scripts_dir=/home/docker/hybridos/sandbox/asset_controls/scripts
 bin_dir=/usr/local/bin

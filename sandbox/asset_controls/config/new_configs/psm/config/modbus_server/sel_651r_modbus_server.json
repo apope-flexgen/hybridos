@@ -1,0 +1,1353 @@
+{
+    "system": {
+        "id": "sel_651r",
+        "ip_address": "0.0.0.0",
+        "name": "SEL 651R",
+        "port": 20000
+    },
+    "registers": {
+        "holding_registers": [
+            {
+                "id": "cb1_open_cmd",
+                "name": "OC1",
+                "offset": 32,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb1_close_cmd",
+                "name": "CC1",
+                "offset": 33,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb2_open_cmd",
+                "name": "OC2",
+                "offset": 34,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb2_close_cmd",
+                "name": "CC2",
+                "offset": 35,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "open_disconnect_sw_cnt_1",
+                "name": "89OC01",
+                "offset": 36,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "close_disconnect_sw_cnt_1",
+                "name": "89CC01",
+                "offset": 37,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "open_disconnect_sw_cnt_2",
+                "name": "89OC02",
+                "offset": 38,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "close_disconnect_sw_cnt_2",
+                "name": "89CC02",
+                "offset": 39,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "open_disconnect_sw_cnt_3",
+                "name": "89OC03",
+                "offset": 40,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "close_disconnect_sw_cnt_3",
+                "name": "89CC03",
+                "offset": 41,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "open_disconnect_sw_cnt_4",
+                "name": "89OC04",
+                "offset": 42,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "close_disconnect_sw_cnt_4",
+                "name": "89CC04",
+                "offset": 43,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "open_disconnect_sw_cnt_5",
+                "name": "89OC05",
+                "offset": 44,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "close_disconnect_sw_cnt_5",
+                "name": "89CC05",
+                "offset": 45,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "open_disconnect_sw_cnt_6",
+                "name": "89OC06",
+                "offset": 46,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "close_disconnect_sw_cnt_6",
+                "name": "89CC06",
+                "offset": 47,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "open_disconnect_sw_cnt_7",
+                "name": "89OC07",
+                "offset": 48,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "close_disconnect_sw_cnt_7",
+                "name": "89CC07",
+                "offset": 49,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "open_disconnect_sw_cnt_8",
+                "name": "89OC08",
+                "offset": 50,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "close_disconnect_sw_cnt_8",
+                "name": "89CC08",
+                "offset": 51,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "open_disconnect_sw_cnt_9",
+                "name": "89OC09",
+                "offset": 52,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "close_disconnect_sw_cnt_9",
+                "name": "89CC09",
+                "offset": 53,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "open_disconnect_sw_cnt_10",
+                "name": "89OC10",
+                "offset": 54,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "close_disconnect_sw_cnt_10",
+                "name": "89CC10",
+                "offset": 55,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "reset_demands",
+                "name": "RST_DEM",
+                "offset": 56,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "reset_demand_peaks",
+                "name": "RST_PDM",
+                "offset": 57,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "reset_energies",
+                "name": "RST_ENE",
+                "offset": 58,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "reset_bk1_monitor_data",
+                "name": "RST_BK1",
+                "offset": 59,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "reset_bk2_monitor_data",
+                "name": "RST_BK2",
+                "offset": 60,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "reset_targets",
+                "name": "RSTTRGT",
+                "offset": 61,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "reset_minmax_metering",
+                "name": "RSTMML",
+                "offset": 62,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "reset_dnp3_event_summary",
+                "name": "RSTDNPE",
+                "offset": 63,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "active_settings_group",
+                "name": "ACTGRP",
+                "offset": 0,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bkr1_op_phase_a_count",
+                "name": "BKR1OPA",
+                "offset": 1,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bkr1_op_phase_b_count",
+                "name": "BKR1OPB",
+                "offset": 2,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bkr1_op_phase_c_count",
+                "name": "BKR1OPC",
+                "offset": 3,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bkr2_op_phase_a_count",
+                "name": "BKR2OPA",
+                "offset": 4,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bkr2_op_phase_b_count",
+                "name": "BKR2OPB",
+                "offset": 5,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bkr2_op_phase_c_count",
+                "name": "BKR2OPC",
+                "offset": 6,
+                "uri": "/components/sel_651r"
+            }
+        ],
+        "input_registers": [
+            {
+                "id": "current_a_phase_mag_10_cycle",
+                "name": "LIAFM",
+                "offset": 0,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "current_a_phase_angle_10_cycle",
+                "name": "LIAFA",
+                "offset": 1,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "current_b_phase_mag_10_cycle",
+                "name": "LIBFM",
+                "offset": 2,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "current_b_phase_angle_10_cycle",
+                "name": "LIBFA",
+                "offset": 3,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "current_c_phase_mag_10_cycle",
+                "name": "LICFM",
+                "offset": 4,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "current_c_phase_angle_10_cycle",
+                "name": "LICFA",
+                "offset": 5,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bk1_a_phase_current_mag",
+                "name": "B1IAFM",
+                "offset": 6,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bk1_a_phase_current_angle",
+                "name": "B1IAFA",
+                "offset": 7,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bk1_b_phase_current_mag",
+                "name": "B1IBFM",
+                "offset": 8,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bk1_b_phase_current_angle",
+                "name": "B1IBFA",
+                "offset": 9,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bk1_c_phase_current_mag",
+                "name": "B1ICFM",
+                "offset": 10,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bk1_c_phase_current_angle",
+                "name": "B1ICFA",
+                "offset": 11,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bk2_a_phase_current_mag",
+                "name": "B2IAFM",
+                "offset": 12,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bk2_a_phase_current_angle",
+                "name": "B2IAFA",
+                "offset": 13,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bk2_b_phase_current_mag",
+                "name": "B2IBFM",
+                "offset": 14,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bk2_b_phase_current_angle",
+                "name": "B2IBFA",
+                "offset": 15,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bk2_c_phase_current_mag",
+                "name": "B2ICFM",
+                "offset": 16,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "bk2_c_phase_current_angle",
+                "name": "B2ICFA",
+                "offset": 17,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "voltage_a_phase_mag",
+                "name": "VAFM",
+                "offset": 18,
+                "scale": 0.01,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "voltage_a_phase_angle",
+                "name": "VAFA",
+                "offset": 19,
+                "scale": 100,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "voltage_b_phase_mag",
+                "name": "VBFM",
+                "offset": 20,
+                "scale": 0.01,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "voltage_b_phase_angle",
+                "name": "VBFA",
+                "offset": 21,
+                "scale": 100,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "voltage_c_phase_mag",
+                "name": "VCFM",
+                "offset": 22,
+                "scale": 0.01,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "voltage_c_phase_angle",
+                "name": "VCFA",
+                "offset": 23,
+                "scale": 100,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "polarizing_voltage_magnitude",
+                "name": "VPM",
+                "offset": 24,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "synchronizing_voltage_1_mag",
+                "name": "NVS1M",
+                "offset": 25,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "synchronizing_voltage_2_mag",
+                "name": "NVS2M",
+                "offset": 26,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "line_zero_sequence_current_mag",
+                "name": "LIGM",
+                "offset": 27,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "line_zero_sequence_current_angle",
+                "name": "LIGA",
+                "offset": 28,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "line_positive_sequence_current_mag",
+                "name": "LI1M",
+                "offset": 29,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "line_positive_sequence_current_angle",
+                "name": "LI1A",
+                "offset": 30,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "line_negative_sequence_current_mag",
+                "name": "L3I2M",
+                "offset": 31,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "line_negative_sequence_current_angle",
+                "name": "L3I2A",
+                "offset": 32,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "zero_sequence_voltage_mag",
+                "name": "3V0M",
+                "offset": 33,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "zero_sequence_voltage_angle",
+                "name": "3V0A",
+                "offset": 34,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "positive_sequence_voltage_mag",
+                "name": "V1M",
+                "offset": 35,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "positive_sequence_voltage_angle",
+                "name": "V1A",
+                "offset": 36,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "negative_sequence_voltage_mag",
+                "name": "3V2M",
+                "offset": 37,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "negative_sequence_voltage_angle",
+                "name": "3V2A",
+                "offset": 38,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "real_power_phase_a",
+                "name": "PA_F",
+                "offset": 39,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "real_power_phase_b",
+                "name": "PB_F",
+                "offset": 40,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "real_power_phase_c",
+                "name": "PC_F",
+                "offset": 41,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "real_power_3_phase",
+                "name": "3P_F",
+                "offset": 42,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "reactive_power_phase_a",
+                "name": "QA_F",
+                "offset": 43,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "reactive_power_phase_b",
+                "name": "QB_F",
+                "offset": 44,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "reactive_power_phase_c",
+                "name": "QC_F",
+                "offset": 45,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "reactive_power_3_phase",
+                "name": "3Q_F",
+                "offset": 46,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "displacement_pf_a",
+                "name": "DPFA",
+                "offset": 47,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "displacement_pf_b",
+                "name": "DPFB",
+                "offset": 48,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "displacement_pf_c",
+                "name": "DPFC",
+                "offset": 49,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "displacement_pf_3ph",
+                "name": "3DPF",
+                "offset": 50,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "dc_battery_1_voltage",
+                "name": "DC1",
+                "offset": 51,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "dc_battery_2_voltage",
+                "name": "DC2",
+                "offset": 52,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "frequency",
+                "name": "FREQ",
+                "offset": 53,
+                "scale": 100,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "total_power_in_a",
+                "name": "MWHAIN",
+                "offset": 54,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "total_power_out_a",
+                "name": "MWHAOUT",
+                "offset": 55,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "total_power_in_b",
+                "name": "MWHBIN",
+                "offset": 56,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "total_power_out_b",
+                "name": "MWHBOUT",
+                "offset": 57,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "total_power_in_c",
+                "name": "MWHCIN",
+                "offset": 58,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "total_power_out_c",
+                "name": "MWHCOUT",
+                "offset": 59,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "total_power_in_3ph",
+                "name": "3MWHIN",
+                "offset": 60,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "total_power_out_3ph",
+                "name": "3MWHOUT",
+                "offset": 61,
+                "signed": true,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "phase_a_demand_current",
+                "name": "IAD",
+                "offset": 62,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "phase_b_demand_current",
+                "name": "IBD",
+                "offset": 63,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "phase_c_demand_current",
+                "name": "ICD",
+                "offset": 64,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "demand_zero_sequence_current",
+                "name": "IGD",
+                "offset": 65,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "demand_negative_sequence_current",
+                "name": "3I2D",
+                "offset": 66,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "phase_a_demand_power",
+                "name": "PAD",
+                "offset": 67,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "phase_b_demand_power",
+                "name": "PBD",
+                "offset": 68,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "phase_c_demand_power",
+                "name": "PCD",
+                "offset": 69,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "3_phase_demand_power",
+                "name": "3PD",
+                "offset": 70,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "peak_phase_a_demand_current",
+                "name": "IAPKD",
+                "offset": 71,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "peak_phase_b_demand_current",
+                "name": "IBPKD",
+                "offset": 72,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "peak_phase_c_demand_current",
+                "name": "ICPKD",
+                "offset": 73,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "peak_zero_sequence_demand_current",
+                "name": "IGPKD",
+                "offset": 74,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "peak_negative_sequence_demand_current",
+                "name": "3I2PKD",
+                "offset": 75,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "peak_phase_a_demand_power",
+                "name": "PAPKD",
+                "offset": 76,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "peak_phase_b_demand_power",
+                "name": "PBPKD",
+                "offset": 77,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "peak_phase_c_demand_power",
+                "name": "PCPKD",
+                "offset": 78,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "peak_3_phase_demand_power",
+                "name": "3PPKD",
+                "offset": 79,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb1_contact_wear_phase_a",
+                "name": "B1BCWPA",
+                "offset": 80,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb1_contact_wear_phase_b",
+                "name": "B1BCWPB",
+                "offset": 81,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb1_contact_wear_phase_c",
+                "name": "B1BCWPC",
+                "offset": 82,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb2_contact_wear_phase_a",
+                "name": "B2BCWPA",
+                "offset": 83,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb2_contact_wear_phase_b",
+                "name": "B2BCWPB",
+                "offset": 84,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb2_contact_wear_phase_c",
+                "name": "B2BCWPC",
+                "offset": 85,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "fault_type",
+                "name": "FTYPE",
+                "offset": 86,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "fault_targets_1",
+                "name": "FTAR1",
+                "offset": 87,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "fault_targets_2",
+                "name": "FTAR2",
+                "offset": 88,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "fault_summary_location",
+                "name": "FSLOC",
+                "offset": 89,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "fault_current",
+                "name": "FCURR",
+                "offset": 90,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "fault_frequency",
+                "name": "FFREQ",
+                "offset": 91,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "fault_settings_group",
+                "name": "FGRP",
+                "offset": 92,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "fault_time_h",
+                "name": "FTIMEUH",
+                "offset": 93,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "fault_time_m",
+                "name": "FTIMEUM",
+                "offset": 94,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "fault_time_l",
+                "name": "FTIMEUL",
+                "offset": 95,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "recloser_single_pole_count",
+                "name": "FSHOT1",
+                "offset": 96,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "recloser_three_pole_count",
+                "name": "FSHOT2",
+                "offset": 97,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "unread_fault_summaries",
+                "name": "FUNR",
+                "offset": 98,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "3_phase_recloser_shots_issued",
+                "name": "SHOT3_T",
+                "offset": 99,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "relay_temp",
+                "name": "RLYTEMP",
+                "offset": 100,
+                "uri": "/components/sel_651r"
+            }
+        ],
+        "discrete_inputs": [
+            {
+                "id": "relay_disabled",
+                "name": "RLYDIS",
+                "offset": 0,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "trip_led",
+                "name": "TRIPLED",
+                "offset": 1,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "relay_diagnostic_failure",
+                "name": "STFAIL",
+                "offset": 2,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "relay_diagnostic_warning",
+                "name": "STWARN",
+                "offset": 3,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "settings_change_or_relay_restart",
+                "name": "STSET",
+                "offset": 4,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "software_alarm",
+                "name": "SALARM",
+                "offset": 5,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "hardware_alarm",
+                "name": "HALARM",
+                "offset": 6,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "invalid_password",
+                "name": "BADPASS",
+                "offset": 7,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "unread_event",
+                "name": "UNRDEV",
+                "offset": 8,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "one_or_two_poles_open",
+                "name": "SPO",
+                "offset": 9,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "three_poles_open",
+                "name": "3PO",
+                "offset": 10,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "breaker_1_ready",
+                "name": "BK1RS",
+                "offset": 11,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "breaker_2_ready",
+                "name": "BK2RS",
+                "offset": 12,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "breaker_1_lockout",
+                "name": "BK1LO",
+                "offset": 13,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "breaker_2_lockout",
+                "name": "BK2LO",
+                "offset": 14,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb1_pole_a_status",
+                "name": "52AA1",
+                "offset": 15,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb1_pole_b_status",
+                "name": "52AB1",
+                "offset": 16,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb1_pole_c_status",
+                "name": "52AC1",
+                "offset": 17,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb1_pole_a_alarm",
+                "name": "52AAL1",
+                "offset": 18,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb1_pole_b_alarm",
+                "name": "52BAL1",
+                "offset": 19,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb1_pole_c_alarm",
+                "name": "52CAL1",
+                "offset": 20,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb2_pole_a_status",
+                "name": "52AA2",
+                "offset": 21,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb2_pole_b_status",
+                "name": "52AB2",
+                "offset": 22,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb2_pole_c_status",
+                "name": "52AC2",
+                "offset": 23,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb2_pole_a_alarm",
+                "name": "52AAL2",
+                "offset": 24,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb2_pole_b_alarm",
+                "name": "52BAL2",
+                "offset": 25,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "cb2_pole_c_alarm",
+                "name": "52CAL2",
+                "offset": 26,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_1",
+                "name": "TLED_1",
+                "offset": 27,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_2",
+                "name": "TLED_2",
+                "offset": 28,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_3",
+                "name": "TLED_3",
+                "offset": 29,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_4",
+                "name": "TLED_4",
+                "offset": 30,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_5",
+                "name": "TLED_5",
+                "offset": 31,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_6",
+                "name": "TLED_6",
+                "offset": 32,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_7",
+                "name": "TLED_7",
+                "offset": 33,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_8",
+                "name": "TLED_8",
+                "offset": 34,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_9",
+                "name": "TLED_9",
+                "offset": 35,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_10",
+                "name": "TLED_10",
+                "offset": 36,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_11",
+                "name": "TLED_11",
+                "offset": 37,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_12",
+                "name": "TLED_12",
+                "offset": 38,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_13",
+                "name": "TLED_13",
+                "offset": 39,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_14",
+                "name": "TLED_14",
+                "offset": 40,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_15",
+                "name": "TLED_15",
+                "offset": 41,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "target_led_16",
+                "name": "TLED_16",
+                "offset": 42,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "pf_leading_true_pha",
+                "name": "LDATPFW",
+                "offset": 43,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "pf_leading_true_phb",
+                "name": "LDBTPFW",
+                "offset": 44,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "pf_leading_true_phc",
+                "name": "LDCTPFW",
+                "offset": 45,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "pf_leading_true_3ph",
+                "name": "LD3TPFW",
+                "offset": 46,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "breaker_status",
+                "name": "BREAKER_STATUS",
+                "offset": 47,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "in202",
+                "name": "IN202",
+                "offset": 48,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "in203",
+                "name": "IN203",
+                "offset": 49,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "in204",
+                "name": "IN204",
+                "offset": 50,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "in205",
+                "name": "IN205",
+                "offset": 51,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "in206",
+                "name": "IN206",
+                "offset": 52,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "mod_close",
+                "name": "MOD_CLOSE",
+                "offset": 53,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "psv01",
+                "name": "PSV01",
+                "offset": 54,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "psv02",
+                "name": "PSV02",
+                "offset": 55,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "psv03",
+                "name": "PSV03",
+                "offset": 56,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "psv04",
+                "name": "PSV04",
+                "offset": 57,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "psv05",
+                "name": "PSV05",
+                "offset": 58,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "psv06",
+                "name": "PSV06",
+                "offset": 59,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "psv07",
+                "name": "PSV07",
+                "offset": 60,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "psv08",
+                "name": "PSV08",
+                "offset": 61,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "asv001",
+                "name": "ASV001",
+                "offset": 62,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "asv002",
+                "name": "ASV002",
+                "offset": 63,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "asv003",
+                "name": "ASV003",
+                "offset": 64,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "asv004",
+                "name": "ASV004",
+                "offset": 65,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "asv005",
+                "name": "ASV005",
+                "offset": 66,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "asv006",
+                "name": "ASV006",
+                "offset": 67,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "asv007",
+                "name": "ASV007",
+                "offset": 68,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "asv008",
+                "name": "ASV008",
+                "offset": 69,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "trip_tc1",
+                "name": "TRIP_TC1",
+                "offset": 70,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "trip_tc2",
+                "name": "TRIP_TC2",
+                "offset": 71,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "supv_close",
+                "name": "SUPV_CLOSE",
+                "offset": 72,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "supv_trip",
+                "name": "SUPV_TRIP",
+                "offset": 73,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "out205",
+                "name": "OUT205",
+                "offset": 74,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "out206",
+                "name": "OUT206",
+                "offset": 75,
+                "uri": "/components/sel_651r"
+            },
+            {
+                "id": "out207",
+                "name": "OUT207",
+                "offset": 76,
+                "uri": "/components/sel_651r"
+            }
+        ]
+    }
+}

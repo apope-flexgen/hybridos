@@ -1,0 +1,153 @@
+{
+    "/alarms/##BMS_ID##_##RACK_ID##": {
+        "MonitorVarAlarm": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": []
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note1": "Contains last recently reported alarm from any monitoring variable",
+            "note2": "Useful for reporting alarm states to an external management system (e.g. Site Controller) or modifying the alarm message before it is reported on the UI",
+            "value": "Normal"
+        },
+        "clear_alarms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note1": "When this variable is set to Clear, all alarm variables (defined in /alarms/##BMS_ID##_##RACK_ID##) will be reset to the normal state (defined in /config/##BMS_ID##_##RACK_ID##:NoAlarmMsg)",
+            "note2": "Also, all monitoring variables (defined in variable) will have their alarm/fault states reset",
+            "type": "alarm",
+            "value": "Normal"
+        }
+    },
+    "/faults/##BMS_ID##_##RACK_ID##": {
+        "MonitorVarFault": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": []
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note1": "Contains last recently reported fault from any monitoring variable",
+            "note2": "Useful for reporting fault states to an external management system (e.g. Site Controller) or modifying the fault message before it is reported on the UI",
+            "value": "Normal"
+        },
+        "clear_faults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note1": "When this variable is set to Clear, all fault variables (defined in /faults/##BMS_ID##_##RACK_ID##) will be reset to the normal state (defined in /config/##BMS_ID##_##RACK_ID##:NoFaultMsg)",
+            "note2": "Also, all monitoring variables (defined in variable) will have their alarm/fault states reset",
+            "type": "fault",
+            "value": "Normal"
+        }
+    },
+    "/schedule/wake_monitor/##BMS_ID##_##RACK_ID##": {
+        "/status/##BMS_ID##_##RACK_ID##:AnyFireFaultActive": {
+            "amap": "##BMS_ID##_##RACK_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##BMS_ID##_##RACK_ID##:TotalAlarmCnt": {
+            "amap": "##BMS_ID##_##RACK_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##BMS_ID##_##RACK_ID##:TotalFaultCnt": {
+            "amap": "##BMS_ID##_##RACK_ID##",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/##BMS_ID##_##RACK_ID##": {
+        "AlarmCnt": 0,
+        "AnyFireFaultActive": {
+            "enable": "/config/##BMS_ID##_##RACK_ID##:enable",
+            "expression": "{1}",
+            "numVars": 1,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:FireFaultActive"
+        },
+        "ClearFaultsDone": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": []
+                    }
+                ]
+            },
+            "ifChanged": false,
+            "note": "When this variable is set, the alarm/fault bitfields will be set to 0 to clear all bits",
+            "value": false
+        },
+        "FaultCnt": 0,
+        "FaultShutdown": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/status/##BMS_ID##:FaultShutdown"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "note": "When the BMS Rack faults, the fault shutdown event will be propagated to its parent",
+            "value": false
+        },
+        "FireFaultActive": false,
+        "TotalAlarmCnt": {
+            "enable": "/config/##BMS_ID##_##RACK_ID##:enable",
+            "expression": "{1}",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:AlarmCnt"
+        },
+        "TotalFaultCnt": {
+            "enable": "/config/##BMS_ID##_##RACK_ID##:enable",
+            "expression": "{1}",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:FaultCnt"
+        }
+    }
+}

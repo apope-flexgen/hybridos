@@ -1,0 +1,226 @@
+{
+    "/system/commands": {
+        "addSchedVars_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/system/commands:runOpts_ess@enabled"
+                            },
+                            {
+                                "uri": "/system/commands:runOpts_ess"
+                            },
+                            {
+                                "uri": "/system/commands:runOpts_bms@enabled"
+                            },
+                            {
+                                "uri": "/system/commands:runOpts_bms"
+                            },
+                            {
+                                "uri": "/system/commands:runOpts_bms_1@enabled"
+                            },
+                            {
+                                "uri": "/system/commands:runOpts_bms_1"
+                            },
+                            {
+                                "uri": "/system/commands:runOpts_rack@enabled"
+                            },
+                            {
+                                "uri": "/system/commands:runOpts_rack"
+                            },
+                            {
+                                "uri": "/system/commands:runOpts_pcs@enabled"
+                            },
+                            {
+                                "uri": "/system/commands:runOpts_pcs"
+                            },
+                            {
+                                "uri": "/system/commands:runOpts_pcs_1@enabled"
+                            },
+                            {
+                                "uri": "/system/commands:runOpts_pcs_1"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "Sets /system/commands:runOpts_<asset> to add schedule variables to scheduler",
+            "value": true
+        },
+        "enableVars_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/config/ess:enable"
+                            },
+                            {
+                                "uri": "/config/ess:remote_control_enable"
+                            },
+                            {
+                                "uri": "/config/bms:enable"
+                            },
+                            {
+                                "uri": "/config/bms:enum_opt"
+                            },
+                            {
+                                "uri": "/config/bms_1:enable"
+                            },
+                            {
+                                "uri": "/config/bms_1:enum_opt"
+                            },
+                            {
+                                "uri": "/config/bms_1_rack_1:enable"
+                            },
+                            {
+                                "uri": "/config/bms_1_rack_1:enum_opt"
+                            },
+                            {
+                                "uri": "/config/bms_1_rack_2:enable"
+                            },
+                            {
+                                "uri": "/config/bms_1_rack_2:enum_opt"
+                            },
+                            {
+                                "uri": "/config/bms_1_rack_3:enable"
+                            },
+                            {
+                                "uri": "/config/bms_1_rack_3:enum_opt"
+                            },
+                            {
+                                "uri": "/config/pcs:enable"
+                            },
+                            {
+                                "uri": "/config/pcs:enum_opt"
+                            },
+                            {
+                                "uri": "/config/pcs_1:enable"
+                            },
+                            {
+                                "uri": "/config/pcs_1:enum_opt"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note1": "Sets /config/<asset>:enable and /config/<asset>:enum_opt",
+            "note2": "Enable actions, if any, and other operations for variables that have the enable parameter",
+            "value": true
+        },
+        "link": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "RunAllLinks"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "Command variable used to link all variables defined in /links",
+            "value": true
+        },
+        "run": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "RunSched"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note": "Command variable used to start scheduled tasks",
+            "value": true
+        },
+        "stop": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "StopSched"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note": "Command variable used to stop scheduled tasks",
+            "value": true
+        },
+        "vlink": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "RunAllVLinks"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "Command variable used to link all variables defined in /vlinks",
+            "value": true
+        }
+    },
+    "/system/sequences": {
+        "triggerSysCmds_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/system/commands:enableVars_ess@enabled"
+                            },
+                            {
+                                "uri": "/system/commands:enableVars_ess"
+                            },
+                            {
+                                "uri": "/system/commands:link@enabled"
+                            },
+                            {
+                                "uri": "/system/commands:link"
+                            },
+                            {
+                                "uri": "/system/commands:vlink@enabled"
+                            },
+                            {
+                                "uri": "/system/commands:vlink"
+                            },
+                            {
+                                "uri": "/system/commands:addSchedVars_ess@enabled"
+                            },
+                            {
+                                "uri": "/system/commands:addSchedVars_ess"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note1": "Trigger some variables defined in /system/commands",
+            "note2": "Specifically, enableVars_ess, link, vlink, and addSchedVars_ess are triggered",
+            "value": true
+        }
+    }
+}

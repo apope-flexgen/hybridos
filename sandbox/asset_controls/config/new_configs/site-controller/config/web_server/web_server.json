@@ -1,0 +1,16 @@
+{
+    "systemInformationRequests": [
+        {
+            "command": "rpm -qa fims node_fims hybridos_controller modbus_interface mcp storage metrics events dbi web_server influxdb",
+            "name": "PROCESSES"
+        },
+        {
+            "command": "df -h",
+            "name": "DISKSPACE"
+        },
+        {
+            "command": "ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10",
+            "name": "CPU USAGE"
+        }
+    ]
+}

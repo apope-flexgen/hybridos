@@ -1,0 +1,174 @@
+{
+    "/config/##BMS_ID##_##RACK_ID##": {
+        "AlarmDestination": "/assets/##BMS_ID##/##RACK_ID##:alarms",
+        "FaultDestination": "/assets/##BMS_ID##/##RACK_ID##:faults",
+        "NoAlarmMsg": "Normal",
+        "NoFaultMsg": "Normal",
+        "enable": false,
+        "enum_opt": false
+    },
+    "/links/##BMS_ID##_##RACK_ID##": {
+        "ChargeCurrentLimit": {
+            "value": "/limits/##BMS_ID##_##RACK_ID##:ChargeCurrentLimit"
+        },
+        "ChargePowerLimit": {
+            "value": "/limits/##BMS_ID##_##RACK_ID##:ChargePowerLimit"
+        },
+        "DischargeCurrentLimit": {
+            "value": "/limits/##BMS_ID##_##RACK_ID##:DischargeCurrentLimit"
+        },
+        "DischargePowerLimit": {
+            "value": "/limits/##BMS_ID##_##RACK_ID##:DischargePowerLimit"
+        }
+    },
+    "/sched/##BMS_ID##_##RACK_ID##": {
+        "pubAssets_##BMS_ID##_##RACK_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##_##RACK_ID##:enable",
+            "mode": "ui",
+            "note": "Publishes UI asset data (/assets/##BMS_ID##/##RACK_ID##)",
+            "table": "/assets/##BMS_ID##/##RACK_ID##",
+            "value": 1
+        },
+        "runMonitor_##BMS_ID##_##RACK_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "RunMonitor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "aname": "##BMS_ID##_##RACK_ID##",
+            "enable": "/config/##BMS_ID##_##RACK_ID##:enable",
+            "monitor": "wake_monitor",
+            "note": "Periodically runs functions for variables defined in /schedule/wake_monitor/##BMS_ID##_##RACK_ID##",
+            "value": 1
+        }
+    },
+    "/schedule/wake_monitor/##BMS_ID##_##RACK_ID##": {
+        "/status/##BMS_ID##_##RACK_ID##:CellTempDelta_Calculated": {
+            "amap": "##BMS_ID##_##RACK_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##BMS_ID##_##RACK_ID##:CellVoltageDelta_Calculated": {
+            "amap": "##BMS_ID##_##RACK_ID##",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/##BMS_ID##_##RACK_ID##": {
+        "CellTempDelta_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/##BMS_ID##_##RACK_ID##:CellTempDelta"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##_##RACK_ID##:enable",
+            "expression": "{2} - {1}",
+            "note": "Calculates the difference between the max and min cell temperatures",
+            "numVars": 2,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:MinCellTemp",
+            "variable2": "/status/##BMS_ID##_##RACK_ID##:MaxCellTemp"
+        },
+        "CellVoltageDelta_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/##BMS_ID##_##RACK_ID##:CellVoltageDelta"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##_##RACK_ID##:enable",
+            "expression": "{2} - {1}",
+            "note": "Calculates the difference between the max and min cell voltages",
+            "numVars": 2,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:MinCellVoltage",
+            "variable2": "/status/##BMS_ID##_##RACK_ID##:MaxCellVoltage"
+        },
+        "DCClosed": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": []
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##_##RACK_ID##:enable",
+            "note1": "Enables/disables monitoring variables if BMS DC contactors are closed/opened",
+            "note2": "Also reports the BMS DC contactor status to the UI",
+            "note3": "TODO: Decode or calculate DC contactors closed status and remap/link value to this variable",
+            "value": false
+        },
+        "Status": "INIT"
+    },
+    "/system/commands": {
+        "runOpts_rack": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "note1": "Sets schedule variables (defined in /sched/##BMS_ID##_##RACK_ID##) to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "options": [
+                {
+                    "aname": "##BMS_ID##_##RACK_ID##",
+                    "every": 1,
+                    "uri": "/sched/##BMS_ID##_##RACK_ID##:pubAssets_##BMS_ID##_##RACK_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##BMS_ID##_##RACK_ID##",
+                    "every": 0.1,
+                    "uri": "/sched/##BMS_ID##_##RACK_ID##:runMonitor_##BMS_ID##_##RACK_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##BMS_ID##_##RACK_ID##",
+                    "every": 1,
+                    "uri": "/sched/##BMS_ID##_##RACK_ID##:checkInputs_##BMS_ID##_##RACK_ID##",
+                    "value": 1
+                }
+            ],
+            "targav": "/system/commands:run",
+            "value": false
+        }
+    }
+}
