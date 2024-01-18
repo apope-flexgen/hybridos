@@ -12,14 +12,14 @@
             "id": "status",
             "type": "int", 
             "outputs": "current_status",
-			"publishRate": 200,
+			"publishRate": 500,
             "expression": "If(status_1_string == \"Standby\", status_1_value, status_0_value)"
         }
     ],
 	"echo": [
 		{
 			"uri": "/components/pcs_registers_fast",
-			"publishRate": 200,
+			"publishRate": 500,
 			"null_value_default": 0,
 			"inputs": [
 				{
