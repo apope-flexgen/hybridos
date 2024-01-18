@@ -1,0 +1,70 @@
+{
+    "pcs": [
+        {
+            "vars": {
+                "id": "pcs_##PCS_ID##",
+                "dccontactorclosecmd": false,
+                "accontactorclosecmd": false,
+                "contactorcontrol": false,
+                "oncmd": false,
+                "offcmd": true,
+                "ctrlword1cfg":[
+                    {
+                        "value": 1,
+                        "controls": [
+                            { "field": "oncmd", "value": true },
+                            { "field": "offcmd", "value": false },
+                            { "field": "standbycmd", "value": false }
+                        ]
+                    },
+                    {
+                        "value": 0,
+                        "controls": [
+                            { "field": "oncmd", "value": false },
+                            { "field": "offcmd", "value": true },
+                            { "field": "standbycmd", "value": false }
+                        ]
+                    },
+                    {
+                        "value": 2,
+                        "controls": [
+                            { "field": "oncmd", "value": true },
+                            { "field": "offcmd", "value": false },
+                            { "field": "standbycmd", "value": true }
+                        ]
+                    }
+                ],
+                "statuscfg": [
+                    {
+                        "value":1,
+                        "string":"Stopped",
+                        "field":"on",
+                        "invert":true
+                    },
+                    {
+                        "value":2,
+                        "string":"Running",
+                        "field":"on",
+                        "invert":false
+                    },
+                    {
+                        "value":3,
+                        "string":"Not Standby",
+                        "field":"standby",
+                        "invert":true
+                    },
+                    {
+                        "value":4,
+                        "string":"Standby",
+                        "field":"standby",
+                        "invert":false
+                    }
+                ]
+            },
+            "reps": {
+                "list": ["1", "2"],
+                "token": "##PCS_ID##"
+            }
+        }
+    ]
+}
