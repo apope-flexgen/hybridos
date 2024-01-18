@@ -47,6 +47,11 @@
         },
         "ctrlwordenabled": {
             "default": false
+        },
+        "V1": {
+            "default": 480,
+            "expression": [{"max":["$parent.vcmd", ["$parent.Vn", "/", "$parent.n"], "$parent.V", "$parent.Vac", "$parent.V1"]}],
+            "note": "This variable is defaulted here mostly to enable transformer Vn defaulting. feed.V1 will be overwritten at runtime in all cases"
         }
     },
     "ess": {
@@ -446,7 +451,7 @@
             "note":  "Nominal apparent power rating"
         },
         "Vn": {
-            "expression":[{"MAX":["$parent.Vcmd", "$parent.V"]}],
+            "expression":[{"MAX":["$parent.Vcmd", "$parent.V", "$parent.V1"]}],
             "default": 480,
             "units": "Volts",
             "note":  "Nominal voltage rating"
