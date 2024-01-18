@@ -719,6 +719,11 @@ namespace InputHandler
             //     amap["ActivePowerSetpoint"]->setVal(newActivePowerSetpoint);
             // }
 
+            //state machine in this state
+            //state 1 is voltage arbitration
+            //state 2 is active power balancing
+            //state 3 is maninpulating rack contactors
+
             double deadband = amap["battery_rack_balance_coarse"]->getdParam("targetVoltageDeadband");
             //TODO make getting rack info a 1 time thing
             std::vector<BatteryBalancingUtility::RackInfoObject> racks = BatteryBalancingUtility::GetRackInfoList(amap);

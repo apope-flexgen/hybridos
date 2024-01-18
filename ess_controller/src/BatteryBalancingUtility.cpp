@@ -51,6 +51,7 @@ namespace BatteryBalancingUtility
             return result;
         }
 
+        //TODO get the average of all of them
         double closedVoltage = closedRacks[0].voltage;
         result.closedRackAverageVoltage = closedVoltage;
 
@@ -62,6 +63,8 @@ namespace BatteryBalancingUtility
                 openRacksOutsideDeadband.push_back(rack);
             }
         }
+        //TODO if there are only open racks that are within the deadband then they need to be closed
+        // if they can't be closed then exclude them and move forward
         //NO BALANCING NEEDED
         if(openRacksOutsideDeadband.size() == 0){
             result.targetVoltage = -1;
@@ -92,47 +95,69 @@ namespace BatteryBalancingUtility
         } else {
             bestVoltage = *maxVoltage;
         }
+    
+    //TODO do some unit tests
 
 
 // ==================== Average Voltage of Group from Optimal Choice and Return ====================
-        double sum = 0.0;
-        int count = 0;
-        for (const auto& voltage : voltages) {
-            if(std::abs(voltage - bestVoltage) <= deadband){
-                sum += voltage;
-                count++;
-            }
-        }
+    //TODO may not need to do this right now
+    //future improvement
+        // double sum = 0.0;
+        // int count = 0;
+        // for (const auto& voltage : voltages) {
+        //     if(std::abs(voltage - bestVoltage) <= deadband){
+        //         sum += voltage;
+        //         count++;
+        //     }
+        // }
 
-        if(sum == 0) {
-            result.targetVoltage = -1;
-            result.balancingNeeded = false;
-            return result;
-        }
+        // if(sum == 0) {
+        //     result.targetVoltage = -1;
+        //     result.balancingNeeded = false;
+        //     return result;
+        // }
 
-        double average = sum / count;
+        // double average = sum / count;
 
 
-        result.targetVoltage = average;
+        // result.targetVoltage = average;
+
+        result.targetVoltage = bestVoltage;
         result.balancingNeeded = true;
         return result;
-        
 
+
+        //TODO may need to have some understanding of state of charge
+        //TODO an option to include knowledge of soc or not for the layer
+        
     }
 
     double ActivePowerBalancing(ActivePowerBalancingInput input){
 
+        //TODO this works for the discharge case
+        // need to consider the charge case
+
         // double deltaVoltage = input.targetVoltage - input.closedRackAverageVoltage;
         double currentVoltage = input.closedRackAverageVoltage;
 
-        if (currentVoltage > (input.targetVoltage + input.rampStartDeadband) || currentVoltage < (input.targetVoltage - input.rampStartDeadband)) {
+        //rampStartDeadband
+        if (currentVoltage >= (input.targetVoltage + input.rampStartDeadband) || currentVoltage <= (input.targetVoltage - input.rampStartDeadband)) {
+            //charging or discharging changes the sign of this
+            //need to figure out which one it is
             return input.maxPowerForBalancing;
         }
 
+        //targetVoltageDeadband
         if (currentVoltage > (input.targetVoltage + input.targetVoltageDeadband) || currentVoltage < (input.targetVoltage - input.targetVoltageDeadband)) {
 
+            //This needs to work for both discharge and charge
+            //looks like it only works for discharge rn
+            // sign of slope will change if you're charge or discharging
             double x = input.rampStartDeadband - (std::abs(currentVoltage - input.targetVoltage));
             double m = input.powerVsDeltaVoltageSlope;
+            
+            //charging or discharging changes the sign of this
+            //need to figure out which one it is
             double b = input.maxPowerForBalancing;
             double y = (m*x) + b;
             return y;
@@ -146,6 +171,8 @@ namespace BatteryBalancingUtility
         ActivePowerBalancingInput inputs;
         inputs.targetVoltage = result.targetVoltage;
         inputs.closedRackAverageVoltage = result.closedRackAverageVoltage;
+        //TODO shouldn't reuse this cause it changes a lot
+        // get the actual average at this point
 
 
         inputs.targetVoltageDeadband = amap["battery_rack_balance_coarse"]->getdParam("targetVoltageDeadband");

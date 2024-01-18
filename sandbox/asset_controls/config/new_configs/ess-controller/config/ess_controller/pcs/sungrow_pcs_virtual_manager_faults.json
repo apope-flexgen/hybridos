@@ -1016,8 +1016,8 @@
         "HeartbeatRead": {
             "AlarmTimeout": 10,
             "EnableAlert": false,
-            "EnableCommsCheck": true,
-            "EnableStateCheck": true,
+            "EnableCommsCheck": false,
+            "EnableStateCheck": false,
             "FaultTimeout": 15,
             "RecoverTimeout": 0.1,
             "Type": "int",

@@ -30,42 +30,6 @@
             "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
             "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
             "value": 0
-        },
-        "status": {
-            "actions": {
-                "onSet": [
-                    {
-                        "remap": [
-                            {
-                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
-                                "outValue": "TODO: add output value to set to uri",
-                                "uri": "/status/bms:Status"
-                            },
-                            {
-                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
-                                "outValue": false,
-                                "uri": "/status/bms:DCClosed"
-                            },
-                            {
-                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
-                                "outValue": true,
-                                "uri": "/status/bms:DCClosed"
-                            },
-                            {
-                                "enable": "/config/bms:enum_opt",
-                                "outValue": true,
-                                "uri": "/components/bms:status@ifChanged",
-                                "useAv": true
-                            }
-                        ]
-                    }
-                ]
-            },
-            "enable": "/config/bms:enable",
-            "ifChanged": false,
-            "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
-            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
-            "value": 0
         }
     },
     "/sched/bms": {
