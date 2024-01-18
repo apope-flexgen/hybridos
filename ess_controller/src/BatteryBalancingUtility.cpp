@@ -1,0 +1,186 @@
+#ifndef BATTERYBALANCINGUTILITY_CPP
+#define BATTERYBALANCINGUTILITY_CPP
+
+#include "asset.h"
+#include "formatters.hpp"
+#include <iostream>
+#include "FunctionUtility.hpp"
+#include "InfoMessageUtility.hpp"
+#include "OutputHandler.hpp"
+#include "BatteryBalancingUtility.hpp"
+
+
+namespace BatteryBalancingUtility
+{
+
+
+    /**
+    * @brief 
+    * 
+    * @param racks 
+    */
+    VoltageArbitrationResult VoltageArbitration(double deadband, const std::vector<RackInfoObject> racks)
+    {
+
+// ==================== Closed Rack Check ====================
+        std::vector<RackInfoObject> closedRacks;
+        for (const auto& rack : racks) {
+            if(rack.contactorStatus == ContactorStatus::CLOSED) {
+                closedRacks.push_back(rack);
+            }
+        } 
+        //FAILURE CASE
+        if(closedRacks.size() == 0){
+            // TODO: add logic for failure
+        }
+
+        VoltageArbitrationResult result;
+
+
+// ==================== Open Rack Check ====================
+        std::vector<RackInfoObject> openRacks;
+        for (const auto& rack : racks) {
+            if(rack.contactorStatus == ContactorStatus::OPEN) {
+                openRacks.push_back(rack);
+            }
+        } 
+        //NO BALANCING NEEDED
+        if(openRacks.size() == 0){
+            result.targetVoltage = -1;
+            result.balancingNeeded = false;
+            return result;
+        }
+
+        double closedVoltage = closedRacks[0].voltage;
+        result.closedRackAverageVoltage = closedVoltage;
+
+
+// ==================== Reduction to Open Racks Outside Deadband ====================
+        std::vector<RackInfoObject> openRacksOutsideDeadband;
+        for (const auto& rack : openRacks) {
+            if(std::abs(rack.voltage - closedVoltage) >= deadband){
+                openRacksOutsideDeadband.push_back(rack);
+            }
+        }
+        //NO BALANCING NEEDED
+        if(openRacksOutsideDeadband.size() == 0){
+            result.targetVoltage = -1;
+            result.balancingNeeded = false;
+            return result;
+        }
+
+
+
+// ==================== Find Least Extreme from Min and Max ====================
+        std::vector<double> voltages;
+        for (const auto& rack : openRacksOutsideDeadband) {
+            voltages.push_back(rack.voltage);
+        }
+
+        auto minVoltage = std::min_element(voltages.begin(), voltages.end());
+
+        auto maxVoltage = std::max_element(voltages.begin(), voltages.end());
+
+        double bestVoltage = 0.0;
+
+        double minVoltageDiffFromClosed = std::abs(closedVoltage - *minVoltage);
+        double maxVoltageDiffFromClosed = std::abs(closedVoltage - *maxVoltage);
+
+        int min = std::min(minVoltageDiffFromClosed, maxVoltageDiffFromClosed);
+        if(min == minVoltageDiffFromClosed) {
+            bestVoltage = *minVoltage;
+        } else {
+            bestVoltage = *maxVoltage;
+        }
+
+
+// ==================== Average Voltage of Group from Optimal Choice and Return ====================
+        double sum = 0.0;
+        int count = 0;
+        for (const auto& voltage : voltages) {
+            if(std::abs(voltage - bestVoltage) <= deadband){
+                sum += voltage;
+                count++;
+            }
+        }
+
+        if(sum == 0) {
+            result.targetVoltage = -1;
+            result.balancingNeeded = false;
+            return result;
+        }
+
+        double average = sum / count;
+
+
+        result.targetVoltage = average;
+        result.balancingNeeded = true;
+        return result;
+        
+
+    }
+
+    double ActivePowerBalancing(ActivePowerBalancingInput input){
+
+        // double deltaVoltage = input.targetVoltage - input.closedRackAverageVoltage;
+        double currentVoltage = input.closedRackAverageVoltage;
+
+        if (currentVoltage > (input.targetVoltage + input.rampStartDeadband) || currentVoltage < (input.targetVoltage - input.rampStartDeadband)) {
+            return input.maxPowerForBalancing;
+        }
+
+        if (currentVoltage > (input.targetVoltage + input.targetVoltageDeadband) || currentVoltage < (input.targetVoltage - input.targetVoltageDeadband)) {
+
+            double x = input.rampStartDeadband - (std::abs(currentVoltage - input.targetVoltage));
+            double m = input.powerVsDeltaVoltageSlope;
+            double b = input.maxPowerForBalancing;
+            double y = (m*x) + b;
+            return y;
+        }
+
+        return 0;
+
+    }
+
+    ActivePowerBalancingInput GetActivePowerBalancingInfo(varmap& amap, VoltageArbitrationResult result){
+        ActivePowerBalancingInput inputs;
+        inputs.targetVoltage = result.targetVoltage;
+        inputs.closedRackAverageVoltage = result.closedRackAverageVoltage;
+
+
+        inputs.targetVoltageDeadband = amap["battery_rack_balance_coarse"]->getdParam("targetVoltageDeadband");
+        inputs.rampStartDeadband = amap["battery_rack_balance_coarse"]->getdParam("rampStartDeadband");
+        inputs.powerVsDeltaVoltageSlope = amap["battery_rack_balance_coarse"]->getdParam("powerVsDeltaVoltageSlope");
+        inputs.maxPowerForBalancing = amap["battery_rack_balance_coarse"]->getdParam("maxPowerForBalancing");
+
+        inputs.currentActivePower = amap["ActivePowerSetpoint"]->getdVal();
+
+        return inputs;
+    }
+
+    std::vector<RackInfoObject> GetRackInfoList(varmap& amap) {
+        int numRacks = amap["NumRacks"]->getiVal();
+        std::vector<RackInfoObject> racks = {};
+        for (int i = 1; i > numRacks; i++) {
+            std::string dcClosedName = fmt::format("DCClosed_rack_{}", i);
+            std::string dcVoltageName = fmt::format("DCVoltage_rack_{}", i);
+            BatteryBalancingUtility::RackInfoObject rackInfo;
+            rackInfo.rackNum = i;
+            rackInfo.voltage = amap[dcVoltageName.c_str()]->getdVal();
+            if(amap[dcClosedName.c_str()]->getbVal()){
+                rackInfo.contactorStatus = BatteryBalancingUtility::ContactorStatus::CLOSED;
+            } else {
+                rackInfo.contactorStatus = BatteryBalancingUtility::ContactorStatus::OPEN;
+            }
+            racks.push_back(rackInfo);
+        } 
+
+        return racks;
+    }
+
+
+
+}
+
+
+#endif

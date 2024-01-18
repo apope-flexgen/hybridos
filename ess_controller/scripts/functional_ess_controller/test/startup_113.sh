@@ -74,5 +74,4 @@ done
 # $bin_dir/ess_controller -f ess_1_file
 
 
-
 # cp $cfg_dir/ess_controller/ess_file.json /usr/local/etc/config/ess_controller

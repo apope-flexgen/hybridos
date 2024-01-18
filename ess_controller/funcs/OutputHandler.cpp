@@ -5,6 +5,8 @@
 #include "formatters.hpp"
 #include "FunctionUtility.hpp"
 #include "OutputHandler.hpp"
+#include "DataUtility.hpp"
+
 
 
 
@@ -31,7 +33,7 @@ namespace OutputHandler {
     FunctionUtility::FunctionReturnObj OpenContactors(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
 
         FunctionUtility::FunctionReturnObj returnObject; 
 
@@ -64,22 +66,22 @@ namespace OutputHandler {
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
             cAv = amap[relname];
 
-            std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
+            std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/bms/OpenContactorsSuccess
-                FunctionUtility::AssetVarInfo("/status/bms", "OpenContactorsSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/bms", "OpenContactorsSuccess", assetVar::ATypes::ABOOL),
                 // /status/bms/VerifyOpenContactorsSuccess
-                FunctionUtility::AssetVarInfo("/status/bms", "VerifyOpenContactorsSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/bms", "VerifyOpenContactorsSuccess", assetVar::ATypes::ABOOL),
                 // /controls/bms/OpenContactors
-                FunctionUtility::AssetVarInfo("/controls/bms", "OpenContactors", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/bms", "OpenContactors", assetVar::ATypes::AFLOAT),
                 // /controls/bms:VerifyOpenContactors
-                FunctionUtility::AssetVarInfo("/controls/bms", "VerifyOpenContactors", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/bms", "VerifyOpenContactors", assetVar::ATypes::AFLOAT),
                 // /alarms/bms:OpenContactors
-                FunctionUtility::AssetVarInfo("/alarms/bms", "OpenContactors", "OpenContactors_ALARM", assetVar::ATypes::ASTRING),
+                DataUtility::AssetVarInfo("/alarms/bms", "OpenContactors", "OpenContactors_ALARM", assetVar::ATypes::ASTRING),
                 // /alarms/bms:VerifyOpenContactors
-                FunctionUtility::AssetVarInfo("/alarms/bms", "VerifyOpenContactors", "VerifyOpenContactors_ALARM", assetVar::ATypes::ASTRING)
+                DataUtility::AssetVarInfo("/alarms/bms", "VerifyOpenContactors", "VerifyOpenContactors_ALARM", assetVar::ATypes::ASTRING)
             };
 
-            amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
+            amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
 
 
@@ -116,7 +118,7 @@ namespace OutputHandler {
     FunctionUtility::FunctionReturnObj CloseContactors(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
 
  
         FunctionUtility::FunctionReturnObj returnObject; 
@@ -146,22 +148,22 @@ namespace OutputHandler {
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
             cAv = amap[relname];
 
-            std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
+            std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/bms/CloseContactorsSuccess
-                FunctionUtility::AssetVarInfo("/status/bms", "CloseContactorsSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/bms", "CloseContactorsSuccess", assetVar::ATypes::ABOOL),
                 // /status/bms/VerifyCloseContactorsSuccess
-                FunctionUtility::AssetVarInfo("/status/bms", "VerifyCloseContactorsSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/bms", "VerifyCloseContactorsSuccess", assetVar::ATypes::ABOOL),
                 // /controls/bms/CloseContactors
-                FunctionUtility::AssetVarInfo("/controls/bms", "CloseContactors", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/bms", "CloseContactors", assetVar::ATypes::AFLOAT),
                 // /controls/bms:VerifyCloseContactors
-                FunctionUtility::AssetVarInfo("/controls/bms", "VerifyCloseContactors", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/bms", "VerifyCloseContactors", assetVar::ATypes::AFLOAT),
                 // /alarms/bms:CloseContactors
-                FunctionUtility::AssetVarInfo("/alarms/bms", "CloseContactors", "CloseContactors_ALARM", assetVar::ATypes::ASTRING),
+                DataUtility::AssetVarInfo("/alarms/bms", "CloseContactors", "CloseContactors_ALARM", assetVar::ATypes::ASTRING),
                 // /alarms/bms:VerifyCloseContactors
-                FunctionUtility::AssetVarInfo("/alarms/bms", "VerifyCloseContactors", "VerifyCloseContactors_ALARM", assetVar::ATypes::ASTRING)
+                DataUtility::AssetVarInfo("/alarms/bms", "VerifyCloseContactors", "VerifyCloseContactors_ALARM", assetVar::ATypes::ASTRING)
             };
 
-            amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
+            amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
             if (reload == 0)
             {
@@ -194,7 +196,7 @@ namespace OutputHandler {
     FunctionUtility::FunctionReturnObj StartPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
 
         FunctionUtility::FunctionReturnObj returnObject; 
 
@@ -223,22 +225,22 @@ namespace OutputHandler {
             linkVals(*vm, vmap, amap, pcsch, "/reload", reload, relname);
             cAv = amap[relname];
 
-            std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
+            std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/pcs/StartSuccess
-                FunctionUtility::AssetVarInfo("/status/pcs", "StartSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/pcs", "StartSuccess", assetVar::ATypes::ABOOL),
                 // /status/bms/VerifyStartSuccess
-                FunctionUtility::AssetVarInfo("/status/bms", "VerifyStartSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/bms", "VerifyStartSuccess", assetVar::ATypes::ABOOL),
                 // /controls/pcs/Start
-                FunctionUtility::AssetVarInfo("/controls/pcs", "Start", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/pcs", "Start", assetVar::ATypes::AFLOAT),
                 // /controls/pcs:VerifyStart
-                FunctionUtility::AssetVarInfo("/controls/pcs", "VerifyStart", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/pcs", "VerifyStart", assetVar::ATypes::AFLOAT),
                 // /alarms/pcs:Start
-                FunctionUtility::AssetVarInfo("/alarms/pcs", "Start", "Start_ALARM", assetVar::ATypes::ASTRING),
+                DataUtility::AssetVarInfo("/alarms/pcs", "Start", "Start_ALARM", assetVar::ATypes::ASTRING),
                 // /alarms/pcs:VerifyStart
-                FunctionUtility::AssetVarInfo("/alarms/pcs", "VerifyStart", "VerifyStart_ALARM", assetVar::ATypes::ASTRING)
+                DataUtility::AssetVarInfo("/alarms/pcs", "VerifyStart", "VerifyStart_ALARM", assetVar::ATypes::ASTRING)
             };
 
-            amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
+            amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
             if (reload == 0)
             {
@@ -271,7 +273,7 @@ namespace OutputHandler {
     FunctionUtility::FunctionReturnObj StopPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
 
         FunctionUtility::FunctionReturnObj returnObject; 
 
@@ -300,22 +302,22 @@ namespace OutputHandler {
             linkVals(*vm, vmap, amap, pcsch, "/reload", reload, relname);
             cAv = amap[relname];
 
-            std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
+            std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/pcs/StopSuccess
-                FunctionUtility::AssetVarInfo("/status/pcs", "StopSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/pcs", "StopSuccess", assetVar::ATypes::ABOOL),
                 // /status/bms/VerifyStopSuccess
-                FunctionUtility::AssetVarInfo("/status/bms", "VerifyStopSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/bms", "VerifyStopSuccess", assetVar::ATypes::ABOOL),
                 // /controls/pcs/Stop
-                FunctionUtility::AssetVarInfo("/controls/pcs", "Stop", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/pcs", "Stop", assetVar::ATypes::AFLOAT),
                 // /controls/pcs:VerifyStop
-                FunctionUtility::AssetVarInfo("/controls/pcs", "VerifyStop", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/pcs", "VerifyStop", assetVar::ATypes::AFLOAT),
                 // /alarms/pcs:Stop
-                FunctionUtility::AssetVarInfo("/alarms/pcs", "Stop", "Stop_ALARM", assetVar::ATypes::ASTRING),
+                DataUtility::AssetVarInfo("/alarms/pcs", "Stop", "Stop_ALARM", assetVar::ATypes::ASTRING),
                 // /alarms/pcs:VerifyStop
-                FunctionUtility::AssetVarInfo("/alarms/pcs", "VerifyStop", "VerifyStop_ALARM", assetVar::ATypes::ASTRING)
+                DataUtility::AssetVarInfo("/alarms/pcs", "VerifyStop", "VerifyStop_ALARM", assetVar::ATypes::ASTRING)
             };
 
-            amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
+            amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
             if (reload == 0)
             {
@@ -350,7 +352,7 @@ namespace OutputHandler {
     FunctionUtility::FunctionReturnObj StandbyPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
 
         FunctionUtility::FunctionReturnObj returnObject; 
 
@@ -379,22 +381,22 @@ namespace OutputHandler {
             linkVals(*vm, vmap, amap, pcsch, "/reload", reload, relname);
             cAv = amap[relname];
 
-            std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
+            std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/pcs/StandbySuccess
-                FunctionUtility::AssetVarInfo("/status/pcs", "StandbySuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/pcs", "StandbySuccess", assetVar::ATypes::ABOOL),
                 // /status/bms/VerifyStandbySuccess
-                FunctionUtility::AssetVarInfo("/status/bms", "VerifyStandbySuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/bms", "VerifyStandbySuccess", assetVar::ATypes::ABOOL),
                 // /controls/pcs/Standby
-                FunctionUtility::AssetVarInfo("/controls/pcs", "Standby", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/pcs", "Standby", assetVar::ATypes::AFLOAT),
                 // /controls/pcs:VerifyStandby
-                FunctionUtility::AssetVarInfo("/controls/pcs", "VerifyStandby", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/pcs", "VerifyStandby", assetVar::ATypes::AFLOAT),
                 // /alarms/pcs:Standby
-                FunctionUtility::AssetVarInfo("/alarms/pcs", "Standby", "Standby_ALARM", assetVar::ATypes::ASTRING),
+                DataUtility::AssetVarInfo("/alarms/pcs", "Standby", "Standby_ALARM", assetVar::ATypes::ASTRING),
                 // /alarms/pcs:VerifyStandby
-                FunctionUtility::AssetVarInfo("/alarms/pcs", "VerifyStandby", "VerifyStandby_ALARM", assetVar::ATypes::ASTRING)
+                DataUtility::AssetVarInfo("/alarms/pcs", "VerifyStandby", "VerifyStandby_ALARM", assetVar::ATypes::ASTRING)
             };
 
-            amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
+            amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
             
             if (reload == 0)

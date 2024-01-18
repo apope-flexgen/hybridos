@@ -18,6 +18,7 @@
 #include "chrono_utils.hpp"
 #include "formatters.hpp"
 #include "InputHandler.hpp"
+#include "ScheduledEnableFunctions.hpp"
 
 #ifndef FPS_ERROR_FMT
 #define FPS_ERROR_FMT(...)     fmt::print(stderr,__VA_ARGS__)
@@ -2365,11 +2366,12 @@ void loadFlexFunc(varsmap & vmap, VarMapUtils*vm , const char* FlexName)
     vm->setFunc(vmap, FlexName, "SiteRunCmd",        (void*)&InputHandler::SiteRunCmd);
     vm->setFunc(vmap, FlexName, "SiteBMSContactorControl",        (void*)&InputHandler::SiteBMSContactorControl);
     vm->setFunc(vmap, FlexName, "SitePCSStatusControl",        (void*)&InputHandler::SitePCSStatusControl);
-    vm->setFunc(vmap, FlexName, "CloseContactorsEnable",        (void*)&InputHandler::CloseContactorsEnable);
-    vm->setFunc(vmap, FlexName, "OpenContactorsEnable",        (void*)&InputHandler::OpenContactorsEnable);
-    vm->setFunc(vmap, FlexName, "StartEnable",        (void*)&InputHandler::StartEnable);
-    vm->setFunc(vmap, FlexName, "StopEnable",        (void*)&InputHandler::StopEnable);
-    vm->setFunc(vmap, FlexName, "StandbyEnable",        (void*)&InputHandler::StandbyEnable);
+    vm->setFunc(vmap, FlexName, "BatteryRackBalanceCoarse",        (void*)&InputHandler::BatteryRackBalanceCoarse);
+    vm->setFunc(vmap, FlexName, "CloseContactorsEnable",        (void*)&ScheduledEnableFunctions::CloseContactorsEnable);
+    vm->setFunc(vmap, FlexName, "OpenContactorsEnable",        (void*)&ScheduledEnableFunctions::OpenContactorsEnable);
+    vm->setFunc(vmap, FlexName, "StartEnable",        (void*)&ScheduledEnableFunctions::StartEnable);
+    vm->setFunc(vmap, FlexName, "StopEnable",        (void*)&ScheduledEnableFunctions::StopEnable);
+    vm->setFunc(vmap, FlexName, "StandbyEnable",        (void*)&ScheduledEnableFunctions::StandbyEnable);
 
 }
     

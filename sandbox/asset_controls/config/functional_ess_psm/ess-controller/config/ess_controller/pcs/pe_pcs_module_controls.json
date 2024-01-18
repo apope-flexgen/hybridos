@@ -1,0 +1,52 @@
+{
+    "/controls/##MODULE_ID##": {
+        "ClearFaults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##MODULE_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "cmdVar": "",
+            "note": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "value": 0
+        }
+    },
+    "/schedule/wake_monitor/##MODULE_ID##": {
+        "/controls/##MODULE_ID##:ClearFaults": {
+            "amap": "##MODULE_ID##",
+            "func": "HandleCmd"
+        }
+    },
+    "/status/##MODULE_ID##": {
+        "ClearFaultsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": "Clear",
+                                "uri": "/faults/##MODULE_ID##:clear_faults"
+                            },
+                            {
+                                "outValue": "Clear",
+                                "uri": "/alarms/##MODULE_ID##:clear_alarms"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##MODULE_ID##:enable",
+            "ifChanged": false,
+            "note": "When this variable is set, /faults/##MODULE_ID##:clear_faults and /alarms/##MODULE_ID##:clear_alarms will be set to Clear",
+            "value": false
+        }
+    }
+}

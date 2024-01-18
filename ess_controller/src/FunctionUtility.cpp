@@ -7,6 +7,8 @@
 #include "FunctionUtility.hpp"
 #include "InfoMessageUtility.hpp"
 #include "OutputHandler.hpp"
+#include "DataUtility.hpp"
+
 
  extern "C++" {
     int HandleCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
@@ -88,7 +90,7 @@ namespace FunctionUtility
     void PullOffScheduler(varmap& amap, assetVar* aV, const char* updatedAssetVarName) 
     {
 
-        if(0)FunctionUtility::PrintAssetVar(aV, assetVar::ATypes::AFLOAT);
+        if(0)DataUtility::PrintAssetVar(aV, assetVar::ATypes::AFLOAT);
         aV->setParam("endTime", 1);
 
         if (!amap[updatedAssetVarName]) return;
@@ -138,10 +140,10 @@ namespace FunctionUtility
 
         std::string uri = fmt::format("/assets/{}/summary", assetName);
 
-        std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
-            FunctionUtility::AssetVarInfo(uri.c_str(), uiUriName.c_str(), assetVar::ATypes::ABOOL)
+        std::vector<DataUtility::AssetVarInfo> assetVarVector = {
+            DataUtility::AssetVarInfo(uri.c_str(), uiUriName.c_str(), assetVar::ATypes::ABOOL)
         };
-        amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
+        amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
         //Function has been called but the assets uri hasn't been updated so it shouldn't have been called
         if(!amap[uiUriName.c_str()]->getbVal()) return;
@@ -159,12 +161,12 @@ namespace FunctionUtility
     
     }
 
-    int SharedInputHandlerRemoteFunction(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, std::string siteUri, std::string scheduledFuncName, std::string outputHandlerFuncName) {
+    int SharedInputHandlerRemoteFunction(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, std::string uri, std::string scheduledFuncName, std::string outputHandlerFuncName) {
         
         if(0)FPS_PRINT_INFO("{}", __func__);
 
-        asset_manager * am = aV->am;
-        VarMapUtils* vm = am->vm;
+        // asset_manager * am = aV->am;
+        // VarMapUtils* vm = am->vm;
 
         std::function<FunctionUtility::FunctionReturnObj(varsmap&, varmap&, const char*, fims*, assetVar*, const char*)> outputHandlerFunction;
 
@@ -184,97 +186,26 @@ namespace FunctionUtility
         }
 
     
-        std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
-            FunctionUtility::AssetVarInfo("/site/ess", siteUri.c_str(), assetVar::ATypes::AINT)
-        };
-        amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
+        // std::vector<DataUtility::AssetVarInfo> assetVarVector = {
+        //     DataUtility::AssetVarInfo("/site/ess", siteUri.c_str(), assetVar::ATypes::AINT)
+        // };
+        // amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
 
         // "every" in /ess/sched/bms/LocalStartPCS -> "every" in /assets/pcs/summary/start
-        amap[siteUri.c_str()]->setParam("every", aV->getdParam("every"));
+        amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
 
 
-        FunctionUtility::FunctionReturnObj returnObject = outputHandlerFunction(vmap, amap, aname, p_fims, aV, siteUri.c_str());
+        FunctionUtility::FunctionReturnObj returnObject = outputHandlerFunction(vmap, amap, aname, p_fims, aV, uri.c_str());
         int returnValue = returnObject.statusIndicator;
         std::string message = returnObject.message;
-
-        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName.c_str(), siteUri.c_str(), message.c_str());
+        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName.c_str(), uri.c_str(), message.c_str());
 
         return returnValue;
 
     }
 
-    /**
-    * @brief gives the ability to populate the amap with a singular given assetVar based on the information given in the "info" variable
-    * 
-    * @param vmap the global data map shared by all assets/asset managers
-    * @param amap the local data map used by an asset/asset manager
-    * @param vm  VarMapUtils pointer
-    * @param info The necessary info of an assetVar for the purpose of populating it within the amap
-    */
-    varmap& PopulateAmapWithAv(varsmap& vmap, varmap& amap, VarMapUtils* vm, const AssetVarInfo* info)
-    {
-
-        int ival= -1;
-        double dval= 0.0;
-        bool bval = false;
-        char* cval = nullptr;
-
-        char* amId = nullptr;
-
-        // if(info->uri) FPS_PRINT_INFO("info->uri [{}]", info->uri);
-        // if(info->varName) FPS_PRINT_INFO("info->varName [{}]", info->varName);
-        // if(info->assetManagerId) FPS_PRINT_INFO("info->assetManagerId [{}]", info->assetManagerId);
-        // if(info->type) FPS_PRINT_INFO("info->type [{}]", info->type);
-        
-
-        if (info->assetManagerId)  {
-            amId = const_cast<char*>(info->assetManagerId);
-        } else {
-            amId = const_cast<char*>(info->varName);
-        }
-
-        assetVar* av = vm->getVar(vmap, info->uri, info->varName);
-        if (!av) {
-            switch (info->type){
-                case assetVar::ATypes::AINT:
-                    av = vm->makeVar(vmap, info->uri, info->varName, ival);
-                    break;
-                case assetVar::ATypes::AFLOAT:
-                    av = vm->makeVar(vmap, info->uri, info->varName, dval);
-                    break;
-                case assetVar::ATypes::ABOOL:
-                    av = vm->makeVar(vmap, info->uri, info->varName, bval);
-                    break;
-                case assetVar::ATypes::ASTRING:
-                    av = vm->makeVar(vmap, info->uri, info->varName, cval);
-                    break;
-                default:
-                    FPS_PRINT_ERROR("Error in Switch Statement of PopulateAmapWithAv - No known type given for AV", nullptr);
-
-            }
-        }
-        amap[amId] = av;
-
-        return amap;
-    } 
-
-    /**
-    * @brief allows to populate multiple assetVars within the amap at once by calling with a vector list of the desired assetVars, this will then call the PopulateAmapWithAv for each one
-    * 
-    * @param vmap the global data map shared by all assets/asset managers
-    * @param amap the local data map used by an asset/asset manager
-    * @param vm  VarMapUtils pointer
-    * @param assetVarVector a vector list of all the assetVars that will be populated individually in the amap
-    */
-    varmap& PopulateAmapWithManyAvs(varsmap& vmap, varmap& amap, VarMapUtils* vm, std::vector<AssetVarInfo>& assetVarVector)
-    {
-        for (const AssetVarInfo& assetVarInfo : assetVarVector) {
-            amap = FunctionUtility::PopulateAmapWithAv(vmap, amap, vm, &assetVarInfo);
-        }
-        return amap;
-    } 
 
     /**
     * @brief Shared function for all of the OutputHandler functions for resetting certain parameters that are necessary to make the process work properly
@@ -466,7 +397,7 @@ namespace FunctionUtility
         amap[control.c_str()]->setParam("enableAlert", true);
 
         // FPS_PRINT_INFO("HandleCmd");
-        // FunctionUtility::PrintAssetVar(amap[control.c_str()], assetVar::ATypes::AINT);
+        // DataUtility::PrintAssetVar(amap[control.c_str()], assetVar::ATypes::AINT);
         HandleCmd(*am->vmap, am->amap, aname, p_fims, amap[control.c_str()]);
         if(!amap[control.c_str()]->getbParam("triggerCmd") && !amap[control.c_str()]->getbParam("cmdSent")) {
             if(amap[controlSuccess.c_str()]) {
@@ -501,102 +432,6 @@ namespace FunctionUtility
 
         return returnObject;
     }
-
-
- 
-    void PrintAssetVar(assetVar* aV, assetVar::ATypes assetVarValType) {
-        std::string assetVarString = "";
-        assetVarString += "\n{\n";
-        // assetVarString += "  \"" + aV->getfName() + "\": {\n";
-        if(0)FPS_PRINT_INFO("Start of PrintAssetVar");
-        assetVarString += fmt::format("  \"{}\": {{\n", aV->getfName());
-
-        switch (assetVarValType){
-            case assetVar::ATypes::AINT:
-                if(0)FPS_PRINT_INFO("Before iParam");
-                assetVarString += fmt::format("    \"value\": {},\n", aV->getiVal());
-                break;
-            case assetVar::ATypes::AFLOAT:
-                if(0)FPS_PRINT_INFO("Before dVal");
-                assetVarString += fmt::format("    \"value\": {},\n", aV->getdVal());
-                break;
-            case assetVar::ATypes::ABOOL:
-                if(0)FPS_PRINT_INFO("Before bVal");
-                assetVarString += fmt::format("    \"value\": {},\n", aV->getbVal());
-                break;
-            case assetVar::ATypes::ASTRING:
-                if(0)FPS_PRINT_INFO("Before cVal");
-                assetVarString += fmt::format("    \"value\": \"{}\",\n", aV->getcVal());
-                break;
-            default:
-                break;
-        }
-
-        // for (const auto& keyValuePair : paramToDataTypeDict) {
-        for (auto it = paramToDataTypeDict.begin(); it != paramToDataTypeDict.end(); ++it) {
-
-            std::string paramString = it->first;
-            assetVar::ATypes paramType = it->second;
-
-            if(0)FPS_PRINT_INFO("paramString {}", paramString);
-
-            if(aV->gotParam(paramString.c_str())) {
-                if(0)FPS_PRINT_INFO("Param was found");
-                switch (paramType){
-                    case assetVar::ATypes::AINT:
-                        if(0)FPS_PRINT_INFO("iParam {}", aV->getiParam(paramString.c_str()));
-                        assetVarString += fmt::format("    \"{}\": {}", paramString, aV->getiParam(paramString.c_str()));
-                        break;
-                    case assetVar::ATypes::AFLOAT:
-                        if(0)FPS_PRINT_INFO("dParam {}", aV->getdParam(paramString.c_str()));
-                        assetVarString += fmt::format("    \"{}\": {}", paramString, aV->getdParam(paramString.c_str()));
-                        break;
-                    case assetVar::ATypes::ABOOL:
-                        if(0)FPS_PRINT_INFO("bParam {}", aV->getbParam(paramString.c_str()));
-                        assetVarString += fmt::format("    \"{}\": {}", paramString, aV->getbParam(paramString.c_str()));
-                        break;
-                    case assetVar::ATypes::ASTRING:
-                        if(0)FPS_PRINT_INFO("cParam {}", aV->getcParam(paramString.c_str()));
-                        assetVarString += fmt::format("    \"{}\": \"{}\"", paramString, aV->getcParam(paramString.c_str()));
-                        break;
-                    default:
-                        break;
-                }
-
-                if (std::next(it) != paramToDataTypeDict.end()) {
-                    //not the last element
-                    assetVarString += ",\n";
-                } else {
-                    //the last element
-                    assetVarString += "\n";
-                }
-            }
-
-        }
-
-        assetVarString += fmt::format("  }}\n");
-        assetVarString += fmt::format("}}\n\n");
-
-        FPS_PRINT_INFO("{}", assetVarString);
-    }
-
-    std::unordered_map<std::string, std::string> controlsEnabledLogicMap = {
-        {"close_contactors", ""},
-        {"open_contactors", ""},
-        {"start", ""},
-        {"stop", ""},
-        {"standby", ""}
-
-    };
-
-    std::string GetEnabledLogicMessage(std::string controlUri){
-        return controlsEnabledLogicMap[controlUri];
-    }
-
-    void UpdateEnabledLogicMessage(std::string controlUri, std::string logicMessage){
-        controlsEnabledLogicMap[controlUri] = logicMessage;
-    }
-
 
 }
 

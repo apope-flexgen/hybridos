@@ -1,0 +1,98 @@
+{
+    "/assets/ess/ess_1": {
+        "build": {
+            "value": "INIT"
+        },
+        "comms_ok": {
+            "value": false
+        },
+        "curr_real_mem": {
+            "value": 0
+        },
+        "max_apparent_power": {
+            "value": 0
+        },
+        "max_charge_power": {
+            "value": 0
+        },
+        "max_discharge_power": {
+            "value": 0
+        },
+        "max_reactive_power": {
+            "value": 0
+        },
+        "peak_real_mem": {
+            "value": 0
+        },
+        "system_temp": {
+            "value": 0
+        }
+    },
+    "/vlinks/ess": {
+        "ui_build": {
+            "value": "/assets/ess/ess_1:build",
+            "vlink": "/status/ess:build"
+        },
+        "ui_comms_ok": {
+            "value": "/assets/ess/ess_1:comms_ok",
+            "vlink": "/status/ess:CommsOK"
+        },
+        "ui_curr_real_mem": {
+            "value": "/assets/ess/ess_1:curr_real_mem",
+            "vlink": "/status/ess:currRealMem"
+        },
+        "ui_max_apparent_power": {
+            "value": "/assets/ess/ess_1:max_apparent_power",
+            "vlink": "/limits/ess:MaxApparentPower"
+        },
+        "ui_max_charge_power": {
+            "value": "/assets/ess/ess_1:max_charge_power",
+            "vlink": "/limits/ess:MaxChargePower"
+        },
+        "ui_max_discharge_power": {
+            "value": "/assets/ess/ess_1:max_discharge_power",
+            "vlink": "/limits/ess:MaxDischargePower"
+        },
+        "ui_max_reactive_power": {
+            "value": "/assets/ess/ess_1:max_reactive_power",
+            "vlink": "/limits/ess:MaxReactivePower"
+        },
+        "ui_peak_real_mem": {
+            "value": "/assets/ess/ess_1:peak_real_mem",
+            "vlink": "/status/ess:peakRealMem"
+        },
+        "ui_system_temp": {
+            "value": "/assets/ess/ess_1:system_temp",
+            "vlink": "/status/ess:system_temp"
+        }
+    },
+    "/assets/ess/summary": {
+        "battery_rack_balance_coarse": {
+            "name": "Battery Rack Balance Coarse",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_button",   
+            "aname": "bms",
+            "uri":"/sched/ess:BatteryRackBalanceCoarse",
+            "every":0.5,
+            "offset":0,
+            "debug":0,
+            "actions":	{
+                "onSet":	[{
+                    "func":	[
+                        {"inValue":true, "func": "RunSched"}
+                    ]
+                }]
+            },
+            "ControlRate": "use every above for this",
+            "Gain": 10,
+            "targetVoltageDeadband": 5,
+            "rampStartDeadband": 10,
+            "powerVsDeltaVoltageSlope": 1,
+            "maxPowerForBalancing": 1000
+        }
+    }
+}

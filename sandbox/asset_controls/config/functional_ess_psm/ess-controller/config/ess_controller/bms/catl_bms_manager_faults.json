@@ -1,0 +1,1042 @@
+{
+    "/alarms/bms": {
+        "ClearFaults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "BMS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 0 - BMS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_control_alarms[0]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending clear faults command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "CloseContactors": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "BMS CloseContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 1 - BMS CloseContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_control_alarms[1]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending close contactors command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "HeartbeatRead": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "MonitorVarAlarm": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": "HeartbeatRead_state",
+                                "outValue": "BMS Communication Failure",
+                                "uri": "/alarms/bms:HeartbeatRead"
+                            },
+                            {
+                                "inValue": "DCCurrent_limit_max",
+                                "note": "Bit 0 - BMS DC Current Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[0]"
+                            },
+                            {
+                                "inValue": "DCCurrent_limit_min",
+                                "note": "Bit 1 - BMS DC Current Min Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[1]"
+                            },
+                            {
+                                "inValue": "MaxCellTemp_limit_max",
+                                "note": "Bit 2 - BMS Max Cell Temperature Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[2]"
+                            },
+                            {
+                                "inValue": "MaxCellVoltage_limit_max",
+                                "note": "Bit 3 - BMS Max Cell Voltage Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[3]"
+                            },
+                            {
+                                "inValue": "MinCellTemp_limit_min",
+                                "note": "Bit 4 - BMS Min Cell Temperature Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[4]"
+                            },
+                            {
+                                "inValue": "MinCellVoltage_limit_min",
+                                "note": "Bit 5 - BMS Min Cell Voltage Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[5]"
+                            },
+                            {
+                                "inValue": "SOH_limit_min",
+                                "note": "Bit 6 - BMS State of Health Below Threshold",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[6]"
+                            },
+                            {
+                                "inValue": "DCVoltage_limit_max",
+                                "note": "Bit 7 - BMS DC Voltage Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[7]"
+                            },
+                            {
+                                "inValue": "DCVoltage_limit_min",
+                                "note": "Bit 8 - BMS DC Voltage Min Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[8]"
+                            },
+                            {
+                                "inValue": "SOC_limit_max",
+                                "note": "Bit 9 - BMS SOC Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[9]"
+                            },
+                            {
+                                "inValue": "SOC_limit_min",
+                                "note": "Bit 10 - BMS SOC Min Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[10]"
+                            },
+                            {
+                                "inValue": "CellVoltageDelta_limit_max",
+                                "note": "Bit 11 - BMS Cell Voltage Delta Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[11]"
+                            },
+                            {
+                                "inValue": "CellTempDelta_limit_max",
+                                "note": "Bit 12 - BMS Cell Temperature Delta Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[12]"
+                            },
+                            {
+                                "inValue": "NumRacksOnline_limit_min",
+                                "note": "Bit 13 - BMS Number of Racks Online Below Min Threshold",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_alarms[13]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note1": "Contains last recently reported alarm from any monitoring variable",
+            "note2": "Useful for reporting alarm states to an external management system (e.g. Site Controller) or modifying the alarm message before it is reported on the UI",
+            "value": "Normal"
+        },
+        "OpenContactors": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "BMS OpenContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 2 - BMS OpenContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_control_alarms[2]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending open contactors command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyCloseContactors": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "BMS VerifyCloseContactors - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 3 - BMS VerifyCloseContactors - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_control_alarms[3]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the BMS failed to close contactors",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyOpenContactors": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "BMS VerifyOpenContactors - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 4 - BMS VerifyOpenContactors - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_control_alarms[4]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the BMS failed to open contactors",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "clear_alarms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note1": "When this variable is set to Clear, all alarm variables (defined in /alarms/bms) will be reset to the normal state (defined in /config/bms:NoAlarmMsg)",
+            "note2": "Also, all monitoring variables (defined in variable) will have their alarm/fault states reset",
+            "numVars": 12,
+            "type": "alarm",
+            "value": "Normal",
+            "variable1": "MaxCellVoltage",
+            "variable10": "CellVoltageDelta",
+            "variable11": "CellTempDelta",
+            "variable12": "NumRacksOnline",
+            "variable2": "MinCellVoltage",
+            "variable3": "MaxCellTemp",
+            "variable4": "MinCellTemp",
+            "variable5": "SOH",
+            "variable6": "HeartbeatRead",
+            "variable7": "DCVoltage",
+            "variable8": "DCCurrent",
+            "variable9": "SOC"
+        }
+    },
+    "/faults/bms": {
+        "HeartbeatRead": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "MonitorVarFault": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": "HeartbeatRead_state",
+                                "outValue": "BMS Communication Failure",
+                                "uri": "/faults/bms:HeartbeatRead"
+                            },
+                            {
+                                "inValue": "DCCurrent_limit_max",
+                                "note": "Bit 0 - BMS DC Current Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[0]"
+                            },
+                            {
+                                "inValue": "DCCurrent_limit_min",
+                                "note": "Bit 1 - BMS DC Current Min Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[1]"
+                            },
+                            {
+                                "inValue": "MaxCellTemp_limit_max",
+                                "note": "Bit 2 - BMS Max Cell Temperature Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[2]"
+                            },
+                            {
+                                "inValue": "MaxCellVoltage_limit_max",
+                                "note": "Bit 3 - BMS Max Cell Voltage Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[3]"
+                            },
+                            {
+                                "inValue": "MinCellTemp_limit_min",
+                                "note": "Bit 4 - BMS Min Cell Temperature Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[4]"
+                            },
+                            {
+                                "inValue": "MinCellVoltage_limit_min",
+                                "note": "Bit 5 - BMS Min Cell Voltage Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[5]"
+                            },
+                            {
+                                "inValue": "SOH_limit_min",
+                                "note": "Bit 6 - BMS State of Health Below Threshold",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[6]"
+                            },
+                            {
+                                "inValue": "DCVoltage_limit_max",
+                                "note": "Bit 7 - BMS DC Voltage Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[7]"
+                            },
+                            {
+                                "inValue": "DCVoltage_limit_min",
+                                "note": "Bit 8 - BMS DC Voltage Min Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[8]"
+                            },
+                            {
+                                "inValue": "SOC_limit_max",
+                                "note": "Bit 9 - BMS SOC Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[9]"
+                            },
+                            {
+                                "inValue": "SOC_limit_min",
+                                "note": "Bit 10 - BMS SOC Min Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[10]"
+                            },
+                            {
+                                "inValue": "CellVoltageDelta_limit_max",
+                                "note": "Bit 11 - BMS Cell Voltage Delta Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[11]"
+                            },
+                            {
+                                "inValue": "CellTempDelta_limit_max",
+                                "note": "Bit 12 - BMS Cell Temperature Delta Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[12]"
+                            },
+                            {
+                                "inValue": "NumRacksOnline_limit_min",
+                                "note": "Bit 13 - BMS Number of Racks Online Below Min Threshold",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_monitor_faults[13]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note1": "Contains last recently reported fault from any monitoring variable",
+            "note2": "Useful for reporting fault states to an external management system (e.g. Site Controller) or modifying the fault message before it is reported on the UI",
+            "value": "Normal"
+        },
+        "clear_faults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note1": "When this variable is set to Clear, all fault variables (defined in /faults/bms) will be reset to the normal state (defined in /config/bms:NoFaultMsg)",
+            "note2": "Also, all monitoring variables (defined in variable) will have their alarm/fault states reset",
+            "numVars": 12,
+            "type": "fault",
+            "value": "Normal",
+            "variable1": "MaxCellVoltage",
+            "variable10": "CellVoltageDelta",
+            "variable11": "CellTempDelta",
+            "variable12": "NumRacksOnline",
+            "variable2": "MinCellVoltage",
+            "variable3": "MaxCellTemp",
+            "variable4": "MinCellTemp",
+            "variable5": "SOH",
+            "variable6": "HeartbeatRead",
+            "variable7": "DCVoltage",
+            "variable8": "DCCurrent",
+            "variable9": "SOC"
+        }
+    },
+    "/schedule/wake_monitor/bms": {
+        "/status/bms:AnyFireFaultActive": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:CellTempDelta": {
+            "amap": "bms",
+            "func": "CheckMonitorVar"
+        },
+        "/status/bms:CellVoltageDelta": {
+            "amap": "bms",
+            "func": "CheckMonitorVar"
+        },
+        "/status/bms:CurrentBeforeStopIsOK": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:DCCurrent": {
+            "amap": "bms",
+            "func": "CheckMonitorVar"
+        },
+        "/status/bms:DCVoltage": {
+            "amap": "bms",
+            "func": "CheckMonitorVar"
+        },
+        "/status/bms:HeartbeatRead": {
+            "amap": "bms",
+            "func": "CheckMonitorVar"
+        },
+        "/status/bms:IsAlarming": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:IsFaulted": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:MaxCellTemp": {
+            "amap": "bms",
+            "func": "CheckMonitorVar"
+        },
+        "/status/bms:MaxCellVoltage": {
+            "amap": "bms",
+            "func": "CheckMonitorVar"
+        },
+        "/status/bms:MinCellTemp": {
+            "amap": "bms",
+            "func": "CheckMonitorVar"
+        },
+        "/status/bms:MinCellVoltage": {
+            "amap": "bms",
+            "func": "CheckMonitorVar"
+        },
+        "/status/bms:NumRacksOnline": {
+            "amap": "bms",
+            "func": "CheckMonitorVar"
+        },
+        "/status/bms:OverCurrentAlarm": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:OverCurrentFault": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:SOC": {
+            "amap": "bms",
+            "func": "CheckMonitorVar"
+        },
+        "/status/bms:SOH": {
+            "amap": "bms",
+            "func": "CheckMonitorVar"
+        },
+        "/status/bms:TotalAlarmCnt": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:TotalFaultCnt": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:UnderCurrentAlarm": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:UnderCurrentFault": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/bms": {
+        "AlarmCnt": 0,
+        "AnyFireFaultActive": {
+            "numVars": 2,
+            "operation": "or",
+            "value": false,
+            "variable1": "bms:AnyFireFaultActive",
+            "variable2": "/status/bms:FireFaultActive"
+        },
+        "CellTempDelta": {
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "MaxAlarmThreshold": 7,
+            "MaxAlarmTimeout": 5.5,
+            "MaxFaultThreshold": 10,
+            "MaxFaultTimeout": 2.5,
+            "MaxRecoverTimeout": 1.4,
+            "MaxResetValue": 7,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for over cell temp delta conditions",
+            "value": 0
+        },
+        "CellVoltageDelta": {
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "MaxAlarmThreshold": 1,
+            "MaxAlarmTimeout": 5.5,
+            "MaxFaultThreshold": 2,
+            "MaxFaultTimeout": 2.5,
+            "MaxRecoverTimeout": 1.4,
+            "MaxResetValue": 1,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for over cell voltage delta conditions",
+            "value": 0
+        },
+        "ClearFaultsDone": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:bms_monitor_faults"
+                            },
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:bms_monitor_alarms"
+                            },
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:bms_control_alarms"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": false,
+            "note": "When this variable is set, the alarm/fault bitfields will be set to 0 to clear all bits",
+            "value": false
+        },
+        "CurrentBeforeStopIsOK": {
+            "enable": "/config/bms:enable",
+            "expression": "{1} <= {2} and {1} >= (-1 * {2})",
+            "note": "Set to true if the BMS DC current is within an acceptable level before stopping the PCS",
+            "numVars": 2,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/bms:DCCurrent",
+            "variable2": "/config/bms:CurrentBeforeStopThreshold"
+        },
+        "DCCurrent": {
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "EnableMinValCheck": false,
+            "MaxAlarmTimeout": 1,
+            "MaxFaultTimeout": 2.5,
+            "MinAlarmTimeout": 1,
+            "MinFaultTimeout": 2.5,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for over/under current conditions",
+            "value": 0
+        },
+        "DCVoltage": {
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "EnableMinValCheck": false,
+            "MaxAlarmThreshold": 1450,
+            "MaxAlarmTimeout": 0.5,
+            "MaxFaultThreshold": 1500,
+            "MaxFaultTimeout": 0.5,
+            "MaxRecoverTimeout": 1.5,
+            "MaxResetValue": 1400,
+            "MinAlarmThreshold": 1000,
+            "MinAlarmTimeout": 0.5,
+            "MinFaultThreshold": 800,
+            "MinFaultTimeout": 0.2,
+            "MinRecoverTimeout": 1.5,
+            "MinResetValue": 1300,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for over/under voltage conditions",
+            "value": 0
+        },
+        "FaultCnt": 0,
+        "FaultShutdown": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/pcs:ActivePowerSetpoint"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/pcs:ReactivePowerSetpoint"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/pcs:Stop@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/pcs:Stop"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "note": "When the BMS faults, the ESS Controller will send 0 kW and 0 kVAR commands to the PCS and then stop the PCS",
+            "value": false
+        },
+        "FireFaultActive": false,
+        "HeartbeatRead": {
+            "AlarmTimeout": 10,
+            "EnableAlert": false,
+            "EnableCommsCheck": false,
+            "EnableStateCheck": false,
+            "FaultTimeout": 15,
+            "RecoverTimeout": 0.1,
+            "Type": "int",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault if ESS Controller loses communications with BMS",
+            "value": 0
+        },
+        "IsAlarming": {
+            "expression": "{1} > 0",
+            "numVars": 1,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/bms:TotalAlarmCnt"
+        },
+        "IsFaulted": {
+            "expression": "{1} or {2} > 0",
+            "numVars": 2,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/bms:SystemFault",
+            "variable2": "/status/bms:TotalFaultCnt"
+        },
+        "MaxCellTemp": {
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "MaxAlarmThreshold": 52,
+            "MaxAlarmTimeout": 2.5,
+            "MaxFaultThreshold": 53,
+            "MaxFaultTimeout": 1,
+            "MaxRecoverTimeout": 1.4,
+            "MaxResetValue": 52,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for over max cell temperature conditions",
+            "value": 0
+        },
+        "MaxCellVoltage": {
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "MaxAlarmThreshold": 3.58,
+            "MaxAlarmTimeout": 2.5,
+            "MaxFaultThreshold": 3.6,
+            "MaxFaultTimeout": 0.2,
+            "MaxRecoverTimeout": 1.4,
+            "MaxResetValue": 3.5,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for over max cell voltage conditions",
+            "value": 0
+        },
+        "MinCellTemp": {
+            "EnableFaultCheck": true,
+            "EnableMinValCheck": false,
+            "MinAlarmThreshold": 10,
+            "MinAlarmTimeout": 2.5,
+            "MinFaultThreshold": -0.1,
+            "MinFaultTimeout": 0.5,
+            "MinRecoverTimeout": 1.4,
+            "MinResetValue": 10,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for under min cell temperature conditions",
+            "value": 0
+        },
+        "MinCellVoltage": {
+            "EnableFaultCheck": true,
+            "EnableMinValCheck": false,
+            "MinAlarmThreshold": 2.85,
+            "MinAlarmTimeout": 2.5,
+            "MinFaultThreshold": 2.8,
+            "MinFaultTimeout": 0,
+            "MinRecoverTimeout": 1.4,
+            "MinResetValue": 2.85,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for under min cell voltage conditions",
+            "value": 0
+        },
+        "NumRacksOnline": {
+            "EnableFaultCheck": true,
+            "EnableMinValCheck": false,
+            "MinAlarmThreshold": 5,
+            "MinAlarmTimeout": 5,
+            "MinFaultThreshold": 2,
+            "MinFaultTimeout": 10,
+            "MinRecoverTimeout": 1,
+            "MinResetValue": 5,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for under num instances condition",
+            "note2": "TODO: Update min alarm/fault/reset thresholds and timeouts",
+            "note3": "TODO: Decode or calculate num instances online and remap/link value to this variable",
+            "value": 0
+        },
+        "OverCurrentAlarm": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:DCCurrent@MaxAlarmThreshold"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "expression": "{1}",
+            "note": "Adjusts the max alarm threshold for BMS DC current monitoring variable depending on the discharge current limit",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/limits/bms:DischargeCurrentLimit"
+        },
+        "OverCurrentFault": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:DCCurrent@MaxFaultThreshold"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "expression": "{1} * 1.05",
+            "note": "Adjusts the max fault threshold for BMS DC current monitoring variable depending on the discharge current limit",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/limits/bms:DischargeCurrentLimit"
+        },
+        "SOC": {
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "EnableMinValCheck": false,
+            "MaxAlarmThreshold": 99.9,
+            "MaxAlarmTimeout": 5.5,
+            "MaxFaultThreshold": 100,
+            "MaxFaultTimeout": 2.5,
+            "MaxRecoverTimeout": 1.4,
+            "MaxResetValue": 99,
+            "MinAlarmThreshold": 6,
+            "MinAlarmTimeout": 5.5,
+            "MinFaultThreshold": 1,
+            "MinFaultTimeout": 2.5,
+            "MinRecoverTimeout": 1.4,
+            "MinResetValue": 8,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for over/under soc conditions",
+            "value": 0
+        },
+        "SOH": {
+            "EnableFaultCheck": true,
+            "EnableMinValCheck": false,
+            "MinAlarmThreshold": 30,
+            "MinAlarmTimeout": 5.5,
+            "MinFaultThreshold": 25,
+            "MinFaultTimeout": 2.5,
+            "MinRecoverTimeout": 1.4,
+            "MinResetValue": 30,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for under soh conditions",
+            "value": 0
+        },
+        "SystemFault": false,
+        "TotalAlarmCnt": {
+            "numVars": 2,
+            "operation": "+",
+            "value": 0,
+            "variable1": "bms:TotalAlarmCnt",
+            "variable2": "/status/bms:AlarmCnt"
+        },
+        "TotalFaultCnt": {
+            "numVars": 2,
+            "operation": "+",
+            "value": 0,
+            "variable1": "bms:TotalFaultCnt",
+            "variable2": "/status/bms:FaultCnt"
+        },
+        "UnderCurrentAlarm": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:DCCurrent@MinAlarmThreshold"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "expression": "{1}",
+            "note": "Adjusts the min alarm threshold for BMS DC current monitoring variable depending on the charge current limit",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/limits/bms:ChargeCurrentLimit"
+        },
+        "UnderCurrentFault": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:DCCurrent@MinFaultThreshold"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "expression": "{1} * 1.05",
+            "note": "Adjusts the min fault threshold for BMS DC current monitoring variable depending on the charge current limit",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/limits/bms:ChargeCurrentLimit"
+        }
+    }
+}

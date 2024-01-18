@@ -4,6 +4,8 @@
 #include "scheduler.h"
 #include "formatters.hpp"
 #include "InputHandler.hpp"
+#include "ScheduledEnableFunctions.hpp"
+
 
 
 /*
@@ -175,11 +177,12 @@ int SetupEssSched(scheduler* sched, asset_manager* am)
     am->vm->setFunc(*am->vmap, aname, "SiteRunCmd",        (void*)&InputHandler::SiteRunCmd);
     am->vm->setFunc(*am->vmap, aname, "SiteBMSContactorControl",        (void*)&InputHandler::SiteBMSContactorControl);
     am->vm->setFunc(*am->vmap, aname, "SitePCSStatusControl",        (void*)&InputHandler::SitePCSStatusControl);
-    am->vm->setFunc(*am->vmap, aname, "CloseContactorsEnable",        (void*)&InputHandler::CloseContactorsEnable);
-    am->vm->setFunc(*am->vmap, aname, "OpenContactorsEnable",        (void*)&InputHandler::OpenContactorsEnable);
-    am->vm->setFunc(*am->vmap, aname, "StartEnable",        (void*)&InputHandler::StartEnable);
-    am->vm->setFunc(*am->vmap, aname, "StopEnable",        (void*)&InputHandler::StopEnable);
-    am->vm->setFunc(*am->vmap, aname, "StandbyEnable",        (void*)&InputHandler::StandbyEnable);
+    am->vm->setFunc(*am->vmap, aname, "BatteryRackBalanceCoarse",        (void*)&InputHandler::BatteryRackBalanceCoarse);
+    am->vm->setFunc(*am->vmap, aname, "CloseContactorsEnable",        (void*)&ScheduledEnableFunctions::CloseContactorsEnable);
+    am->vm->setFunc(*am->vmap, aname, "OpenContactorsEnable",        (void*)&ScheduledEnableFunctions::OpenContactorsEnable);
+    am->vm->setFunc(*am->vmap, aname, "StartEnable",        (void*)&ScheduledEnableFunctions::StartEnable);
+    am->vm->setFunc(*am->vmap, aname, "StopEnable",        (void*)&ScheduledEnableFunctions::StopEnable);
+    am->vm->setFunc(*am->vmap, aname, "StandbyEnable",        (void*)&ScheduledEnableFunctions::StandbyEnable);
 
     return 0;
 }

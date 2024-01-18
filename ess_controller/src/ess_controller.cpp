@@ -14,6 +14,7 @@
 
 #include "gitinc.h"
 #include "InputHandler.hpp"
+#include "ScheduledEnableFunctions.hpp"
 
 asset_manager* ess_man = nullptr;
 int run_secs = 0;
@@ -397,11 +398,12 @@ void initFuncs(asset_manager* am)
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "SiteRunCmd",        (void*)&InputHandler::SiteRunCmd);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "SiteBMSContactorControl",        (void*)&InputHandler::SiteBMSContactorControl);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "SitePCSStatusControl",        (void*)&InputHandler::SitePCSStatusControl);
-        am->vm->setFunc(*am->vmap, amc->name.c_str(), "CloseContactorsEnable",        (void*)&InputHandler::CloseContactorsEnable);
-        am->vm->setFunc(*am->vmap, amc->name.c_str(), "OpenContactorsEnable",        (void*)&InputHandler::OpenContactorsEnable);
-        am->vm->setFunc(*am->vmap, amc->name.c_str(), "StartEnable",        (void*)&InputHandler::StartEnable);
-        am->vm->setFunc(*am->vmap, amc->name.c_str(), "StopEnable",        (void*)&InputHandler::StopEnable);
-        am->vm->setFunc(*am->vmap, amc->name.c_str(), "StandbyEnable",        (void*)&InputHandler::StandbyEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "BatteryRackBalanceCoarse",        (void*)&InputHandler::BatteryRackBalanceCoarse);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "CloseContactorsEnable",        (void*)&ScheduledEnableFunctions::CloseContactorsEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "OpenContactorsEnable",        (void*)&ScheduledEnableFunctions::OpenContactorsEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "StartEnable",        (void*)&ScheduledEnableFunctions::StartEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "StopEnable",        (void*)&ScheduledEnableFunctions::StopEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "StandbyEnable",        (void*)&ScheduledEnableFunctions::StandbyEnable);
 
 
         // Set func for asset instances
