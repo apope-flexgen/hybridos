@@ -520,7 +520,7 @@ namespace InputHandler
     void BatteryRackBalanceCoarse(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
-        if(1)FPS_PRINT_INFO("{}", __func__);
+        if(0)FPS_PRINT_INFO("{}", __func__);
        
 
         int reload = 0;
@@ -539,16 +539,12 @@ namespace InputHandler
 
         std::string uri = "battery_rack_balance_coarse";
 
-        FPS_PRINT_INFO("1");
         auto relname = fmt::format("{}_{}_{}", __func__, "ess", bmsch).c_str();
-        FPS_PRINT_INFO("2");
         assetVar* essAv = amap[relname];
-        FPS_PRINT_INFO("3");
         if (!essAv || (reload = essAv->getiVal()) == 0)
         {
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
-        FPS_PRINT_INFO("4");
 
         // Set up
         if (reload == 0)

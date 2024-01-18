@@ -8,6 +8,9 @@
 #include "InfoMessageUtility.hpp"
 #include "OutputHandler.hpp"
 #include "BatteryBalancingUtility.hpp"
+#include <cstdlib>  
+#include <ctime>
+
 
 
 namespace BatteryBalancingUtility
@@ -155,7 +158,7 @@ namespace BatteryBalancingUtility
             // sign of slope will change if you're charge or discharging
             double x = input.rampStartDeadband - (std::abs(currentVoltage - input.targetVoltage));
             double m = input.powerVsDeltaVoltageSlope;
-            
+
             //charging or discharging changes the sign of this
             //need to figure out which one it is
             double b = input.maxPowerForBalancing;
@@ -205,7 +208,48 @@ namespace BatteryBalancingUtility
         return racks;
     }
 
+    void TestVoltageArbitration(){
 
+        double voltsPerCellAt0SOC = 2.55;
+        double voltsPerCellAt100SOC = 3.4;
+        int cellsPerRack = 380;
+
+        double deadband = 3.0;
+        double closedVariance = .1;
+
+        double upperBoundVoltage = voltsPerCellAt100SOC * cellsPerRack;
+        double lowerBoundVoltage = voltsPerCellAt0SOC * cellsPerRack;
+
+
+
+        int numRacks = 5;
+        int numClosed = 3;
+        int numOpen = 2;
+
+
+        srand(static_cast<unsigned int>(time(0)));
+        // Generate a random number with one decimal place
+        double randomNumber = static_cast<double>(rand()) / RAND_MAX;
+        // Scale the random number to the range [10.0, 20.0]
+        double scaledNumber = lowerBoundVoltage + randomNumber * (upperBoundVoltage - lowerBoundVoltage);
+
+        double randomClosedVoltage = scaledNumber;
+
+
+
+        const std::vector<RackInfoObject> racks = {
+            //rackNum, voltage, contactorStatus
+            BatteryBalancingUtility::RackInfoObject(1, 1250.3, ContactorStatus::CLOSED),
+            BatteryBalancingUtility::RackInfoObject(2, 1250.9, ContactorStatus::CLOSED),
+            BatteryBalancingUtility::RackInfoObject(3, 1201.7, ContactorStatus::OPEN),
+            BatteryBalancingUtility::RackInfoObject(4, 1320.3, ContactorStatus::OPEN),
+            BatteryBalancingUtility::RackInfoObject(5, 1250.4, ContactorStatus::CLOSED),
+            BatteryBalancingUtility::RackInfoObject(6, 1251.1, ContactorStatus::OPEN),
+            BatteryBalancingUtility::RackInfoObject(7, 1250.3, ContactorStatus::CLOSED),
+            BatteryBalancingUtility::RackInfoObject(8, 1362.0, ContactorStatus::OPEN),
+            BatteryBalancingUtility::RackInfoObject(9, 1250.3, ContactorStatus::CLOSED)
+        };
+    }
 
 }
 
