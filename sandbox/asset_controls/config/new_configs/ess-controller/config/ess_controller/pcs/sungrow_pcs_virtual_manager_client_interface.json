@@ -1,4 +1,72 @@
 {
+    "/components/pcs_registers_fast": {
+        "current_status": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {"inValue": 0 , "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 1 , "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 2 , "uri": "/status/pcs:SystemState", "outValue": "Run"},
+                            {"inValue": 3 , "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 4 , "uri": "/status/pcs:SystemState", "outValue": "Standby"},
+                            {"inValue": 5 , "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 6 , "uri": "/status/pcs:SystemState", "outValue": "Fault"},
+                            {"inValue": 7 , "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 8 , "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 9 , "uri": "/status/pcs:SystemState", "outValue": "Standby"},
+                            {"inValue": 10, "uri": "/status/pcs:SystemState", "outValue": "Fault"},
+                            {"inValue": 11, "uri": "/status/pcs:SystemState", "outValue": "Fault"},
+                            {"inValue": 12, "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 13, "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 14, "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 15, "uri": "/status/pcs:SystemState", "outValue": "Standby"},
+                            {"inValue": 17, "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 18, "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 19, "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 20, "uri": "/status/pcs:SystemState", "outValue": "Stop"},
+                            {"inValue": 21, "uri": "/status/pcs:SystemState", "outValue": "Fault"},
+                            {"inValue": 22, "uri": "/status/pcs:SystemState", "outValue": "Fault"},
+                            {"inValue": 24, "uri": "/status/pcs:SystemState", "outValue": "Fault"},
+                            {"inValue": 0, "uri": "/status/pcs:Status", "outValue": "Power up"},
+                            {"inValue": 1, "uri": "/status/pcs:Status", "outValue": "Off"},
+                            {"inValue": 2, "uri": "/status/pcs:Status", "outValue": "On"},
+                            {"inValue": 3, "uri": "/status/pcs:Status", "outValue": "Precharge"},
+                            {"inValue": 4, "uri": "/status/pcs:Status", "outValue": "Ready"},
+                            {"inValue": 5, "uri": "/status/pcs:Status", "outValue": "Wait"},
+                            {"inValue": 6, "uri": "/status/pcs:Status", "outValue": "Off"},
+                            {"inValue": 7, "uri": "/status/pcs:Status", "outValue": "Stop"},
+                            {"inValue": 8, "uri": "/status/pcs:Status", "outValue": "Discharge"},
+                            {"inValue": 9, "uri": "/status/pcs:Status", "outValue": "Fault"},
+                            {"inValue": 10, "uri": "/status/pcs:Status", "outValue": "LVRT"},
+                            {"inValue": 11, "uri": "/status/pcs:Status", "outValue": "OVRT"},
+                            {"inValue": 12, "uri": "/status/pcs:Status", "outValue": "Night"},
+                            {"inValue": 13, "uri": "/status/pcs:Status", "outValue": "Night DC off"},
+                            {"inValue": 14, "uri": "/status/pcs:Status", "outValue": "Standby"},
+                            {"inValue": 15, "uri": "/status/pcs:Status", "outValue": "HVPL"},
+                            {"inValue": 17, "uri": "/status/pcs:Status", "outValue": "Pre-on"},
+                            {"inValue": 18, "uri": "/status/pcs:Status", "outValue": "Self-diagnosis"},
+                            {"inValue": 19, "uri": "/status/pcs:Status", "outValue": "Filter contactors"},
+                            {"inValue": 20, "uri": "/status/pcs:Status", "outValue": "Premagnetization"},
+                            {"inValue": 21, "uri": "/status/pcs:Status", "outValue": "Bank balancing"},
+                            {"inValue": 22, "uri": "/status/pcs:Status", "outValue": "CV stand by"},
+                            {
+                                "enable": "/config/pcs:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/pcs_registers_fast:current_status@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "ifChanged": false,
+            "note": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        }
+    },
     "/components/pcs": {
         "grid_mode": {
             "actions": {
@@ -24,52 +92,6 @@
                                 "enable": "/config/pcs:enum_opt",
                                 "outValue": true,
                                 "uri": "/components/pcs:grid_mode@ifChanged",
-                                "useAv": true
-                            }
-                        ]
-                    }
-                ]
-            },
-            "enable": "/config/pcs:enable",
-            "ifChanged": false,
-            "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
-            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
-            "value": 0
-        },
-        "status": {
-            "actions": {
-                "onSet": [
-                    {
-                        "remap": [
-                            {
-                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
-                                "outValue": "TODO: add output value to set to uri",
-                                "uri": "/status/pcs:Status"
-                            },
-                            {
-                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
-                                "outValue": "Stop",
-                                "uri": "/status/pcs:SystemState"
-                            },
-                            {
-                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
-                                "outValue": "Standby",
-                                "uri": "/status/pcs:SystemState"
-                            },
-                            {
-                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
-                                "outValue": "Run",
-                                "uri": "/status/pcs:SystemState"
-                            },
-                            {
-                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
-                                "outValue": "Fault",
-                                "uri": "/status/pcs:SystemState"
-                            },
-                            {
-                                "enable": "/config/pcs:enum_opt",
-                                "outValue": true,
-                                "uri": "/components/pcs:status@ifChanged",
                                 "useAv": true
                             }
                         ]

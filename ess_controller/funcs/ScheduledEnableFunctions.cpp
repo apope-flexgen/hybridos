@@ -235,7 +235,7 @@ namespace ScheduledEnableFunctions
 
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/bms/DCClosed
-                DataUtility::AssetVarInfo("/status/bms", "DCClosed", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/bms", "DCClosed", "DCClosed_bms", assetVar::ATypes::ABOOL),
                 // /assets/pcs/summary/maint_mode
                 DataUtility::AssetVarInfo("/assets/pcs/summary", "maint_mode", assetVar::ATypes::ABOOL),
                 // /assets/pcs/summary/start
@@ -270,7 +270,7 @@ namespace ScheduledEnableFunctions
 
             std::string message = "";
 
-            if (amap["DCClosed"]->getbVal() && amap["maint_mode"]->getbVal() && (systemState) && !amap["IsFaulted"]->getbVal()) {
+            if (amap["DCClosed_bms"]->getbVal() && amap["maint_mode"]->getbVal() && (systemState) && !amap["IsFaulted"]->getbVal()) {
                 message += fmt::format("{} TRUE", __func__);
                 amap["start"]->setParam("enabled", true);
                 amap["StartEnabled"]->setVal(true);
@@ -285,8 +285,8 @@ namespace ScheduledEnableFunctions
 
                 message += fmt::format(
                     " ---> Condition(s): [{}:{}] == true && [{}:{}] == true && [{}:{}] == (Stop or Standby) && [{}:{}] == false",
-                    amap["DCClosed"]->getfName(), 
-                    amap["DCClosed"]->getbVal(),
+                    amap["DCClosed_bms"]->getfName(), 
+                    amap["DCClosed_bms"]->getbVal(),
                     amap["maint_mode"]->getfName(), 
                     amap["maint_mode"]->getbVal(),
                     amap["SystemState"]->getfName(), 
