@@ -87,7 +87,7 @@
                     ]
                 }]
             },
-            "ControlRate": "use every above for this",
+            "ControlRate": 0.5,
             "Gain": 10,
             "targetVoltageDeadband": 5,
             "rampStartDeadband": 10,

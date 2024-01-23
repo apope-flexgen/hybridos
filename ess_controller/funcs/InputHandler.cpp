@@ -14,6 +14,7 @@
 #include "SiteCommandUtility.hpp"
 #include "DataUtility.hpp"
 #include "BatteryBalancingUtility.hpp"
+#include "VoltageArbitrationTest.hpp"
 
 
 
@@ -520,7 +521,10 @@ namespace InputHandler
     void BatteryRackBalanceCoarse(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{}", __func__);
+        FPS_PRINT_INFO("Before Test");
+        BatteryBalancingUtility::TestVoltageArbitration();
+        FPS_PRINT_INFO("After Test");
        
 
         int reload = 0;
@@ -549,13 +553,10 @@ namespace InputHandler
         // Set up
         if (reload == 0)
         {
+            FPS_PRINT_INFO("reload == 0");
 
             linkVals(*vm, vmap, amap, aname, "/reload", reload, relname);
-            FPS_PRINT_INFO("5");
             essAv = amap[relname];
-            FPS_PRINT_INFO("6");
-
-
 
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /sched/ess/BatteryRackBalanceCoarse
@@ -583,8 +584,28 @@ namespace InputHandler
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
 
+            // DataUtility::PrintAssetVar(amap["battery_rack_balance_coarse"], assetVar::ATypes::ABOOL);
+            // FPS_PRINT_INFO("Before Test");
+            // BatteryBalancingUtility::TestVoltageArbitration(amap);
+            // FPS_PRINT_INFO("After Test");
+
+
+            reload = 1;
+            essAv->setVal(reload);
+
+            if(amap[uri.c_str()]->getbVal() == false) {
+                FunctionUtility::PullOffScheduler(amap, aV, uri.c_str());
+            }
+
+            return;
+        }
+
+        // Set up
+        if (reload == 1)
+        {
+
             int numRacks = amap["NumRacks"]->getiVal();
-            FPS_PRINT_INFO("8 - numRacks[{}]", numRacks);
+            FPS_PRINT_INFO("reload == 1 | numRacks[{}]", numRacks);
             if(numRacks > 0) {
                  std::vector<DataUtility::AssetVarInfo> rackVector = {};
                 for (int i = 1; i > numRacks; i++) {
@@ -607,17 +628,23 @@ namespace InputHandler
 
                 amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, rackVector);
 
-                reload = 1;
+                reload = 2;
                 essAv->setVal(reload);
 
             }
             
 
+            // DataUtility::PrintAssetVar(amap["battery_rack_balance_coarse"], assetVar::ATypes::ABOOL);
+            // FPS_PRINT_INFO("Before Test");
+            // BatteryBalancingUtility::TestVoltageArbitration(amap);
+            // FPS_PRINT_INFO("After Test");
+
             return;
         }
 
+
         // Fault Checking
-        if (reload == 1)
+        if (reload == 2)
         {
 
             if(amap[uri.c_str()]->getbVal() == false) {
@@ -652,7 +679,7 @@ namespace InputHandler
         }
 
         //Start BMS
-        if(reload == 2){
+        if(reload == 3){
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
@@ -674,7 +701,7 @@ namespace InputHandler
         }
 
         //Start PCS
-        if(reload == 3){
+        if(reload == 4){
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
@@ -698,7 +725,7 @@ namespace InputHandler
 
         //Set Active Power Setpoint
         // TODO make this function
-        if(reload == 4){
+        if(reload == 5){
 
             // double currentActivePowerSetpoint = amap["ActivePowerSetpoint"]->getdVal();
 
@@ -740,7 +767,7 @@ namespace InputHandler
         }
 
         //Stop PCS
-        if(reload == 5){
+        if(reload == 6){
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
@@ -761,7 +788,7 @@ namespace InputHandler
         }
 
         //Stop BMS
-        if(reload == 6){
+        if(reload == 7){
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 

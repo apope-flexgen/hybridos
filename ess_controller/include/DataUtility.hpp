@@ -89,12 +89,20 @@ namespace DataUtility
         {"note1", assetVar::ATypes::ASTRING},
         {"size", assetVar::ATypes::AFLOAT},
         // {"type", assetVar::ATypes::AFLOAT},
-        {"note2", assetVar::ATypes::ASTRING}
+        {"note2", assetVar::ATypes::ASTRING},
         // {"aname", assetVar::ATypes::ASTRING},
         // {"every", assetVar::ATypes::AINT},
         // {"offset", assetVar::ATypes::AFLOAT},
         // {"debug", assetVar::ATypes::ASTRING},
         // {"uri", assetVar::ATypes::ASTRING}
+
+
+        {"ControlRate", assetVar::ATypes::AFLOAT},
+        {"Gain", assetVar::ATypes::AFLOAT},
+        {"targetVoltageDeadband", assetVar::ATypes::AFLOAT},
+        {"rampStartDeadband", assetVar::ATypes::AFLOAT},
+        {"powerVsDeltaVoltageSlope", assetVar::ATypes::AFLOAT},
+        {"maxPowerForBalancing", assetVar::ATypes::AFLOAT}
 
 
         //actions
