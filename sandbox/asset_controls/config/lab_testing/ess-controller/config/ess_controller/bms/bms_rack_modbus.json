@@ -1,0 +1,89 @@
+{
+    "/schedule/wake_monitor/##BMS_ID##_##RACK_ID##": {
+        "/limits/##BMS_ID##_##RACK_ID##:ChargePowerLimit": {"func": "CalculateVar"}
+    },
+    
+    "/components/##BMS_ID##_##RACK_ID##":{
+        "rack_dc_contactors_status":{
+            "value":0,
+            "actions":{
+                "onSet":[{
+                    "enum":[
+                        {"inValue": 0, "uri": "/status/##BMS_ID##_##RACK_ID##:DCClosed"  , "outValue": 1    },
+                        {"inValue": 1, "uri": "/status/##BMS_ID##_##RACK_ID##:DCClosed"  , "outValue": 2    },
+                        {"inValue": 0, "uri": "/status/##BMS_ID##_##RACK_ID##:InService" , "outValue": false},
+                        {"inValue": 1, "uri": "/status/##BMS_ID##_##RACK_ID##:InService" , "outValue": true }
+                        ]}]}
+        },
+        "rack_status":{
+            "value":0,
+            "actions":{
+                "onSet":[{
+                    "enum":[
+                        {"inValue": 0, "uri": "/status/##BMS_ID##_##RACK_ID##:Status" , "outValue": "Initialization" },
+                        {"inValue": 1, "uri": "/status/##BMS_ID##_##RACK_ID##:Status" , "outValue": "Standby"        },
+                        {"inValue": 2, "uri": "/status/##BMS_ID##_##RACK_ID##:Status" , "outValue": "Charging"       },
+                        {"inValue": 3, "uri": "/status/##BMS_ID##_##RACK_ID##:Status" , "outValue": "Discharging"    }
+                        ]}]}
+        },
+        "hvac_mode_status":{
+            "value":0,
+            "actions":{
+                "onSet":[{
+                    "enum":[
+                        {"inValue": 0, "uri": "/status/##BMS_ID##_##RACK_ID##:HVACStatus" , "outValue": "Stopped"           },
+                        {"inValue": 1, "uri": "/status/##BMS_ID##_##RACK_ID##:HVACStatus" , "outValue": "Internal Recycle"  },
+                        {"inValue": 2, "uri": "/status/##BMS_ID##_##RACK_ID##:HVACStatus" , "outValue": "Cooling"           },
+                        {"inValue": 3, "uri": "/status/##BMS_ID##_##RACK_ID##:HVACStatus" , "outValue": "Heating"           },
+                        {"inValue": 4, "uri": "/status/##BMS_ID##_##RACK_ID##:HVACStatus" , "outValue": "Full-Automatic"    },
+                        {"inValue": 5, "uri": "/status/##BMS_ID##_##RACK_ID##:HVACStatus" , "outValue": "Water Replenishing"}
+                        ]}]}
+        },
+        "hvac_power_status":{
+            "value":0,
+            "actions":{
+                "onSet":[{
+                    "enum":[
+                        {"inValue": 0, "uri": "/status/##BMS_ID##_##RACK_ID##:HVACPowerStatus" , "outValue": "Off"},
+                        {"inValue": 1, "uri": "/status/##BMS_ID##_##RACK_ID##:HVACPowerStatus" , "outValue": "On" }
+                        ]}]}
+        }
+    },
+
+    "/vlinks/##BMS_ID##_##RACK_ID##"       : {
+        "soc"                      : { "value": "/components/##BMS_ID##_##RACK_ID##:soc"                  , "vlink": "/status/##BMS_ID##_##RACK_ID##:SOC"                 },
+        "soh"                      : { "value": "/components/##BMS_ID##_##RACK_ID##:soh"                  , "vlink": "/status/##BMS_ID##_##RACK_ID##:SOH"                 },
+        "dc_charge_power_limit"    : { "value": "/components/##BMS_ID##_##RACK_ID##:chargeable_power"     , "vlink": "/status/##BMS_ID##_##RACK_ID##:ChargePowerLimit"    },
+        "dc_discharge_power_limit" : { "value": "/components/##BMS_ID##_##RACK_ID##:dischargeable_power"  , "vlink": "/status/##BMS_ID##_##RACK_ID##:DischargePowerLimit" },
+        "dc_current"               : { "value": "/components/##BMS_ID##_##RACK_ID##:dc_current"           , "vlink": "/status/##BMS_ID##_##RACK_ID##:DCCurrent"           },
+        "dc_voltage"               : { "value": "/components/##BMS_ID##_##RACK_ID##:dc_voltage"           , "vlink": "/status/##BMS_ID##_##RACK_ID##:DCVoltage"           },
+        "dischargeable_energy"     : { "value": "/components/##BMS_ID##_##RACK_ID##:dischargeable_energy" , "vlink": "/status/##BMS_ID##_##RACK_ID##:DischargeableEnergy" },
+        "max_cell_temp"            : { "value": "/components/##BMS_ID##_##RACK_ID##:max_cell_temp"        , "vlink": "/status/##BMS_ID##_##RACK_ID##:MaxCellTemp"         },
+        "min_cell_temp"            : { "value": "/components/##BMS_ID##_##RACK_ID##:min_cell_temp"        , "vlink": "/status/##BMS_ID##_##RACK_ID##:MinCellTemp"         },
+        "avg_cell_temp"            : { "value": "/components/##BMS_ID##_##RACK_ID##:avg_temp"             , "vlink": "/status/##BMS_ID##_##RACK_ID##:AvgCellTemp"         },
+        "max_cell_voltage"         : { "value": "/components/##BMS_ID##_##RACK_ID##:max_cell_voltage"     , "vlink": "/status/##BMS_ID##_##RACK_ID##:MaxCellVoltage"      },
+        "min_cell_voltage"         : { "value": "/components/##BMS_ID##_##RACK_ID##:min_cell_voltage"     , "vlink": "/status/##BMS_ID##_##RACK_ID##:MinCellVoltage"      },
+        "avg_cell_voltage"         : { "value": "/components/##BMS_ID##_##RACK_ID##:avg_voltage"          , "vlink": "/status/##BMS_ID##_##RACK_ID##:AvgCellVoltage"      },
+        "environment_temp"         : { "value": "/components/##BMS_ID##_##RACK_ID##:environment_temp"     , "vlink": "/status/##BMS_ID##_##RACK_ID##:EnvironmentTemp"     },
+
+        "limit_discharge_power_limit" : { "value": "/status/##BMS_ID##_##RACK_ID##:DischargePowerLimit"  , "vlink": "/limits/##BMS_ID##_##RACK_ID##:DischargePowerLimit" },
+
+        "hvac_mode_status"  : { "value": "/status/##BMS_ID##_##RACK_ID##:HVACStatus"      , "vlink": "/assets/##BMS_ID##/##RACK_ID##:hvac_status"       },
+        "hvac_power_status" : { "value": "/status/##BMS_ID##_##RACK_ID##:HVACPowerStatus" , "vlink": "/assets/##BMS_ID##/##RACK_ID##:hvac_power_status" },
+
+        "hvac_cool_start_temp" : { "value": "/components/##BMS_ID##_##RACK_ID##:hvac_cool_start_temp" , "vlink": "/assets/##BMS_ID##/##RACK_ID##:hvac_cool_start_temp" },
+        "hvac_heat_start_temp" : { "value": "/components/##BMS_ID##_##RACK_ID##:hvac_heat_start_temp" , "vlink": "/assets/##BMS_ID##/##RACK_ID##:hvac_heat_start_temp" },
+        "hvac_cool_stop_temp"  : { "value": "/components/##BMS_ID##_##RACK_ID##:hvac_cool_stop_temp"  , "vlink": "/assets/##BMS_ID##/##RACK_ID##:hvac_cool_stop_temp"  },
+        "hvac_heat_stop_temp"  : { "value": "/components/##BMS_ID##_##RACK_ID##:hvac_heat_stop_temp"  , "vlink": "/assets/##BMS_ID##/##RACK_ID##:hvac_heat_stop_temp"  }
+    },
+
+    "/limits/##BMS_ID##_##RACK_ID##": {
+        "ChargePowerLimit": {
+            "value": 0,
+            "numVars": 1,
+            "useExpr": true,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:ChargePowerLimit",
+            "expression": "-1 * {1}"
+        }
+    }
+}

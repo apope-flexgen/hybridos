@@ -1,0 +1,309 @@
+{
+    "/components/bms_running_info":{
+        "heartbeat": {
+            "value":0,
+            "signed": false
+        },
+        "info_2":{
+            "value":0,
+            "actions":{ "onSet":[{ "enum":[ 
+                                            {"shift": 0, "mask": 1, "inValue":0, "outValue":"Normal"   , "uri": "/faults/bms:FSSFault"           },
+                                            {"shift": 0, "mask": 1, "inValue":1, "outValue":"Fault"    , "uri": "/faults/bms:FSSFault"           },
+                                            {"shift": 0, "mask": 1, "inValue":0, "outValue":0          , "uri": "/status/site:fss_supervisory"   },
+                                            {"shift": 0, "mask": 1, "inValue":1, "outValue":1          , "uri": "/status/site:fss_supervisory"   },
+                                            {"shift": 1, "mask": 1, "inValue":0, "outValue":"Normal"   , "uri": "/alarms/bms:FSSAlarm"           },
+                                            {"shift": 1, "mask": 1, "inValue":1, "outValue":"Alarm"    , "uri": "/alarms/bms:FSSAlarm"           },
+                                            {"shift": 1, "mask": 1, "inValue":0, "outValue":0          , "uri": "/status/site:fss_trouble"       },
+                                            {"shift": 1, "mask": 1, "inValue":1, "outValue":1          , "uri": "/status/site:fss_trouble"       },
+                                            {"shift": 2, "mask": 1, "inValue":0, "outValue":"Normal"   , "uri": "/faults/bms:SPD"                },
+                                            {"shift": 2, "mask": 1, "inValue":1, "outValue":"Fault"    , "uri": "/faults/bms:SPD"                },
+                                            {"shift": 3, "mask": 1, "inValue":0, "outValue":"Open"     , "uri": "/status/bms:Transformer"        },
+                                            {"shift": 3, "mask": 1, "inValue":1, "outValue":"Close"    , "uri": "/status/bms:Transformer"        },
+                                            {"shift": 4, "mask": 1, "inValue":0, "outValue":"Normal"   , "uri": "/faults/bms:EStop"              },
+                                            {"shift": 4, "mask": 1, "inValue":1, "outValue":"Fault"    , "uri": "/faults/bms:EStop"              },
+                                            {"shift": 5, "mask": 1, "inValue":0, "outValue":"Normal"   , "uri": "/status/bms:DoorStatus"         },
+                                            {"shift": 5, "mask": 1, "inValue":1, "outValue":"Abnormal" , "uri": "/status/bms:DoorStatus"         },
+                                            {"shift": 5, "mask": 1, "inValue":1, "outValue":true       , "uri": "/faults/site:fg_bess_alarms[0]" },
+                                            {"shift": 5, "mask": 1, "inValue":0, "outValue":"Normal"   , "uri": "/faults/bms:DoorOpen"           },
+                                            {"shift": 5, "mask": 1, "inValue":1, "outValue":"Fault"    , "uri": "/faults/bms:DoorOpen"           }
+                                            ]}]}
+        },
+        "ems_comms":{
+            "value":0,
+            "actions":{ "onSet":[{ "enum":[ 
+                                            {"shift": 0, "mask": 1, "inValue":1, "outValue":"Normal" , "uri": "/faults/bms:EMSComms"            },
+                                            {"shift": 0, "mask": 1, "inValue":0, "outValue":"Fault"  , "uri": "/faults/bms:EMSComms"            },
+                                            {"shift": 0, "mask": 1, "inValue":0, "outValue":true     , "uri": "/faults/site:fg_bms_faults_2[0]" }
+                                            ]}]}
+        },
+        "ac_comms_state":{
+            "value":0,
+            "actions":{ "onSet":[{ "enum":[ 
+                                            {"shift": 0, "mask": 1, "inValue":1, "outValue":"Normal" , "uri": "/alarms/bms:ACComms"             },
+                                            {"shift": 0, "mask": 1, "inValue":0, "outValue":"Alarm"  , "uri": "/alarms/bms:ACComms"             },
+                                            {"shift": 0, "mask": 1, "inValue":0, "outValue":true     , "uri": "/faults/site:fg_bms_faults_2[1]" }
+                                            ]}]}
+        },
+        "bms_comms_state":{
+            "value":0,
+            "actions":{ "onSet":[{ "enum":[ 
+                                            {"shift": 0, "mask": 1, "inValue":1, "outValue":"Normal" , "uri": "/faults/bms:BMS1Comms"           },
+                                            {"shift": 0, "mask": 1, "inValue":0, "outValue":"Fault"  , "uri": "/faults/bms:BMS1Comms"           },
+                                            {"shift": 0, "mask": 1, "inValue":0, "outValue":true     , "uri": "/faults/site:fg_bms_faults_2[2]" },
+                                            {"shift": 1, "mask": 1, "inValue":1, "outValue":"Normal" , "uri": "/faults/bms:BMS2Comms"           },
+                                            {"shift": 1, "mask": 1, "inValue":0, "outValue":"Fault"  , "uri": "/faults/bms:BMS2Comms"           },
+                                            {"shift": 1, "mask": 1, "inValue":0, "outValue":true     , "uri": "/faults/site:fg_bms_faults_2[3]" }
+                                            ]}]}
+        },
+        "fss_comms_state":{
+            "value":0,
+            "actions":{ "onSet":[{ "enum":[ 
+                                            {"shift": 0, "mask": 1, "inValue":1, "outValue":"Normal" , "uri": "/faults/bms:FSSComms"            },
+                                            {"shift": 0, "mask": 1, "inValue":0, "outValue":"Fault"  , "uri": "/faults/bms:FSSComms"            },
+                                            {"shift": 0, "mask": 1, "inValue":0, "outValue":true     , "uri": "/faults/site:fg_bms_faults_2[4]" },
+                                            {"shift": 0, "mask": 1, "inValue":1, "outValue":0        , "uri": "/status/site:fss_comms"          },
+                                            {"shift": 0, "mask": 1, "inValue":0, "outValue":1        , "uri": "/status/site:fss_comms"          }
+                                            ]}]}
+        },
+        "fire_status_cabinet_1_2":{
+            "value":0,
+            "actions":{ "onSet":[{ "enum":[ 
+                                            {"shift": 2 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:SmokeAlarmCab1"     },
+                                            {"shift": 2 , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:SmokeAlarmCab1"     },
+                                            {"shift": 5 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:FireGasReleaseCab1" },
+                                            {"shift": 5 , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:FireGasReleaseCab1" },
+                                            {"shift": 10, "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:SmokeAlarmCab2"     },
+                                            {"shift": 10, "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:SmokeAlarmCab2"     },
+                                            {"shift": 13, "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:FireGasReleaseCab2" },
+                                            {"shift": 13, "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:FireGasReleaseCab2" }
+                                            ]}]}
+        },
+        "fire_status_cabinet_3_4":{
+            "value":0,
+            "actions":{ "onSet":[{ "enum":[ 
+                                            {"shift": 2 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:SmokeAlarmCab3"     },
+                                            {"shift": 2 , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:SmokeAlarmCab3"     },
+                                            {"shift": 5 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:FireGasReleaseCab3" },
+                                            {"shift": 5 , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:FireGasReleaseCab3" },
+                                            {"shift": 10, "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:SmokeAlarmCab4"     },
+                                            {"shift": 10, "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:SmokeAlarmCab4"     },
+                                            {"shift": 13, "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:FireGasReleaseCab4" },
+                                            {"shift": 13, "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:FireGasReleaseCab4" }
+                                            ]}]}
+        },
+        "fire_status_cabinet_5_6":{
+            "value":0,
+            "actions":{ "onSet":[{ "enum":[ 
+                                            {"shift": 2 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:SmokeAlarmCab5"     },
+                                            {"shift": 2 , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:SmokeAlarmCab5"     },
+                                            {"shift": 5 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:FireGasReleaseCab5" },
+                                            {"shift": 5 , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:FireGasReleaseCab5" },
+                                            {"shift": 10, "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:SmokeAlarmCab6"     },
+                                            {"shift": 10, "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:SmokeAlarmCab6"     },
+                                            {"shift": 13, "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:FireGasReleaseCab6" },
+                                            {"shift": 13, "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:FireGasReleaseCab6" }
+                                            ]}]}
+        },
+        "fire_status_cabinet_7_8":{
+            "value":0,
+            "actions":{ "onSet":[{ "enum":[ 
+                                            {"shift": 2 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:SmokeAlarmCab7"     },
+                                            {"shift": 2 , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:SmokeAlarmCab7"     },
+                                            {"shift": 5 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:FireGasReleaseCab7" },
+                                            {"shift": 5 , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:FireGasReleaseCab7" },
+                                            {"shift": 10, "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:SmokeAlarmCab8"     },
+                                            {"shift": 10, "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:SmokeAlarmCab8"     },
+                                            {"shift": 13, "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:FireGasReleaseCab8" },
+                                            {"shift": 13, "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:FireGasReleaseCab8" }
+                                            ]}]}
+        },
+        "fire_status_cabinet_9_10":{
+            "value":0,
+            "actions":{ "onSet":[{ "enum":[ 
+                                            {"shift": 2  , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:SmokeAlarmCab9"      },
+                                            {"shift": 2  , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:SmokeAlarmCab9"      },
+                                            {"shift": 5  , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:FireGasReleaseCab9"  },
+                                            {"shift": 5  , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:FireGasReleaseCab9"  },
+                                            {"shift": 10 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:SmokeAlarmCab10"     },
+                                            {"shift": 10 , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:SmokeAlarmCab10"     },
+                                            {"shift": 13 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:FireGasReleaseCab10" },
+                                            {"shift": 13 , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:FireGasReleaseCab10" }
+                                            ]}]}
+        },
+        "fire_status_cabinet_11_12":{
+            "value":0,
+            "actions":{ "onSet":[{ "enum":[ 
+                                            {"shift": 2 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:SmokeAlarmCab11"     },
+                                            {"shift": 2 , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:SmokeAlarmCab11"     },
+                                            {"shift": 5 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:FireGasReleaseCab11" },
+                                            {"shift": 5 , "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:FireGasReleaseCab11" },
+                                            {"shift": 10, "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:SmokeAlarmCab12"     },
+                                            {"shift": 10, "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:SmokeAlarmCab12"     },
+                                            {"shift": 13, "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/faults/bms:FireGasReleaseCab12" },
+                                            {"shift": 13, "mask": 1, "inValue":1, "outValue":"Fault"  , "uri": "/faults/bms:FireGasReleaseCab12" }
+                                            ]}]}
+        },
+        "hvac_alarms_1":{
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [ 
+                        {"shift": 0  , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACHighTemperature"                },
+                        {"shift": 0  , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACHighTemperature"                },
+                        {"shift": 1  , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACLowTemperature"                 },
+                        {"shift": 1  , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACLowTemperature"                 },
+                        {"shift": 2  , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACHighHumidity"                   },
+                        {"shift": 2  , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACHighHumidity"                   },
+                        {"shift": 3  , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACLowHumidity"                    },
+                        {"shift": 3  , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACLowHumidity"                    },
+                        {"shift": 4  , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACHeatCoilFrost"                  },
+                        {"shift": 4  , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACHeatCoilFrost"                  },
+                        {"shift": 5  , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACExhaustTemperatureHigh"         },
+                        {"shift": 5  , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACExhaustTemperatureHigh"         },
+                        {"shift": 6  , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACHeatCoilSensing"                },
+                        {"shift": 6  , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACHeatCoilSensing"                },
+                        {"shift": 7  , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACExteriorTemperatureSensing"     },
+                        {"shift": 7  , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACExteriorTemperatureSensing"     },
+                        {"shift": 8  , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACCondensationTemperatureSensing" },
+                        {"shift": 8  , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACCondensationTemperatureSensing" },
+                        {"shift": 9  , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACInteriorTemperatureSensing"     },
+                        {"shift": 9  , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACInteriorTemperatureSensing"     },
+                        {"shift": 10 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACExhaustTemperatureSensing"      },
+                        {"shift": 10 , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACExhaustTemperatureSensing"      },
+                        {"shift": 11 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACHumiditySensing"                },
+                        {"shift": 11 , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACHumiditySensing"                },
+                        {"shift": 12 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACInteriorFan"                    },
+                        {"shift": 12 , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACInteriorFan"                    },
+                        {"shift": 13 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACExteriorFan"                    },
+                        {"shift": 13 , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACExteriorFan"                    },
+                        {"shift": 14 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACCompressor"                     },
+                        {"shift": 14 , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACCompressor"                     },
+                        {"shift": 15 , "mask": 1, "inValue":0, "outValue":"Normal" , "uri": "/alarms/bms:HVACElectricHeating"                },
+                        {"shift": 15 , "mask": 1, "inValue":1, "outValue":"Alarm"  , "uri": "/alarms/bms:HVACElectricHeating"                }
+                        ]}]}
+        },
+        "hvac_alarms_2":{
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACEmergencyAirFanFailure" , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACEmergencyAirFanFailure" , "outValue": "Alarm"  },
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACHighAirPressure"        , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACHighAirPressure"        , "outValue": "Alarm"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACLowAirPressure"         , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACLowAirPressure"         , "outValue": "Alarm"  },
+                        {"shift": 3  ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACFlood"                  , "outValue": "Normal" },
+                        {"shift": 3  ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACFlood"                  , "outValue": "Alarm"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACSmoke"                  , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACSmoke"                  , "outValue": "Alarm"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACDoorOpen"               , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACDoorOpen"               , "outValue": "Alarm"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HighAirPressureLockdown"    , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HighAirPressureLockdown"    , "outValue": "Alarm"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:LowAirPressureLockdown"     , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:LowAirPressureLockdown"     , "outValue": "Alarm"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:ExhaustLockdown"            , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:ExhaustLockdown"            , "outValue": "Alarm"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACACHighVoltage"          , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACACHighVoltage"          , "outValue": "Alarm"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACACLowVoltage"           , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACACLowVoltage"           , "outValue": "Alarm"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACACDropOut"              , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACACDropOut"              , "outValue": "Alarm"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACPhaseLoss"              , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACPhaseLoss"              , "outValue": "Alarm"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACFreqAbnormal"           , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACFreqAbnormal"           , "outValue": "Alarm"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACPhaseReversal"          , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACPhaseReversal"          , "outValue": "Alarm"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACDCHighVoltage"          , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACDCHighVoltage"          , "outValue": "Alarm"  }
+                        ]
+                }]
+            }
+        },
+        "hvac_dc_low_voltage":{
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/alarms/bms:HVACDCLowVoltage" , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/alarms/bms:HVACDCLowVoltage" , "outValue": "Alarm"  }
+                        ]
+                }]
+            }
+        }
+    },
+    "/alarms/bms": {
+        "ACComms"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "FSSAlarm"                           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACHighTemperature"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACLowTemperature"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACHighHumidity"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACLowHumidity"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACHeatCoilFrost"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACExhaustTemperatureHigh"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACHeatCoilSensing"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACExteriorTemperatureSensing"     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACCondensationTemperatureSensing" : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACInteriorTemperatureSensing"     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACExhaustTemperatureSensing"      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACHumiditySensing"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACInteriorFan"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACExteriorFan"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACCompressor"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACElectricHeating"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACEmergencyAirFanFailure"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACHighAirPressure"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACLowAirPressure"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACFlood"                          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACSmoke"                          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACDoorOpen"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACHighAirPressureLockdown"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACLowAirPressureLockdown"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACExhaustLockdown"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACACHighVoltage"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACACLowVoltage"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACACDropOut"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACACPhaseLoss"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACACFreqAbnormal"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACACPhaseReversal"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACDCHighVoltage"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}},
+        "HVACDCLowVoltage"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms" }]}]}}
+    },
+    "/faults/bms": {
+        "EStop"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "DoorOpen"            : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FSSFault"            : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SPD"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "EMSComms"            : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "BMS1Comms"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "BMS2Comms"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FSSComms"            : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SmokeAlarmCab1"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SmokeAlarmCab2"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SmokeAlarmCab3"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SmokeAlarmCab4"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SmokeAlarmCab5"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SmokeAlarmCab6"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SmokeAlarmCab7"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SmokeAlarmCab8"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SmokeAlarmCab9"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SmokeAlarmCab10"     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SmokeAlarmCab11"     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SmokeAlarmCab12"     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FireGasReleaseCab1"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FireGasReleaseCab2"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FireGasReleaseCab3"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FireGasReleaseCab4"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FireGasReleaseCab5"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FireGasReleaseCab6"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FireGasReleaseCab7"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FireGasReleaseCab8"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FireGasReleaseCab9"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FireGasReleaseCab10" : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FireGasReleaseCab11" : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "FireGasReleaseCab12" : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}}
+    }
+}

@@ -1,0 +1,59 @@
+{
+    "/schedule/wake_monitor/##BMS_ID##": {
+        "/limits/##BMS_ID##:ChargePowerLimit": {"func": "CalculateVar"}
+    },
+    "/limits/##BMS_ID##": {
+        "ChargePowerLimit": {
+            "value": 0,
+            "numVars": 1,
+            "useExpr": true,
+            "variable1": "/components/##BMS_ID##_info:chargeable_power",
+            "expression": "-1 * {1}"
+        }
+    },
+    "/components/##BMS_ID##_info":{
+        "bms_status":{
+            "value":0,
+            "actions":{ "onSet":[{
+                        "remap":[
+                                {"inValue":0, "uri":"/status/##BMS_ID##:Online", "outValue":false},
+                                {"inValue":1, "uri":"/status/##BMS_ID##:Online", "outValue":true},
+                                {"inValue":2, "uri":"/status/##BMS_ID##:Online", "outValue":true},
+                                {"inValue":3, "uri":"/status/##BMS_ID##:Online", "outValue":true}
+                                ]}]}
+        },
+        "bms_dc_contactors_status":{
+            "value":0,
+            "actions":{ "onSet":[{ "enum":[ {"inValue":0, "outValue":1,  "uri": "/status/##BMS_ID##:DCClosed"},
+                                            {"inValue":1, "outValue":2,  "uri": "/status/##BMS_ID##:DCClosed"},
+                                            {"shift": 0, "mask": 1, "inValue":1, "outValue":false, "uri": "/status/##BMS_ID##:InService"},
+                                            {"shift": 1, "mask": 1, "inValue":1, "outValue":true , "uri": "/status/##BMS_ID##:InService"}
+                                            ]}]}
+        }
+    },
+
+    "/vlinks/##BMS_ID##": {
+        "heartbeat1"               : { "value": "/status/bms_2:HeartbeatRead"                      , "vlink": "/status/bms_1:HeartbeatRead"            },
+        "heartbeat2"               : { "value": "/components/bms_running_info:heartbeat"           , "vlink": "/status/bms_2:HeartbeatRead"            },
+        "soc"                      : { "value": "/components/##BMS_ID##_info:soc"                  , "vlink": "/status/##BMS_ID##:SOC"                 },
+        "soh"                      : { "value": "/components/##BMS_ID##_info:soh"                  , "vlink": "/status/##BMS_ID##:SOH"                 },
+        "dc_discharge_power_limit" : { "value": "/components/##BMS_ID##_info:dischargeable_power"  , "vlink": "/limits/##BMS_ID##:DischargePowerLimit" },
+        "dc_current"               : { "value": "/components/##BMS_ID##_info:dc_current"           , "vlink": "/status/##BMS_ID##:DCCurrent"           },
+        "dc_voltage"               : { "value": "/components/##BMS_ID##_info:dc_voltage"           , "vlink": "/status/##BMS_ID##:DCVoltage"           },
+        "dischargeable_energy"     : { "value": "/components/##BMS_ID##_info:dischargeable_energy" , "vlink": "/status/##BMS_ID##:DischargeableEnergy" },
+        "max_cell_temp"            : { "value": "/components/##BMS_ID##_info:max_cell_temp"        , "vlink": "/status/##BMS_ID##:MaxCellTemp"         },
+        "min_cell_temp"            : { "value": "/components/##BMS_ID##_info:min_cell_temp"        , "vlink": "/status/##BMS_ID##:MinCellTemp"         },
+        "avg_cell_temp"            : { "value": "/components/##BMS_ID##_info:avg_temp"             , "vlink": "/status/##BMS_ID##:AvgCellTemp"         },
+        "max_cell_voltage"         : { "value": "/components/##BMS_ID##_info:max_cell_voltage"     , "vlink": "/status/##BMS_ID##:MaxCellVoltage"      },
+        "min_cell_voltage"         : { "value": "/components/##BMS_ID##_info:min_cell_voltage"     , "vlink": "/status/##BMS_ID##:MinCellVoltage"      },
+        "avg_cell_voltage"         : { "value": "/components/##BMS_ID##_info:avg_voltage"          , "vlink": "/status/##BMS_ID##:AvgCellVoltage"      },
+        "num_total_racks"          : { "value": "/components/##BMS_ID##_info:online_racks"    , "vlink": "/status/##BMS_ID##:RacksTotal"          },
+
+        "c_sub_version"  : { "value": "/components/##BMS_ID##_info:c_sub_version"  , "vlink": "/status/##BMS_ID##:CSubVersion"  },
+        "c_main_version" : { "value": "/components/##BMS_ID##_info:c_main_version" , "vlink": "/status/##BMS_ID##:CMainVersion" },
+        "r_sub_version"  : { "value": "/components/##BMS_ID##_info:r_sub_version"  , "vlink": "/status/##BMS_ID##:RSubVersion"  },
+        "r_main_version" : { "value": "/components/##BMS_ID##_info:r_main_version" , "vlink": "/status/##BMS_ID##:RMainVersion" },
+        "v_sub_version"  : { "value": "/components/##BMS_ID##_info:v_sub_version"  , "vlink": "/status/##BMS_ID##:VSubVersion"  },
+        "v_main_version" : { "value": "/components/##BMS_ID##_info:v_main_version" , "vlink": "/status/##BMS_ID##:VMainVersion" }
+    }
+}

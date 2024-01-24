@@ -1,0 +1,24 @@
+{
+    "clients": {
+        "main" : {
+            "directory" : "/home/hybridos/powercloud/archives",
+            "private_key" : "/home/hybridos/.ssh/id_rsa",
+            "known_hosts" : "/home/hybridos/.ssh/known_hosts",
+            "servers" : [ "owner-lima-local-historian-01" ],
+            "extension" : ".tar.gz"   
+        }
+    },
+    "servers": {
+        "owner-lima-local-historian-01": {
+            "ip" : "192.168.114.13",
+            "port" : "22",
+            "user" : "hybridos",
+            "directory" : "/mnt/historian/owner/lima-ess-controller-01",
+            "timeout" : 25
+        }
+    },
+    "db_directory" : "/home/hybridos/.cloud_sync/db",
+    "retry_limit" : 1,
+    "sleep_limit_seconds" : 30,
+    "buffer_size" : 100000
+}

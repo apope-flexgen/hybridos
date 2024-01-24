@@ -1,0 +1,134 @@
+{    
+    "/controls/##BMS_ID##": {
+        "CloseContactors": {
+            "value": 2,
+            "cmdVar": "/components/catl_ems_bms_rw:ems_cmd",
+            "maxCmdTries": 2,
+            "checkCmdTimeout": 2,
+            "checkCmdHoldTimeout": 2
+        },
+        "OpenContactors": {
+            "value": 3,
+            "cmdVar": "/components/catl_ems_bms_rw:ems_cmd",
+            "maxCmdTries": 2,
+            "checkCmdTimeout": 2,
+            "checkCmdHoldTimeout": 2
+        },
+        "VerifyCloseContactors": {
+            "value": 0,
+            "enableAlert": false,
+            "numVars": 1,
+            "variable1": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "{1}",
+            "sendCmdTimeout": 5
+        },
+        "VerifyOpenContactors": {
+            "value": 0,
+            "enableAlert": false,
+            "numVars": 1,
+            "variable1": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "not {1}",
+            "sendCmdTimeout": 5
+        }
+    },
+    "/status/bms": {
+        "CloseContactorsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##BMS_ID##:VerifyCloseContactors@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##BMS_ID##:VerifyCloseContactors"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": "BMS CloseContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##BMS_ID##:CloseContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the close contactors command has been successfully sent to the BMS, verify that DC contactors are closed. Otherwise, send an alarm",
+            "value": false
+        },
+        "OpenContactorsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##BMS_ID##:VerifyOpenContactors@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##BMS_ID##:VerifyOpenContactors"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": "BMS OpenContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##BMS_ID##:OpenContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the open contactors command has been successfully sent to the BMS, verify that DC contactors are opened. Otherwise, send an alarm",
+            "value": false
+        },
+        "VerifyCloseContactorsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "BMS VerifyCloseContactors - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##BMS_ID##:VerifyCloseContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the BMS failed to close contactors after an elasped time, send an alarm",
+            "value": false
+        },
+        "VerifyOpenContactorsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "BMS VerifyOpenContactors - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##BMS_ID##:VerifyOpenContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the BMS failed to open contactors after an elasped time, send an alarm",
+            "value": false
+        }
+    }
+}
