@@ -261,6 +261,13 @@ namespace BatteryBalancingUtility
         return racks;
     }
 
+
+
+
+
+// ========================================================= Everything Below is for Testing =========================================================
+
+
     // void TestVoltageArbitration(varmap& amap){
 
     //     double voltsPerCellAt0SOC = 2.55;

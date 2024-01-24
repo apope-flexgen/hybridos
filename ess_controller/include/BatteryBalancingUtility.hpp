@@ -77,15 +77,18 @@ namespace BatteryBalancingUtility
 
     std::vector<RackInfoObject> GetRackInfoList(varmap& amap);
 
+
+
+
+// ========================================================= Everything Below is for Testing =========================================================
+
+
+
     // void TestVoltageArbitration(varmap& amap);
     void PrintRackInfoList(const std::vector<RackInfoObject> racks);
     void PrintVoltageArbitrationResult(VoltageArbitrationResult result);
     void PrintActivePowerBalancingInfo(ActivePowerBalancingInput input);
     std::string GetVoltageArbitrationResultString(VoltageArbitrationResult result);
-
-
-
-
 
 
     const double voltsPerCellAt0SOC = 2.55;
@@ -107,8 +110,6 @@ namespace BatteryBalancingUtility
 
 
     };
-
-
 
     std::vector<VoltageArbitrationTestCase> voltageArbitrationTestCases = {
         {
@@ -281,13 +282,8 @@ namespace BatteryBalancingUtility
         }
     };
 
-
-
     void PrintVoltageArbitrationTestCaseResult(int testNum, VoltageArbitrationTestCase testCase, BatteryBalancingUtility::VoltageArbitrationResult result);
     void TestVoltageArbitration();
-
-
-
 
     struct ActivePowerBalancingTestCase {
         std::string testName = "";
@@ -302,16 +298,6 @@ namespace BatteryBalancingUtility
 
     };
 
-
-
-
-
-        // double targetVoltage = 0.0;
-        // double closedRackAverageVoltage = 0.0;
-        // double targetVoltageDeadband = 0.0;
-        // double rampStartDeadband = 0.0;
-        // double currentActivePower = 0.0;
-        // double maxPowerForBalancing = 0.0;
     std::vector<ActivePowerBalancingTestCase> activePowerBalancingTestCases = {
         {
             "delta voltage > ramp start deadband && current voltage < target voltage",
