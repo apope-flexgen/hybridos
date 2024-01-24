@@ -22,7 +22,7 @@ namespace BatteryBalancingUtility
     * 
     * @param racks 
     */
-    VoltageArbitrationResult VoltageArbitration(double deadband, const std::vector<RackInfoObject> racks)
+    VoltageArbitrationResult VoltageArbitration(double deadband, std::vector<RackInfoObject> racks)
     {
 
         double closedRackCount = 0.0;
@@ -45,6 +45,10 @@ namespace BatteryBalancingUtility
         }
 
         VoltageArbitrationResult result;
+        //defaults for no balancing needed
+        result.targetVoltage = -1;
+        result.balancingNeeded = false;
+        result.closingNeeded = false;
 
 
 // ==================== Open Rack Check ====================
@@ -56,8 +60,6 @@ namespace BatteryBalancingUtility
         } 
         //NO BALANCING NEEDED
         if(openRacks.size() == 0){
-            result.targetVoltage = -1;
-            result.balancingNeeded = false;
             return result;
         }
 
@@ -80,9 +82,10 @@ namespace BatteryBalancingUtility
 
         if(openRacksInsideDeadband.size() > 0){
             //TODO close contactors here
+            result.closingNeeded = true;
 
             for (auto& rack : openRacksInsideDeadband) {
-                if(rack.contactorCloseAttemptCount > contactorCloseAttemptMax){
+                if(rack.contactorCloseAttemptCount >= contactorCloseAttemptMax){
                     rack.ignore = true;
                 }
                 rack.contactorCloseAttemptCount++;
@@ -92,8 +95,6 @@ namespace BatteryBalancingUtility
 
         //NO BALANCING NEEDED
         if(openRacksOutsideDeadband.size() == 0){
-            result.targetVoltage = -1;
-            result.balancingNeeded = false;
             return result;
         }
 
@@ -163,47 +164,63 @@ namespace BatteryBalancingUtility
         
     }
 
-    double ActivePowerBalancing(ActivePowerBalancingInput input){
+    ActivePowerBalancingOutput ActivePowerBalancing(ActivePowerBalancingInput input){
+        ActivePowerBalancingOutput output;
+        output.stopBalancing = false;
+        output.targetPower = 0.0;
 
         // double targetVoltage = 0.0;
         // double closedRackAverageVoltage = 0.0;
         // double targetVoltageDeadband = 0.0;
         // double rampStartDeadband = 0.0;
-        // double powerVsDeltaVoltageSlope = 0.0;
         // double currentActivePower = 0.0;
         // double maxPowerForBalancing = 0.0;
 
         //TODO this works for the discharge case
         // need to consider the charge case
 
-        // double deltaVoltage = input.targetVoltage - input.closedRackAverageVoltage;
-        double currentVoltage = input.closedRackAverageVoltage;
+        //charge case
+        int sign = 1;
+        if (input.closedRackAverageVoltage > input.targetVoltage){
+            //discharge case
+            sign = -1;
+        }
+
+
+        double deltaVoltage = abs(input.closedRackAverageVoltage - input.targetVoltage);
+
+
+        FPS_PRINT_INFO("targetVoltage {}", input.targetVoltage);
+        FPS_PRINT_INFO("closedRackAverageVoltage {}", input.closedRackAverageVoltage);
+        FPS_PRINT_INFO("targetVoltageDeadband {}", input.targetVoltageDeadband);
+        FPS_PRINT_INFO("rampStartDeadband {}", input.rampStartDeadband);
+        FPS_PRINT_INFO("currentActivePower {}", input.currentActivePower);
+        FPS_PRINT_INFO("maxPowerForBalancing {}", input.maxPowerForBalancing);
+        FPS_PRINT_INFO("deltaVoltage {}", deltaVoltage);
+        FPS_PRINT_INFO("sign {}", sign);
 
         //rampStartDeadband
-        if (currentVoltage >= (input.targetVoltage + input.rampStartDeadband) || currentVoltage <= (input.targetVoltage - input.rampStartDeadband)) {
-            //charging or discharging changes the sign of this
-            //need to figure out which one it is
-            return input.maxPowerForBalancing;
+        if (deltaVoltage > input.rampStartDeadband) {
+            FPS_PRINT_INFO("RAMP START");
+            output.targetPower = sign * input.maxPowerForBalancing;
+            return output;
         }
 
         //targetVoltageDeadband
-        if (currentVoltage > (input.targetVoltage + input.targetVoltageDeadband) || currentVoltage < (input.targetVoltage - input.targetVoltageDeadband)) {
-
-            //This needs to work for both discharge and charge
-            //looks like it only works for discharge rn
-            // sign of slope will change if you're charge or discharging
-            double x = input.rampStartDeadband - (std::abs(currentVoltage - input.targetVoltage));
-            // double m = input.powerVsDeltaVoltageSlope;
+        if (deltaVoltage > input.targetVoltageDeadband) {
+            FPS_PRINT_INFO("TARGET VOLTAGE");
+            double x = input.rampStartDeadband - deltaVoltage;
             double m = input.maxPowerForBalancing / input.rampStartDeadband;
-
-            //charging or discharging changes the sign of this
-            //need to figure out which one it is
             double b = input.maxPowerForBalancing;
             double y = (m*x) + b;
-            return y;
+
+            output.targetPower = sign * y;
+            return output;
         }
 
-        return 0;
+        FPS_PRINT_INFO("STOP");
+        output.stopBalancing = true;
+        return output;
 
     }
 
@@ -217,7 +234,6 @@ namespace BatteryBalancingUtility
 
         inputs.targetVoltageDeadband = amap["battery_rack_balance_coarse"]->getdParam("targetVoltageDeadband");
         inputs.rampStartDeadband = amap["battery_rack_balance_coarse"]->getdParam("rampStartDeadband");
-        inputs.powerVsDeltaVoltageSlope = amap["battery_rack_balance_coarse"]->getdParam("powerVsDeltaVoltageSlope");
         inputs.maxPowerForBalancing = amap["battery_rack_balance_coarse"]->getdParam("maxPowerForBalancing");
 
         inputs.currentActivePower = amap["ActivePowerSetpoint"]->getdVal();
@@ -361,7 +377,6 @@ namespace BatteryBalancingUtility
         message += fmt::format("closedRackAverageVoltage: {}\n", input.closedRackAverageVoltage);
         message += fmt::format("targetVoltageDeadband: {}\n", input.targetVoltageDeadband);
         message += fmt::format("rampStartDeadband: {}\n", input.rampStartDeadband);
-        message += fmt::format("powerVsDeltaVoltageSlope: {}\n", input.powerVsDeltaVoltageSlope);
         message += fmt::format("currentActivePower: {}\n", input.currentActivePower);
         message += fmt::format("maxPowerForBalancing: {}\n", input.maxPowerForBalancing);
 
@@ -369,7 +384,7 @@ namespace BatteryBalancingUtility
     }
 
     std::string GetVoltageArbitrationResultString(VoltageArbitrationResult result){
-        std::string message = fmt::format("\nTarget Voltage: {}      \nClosed Rack Average Voltage: {}      \nBalancing Needed: {}\n", result.targetVoltage, result.closedRackAverageVoltage, result.balancingNeeded);
+        std::string message = fmt::format("\nTarget Voltage: {}      \nClosed Rack Average Voltage: {}      \nBalancing Needed: {}      \nClosing Needed: {}\n", result.targetVoltage, result.closedRackAverageVoltage, result.balancingNeeded, result.closingNeeded);
 
         return message;
     }
@@ -402,6 +417,41 @@ namespace BatteryBalancingUtility
         for (const auto& test : voltageArbitrationTestCases){
             BatteryBalancingUtility::VoltageArbitrationResult result = BatteryBalancingUtility::VoltageArbitration(test.deadband, test.racks);
             PrintVoltageArbitrationTestCaseResult(count, test, result);
+            count++;
+        }
+
+
+    }
+
+
+    std::string GetActivePowerBalancingResultString(ActivePowerBalancingOutput result){
+        std::string message = fmt::format("\nTarget Power: {}      \nStop Balancing: {}\n", result.targetPower, result.stopBalancing);
+
+        return message;
+    }
+
+    void PrintActivePowerBalancingTestCaseResult(int testNum, ActivePowerBalancingTestCase testCase, ActivePowerBalancingOutput result) {
+        if(1)FPS_PRINT_INFO("{}", __func__);
+
+        std::string message = fmt::format("\n\nTest Number #{} \n", testNum);
+        
+        message += fmt::format("Test Name: [{}] \n\n", testCase.testName);
+        message += "\n";
+
+        message += fmt::format("Expected Result: {}", BatteryBalancingUtility::GetActivePowerBalancingResultString(testCase.expectedOutput));
+
+        message += fmt::format("\nActual Result: {} \n\n", BatteryBalancingUtility::GetActivePowerBalancingResultString(result));
+
+        FPS_PRINT_INFO("{}", message);
+    }
+
+    void TestActivePowerBalancing(){
+        if(1)FPS_PRINT_INFO("{}", __func__);
+
+        int count = 1;
+        for (const auto& test : activePowerBalancingTestCases){
+            ActivePowerBalancingOutput result = ActivePowerBalancing(test.input);
+            PrintActivePowerBalancingTestCaseResult(count, test, result);
             count++;
         }
 

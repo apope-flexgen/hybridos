@@ -14,8 +14,6 @@
 #include "SiteCommandUtility.hpp"
 #include "DataUtility.hpp"
 #include "BatteryBalancingUtility.hpp"
-#include "VoltageArbitrationTest.hpp"
-
 
 
 
@@ -523,7 +521,8 @@ namespace InputHandler
 
         if(1)FPS_PRINT_INFO("{}", __func__);
         FPS_PRINT_INFO("Before Test");
-        BatteryBalancingUtility::TestVoltageArbitration();
+        // BatteryBalancingUtility::TestVoltageArbitration();
+        BatteryBalancingUtility::TestActivePowerBalancing();
         FPS_PRINT_INFO("After Test");
        
 
@@ -718,7 +717,7 @@ namespace InputHandler
                 returnValue = IN_PROGRESS;
             }
 
-            // amap["ActivePowerSetpoint"]->setVal(-100);
+            amap["ActivePowerSetpoint"]->setVal(-100);
             return;
 
         }
@@ -727,41 +726,41 @@ namespace InputHandler
         // TODO make this function
         if(reload == 5){
 
-            // double currentActivePowerSetpoint = amap["ActivePowerSetpoint"]->getdVal();
+            double currentActivePowerSetpoint = amap["ActivePowerSetpoint"]->getdVal();
 
-            // if(currentActivePowerSetpoint >= 100){
-            //     reload = 5;
-            //     essAv->setVal(reload);
-            // } else {
+            if(currentActivePowerSetpoint >= 100){
+                reload = 5;
+                essAv->setVal(reload);
+            } else {
 
-            //     // double controlRate = amap["battery_rack_balance_coarse"]->getdParam("every");
-            //     // double controlRate = amap["battery_rack_balance_coarse"]->getdParam("ControlRate");
-            //     double gain = amap["battery_rack_balance_coarse"]->getdParam("Gain");
-            //     double newActivePowerSetpoint = currentActivePowerSetpoint + gain;
+                // double controlRate = amap["battery_rack_balance_coarse"]->getdParam("every");
+                // double controlRate = amap["battery_rack_balance_coarse"]->getdParam("ControlRate");
+                double gain = amap["battery_rack_balance_coarse"]->getdParam("Gain");
+                double newActivePowerSetpoint = currentActivePowerSetpoint + gain;
 
-            //     amap["ActivePowerSetpoint"]->setVal(newActivePowerSetpoint);
-            // }
+                amap["ActivePowerSetpoint"]->setVal(newActivePowerSetpoint);
+            }
 
             //state machine in this state
             //state 1 is voltage arbitration
             //state 2 is active power balancing
             //state 3 is maninpulating rack contactors
 
-            double deadband = amap["battery_rack_balance_coarse"]->getdParam("targetVoltageDeadband");
-            //TODO make getting rack info a 1 time thing
-            std::vector<BatteryBalancingUtility::RackInfoObject> racks = BatteryBalancingUtility::GetRackInfoList(amap);
-            BatteryBalancingUtility::VoltageArbitrationResult result = BatteryBalancingUtility::VoltageArbitration(deadband, racks);
+            // double deadband = amap["battery_rack_balance_coarse"]->getdParam("targetVoltageDeadband");
+            // //TODO make getting rack info a 1 time thing
+            // std::vector<BatteryBalancingUtility::RackInfoObject> racks = BatteryBalancingUtility::GetRackInfoList(amap);
+            // BatteryBalancingUtility::VoltageArbitrationResult result = BatteryBalancingUtility::VoltageArbitration(deadband, racks);
 
-            if(result.balancingNeeded){
+            // if(result.balancingNeeded){
                 
-                BatteryBalancingUtility::ActivePowerBalancingInput inputs = BatteryBalancingUtility::GetActivePowerBalancingInfo(amap, result);
-                double setpoint = BatteryBalancingUtility::ActivePowerBalancing(inputs);
-                amap["ActivePowerSetpoint"]->setVal(setpoint);
+            //     BatteryBalancingUtility::ActivePowerBalancingInput inputs = BatteryBalancingUtility::GetActivePowerBalancingInfo(amap, result);
+            //     double setpoint = BatteryBalancingUtility::ActivePowerBalancing(inputs);
+            //     amap["ActivePowerSetpoint"]->setVal(setpoint);
 
-            } else {
-                reload = 5;
-                essAv->setVal(reload);
-            }
+            // } else {
+            //     reload = 5;
+            //     essAv->setVal(reload);
+            // }
 
             return;
         }
