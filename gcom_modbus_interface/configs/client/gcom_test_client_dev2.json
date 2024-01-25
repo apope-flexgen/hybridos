@@ -16,19 +16,20 @@
         "ip_address1": "192.168.112.20",
         "ip_address": "172.17.0.3",
         "port": 502,
-	"max_num_connections":1,
+        "device_id":1,
+        "max_num_connections":1,
         "data bits (8 typical)": "Columns marked in green are REQUIRED"
     },
     "components": [
         {
 	    "component_id":"components",
-            "id": "comp_sel_2440",
+            "id": "sel_2440",
             "heartbeat_enabled": false,
             "modbus_heartbeat_timeout_ms": 200,
             "component_heartbeat_timeout_ms": 200,
             "frequency": 1000,
             "offset_time": 200,
-            "device_id": 2,
+            "device_id": 1,
             "registers": [
                 {
                     "type": "Holding", "starting_offset": 1400, "number_of_registers": 14,
@@ -44,30 +45,32 @@
                 {
                     "type": "Input Registers", "starting_offset": 400, "number_of_registers": 1,
                     "map": [ 
-                        { "id": "heartbeat",          "offset": 400, "name": "Heartbeat"                    }
+                        { "id": "heartbeat_1",          "offset": 400, "name": "Heartbeat"                    }
                     ]
                 },
                 {
                     "type": "Discrete Inputs", "starting_offset": 392, "number_of_registers": 8,
                     "map": [
-                        {  "id": "fuse_monitoring",   "offset": 393,  "name": "Fuse Monitoring (IN208)"     },
-                        {  "id": "surge_arrester",    "offset": 392,  "name": "Surge Arrester (IN207)"      },
-                        {  "id": "door_latch",        "offset": 394,  "name": "Door Latch (IN206)"          },
-                        {  "id": "disconnect_switch", "offset": 395,  "name": "DC Disconnect Switch (IN205)"},
-                        {  "id": "spare_1",           "offset": 396,  "name": "Spare DI 1 (IN204)"          },
-                        {  "id": "e_stop",            "offset": 397,  "name": "E-Stop (IN203)"              },
-                        {  "id": "fire_relay",        "offset": 398,  "name": "Fire Relay (IN202)"          },
-                        {  "id": "trouble_relay",     "offset": 399,  "name": "Trouble Relay (IN201)"       }
+                        {  "id": "fuse_monitoring_1",   "offset": 393,  "name": "Fuse Monitoring (IN208)"     },
+                        {  "id": "surge_arrester_1",    "offset": 392,  "name": "Surge Arrester (IN207)"      },
+                        {  "id": "door_latch_1",        "offset": 394,  "name": "Door Latch (IN206)"          },
+                        {  "id": "disconnect_switch_1", "offset": 395,  "name": "DC Disconnect Switch (IN205)"},
+                        {  "id": "spare_1_1",           "offset": 396,  "name": "Spare DI 1 (IN204)"          },
+                        {  "id": "e_stop_1",            "offset": 397,  "name": "E-Stop (IN203)"              },
+                        {  "id": "fire_relay_1",        "offset": 398,  "name": "Fire Relay (IN202)"          },
+                        {  "id": "trouble_relay_1",     "offset": 399,  "name": "Trouble Relay (IN201)"       }
                     ]
                 }
             ]
         },
         {
         "component_id":"components2",
-        "id": "comp_alt_2440",
-        "heartbeat_enabled": false,
+        "id": "alt_2440",
+        "heartbeat_enabled": true,
         "modbus_heartbeat_timeout_ms": 200,
-        "component_heartbeat_timeout_ms": 200,
+        "component_heartbeat_read_uri": "heartbeat_2",
+        "component_heartbeat_write_uri": "hold_2_1",
+        "component_heartbeat_timeout_ms": 5000,
         "frequency": 1000,
         "offset_time": 400,
         "device_id": 2,
@@ -75,22 +78,29 @@
             {
                 "type": "Input Registers", "starting_offset": 500, "number_of_registers": 1,
                 "map": [ 
-                    { "id": "heartbeat",          "offset": 500, "name": "Heartbeat"                    }
+                    { "id": "heartbeat_2",          "offset": 500, "name": "Heartbeat"                    }
                 ]
             },
             {
                 "type": "Discrete Inputs", "starting_offset": 492, "number_of_registers": 8,
                 "map": [
-                    {  "id": "fuse_monitoring",   "offset": 493,  "name": "Fuse Monitoring (IN208)"     },
-                    {  "id": "surge_arrester",    "offset": 492,  "name": "Surge Arrester (IN207)"      },
-                    {  "id": "door_latch",        "offset": 494,  "name": "Door Latch (IN206)"          },
-                    {  "id": "disconnect_switch", "offset": 495,  "name": "DC Disconnect Switch (IN205)"},
-                    {  "id": "spare_1",           "offset": 496,  "name": "Spare DI 1 (IN204)"          },
-                    {  "id": "e_stop",            "offset": 497,  "name": "E-Stop (IN203)"              },
-                    {  "id": "fire_relay",        "offset": 498,  "name": "Fire Relay (IN202)"          },
-                    {  "id": "trouble_relay",     "offset": 499,  "name": "Trouble Relay (IN201)"       }
+                    {  "id": "fuse_monitoring_2",   "offset": 493,  "name": "Fuse Monitoring (IN208)"     },
+                    {  "id": "surge_arrester_2",    "offset": 492,  "name": "Surge Arrester (IN207)"      },
+                    {  "id": "door_latch_2",        "offset": 494,  "name": "Door Latch (IN206)"          },
+                    {  "id": "disconnect_switch_2", "offset": 495,  "name": "DC Disconnect Switch (IN205)"},
+                    {  "id": "spare_1_2",           "offset": 496,  "name": "Spare DI 1 (IN204)"          },
+                    {  "id": "e_stop_2",            "offset": 497,  "name": "E-Stop (IN203)"              },
+                    {  "id": "fire_relay_2",        "offset": 498,  "name": "Fire Relay (IN202)"          },
+                    {  "id": "trouble_relay_2",     "offset": 499,  "name": "Trouble Relay (IN201)"       }
+                ]
+            },
+            {
+                "type": "Holding", "starting_offset": 1407, "number_of_registers": 1,
+                "map": [ 
+                    { "id": "hold_2_1",          "offset": 1407, "name": "Hold_2_1"                              }
                 ]
             }
+
         ]
     }
 

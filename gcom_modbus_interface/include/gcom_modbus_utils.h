@@ -71,9 +71,10 @@ typedef struct {
     maps *register_map;
 } datalog;
 
-bool emit_event(fims* pFims, const char* source, const char* message, int severity);
+void emit_event(fims* pFims, const char* source, const char* message, int severity);
 cJSON* get_config_json(int argc, char* argv[]);
 
 #define FORMAT_TO_BUF(fmt_buf, fmt_str, ...) fmt::format_to(std::back_inserter(fmt_buf), FMT_COMPILE(fmt_str), ##__VA_ARGS__)
+const char *getFunction(uint8_t function);
 
 #endif

@@ -162,7 +162,7 @@ int establish_connection(system_config* config)
         //printf(" seeking service [%s]\n", config->service);
         ret = service_to_port(config->service, &sport);
         if (ret == 0) {
-           FPS_RELEASE_PRINT(" found service [%s] port [%d]\n", config->service, sport);
+           FPS_ERROR_PRINT(" found service [%s] port [%d]\n", config->service, sport);
            addr.sin_port = htons(sport);
            config->port = sport;
         } else {
@@ -263,7 +263,7 @@ int parse_system(cJSON *system, system_config *config)
         if(cJSON_IsString(serv))
         {
             config->service = strdup(serv->valuestring);
-            //printf(" setting up service to [%s] \n", config->service);
+            printf(" setting up service to [%s] \n", config->service);
         }
     }
     if (ip_addr != NULL)
@@ -447,7 +447,7 @@ server_data* create_register_map(cJSON* registers,  uint8_t device_id)
 
         // number of variables equates to number of starting registers. Note: each variable could possibly be made up of multiple registers
         int reg_cnt = data[i].map_size = cJSON_GetArraySize(register_array_JSON);
-        FPS_RELEASE_PRINT("Count %d variables included in %s config object.\n", reg_cnt, reg_types[i]);
+        FPS_ERROR_PRINT("Count %d variables included in %s config object.\n", reg_cnt, reg_types[i]);
         if(reg_cnt == 0)
         {
             FPS_ERROR_PRINT("No registers included in %s config object.\n", reg_types[i]);
@@ -610,10 +610,6 @@ server_data* create_register_map(cJSON* registers,  uint8_t device_id)
 
             cJSON* is_float = cJSON_GetObjectItem(current_variable_JSON, "float");
             data[i].register_map[j].floating_pt = cJSON_IsTrue(is_float);
-
-            cJSON* shift = cJSON_GetObjectItem(current_variable_JSON,"shift");
-            data[i].register_map[j].shift = cJSON_IsNumber(shift) ? shift->valueint : 0;
-
             data[i].register_map[j].sign |= data[i].register_map[j].floating_pt; // a float is signed by definition
             if (data[i].register_map[j].floating_pt && data[i].register_map[j].num_regs == 1) {
                 FPS_ERROR_PRINT("%s is declared a float and has size 1 which is not allowed for floats.\n", data[i].register_map[j].reg_name);
@@ -751,10 +747,6 @@ uint16_t json_to_uint16(maps* settings, cJSON* obj)
     // direct float: transmitted directly bit-for-bit
     else if(settings->floating_pt)
     {
-        if(settings->shift != 0) 
-        {
-            scaled_val -= settings->shift;
-        }
         scaled_val *=  (settings->scale == 0.0 ? 1.0 : settings->scale);
         memcpy(&encoded_val, &scaled_val, sizeof(encoded_val));
     }
@@ -762,10 +754,6 @@ uint16_t json_to_uint16(maps* settings, cJSON* obj)
     else if(settings->scale != 0.0)
     {
         //printf( "%s scaled_val %f x %f  scale %f \n", __func__, scaled_val, scaled_val * settings->scale, settings->scale);
-        if(settings->shift != 0) 
-        {
-            scaled_val -= settings->shift;
-        }
         scaled_val *= settings->scale;
         int16_t casted_val;
         uint16_t ucasted_val;
@@ -873,11 +861,6 @@ uint32_t json_to_uint32(maps* settings, cJSON* obj)
     // direct float: transmitted directly bit-for-bit
     else if(settings->floating_pt)
     {
-        if(settings->shift != 0) 
-        {
-            scaled_val -= settings->shift;
-        }
-
         scaled_val *=  (settings->scale == 0.0 ? 1.0 : settings->scale);
         if (scaled_val > 3.4028235e+38)
             scaled_val = 3.4028235e+38;
@@ -891,11 +874,6 @@ uint32_t json_to_uint32(maps* settings, cJSON* obj)
     // indirect float: scaled and truncated to int, then transmitted as int to be descaled on client side
     else if(settings->scale != 0.0)
     {
-        if(settings->shift != 0) 
-        {
-            scaled_val -= settings->shift;
-        }
-
         scaled_val *= settings->scale;
         if (settings->sign)
         {
@@ -920,10 +898,6 @@ uint32_t json_to_uint32(maps* settings, cJSON* obj)
     // source value is either a signed or unsigned integer
     else
     {
-        if(settings->shift != 0) 
-        {
-            scaled_val -= settings->shift;
-        }
         if(settings->sign)
         {
             if (scaled_val > 2147483647)scaled_val = 2147483647.0;
@@ -943,7 +917,6 @@ uint32_t json_to_uint32(maps* settings, cJSON* obj)
         }
 
     }
-    //printf( "%s  enc %d .. %08x  \n", __func__, encoded_val, encoded_val);
     return encoded_val;
 }
 /**
@@ -996,20 +969,12 @@ uint64_t json_to_uint64(maps* settings, cJSON* obj)
     // direct float: transmitted directly bit-for-bit
     else if(settings->floating_pt)
     {
-        if(settings->shift != 0) 
-        {
-            scaled_val -= settings->shift;
-        }
         scaled_val *= (settings->scale == 0.0 ? 1.0 : settings->scale);
         memcpy(&encoded_val, &scaled_val, sizeof(encoded_val));
     }
     // indirect float: scaled and truncated to int, then transmitted as int to be descaled on client side
     else if(settings->scale != 0.0)
     {
-        if(settings->shift != 0) 
-        {
-            scaled_val -= settings->shift;
-        }
         scaled_val *= settings->scale;
         if (settings->sign)
         {
@@ -1037,23 +1002,18 @@ uint64_t json_to_uint64(maps* settings, cJSON* obj)
     // source value is either a signed or unsigned integer
     else
     {
-        if(settings->shift != 0) 
-        {
-            scaled_val -= settings->shift;
-        }
-
         if ((scaled_val > val32) || (scaled_val < val32))
         {
             if (settings->sign)
             {
-                //printf( "%s scaled_val before  %f max %f\n", __func__, scaled_val, (double)0x7fffffffffffffff);
+                printf( "%s scaled_val before  %f max %f\n", __func__, scaled_val, (double)0x7fffffffffffffff);
                 if (scaled_val > 0x7fffffffffffffff)
                     scaled_val = 0x7fffffffffffffff;            
                 if (scaled_val < -0x7fffffffffffffff)
                     scaled_val = -0x7fffffffffffffff;            
-                //printf( "%s scaled_val after  %f \n", __func__, scaled_val);
+                printf( "%s scaled_val after  %f \n", __func__, scaled_val);
                 encoded_val = static_cast<int64_t> (scaled_val);
-                //printf( "%s scaled_val  %f  encoded_val %ld %08lx\n", __func__, scaled_val, encoded_val, encoded_val);
+                printf( "%s scaled_val  %f  encoded_val %ld %08lx\n", __func__, scaled_val, encoded_val, encoded_val);
 
             }
             else
@@ -1063,7 +1023,7 @@ uint64_t json_to_uint64(maps* settings, cJSON* obj)
                 if (scaled_val < 0)
                     scaled_val = 0;            
                 encoded_val = static_cast<uint64_t> (scaled_val);
-                //printf( "%s scaled_val  %f  encoded_val %ld %08lx\n", __func__, scaled_val, encoded_val, encoded_val);
+                printf( "%s scaled_val  %f  encoded_val %ld %08lx\n", __func__, scaled_val, encoded_val, encoded_val);
             }
 
         }
@@ -1078,9 +1038,9 @@ uint64_t json_to_uint64(maps* settings, cJSON* obj)
                 if (val32 < 0)
                     val32 = 0;            
             }
-            //uint64_t uval = 0;//(uint64_t)(18446744073709551188);
+            uint64_t uval = 0;//(uint64_t)(18446744073709551188);
             encoded_val = static_cast<uint64_t> (val32);
-            //printf( "%s val32  %d  encoded_val %ld %08lx  uval %08lx\n", __func__, val32, encoded_val, encoded_val, uval);
+            printf( "%s val32  %d  encoded_val %ld %08lx  uval %08lx\n", __func__, val32, encoded_val, encoded_val, uval);
         //memcpy(&encoded_val, &(val32), sizeof(encoded_val));
         }
     }
@@ -1106,7 +1066,7 @@ void update_holding_or_input_register_value(maps* settings, cJSON* value, uint16
     if(settings->num_regs == 1)
     {
         uint16_t val16 = json_to_uint16(settings, value);
-        if (1||sys_cfg->low_debug)
+        if (sys_cfg->low_debug)
             FPS_ERROR_PRINT(" size 1 Old value [%d] New value [%d] .\n", regs[settings->reg_off], val16);
 
         // variables declared as single-register values should be able to implicitly typecast from 32 bits to 16 bits without losing any data
@@ -1203,8 +1163,8 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
     uint8_t  function = query[header_length];
     uint16_t offset = MODBUS_GET_INT16_FROM_INT8(query, header_length + 1);
     uint16_t num_regs = MODBUS_GET_INT16_FROM_INT8(query, header_length + 3);
-    //uint16_t slave_id = MODBUS_GET_INT16_FROM_INT8(query, header_length-1);
-    //printf(" slave %02x offset  [%02x] [%2d]\n", MODBUS_GET_HIGH_BYTE(slave_id), offset, offset);
+    // uint16_t slave_id = MODBUS_GET_INT16_FROM_INT8(query, header_length-1);
+    // printf(" slave %02x offset  [%02x] [%2d]\n", MODBUS_GET_HIGH_BYTE(slave_id), offset, offset);
     if(function == MODBUS_FC_WRITE_SINGLE_COIL)
     {
         if(bytes_read != header_length + (serial ? 7 : 5))
@@ -1232,7 +1192,7 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                 if(value == 0 || value == 0xFF00)
                 {
                     char uri[512];
-                    snprintf(uri, sizeof(uri), "%s/%s", reg->uri, reg->reg_name);
+                    sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
                     if (!invert)
                         cJSON_AddBoolToObject(send_body, "value", (value == 0xFF00) ? true : false);
                     else
@@ -1284,7 +1244,7 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                     if(send_body != NULL)
                     {
                         char uri[512];
-                        snprintf(uri, sizeof(uri), "%s/%s", reg->uri, reg->reg_name);
+                        sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
                         uint8_t value = (query[header_length + 6 + i] >> j) & 0x01;
                         if(invert)
                             cJSON_AddBoolToObject(send_body, "value", (value == 1) ? false : true);
@@ -1318,8 +1278,6 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
             }
             else
             {
-                //printf("#2   %s/%s  num %d shift  %d \n", reg->uri, reg->reg_name, reg->num_regs, reg->shift);
-
                 if(reg->num_regs != 1)
                 {
                     FPS_ERROR_PRINT("Wrote single register of Multi Register variable %s.\n", reg->reg_name);
@@ -1331,7 +1289,7 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                     if(send_body != NULL)
                     {
                         char uri[512];
-                        snprintf(uri, sizeof(uri), "%s/%s", reg->uri, reg->reg_name);
+                        sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
 
                         if(reg->is_bool)
                         {
@@ -1347,14 +1305,8 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                             else
                                 temp_reg = static_cast<double>(num_regs);
 
-                            //printf("#2.0   %s/%s  num %d shift  %d  temp_reg %f\n", reg->uri, reg->reg_name, reg->num_regs, reg->shift, temp_reg);
                             if(reg->scale != 0.0)
                                 temp_reg /= reg->scale;
-                            if (reg->shift != 0)
-                                temp_reg += reg->shift;
-                            //printf("#2.1   %s/%s  num %d shift  %d  temp_reg %f\n", reg->uri, reg->reg_name, reg->num_regs, reg->shift, temp_reg);
-
-
                             cJSON_AddNumberToObject(send_body, "value", temp_reg);
                         }
                         char* body_msg = cJSON_PrintUnformatted(send_body);
@@ -1439,7 +1391,7 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                 {
                     uint64_t temp_reg_int;
                     if ((config->byte_swap == true) || (reg->use_byte_swap && reg->byte_swap)) {
-                       //printf( " got byte_swap \n");
+                        printf( " got byte_swap \n");
                         temp_reg_int = ((static_cast<uint64_t>(MODBUS_GET_INT16_FROM_INT8(query, byte_offset)    )      ) +
                                         (static_cast<uint64_t>(MODBUS_GET_INT16_FROM_INT8(query, byte_offset + 2)) << 16) +
                                         (static_cast<uint64_t>(MODBUS_GET_INT16_FROM_INT8(query, byte_offset + 4)) << 32) +
@@ -1478,17 +1430,12 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                 //Only want to scale if scale value is present and not == 0.0
                 if (reg->scale != 0.0)
                     temp_reg /= reg->scale;
-                if (reg->shift != 0)
-                    temp_reg += reg->shift;
 
-
-
-                printf("#1   %s/%s   %d ", reg->uri, reg->reg_name, reg->shift);
                 cJSON* send_body = cJSON_CreateObject();
                 if(send_body != NULL)
                 {
                     char uri[512];
-                    snprintf(uri, sizeof(uri), "%s/%s", reg->uri, reg->reg_name);
+                    sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
                     if(reg->is_bool)
                         cJSON_AddBoolToObject(send_body, "value", (temp_reg == 1));
                     else
@@ -1596,8 +1543,6 @@ bool process_fims_message(fims_message* msg, system_config* sys_cfg, bool* reloa
                         auto current_device = device_map.find(body_it->second.device_id);
                         modbus_mapping_t* current_mapping = current_device != device_map.end() ? current_device->second->mb_mapping : server_map->mb_mapping;
                         update_variable_value(current_mapping, body_it->second.reg_types, body_it->second.mappings, cur_obj, sys_cfg);
-                        //FPS_ERROR_PRINT("OK found [%s] in [%s].\n", body_it->first, uri);
-                        //update_variable_value(server_map->mb_mapping, body_it->second.first, body_it->second.second, cur_obj, sys_cfg);
                     }
                 }
             }
@@ -1612,13 +1557,14 @@ bool process_fims_message(fims_message* msg, system_config* sys_cfg, bool* reloa
         {
             //don't know when we would receive a get
             if(msg->replyto != NULL)
-                p_fims->Send("set", msg->replyto, NULL, "Error: Method not implemented for that URI.");
+                p_fims->Send("set", msg->replyto, NULL, "Error: Get method not implemented for that URI.");
             return true;
         }
         else
         {
-            if(msg->replyto != NULL)
-                p_fims->Send("set", msg->replyto, NULL, "Error: Method not implemented for that URI.");
+            if(msg->replyto != NULL) {
+                p_fims->Send("set", msg->replyto, NULL, "Error: Set method not implemented for that URI.");
+            }
             return true;
         }
     }
@@ -1677,10 +1623,10 @@ bool initialize_map(server_data* server_map, system_config* sys_cfg, bool is_mai
     // NOTE(WALKER): uncomment this if you are testing some server stuff then uncomment it before committing
     return true;
 
-    char replyto[256];
+    char replyto[1024];
     for(uri_map::iterator it = uri_to_register.begin(); it != uri_to_register.end(); ++it)
     {
-        snprintf(replyto, sizeof(replyto), "%s/reply%s", base_uri, it->first);
+        snprintf(replyto, 1024, "%s/reply%s", base_uri, it->first);
         p_fims->Send("get", it->first, replyto, NULL);
         timespec current_time, timeout;
         clock_gettime(CLOCK_MONOTONIC, &timeout);
@@ -1788,24 +1734,6 @@ int main(int argc, char *argv[])
     signal(SIGINT, signal_handler);
 
     bool reload;
-    int argn = 2;    
-
-    //server_data *server_map = NULL;
-    // int header_length, serial_fd, fims_socket;
-    // int fd_max = 0;
-    // int reload_fd_max = 0;
-    // int rc = 0;
-    // int server_socket = -1;
-    // int fims_connect = 0;
-    // fd_set all_connections;
-    // fd_set rd_connections;
-    // fd_set wr_connections;
-    // fd_set er_connections;
-    // FD_ZERO(&all_connections);
-    // system_config sys_cfg;
-    // memset(&sys_cfg, 0, sizeof(system_config));
-    //datalog data[Num_Register_Types];
-    //memset(data, 0, sizeof(datalog)*Num_Register_Types);
 
     do
     {
@@ -1816,7 +1744,7 @@ int main(int argc, char *argv[])
         if(config == NULL)
             return 1;
 
-        // Getting the object "System Name" from the object  "System' //
+        // Getting the object "System Name" from the object  "system'
         cJSON *system_obj = cJSON_GetObjectItem(config, "system");
         if (system_obj == NULL)
         {
@@ -1858,11 +1786,12 @@ int main(int argc, char *argv[])
             server_map = nullptr;
 
         } else if (cJSON_IsArray(registers)) {
+            // 'registers' is a cJSON Array
             cJSON *reg;
             int i = 0;
             cJSON_ArrayForEach(reg, registers) {
 
-                uint8_t device_id = 255; // defaut to 255
+                uint8_t device_id = 255;
                 auto dev_id = cJSON_GetObjectItem(reg, "device_id");
                 if (dev_id == NULL || !cJSON_IsNumber(dev_id)) {
                     FPS_ERROR_PRINT("Failed to get object item 'device_id' as a number in 'devices' array object #%d\n", i);
@@ -1870,16 +1799,18 @@ int main(int argc, char *argv[])
                     //cJSON_Delete(config);
                     //goto cleanup;
                 }
-                if (dev_id->valueint < 0 || dev_id->valueint > 254) {
-                    FPS_ERROR_PRINT("'device_id' must be between 0 and 254, but was %d in 'devices' object #%d\n", dev_id->valueint, i);
+                if (dev_id != NULL &&  (dev_id->valueint < 0 || dev_id->valueint > 254)) {
+                    //FPS_ERROR_PRINT("'device_id' must be between 0 and 254, but was %d in 'devices' object #%d\n", dev_id->valueint, i);
+                    FPS_ERROR_PRINT("'device_id' must be between 0 and 254, but was %d in 'devices' object #%d\n", device_id, i);
                     //rc = 1;
                     //cJSON_Delete(config);
                     //goto cleanup;
                 }
                 else
                 {
-                    device_id = dev_id->valueint;
+                    if(dev_id != NULL) device_id = dev_id->valueint;
                 }
+                FPS_ERROR_PRINT("Creating register map for array  %s dev_id %d \n", sys_cfg.name, device_id);
                 auto reg_server_map = create_register_map(reg, device_id);
                 if (reg_server_map == NULL)
                 {
@@ -1887,11 +1818,10 @@ int main(int argc, char *argv[])
                     cJSON_Delete(config);
                     goto cleanup;
                 }
-                FPS_ERROR_PRINT("Error creating device map for device_id %d \n", device_id );
+                FPS_ERROR_PRINT("Creating device map for device_id %d \n", device_id );
                 device_map[device_id] = reg_server_map;
                 i++;
             }
-            // 'registers' is a cJSON Array
         } else {
             // 'registers' is neither an Object nor an Array
         }
@@ -1902,17 +1832,17 @@ int main(int argc, char *argv[])
         // must be done after register map creation to get a count of how many unique URIs there are.
         //server_map->
         load_uri_array();
-        sys_cfg.debug = false;
-        // a crude form of the options system
-        if(argc > argn) {
-            if (strcmp(argv[argn], "bypass_init:true") == 0)
+        sys_cfg.debug = false;    
+
+        // TODO add overrides here
+        if(argc >= 3) {
+            if (strcmp(argv[2], "bypass") == 0)
             {
-                argn++;
-                sys_cfg.bypass_init = true;                
+               sys_cfg.bypass_init = true;                
             }
         }
-        if(argc > argn) {
-            if (strcmp(argv[argn], "debug:true") == 0)
+        if(argc == 4) {
+            if (strcmp(argv[3], "debug") == 0)
             {
                sys_cfg.debug = true;                
             }
@@ -1973,8 +1903,8 @@ int main(int argc, char *argv[])
 
         FPS_ERROR_PRINT("Map configured: Initializing data.\n");
         //todo this should be defined to a better length
-        char uri[512];
-        snprintf(uri,sizeof(uri), "/interfaces/%s", sys_cfg.name);
+        char uri[1024];
+        snprintf(uri,1024,"/interfaces/%s", sys_cfg.name);
         FPS_ERROR_PRINT("Map configured: Base Uri[%s] \n", uri );
         base_uri = uris[0] = uri;
         if(false == initialize_map(server_map, &sys_cfg, true))
@@ -1986,7 +1916,7 @@ int main(int argc, char *argv[])
                 goto cleanup;
             }
         }
-        for (auto& mapping : device_map) {
+         for (auto& mapping : device_map) {
             if (mapping.first != (uint8_t)255 && false == initialize_map(mapping.second, &sys_cfg, false))
             {
                 if(!sys_cfg.bypass_init)
@@ -2086,6 +2016,10 @@ int main(int argc, char *argv[])
 
         running = true;
         FPS_ERROR_PRINT("Setup complete: Entering main loop.\n");
+        // setup default error message
+        char message[1024];
+        snprintf(message, 1024, "Modbus Server %s detected a TCP client disconnect.\n", sys_cfg.name);
+
         while(running)
         {
             connections_with_data = all_connections;
@@ -2108,7 +2042,7 @@ int main(int argc, char *argv[])
                 if(FD_ISSET(current_fd, &er_connections))
                 {
                     char message[1024];
-                    FPS_ERROR_PRINT("server select() error on fd : %d lets close it .\n", current_fd);
+                    FPS_ERROR_PRINT("server select() error on fd : %d closing it .\n", current_fd);
                     snprintf(message, 1024, "Connection closed for fd  %d ", current_fd);
                     emit_event(p_fims, "Modbus Server", message, 1);
                     close(current_fd);
@@ -2156,11 +2090,12 @@ int main(int argc, char *argv[])
                             // fims connection closed
                             FPS_ERROR_PRINT("Fims connection closed.\n");
                             FD_CLR(current_fd, &all_connections);
-                            running = false; 
                             break;
                         }
                         else
+                        {
                             FPS_ERROR_PRINT("No fims message received.\n");
+                        }
                     }
                     else
                     {
@@ -2184,23 +2119,11 @@ int main(int argc, char *argv[])
                         const uint8_t device_id = query[header_length - 1];
                         auto device_mapping = device_map.find(device_id);
                         auto default_device_mapping = device_map.find(255);
-                        if(default_device_mapping== device_map.end())
-                        {
-                            default_device_mapping = device_map.find(sys_cfg.device_id);
-                        }
                         
                         auto current_server_map = device_mapping == device_map.end() ? default_device_mapping->second : device_mapping->second;
                         
                         process_modbus_message(rc, header_length, &sys_cfg, current_server_map, true, query);
-                        if(!current_server_map) 
-                        {
-                            FPS_ERROR_PRINT("sending server exception ILLEGAL DATA.\n");
-                            modbus_reply_exception(sys_cfg.mb, query, MODBUS_EXCEPTION_ILLEGAL_DATA_VALUE);
-                        }
-                        else
-                        {
-                            modbus_reply(sys_cfg.mb, query, rc, current_server_map->mb_mapping);
-                        }
+                        modbus_reply(sys_cfg.mb, query, rc, current_server_map->mb_mapping);
                     }
                     else if (rc  == -1)
                     {
@@ -2232,27 +2155,42 @@ int main(int argc, char *argv[])
                     uint8_t query[MODBUS_TCP_MAX_ADU_LENGTH];
 
                     rc = modbus_receive(sys_cfg.mb, query);
-                    //printf(" got message from slave [%d]\n",sys_cfg.mb->slave);
-                    if (rc > 0)
+
+                    // 1: "Illegal Function",
+                    // 2: "Illegal Data Address",
+                    // 3: "Illegal Data Value",
+                    // 4: "Slave Device Failure",
+                    // 5: "Acknowledge",
+                    // 6: "Slave Device Busy",
+                    // 7: "Negative Acknowledge",
+                    // 8: "Memory Parity Error",
+                    // 9: "Gateway Path Unavailable",
+                    // 10: "Gateway Target Device Failed to Respond",
+                    if(rc > 0)
                     {
                         bool send_reply = true;
                         const uint8_t device_id = query[header_length - 1];
                         auto device_mapping = device_map.find(device_id);
                         auto default_device_mapping = device_map.find(255);
-                        if(default_device_mapping == device_map.end())
-                        {
-                            default_device_mapping = device_map.find(sys_cfg.device_id);
-                        }
                         auto current_server_map = device_mapping == device_map.end() ? default_device_mapping->second : device_mapping->second;
-                        //FPS_ERROR_PRINT("modbus_receive device_id %d server_map %p\n", device_id, (void *)current_server_map);
+                        uint8_t  function = query[header_length];
+                        uint16_t offset = MODBUS_GET_INT16_FROM_INT8(query, header_length + 1);
+                        uint16_t num_regs = MODBUS_GET_INT16_FROM_INT8(query, header_length + 3);
 
-                        process_modbus_message(rc, header_length, &sys_cfg, current_server_map, false, query);
-                        if(!current_server_map) 
+                        // could not handle device id
+                        if (current_server_map == nullptr)
                         {
-                            FPS_ERROR_PRINT("sending server exception ILLEGAL DATA.\n");
-                            modbus_reply_exception(sys_cfg.mb, query, MODBUS_EXCEPTION_ILLEGAL_DATA_VALUE);
+
+                            FPS_ERROR_PRINT("modbus_receive, function %s device %d offset %d num regs %d no mapping found for device_id %d sending [Illegal Data Address] \n", 
+                                                    getFunction(function), device_id, offset, num_regs, device_id);
+                            modbus_reply_exception(sys_cfg.mb, query, MODBUS_EXCEPTION_ILLEGAL_DATA_ADDRESS);
                             send_reply = false;
                         }
+                        else 
+                        {
+                            process_modbus_message(rc, header_length, &sys_cfg, current_server_map, false, query);
+                        }
+ 
 #if defined SERVER_DELAY
                         if(sys_cfg.connect_delay > 0) {
                             FPS_ERROR_PRINT("adding server connect delay %d ms.\n", sys_cfg.connect_delay);
@@ -2265,7 +2203,7 @@ int main(int argc, char *argv[])
                             usleep(sys_cfg.server_delay*1000);
                             sys_cfg.server_delay = 0;
                         }
-                        else if(sys_cfg.exception > 0) {
+                        else if(sys_cfg.exception > 0 && send_reply) {
                             if (sys_cfg.exception < 11 )
                             {
                                 FPS_ERROR_PRINT("sending server exception %d.\n", sys_cfg.exception);
@@ -2293,14 +2231,11 @@ int main(int argc, char *argv[])
                             sys_cfg.mdebug = -1;
                         }
 #endif
-
                         if(send_reply)modbus_reply(sys_cfg.mb, query, rc, current_server_map->mb_mapping);
                     }
                     else if (rc  == -1)
                     {
-                        // Connection closed by the client or error
-                        char message[1024];
-                        snprintf(message, 1024, "Modbus Server %s detected a TCP client disconnect.\n", sys_cfg.name);
+                        // Connection closed by the client or error or no device id
                         FPS_ERROR_PRINT("%s\n", message);
                         emit_event(p_fims, "Modbus Server", message, 1);
                         close(current_fd);
@@ -2315,6 +2250,18 @@ int main(int argc, char *argv[])
         FPS_ERROR_PRINT("Main loop complete: Entering clean up.\n");
 
         cleanup:
+
+        if(p_fims != NULL)
+        {
+            if(p_fims->Connected() == true)
+            {
+                char message[1024];
+                snprintf(message, 1024, "Modbus Server %s shutting down.\n", sys_cfg.name);
+                FPS_ERROR_PRINT("%s\n", message);
+                emit_event(p_fims, "Modbus Server", message, 1);
+         
+            }
+        }
 
         if(sys_cfg.eth_dev       != NULL) free(sys_cfg.eth_dev);
         if(sys_cfg.ip_address    != NULL) free(sys_cfg.ip_address);
@@ -2350,37 +2297,11 @@ int main(int argc, char *argv[])
             }
             device_map.clear();
         }
-        // if(server_map != NULL)
-        // {
-        //     for (uri_map::iterator it = uri_to_register.begin(); it != uri_to_register.end(); ++it)
-        //     {
-        //         for (body_map::iterator body_it = it->second->begin(); body_it != it->second->end(); ++body_it)
-        //         {
-        //             delete []body_it->second.reg_types;
-        //             delete []body_it->second.mappings;
-
-        //             //delete []body_it->second.first;
-        //             //delete []body_it->second.second;
-        //         }
-        //         it->second->clear();
-        //         delete(it->second);
-        //     }
-        //     uri_to_register.clear();
 
         if(server_map != NULL)
         {
             FPS_ERROR_PRINT("Main loop complete: Entering clean up server map.\n");
 
-            // for (uri_map::iterator it = uri_to_register.begin(); it != uri_to_register.end(); ++it)
-            // {
-            //     for (body_map::iterator body_it = it->second->begin(); body_it != it->second->end(); ++body_it)
-            //     {
-            //         delete []body_it->second.reg_types;
-            //         delete []body_it->second.mappings;
-            //     }
-            //     it->second->clear();
-            //     delete(it->second);
-            // }
             delete server_map;
             server_map = nullptr;
         }
@@ -2401,9 +2322,6 @@ int main(int argc, char *argv[])
         for (int i = 0; i < Num_Register_Types; i++)
         {
             FPS_ERROR_PRINT("Main loop complete: Entering server_map->dat %d.\n", i);
-            // if(server_map->data[i].register_map != NULL)
-            //     delete []server_map->data[i].register_map;
-            // if(server_map->regs_to_map[i] != NULL) delete [] server_map->regs_to_map[i];
         }
         FPS_ERROR_PRINT("Main loop complete: Entering clean up server uris.\n");
         if (uris != NULL) delete []uris;
@@ -2411,19 +2329,15 @@ int main(int argc, char *argv[])
         if(p_fims != NULL)
         {
             if(p_fims->Connected() == true)
-            {
+            {         
                 FD_CLR(p_fims->get_socket(), &all_connections);
                 p_fims->Close();
             }
             delete p_fims;
         }
 
-        //if(server_map->mb_mapping != NULL)
-        //    modbus_mapping_free(server_map->mb_mapping);
         FPS_ERROR_PRINT("Main loop complete: Entering delete server_map. reload %d\n", reload);
      
-        //}
-        FPS_ERROR_PRINT("Main loop complete: Entering clean up server done.\n");
         if (reload)
         {
             reload_fd_max = fd_max; // record it
@@ -2443,17 +2357,3 @@ int main(int argc, char *argv[])
 
     return rc;
 }
-
-// /**
-//  * @brief Copies URIs, to which we must subscribe, from the uri_to_register map to the uris array.
-//  * 
-//  */
-// //void sdata::
-// load_uri_array()
-// {
-//     num_uris = uri_to_register.size();
-//     uris = new const char*[num_uris + 1];
-//     int i = 1; // start with 1 because 0 is used for this processes uri
-//     for(auto it = uri_to_register.begin(); it != uri_to_register.end(); ++it, i++)
-//         uris[i] = it->first;
-// }

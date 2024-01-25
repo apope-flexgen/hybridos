@@ -6,136 +6,43 @@
        "ip_address": "0.0.0.0",
        "xserver_delay": 510, 
        "port": 502, 
-       "device_id": 3, 
-       "bypass_init": false 
+       "device_id": 2 
    },
     "registers":
      {
-        "coils":
-        [
-            { "name":"coil_0",     "id":"coil_0",     "offset":100,                            "uri":"/components/sel_2440" },
-            { "name":"coil_1",     "id":"coil_1",     "offset":101,                            "uri":"/components/sel_2440" },
-            { "name":"coil_2",     "id":"coil_2",     "offset":102,                            "uri":"/components/sel_2440" },
-            { "name":"coil_3",     "id":"coil_3",     "offset":103,                            "uri":"/components/sel_2440" },
-            { "name":"coil_4",     "id":"coil_4",     "offset":104,                            "uri":"/components/sel_2440" },
-            { "name":"coil_5",     "id":"coil_5",     "offset":105,                            "uri":"/components/sel_2440" },
-            { "name":"coil_6",     "id":"coil_6",     "offset":106,                            "uri":"/components/sel_2440" },
-            { "name":"coil_7",     "id":"coil_7",     "offset":107,                            "uri":"/components/sel_2440" },
-            { "name":"coil_8",     "id":"coil_8",     "offset":108,                            "uri":"/components/sel_2440" }
-        ],
         "holding_registers":
         [
-            { "name":"test_id",           "id":"test_id",     "offset":1500,             "signed":false,                   "uri":"/components/sel_2440" },
-            { "name":"inv_1_16",          "id":"inv_1_16",    "offset":1501,             "signed":false,                   "uri":"/components/sel_2440" },
-            { "name":"inv_1_4",           "id":"inv_1_4",     "offset":1502,             "signed":false,                   "uri":"/components/sel_2440" },
-            { "name":"multi_1",           "id":"multi_1",     "offset":1503,                                               "uri":"/components/sel_2440" },
-            { "name":"multi_2",           "id":"multi_2",     "offset":1504,                                               "uri":"/components/sel_2440" },
-            { "name":"multi_3",           "id":"multi_3",     "offset":1505,                                               "uri":"/components/sel_2440" },
-            { "name":"multi_4",           "id":"multi_4",     "offset":1506,                                               "uri":"/components/sel_2440" },
-            { "name":"multi_5",           "id":"multi_5",     "offset":1507,                                               "uri":"/components/sel_2440" },
-            { "name":"multi_6",           "id":"multi_6",     "offset":1508,                                               "uri":"/components/sel_2440" },
-            { "name":"multi_7",           "id":"multi_7",     "offset":1509,                                               "uri":"/components/sel_2440" },
-            { "name":"multi_8",           "id":"multi_8",     "offset":1510,                                               "uri":"/components/sel_2440" },
-            { "name":"multi_9",           "id":"multi_9",     "offset":1511,                                               "uri":"/components/sel_2440" },
-            { "name":"multi_10",          "id":"multi_10",    "offset":1512,                                               "uri":"/components/sel_2440" },
-            { "name":"multi_11",          "id":"multi_11",    "offset":1513,                                               "uri":"/components/sel_2440" },
-            { "name":"multi_12",          "id":"multi_12",    "offset":1514,                                               "uri":"/components/sel_2440" },
-            { "name":"multi_13",          "id":"multi_13",    "offset":1515,                                               "uri":"/components/sel_2440" },
-
-            { "name":"hold_1_1",          "id":"hold_1_1",    "offset":1400,             "signed":false,                   "uri":"/components/sel_2440" },
-            { "name":"hold_1_2",          "id":"hold_1_2",    "offset":1401, "size":2,   "signed":false,                   "uri":"/components/sel_2440" },
-            { "name":"hold_1_4",          "id":"hold_1_4",    "offset":1403, "size":4,   "signed":false,                   "uri":"/components/sel_2440" },
-            { "name":"hold_2_1",          "id":"hold_2_1",    "offset":1407,                                               "uri":"/components/sel_2440" },
-            { "name":"hold_2_2",          "id":"hold_2_2",    "offset":1408, "size":2,                                     "uri":"/components/sel_2440" },
-            { "name":"hold_2_4",          "id":"hold_2_4",    "offset":1410, "size":4,                                     "uri":"/components/sel_2440" },
-            { "name":"shold_1_1",         "id":"shold_1_1",   "offset":1414,             "signed":true,                    "uri":"/components/sel_2440" },
-            { "name":"shold_1_2",         "id":"shold_1_2",   "offset":1415, "size":2,   "signed":true,                    "uri":"/components/sel_2440" },
-            { "name":"shold_1_4",         "id":"shold_1_4",   "offset":1417, "size":4,   "signed":true,                    "uri":"/components/sel_2440" },
-            { "name":"shold_2_1",         "id":"shold_2_1",   "offset":1421,             "signed":true,                    "uri":"/components/sel_2440" },
-            { "name":"shold_2_2",         "id":"shold_2_2",   "offset":1422, "size":2,   "signed":true,                    "uri":"/components/sel_2440" },
-            { "name":"shold_2_4",         "id":"shold_2_4",   "offset":1424, "size":4,   "signed":true,                    "uri":"/components/sel_2440" },
-            { "name":"fhold_1_1",         "id":"fhold_1_1",   "offset":1428,             "xfloat":true,                    "uri":"/components/sel_2440" },
-            { "name":"fhold_1_2",         "id":"fhold_1_2",   "offset":1429, "size":2,   "float":true,                     "uri":"/components/sel_2440" },
-            { "name":"fhold_1_4",         "id":"fhold_1_4",   "offset":1431, "size":4,   "float":true,                     "uri":"/components/sel_2440" },
-            { "name":"fshold_1_4",        "id":"fshold_1_4",  "offset":1435, "size":4,   "float":true, "byte_swap":true,   "uri":"/components/sel_2440" },
-            { "name":"scale_1_1",         "id":"scale_1_1",   "offset":1439,             "scale":1.0,                      "uri":"/components/sel_2440" },
-            { "name":"scale_1_2",         "id":"scale_1_2",   "offset":1440, "size":2,   "scale":1.0,                      "uri":"/components/sel_2440" },
-            { "name":"scale_1_4",         "id":"scale_1_4",   "offset":1442, "size":4,   "scale":1.0,                      "uri":"/components/sel_2440" },
-            { "name":"shift_1_1",         "id":"shift_1_1",   "offset":1446,             "shift":100,                      "uri":"/components/sel_2440" },
-            { "name":"shift_1_2",         "id":"shift_1_2",   "offset":1447, "size":2,   "shift":100,                      "uri":"/components/sel_2440" },
-            { "name":"shift_1_4",         "id":"shift_1_4",   "offset":1449, "size":4,   "shift":100,                      "uri":"/components/sel_2440" },
-            { "name":"debounce_1",        "id":"debounce_1",  "offset":1553, "size":1,                                     "uri":"/components/sel_2440" }
+            { "name":"Hold_1_1","id":"hold_1_1","offset":1400,                   "uri":"/components/sel_2440" },
+            { "name":"Hold_1_2","id":"hold_1_2","offset":1401, "size":2,         "uri":"/components/sel_2440" },
+            { "name":"Hold_1_4","id":"hold_1_4","offset":1403, "size":4,         "uri":"/components/sel_2440" },
+            { "name":"Hold_2_1","id":"hold_2_1","offset":1407,                   "uri":"/components/sel_2440" },
+            { "name":"Hold_2_2","id":"hold_2_2","offset":1408, "size":2,         "uri":"/components/sel_2440" },
+            { "name":"Hold_2_4","id":"hold_2_4","offset":1410, "size":4,         "uri":"/components/sel_2440" }
 
         ],
         "discrete_inputs":
-        [
-            { "name":"fuse_monitoring",   "id":"fuse_monitoring",     "offset":390, "uri": "/components/sel_2440" },
-            { "name":"surge_arrester",    "id":"surge_arrester",      "offset":393, "uri": "/components/sel_2440" },
-            { "name":"door_latch",        "id":"door_latch",          "offset":394, "uri": "/components/sel_2440" },
-            { "name":"disconnect_switch", "id":"disconnect_switch",   "offset":395, "uri": "/components/sel_2440" },
-            { "name":"spare_1",           "id":"spare_1",             "offset":396, "uri": "/components/sel_2440" },
-            { "name":"e_stop",            "id":"e_stop",              "offset":397, "uri": "/components/sel_2440" },
-            { "name":"fire_relay",        "id":"fire_relay",          "offset":398, "uri": "/components/sel_2440" },
-            { "name":"trouble_relay",     "id":"trouble_relay",       "offset":399, "uri": "/components/sel_2440" },
-
-            { "name":"fuse_monitoring",   "id":"fuse_monitoring",     "offset":493,"uri": "/components/alt_2440" },
-            { "name":"surge_arrester",    "id":"surge_arrester",      "offset":492,"uri": "/components/alt_2440" },
-            { "name":"door_latch",        "id":"door_latch",          "offset":494,"uri": "/components/alt_2440" },
-            { "name":"disconnect_switch", "id":"disconnect_switch",   "offset":495,"uri": "/components/alt_2440" },
-            { "name":"spare_1",           "id":"spare_1",             "offset":496,"uri": "/components/alt_2440" },
-            { "name":"e_stop",            "id":"e_stop",              "offset":497,"uri": "/components/alt_2440" },
-            { "name":"fire_relay",        "id":"fire_relay",          "offset":498,"uri": "/components/alt_2440" },
-            { "name":"trouble_relay",     "id":"trouble_relay",       "offset":499,"uri": "/components/alt_2440" }       
+       [
+          { "name":"fuse_monitoring",   "id":"fuse_monitoring",    "offset":390,"uri":"/components/sel_2440" },
+          { "name":"surge_arrester",    "id":"surge_arrester",     "offset":393,"uri":"/components/sel_2440" },
+          { "name":"door_latch",        "id":"door_latch",         "offset":394,"uri":"/components/sel_2440" },
+          { "name":"disconnect_switch", "id":"disconnect_switch",  "offset":395,"uri":"/components/sel_2440" },
+          { "name":"spare_1",           "id":"spare_1",            "offset":396,"uri":"/components/sel_2440" },
+          { "name":"e_stop",            "id":"e_stop",             "offset":397,"uri":"/components/sel_2440" },
+          { "name":"fire_relay",        "id":"fire_relay",         "offset":398,"uri":"/components/sel_2440" },
+          { "name":"trouble_relay",     "id":"trouble_relay",      "offset":399,"uri":"/components/sel_2440" },       
+          { "name":"fuse_monitoring",   "id":"fuse_monitoring",    "offset":490,"uri":"/components/alt_2440" },
+          { "name":"surge_arrester",    "id":"surge_arrester",     "offset":493,"uri":"/components/alt_2440" },
+          { "name":"door_latch",        "id":"door_latch",         "offset":494,"uri":"/components/alt_2440" },
+          { "name":"disconnect_switch", "id":"disconnect_switch",  "offset":495,"uri":"/components/alt_2440" },
+          { "name":"spare_1",           "id":"spare_1",            "offset":496,"uri":"/components/alt_2440" },
+          { "name":"e_stop",            "id":"e_stop",             "offset":497,"uri":"/components/alt_2440" },
+          { "name":"fire_relay",        "id":"fire_relay",         "offset":498,"uri":"/components/alt_2440" },
+          { "name":"trouble_relay",     "id":"trouble_relay",      "offset":499,"uri":"/components/alt_2440" }       
         ],
-        "input_registers":
-        [
-            { "name": "input_0",        "id": "input_0_1",             "offset": 200,  "uri": "/components/sel_2440"  },
-            { "name": "input_1",        "id": "input_1_1",             "offset": 201,  "uri": "/components/sel_2440"  },
-            { "name": "input_2",        "id": "input_2_1",             "offset": 202,  "uri": "/components/sel_2440"  },
-            { "name": "input_3",        "id": "input_3_1",             "offset": 203,  "uri": "/components/sel_2440"  },
-            { "name": "input_4",        "id": "input_4_1",             "offset": 204,  "uri": "/components/sel_2440"  },
-            { "name": "input_5",        "id": "input_5_1",             "offset": 205,  "uri": "/components/sel_2440"  },
-            { "name": "input_6",        "id": "finput_6_1",             "offset": 206,  "uri": "/components/sel_2440"  },
-            { "name": "input_7",        "id": "input_7_1",             "offset": 207,  "uri": "/components/sel_2440"  },
-
-            { "name": "input_0",        "id": "input_0_2", "size":2,        "offset": 208,  "uri": "/components/sel_2440"  },
-            { "name": "input_1",        "id": "input_1_2", "size":2,        "offset": 210,  "uri": "/components/sel_2440"  },
-            { "name": "input_2",        "id": "input_2_2", "size":2,        "offset": 212,  "uri": "/components/sel_2440"  },
-            { "name": "input_3",        "id": "input_3_2", "size":2,        "offset": 214,  "uri": "/components/sel_2440"  },
-            { "name": "input_4",        "id": "input_4_2", "size":2,        "offset": 216,  "uri": "/components/sel_2440"  },
-            { "name": "input_5",        "id": "input_5_2", "size":2,                "offset": 218,  "uri": "/components/sel_2440"  },
-            { "name": "input_6",        "id": "finput_6_2", "size":2, "float":true,  "offset": 220,  "uri": "/components/sel_2440"  },
-            { "name": "input_7",        "id": "input_7_2", "size":2,                 "offset": 222,  "uri": "/components/sel_2440"  },
-
-            { "name": "input_0",        "id": "input_0_4", "size":4,        "offset": 224,  "uri": "/components/sel_2440"  },
-            { "name": "input_1",        "id": "input_1_4", "size":4,        "offset": 228,  "uri": "/components/sel_2440"  },
-            { "name": "input_2",        "id": "input_2_4", "size":4,        "offset": 232,  "uri": "/components/sel_2440"  },
-            { "name": "input_3",        "id": "input_3_4", "size":4,        "offset": 236,  "uri": "/components/sel_2440"  },
-            { "name": "input_4",        "id": "input_4_4", "size":4,        "offset": 240,  "uri": "/components/sel_2440"  },
-            { "name": "input_5",        "id": "input_5_4", "size":4,                   "offset": 244,   "uri": "/components/sel_2440"  },
-            { "name": "input_6",        "id": "finput_6_4", "size":4, "float":true,    "offset": 248,   "uri": "/components/sel_2440"  },
-            { "name": "input_7",        "id": "input_7_4",    "size":4,     "offset": 252,   "uri": "/components/sel_2440"  },
-            { "name": "enum_256_1",     "id": "enum_256_1",   "size":1,          "offset": 256,   "uri": "/components/sel_2440"  },
-            { "name": "enum_257_2",     "id": "enum_257_2",   "size":2,          "offset": 257,   "uri": "/components/sel_2440"  },
-            { "name": "enum_259_4",     "id": "enum_259_4",   "size":4,          "offset": 270,   "uri": "/components/sel_2440"  },
-            { "name": "bsinput_0",      "id": "bsinput_0_4",  "size":4,  "byte_swap":true,   "offset": 294,  "uri": "/components/sel_2440" },
-            { "name": "bsinput_1",      "id": "bsinput_1_4",  "size":4,  "byte_swap":true,   "offset": 298,  "uri": "/components/sel_2440"  },
-            { "name": "ibits_1000_1",    "id": "ibits_1000_1",  "size":1,   "offset": 1000,  "uri": "/components/sel_2440"  },
-
-            { "name": "ibits_2000_1",        "id": "ibits_2000_1",  "size":1,          "offset": 2000,  "uri": "/components/sel_2440"  },
-            { "name": "ibits_2001_2",        "id": "ibits_2001_2",  "size":2,          "offset": 2001,  "uri": "/components/sel_2440"  },
-            { "name": "ibits_2003_4",        "id": "ibits_2003_4",  "size":4,          "offset": 2003,  "uri": "/components/sel_2440"  },
-            { "name": "bf_2007_1",           "id": "bf_2007_1",     "size":1,          "offset": 2007,  "uri": "/components/sel_2440"  },
-            { "name": "bf_2008_2",           "id": "bf_2008_2",     "size":2,          "offset": 2008,  "uri": "/components/sel_2440"  },
-            { "name": "bf_2010_4",           "id": "bf_2010_4",     "size":4,          "offset": 2010,  "uri": "/components/sel_2440"  },
-            { "name": "pr_2014_1",           "id": "pr_2014_1",     "size":1,          "offset": 2014,  "uri": "/components/sel_2440"  },
-            { "name": "pr_2015_2",           "id": "pr_2015_2",     "size":2,          "offset": 2015,  "uri": "/components/sel_2440"  },
-            { "name": "pr_2017_4",           "id": "pr_2017_4",     "size":4,          "offset": 2017,  "uri": "/components/sel_2440"  },
-            { "name": "pack_1",              "id": "pack_1",        "size":1,          "offset": 2022,  "uri": "/components/sel_2440"  },
-            { "name": "frequency",           "id": "frequency",     "size":1,          "offset": 2023,  "uri": "/components/sel_2440"  },
-
-            { "name":"heartbeat_1",     "id": "heartbeat_1",     "offset": 400,  "uri": "/components/sel_2440"  },       
-            { "name":"heartbeat_2",     "id": "heartbeat_2",     "offset": 500,  "uri": "/components/alt_2440"  }       
-       ]
+      "input_registers":
+       [
+          { "name":"heartbeat","id":"heartbeat","offset":400,"uri":"/components/sel_2440" },
+          { "name":"heartbeat2","id":"heartbeat2","offset":500,"uri":"/components/sel_2440" }       
+        ]
     }
 }

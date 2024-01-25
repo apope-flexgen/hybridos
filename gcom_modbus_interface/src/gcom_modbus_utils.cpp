@@ -15,22 +15,17 @@
 #include "fims/defer.hpp"
 #include "spdlog/fmt/fmt.h"
 
-bool emit_event(fims* pFims, const char* source, const char* message, int severity)
+void emit_event(fims* pFims, const char* source, const char* message, int severity)
 {
-    if(pFims->Connected())
-    {
-        cJSON* body_object;
-        body_object = cJSON_CreateObject();
-        cJSON_AddStringToObject(body_object, "source", source);
-        cJSON_AddStringToObject(body_object, "message", message);
-        cJSON_AddNumberToObject(body_object, "severity", severity);
-        char* body = cJSON_PrintUnformatted(body_object);
-        pFims->Send("post", "/events", NULL, body);
-        free(body);
-        cJSON_Delete(body_object);
-        return true;
-    }
-    return false;
+    cJSON* body_object;
+    body_object = cJSON_CreateObject();
+    cJSON_AddStringToObject(body_object, "source", source);
+    cJSON_AddStringToObject(body_object, "message", message);
+    cJSON_AddNumberToObject(body_object, "severity", severity);
+    char* body = cJSON_PrintUnformatted(body_object);
+    pFims->Send("post", "/events", NULL, body);
+    free(body);
+    cJSON_Delete(body_object);
 }
 
 cJSON* get_config_json(int argc, char* argv[])
@@ -61,6 +56,20 @@ cJSON* get_config_json(int argc, char* argv[])
 
     static constexpr std::size_t Max_Arg_Size = std::numeric_limits<uint8_t>::max();
 
+    // uri init code for  file:
+    if (strcmp(argv[1], "-c") == 0 || strcmp(argv[1], "--config") == 0)
+    {
+        if (argc >= 2 && argv[2] && strlen(argv[2]) <= Max_Arg_Size)
+        {
+            args.first = Arg_Types::File;
+            args.second = argv[2];
+        }
+        else
+        {
+            FPS_ERROR_PRINT("error in --config: config json path not provided, or config json path was more than %ld characters\n", Max_Arg_Size);
+            return nullptr;
+        }
+    }
     // uri init code for server:
     if (strcmp(argv[1], "-u") == 0 || strcmp(argv[1], "--uri") == 0)
     {
@@ -83,11 +92,16 @@ cJSON* get_config_json(int argc, char* argv[])
     {
         // prune the extensions of the input file then append .json
         // this way input extension doesn't matter (it can be optional or messed up by accident)
-        const auto first_extension_index = args.second.find_first_of('.');
-        if (first_extension_index != args.second.npos) args.second.resize(first_extension_index);
-        args.second.append(".json");
+        //const auto first_extension_index = args.second.find_first_of('.');
+        // const auto first_extension_index = args.second.find_last_of('.');
+        // if (first_extension_index != args.second.npos) args.second.resize(first_extension_index);
 
         fp = fopen(args.second.c_str(), "r");
+        if(fp == NULL)
+        {
+            args.second.append(".json");
+            fp = fopen(args.second.c_str(), "r");
+        }
         if(fp == NULL)
         {
             FPS_ERROR_PRINT("Failed to open file %s\n", args.second.c_str());
@@ -171,4 +185,49 @@ const char *getRegisterType(Type_of_Register idx)
     if(idx < Num_Register_Types)
         return regTypes[idx];
     return regTypes[Num_Register_Types];
+}
+
+// #define MODBUS_FC_READ_COILS                0x01
+// #define MODBUS_FC_READ_DISCRETE_INPUTS      0x02
+// #define MODBUS_FC_READ_HOLDING_REGISTERS    0x03
+// #define MODBUS_FC_READ_INPUT_REGISTERS      0x04
+// #define MODBUS_FC_WRITE_SINGLE_COIL         0x05
+// #define MODBUS_FC_WRITE_SINGLE_REGISTER     0x06
+// #define MODBUS_FC_READ_EXCEPTION_STATUS     0x07
+// #define MODBUS_FC_WRITE_MULTIPLE_COILS      0x0F
+// #define MODBUS_FC_WRITE_MULTIPLE_REGISTERS  0x10
+// #define MODBUS_FC_REPORT_SLAVE_ID           0x11
+// #define MODBUS_FC_MASK_WRITE_REGISTER       0x16
+// #define MODBUS_FC_WRITE_AND_READ_REGISTERS  0x17
+const char *getFunction(uint8_t function)
+{
+    switch (function & 0x7f)
+    {
+        case  MODBUS_FC_READ_COILS:
+            return "write_multiple_registers";
+        case MODBUS_FC_READ_DISCRETE_INPUTS:
+            return "read_discrete_inputs";
+        case MODBUS_FC_READ_HOLDING_REGISTERS:
+            return "read_holding_registers";
+        case MODBUS_FC_READ_INPUT_REGISTERS:
+            return "read_input_registers";
+        case MODBUS_FC_WRITE_SINGLE_COIL:     
+            return "write_single_coil";
+        case MODBUS_FC_WRITE_SINGLE_REGISTER: 
+            return "write_single_register";
+        case MODBUS_FC_READ_EXCEPTION_STATUS:
+            return "read_exception_registers";
+        case MODBUS_FC_WRITE_MULTIPLE_COILS:  
+            return "write_multiple_coils";
+        case MODBUS_FC_WRITE_MULTIPLE_REGISTERS: 
+            return "write_multiple_registers";
+        case MODBUS_FC_REPORT_SLAVE_ID:         
+            return "report_slave_id";
+        case MODBUS_FC_MASK_WRITE_REGISTER:      
+            return "mask_write_register";
+        case MODBUS_FC_WRITE_AND_READ_REGISTERS: 
+            return "write_and_read_registers";
+
+    }
+    return "unknown function code";
 }

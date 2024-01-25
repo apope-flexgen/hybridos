@@ -15,13 +15,12 @@ cfg::Register_Types cfg::typeFromStr(std::string &register_type_str)
         return Register_Types::Holding;
     else if (register_type_str == "Coil" || register_type_str == "coils")
         return Register_Types::Coil;
-    else if (register_type_str == "Input" || register_type_str == "input_registers")
+    else if (register_type_str == "Input" || register_type_str == "Input Registers"|| register_type_str == "input_registers")
         return Register_Types::Input;
-    else if (register_type_str == "Input Registers")
-        return Register_Types::Input;
-    else if (register_type_str == "Discrete_Input" || register_type_str == "discrete_inputs" || register_type_str == "Discrete Input")
-        return Register_Types::Discrete_Input;
-    else if (register_type_str == "Discrete Inputs")
+    else if (register_type_str == "Discrete_Input" 
+                                        || register_type_str == "discrete_inputs" 
+                                            || register_type_str == "Discrete Inputs" 
+                                                || register_type_str == "Discrete Input") 
         return Register_Types::Discrete_Input;
     else
         return Register_Types::Undefined;

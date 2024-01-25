@@ -1,0 +1,67 @@
+{
+   "system":
+   {   "name":"SEL-2440",
+       "protocol": "Modbus TCP",
+       "id": "SEL-2440",
+       "ip_address": "0.0.0.0",
+       "xserver_delay": 510, 
+       "port": 502,
+       "device_id":1
+   },
+    "registers": [
+    {
+        "device_id":1,
+        "holding_registers":
+        [
+            { "name":"Hold_1_1","id":"hold_1_1","offset":1400,                   "uri":"/components/sel_2440" },
+            { "name":"Hold_1_2","id":"hold_1_2","offset":1401, "size":2,         "uri":"/components/sel_2440" },
+            { "name":"Hold_1_4","id":"hold_1_4","offset":1403, "size":4,         "uri":"/components/sel_2440" }
+    
+        ],
+        "discrete_inputs":
+       [
+          { "name":"fuse_monitoring",       "id":"fuse_monitoring",    "offset":390,"uri":"/components/sel_2440" },
+          { "name":"surge_arrester",        "id":"surge_arrester",     "offset":393,"uri":"/components/sel_2440" },
+          { "name":"door_latch",            "id":"door_latch",         "offset":394,"uri":"/components/sel_2440" },
+          { "name":"disconnect_switch",     "id":"disconnect_switch",  "offset":395,"uri":"/components/sel_2440" },
+          { "name":"spare_1",               "id":"spare_1",            "offset":396,"uri":"/components/sel_2440" },
+          { "name":"e_stop",                "id":"e_stop",             "offset":397,"uri":"/components/sel_2440" },
+          { "name":"fire_relay",            "id":"fire_relay",         "offset":398,"uri":"/components/sel_2440" },
+          { "name":"trouble_relay",         "id":"trouble_relay",      "offset":399,"uri":"/components/sel_2440" }
+
+      ],
+      "input_registers":
+       [
+          { "name":"heartbeat_1","id":"heartbeat_1","offset":400,"uri":"/components/sel_2440" }
+       ]
+    },
+    {
+        "device_id":2,
+        "holding_registers":
+        [
+            { "name":"Hold_2_1","id":"hold_2_1","offset":1407,                   "uri":"/components/sel_2440" },
+            { "name":"Hold_2_2","id":"hold_2_2","offset":1408, "size":2,         "uri":"/components/sel_2440" },
+            { "name":"Hold_2_4","id":"hold_2_4","offset":1410, "size":4,         "uri":"/components/sel_2440" }
+
+        ],
+        "discrete_inputs":
+        [
+
+          { "name":"fuse_monitoring_2",     "id":"fuse_monitoring_2",  "offset":390,"uri":"/components/sel_2440" },
+          { "name":"surge_arrester_2",      "id":"surge_arrester_2",   "offset":393,"uri":"/components/sel_2440" },
+          { "name":"door_latch_2",          "id":"door_latch_2",       "offset":394,"uri":"/components/sel_2440" },
+          { "name":"disconnect_switch_2",   "id":"disconnect_switch_2","offset":395,"uri":"/components/sel_2440" },
+          { "name":"spare_1",               "id":"spare_1_2",          "offset":396,"uri":"/components/sel_2440" },
+          { "name":"e_stop",                "id":"e_stop_2",           "offset":397,"uri":"/components/sel_2440" },
+          { "name":"fire_relay",            "id":"fire_relay_2",       "offset":398,"uri":"/components/sel_2440" },
+          { "name":"trouble_relay",         "id":"trouble_relay_2",    "offset":399,"uri":"/components/sel_2440" }
+        ],
+        "input_registers":
+        [
+          { "name":"heartbeat_2","id":"heartbeat_2","offset":400,"uri":"/components/sel_2440" }       
+        ]
+    }
+    ]
+}
+
+}
