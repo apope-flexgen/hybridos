@@ -25,8 +25,10 @@ func sendHeartbeats() {
 // Sends GETs to all processes to request heartbeat values and PIDs
 func getHeartbeats() {
 	for _, process := range processJurisdiction {
-		targetURI := path.Join(process.uri, "cops")
-		f.SendGet(targetURI, process.replyToURI)
+		if process.requiredForHealthyStatus {
+			targetURI := path.Join(process.uri, "cops")
+			f.SendGet(targetURI, process.replyToURI)
+		}
 	}
 }
 

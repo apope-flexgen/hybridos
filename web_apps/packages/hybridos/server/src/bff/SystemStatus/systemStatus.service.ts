@@ -31,8 +31,8 @@ export class SystemStatusService {
 
     private parseSystemStatusData = (rawSystemStatusData: any, serviceName: string): ServiceStatusResponse => {
         const parseConnectionStatus = () => {
-            if (rawSystemStatusData.connectionStatus) return ConnectionStatus.Online;
-            else if (rawSystemStatusData.connectionStatus === false) return ConnectionStatus.Offline;
+            if (rawSystemStatusData.is_connected) return ConnectionStatus.Online;
+            else if (rawSystemStatusData.is_connected === false) return ConnectionStatus.Offline;
             return null;
         };
         

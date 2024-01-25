@@ -24,29 +24,31 @@ type configurationError struct {
 
 // Config is the struct to unmarshal cops.json into
 type Config struct {
-	Name                    string    `json:"controllerName"`
-	HeartbeatFrequencyMS    int       `json:"heartbeatFrequencyMS"`
-	PatrolFrequencyMS       int       `json:"patrolFrequencyMS"`
-	BriefingFrequencyMS     int       `json:"briefingFrequencyMS"`
-	C2cMsgFrequencyMS       int       `json:"c2cMsgFrequencyMS"`
-	TemperatureSource       string    `json:"temperatureSource"`
-	Syswatch                bool      `json:"syswatch"` // Enable system hardware stats reporting.
-	EnableRedundantFailover bool      `json:"enableRedundantFailover"`
-	PrimaryIP               []string  `json:"primaryIP,omitempty"`
-	PrimaryNetworkInterface []string  `json:"primaryNetworkInterface,omitempty"`
-	ThisCtrlrStaticIP       string    `json:"thisCtrlrStaticIP,omitempty"`
-	OtherCtrlrStaticIP      string    `json:"otherCtrlrStaticIP,omitempty"`
-	PduIP                   string    `json:"pduIP,omitempty"`
-	PduOutletEndpoint       string    `json:"pduOutletEndpoint"`
-	OtherCtrlrOutlet        string    `json:"otherCtrlrOutlet"`
-	AllowActions            bool      `json:"allowActions"` // Global for whether or not to allow taking an action
-	ProcessList             []Process `json:"processList"`
+	Name                        string    `json:"controllerName"`
+	HeartbeatFrequencyMS        int       `json:"heartbeatFrequencyMS"`
+	PatrolFrequencyMS           int       `json:"patrolFrequencyMS"`
+	BriefingFrequencyMS         int       `json:"briefingFrequencyMS"`
+	C2cMsgFrequencyMS           int       `json:"c2cMsgFrequencyMS"`
+	ConnectionHangtimeAllowance int       `json:"connectionHangtimeAllowance"`
+	TemperatureSource           string    `json:"temperatureSource"`
+	Syswatch                    bool      `json:"syswatch"` // Enable system hardware stats reporting.
+	EnableRedundantFailover     bool      `json:"enableRedundantFailover"`
+	PrimaryIP                   []string  `json:"primaryIP,omitempty"`
+	PrimaryNetworkInterface     []string  `json:"primaryNetworkInterface,omitempty"`
+	ThisCtrlrStaticIP           string    `json:"thisCtrlrStaticIP,omitempty"`
+	OtherCtrlrStaticIP          string    `json:"otherCtrlrStaticIP,omitempty"`
+	PduIP                       string    `json:"pduIP,omitempty"`
+	PduOutletEndpoint           string    `json:"pduOutletEndpoint"`
+	OtherCtrlrOutlet            string    `json:"otherCtrlrOutlet"`
+	AllowActions                bool      `json:"allowActions"` // Global for whether or not to allow taking an action
+	ProcessList                 []Process `json:"processList"`
 }
 
 type Process struct {
 	Name                     string   `json:"name"`
 	Uri                      string   `json:"uri"`
 	AllowActions             bool     `json:"allowActions"`
+	EnableConnectionStatus   bool     `json:"connectionStatus"` // toggle for enabling reporting a client-server connection status
 	WriteOutC2C              []string `json:"writeOutC2C"`
 	KillOnHang               bool     `json:"killOnHang"`
 	RequiredForHealthyStatus bool     `json:"requiredForHealthyStatus"` // Determines whether or not heartbeats are enabled for a process.
@@ -134,10 +136,12 @@ func parse(cfgSource string) error {
 
 // Validate the configuration - verify required fields exist. Populate optional fields with defaults if applicable.
 func (c *Config) validate() error {
+	// Default rates in milliseconds
 	defaultHeartBeatMS := 1000
 	defaultPatrolMS := 1000
 	defaultBriefingMS := 5000
 	defaultC2CmsgMS := 50
+	defaultConnMS := 3500
 
 	// Use hostname as name if no name provided and redundant failover is not enabled
 	if c.Name == "" && !c.EnableRedundantFailover {
@@ -169,6 +173,11 @@ func (c *Config) validate() error {
 	if c.C2cMsgFrequencyMS == 0 {
 		log.Infof("Using default c2c messaging frequency value: %v.", defaultC2CmsgMS)
 		c.C2cMsgFrequencyMS = defaultC2CmsgMS
+	}
+
+	if c.ConnectionHangtimeAllowance == 0 {
+		log.Infof("Using default c2c messaging frequency value: %v.", defaultC2CmsgMS)
+		c.C2cMsgFrequencyMS = defaultConnMS
 	}
 
 	// Validate process list
@@ -303,7 +312,10 @@ func configureCOPS(config Config) error {
 		var processEntry processInfo
 		processEntry.name = process.Name
 		processEntry.uri = process.Uri
+		processEntry.connected = false
+		processEntry.lastUpdate = time.Now()
 		processEntry.allowActions = process.AllowActions
+		processEntry.enableConnectionStatus = process.EnableConnectionStatus
 		processEntry.writeOutC2C = process.WriteOutC2C
 		processEntry.killOnHang = process.KillOnHang
 		processEntry.requiredForHealthyStatus = process.RequiredForHealthyStatus

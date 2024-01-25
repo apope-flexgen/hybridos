@@ -88,6 +88,10 @@ func (process processInfo) buildStatsReport() map[string]interface{} {
 	healthParams["avg_mem_usage_pct"] = process.healthStats.avgMemUsagePercent
 	healthParams["controls"] = process.generateControlsMap()
 	healthParams["dependencies"] = process.dependencies
+	// Only report connection status for enabled processes
+	if process.enableConnectionStatus {
+		healthParams["is_connected"] = process.connected
+	}
 	return healthParams
 }
 
@@ -128,6 +132,13 @@ func getProcessStats(processName string) (cpu, mem float64, err error) {
 		return 0, 0, fmt.Errorf("get %s cpu and mem stats: %v", processName, err)
 	}
 
+	// Validate bounds on average % usage statistics.
+	if cpu < 0.0 {
+		cpu = 0.0
+	}
+	if mem < 0.0 {
+		mem = 0.0
+	}
 	return cpu, mem, nil
 }
 
@@ -254,6 +265,7 @@ func updateResourceUsageData() {
 			//log.Errorf("getting %s cpu and mem stats: %v", process.name, err)
 			continue
 		}
+
 		process.healthStats.avgCPUUsagePercent = cpu
 		process.healthStats.avgMemUsagePercent = mem
 	}

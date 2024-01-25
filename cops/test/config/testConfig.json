@@ -4,6 +4,7 @@
     "patrolFrequencyMS": 1000,
     "briefingFrequencyMS": 5000,
     "c2cMsgFrequencyMS": 50,
+    "connectionHangtimeAllowance": 5000,
     "statsPubFrequencySeconds": 1,
     "enableRedundantFailover": false,
     "primaryIP": ["192.168.1.1"],
@@ -29,7 +30,8 @@
             "allowActions": false,
             "requiredForHealthyStatus": true,
             "hangtimeallowanceMS": 3000,
-            "configRestart": true
+            "configRestart": true,
+            "connectionStatus": true
         }
     ]
 }

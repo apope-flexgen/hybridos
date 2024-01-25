@@ -28,9 +28,12 @@ type processControls struct {
 
 // Information about each process used and updated by COPS
 type processInfo struct {
-	name                     string             // process name
-	uri                      string             // URI of the data structure holding the COPS info at the process
-	allowActions             bool               // Configurable value for whether or not actions can be taken on the process
+	name                     string // process name
+	uri                      string // URI of the data structure holding the COPS info at the process
+	allowActions             bool   // Configurable value for whether or not actions can be taken on the process
+	enableConnectionStatus   bool   // Configure whether to report connection status for a process. Mainly for modbus/dnp
+	connected                bool
+	lastUpdate               time.Time          // Store most recently updated connection status for process
 	replyToURI               string             // URI that heartbeat replies from this process to COPS will use
 	writeOutC2C              []string           // URIs that should be written out to C2C by primary to maintain data
 	heartbeat                uint               // Current COPS heartbeat value
@@ -76,6 +79,28 @@ func getProcess(name string) *processInfo {
 		if process.name == name {
 			return process
 		}
+	}
+	return nil
+}
+
+// Send poll to retrieve connection information for a given client.
+func (process *processInfo) pollConnectionStatus() error {
+	// Update current reporting connection status
+	waitTime := time.Duration(config.ConnectionHangtimeAllowance / 1000)
+	if time.Since(process.lastUpdate) > waitTime*time.Second {
+		// Auto timeout connected status after a configurable wait time.
+		if process.connected {
+			process.connected = false
+			log.Infof("Process %s is disconnected \n", process.name)
+		}
+	}
+
+	// Build URI and replyto message.
+	replyTo := fmt.Sprintf("/cops/connection/%s", process.name)
+
+	// Send FIMS request to get back info on component.
+	if err := getClientConnectionStatus(process.uri, replyTo); err != nil {
+		return fmt.Errorf("getting client connection status: %w", err)
 	}
 	return nil
 }
@@ -234,7 +259,7 @@ func getUnitTime(conn *dbus.Conn, service string) (uint64, error) {
 	// If the .service file does not exist, it will return "inactive" for its state.
 	stats, err := conn.GetUnitProperties(service)
 	if err != nil {
-		return 0, fmt.Errorf("Failed to get service status: %v", err)
+		return 0, fmt.Errorf("failed to get service status: %w", err)
 	}
 
 	if stats["ActiveEnterTimestamp"] != nil {

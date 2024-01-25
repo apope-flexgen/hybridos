@@ -7,6 +7,7 @@ import (
 	"path"
 	"reflect"
 	"strings"
+	"time"
 
 	log "github.com/flexgen-power/go_flexgen/logger"
 )
@@ -55,6 +56,15 @@ func getDBIUpdateModeStatus() {
 	if err != nil {
 		log.Errorf("error getting update_mode status from dbi: %v", err)
 	}
+}
+
+// Call function to actively poll FIMS data for connection status of a service.
+func getClientConnectionStatus(uri string, replyTo string) error {
+	err := f.SendGet(uri, replyTo)
+	if err != nil {
+		return fmt.Errorf("retrieving connection status at uri: %s: %w", uri, err)
+	}
+	return nil
 }
 
 // As the primary, the other controller (secondary) has requested our latest setpoints on its startup
@@ -107,6 +117,9 @@ func handleSet(msg fims.FimsMsg) error {
 	// Set received from UI or command line enabling or disabling Update mode
 	case msg.Uri == "/cops/update_mode":
 		return handleUpdateMode(msg)
+	case msg.Nfrags == 3 && strings.HasPrefix(msg.Uri, "/cops/connection"):
+		// Handle monitoring connect/disconnect.
+		return handleConnectionStatus(msg)
 	case msg.Uri == "/cops/configuration":
 		// verify type of FIMS msg body
 		body, ok := msg.Body.(map[string]interface{})
@@ -181,6 +194,29 @@ func handleSet(msg fims.FimsMsg) error {
 		// If not caught by any of the above checks, then the set is invalid
 		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
 	}
+	return nil
+}
+
+// Handle reporting connection status for a given process.
+func handleConnectionStatus(msg fims.FimsMsg) error {
+	// Process name in uri is built off existing process. Guranteed to always exist.
+	process := processJurisdiction[msg.Frags[2]]
+
+	// Check for connection status.
+	if m, ok := msg.Body.(map[string]interface{}); ok {
+		// Update process connection information
+		isConnected := m["component_connected"].(float64) != 0.0
+		if isConnected {
+			process.connected = true
+			process.lastUpdate = time.Now()
+			return nil
+		} else {
+			process.connected = false
+		}
+	} else {
+		return fmt.Errorf("fims body is not a map: %v", m)
+	}
+
 	return nil
 }
 

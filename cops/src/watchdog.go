@@ -35,6 +35,13 @@ func patrolProcesses() error {
 		if err := process.updateStatus(); err != nil {
 			return fmt.Errorf("updating service %v status: %w", process.name, err)
 		}
+
+		// If connection reporting is enabled, retrieve connection information and report.
+		if process.enableConnectionStatus {
+			if err := process.pollConnectionStatus(); err != nil {
+				return fmt.Errorf("polling connection status for process %v: %w", process.name, err)
+			}
+		}
 	}
 
 	return nil
