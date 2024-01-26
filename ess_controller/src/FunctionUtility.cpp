@@ -43,7 +43,7 @@ namespace FunctionUtility
         const char* infoMessage
     ) 
     {
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{}", __func__);
 
 
         std::string status = "";
@@ -90,7 +90,7 @@ namespace FunctionUtility
     void PullOffScheduler(varmap& amap, assetVar* aV, const char* updatedAssetVarName) 
     {
 
-        if(0)DataUtility::PrintAssetVar(aV, assetVar::ATypes::AFLOAT);
+        if(1)DataUtility::PrintAssetVar(aV, assetVar::ATypes::AFLOAT);
         aV->setParam("endTime", 1);
 
         if (!amap[updatedAssetVarName]) return;
@@ -102,7 +102,7 @@ namespace FunctionUtility
 
     void SharedInputHandlerLocalFunction(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* inputHandlerFuncName) {
         
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{}", __func__);
 
         asset_manager * am = aV->am;
         VarMapUtils* vm = am->vm;
@@ -113,25 +113,39 @@ namespace FunctionUtility
 
         std::string scheduledFuncName = inputHandlerFuncName;
 
+        const char *bmsch = (const char*)"bms";
+        if (aV->gotParam("bms"))
+        {
+            bmsch = aV->getcParam("bms");
+        }
+
+        const char *pcsch = (const char*)"pcs";
+        if (aV->gotParam("pcs"))
+        {
+            pcsch = aV->getcParam("pcs");
+        }
+
+        // if(1)FPS_PRINT_INFO("bmsch is {}", bmsch);
+
 
         if (scheduledFuncName == "LocalStartBMS") {
-            assetName += "bms";
+            assetName += bmsch;
             uiUriName += "close_contactors";
             outputHandlerFunction = OutputHandler::CloseContactors;
         } else if (scheduledFuncName == "LocalStopBMS") {
-            assetName += "bms";
+            assetName += bmsch;
             uiUriName += "open_contactors";
             outputHandlerFunction = OutputHandler::OpenContactors;
         } else if (scheduledFuncName == "LocalStartPCS") {
-            assetName += "pcs";
+            assetName += pcsch;
             uiUriName += "start";
             outputHandlerFunction = OutputHandler::StartPCS;
         } else if (scheduledFuncName == "LocalStopPCS") {
-            assetName += "pcs";
+            assetName += pcsch;
             uiUriName += "stop";
             outputHandlerFunction = OutputHandler::StopPCS;
         } else if (scheduledFuncName == "LocalStandbyPCS") {
-            assetName += "pcs";
+            assetName += pcsch;
             uiUriName += "standby";
             outputHandlerFunction = OutputHandler::StandbyPCS;
         } else {
@@ -254,7 +268,7 @@ namespace FunctionUtility
     * @param av the assetVar that contains the command value to send
     * @param controlString the string for the /ess/controls/X/[] uri    ex: CloseContactors, OpenContactors, Start, etc.
     */
-    FunctionReturnObj SharedHandleCmdProcess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, std::string controlString) {
+    FunctionReturnObj SharedHandleCmdProcess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, HandleCmdProcessUris uris) {
 
         FunctionReturnObj returnObject; 
         int reload = 0;
@@ -268,22 +282,22 @@ namespace FunctionUtility
 
 
         // **Control** -> CloseContactors
-        std::string control = controlString;
+        std::string control = uris.controlsUri;
         if(0)FPS_PRINT_INFO("control [{}]", control);
         // **Control**Success -> CloseContactorsSuccess
-        std::string controlSuccess = controlString + SUCCESS_STRING;
+        std::string controlSuccess = uris.controlsSuccessUri;
         if(0)FPS_PRINT_INFO("controlSuccess [{}]", controlSuccess);
         // Verify**Control** -> VerifyCloseContactors
-        std::string verifyControl = VERIFY_STRING + controlString;
+        std::string verifyControl = uris.verifyControlsUri;
         if(0)FPS_PRINT_INFO("verifyControl [{}]", verifyControl);
         // Verify**Control**Success -> VerifyCloseContactorsSuccess
-        std::string verifyControlSuccess = VERIFY_STRING + controlString + SUCCESS_STRING;
+        std::string verifyControlSuccess = uris.verifyControlsSuccessUri;
         if(0)FPS_PRINT_INFO("verifyControlSuccess [{}]", verifyControlSuccess);
 
-        std::string controlAlarm = controlString + ALARM_STRING;
+        std::string controlAlarm = uris.controlsAlarmUri;
         if(0)FPS_PRINT_INFO("controlAlarm [{}]", controlAlarm);
 
-        std::string verifyControlAlarm = VERIFY_STRING + controlString + ALARM_STRING;
+        std::string verifyControlAlarm = uris.verifyControlsAlarmUri;
         if(0)FPS_PRINT_INFO("verifyControlAlarm [{}]", verifyControlAlarm);
 
         //TODO make "bms" below dynamic to any aname

@@ -1,15 +1,15 @@
 {    
     "/controls/##BMS_ID##": {
         "CloseContactors": {
-            "value": 2,
-            "cmdVar": "/components/catl_ems_bms_rw:ems_cmd",
+            "value": 1,
+            "cmdVar": "/components/##BMS_ID##_info:contactor_control",
             "maxCmdTries": 2,
             "checkCmdTimeout": 2,
             "checkCmdHoldTimeout": 2
         },
         "OpenContactors": {
-            "value": 3,
-            "cmdVar": "/components/catl_ems_bms_rw:ems_cmd",
+            "value": 2,
+            "cmdVar": "/components/##BMS_ID##_info:contactor_control",
             "maxCmdTries": 2,
             "checkCmdTimeout": 2,
             "checkCmdHoldTimeout": 2
@@ -18,22 +18,22 @@
             "value": 0,
             "enableAlert": false,
             "numVars": 1,
-            "variable1": "/status/bms:DCClosed",
+            "variable1": "/status/##BMS_ID##:DCClosed",
             "useExpr": true,
-            "expression": "{1}",
+            "expression": "{1} == 2",
             "sendCmdTimeout": 5
         },
         "VerifyOpenContactors": {
             "value": 0,
             "enableAlert": false,
             "numVars": 1,
-            "variable1": "/status/bms:DCClosed",
+            "variable1": "/status/##BMS_ID##:DCClosed",
             "useExpr": true,
-            "expression": "not {1}",
+            "expression": "{1} == 1",
             "sendCmdTimeout": 5
         }
     },
-    "/status/bms": {
+    "/status/##BMS_ID##": {
         "CloseContactorsSuccess": {
             "actions": {
                 "onSet": [

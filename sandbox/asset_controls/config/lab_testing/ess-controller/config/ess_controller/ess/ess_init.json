@@ -22,12 +22,17 @@
                 },
                 {
                     "aname": "bms",
-                    "load": "catl_bms_init",
+                    "load": "bms_init",
                     "pname": "ess"
                 },
                 {
                     "aname": "pcs",
-                    "load": "sungrow_pcs_init",
+                    "load": "pe_pcs_1_init",
+                    "pname": "ess"
+                },
+                {
+                    "aname": "pcs",
+                    "load": "pe_pcs_2_init",
                     "pname": "ess"
                 }
             ],

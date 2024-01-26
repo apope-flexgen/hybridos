@@ -1,37 +1,166 @@
 {
     "/config/##BMS_ID##": {
-        "CurrentCheckThreshold": 35
+        "AlarmDestination": "/assets/bms/##BMS_ID##:alarms",
+        "CurrentBeforeStopThreshold": 35,
+        "FaultDestination": "/assets/bms/##BMS_ID##:faults",
+        "NoAlarmMsg": "Normal",
+        "NoFaultMsg": "Normal",
+        "enable": false,
+        "enum_opt": false
     },
 
 
     "/assets/bms/##BMS_ID##": {
         "close_contactors": {
+            "name": "Close DC Contactor",
             "value": false,
+            "unit": "",
+            "scaler": 0,
             "enabled": false,
-            "actions": {
-                "onSet": [{
-                    "func": [{"func": "LogInfo"}],
-                    "remap": [{"inValue": true, "ifChanged": false, "uri": "/controls/##BMS_ID##:CloseContactors@triggerCmd", "outValue": true}]
+            "note": "Enabled conditions: ![/status/bms/DCClosed] && [/assets/bms/summary/maint_mode] && ![/status/bms/IsFaulted]",
+            "ui_type": "control",
+            "type": "enum_button",   
+            "aname": "##BMS_ID##",
+            "uri":"/sched/##BMS_ID##:LocalStartBMS",
+            "every":0.5,
+            "offset":0,
+            "debug": 0,
+            "actions":	{
+                "onSet":	[{
+                    "func":	[
+                        {"inValue":true, "func": "RunSched"}
+                    ]
                 }]
-            },
-            "options": [
-                {"name": "No", "return_value": false},
-                {"name": "Yes","return_value": true}
-            ]
+            }
         },
         "open_contactors": {
+            "name": "Open DC Contactor",
             "value": false,
+            "unit": "",
+            "scaler": 0,
             "enabled": false,
-            "actions": {
-                "onSet": [{
-                    "func": [{"func": "LogInfo"}],
-                    "remap": [{"inValue": true, "ifChanged": false, "uri": "/controls/##BMS_ID##:OpenContactors@triggerCmd", "outValue": true}]
+            "note": "Enabled conditions: [/status/bms/DCClosed] && ![/status/pcs/DCClosed] && [/assets/bms/summary/maint_mode]",
+            "ui_type": "control",
+            "type": "enum_button",
+            "aname": "##BMS_ID##",
+            "uri":"/sched/##BMS_ID##:LocalStopBMS",
+            "every":0.5,
+            "offset":0,
+            "debug":0,
+            "actions":	{
+                "onSet":	[{
+                    "func":	[
+                        {"inValue":true, "func": "RunSched"}
+                    ]
                 }]
+            }
+        }
+    },
+
+    "/sched/##BMS_ID##": {
+        "pubAssetsSummary_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
             },
-            "options": [
-                {"name": "No", "return_value": false},
-                {"name": "Yes","return_value": true}
-            ]
+            "enable": "/config/##BMS_ID##:enable",
+            "mode": "ui",
+            "note": "Publishes UI summary data (/assets/bms/summary)",
+            "table": "/assets/##BMS_ID##/summary",
+            "value": 1
+        },
+        "runMonitor_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "RunMonitor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "aname": "##BMS_ID##",
+            "enable": "/config/##BMS_ID##:enable",
+            "monitor": "wake_monitor",
+            "note": "Periodically runs functions for variables defined in /schedule/wake_monitor/bms",
+            "value": 1
+        },
+        "LocalStartBMS": {
+            "every": 0.5,
+            "value": "LocalStartBMS",
+            "bms": "##BMS_ID##",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "LocalStartBMS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "LocalStopBMS": {
+            "every": 0.5,
+            "value": "LocalStopBMS",
+            "bms": "##BMS_ID##",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "LocalStopBMS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "CloseContactorsEnable": {
+            "value": "CloseContactorsEnable",
+            "bms": "##BMS_ID##",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "CloseContactorsEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "OpenContactorsEnable": {
+            "value": "OpenContactorsEnable",
+            "bms": "##BMS_ID##",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "OpenContactorsEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
         }
     },
 
@@ -238,6 +367,74 @@
             "scale": 1,
             "useExpr": true,
             "expression": "{1} / 10 + {2}"
+        }
+    },
+
+    "/system/commands": {
+        "runOpts_##BMS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "note1": "Sets schedule variables (defined in /sched/bms) to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "options": [
+                {
+                    "aname": "##BMS_ID##",
+                    "every": 1,
+                    "uri": "/sched/##BMS_ID##:pubAssetsSummary_bms",
+                    "value": 1
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "every": 0.1,
+                    "uri": "/sched/##BMS_ID##:runMonitor_bms",
+                    "value": 1
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "value":0, 
+                    "uri":"/sched/##BMS_ID##:LocalStartBMS",
+                    "every":0,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "value":0, 
+                    "uri":"/sched/##BMS_ID##:LocalStopBMS",
+                    "every":0,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "value":0, 
+                    "uri":"/sched/##BMS_ID##:CloseContactorsEnable",
+                    "every":0.1,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "value":0, 
+                    "uri":"/sched/##BMS_ID##:OpenContactorsEnable",
+                    "every":0.1,
+                    "offset":0,
+                    "debug":0
+                }
+            ],
+            "targav": "/system/commands:run",
+            "value": false
         }
     },
 

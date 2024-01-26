@@ -52,6 +52,9 @@ namespace OutputHandler {
             bmsch = aV->getcParam("bms");
         }
 
+        if(1)FPS_PRINT_INFO("bmsch is {}", bmsch);
+
+
         auto relname = fmt::format("{}_{}", __func__, bmsch).c_str() ;
         assetVar* cAv = amap[relname];
 
@@ -60,25 +63,42 @@ namespace OutputHandler {
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
+        std::string OpenContactorsSuccessUri = (fmt::format("OpenContactorsSuccess_{}", bmsch));
+        std::string VerifyOpenContactorsSuccessUri = (fmt::format("VerifyOpenContactorsSuccess_{}", bmsch));
+        std::string OpenContactorsUri = (fmt::format("OpenContactors_{}", bmsch));
+        std::string VerifyOpenContactorsUri = (fmt::format("VerifyOpenContactors_{}", bmsch));
+        std::string OpenContactors_ALARMUri = (fmt::format("OpenContactors_ALARM_{}", bmsch));
+        std::string VerifyOpenContactors_ALARMUri = (fmt::format("VerifyOpenContactors_ALARM_{}", bmsch));
+
 
         if (reload < 2)
         {
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
             cAv = amap[relname];
 
+
+            std::string status = (fmt::format("/status/{}", bmsch));
+            std::string controls = (fmt::format("/controls/{}", bmsch));
+            std::string alarms = (fmt::format("/alarms/{}", bmsch));
+
+            FPS_PRINT_INFO("status string is {}", status);
+            FPS_PRINT_INFO("controls string is {}", controls);
+            FPS_PRINT_INFO("alarms string is {}", alarms);
+
+
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/bms/OpenContactorsSuccess
-                DataUtility::AssetVarInfo("/status/bms", "OpenContactorsSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "OpenContactorsSuccess", OpenContactorsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /status/bms/VerifyOpenContactorsSuccess
-                DataUtility::AssetVarInfo("/status/bms", "VerifyOpenContactorsSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "VerifyOpenContactorsSuccess", VerifyOpenContactorsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /controls/bms/OpenContactors
-                DataUtility::AssetVarInfo("/controls/bms", "OpenContactors", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo(controls.c_str(), "OpenContactors", OpenContactorsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /controls/bms:VerifyOpenContactors
-                DataUtility::AssetVarInfo("/controls/bms", "VerifyOpenContactors", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo(controls.c_str(), "VerifyOpenContactors", VerifyOpenContactorsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /alarms/bms:OpenContactors
-                DataUtility::AssetVarInfo("/alarms/bms", "OpenContactors", "OpenContactors_ALARM", assetVar::ATypes::ASTRING),
+                DataUtility::AssetVarInfo(alarms.c_str(), "OpenContactors", OpenContactors_ALARMUri.c_str(), assetVar::ATypes::ASTRING),
                 // /alarms/bms:VerifyOpenContactors
-                DataUtility::AssetVarInfo("/alarms/bms", "VerifyOpenContactors", "VerifyOpenContactors_ALARM", assetVar::ATypes::ASTRING)
+                DataUtility::AssetVarInfo(alarms.c_str(), "VerifyOpenContactors", VerifyOpenContactors_ALARMUri.c_str(), assetVar::ATypes::ASTRING)
             };
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
@@ -99,8 +119,17 @@ namespace OutputHandler {
         }
 
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "OpenContactors", "VerifyOpenContactors");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, bmsch, p_fims, aV, "OpenContactors");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, OpenContactorsUri.c_str(), VerifyOpenContactorsUri.c_str());
+
+        FunctionUtility::HandleCmdProcessUris uris;
+        uris.controlsUri = OpenContactorsUri;
+        uris.verifyControlsUri = VerifyOpenContactorsUri;
+        uris.controlsSuccessUri = OpenContactorsSuccessUri;
+        uris.verifyControlsSuccessUri = VerifyOpenContactorsSuccessUri;
+        uris.controlsAlarmUri = OpenContactors_ALARMUri;
+        uris.verifyControlsAlarmUri = VerifyOpenContactors_ALARMUri;
+
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, bmsch, p_fims, aV, uris);
 
         return returnObject;
 
@@ -135,6 +164,9 @@ namespace OutputHandler {
             bmsch = aV->getcParam("bms");
         }
 
+        if(1)FPS_PRINT_INFO("bmsch is {}", bmsch);
+
+
         auto relname = fmt::format("{}_{}", __func__, bmsch).c_str();
         assetVar* cAv = amap[relname];
         if (!cAv || (reload = cAv->getiVal()) == 0)
@@ -142,25 +174,41 @@ namespace OutputHandler {
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
+
+        std::string CloseContactorsSuccessUri = (fmt::format("CloseContactorsSuccess_{}", bmsch));
+        std::string VerifyCloseContactorsSuccessUri = (fmt::format("VerifyCloseContactorsSuccess_{}", bmsch));
+        std::string CloseContactorsUri = (fmt::format("CloseContactors_{}", bmsch));
+        std::string VerifyCloseContactorsUri = (fmt::format("VerifyCloseContactors_{}", bmsch));
+        std::string CloseContactors_ALARMUri = (fmt::format("CloseContactors_ALARM_{}", bmsch));
+        std::string VerifyCloseContactors_ALARMUri = (fmt::format("VerifyCloseContactors_ALARM_{}", bmsch));
+
         if (reload < 2)
         {
 
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
             cAv = amap[relname];
 
+            std::string status = (fmt::format("/status/{}", bmsch));
+            std::string controls = (fmt::format("/controls/{}", bmsch));
+            std::string alarms = (fmt::format("/alarms/{}", bmsch));
+
+            FPS_PRINT_INFO("status string is {}", status);
+            FPS_PRINT_INFO("controls string is {}", controls);
+            FPS_PRINT_INFO("alarms string is {}", alarms);
+
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/bms/CloseContactorsSuccess
-                DataUtility::AssetVarInfo("/status/bms", "CloseContactorsSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "CloseContactorsSuccess", CloseContactorsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /status/bms/VerifyCloseContactorsSuccess
-                DataUtility::AssetVarInfo("/status/bms", "VerifyCloseContactorsSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "VerifyCloseContactorsSuccess", VerifyCloseContactorsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /controls/bms/CloseContactors
-                DataUtility::AssetVarInfo("/controls/bms", "CloseContactors", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo(controls.c_str(), "CloseContactors", CloseContactorsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /controls/bms:VerifyCloseContactors
-                DataUtility::AssetVarInfo("/controls/bms", "VerifyCloseContactors", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo(controls.c_str(), "VerifyCloseContactors", VerifyCloseContactorsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /alarms/bms:CloseContactors
-                DataUtility::AssetVarInfo("/alarms/bms", "CloseContactors", "CloseContactors_ALARM", assetVar::ATypes::ASTRING),
+                DataUtility::AssetVarInfo(alarms.c_str(), "CloseContactors", CloseContactors_ALARMUri.c_str(), assetVar::ATypes::ASTRING),
                 // /alarms/bms:VerifyCloseContactors
-                DataUtility::AssetVarInfo("/alarms/bms", "VerifyCloseContactors", "VerifyCloseContactors_ALARM", assetVar::ATypes::ASTRING)
+                DataUtility::AssetVarInfo(alarms.c_str(), "VerifyCloseContactors", VerifyCloseContactors_ALARMUri.c_str(), assetVar::ATypes::ASTRING)
             };
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
@@ -178,8 +226,17 @@ namespace OutputHandler {
         }
 
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "CloseContactors", "VerifyCloseContactors");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, bmsch, p_fims, aV, "CloseContactors");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, CloseContactorsUri.c_str(), VerifyCloseContactorsUri.c_str());
+
+        FunctionUtility::HandleCmdProcessUris uris;
+        uris.controlsUri = CloseContactorsUri;
+        uris.verifyControlsUri = VerifyCloseContactorsUri;
+        uris.controlsSuccessUri = CloseContactorsSuccessUri;
+        uris.verifyControlsSuccessUri = VerifyCloseContactorsSuccessUri;
+        uris.controlsAlarmUri = CloseContactors_ALARMUri;
+        uris.verifyControlsAlarmUri = VerifyCloseContactors_ALARMUri;
+
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, bmsch, p_fims, aV, uris);
 
         return returnObject;
     }
@@ -256,7 +313,14 @@ namespace OutputHandler {
         }
 
         amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "Start", "VerifyStart");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, "Start");
+        FunctionUtility::HandleCmdProcessUris uris;
+        // uris.controlsUri = CloseContactorsUri;
+        // uris.verifyControlsUri = VerifyCloseContactorsUri;
+        // uris.controlsSuccessUri = CloseContactorsSuccessUri;
+        // uris.verifyControlsSuccessUri = VerifyCloseContactorsSuccessUri;
+        // uris.controlsAlarmUri = CloseContactors_ALARMUri;
+        // uris.verifyControlsAlarmUri = VerifyCloseContactors_ALARMUri;
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, uris);
 
         return returnObject;
     }
@@ -335,7 +399,14 @@ namespace OutputHandler {
 
 
         amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "Stop", "VerifyStop");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, "Stop");
+        FunctionUtility::HandleCmdProcessUris uris;
+        // uris.controlsUri = CloseContactorsUri;
+        // uris.verifyControlsUri = VerifyCloseContactorsUri;
+        // uris.controlsSuccessUri = CloseContactorsSuccessUri;
+        // uris.verifyControlsSuccessUri = VerifyCloseContactorsSuccessUri;
+        // uris.controlsAlarmUri = CloseContactors_ALARMUri;
+        // uris.verifyControlsAlarmUri = VerifyCloseContactors_ALARMUri;
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, uris);
 
         return returnObject;
     }
@@ -414,7 +485,14 @@ namespace OutputHandler {
 
 
         amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "Standby", "VerifyStandby");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, "Standby");
+        FunctionUtility::HandleCmdProcessUris uris;
+        // uris.controlsUri = CloseContactorsUri;
+        // uris.verifyControlsUri = VerifyCloseContactorsUri;
+        // uris.controlsSuccessUri = CloseContactorsSuccessUri;
+        // uris.verifyControlsSuccessUri = VerifyCloseContactorsSuccessUri;
+        // uris.controlsAlarmUri = CloseContactors_ALARMUri;
+        // uris.verifyControlsAlarmUri = VerifyCloseContactors_ALARMUri;
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, uris);
 
         return returnObject;
     }
