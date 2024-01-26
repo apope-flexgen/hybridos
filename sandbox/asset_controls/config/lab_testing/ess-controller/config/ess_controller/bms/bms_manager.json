@@ -261,8 +261,8 @@
         },
         "SOH": {
             "value": 0,
-            "EnableMinValCheck": true,
-            "EnableFaultCheck": true,
+            "EnableMinValCheck": false,
+            "EnableFaultCheck": false,
             "EnableMaxValCheck": false,
             "MinAlarmThreshold": 60,
             "MinFaultThreshold": 50,
@@ -294,8 +294,8 @@
         "MinCellVoltage":{
             "value": 0,
 
-            "EnableFaultCheck": true,
-            "EnableMinValCheck": true,
+            "EnableFaultCheck": false,
+            "EnableMinValCheck": false,
             "MinAlarmThreshold": 2.80,
             "MinFaultThreshold": 2.70,
             "MinResetValue": 2.72,
@@ -325,8 +325,8 @@
         },
         "MinCellTemp": {
             "value": 0,
-            "EnableFaultCheck": true,
-            "EnableMinValCheck": true,
+            "EnableFaultCheck": false,
+            "EnableMinValCheck": false,
 
             "MinAlarmThreshold": 10,
             "MinFaultThreshold": 1,

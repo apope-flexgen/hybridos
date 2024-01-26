@@ -78,17 +78,17 @@
     },
     "/status/bms": {
         "DCClosed": {
-            "value": -1,
+            "value": false,
             "numVars": 1,
             "variable1": "bms:DCClosed",
             "operation": "max",
             "actions": {
                 "onSet":[{
                     "remap":[
-                        {"inValue": 1, "ifChanged": false, "uri":"/status/bms:DCClosedStatus", "outValue": "Opened"},
-                        {"inValue": 2, "ifChanged": false, "uri":"/status/bms:DCClosedStatus", "outValue": "Closed"},
-                        {"inValue": 1, "ifChanged": false, "uri":"/status/bms:DCClosedBool", "outValue": false},
-                        {"inValue": 2, "ifChanged": false, "uri":"/status/bms:DCClosedBool", "outValue": true}
+                        {"inValue": false, "ifChanged": false, "uri":"/status/bms:DCClosedStatus", "outValue": "Opened"},
+                        {"inValue": true, "ifChanged": false, "uri":"/status/bms:DCClosedStatus", "outValue": "Closed"},
+                        {"inValue": false, "ifChanged": false, "uri":"/status/bms:DCClosedBool", "outValue": false},
+                        {"inValue": true, "ifChanged": false, "uri":"/status/bms:DCClosedBool", "outValue": true}
                     ]
                 }]
             }

@@ -206,18 +206,18 @@
             }
         },
         "DCClosed": {
-            "value": -1,
+            "value": false,
             "numVars": 1,
             "variable1": "bms:DCClosed",
             "operation": "max",
             "actions": {
                 "onSet":[{
                     "remap":[
-                        {"inValue": 1, "uri":"/status/bms:DCClosedStatus", "outValue": "Opened"},
-                        {"inValue": 2, "uri":"/status/bms:DCClosedStatus", "outValue": "Closed"},
+                        {"inValue": false, "uri":"/status/bms:DCClosedStatus", "outValue": "Opened"},
+                        {"inValue": true, "uri":"/status/bms:DCClosedStatus", "outValue": "Closed"},
 
-                        {"inValue": 1, "uri":"/status/site:dc_contactors_closed_bool", "outValue": 0},
-                        {"inValue": 2, "uri":"/status/site:dc_contactors_closed_bool", "outValue": 1}
+                        {"inValue": false, "uri":"/status/site:dc_contactors_closed_bool", "outValue": 0},
+                        {"inValue": true, "uri":"/status/site:dc_contactors_closed_bool", "outValue": 1}
                     ]
                 }]
             }

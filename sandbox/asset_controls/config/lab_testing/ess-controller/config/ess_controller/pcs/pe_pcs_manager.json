@@ -380,12 +380,12 @@
             "actions": {
                 "onSet": [{
                     "remap": [
-                        {"inValue": "Off",      "uri": "/status/pcs:DCClosed", "outValue": 0},
-                        {"inValue": "Starting", "uri": "/status/pcs:DCClosed", "outValue": 0},
-                        {"inValue": "Ready",    "uri": "/status/pcs:DCClosed", "outValue": 1},
-                        {"inValue": "Running",  "uri": "/status/pcs:DCClosed", "outValue": 1},
-                        {"inValue": "Shutdown", "uri": "/status/pcs:DCClosed", "outValue": 1},
-                        {"inValue": "Fault",    "uri": "/status/pcs:DCClosed", "outValue": 0},
+                        {"inValue": "Off",      "uri": "/status/pcs:DCClosed", "outValue": false},
+                        {"inValue": "Starting", "uri": "/status/pcs:DCClosed", "outValue": false},
+                        {"inValue": "Ready",    "uri": "/status/pcs:DCClosed", "outValue": true},
+                        {"inValue": "Running",  "uri": "/status/pcs:DCClosed", "outValue": true},
+                        {"inValue": "Shutdown", "uri": "/status/pcs:DCClosed", "outValue": true},
+                        {"inValue": "Fault",    "uri": "/status/pcs:DCClosed", "outValue": false},
                         
                         {"inValue": "Off",      "uri": "/status/pcs:NumRunningModules@EnableMinValCheck", "outValue": false},
                         {"inValue": "Starting", "uri": "/status/pcs:NumRunningModules@EnableMinValCheck", "outValue": false},
@@ -419,16 +419,16 @@
             ]}
         },
         "DCClosed": {
-            "value": 0,
+            "value": false,
             "resetChange": false,
             "actions": {
                 "onSet": [{
                     "remap": [
-                        {"inValue": 0, "uri": "/status/pcs:VoltageDC@EnableMinValCheck", "outValue": false},
-                        {"inValue": 1, "uri": "/status/pcs:VoltageDC@EnableMinValCheck", "outValue": true},
+                        {"inValue": false, "uri": "/status/pcs:VoltageDC@EnableMinValCheck", "outValue": false},
+                        {"inValue": true, "uri": "/status/pcs:VoltageDC@EnableMinValCheck", "outValue": true},
                         
-                        {"inValue": 0, "uri": "/status/bms:Voltage@EnableMinValCheck", "outValue": false},
-                        {"inValue": 1, "uri": "/status/bms:Voltage@EnableMinValCheck", "outValue": true}
+                        {"inValue": false, "uri": "/status/bms:Voltage@EnableMinValCheck", "outValue": false},
+                        {"inValue": true, "uri": "/status/bms:Voltage@EnableMinValCheck", "outValue": true}
                     ]
                 }]
             }

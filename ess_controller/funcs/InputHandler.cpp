@@ -35,7 +35,8 @@ namespace InputHandler
     void LocalStartBMS(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*aV)
     {
     
-        if(1)FPS_PRINT_INFO("{}", __func__);
+        if(0)FPS_PRINT_INFO("{}", __func__);
+        // DataUtility::PrintAssetVar(aV, assetVar::ATypes::AINT);
         FunctionUtility::SharedInputHandlerLocalFunction(vmap, amap, aname, p_fims, aV, __func__);
     }
 
@@ -50,7 +51,7 @@ namespace InputHandler
     */
     void LocalStopBMS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
-        if(1)FPS_PRINT_INFO("{}", __func__);
+        if(0)FPS_PRINT_INFO("{}", __func__);
         FunctionUtility::SharedInputHandlerLocalFunction(vmap, amap, aname, p_fims, aV, __func__);
 
     }

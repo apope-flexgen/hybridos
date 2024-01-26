@@ -64,9 +64,20 @@ namespace FunctionUtility
             : controlsUri(a), verifyControlsUri(b), controlsSuccessUri(c), verifyControlsSuccessUri(d), controlsAlarmUri(e), verifyControlsAlarmUri(f)  {}
     };
 
+    struct HandleCmdLogicUris {
+        std::string controlsUri = "";
+        std::string controlsSuccessUri = "";
+        std::string controlsAlarmUri = "";
+
+        HandleCmdLogicUris() = default;
+
+        HandleCmdLogicUris(std::string a, std::string b,  std::string c) 
+            : controlsUri(a), controlsSuccessUri(b), controlsAlarmUri(c)  {}
+    };
+
     FunctionReturnObj SharedHandleCmdProcess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, HandleCmdProcessUris uris);
 
-    FunctionReturnObj SharedIndividualHandleCmdLogic(varmap& amap, const char* aname, fims* p_fims, assetVar* aV, std::string controlString);
+    FunctionReturnObj SharedIndividualHandleCmdLogic(varmap& amap, const char* aname, fims* p_fims, assetVar* aV, HandleCmdLogicUris uris);
 
 }
 

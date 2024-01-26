@@ -49,7 +49,8 @@ $scripts_dir/dbi.sh $cfg_dir web_ui
 # $bin_dir/echo $psm_dir/echo/ess_1_pcs_modbus_echo.json &
 # $bin_dir/go_metrics $psm_dir/echo/ess_1_pcs_modbus_echo.json &
 
-$bin_dir/modbus_client $cfg_dir/modbus_client/risen_bms_addressed_client.json &
+# $bin_dir/modbus_client $cfg_dir/modbus_client/risen_without_racks.json &
+# $bin_dir/modbus_client $cfg_dir/modbus_client/risen_bms_addressed_client.json &
 # modbus_client $cfg_dir/modbus_client/sce_pe_pcs_modbus_client.json &
 
 

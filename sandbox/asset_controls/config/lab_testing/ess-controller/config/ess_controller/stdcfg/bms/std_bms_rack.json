@@ -87,12 +87,12 @@
         "AvgCellVoltage"      : -1.0 ,
         "MinCellVoltage"      : -1.0 ,
         "DCClosed": {
-            "value": -1,
+            "value": false,
             "actions": {
                 "onSet":[{
                     "remap":[
-                        {"inValue": 1, "uri":"/status/##BMS_ID##_##RACK_ID##:DCClosedStatus", "outValue": "Opened"},
-                        {"inValue": 2, "uri":"/status/##BMS_ID##_##RACK_ID##:DCClosedStatus", "outValue": "Closed"}
+                        {"inValue": false, "uri":"/status/##BMS_ID##_##RACK_ID##:DCClosedStatus", "outValue": "Opened"},
+                        {"inValue": true, "uri":"/status/##BMS_ID##_##RACK_ID##:DCClosedStatus", "outValue": "Closed"}
                     ]
                 }]
             }

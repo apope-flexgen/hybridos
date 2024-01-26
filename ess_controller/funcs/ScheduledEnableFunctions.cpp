@@ -232,7 +232,7 @@ namespace ScheduledEnableFunctions
                     amap[maint_mode.c_str()]->getfName(), 
                     amap[maint_mode.c_str()]->getbVal()
                 );
-                DataUtility::UpdateEnabledLogicMessage(open_contactors.c_str(), message);
+                DataUtility::UpdateEnabledLogicMessage("open_contactors", message);
                 amap[open_contactors.c_str()]->setParam("enabled", false);
                 amap[OpenContactorsEnabled.c_str()]->setVal(false);
             }

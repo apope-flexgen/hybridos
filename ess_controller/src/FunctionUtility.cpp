@@ -43,7 +43,7 @@ namespace FunctionUtility
         const char* infoMessage
     ) 
     {
-        if(1)FPS_PRINT_INFO("{}", __func__);
+        if(0)FPS_PRINT_INFO("{}", __func__);
 
 
         std::string status = "";
@@ -90,7 +90,7 @@ namespace FunctionUtility
     void PullOffScheduler(varmap& amap, assetVar* aV, const char* updatedAssetVarName) 
     {
 
-        if(1)DataUtility::PrintAssetVar(aV, assetVar::ATypes::AFLOAT);
+        if(0)DataUtility::PrintAssetVar(aV, assetVar::ATypes::AFLOAT);
         aV->setParam("endTime", 1);
 
         if (!amap[updatedAssetVarName]) return;
@@ -102,12 +102,11 @@ namespace FunctionUtility
 
     void SharedInputHandlerLocalFunction(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* inputHandlerFuncName) {
         
-        if(1)FPS_PRINT_INFO("{}", __func__);
+        if(0)FPS_PRINT_INFO("{}", __func__);
 
         asset_manager * am = aV->am;
         VarMapUtils* vm = am->vm;
 
-        std::string assetName = "";
         std::string uiUriName = "";
         std::function<FunctionUtility::FunctionReturnObj(varsmap&, varmap&, const char*, fims*, assetVar*, const char*)> outputHandlerFunction;
 
@@ -128,49 +127,102 @@ namespace FunctionUtility
         // if(1)FPS_PRINT_INFO("bmsch is {}", bmsch);
 
 
+        std::string assetsUri = "";
+        std::string uniqueAssetUri = "";
         if (scheduledFuncName == "LocalStartBMS") {
-            assetName += bmsch;
             uiUriName += "close_contactors";
             outputHandlerFunction = OutputHandler::CloseContactors;
+
+            std::string assetsString = "";
+            if (std::strcmp(bmsch, "bms") == 0) {
+                assetsString = "summary";
+            } else {
+                assetsString = bmsch;
+            }
+            assetsUri = (fmt::format("/assets/bms/{}", assetsString));
+            uniqueAssetUri = fmt::format("{}_{}", uiUriName, bmsch);
         } else if (scheduledFuncName == "LocalStopBMS") {
-            assetName += bmsch;
             uiUriName += "open_contactors";
             outputHandlerFunction = OutputHandler::OpenContactors;
+
+            std::string assetsString = "";
+            if (std::strcmp(bmsch, "bms") == 0) {
+                assetsString = "summary";
+            } else {
+                assetsString = bmsch;
+            }
+            assetsUri = (fmt::format("/assets/bms/{}", assetsString));
+            uniqueAssetUri = fmt::format("{}_{}", uiUriName, bmsch);
         } else if (scheduledFuncName == "LocalStartPCS") {
-            assetName += pcsch;
             uiUriName += "start";
             outputHandlerFunction = OutputHandler::StartPCS;
+
+            std::string assetsString = "";
+            if (std::strcmp(pcsch, "pcs") == 0) {
+                assetsString = "summary";
+            } else {
+                assetsString = pcsch;
+            }
+            assetsUri = (fmt::format("/assets/pcs/{}", assetsString));
+            uniqueAssetUri = fmt::format("{}_{}", uiUriName, pcsch);
         } else if (scheduledFuncName == "LocalStopPCS") {
-            assetName += pcsch;
             uiUriName += "stop";
             outputHandlerFunction = OutputHandler::StopPCS;
+
+            std::string assetsString = "";
+            if (std::strcmp(pcsch, "pcsch") == 0) {
+                assetsString = "summary";
+            } else {
+                assetsString = pcsch;
+            }
+            assetsUri = (fmt::format("/assets/pcs/{}", assetsString));
+            uniqueAssetUri = fmt::format("{}_{}", uiUriName, pcsch);
         } else if (scheduledFuncName == "LocalStandbyPCS") {
-            assetName += pcsch;
             uiUriName += "standby";
             outputHandlerFunction = OutputHandler::StandbyPCS;
+
+            std::string assetsString = "";
+            if (std::strcmp(pcsch, "pcs") == 0) {
+                assetsString = "summary";
+            } else {
+                assetsString = pcsch;
+            }
+            assetsUri = (fmt::format("/assets/pcs/{}", assetsString));
+            uniqueAssetUri = fmt::format("{}_{}", uiUriName, pcsch);
         } else {
             // TODO
         }
 
-        std::string uri = fmt::format("/assets/{}/summary", assetName);
+
+
+
+        // std::string assetsString = "";
+        // if (std::strcmp(bmsch, "bms") == 0) {
+        //     assetsString = "summary";
+        // } else {
+        //     assetsString = bmsch;
+        // }
+        // std::string uri = fmt::format("/assets/{}/summary", assetName);
+        //         std::string open_contactors = (fmt::format("open_contactors_{}", bmsch));
+
 
         std::vector<DataUtility::AssetVarInfo> assetVarVector = {
-            DataUtility::AssetVarInfo(uri.c_str(), uiUriName.c_str(), assetVar::ATypes::ABOOL)
+            DataUtility::AssetVarInfo(assetsUri.c_str(), uiUriName.c_str(), uniqueAssetUri.c_str(), assetVar::ATypes::ABOOL)
         };
         amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
         //Function has been called but the assets uri hasn't been updated so it shouldn't have been called
-        if(!amap[uiUriName.c_str()]->getbVal()) return;
+        if(!amap[uniqueAssetUri.c_str()]->getbVal()) return;
 
         // "every" in /ess/sched/bms/LocalStartPCS -> "every" in /assets/pcs/summary/start
-        amap[uiUriName.c_str()]->setParam("every", aV->getdParam("every"));
+        amap[uniqueAssetUri.c_str()]->setParam("every", aV->getdParam("every"));
 
 
-        FunctionUtility::FunctionReturnObj returnObject = outputHandlerFunction(vmap, amap, aname, p_fims, aV, uiUriName.c_str());
+        FunctionUtility::FunctionReturnObj returnObject = outputHandlerFunction(vmap, amap, aname, p_fims, aV, uniqueAssetUri.c_str());
         int returnValue = returnObject.statusIndicator;
         std::string message = returnObject.message;
 
-        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName.c_str(), uiUriName.c_str(), message.c_str());
+        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName.c_str(), uniqueAssetUri.c_str(), message.c_str());
 
     
     }
@@ -302,6 +354,8 @@ namespace FunctionUtility
 
         //TODO make "bms" below dynamic to any aname
 
+        HandleCmdLogicUris logicUris;
+
 
         auto relname = fmt::format("{}_{}_{}", __func__, control, aname).c_str();
         assetVar* hcAV = amap[relname];
@@ -322,7 +376,10 @@ namespace FunctionUtility
 
         // Phase 1 (Control)
         if(reload == 1) {
-            returnObject = SharedIndividualHandleCmdLogic(amap, aname, p_fims, aV, control);
+            logicUris.controlsUri = uris.controlsUri;
+            logicUris.controlsSuccessUri = uris.controlsSuccessUri;
+            logicUris.controlsAlarmUri = uris.controlsAlarmUri;
+            returnObject = SharedIndividualHandleCmdLogic(amap, aname, p_fims, aV, logicUris);
             switch(returnObject.statusIndicator) {
                 case SUCCESS:
                     // Successfully did the initial control but is still in progress because needs to do the VerifyControl
@@ -350,8 +407,10 @@ namespace FunctionUtility
 
         // Phase 3 (VerifyControl)
         if(reload == 3) {
-
-            returnObject = SharedIndividualHandleCmdLogic(amap, aname, p_fims, aV, verifyControl);
+            logicUris.controlsUri = uris.verifyControlsUri;
+            logicUris.controlsSuccessUri = uris.verifyControlsSuccessUri;
+            logicUris.controlsAlarmUri = uris.verifyControlsAlarmUri;
+            returnObject = SharedIndividualHandleCmdLogic(amap, aname, p_fims, aV, logicUris);
             switch(returnObject.statusIndicator) {
                 case RESET:
                     hcAV->setVal(0);
@@ -380,7 +439,7 @@ namespace FunctionUtility
     * @param av the assetVar that contains the command value to send
     * @param controlString the string for the /ess/controls/X/[] uri **Can be either control or verifyControl**    ex: CloseContactors, VerifyCloseContactors, Start, VerifyStart, etc.
     */
-    FunctionReturnObj SharedIndividualHandleCmdLogic(varmap& amap, const char* aname, fims* p_fims, assetVar* aV, std::string controlString) {
+    FunctionReturnObj SharedIndividualHandleCmdLogic(varmap& amap, const char* aname, fims* p_fims, assetVar* aV, HandleCmdLogicUris uris) {
 
         if(0)FPS_PRINT_INFO("{}", __func__);
 
@@ -391,15 +450,15 @@ namespace FunctionUtility
 
         std::string assetName = aname;
 
-        std::string control = controlString;
-        std::string controlSuccess = controlString + SUCCESS_STRING;
-        std::string controlAlarm = controlString + ALARM_STRING;
+        std::string control = uris.controlsUri;
+        std::string controlSuccess = uris.controlsSuccessUri;
+        std::string controlAlarm = uris.controlsAlarmUri;
 
 
 
-        if(0)FPS_PRINT_INFO("control [{}]", control);
-        if(0)FPS_PRINT_INFO("controlSuccess [{}]", controlSuccess);
-        if(0)FPS_PRINT_INFO("controlAlarm [{}]", controlAlarm);
+        if(1)FPS_PRINT_INFO("control [{}]", control);
+        if(1)FPS_PRINT_INFO("controlSuccess [{}]", controlSuccess);
+        if(1)FPS_PRINT_INFO("controlAlarm [{}]", controlAlarm);
 
         
         if(!amap[control.c_str()]){

@@ -1,0 +1,967 @@
+{
+    "fileInfo": {
+        "sourceFileName": "risen_bms_virtual.xlsx",
+        "sourceFileCreated": "2021-10-19T14:03:27.000Z",
+        "sourceFileLastModified": "2023-07-07T18:21:20.000Z",
+        "sourceFileCreatedBy": "Jimmy Nguyen",
+        "sourceFileLastModifiedBy": "Jasen Liu",
+        "outputFileName": "risen_bms_virtual_client.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2023-07-07T18:21:55.296Z"
+    },
+    "connection": {
+        "name": "Digital Twins BMS",
+        "device name": "Digital Twins BMS",
+        "device protocol": "Modbus TCP",
+        "device id string": "digital_twins_bms",
+        "ip_address": "192.168.1.136",
+        "port": 502
+    },
+    "components": [
+        {
+            "id": "bms_running_info",
+            "frequency": 1000,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 0,
+                    "number_of_registers": 4,
+                    "map": [
+                        {
+                            "id": "gs_version_a",
+                            "offset": 0,
+                            "name": "Version Part 1"
+                        },
+                        {
+                            "id": "gs_version_b",
+                            "offset": 1,
+                            "name": "Version Part 2"
+                        },
+                        {
+                            "id": "gs_version_c",
+                            "offset": 2,
+                            "name": "Version Part 3"
+                        },
+                        {
+                            "id": "gs_version_d",
+                            "offset": 3,
+                            "name": "Version Part 4"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 298,
+                    "number_of_registers": 89,
+                    "map": [
+                        {
+                            "id": "year",
+                            "offset": 298,
+                            "name": "Time - Year"
+                        },
+                        {
+                            "id": "month",
+                            "offset": 299,
+                            "name": "Time - Month"
+                        },
+                        {
+                            "id": "day",
+                            "offset": 300,
+                            "name": "Time - Day"
+                        },
+                        {
+                            "id": "hour",
+                            "offset": 301,
+                            "name": "Time - Hour"
+                        },
+                        {
+                            "id": "minute",
+                            "offset": 302,
+                            "name": "Time - Minute"
+                        },
+                        {
+                            "id": "second",
+                            "offset": 303,
+                            "name": "Time - Second"
+                        },
+                        {
+                            "id": "sw_estop",
+                            "offset": 376,
+                            "name": "SW E-Stop"
+                        },
+                        {
+                            "id": "shunt_trip",
+                            "offset": 384,
+                            "name": "Shunt Trip"
+                        },
+                        {
+                            "id": "relay_status",
+                            "offset": 386,
+                            "name": "Relay Status"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 512,
+                    "number_of_registers": 4,
+                    "map": [
+                        {
+                            "id": "maint_mode",
+                            "offset": 512,
+                            "name": "Maintenance Start"
+                        },
+                        {
+                            "id": "ems_timeout",
+                            "offset": 513,
+                            "name": "EMS Timeout of Loss of Communication"
+                        },
+                        {
+                            "id": "ems_timeout_duration",
+                            "offset": 514,
+                            "name": "EMS Loss of Comm Timeout"
+                        },
+                        {
+                            "id": "battery_cell",
+                            "offset": 515,
+                            "name": "Battery cell data retaining period"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 2049,
+                    "number_of_registers": 13,
+                    "map": [
+                        {
+                            "id": "hvac_remote_ac",
+                            "offset": 2049,
+                            "name": "Remote AC on"
+                        },
+                        {
+                            "id": "hvac_temp_setting",
+                            "offset": 2050,
+                            "name": "Cooling Temp setting"
+                        },
+                        {
+                            "id": "hvac_cooling_setpoint_upper_limit",
+                            "offset": 2051,
+                            "name": "Cooling set-point upper limit"
+                        },
+                        {
+                            "id": "hvac_ht_warning_setting",
+                            "offset": 2052,
+                            "name": "HT warning setting"
+                        },
+                        {
+                            "id": "hvac_lt_warning_setting",
+                            "offset": 2053,
+                            "name": "LT warning setting"
+                        },
+                        {
+                            "id": "hvac_interior_air_fan_setting",
+                            "offset": 2054,
+                            "name": "Interior air fan stop setting"
+                        },
+                        {
+                            "id": "hvac_heat_temp_setting",
+                            "offset": 2059,
+                            "name": "Heating Temp setting"
+                        },
+                        {
+                            "id": "hvac_heating_setpoint_lower_limit",
+                            "offset": 2060,
+                            "name": "Heating set-point lower limit"
+                        },
+                        {
+                            "id": "hvac_humidity_point",
+                            "offset": 2061,
+                            "name": "High humidity point"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 256,
+                    "number_of_registers": 70,
+                    "map": [
+                        {
+                            "id": "info",
+                            "offset": 256,
+                            "name": "Info uint16"
+                        },
+                        {
+                            "id": "info_2",
+                            "offset": 257,
+                            "name": "Info uint16 2"
+                        },
+                        {
+                            "id": "heartbeat",
+                            "offset": 278,
+                            "size": 2,
+                            "name": "Heartbeat",
+                            "echo_id": "/components/bms_01a/heart_heartbeat"
+                        },
+                        {
+                            "id": "ems_comms",
+                            "offset": 280,
+                            "name": "EMS Communication State"
+                        },
+                        {
+                            "id": "ac_comms_state",
+                            "offset": 281,
+                            "name": "AC Communication State 1"
+                        },
+                        {
+                            "id": "bms_comms_state",
+                            "offset": 284,
+                            "name": "BMS Communication State"
+                        },
+                        {
+                            "id": "fss_comms_state",
+                            "offset": 292,
+                            "name": "FSS Communication State"
+                        },
+                        {
+                            "id": "fire_status_cabinet_1_2",
+                            "offset": 320,
+                            "name": "Cabinet 1&2 Fire Status"
+                        },
+                        {
+                            "id": "fire_status_cabinet_3_4",
+                            "offset": 321,
+                            "name": "Cabinet 3&4 Fire Status"
+                        },
+                        {
+                            "id": "fire_status_cabinet_5_6",
+                            "offset": 322,
+                            "name": "Cabinet 5&6 Fire Status"
+                        },
+                        {
+                            "id": "fire_status_cabinet_7_8",
+                            "offset": 323,
+                            "name": "Cabinet 7&8 Fire Status"
+                        },
+                        {
+                            "id": "fire_status_cabinet_9_10",
+                            "offset": 324,
+                            "name": "Cabinet 9&10 Fire Status"
+                        },
+                        {
+                            "id": "fire_status_cabinet_11_12",
+                            "offset": 325,
+                            "name": "Cabinet 11&12 Fire Status"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 768,
+                    "number_of_registers": 24,
+                    "map": [
+                        {
+                            "id": "hvac_gen_sys_state",
+                            "offset": 768,
+                            "name": "General System State"
+                        },
+                        {
+                            "id": "hvac_interior_fan_state",
+                            "offset": 769,
+                            "name": "Interior heat exchanger fan"
+                        },
+                        {
+                            "id": "hvac_exterior_fan_state",
+                            "offset": 770,
+                            "name": "Exterior heat exchanger fan"
+                        },
+                        {
+                            "id": "hvac_compressor_state",
+                            "offset": 771,
+                            "name": "Compressor"
+                        },
+                        {
+                            "id": "hvac_interior_temp",
+                            "offset": 772,
+                            "scale": 10,
+                            "name": "Interior Temp."
+                        },
+                        {
+                            "id": "hvac_exterior_temp",
+                            "offset": 774,
+                            "scale": 10,
+                            "name": "Exterior Temp."
+                        },
+                        {
+                            "id": "hvac_condensation_temp",
+                            "offset": 775,
+                            "scale": 10,
+                            "name": "Condensation Temp."
+                        },
+                        {
+                            "id": "hvac_ac_voltage",
+                            "offset": 779,
+                            "name": "AC voltage"
+                        },
+                        {
+                            "id": "hvac_emergency_fan_state",
+                            "offset": 782,
+                            "name": "Emergency air fan state"
+                        },
+                        {
+                            "id": "hvac_heat_coil_temp",
+                            "offset": 783,
+                            "scale": 10,
+                            "name": "Heat Exchanger Coil (Tubing) Temp."
+                        },
+                        {
+                            "id": "hvac_humidity",
+                            "offset": 787,
+                            "scale": 100,
+                            "name": "Humidity"
+                        },
+                        {
+                            "id": "hvac_electrical_heating",
+                            "offset": 788,
+                            "name": "Electrical Heating"
+                        },
+                        {
+                            "id": "hvac_alarms_1",
+                            "offset": 789,
+                            "name": "HVAC Alarm 1"
+                        },
+                        {
+                            "id": "hvac_alarms_2",
+                            "offset": 790,
+                            "name": "HVAC Alarm 2"
+                        },
+                        {
+                            "id": "hvac_dc_low_voltage",
+                            "offset": 791,
+                            "name": "DC Low Voltage"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "bms_1_info",
+            "frequency": 1000,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 4736,
+                    "number_of_registers": 8,
+                    "map": [
+                        {
+                            "id": "request_cell_information_racking_address",
+                            "offset": 4736,
+                            "name": "Request Cell Information Racking Address"
+                        },
+                        {
+                            "id": "contactor_control",
+                            "offset": 4737,
+                            "name": "High Voltage Power On/Off Command",
+                            "echo_id": "/components/bms_01a/ctrlword2"
+                        },
+                        {
+                            "id": "year",
+                            "offset": 4738,
+                            "name": "Year"
+                        },
+                        {
+                            "id": "month",
+                            "offset": 4739,
+                            "name": "Month"
+                        },
+                        {
+                            "id": "day",
+                            "offset": 4740,
+                            "name": "Day"
+                        },
+                        {
+                            "id": "hour",
+                            "offset": 4741,
+                            "name": "Hour"
+                        },
+                        {
+                            "id": "minutes",
+                            "offset": 4742,
+                            "name": "Minutes"
+                        },
+                        {
+                            "id": "seconds",
+                            "offset": 4743,
+                            "name": "Seconds"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 4608,
+                    "number_of_registers": 60,
+                    "map": [
+                        {
+                            "id": "dc_voltage",
+                            "offset": 4608,
+                            "scale": 10,
+                            "name": "Total Voltage",
+                            "echo_id": "/components/bms_01a/vdc_value"
+                        },
+                        {
+                            "id": "dc_current",
+                            "offset": 4609,
+                            "name": "Total Current",
+                            "echo_id": "/components/bms_01a/idc_value",
+                            "signed": true
+                        },
+                        {
+                            "id": "soc",
+                            "offset": 4610,
+                            "name": "SOC",
+                            "echo_id": "/components/bms_01a/soc_value"
+                        },
+                        {
+                            "id": "soh",
+                            "offset": 4611,
+                            "name": "SOH"
+                        },
+                        {
+                            "id": "soe",
+                            "offset": 4612,
+                            "name": "SOE"
+                        },
+                        {
+                            "id": "sys_state",
+                            "offset": 4613,
+                            "name": "BSU Operative Mode"
+                        },
+                        {
+                            "id": "rated_capacity",
+                            "offset": 4614,
+                            "scale": 10,
+                            "name": "Rated Capacity",
+                            "echo_id": "/components/bms_01a/cap"
+                        },
+                        {
+                            "id": "remaining_capacity",
+                            "offset": 4615,
+                            "scale": 10,
+                            "name": "Remaining Capacity"
+                        },
+                        {
+                            "id": "rated_power",
+                            "offset": 4616,
+                            "scale": 10,
+                            "name": "Rated Power"
+                        },
+                        {
+                            "id": "dischargeable_energy",
+                            "offset": 4617,
+                            "scale": 10,
+                            "name": "Dischargeable Energy",
+                            "echo_id": "/components/bms_01a/edischarge"
+                        },
+                        {
+                            "id": "total_rack_number",
+                            "offset": 4618,
+                            "name": "Total Rack number (BCU)",
+                            "echo_id": "/components/bms_01a/numsbmus"
+                        },
+                        {
+                            "id": "online_racks",
+                            "offset": 4619,
+                            "name": "Online Racks (BCU)",
+                            "echo_id": "/components/bms_01a/numracks"
+                        },
+                        {
+                            "id": "total_slave_number",
+                            "offset": 4620,
+                            "name": "Total Slave Number (BMU)"
+                        },
+                        {
+                            "id": "total_online_slave_number",
+                            "offset": 4621,
+                            "name": "Total Online Slave Number (BMU)"
+                        },
+                        {
+                            "id": "total_number_of_modules",
+                            "offset": 4622,
+                            "name": "Total Number of Batteries"
+                        },
+                        {
+                            "id": "total_number_of_online_modules",
+                            "offset": 4623,
+                            "name": "Total Number of Online Batteries"
+                        },
+                        {
+                            "id": "total_temperature",
+                            "offset": 4624,
+                            "name": "Total Temperature"
+                        },
+                        {
+                            "id": "total_online_temperature",
+                            "offset": 4625,
+                            "name": "Total Online Temperature"
+                        },
+                        {
+                            "id": "max_allowable_discharge_current",
+                            "offset": 4626,
+                            "name": "Maximum Allowable Discharge Current",
+                            "echo_id": "/components/bms_01a/idischarge"
+                        },
+                        {
+                            "id": "dischargeable_power",
+                            "offset": 4627,
+                            "scale": 10,
+                            "name": "Maximum Allowable Discharge Power",
+                            "echo_id": "/components/bms_01a/pdischarge"
+                        },
+                        {
+                            "id": "max_allowable_charging_current",
+                            "offset": 4628,
+                            "name": "Maximum Allowable Charging Current",
+                            "echo_id": "/components/bms_01a/icharge"
+                        },
+                        {
+                            "id": "chargeable_power",
+                            "offset": 4629,
+                            "scale": 10,
+                            "name": "Maximum Allowable Charge Power",
+                            "echo_id": "/components/bms_01a/pcharge"
+                        },
+                        {
+                            "id": "pos_insulation_resistance",
+                            "offset": 4630,
+                            "name": "Positive Insulation Resistance Value"
+                        },
+                        {
+                            "id": "neg_insulation_resistance",
+                            "offset": 4631,
+                            "name": "Negative Insulation Resistance Value"
+                        },
+                        {
+                            "id": "avg_voltage",
+                            "offset": 4632,
+                            "scale": 1000,
+                            "name": "Average Voltage"
+                        },
+                        {
+                            "id": "max_rack_volt_difference",
+                            "offset": 4633,
+                            "scale": 1000,
+                            "name": "Maximum Rack Voltage Difference"
+                        },
+                        {
+                            "id": "max_cell_voltage",
+                            "offset": 4634,
+                            "scale": 1000,
+                            "name": "Maximum Cell Voltage"
+                        },
+                        {
+                            "id": "max_cell_voltage_rack_num",
+                            "offset": 4635,
+                            "name": "Maximum Cell Voltage Rack Number"
+                        },
+                        {
+                            "id": "max_cell_voltage_slave_num",
+                            "offset": 4636,
+                            "name": "Maximum Cell Voltage Slave Number"
+                        },
+                        {
+                            "id": "max_cell_voltage_num",
+                            "offset": 4637,
+                            "name": "Maximum Cell Voltage Number"
+                        },
+                        {
+                            "id": "min_cell_voltage",
+                            "offset": 4638,
+                            "scale": 1000,
+                            "name": "Minimum Cell Voltage"
+                        },
+                        {
+                            "id": "min_cell_voltage_rack_num",
+                            "offset": 4639,
+                            "name": "Minimum Cell Voltage Rack Number"
+                        },
+                        {
+                            "id": "min_cell_voltage_slave_num",
+                            "offset": 4640,
+                            "name": "Minimum Cell Voltage Slave Number"
+                        },
+                        {
+                            "id": "min_cell_voltage_num",
+                            "offset": 4641,
+                            "name": "Minimum Cell Voltage Number"
+                        },
+                        {
+                            "id": "avg_temp",
+                            "offset": 4642,
+                            "scale": 10,
+                            "name": "Average Temperature"
+                        },
+                        {
+                            "id": "max_rack_temp_difference",
+                            "offset": 4643,
+                            "scale": 10,
+                            "name": "Maximum Rack Temperature Difference"
+                        },
+                        {
+                            "id": "max_cell_temp",
+                            "offset": 4644,
+                            "scale": 10,
+                            "name": "Maximum Cell Temperature"
+                        },
+                        {
+                            "id": "max_cell_temp_rack_num",
+                            "offset": 4645,
+                            "name": "Maximum Cell Temperature Rack Number"
+                        },
+                        {
+                            "id": "max_cell_temp_slave_num",
+                            "offset": 4646,
+                            "name": "Maximum Cell Temperature Slave Number"
+                        },
+                        {
+                            "id": "max_cell_temp_num",
+                            "offset": 4647,
+                            "name": "Maximum Cell Temperature Number"
+                        },
+                        {
+                            "id": "min_cell_temp",
+                            "offset": 4648,
+                            "scale": 10,
+                            "name": "Minimum Cell T emperature"
+                        },
+                        {
+                            "id": "min_cell_temp_rack_num",
+                            "offset": 4649,
+                            "name": "Minimum Cell Temperature Rack Number"
+                        },
+                        {
+                            "id": "min_cell_temp_slave_num",
+                            "offset": 4650,
+                            "name": "Minimum Cell Temperature Slave Number"
+                        },
+                        {
+                            "id": "min_cell_temp_num",
+                            "offset": 4651,
+                            "name": "Minimum Cell Temperature Number"
+                        },
+                        {
+                            "id": "daily_charge_capacity",
+                            "offset": 4652,
+                            "scale": 10,
+                            "name": "Daily Charging Capacity"
+                        },
+                        {
+                            "id": "daily_charge_power",
+                            "offset": 4653,
+                            "scale": 10,
+                            "name": "Daily Charging Power"
+                        },
+                        {
+                            "id": "daily_discharge_capacity",
+                            "offset": 4654,
+                            "scale": 10,
+                            "name": "Daily Discharge Capacity"
+                        },
+                        {
+                            "id": "daily_discharge",
+                            "offset": 4655,
+                            "scale": 10,
+                            "name": "Daily Discharge"
+                        },
+                        {
+                            "id": "daily_charging_time",
+                            "offset": 4656,
+                            "scale": 10,
+                            "name": "Daily Charging Time"
+                        },
+                        {
+                            "id": "daily_discharge_time",
+                            "offset": 4657,
+                            "scale": 10,
+                            "name": "Daily Discharge Time"
+                        },
+                        {
+                            "id": "cumulative_charging_capacity",
+                            "offset": 4658,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Cumulative Charging Capacity"
+                        },
+                        {
+                            "id": "cumulative_charging_power",
+                            "offset": 4660,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Cumulative Charging Power"
+                        },
+                        {
+                            "id": "cumulative_discharge_capacity",
+                            "offset": 4662,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Cumulative Discharge Capacity"
+                        },
+                        {
+                            "id": "cumulative_discharge",
+                            "offset": 4664,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Cumulative Discharge"
+                        },
+                        {
+                            "id": "cumulative_charging_time",
+                            "offset": 4666,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Cumulative Charging Time"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 4668,
+                    "number_of_registers": 64,
+                    "map": [
+                        {
+                            "id": "cumulative_discharge_time",
+                            "offset": 4668,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Cumulative Discharge Time"
+                        },
+                        {
+                            "id": "fault_1_8",
+                            "offset": 4670,
+                            "name": "Fault Level of Fault 1-8"
+                        },
+                        {
+                            "id": "fault_9_16",
+                            "offset": 4671,
+                            "name": "Fault Level of Fault 9-16"
+                        },
+                        {
+                            "id": "fault_17_24",
+                            "offset": 4672,
+                            "name": "Fault Level of Fault 17-24"
+                        },
+                        {
+                            "id": "fault_25_32",
+                            "offset": 4673,
+                            "name": "Fault Level of 25-32"
+                        },
+                        {
+                            "id": "fault_33_40",
+                            "offset": 4674,
+                            "name": "Fault Level of 33-40"
+                        },
+                        {
+                            "id": "fault_41_48",
+                            "offset": 4675,
+                            "name": "Fault Level of 41-48"
+                        },
+                        {
+                            "id": "fault_49_56",
+                            "offset": 4676,
+                            "name": "Fault Level of 49-56"
+                        },
+                        {
+                            "id": "fault_57_64",
+                            "offset": 4677,
+                            "name": "Fault Level of 57-64"
+                        },
+                        {
+                            "id": "fault_level",
+                            "offset": 4678,
+                            "name": "Fault Condition"
+                        },
+                        {
+                            "id": "relay_status",
+                            "offset": 4679,
+                            "name": "Relay Status"
+                        },
+                        {
+                            "id": "switch_status",
+                            "offset": 4680,
+                            "name": "Switch Status"
+                        },
+                        {
+                            "id": "total_battery_cycles",
+                            "offset": 4681,
+                            "name": "Number of Battery System Cycles"
+                        },
+                        {
+                            "id": "max_charging_cell_voltage",
+                            "offset": 4682,
+                            "scale": 10,
+                            "name": "Maximum Allowable Charging Cell Voltage"
+                        },
+                        {
+                            "id": "min_discharge_cell_voltage",
+                            "offset": 4683,
+                            "scale": 10,
+                            "name": "Minimum Allowable Discharge Cell Voltage"
+                        },
+                        {
+                            "id": "max_total_charging_voltage",
+                            "offset": 4684,
+                            "name": "Maximum Allowable Total Charging Voltage"
+                        },
+                        {
+                            "id": "min_total_discharge_voltage",
+                            "offset": 4685,
+                            "name": "Minimum Allowable Total Discharge Voltage"
+                        },
+                        {
+                            "id": "bcu_power_on",
+                            "offset": 4686,
+                            "size": 2,
+                            "name": "Power-on Command of BCU"
+                        },
+                        {
+                            "id": "software_version",
+                            "offset": 4688,
+                            "size": 2,
+                            "name": "Software Version Number"
+                        },
+                        {
+                            "id": "revised_version",
+                            "offset": 4690,
+                            "name": "Revised Version Number"
+                        },
+                        {
+                            "id": "hardware_version",
+                            "offset": 4691,
+                            "name": "Hardware Version Number"
+                        },
+                        {
+                            "id": "system_alarms1_lv1",
+                            "offset": 4704,
+                            "name": "BSU System Alarm Level 1"
+                        },
+                        {
+                            "id": "system_alarms1_lv2",
+                            "offset": 4705,
+                            "name": "BSU System Alarm Level 2"
+                        },
+                        {
+                            "id": "system_alarms1_lv3",
+                            "offset": 4706,
+                            "name": "BSU System Alarm Level 3"
+                        },
+                        {
+                            "id": "system_alarms2_lv1",
+                            "offset": 4707,
+                            "name": "BSU System Alarm Level 1"
+                        },
+                        {
+                            "id": "system_alarms2_lv2",
+                            "offset": 4708,
+                            "name": "BSU System Alarm Level 2"
+                        },
+                        {
+                            "id": "system_alarms2_lv3",
+                            "offset": 4709,
+                            "name": "BSU System Alarm Level 3"
+                        },
+                        {
+                            "id": "system_alarms3_lv1",
+                            "offset": 4710,
+                            "name": "BSU System Alarm Level 1"
+                        },
+                        {
+                            "id": "system_alarms3_lv2",
+                            "offset": 4711,
+                            "name": "BSU System Alarm Level 2"
+                        },
+                        {
+                            "id": "system_alarms3_lv3",
+                            "offset": 4712,
+                            "name": "BSU System Alarm Level 3"
+                        },
+                        {
+                            "id": "system_alarms4_lv1",
+                            "offset": 4713,
+                            "name": "BSU System Alarm Level 1 (47 - 64)"
+                        },
+                        {
+                            "id": "system_alarms4_lv2",
+                            "offset": 4714,
+                            "name": "BSU System Alarm Level 2 (47 - 64)"
+                        },
+                        {
+                            "id": "system_alarms4_lv3",
+                            "offset": 4715,
+                            "name": "BSU System Alarm Level 3 (47 - 64)"
+                        },
+                        {
+                            "id": "bms_status",
+                            "offset": 4720,
+                            "name": "BSU Working Status (bit0 - bit3)"
+                        },
+                        {
+                            "id": "bms_restrict_charging",
+                            "offset": 4721,
+                            "name": "BSU Working Status (bit4)"
+                        },
+                        {
+                            "id": "bms_restrict_discharging",
+                            "offset": 4722,
+                            "name": "BSU Working Status (bit5)"
+                        },
+                        {
+                            "id": "bms_dc_contactors_status",
+                            "offset": 4723,
+                            "name": "BSU Working Status (bit6) High voltage closed state (DC ContactorS)",
+                            "echo_id": "/components/bms_01a/dccontactor"
+                        },
+                        {
+                            "id": "bms_fan_status",
+                            "offset": 4724,
+                            "name": "BSU Working Status (bit7) Fan Reserved"
+                        },
+                        {
+                            "id": "c_sub_version",
+                            "offset": 4725,
+                            "name": "C Sub Version"
+                        },
+                        {
+                            "id": "c_main_version",
+                            "offset": 4726,
+                            "name": "C Main Version"
+                        },
+                        {
+                            "id": "r_sub_version",
+                            "offset": 4727,
+                            "name": "R Sub Version"
+                        },
+                        {
+                            "id": "r_main_version",
+                            "offset": 4728,
+                            "name": "R Main Version"
+                        },
+                        {
+                            "id": "application_area",
+                            "offset": 4729,
+                            "name": "Application Area"
+                        },
+                        {
+                            "id": "v_sub_version",
+                            "offset": 4730,
+                            "name": "V Subversion"
+                        },
+                        {
+                            "id": "v_main_version",
+                            "offset": 4731,
+                            "name": "V Main Version"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

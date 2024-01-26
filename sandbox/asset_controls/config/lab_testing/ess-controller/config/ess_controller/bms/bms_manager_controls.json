@@ -3,16 +3,16 @@
         "CloseContactors": {
             "value": 1,
             "cmdVar": "/components/##BMS_ID##_info:contactor_control",
-            "maxCmdTries": 2,
+            "maxCmdTries": 5,
             "checkCmdTimeout": 2,
-            "checkCmdHoldTimeout": 2
+            "checkCmdHoldTimeout": 0
         },
         "OpenContactors": {
             "value": 2,
             "cmdVar": "/components/##BMS_ID##_info:contactor_control",
             "maxCmdTries": 2,
             "checkCmdTimeout": 2,
-            "checkCmdHoldTimeout": 2
+            "checkCmdHoldTimeout": 0
         },
         "VerifyCloseContactors": {
             "value": 0,
@@ -20,7 +20,7 @@
             "numVars": 1,
             "variable1": "/status/##BMS_ID##:DCClosed",
             "useExpr": true,
-            "expression": "{1} == 2",
+            "expression": "{1}",
             "sendCmdTimeout": 5
         },
         "VerifyOpenContactors": {
@@ -29,7 +29,7 @@
             "numVars": 1,
             "variable1": "/status/##BMS_ID##:DCClosed",
             "useExpr": true,
-            "expression": "{1} == 1",
+            "expression": "not {1}",
             "sendCmdTimeout": 5
         }
     },
