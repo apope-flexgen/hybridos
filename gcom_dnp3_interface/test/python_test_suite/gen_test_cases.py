@@ -1,7 +1,7 @@
 import random
-from test_utils import *
+from global_utils import *
 import math
-from configs import *
+from comms_configs import MergedRegister
 import numpy as np
   
 def check_limits(register: MergedRegister, value):
@@ -88,7 +88,7 @@ def expected_value(register: MergedRegister, value):
         value = check_limits(register, value)
         value = value / second_scale
         if register.data_type == "float32":
-            value = "{:g}".format(value)
+            value = "{:.{}g}".format(value, 16)
         value = float(value)
     return value
 
@@ -107,11 +107,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
         value = -random.random()*512
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
 
@@ -122,11 +121,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
         value = random.random()*512
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
     
@@ -136,11 +134,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
         value = random.randint(-512,-1)
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
     
@@ -150,11 +147,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
         value = random.randint(1,512)
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
     
@@ -162,11 +158,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
     value = 0
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
     
@@ -174,11 +169,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
     value = True
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
     
@@ -186,11 +180,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
     value = False
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
     
@@ -198,11 +191,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
     value = "\"some_random_string\""
 
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = []
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id)]
     
     test_id += 1
     
@@ -210,11 +202,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
     value = 1 << 17
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
 
@@ -222,11 +213,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
     value = -(1 << 17)
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
 
@@ -234,11 +224,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
     value = 1 << 33
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
 
@@ -246,11 +235,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
     value = -(1 << 33)
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
 
@@ -258,11 +246,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
     value = MAX_FLOAT_32*2
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
 
@@ -270,11 +257,10 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
     value = MIN_FLOAT_32 * 0.0001
     expected_val = expected_value(register, value)
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
-    expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+    expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     
     test_id += 1
 
@@ -282,14 +268,13 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
     value = '9'*400
     expected_val = expected_val # message doesn't get parsed
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
     if register.method == "pub":
-        expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+        expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     else:
-        expected_messages[test_id] = []
+        expected_messages[test_id] = [test_register.gen_expected_result(test_id)]
     
     test_id += 1
 
@@ -298,14 +283,13 @@ def test_basics(starting_test_id: int, test_register: MergedRegister, register: 
     value = '0.' + value
     expected_val = 0
 
-    fims_commands.append(test_register.gen_fims_message(test_id))
-    fims_commands.append(register.gen_fims_message(value))
-    commands_by_test_id[test_id] = fims_commands[-1][0:fims_commands[-1].find("\n")+1]
+    fims_commands.append([test_register.gen_fims_message(test_id),register.gen_fims_message(value)])
+    commands_by_test_id[test_id] = fims_commands[-1]
     
     if register.method == "pub":
-        expected_messages[test_id] = [register.gen_expected_result(expected_val)]
+        expected_messages[test_id] = [test_register.gen_expected_result(test_id),register.gen_expected_result(expected_val)]
     else:
-        expected_messages[test_id] = []
+        expected_messages[test_id] = [test_register.gen_expected_result(test_id)]
     
     test_id += 1
 

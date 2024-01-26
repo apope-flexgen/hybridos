@@ -1,10 +1,14 @@
 from compare_messages import *
-from test_utils import *
+from global_utils import *
 from git_info import *
 from check_uris import *
 
 def check_test_case(test_case_num_str, expected_test_case, actual_test_case):
     global commands_by_test_id
+    if expected_test_case is not None and actual_test_case is None:
+        return False, print(f"Test Case {test_case_num_str}:\nExpected: {json.dump(expected_test_case)}\nGot: No messages for this test case!\n")
+    if actual_test_case is not None and expected_test_case is None:
+        return False, print(f"Test Case {test_case_num_str}:\nExpected: No messages for this test case!\nGot: {json.dump(actual_test_case)}\n")
     passed_subconditions = []
     highest_return_value = -1
     final_return_message = ""

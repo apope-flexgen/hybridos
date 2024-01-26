@@ -1,15 +1,13 @@
 import subprocess
-from test_utils import *
+from global_utils import *
 import time
 import os
 from process_fims_messages import *
 import signal
 from gen_test_script import *
 from check_test_case import *
-from git_info import *
-from datetime import datetime
 from check_uris import *
-from compare_messages import *
+from check_test_case import *
 import argparse
 from test_python_output import *
 
@@ -90,7 +88,7 @@ signal.signal(signal.SIGINT, sig_handler)
 server_files = []
 client_files = []
 
-
+test_timestamp=timestamp.file_fmt
 expected_test_output = {}
 if args.new:
     print("Generating new test cases")
@@ -98,6 +96,7 @@ if args.new:
     get_config_pairs()
     get_test_register_sets()
     gen_commands()
+    build_output_files()
     write_command_files()
     write_expected_message_files()
     for (test_set_num, [client_filename, server_filename]) in enumerate(all_config_file_pairs):
@@ -131,8 +130,8 @@ failed_cases = 0
 failed_cases_list = []
 
 test_result_output = ""
-test_result_output += get_git_info()
-date = f"Test date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')}"
+test_result_output += str(git_info)
+date = f"Test date: {timestamp.print_fmt}"
 print(date)
 test_result_output += date + "\n"
 
@@ -243,17 +242,17 @@ for (test_set_num, [client_file,server_file]) in enumerate(all_config_file_pairs
     subprocess.run(["docker", "exec", "-it", f"{SERVER_CONTAINER}", "pkill", f"{INTERFACE}_server"])
     subprocess.run(["docker", "exec", "-it", f"{CLIENT_CONTAINER}", "pkill", f"{INTERFACE}_client"])
     print("writing to server log")
-    with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_LOG_DIR}/{server_file}.log", 'w', newline='\n') as file:
+    with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_LOG_DIR}/{server_file}_{test_timestamp}.log", 'w', newline='\n') as file:
         file.write(fims_listen_server_output)
     print("writing to client log")
-    with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_LOG_DIR}/{client_file}.log", 'w', newline='\n') as file:
+    with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_LOG_DIR}/{client_file}_{test_timestamp}.log", 'w', newline='\n') as file:
         file.write(fims_listen_client_output)
     print("writing to server console output")
-    with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONSOLE_OUTPUT_DIR}/{server_file}.txt", 'w', newline='\n') as file:
+    with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONSOLE_OUTPUT_DIR}/{server_file}_{test_timestamp}.txt", 'w', newline='\n') as file:
         server_output = dnp3_server.stdout.read()
         file.write(server_output)
     print("writing to client console output")
-    with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONSOLE_OUTPUT_DIR}/{client_file}.txt", 'w', newline='\n') as file:
+    with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONSOLE_OUTPUT_DIR}/{client_file}_{test_timestamp}.txt", 'w', newline='\n') as file:
         client_output = dnp3_client.stdout.read()
         file.write(client_output)
 

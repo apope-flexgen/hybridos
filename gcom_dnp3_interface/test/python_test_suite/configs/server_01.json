@@ -7,9 +7,7 @@
         "id": "test_server",
         "ip_address": "0.0.0.0",
         "local_uri": "/local_server",
-        "port": 20000,
-        "stats_pub_frequency":1000,
-        "stats_pub_uri": "/stats"
+        "port": 20000
     },
     "registers": [
         {

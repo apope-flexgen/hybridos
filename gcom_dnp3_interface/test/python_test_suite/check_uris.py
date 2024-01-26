@@ -1,7 +1,7 @@
 import os
 import json
 from datetime import datetime
-from test_utils import *
+from global_utils import *
 from git_info import *
 
 def get_uri_vars(filename):

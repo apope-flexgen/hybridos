@@ -3,50 +3,69 @@ import os
 import sys
 import random
 import math
-from test_utils import *
+from global_utils import *
 from gen_test_cases import *
-from configs import *
+from comms_configs import ConfigFile, MergedRegister
 
-def write_command_files():
-    global all_config_file_pairs, all_config_pairs, all_config_register_sets, all_fims_commands, all_expected_messages
-    for file_set, command_set, test_register_set in list(zip(all_config_file_pairs, all_fims_commands, test_register_sets)):
-        client_file = file_set[0]
-        server_file = file_set[1]
-        client_commands = command_set[0]
-        server_commands = command_set[1]
-        pub_test_register = test_register_set[0]
-        set_test_register = test_register_set[1]
+def load_output_files():
+    global output_file_content
+    for (client_filename, server_filename) in all_config_file_pairs:
+        client_file = None
+        server_file = None
+        try:
+            with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONFIG_DIR}/{client_filename}", "r") as file:
+                client_file = json.loads(file)
+        except:
+            pass
+        try:
+            with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONFIG_DIR}/{server_filename}", "r") as file:
+                server_file = json.loads(file)
+        except:
+            pass
+        output_file_content.append((client_file, server_file))
+        
 
-        client_output_filename = f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_SCRIPT_DIR}/{client_file.replace('.json', '.sh')}"
-        server_output_filename = f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_SCRIPT_DIR}/{server_file.replace('.json', '.sh')}"
-        with open(client_output_filename, 'w', newline='\n') as file:
-            for fims_command in client_commands:
-                file.write(f"{fims_command}\n")
-            uri = set_test_register.client_uri
-            file.write(f'fims_send -m set -u {uri} "{{\\"{set_test_register.client_id}\\":-1}}"\n')
-            file.write(f"echo \"done\"\n")
-        with open(server_output_filename, 'w', newline='\n') as file:
-            for fims_command in server_commands:
-                file.write(f"{fims_command}\n")
-            file.write(f"echo \"done\"\n")
+def write_output_files(output_dir, include_timestamp=True):
+    for ((client_filename, server_filename),(output_file_client, output_file_server))  in zip(all_config_file_pairs, output_file_content):
+        if include_timestamp:
+            client_filename = client_filename.replace(".json", f"_{timestamp.file_fmt}.json")
+            server_filename = server_filename.replace(".json", f"_{timestamp.file_fmt}.json")
+        with open(f"{output_dir}/{client_filename}", "w", newline="\n") as file:
+            file.write(json.dumps(output_file_client, indent=4))
+        with open(f"{output_dir}/{server_filename}", "w", newline="\n") as file:
+            file.write(json.dumps(output_file_server, indent=4))
 
-def write_expected_message_files():
-    global all_config_file_pairs, all_config_pairs, all_config_register_sets, all_fims_commands, all_expected_messages
-    for file_set, expected_message_set in list(zip(all_config_file_pairs, all_expected_messages)):
-        client_file = file_set[0]
-        server_file = file_set[1]
+
+def build_output_files():
+    global output_file_content, output_filenames, all_config_file_pairs, all_config_pairs, all_config_register_sets, all_fims_commands, all_expected_messages, commands_by_test_id
+    output_file_client = {}
+    output_file_server = {}
+    for expected_message_set in all_expected_messages:
         client_expected_messages = expected_message_set[0]
         server_expected_messages = expected_message_set[1]
+        for test_id,expected_messages in client_expected_messages.items():
+            output_file_client[test_id] = {}
+            output_file_client[test_id]['commands'] = commands_by_test_id[test_id]
+            output_file_client[test_id]['expected'] = expected_messages
+            output_file_client[test_id]['actual'] = None
+            output_file_client[test_id]['result'] = None
+            output_file_client[test_id]['git_commit_hash'] = None
+            output_file_client[test_id]['git_branch'] = None
+            output_file_client[test_id]['git_commit_author'] = None
 
+        for test_id,expected_messages in server_expected_messages.items():
+            output_file_server[test_id] = {}
+            output_file_server[test_id]['commands'] = commands_by_test_id[test_id]
+            output_file_server[test_id]['expected'] = expected_messages
+            output_file_server[test_id]['actual'] = None
+            output_file_server[test_id]['result'] = None
+            output_file_server[test_id]['git_commit'] = None
+            output_file_server[test_id]['git_branch'] = None
+            output_file_server[test_id]['git_commit_hash'] = None
+    output_file_content.append([output_file_client, output_file_server])
 
-        client_output_filename =f"{LOCAL_PYTHON_SCRIPT_DIR}/{EXPECTED_TEST_OUTPUT_DIR}/expected_fims_output_{client_file}"
-        server_output_filename =f"{LOCAL_PYTHON_SCRIPT_DIR}/{EXPECTED_TEST_OUTPUT_DIR}/expected_fims_output_{server_file}"
-        with open(client_output_filename, 'w', newline='\n') as file:
-            file_contents = {"test_cases": client_expected_messages}
-            file.write(json.dumps(file_contents, indent=4))
-        with open(server_output_filename, 'w', newline='\n') as file:
-            file_contents = {"test_cases": server_expected_messages}
-            file.write(json.dumps(file_contents, indent=4))
+    write_output_files(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONFIG_DIR}", False)
+
 
 test_id = 0
 def gen_commands():
@@ -141,5 +160,4 @@ if __name__ == '__main__':
     get_config_pairs()
     get_test_register_sets()
     gen_commands()
-    write_command_files()
-    write_expected_message_files()
+    build_output_files()

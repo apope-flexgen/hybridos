@@ -1,4 +1,4 @@
-from test_utils import *
+from global_utils import *
 
 # RETURN CODES
 OTHER_ISSUE = -1
@@ -42,6 +42,9 @@ def check_message_format(test_id, expected_message, actual_message):
    
 def compare_messages(test_id, expected_message, actual_message):
     global commands_by_test_id
+    expected_value = 0
+    tolerance = 0
+    reject_values=[]
     [return_code, return_message] = check_message_format(test_id, expected_message, actual_message)
     if return_code != SUCCESS:
         return return_code, return_message
@@ -49,28 +52,46 @@ def compare_messages(test_id, expected_message, actual_message):
         return_value = SUCCESS
         return_string = ""
         for key in expected_message['body']:
+            if isinstance(expected_message['body'][key], dict):
+                if 'value' in expected_message['body'][key]:
+                    expected_value = expected_message['body'][key]['value']
+                if 'tolerance' in expected_message['body'][key]:
+                    tolerance = expected_message['body'][key]['tolerance']
+                else:
+                    tolerance = 0
+                if 'reject_values' in expected_message['body'][key]:
+                    reject_values = expected_message['body'][key]['reject_values']
+                else:
+                    reject_values=[]
+            else:
+                expected_value = expected_message['body'][key] 
+                tolerance = 0
+                reject_values=[]
             if isinstance(actual_message['body'],dict) and key in actual_message['body']:
                 value = actual_message['body'][key]
-                if value == expected_message['body'][key]:
+                if (not isinstance(value, dict)) and abs(value - expected_value) <= tolerance:
                     continue
+                elif value in reject_values:
+                    return_value = INCORRECT_VALUE
+                    return_string = f'Test Case {test_id}:\nExpected: "{key}":{expected_value}\nGot     : "{key}":{value}\n'
                 elif isinstance(value, dict):
                     if 'value' in value:
                         value = value['value']
-                        if value == expected_message['body'][key]:
+                        if abs(value - expected_value) <= tolerance:
                             continue
                         else:
                             return_value = INCORRECT_VALUE
-                            return_string = f'Test Case {test_id}:\nExpected: "{key}":{expected_message["body"][key]}\nGot     : "{key}":{value}\n'
+                            return_string = f'Test Case {test_id}:\nExpected: "{key}":{expected_value}\nGot     : "{key}":{value}\n'
                     else:
-                        if value == expected_message['body'][key]:
+                        if abs(value - expected_value) <= tolerance:
                             continue
                         return_value = INCORRECT_VALUE
-                        return_string = f'Test Case {test_id}:\nExpected: "{key}":{expected_message["body"][key]}\nGot     : "{key}":{value}\n'
+                        return_string = f'Test Case {test_id}:\nExpected: "{key}":{expected_value}\nGot     : "{key}":{value}\n'
                 else:
-                    return_string = f'Test Case {test_id}:\nExpected: "{key}":{expected_message["body"][key]}\nGot     : "{key}":{value}\n'
+                    return_string = f'Test Case {test_id}:\nExpected: "{key}":{expected_value}\nGot     : "{key}":{value}\n'
                     return_value = INCORRECT_VALUE
             else:
-                return_string = f'Test Case {test_id}:\nExpected: "{key}": {expected_message["body"][key]}\nGot     : "{key}": Missing from message body!\n'
+                return_string = f'Test Case {test_id}:\nExpected: "{key}": {expected_value}\nGot     : "{key}": Missing from message body!\n'
                 return_value = MISSING_KEY
         return return_value, return_string
     else:
@@ -80,25 +101,43 @@ def compare_messages(test_id, expected_message, actual_message):
         return_value = SUCCESS
         if expected_message['uri'] == parent_uri:
             if key in expected_message['body']:
+                if isinstance(expected_message['body'][key], dict):
+                    if 'value' in expected_message['body'][key]:
+                        expected_value = expected_message['body'][key]['value']
+                    if 'tolerance' in expected_message['body'][key]:
+                        tolerance = expected_message['body'][key]['tolerance']
+                    else:
+                        tolerance = 0
+                    if 'reject_values' in expected_message['body'][key]:
+                        reject_values = expected_message['body'][key]['reject_values']
+                    else:
+                        reject_values=[]
+                else:
+                    expected_value = expected_message['body'][key] 
+                    tolerance = 0
+                    reject_values=[]
                 value = actual_message['body']
-                if value == expected_message['body'][key]:
+                if (not isinstance(value, dict)) and abs(value - expected_value) <= tolerance:
                     pass
+                elif value in reject_values:
+                    return_value = INCORRECT_VALUE
+                    return_string = f'Test Case {test_id}:\nExpected: "{key}":{expected_value}\nGot     : "{key}":{value}\n'    
                 elif isinstance(value, dict):
                     if 'value' in value:
                         value = value['value']
-                        if value == expected_message['body'][key]:
+                        if abs(value - expected_value) <= tolerance:
                             pass
                         else:
                             return_value = INCORRECT_VALUE
-                            return_string = f'Test Case {test_id}:\nExpected: "{key}": {expected_message["body"][key]}\nGot     : "{key}": {value}\n'
+                            return_string = f'Test Case {test_id}:\nExpected: "{key}": {expected_value}\nGot     : "{key}": {value}\n'
                     else:
-                        if value == expected_message['body'][key]:
+                        if abs(value - expected_value) <= tolerance:
                             pass
                         else:
                             return_value = INCORRECT_VALUE
-                            return_string = f'Test Case {test_id}:\nExpected: "{key}": {expected_message["body"][key]}\nGot     : "{key}": {value}\n'
+                            return_string = f'Test Case {test_id}:\nExpected: "{key}": {expected_value}\nGot     : "{key}": {value}\n'
                 else:
-                    return_string = f'Test Case {test_id}:\nExpected: "{key}": {expected_message["body"][key]}\nGot     : "{key}": {value}\n'
+                    return_string = f'Test Case {test_id}:\nExpected: "{key}": {expected_value}\nGot     : "{key}": {value}\n'
                     return_value = INCORRECT_VALUE
             else:
                 return_string = f'Test Case {test_id}:\nExpected: "{key}": Missing!\nGot     : "{key}": {actual_message["body"]}\n'
