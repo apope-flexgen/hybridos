@@ -6,12 +6,12 @@ import { AuthWsAdapter } from './adapters/authWs.adapter';
 import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
-import { AppEnvService } from './environment/appEnv.service';
 import { NestSwagger } from './openapi/nestswagger';
 import { RequestMethod } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { ProcessArgvValidation } from './startup/ProcessArgValidation';
 import { ConfigModule } from './config/config.module';
+import { APP_ENV_SERVICE } from 'src/environment/appEnv.interface';
 
 // eslint-disable-next-line max-statements
 async function bootstrap() {
@@ -31,7 +31,7 @@ async function bootstrap() {
   });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-  const appEnvService = app.get(AppEnvService);
+  const appEnvService = app.get(APP_ENV_SERVICE);
   const DEV_MODE_PORT = 3001;
   const PORT = processArgs.isDev ? DEV_MODE_PORT : appEnvService.getAppServerPort();
 

@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Observable, map, merge } from 'rxjs';
+import { Observable, filter, map, merge } from 'rxjs';
 import { computeClothedValue } from '../../utils/utils';
 import { FimsService } from '../../fims/fims.service';
 import { FIMS_SERVICE } from '../../fims/interfaces/fims.interface';
 import {
+  ISiteStatusService,
   SiteStatusConfig,
   SiteStatusDataField,
   SiteStatusDataFieldConfig,
@@ -11,20 +12,21 @@ import {
 } from './sitestatus.interface';
 import { DBI_URIs, IDBIService } from 'src/dbi/dbi.interface';
 import { DBI_SERVICE } from 'src/dbi/dbi.interface';
-import { AppEnvService } from 'src/environment/appEnv.service';
 import { SiteConfiguration } from 'src/webuiconfig/webUIConfig.interface';
+import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
 
 const SITE_SUMMARY_URI = '/site/summary';
 
 @Injectable()
-export class SiteStatusService {
+export class SiteStatusService implements ISiteStatusService {
   private siteConfiguration: SiteConfiguration;
   constructor(
     @Inject(DBI_SERVICE)
     private readonly dbiService: IDBIService,
     @Inject(FIMS_SERVICE)
     private readonly fimsService: FimsService,
-    private readonly appEnvService: AppEnvService,
+    @Inject(APP_ENV_SERVICE)
+    private appEnvService: IAppEnvService,
   ) {
     this.siteConfiguration = this.appEnvService.getSiteConfiguration();
   }
@@ -57,77 +59,27 @@ export class SiteStatusService {
   };
 
   getObservable = async (config: SiteStatusConfig): Promise<Observable<SiteStatusResponse>> => {
-    const fimsSubscribe = this.fimsService.subscribe(SITE_SUMMARY_URI);
-
     const dataObservables: Observable<SiteStatusResponse>[] = config.dataSources.map(
-      (dataSource): Observable<SiteStatusResponse> => {
-        return this.fimsService.subscribe(dataSource.uri).pipe(
-          map((data): SiteStatusResponse => {
-            const body = data.body;
-
-            if (!body[dataSource.field]) {
-              return {} as SiteStatusResponse;
-            }
-
-            const fieldData = body[dataSource.field];
-            const fieldDataType = typeof fieldData;
-            const validDataTypes = ['boolean', 'number', 'string'];
-
-            if (validDataTypes.includes(fieldDataType)) {
-              return {
-                data: {
-                  dataPoints: {
-                    [`${dataSource.uri}/${dataSource.field}`]: {
-                      label: dataSource.label,
-                      value: fieldData,
-                      unit: '',
-                    },
-                  },
-                },
-              } as SiteStatusResponse;
-            }
-
-            let value: String = fieldData['value'];
-            let unit: String = fieldData['unit'];
-
-            if (dataSource.dataType === 'number') {
-              const { value: newValue, targetUnit } = computeClothedValue(
-                Number(fieldData['value']),
-                Number(fieldData['scaler']),
-                fieldData['unit'],
-                this.siteConfiguration,
-              );
-
-              value = newValue;
-              unit = targetUnit;
-            }
-
-            return {
-              data: {
-                dataPoints: {
-                  [`${dataSource.uri}/${dataSource.field}`]: {
-                    label: dataSource.label,
-                    value,
-                    unit,
-                    index: dataSource.index,
-                  },
-                },
-              },
-            } as SiteStatusResponse;
-          }),
-        );
-      },
+      (dataSource): Observable<SiteStatusResponse> => this.buildDataSourceObservable(dataSource),
     );
 
+    const siteStateObs: Observable<SiteStatusResponse> = this.buildSiteStateObservable();
+
+    return merge(siteStateObs, ...dataObservables);
+  };
+
+  buildSiteStateObservable = (): Observable<SiteStatusResponse> => {
+    const siteSummaryFimsSubscribe = this.fimsService.subscribe(SITE_SUMMARY_URI);
+
     // FIXME: validate the data from fims first
-    const siteStateObs: Observable<SiteStatusResponse> = fimsSubscribe.pipe(
+    const siteStateObs: Observable<SiteStatusResponse> = siteSummaryFimsSubscribe.pipe(
       map((fimsData) => {
         const newDTO: SiteStatusResponse = {
           data: {
             activeFaults: fimsData.body['active_faults'],
             activeAlarms: fimsData.body['active_alarms'],
             siteState: fimsData.body['site_state'],
-            siteStatusLabel: this.config.siteStatusLabel || '',
+            siteStatusLabel: this.config?.siteStatusLabel || '',
           },
         };
 
@@ -135,8 +87,84 @@ export class SiteStatusService {
       }),
     );
 
-    const obs = merge(siteStateObs, ...dataObservables);
+    return siteStateObs;
+  };
 
-    return obs;
+  buildDataSourceObservable = (dataSource: SiteStatusDataField): Observable<SiteStatusResponse> => {
+    return this.fimsService.subscribe(dataSource.uri).pipe(
+      filter((data) => this.fieldDataExists(data, dataSource)),
+      map((data): SiteStatusResponse => {
+        const fieldData = this.getFieldData(data, dataSource);
+
+        return this.processData(fieldData, dataSource);
+      }),
+    );
+  };
+
+  getFieldData = (data: any, dataSource: SiteStatusDataField): any | undefined => {
+    return data?.body[dataSource.field];
+  };
+
+  fieldDataExists = (data: any, dataSource: SiteStatusDataField): boolean => {
+    const fieldData = this.getFieldData(data, dataSource);
+    return fieldData !== undefined;
+  };
+
+  processData = (fieldData: any, dataSource: SiteStatusDataField): SiteStatusResponse => {
+    switch (typeof fieldData) {
+      case 'boolean':
+      case 'number':
+      case 'string':
+        return this.processNakedData(fieldData, dataSource);
+
+      case 'object':
+        if (fieldData['value'] !== undefined) {
+          return this.processClothedData(fieldData, dataSource);
+        }
+        break;
+    }
+
+    return {} as SiteStatusResponse;
+  };
+
+  processNakedData = (
+    fieldData: number | string | boolean,
+    dataSource: SiteStatusDataField,
+  ): SiteStatusResponse => {
+    return this.buildResponse(dataSource, fieldData);
+  };
+
+  processClothedData = (fieldData: object, dataSource: SiteStatusDataField): SiteStatusResponse => {
+    let value: string = fieldData['value'];
+    let unit: string = fieldData['unit'];
+
+    if (dataSource.dataType === 'number') {
+      const { value: newValue, targetUnit } = computeClothedValue(
+        Number(fieldData['value']),
+        Number(fieldData['scaler']),
+        fieldData['unit'],
+        this.siteConfiguration,
+      );
+
+      value = newValue;
+      unit = targetUnit;
+    }
+
+    return this.buildResponse(dataSource, value, unit);
+  };
+
+  buildResponse = (dataSource: SiteStatusDataField, value: any, unit = ''): SiteStatusResponse => {
+    return {
+      data: {
+        dataPoints: {
+          [`${dataSource.uri}/${dataSource.field}`]: {
+            label: dataSource.label,
+            value: value.toString(),
+            unit,
+            index: dataSource.index,
+          },
+        },
+      },
+    };
   };
 }

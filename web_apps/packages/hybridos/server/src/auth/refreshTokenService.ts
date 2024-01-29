@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { AppEnvService } from '../environment/appEnv.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
 
 @Injectable()
 export class RefreshTokenService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly appEnvService: AppEnvService,
+    @Inject(APP_ENV_SERVICE)
+    private appEnvService: IAppEnvService,
   ) {}
 
   private readonly refreshTokens: Set<string> = new Set();

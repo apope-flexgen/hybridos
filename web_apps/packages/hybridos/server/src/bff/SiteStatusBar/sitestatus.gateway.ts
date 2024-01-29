@@ -1,10 +1,14 @@
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Observable } from 'rxjs';
 import { Server } from 'ws';
-import { SiteStatusResponse } from './sitestatus.interface';
-import { SiteStatusService } from './sitestatus.service';
+import {
+  ISiteStatusService,
+  SITE_STATUS_SERVICE,
+  SiteStatusResponse,
+} from './sitestatus.interface';
 import { UseWsFilters } from '../../decorators/ws.filters.decorator';
 import { UseWsInterceptors } from '../../decorators/ws.interceptors.decorator';
+import { Inject } from '@nestjs/common';
 
 @WebSocketGateway({
   cors: {
@@ -13,7 +17,10 @@ import { UseWsInterceptors } from '../../decorators/ws.interceptors.decorator';
 })
 @UseWsFilters()
 export class SiteStatusGateway {
-  constructor(private readonly siteStatusService: SiteStatusService) {}
+  constructor(
+    @Inject(SITE_STATUS_SERVICE)
+    private readonly siteStatusService: ISiteStatusService,
+  ) {}
 
   @WebSocketServer()
   server: Server;

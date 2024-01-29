@@ -12,10 +12,10 @@ import {
 import { parseClothedData, parseNakedData, parseSummaryData } from '../Parser';
 import { DBI_SERVICE, DBI_URIs } from 'src/dbi/dbi.interface';
 import { IDBIService } from 'src/dbi/dbi.interface';
-import { AppEnvService } from 'src/environment/appEnv.service';
 import { SiteConfiguration } from 'src/webuiconfig/webUIConfig.interface';
 import { LockModeService } from './lockMode/lockMode.service';
 import { DEFAULT_URIS, NAKED_URIS } from './assetsPage.constants';
+import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
 
 @Injectable()
 export class AssetsPageService {
@@ -26,7 +26,8 @@ export class AssetsPageService {
     private readonly fimsService: IFimsService,
     @Inject(DBI_SERVICE)
     private readonly dbiService: IDBIService,
-    private readonly appEnvService: AppEnvService,
+    @Inject(APP_ENV_SERVICE)
+    private appEnvService: IAppEnvService,
     private readonly lockModeService: LockModeService,
   ) {
     this.siteConfiguration = this.appEnvService.getSiteConfiguration();
@@ -148,17 +149,18 @@ export class AssetsPageService {
           uri: '/actions/control',
         };
 
-        individualMetadata.controls.push(maintenanceActionControl)
+        individualMetadata.controls.push(maintenanceActionControl);
       }
-  
+
       let extension = individualMetadata.info.extension ?? '';
       const maybeNumber = Number(individualMetadata.info.numberOfItems);
       const numItems = isNaN(maybeNumber) ? -1 : maybeNumber;
-      const range = individualMetadata.info.range
+      const range = individualMetadata.info.range;
       const baseName = individualMetadata.info.name ?? '';
       const itemName = individualMetadata.info.itemName ?? '';
 
-      (numItems < 0 && (range === undefined || range.length < 1))&&
+      numItems < 0 &&
+        (range === undefined || range.length < 1) &&
         console.warn(
           `numberOfItems for ${queryUri} is not configured, getting initial data will fail`,
         );
@@ -173,50 +175,52 @@ export class AssetsPageService {
       })();
 
       if (range) {
-        let numericExtensions = []
+        let numericExtensions = [];
         range.forEach((rangeItem) => {
           if (typeof rangeItem === 'string' && rangeItem.includes('..')) {
-              const arrayOfRange = rangeItem.split('..')
-              const startNumber = Number(arrayOfRange[0]);
-              const endNumber = Number(arrayOfRange[1]);
-              if (startNumber > endNumber || Number.isNaN(startNumber) || Number.isNaN(endNumber)) {
-                console.warn(
-                  `received an invalid string within range array for ${queryUri}, getting initial data will fail`,
-                );
-              }
-              for (var i = startNumber; i < endNumber + 1; i++) {
-                numericExtensions.push(i)
-              }
+            const arrayOfRange = rangeItem.split('..');
+            const startNumber = Number(arrayOfRange[0]);
+            const endNumber = Number(arrayOfRange[1]);
+            if (startNumber > endNumber || Number.isNaN(startNumber) || Number.isNaN(endNumber)) {
+              console.warn(
+                `received an invalid string within range array for ${queryUri}, getting initial data will fail`,
+              );
+            }
+            for (var i = startNumber; i < endNumber + 1; i++) {
+              numericExtensions.push(i);
+            }
           } else {
-            numericExtensions.push(Number(rangeItem))
+            numericExtensions.push(Number(rangeItem));
           }
-        })
+        });
         numericExtensions.forEach((rangeItem) => {
-          const assetID = `${extension}${rangeItem < 10 ? leadingZero : ''}${rangeItem}`.substring(1);
-    
+          const assetID = `${extension}${rangeItem < 10 ? leadingZero : ''}${rangeItem}`.substring(
+            1,
+          );
+
           initialRawData[assetID] = {
             name: `${baseName} ${itemName} ${rangeItem}`,
             ...this.getClothedBodyFieldsForConfiguredAsset(individualMetadata),
           };
-        })
+        });
       } else {
         for (let i = 1; i <= numItems; i++) {
-          const templatedItem: boolean = extension.slice(-1) === '_' || extension.slice(-2) === '_0';
-          const assetID = 
-            templatedItem ?
-            `${extension}${i < 10 ? leadingZero : ''}${i}`.substring(1)
+          const templatedItem: boolean =
+            extension.slice(-1) === '_' || extension.slice(-2) === '_0';
+          const assetID = templatedItem
+            ? `${extension}${i < 10 ? leadingZero : ''}${i}`.substring(1)
             : `${extension}`.substring(1);
-    
-          const name = templatedItem ?  `${baseName} ${itemName} ${i}` : (itemName || `${baseName}`);
-    
+
+          const name = templatedItem ? `${baseName} ${itemName} ${i}` : itemName || `${baseName}`;
+
           initialRawData[assetID] = {
             name: name,
             ...this.getClothedBodyFieldsForConfiguredAsset(individualMetadata),
           };
         }
       }
-    })
-   
+    });
+
     return initialRawData;
   };
 
@@ -272,10 +276,12 @@ export class AssetsPageService {
       );
       return null;
     } else if (filteredMetadata.length > 1) {
-      const arrayOfExtensions = filteredMetadata.map(function(item){ return item.info.extension });
-      
-      var containsDuplicateExtensions = arrayOfExtensions.some(function(item, idx){ 
-          return arrayOfExtensions.indexOf(item) != idx 
+      const arrayOfExtensions = filteredMetadata.map(function (item) {
+        return item.info.extension;
+      });
+
+      var containsDuplicateExtensions = arrayOfExtensions.some(function (item, idx) {
+        return arrayOfExtensions.indexOf(item) != idx;
       });
 
       if (containsDuplicateExtensions) {
@@ -347,61 +353,58 @@ export class AssetsPageService {
     return {} as metadataFromDBI[];
   };
 
-  private getIndividualAssetMetadata = (
-    uri: string,
-    dbiMetadata: metadataFromDBI[],
-  ) => {
+  private getIndividualAssetMetadata = (uri: string, dbiMetadata: metadataFromDBI[]) => {
     let indexOfMetadata = -1;
-      dbiMetadata.every((metadata, index) => {
-        // check if the extension listed in this metadata is the full uri
-        // if so, this is the correct metadata for this uri
-        if (metadata.info.extension === `/${uri}`) {
-          indexOfMetadata = index;
-          return false;
-        }
-        // check if there is a range object in the metadata 
-        // if so and if the asset number from this uri is listed in this range,
-        // this is the correct metadata for this uri
-        else if ('range' in metadata.info) {
-          const lastUnderscore = uri.lastIndexOf("_")
-          const assetNumber = uri.slice(lastUnderscore + 1)
-          let numericExtensions = []
-          metadata.info.range.forEach((rangeItem) => {
-            if (typeof rangeItem === 'string' && rangeItem.includes('..')) {
-                const arrayOfRange = rangeItem.split('..')
-                const startNumber = Number(arrayOfRange[0]);
-                const endNumber = Number(arrayOfRange[1]);
-                for (var i = startNumber; i < endNumber + 1; i++) {
-                  numericExtensions.push(i)
-                }
-            } else {
-              numericExtensions.push(Number(rangeItem))
-            }
-          })
-          if (numericExtensions.includes(Number(assetNumber))) {
-            indexOfMetadata = index;
-            return false;
-          }
-        }
-        // check if this is a templated extension
-        // i.e. the extension ends in _ or _0 (numberOfItems field has be used to generate uri)
-        // if so, this is the correct metadata for this uri
-        else if (
-          metadata.info.extension.slice(-1) === '_' ||
-          metadata.info.extension.slice(-2) === '_0'  
-        ) {
-          indexOfMetadata = index;
-          return false;
-        };
-        return true;
-      })
-
-      if (indexOfMetadata === -1) {
-        console.warn(`error getting metadata for uri ${uri}`);
+    dbiMetadata.every((metadata, index) => {
+      // check if the extension listed in this metadata is the full uri
+      // if so, this is the correct metadata for this uri
+      if (metadata.info.extension === `/${uri}`) {
+        indexOfMetadata = index;
+        return false;
       }
+      // check if there is a range object in the metadata
+      // if so and if the asset number from this uri is listed in this range,
+      // this is the correct metadata for this uri
+      else if ('range' in metadata.info) {
+        const lastUnderscore = uri.lastIndexOf('_');
+        const assetNumber = uri.slice(lastUnderscore + 1);
+        let numericExtensions = [];
+        metadata.info.range.forEach((rangeItem) => {
+          if (typeof rangeItem === 'string' && rangeItem.includes('..')) {
+            const arrayOfRange = rangeItem.split('..');
+            const startNumber = Number(arrayOfRange[0]);
+            const endNumber = Number(arrayOfRange[1]);
+            for (var i = startNumber; i < endNumber + 1; i++) {
+              numericExtensions.push(i);
+            }
+          } else {
+            numericExtensions.push(Number(rangeItem));
+          }
+        });
+        if (numericExtensions.includes(Number(assetNumber))) {
+          indexOfMetadata = index;
+          return false;
+        }
+      }
+      // check if this is a templated extension
+      // i.e. the extension ends in _ or _0 (numberOfItems field has be used to generate uri)
+      // if so, this is the correct metadata for this uri
+      else if (
+        metadata.info.extension.slice(-1) === '_' ||
+        metadata.info.extension.slice(-2) === '_0'
+      ) {
+        indexOfMetadata = index;
+        return false;
+      }
+      return true;
+    });
 
-      return dbiMetadata[indexOfMetadata]
-  }
+    if (indexOfMetadata === -1) {
+      console.warn(`error getting metadata for uri ${uri}`);
+    }
+
+    return dbiMetadata[indexOfMetadata];
+  };
   private getInitialSendData = async (
     summaryData: summaryDataFromFims,
     URIs: string[],
@@ -450,7 +453,6 @@ export class AssetsPageService {
       };
     });
 
-
     if (dbiMetadata !== null && dbiMetadata[0].info.hasSummary) {
       const initialSummaryData = await this.fimsService.get(`${baseUri}/summary`);
       if (initialSummaryData.method === 'error')
@@ -485,13 +487,13 @@ export class AssetsPageService {
 
     const observableForMeta: Observable<ConfigurablePageDTO> = fimsSubscribe.pipe(
       map((event) => {
-        const assetURI = uri.substring(uri.lastIndexOf("/") + 1, uri.length);
+        const assetURI = uri.substring(uri.lastIndexOf('/') + 1, uri.length);
 
         // if this event body contains information about maintenance actions
         // and this page is configured to show maintenance actions
         // send action data to frontend
         // otherwise, send empty object
-        const maintenanceActions = hasMaintenanceActions ? (event.body.actions || {}) : {}
+        const maintenanceActions = hasMaintenanceActions ? event.body.actions || {} : {};
 
         const parsedData = isSummary
           ? parseSummaryData(

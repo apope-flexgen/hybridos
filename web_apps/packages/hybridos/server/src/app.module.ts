@@ -9,7 +9,6 @@ import { AuthModule } from './auth/auth.module';
 import { AccessTokenAuthGuard } from './auth/guards/accessTokenAuth.guard';
 import { BffModule } from './bff/bff.module';
 import { AppEnvModule } from './environment/appEnv.module';
-import { AppEnvService } from './environment/appEnv.service';
 import { MongoErrorFilter } from './filters/mongoose.filter';
 import { FimsModule } from './fims/fims.module';
 import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
@@ -29,6 +28,7 @@ import { LoggingService } from './logging/logging.service';
 import { ConfigModule } from '@nestjs/config';
 import { CoreHttpExceptionsFilter } from './filters/core.http.exception.filter';
 import { HttpExceptionsFilter } from './filters/http.exception.filter';
+import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
 
 @Module({
   imports: [
@@ -36,10 +36,10 @@ import { HttpExceptionsFilter } from './filters/http.exception.filter';
       isGlobal: true,
     }),
     MongooseModule.forRootAsync({
-      useFactory: async (appEnv: AppEnvService) => ({
+      useFactory: async (appEnv: IAppEnvService) => ({
         uri: appEnv.getMongoUri(),
       }),
-      inject: [AppEnvService],
+      inject: [APP_ENV_SERVICE],
     }),
     UsersModule,
     PermissionsModule,
@@ -71,8 +71,8 @@ import { HttpExceptionsFilter } from './filters/http.exception.filter';
     }),
     CustomConfigModule,
     ThrottlerModule.forRootAsync({
-      inject: [AppEnvService],
-      useFactory: async (appEnv: AppEnvService) => ({
+      inject: [APP_ENV_SERVICE],
+      useFactory: async (appEnv: IAppEnvService) => ({
         ttl: appEnv.getThrottleTTL(),
         limit: appEnv.getThrottleLimit(),
       }),
@@ -100,13 +100,13 @@ import { HttpExceptionsFilter } from './filters/http.exception.filter';
     },
     {
       provide: APP_INTERCEPTOR,
-      useFactory: (appEnv: AppEnvService) => {
+      useFactory: (appEnv: IAppEnvService) => {
         if (USE_TIMEOUT_INTERCEPTOR) {
           return new TimeoutInterceptor(appEnv);
         }
         return;
       },
-      inject: [AppEnvService],
+      inject: [APP_ENV_SERVICE],
     },
     {
       provide: APP_GUARD,

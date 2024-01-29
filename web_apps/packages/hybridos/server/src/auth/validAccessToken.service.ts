@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { AppEnvService } from '../environment/appEnv.service';
+import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
 
 @Injectable()
 export class ValidAccessTokenService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly appEnvService: AppEnvService,
+    @Inject(APP_ENV_SERVICE)
+    private appEnvService: IAppEnvService,
   ) {}
 
   private readonly validAccessTokens: Set<string> = new Set();

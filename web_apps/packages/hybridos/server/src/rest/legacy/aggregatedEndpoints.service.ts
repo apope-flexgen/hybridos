@@ -1,5 +1,4 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { AppEnvService } from '../../environment/appEnv.service';
 import { FimsMsg, FIMS_SERVICE, IFimsService } from '../../fims/interfaces/fims.interface';
 import { PermissionsService } from '../../permissions/permissions.service';
 import { User } from 'src/users/dtos/user.dto';
@@ -9,6 +8,7 @@ import {
   PERMISSIONS_SERVICE,
 } from '../../permissions/interfaces/permission.interface';
 import { LoggingService } from '../../logging/logging.service';
+import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
 
 const PERMISSION_LEVEL = PermissionLevel.READ;
 
@@ -24,7 +24,8 @@ export class AggregatedEndpointsService implements OnApplicationBootstrap {
   } = {};
 
   constructor(
-    private readonly appEnvService: AppEnvService,
+    @Inject(APP_ENV_SERVICE)
+    private appEnvService: IAppEnvService,
     @Inject(FIMS_SERVICE) private readonly fimsService: IFimsService,
     @Inject(PERMISSIONS_SERVICE) private readonly permissionsService: PermissionsService,
     private readonly loggingService: LoggingService,

@@ -8,7 +8,7 @@ import {
 } from '../siteAdmins/interfaces/siteAdmin.service.interface';
 import { User } from '../../../shared/types/dtos/auth.dto';
 import { MfaRequiredException } from './exceptions/mfaRequired.exception';
-import { AppEnvService } from 'src/environment/appEnv.service';
+import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
 
 @Injectable()
 export class MfaService {
@@ -16,7 +16,8 @@ export class MfaService {
     @Inject(SITE_ADMINS_SERVICE)
     private readonly siteAdminsService: ISiteAdminsService,
     private readonly jwtService: JwtService,
-    private appEnvService: AppEnvService,
+    @Inject(APP_ENV_SERVICE)
+    private appEnvService: IAppEnvService,
   ) {}
   generateURL(user: User): string {
     const issuer = 'flexgen';
