@@ -40,6 +40,8 @@ using namespace std::string_view_literals;
 ////////// UTILITY METHODS ////////////
 ///////////////////////////////////////
 
+void printConstAny(const std::any &value, int indent);
+
 /**
  * @brief convert a set of raw 16-bit registers to its hexadecimal representation as a string
  * 
@@ -496,19 +498,25 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
     // debug
     ok &= getItemFromMap(jsonMapOfConfig, "connection.debug", myCfg.connection.debug, false, true, true, false);
     // connection_timeout
-    ok &= getItemFromMap(jsonMapOfConfig, "connection.connection_timeout", myCfg.connection.connection_timeout, 2, true, true, false);
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.connection_timeout", myCfg.connection.connection_timeout, 2.0, true, true, false);
     if (ok && (myCfg.connection.connection_timeout < 2 || myCfg.connection.connection_timeout > 10))
     {
-        FPS_INFO_LOG("Connection timeout must be between 2 and 10 seconds. Configured value is [%d] seconds. Using default of 2s.", myCfg.connection.connection_timeout);
-        myCfg.connection.connection_timeout = 2;
+        FPS_INFO_LOG("Connection timeout must be between 2 and 10 seconds. Configured value is [%f] seconds. Using default of 2s.", myCfg.connection.connection_timeout);
+        myCfg.connection.connection_timeout = 2.0;
     }
-    // transfer_timeout
-    ok &= getItemFromMap(jsonMapOfConfig, "connection.transfer_timeout", myCfg.connection.transfer_timeout, 500, true, true, false);
-    if (ok && (myCfg.connection.transfer_timeout < 10 || myCfg.connection.transfer_timeout > 2000))
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.transfer_timeout", myCfg.connection.transfer_timeout, 0.2, true, true, false);
+    if (ok && (myCfg.connection.transfer_timeout < 0.05 || myCfg.connection.transfer_timeout > 1.00))
     {
-        FPS_INFO_LOG("Transfer timeout must be between 10 and 2000 milli seconds. Configured value is [%d] milliseconds. Using default of 500.", myCfg.connection.transfer_timeout);
-        myCfg.connection.transfer_timeout = 500;
+        FPS_INFO_LOG("Transfer timeout must be between 0.05 and 1.0 seconds. Configured value is [%f] seconds. Using default of 0.5s.", myCfg.connection.transfer_timeout);
+        myCfg.connection.transfer_timeout = 0.5;
     }
+    // // transfer_timeout
+    // ok &= getItemFromMap(jsonMapOfConfig, "connection.transfer_timeout", myCfg.connection.transfer_timeout, 500, true, true, false);
+    // if (ok && (myCfg.connection.transfer_timeout < 10 || myCfg.connection.transfer_timeout > 2000))
+    // {
+    //     FPS_INFO_LOG("Transfer timeout must be between 10 and 2000 milli seconds. Configured value is [%d] milliseconds. Using default of 500.", myCfg.connection.transfer_timeout);
+    //     myCfg.connection.transfer_timeout = 500;
+    // }
     // double dval = 0.5;
     // ok &= getItemFromMap(jsonMapOfConfig, "connection.sync_percent", myCfg.connection.syncPct, dval, true, true, false);
     // if (ok && (myCfg.connection.syncPct > 0.0) && (myCfg.connection.syncPct < 0.1 || myCfg.connection.syncPct > 0.9))
@@ -650,6 +658,10 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
     ok &= getItemFromMap(jsonMapOfConfig, "connection.device_id", myCfg.connection.device_id, 1, true, true, false);
     // off_by_one
     ok &= getItemFromMap(jsonMapOfConfig, "connection.off_by_one", myCfg.inherited_fields.off_by_one, false, true, true, false);
+    if (myCfg.inherited_fields.off_by_one)
+    {
+        FPS_INFO_LOG("Connection field \"off_by_one \" set ");
+    }
     // byte_swap
     ok &= getItemFromMap(jsonMapOfConfig, "connection.byte_swap", myCfg.inherited_fields.byte_swap, false, true, true, false);
 
@@ -738,8 +750,12 @@ bool extract_components(std::map<std::string, std::any> jsonMapOfConfig, const s
             ok &= getItemFromMap(jsonComponentMap, "offset_time", component->offset_time, 0, true, true, false);
 
 
-            ok &= getItemFromMap(jsonComponentMap, "byte_swap", component->is_byte_swap, myCfg.inherited_fields.byte_swap, true, true, debug);
-            // ok &= getItemFromMap(jsonComponentMap, "off_by_one",          component->off_by_one,   myCfg.inherited_fields.off_by_one, true, true, debug);
+            ok &= getItemFromMap(jsonComponentMap, "byte_swap", component->is_byte_swap,  myCfg.inherited_fields.byte_swap, true, true, debug);
+            ok &= getItemFromMap(jsonComponentMap, "off_by_one", component->off_by_one,   myCfg.inherited_fields.off_by_one, true, true, debug);
+            if (component->off_by_one)
+            {
+                FPS_INFO_LOG("component field \"off_by_one \" set ");
+            }
 
             ok &= getItemFromMap(jsonComponentMap, "pub_sync",                       myCfg.pub_sync, true, true, true, debug);
             ok &= getItemFromMap(jsonComponentMap, "heartbeat_enabled",              component->heartbeat_enabled, false, true, true, debug);
@@ -864,6 +880,13 @@ bool extract_register_groups(std::vector<std::shared_ptr<cfg::register_group_str
                 register_group->component = component.get();
                 register_group->id = component->id;
                 register_group->component_id = component->component_id;
+                register_group->off_by_one = component->off_by_one;
+                if (register_group->off_by_one)
+                {
+                    FPS_INFO_LOG("register_group \"off_by_one \" set ");
+                }
+
+
                 if (debug)
                     printf(" >>>>>>>>>>>>> <%s> component %p  initial register_group %p \n", __func__, (void *)component.get(), (void *)register_group.get());
                 ok &= getItemFromMap(jsonRegisterGroupMap, "type", register_group->register_type_str, std::string("type"), true, true, debug);
@@ -939,7 +962,9 @@ bool extract_io_point( std::map<std::string, std::any>&json_io_point, std::share
     getItemFromMap(json_io_point, "offset", io_point->offset, parent_io_point->offset, new_point, new_point, debug);
     getItemFromMap(json_io_point, "size", io_point->size, parent_io_point->size, new_point, new_point, debug);
     getItemFromMap(json_io_point, "multi_write_op_code", io_point->multi_write_op_code, parent_io_point->multi_write_op_code, new_point, new_point, debug);
-    // getItemFromMap(json_io_point, "off_by_one",          io_point->off_by_one, myCfg.inherited_fields.off_by_one, new_point, new_point, debug);
+    //getItemFromMap(json_io_point, "off_by_one",          io_point->off_by_one, register_group->off_by_one, new_point, new_point, debug);
+    io_point->off_by_one = register_group->off_by_one;
+
 
     // set up default
     io_point->number_of_bits = io_point->size * 16;
@@ -1112,6 +1137,8 @@ bool extract_io_point_map(std::shared_ptr<struct cfg::register_group_struct> reg
                 io_point->scale = scale;
                 io_point->register_type_str = register_group->register_type_str;
                 extract_io_point(json_io_point, register_group, io_point, packed_io_point, true, myCfg, debug);
+                io_point->off_by_one = register_group->off_by_one;
+
 
                 // bool extract_io_point(std::any&json_io_point, std::shared_ptr<cfg::io_point_struct>&io_point, std::shared_ptr<cfg::io_point_struct>&packed_io_point, struct cfg &myCfg)
                 // {
@@ -1982,7 +2009,7 @@ uint64_t set_any_to_uint64(struct cfg &myCfg, std::shared_ptr<cfg::io_point_stru
     // }
     if (val.type() == typeid(std::map<std::string, std::any>))
     {
-        std::cout << __func__ << " looking for a clothed value" << std::endl;
+        //std::cout << __func__ << " looking for a clothed value" << std::endl;
         auto clothed_val = std::any_cast<std::map<std::string, std::any>>(val);
         if (clothed_val.find("value") != clothed_val.end())
         {
@@ -2525,13 +2552,13 @@ std::map<std::string, std::shared_ptr<cfg::io_point_struct>> *cfg::findIOPointMa
     // Look up outerKey in the outer map
     if (keys.size() < 3)
     {
-        std::cout << "Not enough keys found" << std::endl;
+        //std::cout << "Not enough keys found" << std::endl;
         return nullptr;
     }
     int key_idx = 0;
     if ((int)keys[0].size() == (int)0)
     {
-        std::cout << "skipping key 0" << std::endl;
+        //std::cout << "skipping key 0" << std::endl;
         key_idx = 1;
     }
     auto outerIt = component_io_point_map.find(keys[key_idx]); // like "components" in /components/sel_3530_slow_rtac
@@ -2548,13 +2575,13 @@ std::map<std::string, std::shared_ptr<cfg::io_point_struct>> *cfg::findIOPointMa
         }
         else
         {
-            std::cout << " inner key [" << keys[key_idx + 1] << "] not  found" << std::endl;
+            //std::cout << " inner key [" << keys[key_idx + 1] << "] not  found" << std::endl;
             return nullptr;
         }
     }
     else
     {
-        std::cout << " base key [" << keys[key_idx] << "] not  found" << std::endl;
+        if(0)std::cout << " base key [" << keys[key_idx] << "] not  found" << std::endl;
     }
     // If any key not found, return nullopt
     return nullptr;
@@ -2740,7 +2767,7 @@ void check_work_items(std::vector<std::shared_ptr<IO_Work>> &io_work_vec, std::v
     cfg::Register_Types register_type;
 
     auto io_point = io_map_vec.at(0);
-    auto io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, 1, nullptr, nullptr, strToWorkType(work_type, false));
+    auto io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, 1, nullptr, nullptr, strToWorkType(work_type, false));
     if ((io_point->register_type == cfg::Register_Types::Coil) || (io_point->register_type == cfg::Register_Types::Discrete_Input))
         max_item_size = max_bit_size;
     #ifdef FPS_DEBUG_MODE
@@ -2811,11 +2838,11 @@ void check_work_items(std::vector<std::shared_ptr<IO_Work>> &io_work_vec, std::v
                 }
                 if ((io_point->register_type != register_type))
                 {
-                    std::cout << " >>>>>>>>>>>> Break detected  #4 (register_type)" << std::endl;
+                    if(0)std::cout << " >>>>>>>>>>>> Break detected  #4 (register_type)" << std::endl;
                 }
                 if (!io_point->is_enabled && io_point->is_forced)
                 {
-                    std::cout << " >>>>>>>>>>>> Break detected  #5 !enabled but forced, use local " << offset
+                    if(0)std::cout << " >>>>>>>>>>>> Break detected  #5 !enabled but forced, use local " << offset
                             << " isize " << isize
                             << " io_point->offset " << io_point->offset
                             << std::endl;
@@ -2836,7 +2863,7 @@ void check_work_items(std::vector<std::shared_ptr<IO_Work>> &io_work_vec, std::v
                 if (debug)
                     std::cout << " >>>>>>>>>>>> At break; offset : " << first_offset << " num : " << num << std::endl;
                 #endif
-                io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, 1, nullptr, nullptr, strToWorkType(work_type, false));
+                io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, 1, nullptr, nullptr, strToWorkType(work_type, false));
                 offset = io_point->offset;
                 first_offset = io_point->offset;
                 device_id = io_point->device_id;
@@ -2960,7 +2987,10 @@ bool gcom_parse_data(std::any &anyFimsMessageBody, const char *data, size_t leng
     anyFimsMessageBody = jsonToAny(result.value());
     // Utility function to print nested maps
     if (debug)
+    {
+        //std::any &nonConstAnyVal = const_cast<std::any&>(anyFimsMessageBody);
         printAny(anyFimsMessageBody, 0);
+    }
     if (anyFimsMessageBody.type() == typeid(std::map<std::string, std::any>))
     {
         if (debug)
@@ -3034,6 +3064,51 @@ bool add_all_component_points_to_io_vec(std::vector<std::shared_ptr<cfg::io_poin
     return false;
 }
 
+// Utility function to print nested maps
+void printConstAny(const std::any &value, int indent)
+{
+    if (value.type() == typeid(std::map<std::string, std::any>))
+    {
+        std::cout << "\n";
+        printMap(std::any_cast<std::map<std::string, std::any>>(value), indent + 1);
+    }
+    else if (value.type() == typeid(int))
+    {
+        //std::cout << " type is int " << "\n";
+        std::cout << std::any_cast<int>(value) << "\n";
+    }
+    else if (value.type() == typeid(int64_t))
+    {
+        std::cout << std::any_cast<int64_t>(value) << "\n";
+    }
+    else if (value.type() == typeid(double))
+    {
+        std::cout << std::any_cast<double>(value) << "\n";
+    }
+    else if (value.type() == typeid(std::string))
+    {
+        std::cout << std::any_cast<std::string>(value) << "\n";
+    }
+    else if (value.type() == typeid(std::any))
+    {
+        std::cout << " type is std::any " << "\n";
+    }
+    else if (value.type() == typeid(bool))
+    {
+        auto val = std::any_cast<bool>(value);
+        if (val)
+            std::cout << "true"
+                      << "\n";
+        else
+            std::cout << "false"
+                      << "\n";
+    }
+    else
+    {
+        std::cout << "type unknown"
+                  << "\n";
+    }
+}
 // Utility function to print nested maps
 void printAny(std::any &value, int indent)
 {

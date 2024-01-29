@@ -1219,7 +1219,8 @@ int main(const int argc, const char* argv[]) noexcept {
              // in gcom_config_any
             gcom_load_cfg_file(gcom_map, filename, myCfg, false);
 
-            test_io_point_single(argv[2], atoi(argv[3]), 2, oper, device_id, register_type, offset, num_regs, value, num_threads, myCfg, debug);
+            test_io_point_single(argv[2], atoi(argv[3]), 2.0, oper, device_id, register_type, offset, num_regs,
+                 value, num_threads, myCfg, debug);
 
             // now we have to peel off the data  from the response queue
             return 0;

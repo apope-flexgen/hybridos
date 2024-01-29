@@ -36,6 +36,8 @@ public:
     double total_sync_time = 0.0;
     int total_sync_count = 0;
     double syncPct = 0.0;
+    void* userData = nullptr;
+     
 
     int id;
 
@@ -166,5 +168,6 @@ bool syncTimeObjectByName(const std::string& name, double error_margin_percent);
 // void runTimer();
 // void stopTimer();
 
+bool modifyTimeObjectByName(const std::string& name, double newRunTime, double newStopTime, double newRepeatTime);
 int test_timer();
 

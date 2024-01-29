@@ -86,7 +86,7 @@ std::string regTypeToStr(cfg::Register_Types &register_type)
     return "Unknown";
 }
 
-WorkTypes strToWorkType(std::string roper, bool debug = false)
+WorkTypes strToWorkType(std::string roper, bool debug)
 {
     auto work_type = WorkTypes::Noop; // no op
     if (roper == "set")

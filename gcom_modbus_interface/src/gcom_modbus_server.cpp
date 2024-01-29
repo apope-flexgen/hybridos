@@ -263,7 +263,7 @@ int parse_system(cJSON *system, system_config *config)
         if(cJSON_IsString(serv))
         {
             config->service = strdup(serv->valuestring);
-            printf(" setting up service to [%s] \n", config->service);
+            //printf(" setting up service to [%s] \n", config->service);
         }
     }
     if (ip_addr != NULL)
@@ -1006,14 +1006,14 @@ uint64_t json_to_uint64(maps* settings, cJSON* obj)
         {
             if (settings->sign)
             {
-                printf( "%s scaled_val before  %f max %f\n", __func__, scaled_val, (double)0x7fffffffffffffff);
+                //printf( "%s scaled_val before  %f max %f\n", __func__, scaled_val, (double)0x7fffffffffffffff);
                 if (scaled_val > 0x7fffffffffffffff)
                     scaled_val = 0x7fffffffffffffff;            
                 if (scaled_val < -0x7fffffffffffffff)
                     scaled_val = -0x7fffffffffffffff;            
-                printf( "%s scaled_val after  %f \n", __func__, scaled_val);
+                //printf( "%s scaled_val after  %f \n", __func__, scaled_val);
                 encoded_val = static_cast<int64_t> (scaled_val);
-                printf( "%s scaled_val  %f  encoded_val %ld %08lx\n", __func__, scaled_val, encoded_val, encoded_val);
+                //printf( "%s scaled_val  %f  encoded_val %ld %08lx\n", __func__, scaled_val, encoded_val, encoded_val);
 
             }
             else
@@ -1023,7 +1023,7 @@ uint64_t json_to_uint64(maps* settings, cJSON* obj)
                 if (scaled_val < 0)
                     scaled_val = 0;            
                 encoded_val = static_cast<uint64_t> (scaled_val);
-                printf( "%s scaled_val  %f  encoded_val %ld %08lx\n", __func__, scaled_val, encoded_val, encoded_val);
+                //printf( "%s scaled_val  %f  encoded_val %ld %08lx\n", __func__, scaled_val, encoded_val, encoded_val);
             }
 
         }
@@ -1038,9 +1038,9 @@ uint64_t json_to_uint64(maps* settings, cJSON* obj)
                 if (val32 < 0)
                     val32 = 0;            
             }
-            uint64_t uval = 0;//(uint64_t)(18446744073709551188);
+            //uint64_t uval = 0;//(uint64_t)(18446744073709551188);
             encoded_val = static_cast<uint64_t> (val32);
-            printf( "%s val32  %d  encoded_val %ld %08lx  uval %08lx\n", __func__, val32, encoded_val, encoded_val, uval);
+            //printf( "%s val32  %d  encoded_val %ld %08lx  uval %08lx\n", __func__, val32, encoded_val, encoded_val, uval);
         //memcpy(&encoded_val, &(val32), sizeof(encoded_val));
         }
     }
@@ -1191,8 +1191,8 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
             {
                 if(value == 0 || value == 0xFF00)
                 {
-                    char uri[512];
-                    sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
+                    char uri[1024];
+                    snprintf(uri, 1024, "%s/%s", reg->uri, reg->reg_name);
                     if (!invert)
                         cJSON_AddBoolToObject(send_body, "value", (value == 0xFF00) ? true : false);
                     else
@@ -1243,8 +1243,8 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                     cJSON* send_body = cJSON_CreateObject();
                     if(send_body != NULL)
                     {
-                        char uri[512];
-                        sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
+                        char uri[1024];
+                        snprintf(uri, 1024, "%s/%s", reg->uri, reg->reg_name);
                         uint8_t value = (query[header_length + 6 + i] >> j) & 0x01;
                         if(invert)
                             cJSON_AddBoolToObject(send_body, "value", (value == 1) ? false : true);
@@ -1288,8 +1288,8 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                     cJSON* send_body = cJSON_CreateObject();
                     if(send_body != NULL)
                     {
-                        char uri[512];
-                        sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
+                        char uri[1024];
+                        snprintf(uri, 1024, "%s/%s", reg->uri, reg->reg_name);
 
                         if(reg->is_bool)
                         {
@@ -1391,7 +1391,7 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                 {
                     uint64_t temp_reg_int;
                     if ((config->byte_swap == true) || (reg->use_byte_swap && reg->byte_swap)) {
-                        printf( " got byte_swap \n");
+                        //printf( " got byte_swap \n");
                         temp_reg_int = ((static_cast<uint64_t>(MODBUS_GET_INT16_FROM_INT8(query, byte_offset)    )      ) +
                                         (static_cast<uint64_t>(MODBUS_GET_INT16_FROM_INT8(query, byte_offset + 2)) << 16) +
                                         (static_cast<uint64_t>(MODBUS_GET_INT16_FROM_INT8(query, byte_offset + 4)) << 32) +
@@ -1434,8 +1434,8 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                 cJSON* send_body = cJSON_CreateObject();
                 if(send_body != NULL)
                 {
-                    char uri[512];
-                    sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
+                    char uri[1024];
+                    snprintf(uri, 1024, "%s/%s", reg->uri, reg->reg_name);
                     if(reg->is_bool)
                         cJSON_AddBoolToObject(send_body, "value", (temp_reg == 1));
                     else

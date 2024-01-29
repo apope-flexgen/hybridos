@@ -81,8 +81,8 @@ struct cfg
         int port;
         int max_num_connections;
         int device_id;
-        int connection_timeout; // default 2 secs
-        int transfer_timeout;   // default 0.5 sec
+        double connection_timeout; // default 2 secs
+        double transfer_timeout;   // default 0.5 sec
         int data_buffer_size;   // default 100000
         std::string serial_device;
         int baud_rate;
@@ -130,9 +130,9 @@ struct cfg
         std::string id;
         std::string name;
         std::string register_type_str;
-        std::any value;
-        std::any last_value;
-        std::any set_value;
+        std::any value = (uint64_t)0;
+        std::any last_value = (uint64_t)0;
+        std::any set_value = (uint64_t)0;
         Fims_Format format = Fims_Format::Undefined;
 
         int offset;
@@ -149,6 +149,7 @@ struct cfg
         u64 invert_mask;
         u64 care_mask;   // new
         bool uses_masks; //  new
+        bool off_by_one = false;
 
         bool is_float;
         bool is_signed;
@@ -180,6 +181,8 @@ struct cfg
         bool is_random_enum = false;
         bool is_forced = false;
         bool is_enabled = true;
+        bool is_disconnected = false;  // this is set when we cant find the point on the server
+        double reconnect = 0.0;
 
         u64 forced_val = 0;
         u64 raw_val = 0;
@@ -239,6 +242,8 @@ struct cfg
         int device_id;
         bool enabled = true;
         bool is_byte_swap = false;
+        bool off_by_one = false;
+
         int word_order=0; // 1234 , 1324, 3412 etc used to decode 4 register systemsfrom odd servers
 
         bool multi_write_op_code = false;
@@ -262,6 +267,8 @@ struct cfg
         int word_order=0; // 1234 , 1324, 3412 etc used to decode 4 register systemsfrom odd servers
 
         bool is_byte_swap = false;
+        bool off_by_one = false;
+
         bool heartbeat_enabled = false;
         bool watchdog_enabled = false;
         bool use_bool = true;
@@ -407,6 +414,8 @@ struct cfg
         struct cfg *cfg;
         double syncPct     = 0.0; // if polls take too long to retrieve data, what is our threshold (as a percent of pub frequency) for pushing back the next poll?
         bool use_sync = false; // do we push back polls if they're excessively late?
+        int pending = 0;
+        int pub_threads = 0;
     };
 
 

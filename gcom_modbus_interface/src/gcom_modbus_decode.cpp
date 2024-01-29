@@ -236,27 +236,124 @@ void gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstrea
 //     return "\"" + si + "\"";
 // }
 
+
+void printConstAny(const std::any &value, int indent);
+
 template <typename T>
 bool testAnyVal(const std::any &anyVal, const T &defaultValue)
 {
     return anyVal.type() == typeid(T);
 }
 
+#include <cxxabi.h>
+#include <memory>
+#include <typeinfo>
+#include <iostream>
+
+std::string demangle(const char* name) {
+    int status = -1; 
+    std::unique_ptr<char, void(*)(void*)> res {
+        abi::__cxa_demangle(name, NULL, NULL, &status),
+        std::free
+    };
+    return (status==0) ? res.get() : name ;
+}
+
 template <typename T>
-T getAnyVal(const std::any &anyVal, const T &defaultValue)
-{
-    try
-    {
-        return std::any_cast<T>(anyVal);
+T convertAnyToType(const std::any &anyVal) {
+    if (anyVal.type() == typeid(int)) {
+        return static_cast<T>(std::any_cast<int>(anyVal));
+    } else if (anyVal.type() == typeid(float)) {
+        return static_cast<T>(std::any_cast<float>(anyVal));
+    } else if (anyVal.type() == typeid(unsigned long)) {
+        return static_cast<T>(std::any_cast<unsigned long>(anyVal));
     }
-    catch (const std::bad_any_cast &)
-    {
-        std::any def = defaultValue;
-        std::cout <<" could not decode value properly need " << def.type().name()<< " got " << anyVal.type().name() << std::endl;
-        //printAny(std::ref(anyVal), 2);
-        return defaultValue;
+    throw std::bad_any_cast();
+}
+
+template <typename T>
+T getAnyVal(const std::any &anyVal, const T &defaultValue) {
+    try {
+        return std::any_cast<T>(anyVal);
+    } catch (const std::bad_any_cast &) {
+        try {
+            return convertAnyToType<T>(anyVal);
+        } catch (const std::bad_any_cast &) {
+            std::cout << "Could not decode value properly; needed type '" << typeid(T).name() 
+                      << "', but got type '" << demangle(anyVal.type().name()) << "'" << std::endl;
+            return defaultValue;
+        }
     }
 }
+
+// template <typename T>
+// T xxgetAnyVal(const std::any &anyVal, const T &defaultValue)
+// {
+//     try
+//     {
+//         return std::any_cast<T>(anyVal);
+//     }
+//     catch (const std::bad_any_cast &)
+//     {
+//         //std::any def = defaultValue;
+//         if (typeid(T) == typeid(double))
+//         {
+//             if (anyVal.type() == typeid(int))
+//             {
+//                 auto intval = std::any_cast<int>(anyVal);
+//                 return (T)intval;
+//             }
+//             else if (anyVal.type() == typeid(float))
+//             {
+//                 auto intval = std::any_cast<float>(anyVal);
+//                 return (T)intval;
+//             }
+//             else if (anyVal.type() == typeid(unsigned long))
+//             {
+//                 auto intval = std::any_cast<unsigned long>(anyVal);
+//                 return (T)intval;
+//             }
+//             std::cout << " we need a double  from "<< demangle(anyVal.type().name()) << std::endl;
+//         }
+//         else if (typeid(T) == typeid(int))
+//         {
+//             if (anyVal.type() == typeid(float))
+//             {
+//                 auto intval = std::any_cast<float>(anyVal);
+//                 return (T)intval;
+//             }
+//             else if (anyVal.type() == typeid(unsigned long))
+//             {
+//                 auto intval = std::any_cast<unsigned long>(anyVal);
+//                 return (T)intval;
+//             }
+//             std::cout << " we need an int  from "<< demangle(anyVal.type().name()) << std::endl;
+//         }
+//         else if (typeid(T) == typeid(unsigned long))
+//         {
+//             if (anyVal.type() == typeid(float))
+//             {
+//                 auto intval = std::any_cast<float>(anyVal);
+//                 return (T)intval;
+//             }
+//             else if (anyVal.type() == typeid(int))
+//             {
+//                 auto intval = std::any_cast<int>(anyVal);
+//                 return (T)intval;
+//             }
+//             std::cout << " we need an unsigned long  from "<< demangle(anyVal.type().name()) << std::endl;
+//         }
+
+//         std::cout <<" could not decode value properly; default type '" << typeid(defaultValue).name() << "' value type '" << anyVal.type().name() 
+//             << "'"
+//             << std::endl;
+//         std::any &nonConstAnyVal = const_cast<std::any&>(anyVal);
+//         printConstAny(nonConstAnyVal, 2);
+
+//         //printAny(anyVal, 2);
+//         return defaultValue;
+//     }
+// }
 
 /// @brief gcom_decode_any
 /// correctly decode the raw16 buffer received by the modbus into an std::any structure
@@ -831,6 +928,8 @@ bool modbus_decode(std::shared_ptr<cfg::io_point_struct> io_point, std::any &val
 /// @return
 bool modbus_decode(std::shared_ptr<cfg::io_point_struct> io_point, std::any &value, std::stringstream &ss, struct cfg &cfg, bool include_key = true)
 {
+    //std::cout << __func__ << " Point id :" <<io_point->id << std::endl;
+
     if (io_point->is_bit)
     {
         decode_bval_from_value(value, io_point, ss, cfg, include_key);
@@ -869,7 +968,7 @@ bool modbus_decode(std::shared_ptr<cfg::io_point_struct> io_point, std::any &val
     }
     else if (io_point->is_signed || io_point->scale)
     {
-        f64 val = getAnyVal(value, (f64)0);
+        double val = getAnyVal(value, (double)0);
         if (include_key)
         {
             ss << addQuote(io_point->id) << ":";

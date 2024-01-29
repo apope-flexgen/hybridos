@@ -91,6 +91,13 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
     // std::string pstr = "pub_" + base + "_" + component_name;
     int num_threads = GetNumThreads(mypub->cfg);
 
+    // if (1 || mypub->cfg->pub_debug)
+    // {
+    //     std::cout << "Callback for :" << t->name
+    //                 << " running ;  num_threads: " << num_threads
+    //                 << std::endl;
+    // }
+
 
     // Dont request pubs if there are no threads running.
     if(num_threads == 0)
@@ -101,6 +108,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
                       << " Skipped : num_threads: " << num_threads
                       << std::endl;
         }
+        mypub->pub_threads = 0;
         //return;
     }
 
@@ -129,6 +137,9 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
     int work_id = 1;
     cfg::component_struct *compshr = mypub->component;
     bool sent_something = false;
+
+    int num_local_points  = 0;
+    int num_remote_points  = 0;
     std::vector<std::shared_ptr<IO_Work>> io_work_vec;
     std::vector<std::shared_ptr<cfg::io_point_struct>> io_map_vec;
     std::vector<std::shared_ptr<cfg::io_point_struct>> local_map_vec;
@@ -150,19 +161,46 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
             if (!io_point->is_enabled && io_point->is_forced)
             {
                 local_map_vec.emplace_back(io_point);
+                num_local_points++;
             }
 
             if (!io_point->is_enabled)
             {
                 enabled = false;
             }
+            // disconnected flag  can be reset after disconnect time 
+            if (io_point->is_disconnected)
+            {
+                if (io_point->reconnect > 0 && tNow >io_point->reconnect)
+                {
+                    io_point->is_disconnected = false;
+                }
+                else
+                {
+                    enabled = false;
+                    if (io_point->is_forced)
+                    {
+                        local_map_vec.emplace_back(io_point);
+                        num_local_points++;
+                    }
+                }
+            }
+
             if (enabled)
             {
                 // this is the normal io_work vec
                 io_map_vec.emplace_back(io_point);
+                num_remote_points++;
+
             }
         }
     }
+
+    // std::cout << "Callback for :" << t->name
+    //                 << " running ;  num remote points : " << num_remote_points
+    //                 << " num local points : " << num_local_points
+    //                 << std::endl;
+
     // check_work_items
     check_work_items(io_work_vec, io_map_vec, *compshr->myCfg, "poll", false, false);
     io_map_vec.clear();
@@ -174,7 +212,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
         auto io_point = local_map_vec.at(0);
         if(debug)
             std::cout << __func__ << " local vec point id [" << io_point->id << "]" << std::endl;
-        auto io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->size, nullptr, nullptr, strToWorkType(oper, false));
+        auto io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, nullptr, nullptr, strToWorkType(oper, false));
         work_group_size++;
         io_work->tNow = tNow;
         io_work->work_group = work_group_size;
@@ -185,7 +223,15 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
         io_work->pub_struct = mypub;
 
         io_work->local = true;
+        io_work->off_by_one = io_point->off_by_one;
+
         io_work->erase_group = false;
+        // erase group if we have no remote requests
+        // if(io_work_vec.size() == 0)
+        // {
+        //     io_work->erase_group = true;
+        // }
+
         for (auto io_point : local_map_vec)
         {
             io_work->io_points.emplace_back(io_point);
@@ -193,6 +239,26 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
 
         pollWork(io_work);
         sent_something = true;
+    }
+
+    if (mypub->pub_threads == 0 && num_threads > 0 )
+    {
+        mypub->pub_threads = num_threads;
+        // reset pub_pending on num_thread transition
+         mypub->pending = 0;
+    }
+
+    if (mypub->pending > 3 && num_threads > 0)
+    {
+        //its not a bug but we need to know
+        //if(1)std::cout << " too many pending pubs  aborting poll; name: "<<t->name<<"  num_threads :" << num_threads << std::endl;
+        FPS_INFO_LOG("Server stall  too many pending pubs,  aborting poll name: %s num_threads : %d", t->name.c_str(), num_threads);
+
+    }
+    else
+    {
+        mypub->pending++;
+        if(0)std::cout << " pending pubs  ok running poll; name: "<< t->name << " size :" << work_group_size<< std::endl;
     }
 
     for (auto io_work : io_work_vec)
@@ -207,9 +273,24 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
 
         io_work->local = false;
         io_work->erase_group = false;
-        pollWork(io_work);
-        sent_something = true;
-
+        // we need to see how many pending pubs we have
+        if (mypub->pending > 3)
+        {
+            stashWork(io_work);
+        }
+        else
+        {
+            if(num_threads > 0)
+            {
+                pollWork(io_work);
+                sent_something = true;
+            }
+            else
+            {
+                // no need to send it
+                stashWork(io_work);
+            }
+        }
         // the response collator used this lot to
         // work_name pub_components_comp_alt_2440 work_id 2 in  2
         if (debug) //|| (register_group->starting_offset == 200 && io_work->work_id == 1))

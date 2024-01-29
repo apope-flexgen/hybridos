@@ -4425,7 +4425,8 @@ bool gcom_points_test(std::map<std::string, std::any> jsonMapOfConfig, struct cf
     //    std::string mygo(go);
     //   auto run = (mygo == "run") ;
     int idx = 0;
-    auto io_thread = make_IO_Thread(idx, myCfg.connection.ip_address.c_str(), myCfg.connection.port, myCfg.connection.connection_timeout, myCfg);
+    auto io_thread = make_IO_Thread(idx, myCfg.connection.ip_address.c_str(), myCfg.connection.port,
+            myCfg.connection.connection_timeout,myCfg.connection.transfer_timeout, myCfg);
     std::cout << " connection ip  ..." << myCfg.connection.ip_address << ":" << myCfg.connection.port << "   ->\n";
     SetupModbusForThread(myCfg, io_thread, debug);
     io_thread->jobs = 0;
@@ -4466,7 +4467,7 @@ bool gcom_points_test(std::map<std::string, std::any> jsonMapOfConfig, struct cf
                         // std::cout   << ">>>>>>>> start time #1 :" << tNow
                         //                 << " delay since start " << tNow-tStart
                         //                 << std::endl;
-                        io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->size, io_point->reg16, io_point->reg8, strToWorkType("get", false));
+                        io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one,io_point->size, io_point->reg16, io_point->reg8, strToWorkType("get", false));
                         // double tEnd = get_time_double();
                         // std::cout   << ">>>>>>>> done time #1 :" << tEnd
                         //     << " elapsed: " << tEnd - tNow
@@ -4586,7 +4587,8 @@ bool gcom_point_type_test(std::map<std::string, std::any> jsonMapOfConfig, struc
     std::cout << "point type test ..." << std::endl;
     double runTime = 0.0;
     int idx = 0;
-    auto io_thread = make_IO_Thread(idx, myCfg.connection.ip_address.c_str(), myCfg.connection.port, myCfg.connection.connection_timeout, myCfg);
+    auto io_thread = make_IO_Thread(idx, myCfg.connection.ip_address.c_str(), myCfg.connection.port,
+        myCfg.connection.connection_timeout, myCfg.connection.transfer_timeout, myCfg);
     std::cout << " connection ip  ..." << myCfg.connection.ip_address << ":" << myCfg.connection.port << "   ->\n";
     SetupModbusForThread(myCfg, io_thread, debug);
     io_thread->jobs = 0;
@@ -4867,7 +4869,7 @@ bool test_uri(struct cfg &myCfg, const char *uri)
 bool decode_io_point_struct(std::vector<std::shared_ptr<IO_Work>> &work_vec, std::shared_ptr<cfg::io_point_struct> io_point, std::any val, struct cfg &myCfg, Uri_req &uri, const char *mode, bool debug)
 {
     std::shared_ptr<IO_Work> iop;
-    iop = make_work(io_point->register_type, io_point->device_id, io_point->offset, 1, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
+    iop = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, 1, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
     work_vec.emplace_back(iop);
     return true;
 }
@@ -4987,7 +4989,7 @@ bool encode_io_point_struct(std::vector<std::shared_ptr<IO_Work>> &work_vec, std
         {
             std::cout << ">>>>" << __func__ << " regtype Coil " << std::endl;
         }
-        io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, 1, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
+        io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one,1, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
         // io_work_single->ip_address = myCfg.connection.ip_address;
         // io_work_single->port = myCfg.connection.port;
 
@@ -5009,7 +5011,7 @@ bool encode_io_point_struct(std::vector<std::shared_ptr<IO_Work>> &work_vec, std
         {
             std::cout << ">>>>" << __func__ << " regtype Holding " << std::endl;
         }
-        io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
+        io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
         io_work_single->replyto = replyto;
         if (uri.is_unforce_request)
         {

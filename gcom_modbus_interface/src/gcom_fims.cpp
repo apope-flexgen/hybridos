@@ -507,10 +507,11 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
 #endif
                             std::string mode("set");
 
-                            std::shared_ptr<IO_Work> io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
+                            std::shared_ptr<IO_Work> io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
                             io_work_single->io_points.emplace_back(io_point);
                             io_work_single->replyto = replyto;
                             io_work_single->local = is_local_request;
+                            io_work_single->off_by_one = io_point->off_by_one;
 
                             if ((io_point->register_type == cfg::Register_Types::Coil)|| (io_point->register_type == cfg::Register_Types::Discrete_Input))
                             {
@@ -667,7 +668,10 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                         {
                             //std::cout << " io_point id [" << io_point->id << " ] not doing multi sets, added to work_vec " << std::endl;
 
-                            std::shared_ptr<IO_Work> io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->size, io_point->reg16, io_point->reg8, strToWorkType("set", false));
+                            std::shared_ptr<IO_Work> io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset,
+                                         io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType("set", false));
+                            io_work_single->off_by_one = io_point->off_by_one;
+
                             io_work_single->io_points.emplace_back(io_point);
                             work_vec.emplace_back(io_work_single);
                         }
@@ -920,12 +924,13 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
 
                 std::string mode("get");
 
-                std::shared_ptr<IO_Work> io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
+                std::shared_ptr<IO_Work> io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
                 io_work_single->io_points.emplace_back(io_point);
                 io_work_single->replyto = replyto;
                 io_work_single->local = is_local_request;
                 io_work_single->unforced = is_unforce_request;
                 io_work_single->full = is_full_request;
+                io_work_single->off_by_one = io_point->off_by_one;
 
                 if (io_point->register_type == cfg::Register_Types::Coil || io_point->register_type == cfg::Register_Types::Discrete_Input)
                 {

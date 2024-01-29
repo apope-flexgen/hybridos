@@ -512,7 +512,8 @@ struct IO_Thread {
     ThreadControl *thread_control;
     std::string ip;
     bool connected =  false;
-    int connection_timeout;
+    double connection_timeout;
+    double transfer_timeout;
     int transaction_timeout;
 
     double connect_time;
@@ -575,24 +576,42 @@ bool startRespThread(struct cfg&);
 bool stopRespThread(struct cfg&);
 void sendpollChantoResp(bool debug);
 void clearrespChan(bool debug);
-std::shared_ptr<IO_Work> make_work(cfg::Register_Types register_type,  int device_id, int offset, int num_regs, uint16_t* u16bufs, uint8_t* u8bufs, WorkTypes wtype );
+std::shared_ptr<IO_Work> make_work(cfg::Register_Types register_type,  int device_id, int offset, bool off_by_one, int num_regs, uint16_t* u16bufs, uint8_t* u8bufs, WorkTypes wtype );
 bool pollWork (std::shared_ptr<IO_Work> io_work);
 bool setWork (std::shared_ptr<IO_Work> io_work);
 WorkTypes strToWorkType(std::string roper, bool);
 cfg::Register_Types strToRegType(std::string& register_type);
 void test_io_point_multi(const char* ip, int port, int timeout, const char *oper, int device_id, const char *regtype, int offset, int value, int num_threads, struct cfg&, bool debug);
-void test_io_point_single(const char* ip, int port, int timeout, const char *oper, int device_id, const char *regtype, int offset, int num_regs, int value, int num_threads,  struct cfg&, bool debug);
+void test_io_point_single(const char* ip, int port, double timeout, const char *oper, int device_id, const char *regtype, int offset, int num_regs, int value, int num_threads,  struct cfg&, bool debug);
 double SetupModbusForThread(std::shared_ptr<IO_Thread> io_thread, bool debug);
 bool CloseModbusForThread(std::shared_ptr<IO_Thread> io_thread, bool debug);
-std::shared_ptr<IO_Thread> make_IO_Thread(int idx, const char* ip, int port, int connection_timeout, struct cfg& myCfg);
+std::shared_ptr<IO_Thread> make_IO_Thread(int idx, const char* ip, int port, double connection_timeout,double transfer_timeout, struct cfg& myCfg);
 int test_find_bad_regs();
 bool test_decode_raw();
 bool StartThreads(struct cfg& myCfg, bool debug);
 bool StopThreads(struct cfg& myCfg, bool debug);
 bool StartThreads(int num_threads, const char *ip, int port, int connection_timeout, struct cfg& myCfg);
 void runThreadWork(struct cfg& myCfg, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work,  bool debug);
-double SetupModbusForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, bool debug);
+
 bool check_pubgroup_key(std::string key, std::shared_ptr<IO_Work> io_work);
 int test_io_threads(struct cfg &myCfg);
+void stashWork(std::shared_ptr<IO_Work> io_work);
+void ioThreadFunc(ThreadControl &control, struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread);
+void responseThreadFunc(ThreadControl &control, struct cfg &myCfg);
+std::string regTypeToStr(cfg::Register_Types &register_type);
+WorkTypes strToWorkType(std::string roper, bool debug = false);
+std::string workTypeToStr(WorkTypes &work_type);
+double get_time_double();
+void randomDelay(int minMicroseconds, int maxMicroseconds);
+double SetupModbusForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, bool debug);
+
+double FastReconnectForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, bool debug);
+WorkTypes strToWorkType(std::string roper, bool debug);
+
+
+
+
+
+
 
 #endif
