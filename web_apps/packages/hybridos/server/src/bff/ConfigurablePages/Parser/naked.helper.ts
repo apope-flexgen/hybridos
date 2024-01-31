@@ -3,6 +3,7 @@ import {
   ControlComponentDTO,
   ControlType,
   DisplayGroupDTO,
+  MaintenanceActionComponentDTO,
   StatusComponentDTO,
   ValueType,
 } from 'shared/types/dtos/configurablePages.dto';
@@ -28,6 +29,7 @@ export const parseNakedData = (
   includeStatic: boolean,
   enableAssetPageControls: boolean,
   siteConfiguration: SiteConfiguration,
+  maintenanceActionsStaticData?: any,
 ): DisplayGroupDTO => {
   const displayGroupDTO: DisplayGroupDTO = {
     status: parseNakedBodyStatus(rawData, metaData, includeStatic),
@@ -41,10 +43,25 @@ export const parseNakedData = (
     ),
     fault: parseNakedBodyFault(rawData, metaData),
     alarm: parseNakedBodyAlarm(rawData, metaData),
+    maintenanceActions: parseMaintenanceActionData(includeStatic, maintenanceActionsStaticData),
   };
 
   return displayGroupDTO;
 };
+
+const parseMaintenanceActionData = (
+  includeStatic: boolean,
+  maintenanceActionsStaticData: any,
+) => {
+  let maintenanceActionsMetadata = {}
+  if (maintenanceActionsStaticData) {
+      const dataType = includeStatic ? "static" : "state";
+      Object.keys(maintenanceActionsStaticData).forEach((maintenanceAction) => {
+        maintenanceActionsMetadata = { ...maintenanceActionsMetadata, [maintenanceAction]: { [dataType]: maintenanceActionsStaticData[maintenanceAction] } }
+      });
+  } 
+  return maintenanceActionsMetadata;
+}
 
 const parseNakedBodyStatus = (
   rawData: nakedBodyFromFims,
@@ -166,7 +183,7 @@ const parseNakedBodyControl = (
       aggregatedDTOs[componentID].state.value = trueValue;
       trueScalar = newScalar;
     }
-    
+
     if (!includeStatic) {
       return;
     }

@@ -7,12 +7,13 @@ import { AssetsPageProps } from './assetsPage.types';
 const AssetsPage = (props: AssetsPageProps) => {
   const [tabComponents, setTabComponents] = useState<React.ReactElement[]>([]);
   const [tabValue, setTabValue] = useState('');
-  
+
   const {
     componentState,
     alertState,
     componentFunctions,
     allControlsState,
+    maintenanceActionsState,
     maintModeState,
     currentUser,
   } = props;
@@ -21,13 +22,13 @@ const AssetsPage = (props: AssetsPageProps) => {
     const updatedTabComponents = Object.entries(componentFunctions).map(
       ([displayGroupID, displayGroup]) => {
         let icon;
-        let color = 'primary';
+        const color = 'primary';
         const alerts = alertState[displayGroupID];
-        if (maintModeState && maintModeState[displayGroupID].value) icon = 'Build';
-        if (alerts.faultInformation.length > 0) icon = 'Fault';
-        if (alerts.alarmInformation.length > 0) icon = 'Alarm';
+        if (alerts === undefined && maintModeState === undefined) icon = undefined;
+        else if (alerts.faultInformation.length > 0) icon = 'Fault';
+        else if (alerts.alarmInformation.length > 0) icon = 'Alarm';
+        else if (maintModeState && maintModeState[displayGroupID].value) icon = 'Build';
         if (alerts.alarmInformation.length > 0 && alerts.faultInformation.length > 0) icon = 'Fault';
-
 
         return (
           <Tab
@@ -64,6 +65,7 @@ const AssetsPage = (props: AssetsPageProps) => {
   return (
     <AssetsPageLayout
       allControlsState={allControlsState}
+      maintenanceActionsState={maintenanceActionsState}
       componentFunctions={componentFunctions[tabValue]}
       handleTabChange={handleTabChange}
       tabComponents={tabComponents}

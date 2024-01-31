@@ -26,6 +26,9 @@ export type DisplayGroupStateStructure = {
       }
     }
   }
+  maintenanceActions: {
+    [componentId: string]: any
+  }
 };
 
 export type ConfigurablePageStateStructure = {
@@ -40,4 +43,5 @@ export type DisplayGroupFunctions = {
   displayName: string
   statusFunctions: ConfigurableComponentFunction[]
   controlFunctions: ConfigurableComponentFunction[]
+  maintenanceActionsFunctions: ConfigurableComponentFunction[]
 };

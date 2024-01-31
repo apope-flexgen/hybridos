@@ -1,8 +1,8 @@
-// TODO: figure out what's wrong with eslint
 import {
   CardContainer, ResizableContainer, Tabs, ThemeType,
 } from '@flexgen/storybook';
 import { Box } from '@mui/material';
+import React from 'react';
 import {
   AlertState,
   ConfigurablePageStateStructure,
@@ -22,6 +22,8 @@ export type AssetsPageLayoutProps = {
   alertState?: AlertState[string];
   componentFunctions?: DisplayGroupFunctions;
   allControlsState?: any;
+  maintenanceActionsState?: boolean;
+  maintActionsControlState?: any;
   currentUser?: any;
 };
 
@@ -67,6 +69,7 @@ const AssetsPageLayout = (props: AssetsPageLayoutProps) => {
     allControlsState,
     currentUser,
     maintModeStatus,
+    maintenanceActionsState,
   } = props;
 
   const alertsToDisplay = alertState || { faultInformation: [], alarmInformation: [] };
@@ -89,6 +92,8 @@ const AssetsPageLayout = (props: AssetsPageLayoutProps) => {
                   statusChildren={componentFunctions?.statusFunctions || []}
                   assetState={assetState}
                   alertState={alertsToDisplay}
+                  maintenanceActionsState={maintenanceActionsState || false}
+                  maintenanceActionsChildren={componentFunctions?.maintenanceActionsFunctions || []}
                 />
               </Window>
             </Box>

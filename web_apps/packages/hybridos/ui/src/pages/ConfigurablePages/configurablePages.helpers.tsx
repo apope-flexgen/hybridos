@@ -6,6 +6,7 @@
 import {
   ConfigurablePageDTO,
   ControlComponentDTO,
+  MaintenanceActionComponentDTO,
   StatusComponentDTO,
 } from 'shared/types/dtos/configurablePages.dto';
 import { generateReactComponentFunction } from './ComponentFactory';
@@ -34,6 +35,22 @@ const getStatusStateForDisplayGroup: (
 
       statusState[componentID] = `${state.value}`;
       return statusState;
+    },
+    {},
+  );
+};
+
+const getMaintenanceActionStateForDisplayGroup: (
+  maintenanceAction: ConfigurablePageDTO['displayGroups'][string]['maintenanceActions'],
+) => DisplayGroupStateStructure['maintenanceActions'] = (maintenanceAction) => {
+  if (maintenanceAction === undefined) return {};
+  return Object.entries(maintenanceAction).reduce(
+    (maintenanceActionsState: DisplayGroupStateStructure['maintenanceActions'], [componentID, component]) => {
+      const { state } = component;
+      if (state === undefined) return maintenanceActionsState;
+
+      maintenanceActionsState[componentID] = state;
+      return maintenanceActionsState;
     },
     {},
   );
@@ -71,6 +88,7 @@ export const getUpdatedStates: (
     updatedComponentState[displayGroupID] = {
       status: getStatusStateForDisplayGroup(displayGroup.status, displayGroup.batteryViewStatus),
       control: getControlStateForDisplayGroup(displayGroup.control),
+      maintenanceActions: getMaintenanceActionStateForDisplayGroup(displayGroup.maintenanceActions)
     };
 
     updatedAlertState[displayGroupID] = {
@@ -166,6 +184,52 @@ const getStatusComponentFunctions: (
     .concat(batteryViewComponents);
 };
 
+const generateProgressStepperComponent: (
+  displayGroupID: string,
+  componentID: string,
+  staticData: MaintenanceActionComponentDTO['static'],
+) => ConfigurableComponentFunction = (displayGroupID, componentID, staticData) => {
+  if (staticData === undefined) return () => <></>;
+  return generateReactComponentFunction(
+    {
+      component: 'MaintActionProgress',
+      props: {
+        label: componentID,
+        stepIndex: staticData.step_index,
+        pathIndex: staticData.path_index,
+        paths: staticData.paths,
+        status: staticData.status.toLowerCase(),
+        steps: staticData.paths[staticData.path_index].steps,
+        inactive: staticData.status.toLowerCase() === 'inactive',
+        stopActionURI: `${displayGroupID}/actions/${componentID}/stop`,
+        clearActionURI: `${displayGroupID}/actions/${componentID}/clear`,
+      },
+    },
+    displayGroupID,
+    componentID,
+    '',
+    true,
+  );
+};
+
+const getMaintenanceActionComponentFunctions: (
+  maintenanceAction: ConfigurablePageDTO['displayGroups'][string]['maintenanceActions'],
+  displayGroupID: string,
+) => ConfigurableComponentFunction[] = (maintenanceAction, displayGroupID) => {
+  if (maintenanceAction === undefined) return [];
+  return Object.entries(maintenanceAction)
+    .reduce((maintenanceActionFunctions: ConfigurableComponentFunction[], [componentID, component]) => {
+      const { static: staticData } = component;
+
+      if (staticData === undefined) return maintenanceActionFunctions;
+      maintenanceActionFunctions.push(
+        generateProgressStepperComponent(displayGroupID, componentID, staticData),
+      );
+
+      return maintenanceActionFunctions;
+    }, [])
+};
+
 const generateControlComponentFunction: (
   displayGroupID: string,
   componentID: string,
@@ -219,7 +283,6 @@ export const getUpdatedComponentFunctions: (data: ConfigurablePageDTO['displayGr
   [displayGroupID: string]: DisplayGroupFunctions;
 } = (data) => {
   const updatedComponentFunctions: { [displayGroupID: string]: DisplayGroupFunctions } = {};
-
   Object.entries(data).forEach(([displayGroupID, displayGroup]) => {
     updatedComponentFunctions[displayGroupID] = {
       displayName: displayGroup.displayName || displayGroupID,
@@ -229,6 +292,7 @@ export const getUpdatedComponentFunctions: (data: ConfigurablePageDTO['displayGr
         displayGroup.batteryViewStatus,
       ),
       controlFunctions: getControlComponentFunctions(displayGroup.control, displayGroupID),
+      maintenanceActionsFunctions: getMaintenanceActionComponentFunctions(displayGroup.maintenanceActions, displayGroupID)
     };
   });
 

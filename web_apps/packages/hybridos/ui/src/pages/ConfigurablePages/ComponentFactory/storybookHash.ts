@@ -41,6 +41,7 @@ import {
 } from '@flexgen/storybook';
 import ConfirmCancelButton from './components/ConfirmCancelButton';
 import MaintActionControl from './components/MaintActionControl';
+import MaintActionProgress from './components/MaintActionProgress';
 
 // FIXME: storybook should probably have consistent types
 export interface IComponentHash {
@@ -89,6 +90,7 @@ const storybookComponents: IComponentHash = {
   Progress,
   ConfirmCancelButton,
   MaintActionControl,
+  MaintActionProgress,
 };
 
 export default storybookComponents;

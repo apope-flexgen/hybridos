@@ -15,6 +15,17 @@ export type ControlComponentStateInfo = {
   }
 };
 
+export type MaintenanceActionComponentStateInfo = {
+  name: string
+  path_name: boolean
+  step_name: string
+  path_index: number
+  step_index: number
+  seconds_left_in_step: number
+  seconds_left_in_action: number
+  status: string
+};
+
 export type MemoizedComponentObject = { prevState: any; element: JSX.Element };
 
 export type PossibleConfirmValues = ValueType;

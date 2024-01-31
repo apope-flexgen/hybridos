@@ -19,21 +19,40 @@ export type DisplayGroupDTO = {
     [componentID: string]: ControlComponentDTO;
   };
   maintenanceActions?: {
-    [componentID: string]: MaintenanceActionDTO;
+    [componentID: string]: MaintenanceActionComponentDTO;
   }
   fault?: string[];
   alarm?: string[];
 };
 
-export type MaintenanceActionDTO = {
-  name?: string;
-  path_name?: string;
-  step_name?: string;
-  path_index?: number;
-	step_index?: number;
-  seconds_left_in_step?: number;
-  seconds_left_in_action?: number;
-  status?: string;
+export type MaintenanceActionStep = {
+  step_name: string,
+  estimated_duration: number,
+}
+
+export type MaintenanceActionPath = {
+  path_name: string,
+  estimated_duration: number,
+  steps: MaintenanceActionStep[],
+}
+
+export type MaintenanceActionComponentDTO = {
+  static?: {
+      path_index: number,
+      step_index: number,
+      status: string,
+      paths: MaintenanceActionPath[],
+  };
+  state?: {
+    name?: string;
+    path_name?: string;
+    step_name?: string;
+    path_index?: number;
+    step_index?: number;
+    seconds_left_in_step?: number;
+    seconds_left_in_action?: number;
+    status?: string;
+  };
 };
 
 export type StatusComponentDTO = {

@@ -13,6 +13,7 @@ import {
   StatusComponentStateInfo,
   ControlComponentStateInfo,
   MemoizedComponentObject,
+  MaintenanceActionComponentStateInfo,
 } from './componentFactory.types';
 import { useAppContext } from 'src/App/App';
 import { Roles } from 'shared/types/api/Users/Users.types';
@@ -93,9 +94,12 @@ const getSpecificStateInfo = (
   displayGroupID: string,
   componentID: string,
   control: boolean,
+  maintenanceAction?: boolean,
 ): any => {
   if (control) {
     return assetState[displayGroupID].control[componentID];
+  } if (maintenanceAction) {
+    return assetState[displayGroupID].maintenanceActions[componentID];
   }
 
   return assetState[displayGroupID].status[componentID];
@@ -121,7 +125,7 @@ const memoIsValid = (
 const organizeProps = (
   props: any,
   component: string,
-  stateInfo: StatusComponentStateInfo | ControlComponentStateInfo | undefined,
+  stateInfo: StatusComponentStateInfo | ControlComponentStateInfo | MaintenanceActionComponentStateInfo |undefined,
 ): any => {
   const { currentUser } = useAppContext();
 
@@ -129,9 +133,17 @@ const organizeProps = (
     props.disabled = currentUser.role === Roles.Observer;
     return props;
   }
+  // if this is state info regarding maintenance actions  
+  else if (typeof stateInfo === 'object' && 'step_name' in stateInfo) {
+    props.stepIndex = stateInfo.step_index;
+    props.pathIndex = stateInfo.path_index;
+    props.status = stateInfo.status.toLowerCase();
+    props.inactive = stateInfo.status.toLowerCase() === 'inactive';
+    return props;
+  }
 
   const [value, enabled] =
-    typeof stateInfo === 'object' ? [stateInfo.value, stateInfo.enabled] : [stateInfo, true];
+    (typeof stateInfo === 'object' && 'value' in stateInfo) ? [stateInfo.value, stateInfo.enabled] : [stateInfo, true];
 
   props.disabled = !enabled || currentUser.role === Roles.Observer;
 
@@ -216,7 +228,8 @@ export const generateReactComponentFunction: (
   displayGroupID: string,
   componentID: string,
   uri?: string,
-) => ConfigurableComponentFunction = (componentMetadata, displayGroupID, componentID, uri) => {
+  maintenanceAction?: boolean,
+) => ConfigurableComponentFunction = (componentMetadata, displayGroupID, componentID, uri, maintenanceAction) => {
   const { component, props } = componentMetadata;
   const Component = storybookComponents[component];
 
@@ -241,8 +254,7 @@ export const generateReactComponentFunction: (
   }
 
   return (assetState: ConfigurablePageStateStructure): JSX.Element => {
-    const stateInfo = getSpecificStateInfo(assetState, displayGroupID, componentID, !!uri);
-
+    const stateInfo = getSpecificStateInfo(assetState, displayGroupID, componentID, !!uri, maintenanceAction);
     if (memoized !== undefined && memoIsValid(memoized, stateInfo)) {
       return memoized.element;
     }

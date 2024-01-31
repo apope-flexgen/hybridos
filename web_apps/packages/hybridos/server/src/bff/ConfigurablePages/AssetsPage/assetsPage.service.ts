@@ -93,14 +93,14 @@ export class AssetsPageService {
     // should be displayed, there is no reason to send that data to the UI
     const URIs = isClothed
       ? uriCandidates.filter((uriCandidate) => {
-          for (const value of Object.values(initialRawData[uriCandidate])) {
-            if (value !== null && typeof value === 'object' && 'ui_type' in value) {
-              if (value.ui_type !== 'none') return true;
-            }
+        for (const value of Object.values(initialRawData[uriCandidate])) {
+          if (value !== null && typeof value === 'object' && 'ui_type' in value) {
+            if (value.ui_type !== 'none') return true;
           }
+        }
 
-          return false;
-        })
+        return false;
+      })
       : uriCandidates;
 
     const initialSendData = await this.getInitialSendData(
@@ -418,6 +418,20 @@ export class AssetsPageService {
 
     return dbiMetadata[indexOfMetadata];
   };
+  private getInitialMaintenanceActionsData = async (
+    URIs: string[],
+    baseUri: string,
+  ): Promise<any> => {
+    // if this asset is configured to have maintenance actions 
+    // get initial data to send to frontend
+    const entries = await Promise.all(
+      URIs.map(async (uri, index) => {
+        const indiviudalMetadata = await this.fimsService.get(`${baseUri}/${URIs[index]}/actions`)
+        return [uri, indiviudalMetadata.body];
+      })
+    );
+    return Object.fromEntries(entries);
+  }
   private getInitialSendData = async (
     summaryData: summaryDataFromFims,
     URIs: string[],
@@ -426,30 +440,34 @@ export class AssetsPageService {
     enableAssetPageControls: boolean,
     dbiMetadata: metadataFromDBI[],
   ): Promise<ConfigurablePageDTO> => {
+    const hasMaintenanceActions = dbiMetadata?.[0].info.hasMaintenanceActions ? true : false;
     const returnWithMetadata: ConfigurablePageDTO = {
       hasStatic: true,
       hasAllControls: dbiMetadata?.[0].info.hasAllControls ? true : false,
-      hasMaintenanceActions: dbiMetadata?.[0].info.hasMaintenanceActions ? true : false,
+      hasMaintenanceActions: hasMaintenanceActions,
       displayGroups: {},
     };
+
+    const maintenanceActionsMetadata = hasMaintenanceActions ? await this.getInitialMaintenanceActionsData(URIs, baseUri) : undefined;
 
     URIs.forEach((uri) => {
       const parsedData: DisplayGroupDTO = isClothed
         ? parseClothedData(
-            summaryData[uri],
-            this.setLockMode(`${baseUri}/${uri}`),
-            true,
-            enableAssetPageControls,
-            this.siteConfiguration,
-          )
+          summaryData[uri],
+          this.setLockMode(`${baseUri}/${uri}`),
+          true,
+          enableAssetPageControls,
+          this.siteConfiguration,
+        )
         : parseNakedData(
-            summaryData[uri],
-            this.setLockMode(`${baseUri}/${uri}`),
-            this.getIndividualAssetMetadata(uri, dbiMetadata),
-            true,
-            enableAssetPageControls,
-            this.siteConfiguration,
-          );
+          summaryData[uri],
+          this.setLockMode(`${baseUri}/${uri}`),
+          this.getIndividualAssetMetadata(uri, dbiMetadata),
+          true,
+          enableAssetPageControls,
+          this.siteConfiguration,
+          maintenanceActionsMetadata?.[uri],
+        );
 
       const displayName = summaryData[uri]['name'] ?? `${baseUri}/${uri}`;
       // const displayName =
@@ -510,22 +528,23 @@ export class AssetsPageService {
 
         const parsedData = isSummary
           ? parseSummaryData(
-              this.getIndividualAssetMetadata(assetURI, dbiMetadata),
-              event.body,
-              false,
-              enableAssetPageControls,
-              this.siteConfiguration,
-            )
+            this.getIndividualAssetMetadata(assetURI, dbiMetadata),
+            event.body,
+            false,
+            enableAssetPageControls,
+            this.siteConfiguration,
+          )
           : !isClothed
-          ? parseNakedData(
+            ? parseNakedData(
               event.body as nakedBodyFromFims,
               this.setLockMode(uri),
               this.getIndividualAssetMetadata(assetURI, dbiMetadata),
               false,
               enableAssetPageControls,
               this.siteConfiguration,
+              maintenanceActions,
             )
-          : parseClothedData(
+            : parseClothedData(
               event.body as clothedBodyFromFims,
               this.setLockMode(uri),
               false,
@@ -540,7 +559,6 @@ export class AssetsPageService {
             [uri]: {
               ...parsedData,
               displayName: name || uri,
-              maintenanceActions: maintenanceActions,
             },
           },
         };
