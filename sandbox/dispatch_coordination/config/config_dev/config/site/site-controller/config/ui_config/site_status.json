@@ -1,0 +1,41 @@
+{
+    "siteStatusLabel": "Durham",
+    "dataSources": [
+        {
+            "uri": "/features/active_power",
+            "field": "runmode1_kW_mode_status",
+            "dataType": "string",
+            "label": "Mode"
+        },
+        {
+            "uri": "/features/active_power",
+            "field": "site_kW_load",
+            "dataType": "number",
+            "label": "Active Power"
+        },
+        {
+            "uri": "/assets/ess/ess_1",
+            "field": "status",
+            "dataType": "string",
+            "label": "ESS 1 Status"
+        },
+        {
+            "uri": "/assets/feeders/feed_1",
+            "field": "utility_status",
+            "dataType": "boolean",
+            "label": "POI Feeder Utility Status"
+        },
+        {
+            "uri": "/features/reactive_power",
+            "field": "site_kVAR_demand",
+            "dataType": "number",
+            "label": "Reactive Power"
+        },
+        {
+            "uri": "/features/active_power",
+            "field": "site_frequency",
+            "dataType": "number",
+            "label": "Frequency"
+        }
+    ]
+}

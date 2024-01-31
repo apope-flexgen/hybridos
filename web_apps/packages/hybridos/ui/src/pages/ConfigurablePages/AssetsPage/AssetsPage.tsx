@@ -7,7 +7,7 @@ import { AssetsPageProps } from './assetsPage.types';
 const AssetsPage = (props: AssetsPageProps) => {
   const [tabComponents, setTabComponents] = useState<React.ReactElement[]>([]);
   const [tabValue, setTabValue] = useState('');
-
+  
   const {
     componentState,
     alertState,
@@ -23,13 +23,11 @@ const AssetsPage = (props: AssetsPageProps) => {
         let icon;
         let color = 'primary';
         const alerts = alertState[displayGroupID];
-        if (alerts === undefined) icon = undefined;
-        else if (alerts.faultInformation.length > 0) icon = 'Fault';
-        else if (alerts.alarmInformation.length > 0) icon = 'Alarm';
+        if (maintModeState && maintModeState[displayGroupID].value) icon = 'Build';
+        if (alerts.faultInformation.length > 0) icon = 'Fault';
+        if (alerts.alarmInformation.length > 0) icon = 'Alarm';
         if (alerts.alarmInformation.length > 0 && alerts.faultInformation.length > 0) icon = 'Fault';
 
-        if (maintModeState && maintModeState[displayGroupID].value) color = 'warning';
-        else color = 'primary';
 
         return (
           <Tab
@@ -73,6 +71,7 @@ const AssetsPage = (props: AssetsPageProps) => {
       assetState={componentState}
       alertState={alertState[tabValue]}
       currentUser={currentUser}
+      maintModeStatus={maintModeState?.[tabValue]}
     />
   );
 };

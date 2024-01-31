@@ -12,7 +12,6 @@ import {
   DisplayGroupFunctions,
   AlertState,
   MaintModeState,
-  MaintActionsControlState,
 } from './configurablePages.types';
 
 export interface ConfigurablePagesProps extends PageProps {
@@ -24,7 +23,6 @@ export interface ConfigurablePagesProps extends PageProps {
   allControlsState?: any;
   maintModeState?: MaintModeState;
   maintenanceActionsState?: any;
-  maintActionsControlState?: MaintActionsControlState;
 }
 
 const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
@@ -36,7 +34,6 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
     const [maintenanceActionsState, setMaintenanceActionsState] = useState<boolean>(false);
     const [alertState, setAlertState] = useState<AlertState>({});
     const [maintModeState, setMaintModeState] = useState<MaintModeState>({});
-    const [maintActionsControlState, setMaintActionsControlState] = useState<MaintActionsControlState>({});
     const [isLoading, setIsLoading] = useState<any>(false);
 
     const [componentFunctions, setComponentFunctions] = useState<{
@@ -48,17 +45,11 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
         updatedComponentState,
         updatedAlertState,
         updatedMaintModeState,
-        updatedMaintActionsControlState,
       ] = getUpdatedStates(data);
 
       setMaintModeState((prevMaintModeState) => ({
         ...prevMaintModeState,
         ...updatedMaintModeState,
-      }));
-
-      setMaintActionsControlState((prevMaintActionsControlState) => ({
-        ...prevMaintActionsControlState,
-        ...updatedMaintActionsControlState,
       }));
 
       setComponentState((prevComponentState) => ({
@@ -114,7 +105,6 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
           allControlsState={allControlsState}
           maintModeState={maintModeState}
           maintenanceActionsState={maintenanceActionsState}
-          maintActionsControlState={maintActionsControlState}
           componentState={componentState}
           alertState={alertState}
           componentFunctions={componentFunctions}

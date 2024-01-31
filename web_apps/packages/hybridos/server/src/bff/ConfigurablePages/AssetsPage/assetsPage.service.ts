@@ -144,12 +144,19 @@ export class AssetsPageService {
       // add a new control to the metadata for the maintenanceActions control
       if (individualMetadata?.info.hasMaintenanceActions) {
         const maintenanceActionControl = {
-          inputType: 'maint-action',
+          inputType: 'maint_action_control',
           name: 'Start Maintenance Action',
-          uri: '/actions/control',
+          uri: '/maint_actions_ctl',
         };
 
-        individualMetadata.controls.push(maintenanceActionControl);
+        // if this asset is configured to include a control for maintenance mode
+        // put the maintenance actions right after the maintenance mode control so they appear together
+        const indexOfMaintMode = individualMetadata.controls.findIndex((control) => control.name.toLowerCase() ==="maintenance mode");
+        if (indexOfMaintMode !== -1) {
+          individualMetadata.controls.splice(indexOfMaintMode + 1, 0, maintenanceActionControl)
+        } else { 
+          individualMetadata.controls.push(maintenanceActionControl)
+        }
       }
 
       let extension = individualMetadata.info.extension ?? '';
@@ -259,6 +266,12 @@ export class AssetsPageService {
         ui_type: '',
         enabled: false,
         value: '-',
+        options: [
+          {
+            name: '',
+            return_value: '',
+          }
+        ]
       };
     });
     return clothedBodyFields;

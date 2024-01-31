@@ -15,6 +15,7 @@ import { tabsAndStatusContainerSx, tabsContainerSx, internalTabsAndStatusContain
 
 export type AssetsPageLayoutProps = {
   tabValue: string;
+  maintModeStatus?: { value: boolean };
   handleTabChange: (event: React.ChangeEvent<object>, newValue: unknown) => void;
   tabComponents: React.ReactElement[];
   assetState: ConfigurablePageStateStructure;
@@ -65,6 +66,7 @@ const AssetsPageLayout = (props: AssetsPageLayoutProps) => {
     componentFunctions,
     allControlsState,
     currentUser,
+    maintModeStatus,
   } = props;
 
   const alertsToDisplay = alertState || { faultInformation: [], alarmInformation: [] };
@@ -82,6 +84,7 @@ const AssetsPageLayout = (props: AssetsPageLayoutProps) => {
               />
               <Window>
                 <AssetStatus
+                  maintModeStatus={maintModeStatus?.value}
                   assetName={componentFunctions?.displayName || 'Asset'}
                   statusChildren={componentFunctions?.statusFunctions || []}
                   assetState={assetState}

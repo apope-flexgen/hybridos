@@ -13,12 +13,6 @@ export type MaintModeState = {
   }
 };
 
-export type MaintActionsControlState = {
-  [displayGroupID: string]: {
-    value: boolean
-  }
-};
-
 export type DisplayGroupStateStructure = {
   status: {
     [componentID: string]: string

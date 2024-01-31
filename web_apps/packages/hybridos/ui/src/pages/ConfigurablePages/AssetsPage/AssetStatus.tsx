@@ -1,4 +1,4 @@
-import { Divider, Typography, EmptyContainer } from '@flexgen/storybook';
+import { Divider, Typography, EmptyContainer, Chip } from '@flexgen/storybook';
 import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import React, { ReactElement } from 'react';
@@ -23,10 +23,17 @@ export interface SingleAssetProps {
   statusChildren: ConfigurableComponentFunction[];
   assetState: ConfigurablePageStateStructure;
   alertState: AlertState[string];
+  maintModeStatus?: boolean;
 }
 
-const Header = ({ headerText }: { headerText: string }) => (
-  <Typography variant="headingL" color="primary" text={headerText} />
+const Header = ({ headerText, maintModeStatus }: { headerText: string, maintModeStatus: boolean }) => (
+  <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+      <Typography variant="headingL" color="primary" text={headerText} />
+      {
+        maintModeStatus &&
+        <Chip variant='outlined' color="primary" size="small" borderStyle="squared" label='Maintenance Mode' icon='Build' />
+      }
+  </Box>
 );
 
 const noStatusesToDisplayMessage = 'No statuses have been configured for this asset';
@@ -54,7 +61,7 @@ const StatusPointsDisplay = ({ statusComponents }: { statusComponents: ReactElem
 
 const AssetStatus: React.FC<SingleAssetProps> = (props: SingleAssetProps): ReactElement => {
   const {
-    assetName, statusChildren, assetState, alertState,
+    assetName, statusChildren, assetState, alertState, maintModeStatus,
   } = props;
 
   const statusChildrenMapped = statusChildren.map((child) => (
@@ -65,7 +72,7 @@ const AssetStatus: React.FC<SingleAssetProps> = (props: SingleAssetProps): React
 
   return (
     <Box sx={statusOuterBoxSx}>
-      <Header headerText={assetName} />
+      <Header headerText={assetName} maintModeStatus={maintModeStatus || false}/>
       <AlertContainer alerts={alertState} />
       <StatusPointsDisplay statusComponents={statusChildrenMapped} />
     </Box>

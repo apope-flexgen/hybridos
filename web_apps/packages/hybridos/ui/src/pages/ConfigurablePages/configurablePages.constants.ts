@@ -8,4 +8,5 @@ export const ControlTypeMap: { [key: string]: string } = {
   TextField: 'TextField',
   maint_mode_slider: 'MaintModeSlider',
   enum: 'Select',
+  maint_action_control: 'MaintActionControl',
 };

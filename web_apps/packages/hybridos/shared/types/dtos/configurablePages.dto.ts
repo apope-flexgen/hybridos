@@ -72,7 +72,8 @@ export type ControlType =
   | 'number'
   | 'enum_slider'
   | 'switch'
-  | 'maint_mode_slider';
+  | 'maint_mode_slider'
+  | 'maint_action_control';
 export type ValueType = string | number | boolean;
 
 export type DataPointVariantType = 'vertical' | 'horizontal' | 'dynamic';

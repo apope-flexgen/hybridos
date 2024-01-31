@@ -37,13 +37,13 @@ const AssetControl = ({
           <AllControlsContainer currentUser={currentUser} uris={Object.keys(assetState)} />
         )}
         <Typography
-          variant='headingS'
+          variant='bodyLBold'
           text={
             controlChildrenMapped.length > 0
               ? componentFunctions?.displayName
-                ? `${componentFunctions.displayName.toUpperCase()} CONTROLS`
-                : 'ASSET CONTROLS'
-              : 'NO CONTROLS CONFIGURED'
+                ? `${componentFunctions.displayName} Controls`
+                : 'Asset Controls'
+              : 'No Controls Configured'
           }
           color='secondary'
         />

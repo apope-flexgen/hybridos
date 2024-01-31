@@ -39,7 +39,8 @@ import {
   NumericInput,
   Progress,
 } from '@flexgen/storybook';
-import ConfirmCancelButton from './ConfirmCancelButton';
+import ConfirmCancelButton from './components/ConfirmCancelButton';
+import MaintActionControl from './components/MaintActionControl';
 
 // FIXME: storybook should probably have consistent types
 export interface IComponentHash {
@@ -87,6 +88,7 @@ const storybookComponents: IComponentHash = {
   NumericInput,
   Progress,
   ConfirmCancelButton,
+  MaintActionControl,
 };
 
 export default storybookComponents;
@@ -102,7 +104,7 @@ const controlsSets = {
     'TimePicker',
     'MuiTimePicker',
   ],
-  onClick: ['IconButton', 'MuiButton', 'ConfirmCancelButton'],
+  onClick: ['IconButton', 'MuiButton', 'ConfirmCancelButton', 'MaintActionControl'],
   withConfirm: ['TextField', 'Switch', 'MaintModeSlider', 'Select', 'NumericInput'],
 };
 

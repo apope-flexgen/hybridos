@@ -131,6 +131,19 @@ const parseNakedBodyControl = (
     const computeValue: ValueType =
       (rawValue !== null && typeof rawValue === 'object' && rawData[componentID].hasOwnProperty('value')) ? rawValue.value : rawValue;
 
+    const optionsArray: any[] = (rawValue !== null && typeof rawValue === 'object' && rawData[componentID].hasOwnProperty('options'))
+      ? rawValue.options.map((option) => {
+        return {
+          name: option.name,
+          value: option.return_value,
+        };
+      })
+      : [];
+
+    if (optionsArray.length > 0) {
+      aggregatedDTOs[componentID].state.extraProps = {...aggregatedDTOs[componentID].state.extraProps, options: optionsArray};
+    }
+
     const scalar =
       control.scalar && (typeof control.scalar === 'number' || !isNaN(Number(control.scalar)))
         ? Number(control.scalar)
@@ -165,7 +178,7 @@ const parseNakedBodyControl = (
       controlType: control.inputType as ControlType,
     };
 
-    if (control.inputType === 'enum') {
+    if (control.inputType === 'enum' || control.inputType === 'maint_action_control') {
       const optionsArray = (rawData[componentID] as controlObjectForNakedBody).options.map(
         (option) => {
           return {

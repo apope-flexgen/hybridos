@@ -135,6 +135,11 @@ const organizeProps = (
 
   props.disabled = !enabled || currentUser.role === Roles.Observer;
 
+  
+  if (component === 'MaintActionControl') {
+    if (typeof stateInfo === 'object' && stateInfo.extraProps?.options) props.options = stateInfo.extraProps.options 
+  }
+  
   if (component === 'TextField') {
     props.disabled = currentUser.role === Roles.Observer;
     props.bold = enabled;
@@ -228,6 +233,11 @@ export const generateReactComponentFunction: (
 
   if (component === 'MaintModeSlider') {
     props.product = props.extraProps?.product ?? '';
+  }
+
+  if (component === 'MaintActionControl') {
+    props.controlURI = uri;
+    props.options = props.extraProps.options ?? [];
   }
 
   return (assetState: ConfigurablePageStateStructure): JSX.Element => {
