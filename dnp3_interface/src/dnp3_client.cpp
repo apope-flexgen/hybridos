@@ -774,7 +774,9 @@ int main(int argc, char *argv[])
 
     int fims_connect = 0;
     num_configs = getConfigs(argc, argv, (sysCfg**)&sys_cfg, DNP3_MASTER, p_fims);
-
+    if (num_configs < 0){
+        return 1;
+    }
     
     const char **subs = NULL;
     bool *bpubs = NULL;

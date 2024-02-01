@@ -404,6 +404,9 @@ int main(int argc, char* argv[])
     }
     
     num_configs = getConfigs(argc, argv, (sysCfg**)&sys_cfg, DNP3_OUTSTATION, p_fims);
+    if (num_configs < 0){
+        return 1;
+    }
 
     const char **subs = NULL;
     bool *bpubs = NULL;

@@ -405,7 +405,7 @@ cJSON* get_config_json(int argc, char* argv[], int num)
         FPS_ERROR_PRINT(" Failed to get the path of the test file. \n");
         return NULL;
     }
-    FPS_ERROR_PRINT(" getting arg %d . \n", num+1);
+    FPS_ERROR_PRINT(" getting arg %d. \n", num+1);
     return get_config_file(argv[num+1]);
 }
 
@@ -2998,45 +2998,129 @@ bool run_config(cJSON* config, sysCfg** sys, int &num_configs, int who, fims* p_
     return ret;
 }
 
+const char* get_program_name(const char* uri) {
+    // Find the last occurrence of '/'
+    const char* lastSlash = std::strrchr(uri, '/');
+
+    // If '/' is found, return the part after it; otherwise, return the whole URI
+    return (lastSlash != nullptr) ? (lastSlash + 1) : uri;
+}
+
+cJSON *load_from_dbi(int argc, char *argv[]){
+    if (argc <= 2){ // it would have to be equal to 2 in order to get here, but just to be safe
+        FPS_ERROR_PRINT("Need URI to load from DBI\n");
+        return nullptr;
+    }
+
+    std::string program_name(get_program_name(argv[0]));
+    std::string fname(argv[2]);
+    if (fname.front() != '/')
+    {
+        FPS_ERROR_PRINT("For %s with init uri \"%s\": the uri does not begin with `/`\n", program_name.c_str(), argv[2]);
+        return nullptr;
+    }
+    fims fims_gateway;
+    const auto conn_id_str = program_name + "_uri_init@" + fname;
+    if (!fims_gateway.Connect(conn_id_str.data()))
+    {
+        FPS_ERROR_PRINT("For %s with init uri \"%s\": could not connect to fims_server\n", program_name.c_str(), argv[2]);
+        return nullptr;
+    }
+    const auto sub_string = "/" + program_name + "_uri_init" + fname;
+    if (!fims_gateway.Subscribe(std::vector<std::string>{sub_string}))
+    {
+        FPS_ERROR_PRINT("For %s with init uri \"%s\": failed to subscribe for uri init\n", program_name.c_str(), argv[2]);
+        fims_gateway.Close();
+        return nullptr;
+    }
+    if (!fims_gateway.Send(fims::str_view{"get", sizeof("get") - 1}, fims::str_view{fname.data(), fname.size()}, fims::str_view{sub_string.data(), sub_string.size()}, fims::str_view{nullptr, 0}, fims::str_view{nullptr, 0}))
+    {
+        FPS_ERROR_PRINT("For %s with inti uri \"%s\": failed to send a fims get message\n", program_name.c_str(), argv[2]);
+        fims_gateway.Close();
+        return nullptr;
+    }
+    auto config_msg = fims_gateway.Receive_Timeout(5000000); // give them 5 seconds to respond before erroring
+    if (!config_msg)
+    {
+        FPS_ERROR_PRINT("For %s with init uri \"%s\": failed to receive a message in 5 seconds\n", program_name.c_str(), argv[2]);
+        fims_gateway.Close();
+        return nullptr;
+    }
+    if (!config_msg->body)
+    {
+        FPS_ERROR_PRINT("For %s with init uri \"%s\": message was received, but body doesn't exist\n", program_name.c_str(), argv[2]);
+        fims_gateway.Close();
+        return nullptr;
+    }
+    cJSON* config = cJSON_Parse(config_msg->body);
+    if(config == NULL)
+        fprintf(stderr, "Invalid JSON object in file\n");
+    fims_gateway.Close();
+    if (config_msg){
+        delete config_msg;
+    }
+    printf("File loaded from DBI\n");
+    return config;
+}
+
 int getConfigs(int argc, char *argv[], sysCfg**sys, int who, fims *p_fims)
 {
-    int num_configs  = 0;    
+    int num_configs  = 0;  
     while (true)
     {
-
         FPS_DEBUG_PRINT("Reading config file(s) and starting setup.\n");
-        cJSON* config = get_config_json(argc, argv, num_configs);
-        if(config == NULL)
-        {
-            if (num_configs == 0)
+        if (argc >= 2 && std::strcmp(argv[1], "-u") == 0) {
+            cJSON* config = load_from_dbi(argc, argv);
+            if(config == NULL)
             {
-                FPS_ERROR_PRINT("Error reading config file\n");
+                if (num_configs == 0)
+                {
+                    FPS_ERROR_PRINT("Error reading config file\n");
+                    return -1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if(!run_config(config, sys, num_configs, who, p_fims))
                 return -1;
+            return 1;
+        } else {
+            cJSON* config = get_config_json(argc, argv, num_configs);
+            if(config == NULL)
+            {
+                if (num_configs == 0)
+                {
+                    FPS_ERROR_PRINT("Error reading config file\n");
+                    return -1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            cJSON* cjfiles = parse_files(config);
+            if(cjfiles)
+            {
+                cJSON* cjfile;
+                cJSON_ArrayForEach(cjfile, cjfiles)
+                {
+                    FPS_ERROR_PRINT(" NOTE config file [%s]\n", cjfile->valuestring);
+                    config = get_config_file(cjfile->valuestring);
+                    if(!run_config(config,sys, num_configs, who, p_fims))
+                    {
+                        return -1;
+                    }
+                }
             }
             else
             {
-                break;
-            }
-        }
-        cJSON* cjfiles = parse_files(config);
-        if(cjfiles)
-        {
-            cJSON* cjfile;
-            cJSON_ArrayForEach(cjfile, cjfiles)
-            {
-                FPS_ERROR_PRINT(" NOTE config file [%s]\n", cjfile->valuestring);
-                config = get_config_file(cjfile->valuestring);
-                if(!run_config(config,sys, num_configs, who, p_fims))
-                {
+                if(!run_config(config, sys, num_configs, who, p_fims))
                     return -1;
-                }
             }
         }
-        else
-        {
-            if(!run_config(config, sys, num_configs, who, p_fims))
-                return -1;
-        }
+        
     }
     return num_configs;
 }
