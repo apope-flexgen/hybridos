@@ -1,0 +1,45 @@
+{
+    "system": {
+        "name": "FlexGen HybridOS",
+        "protocol": "DNP3",
+        "version": "0.2",
+        "base_uri": "/base_uri_server",
+        "id": "test_server",
+        "ip_address": "0.0.0.0",
+        "local_uri": "/local_server",
+        "port": 20000
+    },
+    "registers": [
+        {
+            "type": "analogOS",
+            "map": [
+                { "note": "test uri", "id": "analog_out_4", "offset": 4, "variation": "Group40Var1", "uri": "/components/test" },
+                { "note": "test class 1", "id": "analog_out_5", "offset": 5,"variation": "Group40Var2",  "uri": "/components/test"},
+                { "note": "test class 2", "id": "analog_out_7", "offset": 7,"variation": "Group40Var3",  "uri": "/components/test"},
+                { "note": "test class 3", "id": "analog_out_11", "offset": 11,"variation": "Group40Var4",  "uri": "/components/test"}
+            ]            
+        },
+        {
+            "type": "CROB",
+            "map": [
+                { "note": "test uri", "id": "binary_out_4", "offset": 4, "uri": "/components/test" },
+                { "note": "test class 1", "id": "binary_out_5", "offset": 5, "uri": "/components/test"},
+                { "note": "test class 2", "id": "binary_out_7", "offset": 7, "uri": "/components/test"},
+                { "note": "test class 3", "id": "binary_out_11", "offset": 11, "uri": "/components/test"}
+            ]
+        },
+        {
+            "type": "binary",
+
+            "map": [
+                { "note": "test uri", "id": "binary_in_4", "offset": 4, "uri": "/components/test" }
+            ]
+        },
+        {
+            "type": "analog",
+            "map": [
+                { "note": "test uri", "id": "analog_in_4", "offset": 4, "uri": "/components/test" }
+            ]
+        }
+    ]
+}

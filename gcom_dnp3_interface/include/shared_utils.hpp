@@ -30,18 +30,14 @@ enum class Mode : uint8_t
 
 enum class Register_Types : uint8_t
 {
-    Holding,        // modbus
-    Input,          // modbus
-    Coil,           // modbus
-    Discrete_Input, // modbus
     AnOPInt16,      // dnp3: Analog Output Int 16
     AnOPInt32,      // dnp3: Analog Output Int 32
     AnOPF32,        // dnp3: Analog Output Float 32
+    CROB,            // dnp3: Binary Command (Group 12 Variation 1)
     Analog,         // dnp3: Analog Input, any variation
-    AnalogOS,       // dnp3: Analog Output Status, any variation
     Binary,         // dnp3: Binary Input, any variation
-    BinaryOS,       // dnp3: Binary Output Status, any variation
-    CROB            // dnp3: Binary Command (Group 12 Variation 1)
+    AnalogOS,       // dnp3: Analog Output Status, any variation
+    BinaryOS       // dnp3: Binary Output Status, any variation
 };
 
 enum class Conn_Type : uint8_t
@@ -102,14 +98,14 @@ struct fmt::formatter<Register_Types>
     {
         switch (type)
 {
-    case Register_Types::Holding:
-        return fmt::format_to(ctx.out(),"analog output (Holding Register)");
-    case Register_Types::Input:
-        return fmt::format_to(ctx.out(),"analog input (Input Register)");
-    case Register_Types::Coil:
-        return fmt::format_to(ctx.out(),"binary output (Coil)");
-    case Register_Types::Discrete_Input:
-        return fmt::format_to(ctx.out(),"binary input (Discrete Input)");
+    // case Register_Types::Holding:
+    //     return fmt::format_to(ctx.out(),"analog output (Holding Register)");
+    // case Register_Types::Input:
+    //     return fmt::format_to(ctx.out(),"analog input (Input Register)");
+    // case Register_Types::Coil:
+    //     return fmt::format_to(ctx.out(),"binary output (Coil)");
+    // case Register_Types::Discrete_Input:
+    //     return fmt::format_to(ctx.out(),"binary input (Discrete Input)");
     case Register_Types::AnOPInt16:
         return fmt::format_to(ctx.out(),"analog output (Group 40)");
     case Register_Types::AnOPInt32:

@@ -345,7 +345,9 @@ bool parseHeader(GcomSystem &sys, Meta_Data_Info &meta_data, char *data_buf, uin
 bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data, void *data_buf, uint32_t data_buf_len);
 bool gcom_recv_raw_message(fims &fims_gateway, Meta_Data_Info &meta_data, void *data_buf, uint32_t data_buf_len) noexcept;
 bool listener_thread(GcomSystem &sys) noexcept;
-bool uriIsMultiOrSingle(GcomSystem &sys, std::string_view uri);
+
+// 1 = multi, 2 = single, 3 = multi output status, 4 = single output status
+int getUriType(GcomSystem &sys, std::string_view uri);
 void replyToFullGet(GcomSystem &sys, fmt::memory_buffer &send_buf);
 
 /**

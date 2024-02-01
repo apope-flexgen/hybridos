@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include "gcom_dnp3_system_structs.h"
+#include "gcom_dnp3_point_utils.h"
 #include "gcom_dnp3_stats.h"
 #include "Jval_buif.hpp"
 #include "logger/gcom_dnp3_logger.h"
@@ -243,7 +244,7 @@ bool parseHeader(GcomSystem &sys, Meta_Data_Info &meta_data, char *data_buf, uin
     return true;
 }
 
-bool uriIsMultiOrSingle(GcomSystem &sys, std::string_view uri)
+int getUriType(GcomSystem &sys, std::string_view uri)
 {
     std::string suri = {uri.begin(), uri.end()};
     std::map<std::string, varList *>::iterator it = sys.dburiMap.find(suri);
@@ -251,9 +252,20 @@ bool uriIsMultiOrSingle(GcomSystem &sys, std::string_view uri)
     {
         const auto multi = it->second->multi;
         if (multi)
-            return true;
+            return 1;
+        else
+            return 2;
     }
-    return false;
+    it = sys.outputStatusUriMap.find(suri);
+    if (it != sys.outputStatusUriMap.end())
+    {
+        const auto multi = it->second->multi;
+        if (multi)
+            return 3;
+        else
+            return 4;
+    }
+    return -1;
 }
 
 bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
@@ -743,142 +755,77 @@ bool gcom_recv_raw_message(fims &fims_gateway, Meta_Data_Info &meta_data, void *
 /// @param send_buf
 void replyToFullGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
 {
+    sys.db_mutex.lock();
     const auto uri_len = sys.fims_dependencies->uri_view.size();
     const auto request_len = std::string_view{"/_full"}.size();
     std::string uri = std::string{sys.fims_dependencies->uri_view.substr(0, uri_len - request_len)};
     std::map<std::string, varList *>::iterator uri_item = sys.dburiMap.find(uri);
-    if (uri_item != sys.dburiMap.end())
+    if (uri_item == sys.dburiMap.end())
     {
-        bool first = true;
-        int num_points = uri_item->second->dbmap.size();
-        if (num_points > 1)
+        uri_item = sys.outputStatusUriMap.find(uri);
+        if (uri_item == sys.outputStatusUriMap.end())
         {
-            send_buf.clear();
-            FORMAT_TO_BUF(send_buf, R"({{)");
-            for (std::pair<const std::string, TMWSIM_POINT *> pair : uri_item->second->dbmap)
-            {
-                if (first)
-                {
-                    first = false;
-                }
-                else
-                {
-                    FORMAT_TO_BUF(send_buf, R"(, )");
-                }
-                TMWSIM_POINT *dbPoint = pair.second;
-                if (dbPoint)
-                {
-                    FORMAT_TO_BUF(send_buf, R"("{}":{})", ((FlexPoint *)(dbPoint->flexPointHandle))->name, *dbPoint);
-                }
-            }
-            FORMAT_TO_BUF(send_buf, R"(}})");
+            return;
         }
-        else
+    }
+    bool first = true;
+    int num_points = uri_item->second->dbmap.size();
+    if (num_points > 1)
+    {
+        send_buf.clear();
+        FORMAT_TO_BUF(send_buf, R"({{)");
+        for (std::pair<const std::string, TMWSIM_POINT *> pair : uri_item->second->dbmap)
         {
-            for (std::pair<const std::string, TMWSIM_POINT *> pair : uri_item->second->dbmap)
+            if (first)
             {
-                TMWSIM_POINT *dbPoint = pair.second;
-                if (dbPoint)
-                {
-                    send_buf.clear();
-                    FORMAT_TO_BUF(send_buf, R"({})", *dbPoint);
-                }
+                first = false;
+            }
+            else
+            {
+                FORMAT_TO_BUF(send_buf, R"(, )");
+            }
+            TMWSIM_POINT *dbPoint = pair.second;
+            if (dbPoint)
+            {
+                FORMAT_TO_BUF(send_buf, R"("{}":{})", ((FlexPoint *)(dbPoint->flexPointHandle))->name, *dbPoint);
             }
         }
-        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view, std::string_view{send_buf.data(), send_buf.size()}))
+        FORMAT_TO_BUF(send_buf, R"(}})");
+    }
+    else
+    {
+        for (std::pair<const std::string, TMWSIM_POINT *> pair : uri_item->second->dbmap)
         {
-            if (!spam_limit(&sys, sys.fims_errors))
+            TMWSIM_POINT *dbPoint = pair.second;
+            if (dbPoint)
             {
-                FPS_ERROR_LOG("Listener for '%s', could not send replyto fims message. Exiting",
-                              sys.fims_dependencies->name.c_str());
-                FPS_LOG_IT("fims_send_error");
+                send_buf.clear();
+                FORMAT_TO_BUF(send_buf, R"({})", *dbPoint);
             }
+        }
+    }
+    sys.db_mutex.unlock();
+    if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view, std::string_view{send_buf.data(), send_buf.size()}))
+    {
+        if (!spam_limit(&sys, sys.fims_errors))
+        {
+            FPS_ERROR_LOG("Listener for '%s', could not send replyto fims message. Exiting",
+                            sys.fims_dependencies->name.c_str());
+            FPS_LOG_IT("fims_send_error");
         }
     }
 }
 
 /// @brief
-/// @param send_buf
-/// @param dbPoint
-void formatPointValue(fmt::memory_buffer &send_buf, TMWSIM_POINT *dbPoint)
-{
-    ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
-    if (dbPoint->type == TMWSIM_TYPE_ANALOG)
-    {
-        if ((((FlexPoint *)(dbPoint->flexPointHandle))->scale) == 0.0)
-        {
-            if (dbPoint->defaultStaticVariation == 1)
-            {
-                FORMAT_TO_BUF(send_buf, R"({})", static_cast<int32_t>(dbPoint->data.analog.value));
-            }
-            else if (dbPoint->defaultStaticVariation == 2)
-            {
-                FORMAT_TO_BUF(send_buf, R"({})", static_cast<int16_t>(dbPoint->data.analog.value));
-            }
-            else
-            {
-                FORMAT_TO_BUF(send_buf, R"({:.{}g})", dbPoint->data.analog.value, std::numeric_limits<double>::max_digits10 - 1);
-            }
-        }
-        else
-        {
-            if (dbPoint->defaultStaticVariation == 1)
-            {
-                FORMAT_TO_BUF(send_buf, R"({:.{}g})", static_cast<int32_t>(dbPoint->data.analog.value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-            }
-            else if (dbPoint->defaultStaticVariation == 2)
-            {
-                FORMAT_TO_BUF(send_buf, R"({:.{}g})", static_cast<int16_t>(dbPoint->data.analog.value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-            }
-            else
-            {
-                FORMAT_TO_BUF(send_buf, R"({:.{}g})", dbPoint->data.analog.value / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-            }
-        }
-    }
-    else
-    {
-        if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
-        {
-            if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_string)
-            {
-                FORMAT_TO_BUF(send_buf, R"("{}")", static_cast<bool>(dbPoint->data.binary.value) ? (((FlexPoint *)(dbPoint->flexPointHandle))->crob_false) : (((FlexPoint *)(dbPoint->flexPointHandle))->crob_true));
-            }
-            else if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_int)
-            {
-                FORMAT_TO_BUF(send_buf, R"({})", static_cast<bool>(dbPoint->data.binary.value) ? 0 : 1);
-            }
-            else
-            {
-                FORMAT_TO_BUF(send_buf, R"({})", static_cast<bool>(dbPoint->data.binary.value) ? "false" : "true");
-            }
-        }
-        else
-        {
-            if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_string)
-            {
-                FORMAT_TO_BUF(send_buf, R"("{}")", static_cast<bool>(dbPoint->data.binary.value) ? (((FlexPoint *)(dbPoint->flexPointHandle))->crob_true) : (((FlexPoint *)(dbPoint->flexPointHandle))->crob_false));
-            }
-            else if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_int)
-            {
-                FORMAT_TO_BUF(send_buf, R"({})", static_cast<bool>(dbPoint->data.binary.value) ? 1 : 0);
-            }
-            else
-            {
-                FORMAT_TO_BUF(send_buf, R"({})", static_cast<bool>(dbPoint->data.binary.value) ? "true" : "false");
-            }
-        }
-    }
-    ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
-}
-/// @brief
 /// @param sys
 /// @param send_buf
 void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
 {
+    sys.db_mutex.lock();
     TMWSIM_POINT *dbPoint = nullptr;
     bool has_one_point = false;
-    if (uriIsMultiOrSingle(sys, sys.fims_dependencies->uri_view))
+    int uriType = getUriType(sys, sys.fims_dependencies->uri_view);
+    if (uriType == 1)
     {
         send_buf.clear();
         FORMAT_TO_BUF(send_buf, R"({{)");
@@ -887,8 +834,13 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
             dbPoint = dbVar.second;
             if (dbPoint)
             {
-                FORMAT_TO_BUF(send_buf, R"("{}": )", dbVar.first);
-                formatPointValue(send_buf, dbVar.second);
+                double value;
+                if(dbPoint->type == TMWSIM_TYPE_ANALOG){
+                    value = dbPoint->data.analog.value;
+                } else {
+                    value = static_cast<double>(dbPoint->data.binary.value);
+                }
+                format_point_with_key(send_buf, dbPoint, value, dbPoint->flags, &dbPoint->timeStamp);
                 FORMAT_TO_BUF(send_buf, R"(, )");
                 has_one_point = true;
             }
@@ -896,16 +848,50 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
         send_buf.resize(send_buf.size() - (2 * has_one_point)); // get rid of the last comma and space if we have them
         FORMAT_TO_BUF(send_buf, R"(}})");
     }
-    else
+    else if(uriType == 2)
     {
         dbPoint = getDbVar(sys, sys.fims_dependencies->uri_view, {});
         if (dbPoint)
         {
             send_buf.clear();
-            formatPointValue(send_buf, dbPoint);
+            double value;
+            if(dbPoint->type == TMWSIM_TYPE_ANALOG){
+                value = dbPoint->data.analog.value;
+            } else {
+                value = static_cast<double>(dbPoint->data.binary.value);
+            }
+            format_point_value(send_buf, dbPoint, value);
+            has_one_point = true;
+        }
+    }else if (uriType == 3)
+    {
+        send_buf.clear();
+        FORMAT_TO_BUF(send_buf, R"({{)");
+        for (auto &dbVar : sys.outputStatusUriMap[std::string{sys.fims_dependencies->uri_view}]->dbmap)
+        {
+            dbPoint = dbVar.second;
+            if (dbPoint)
+            {
+                FORMAT_TO_BUF(send_buf, R"("{}": )", dbVar.first);
+                format_point_with_key(send_buf, dbPoint, ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value, dbPoint->flags, &dbPoint->timeStamp);
+                FORMAT_TO_BUF(send_buf, R"(, )");
+                has_one_point = true;
+            }
+        }
+        send_buf.resize(send_buf.size() - (2 * has_one_point)); // get rid of the last comma and space if we have them
+        FORMAT_TO_BUF(send_buf, R"(}})");
+    }
+    else if(uriType == 4)
+    {
+        dbPoint = getDbVar(sys, sys.fims_dependencies->uri_view, {});
+        if (dbPoint)
+        {
+            send_buf.clear();
+            format_point_value(send_buf, dbPoint, ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value);
             has_one_point = true;
         }
     }
+    sys.db_mutex.unlock();
 
     if (has_one_point)
     {

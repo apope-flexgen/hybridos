@@ -51,7 +51,7 @@ extern "C"
 #endif
 
 // Max number of error logs since boot allowed to be published
-#define SYS_SPAM_LIMIT 16
+#define SYS_SPAM_LIMIT 64
 
 #define STATE_RESET 0
 #define STATE_ONLINE 1

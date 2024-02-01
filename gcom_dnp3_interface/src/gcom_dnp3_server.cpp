@@ -22,6 +22,7 @@ extern "C"
 #include "gcom_dnp3_flags.h"
 #include "gcom_dnp3_tmw_utils.h"
 #include "gcom_dnp3_server.h"
+#include "gcom_dnp3_point_utils.h"
 #include "version.h"
 
 // #define TRACY_ENABLE
@@ -61,80 +62,7 @@ void fimsSendSetCallback(void *pSetWork)
     SetWork *set_work = (SetWork *)pSetWork;
     set_work->send_buf.clear();
     TMWSIM_POINT *dbPoint = set_work->dbPoint;
-    if (set_work->dbPoint->type == TMWSIM_TYPE_ANALOG)
-    {
-        if ((((FlexPoint *)(dbPoint->flexPointHandle))->scale) == 0.0)
-        {
-            if (dbPoint->defaultStaticVariation == Group40Var1)
-            {
-                FORMAT_TO_BUF(set_work->send_buf, R"({})", static_cast<int32_t>(set_work->value));
-            }
-            else if (dbPoint->defaultStaticVariation == Group40Var2)
-            {
-                FORMAT_TO_BUF(set_work->send_buf, R"({})", static_cast<int16_t>(set_work->value));
-            }
-            else if (dbPoint->defaultStaticVariation == Group40Var3)
-            {
-                FORMAT_TO_BUF(set_work->send_buf, R"({:.{}g})", static_cast<float>(set_work->value), std::numeric_limits<double>::max_digits10 - 1);
-            }
-            else
-            {
-                FORMAT_TO_BUF(set_work->send_buf, R"({:.{}g})", set_work->value, std::numeric_limits<double>::max_digits10 - 1);
-            }
-        }
-        else
-        {
-            if (dbPoint->defaultStaticVariation == Group40Var1)
-            {
-                FORMAT_TO_BUF(set_work->send_buf, R"({:.{}g})", static_cast<int32_t>(set_work->value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-            }
-            else if (dbPoint->defaultStaticVariation == Group40Var2)
-            {
-                FORMAT_TO_BUF(set_work->send_buf, R"({:.{}g})", static_cast<int16_t>(set_work->value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-            }
-            else if (dbPoint->defaultStaticVariation == Group40Var3)
-            {
-                FORMAT_TO_BUF(set_work->send_buf, R"({:.{}g})", static_cast<float>(set_work->value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-            }
-            else
-            {
-                FORMAT_TO_BUF(set_work->send_buf, R"({:.{}g})", set_work->value / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-            }
-        }
-    }
-    else
-    { // binary points
-        if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
-        {
-            if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_string)
-            {
-                FORMAT_TO_BUF(set_work->send_buf, R"("{}")", !static_cast<bool>(set_work->value) ? ((FlexPoint *)(dbPoint->flexPointHandle))->crob_true.c_str() : ((FlexPoint *)(dbPoint->flexPointHandle))->crob_false.c_str());
-            }
-            else if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_int)
-            {
-                FORMAT_TO_BUF(set_work->send_buf, R"({})", !static_cast<bool>(set_work->value) ? 1 : 0);
-            }
-            else
-            { // represent the crob as a bool
-                FORMAT_TO_BUF(set_work->send_buf, R"({})", !static_cast<bool>(set_work->value) ? "true" : "false");
-            }
-        }
-        else
-        {
-            if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_string)
-            {
-                FORMAT_TO_BUF(set_work->send_buf, R"("{}")", static_cast<bool>(set_work->value) ? ((FlexPoint *)(dbPoint->flexPointHandle))->crob_true.c_str() : ((FlexPoint *)(dbPoint->flexPointHandle))->crob_false.c_str());
-            }
-            else if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_int)
-            {
-                FORMAT_TO_BUF(set_work->send_buf, R"({})", static_cast<bool>(set_work->value) ? 1 : 0);
-            }
-            else
-            { // represent the crob as a bool
-                FORMAT_TO_BUF(set_work->send_buf, R"({})", static_cast<bool>(set_work->value) ? "true" : "false");
-            }
-        }
-    }
+    format_point_value(set_work->send_buf, dbPoint, set_work->value);
     if (!send_set((((FlexPoint *)dbPoint->flexPointHandle)->sys)->fims_dependencies->fims_gateway, std::string_view{set_work->send_uri.data(), set_work->send_uri.size()}, std::string_view{set_work->send_buf.data(), set_work->send_buf.size()}))
     {
         if (!spam_limit(((FlexPoint *)dbPoint->flexPointHandle)->sys, ((FlexPoint *)dbPoint->flexPointHandle)->sys->fims_errors))
@@ -191,12 +119,13 @@ void received_command_callback(void *pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_
         if (objectGroup == DNPDEFS_OBJ_40_ANA_OUT_STATUSES)
         {
             TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetPoint(pDbHandle, pointNumber);
-            if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr)
+            if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr && dbPoint->reason == TMWDEFS_CHANGE_REMOTE_OP)
             {
                 // checkOutputOverflow(dbPoint); // I don't think this works...something weird with how the over_range flag is set
-                ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
                 ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value = dbPoint->data.analog.value;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
+                if(((FlexPoint *)dbPoint->flexPointHandle)->sent_operate) {
+                    dbPoint->data.analog.value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value; // this is the last value received over fims
+                }
                 if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->set_timer))
                 {
                     if (((FlexPoint *)(dbPoint->flexPointHandle))->interval_sets)
@@ -226,10 +155,13 @@ void received_command_callback(void *pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_
         {
 
             TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)sdnpsim_binOutGetPoint(pDbHandle, pointNumber);
-            if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr)
+            if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr && dbPoint->reason == TMWDEFS_CHANGE_REMOTE_OP)
             {
                 // checkOutputOverflow(dbPoint); // I don't think this works...something weird with how the over_range flag is set
                 ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value = dbPoint->data.binary.value;
+                if(((FlexPoint *)dbPoint->flexPointHandle)->sent_operate) {
+                    dbPoint->data.binary.value = static_cast<bool>(((FlexPoint *)(dbPoint->flexPointHandle))->operate_value); // this is the last value received over fims
+                }
                 if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->set_timer))
                 {
                     if (((FlexPoint *)(dbPoint->flexPointHandle))->interval_sets)
@@ -497,70 +429,138 @@ bool openTMWServerSession(GcomSystem &serverSys)
 void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
 {
     GcomSystem *sys = ((FlexPoint *)(dbPoint->flexPointHandle))->sys;
+    if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog){
+        if (dbPoint->defaultStaticVariation == Group30Var1 || dbPoint->defaultStaticVariation == Group30Var3)
+        {
+            if (value > std::numeric_limits<int32_t>::max())
+            {
+                value = std::numeric_limits<int32_t>::max();
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit signed int) exceeded maximum (2,147,483,647). Setting to maximum value instead.", dbPoint->pointNumber);
+                }
+            }
+            else if (value < std::numeric_limits<int32_t>::lowest())
+            {
+                value = std::numeric_limits<int32_t>::lowest();
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit signed int) exceeded minimum (-2,147,483,648). Setting to minimum value instead.", dbPoint->pointNumber);
+                }
+            }
+        }
+        else if (dbPoint->defaultStaticVariation == Group30Var2 || dbPoint->defaultStaticVariation == Group30Var4)
+        {
 
-    if (dbPoint->defaultStaticVariation == Group30Var1 || dbPoint->defaultStaticVariation == Group30Var3)
-    {
-        if (value > std::numeric_limits<int32_t>::max())
-        {
-            value = std::numeric_limits<int32_t>::max();
-            if (!spam_limit(sys, sys->point_errors))
+            if (value > std::numeric_limits<int16_t>::max())
             {
-                FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit signed int) exceeded maximum (2,147,483,647). Setting to maximum value instead.", dbPoint->pointNumber);
+                value = std::numeric_limits<int16_t>::max();
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog input point [%d] (16-bit signed int) exceeded maximum (32,767). Setting to maximum value instead.", dbPoint->pointNumber);
+                }
+            }
+            else if (value < std::numeric_limits<int16_t>::lowest())
+            {
+                value = std::numeric_limits<int16_t>::lowest();
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog input point [%d] (16-bit signed int) exceeded minimum (-32,768). Setting to minimum value instead.", dbPoint->pointNumber);
+                }
             }
         }
-        else if (value < std::numeric_limits<int32_t>::lowest())
+        else if (dbPoint->defaultStaticVariation == Group30Var5)
         {
-            value = std::numeric_limits<int32_t>::lowest();
-            if (!spam_limit(sys, sys->point_errors))
+            if (value > TMWDEFS_SFLOAT_MAX)
             {
-                FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit signed int) exceeded minimum (-2,147,483,648). Setting to minimum value instead.", dbPoint->pointNumber);
+                value = TMWDEFS_SFLOAT_MAX;
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded maximum (%g). Setting to maximum value instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_MAX);
+                }
+            }
+            else if (value < TMWDEFS_SFLOAT_MIN)
+            {
+                value = TMWDEFS_SFLOAT_MIN;
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded minimum (%g). Setting to minimum value instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_MIN);
+                }
+            }
+            else if (value != 0.0 && abs(value) < TMWDEFS_SFLOAT_SMALLEST)
+            {
+                value = 0.0;
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded minimum exponent value (%g). Setting to 0 instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_SMALLEST);
+                }
             }
         }
-    }
-    else if (dbPoint->defaultStaticVariation == Group30Var2 || dbPoint->defaultStaticVariation == Group30Var4)
-    {
+    } else {
+        if (dbPoint->defaultStaticVariation == Group40Var1)
+        {
+            if (value > std::numeric_limits<int32_t>::max())
+            {
+                value = std::numeric_limits<int32_t>::max();
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog output point [%d] (32-bit signed int) exceeded maximum (2,147,483,647). Setting to maximum value instead.", dbPoint->pointNumber);
+                }
+            }
+            else if (value < std::numeric_limits<int32_t>::lowest())
+            {
+                value = std::numeric_limits<int32_t>::lowest();
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog output point [%d] (32-bit signed int) exceeded minimum (-2,147,483,648). Setting to minimum value instead.", dbPoint->pointNumber);
+                }
+            }
+        }
+        else if (dbPoint->defaultStaticVariation == Group40Var2)
+        {
 
-        if (value > std::numeric_limits<int16_t>::max())
-        {
-            value = std::numeric_limits<int16_t>::max();
-            if (!spam_limit(sys, sys->point_errors))
+            if (value > std::numeric_limits<int16_t>::max())
             {
-                FPS_ERROR_LOG("Pub to analog input point [%d] (16-bit signed int) exceeded maximum (32,767). Setting to maximum value instead.", dbPoint->pointNumber);
+                value = std::numeric_limits<int16_t>::max();
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog output point [%d] (16-bit signed int) exceeded maximum (32,767). Setting to maximum value instead.", dbPoint->pointNumber);
+                }
+            }
+            else if (value < std::numeric_limits<int16_t>::lowest())
+            {
+                value = std::numeric_limits<int16_t>::lowest();
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog output point [%d] (16-bit signed int) exceeded minimum (-32,768). Setting to minimum value instead.", dbPoint->pointNumber);
+                }
             }
         }
-        else if (value < std::numeric_limits<int16_t>::lowest())
+        else if (dbPoint->defaultStaticVariation == Group40Var3)
         {
-            value = std::numeric_limits<int16_t>::lowest();
-            if (!spam_limit(sys, sys->point_errors))
+            if (value > TMWDEFS_SFLOAT_MAX)
             {
-                FPS_ERROR_LOG("Pub to analog input point [%d] (16-bit signed int) exceeded minimum (-32,768). Setting to minimum value instead.", dbPoint->pointNumber);
+                value = TMWDEFS_SFLOAT_MAX;
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded maximum (%g). Setting to maximum value instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_MAX);
+                }
             }
-        }
-    }
-    else if (dbPoint->defaultStaticVariation == Group30Var5)
-    {
-        if (value > std::numeric_limits<float>::max())
-        {
-            value = std::numeric_limits<float>::max();
-            if (!spam_limit(sys, sys->point_errors))
+            else if (value < TMWDEFS_SFLOAT_MIN)
             {
-                FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded maximum (%g). Setting to maximum value instead.", dbPoint->pointNumber, std::numeric_limits<float>::max());
+                value = TMWDEFS_SFLOAT_MIN;
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded minimum (%g). Setting to minimum value instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_MIN);
+                }
             }
-        }
-        else if (value < -std::numeric_limits<float>::max())
-        {
-            value = -std::numeric_limits<float>::max();
-            if (!spam_limit(sys, sys->point_errors))
+            else if (value != 0.0 && abs(value) < TMWDEFS_SFLOAT_SMALLEST)
             {
-                FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded minimum (-%g). Setting to minimum value instead.", dbPoint->pointNumber, std::numeric_limits<float>::max());
-            }
-        }
-        else if (value != 0.0 && abs(value) < std::numeric_limits<float>::min())
-        {
-            value = 0.0;
-            if (!spam_limit(sys, sys->point_errors))
-            {
-                FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded minimum exponent value (%g). Setting to 0 instead.", dbPoint->pointNumber, std::numeric_limits<float>::min());
+                value = 0.0;
+                if (!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded minimum exponent value (%g). Setting to 0 instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_SMALLEST);
+                }
             }
         }
     }
@@ -606,8 +606,8 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
     // now set onto channels based on multi or single set uri:
     Jval_buif to_set;
     bool ok = true;
-
-    if (uriIsMultiOrSingle(sys, sys.fims_dependencies->uri_view)) // multi-set
+    int uriType = getUriType(sys, sys.fims_dependencies->uri_view);
+    if (uriType == 1) // multi-set
     {
         simdjson::ondemand::object set_obj;
         if (const auto err = doc.get(set_obj); err)
@@ -670,59 +670,17 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
                 }
                 continue;
             }
-            else if (((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::Analog && ((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::Binary)
-            {
-                sys.db_mutex.lock();
-                if (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0))
-                {
-                    if (dbPoint->type == TMWSIM_TYPE_ANALOG)
-                    {
-                        TMWTYPES_ANALOG_VALUE analogValue;
-                        double value = jval_to_double(to_set);
-                        analogValue.type = TMWTYPES_ANALOG_TYPE_DOUBLE;
-                        if (((FlexPoint *)(dbPoint->flexPointHandle))->scale == 0.0)
-                        {
-                            analogValue.value.dval = value;
-                        }
-                        else
-                        {
-                            analogValue.value.dval = value * ((FlexPoint *)(dbPoint->flexPointHandle))->scale;
-                        }
 
-                        sdnpsim_anlgOutOperate(dbPoint, &analogValue);
-                    }
-                    else if (dbPoint->type == TMWSIM_TYPE_BINARY)
-                    {
-                        double value = jval_to_double(to_set);
-                        bool bool_value = static_cast<bool>(value);
-                        if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
-                        {
-                            bool_value = !bool_value;
-                        }
-                        sdnpsim_binOutOperate(dbPoint, (TMWTYPES_UCHAR)(bool_value ? DNPDEFS_CROB_CTRL_LATCH_ON : DNPDEFS_CROB_CTRL_LATCH_OFF), 0, 0, 0);
-                    }
-                }
-                else
-                {
-                    ok = false;
-                    if (sys.debug > 0)
-                    {
-                        FPS_ERROR_LOG("with single-pub uri: '%s', point is not an INPUT type (analog input or binary input)", sys.fims_dependencies->uri_view);
-                        FPS_LOG_IT("pub_to_wrong_type");
-                    }
-                    continue;
-                }
-                sys.db_mutex.unlock();
-            }
-
-            if (!sys.fims_dependencies->uri_requests.contains_local_uri)
+            if (!sys.fims_dependencies->uri_requests.contains_local_uri && 
+                (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog ||
+                ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary))
             {
                 setInputPointOnline(dbPoint);
             }
 
             double value = jval_to_double(to_set);
             sys.db_mutex.lock();
-            if (dbPoint->type == TMWSIM_TYPE_ANALOG &&
+            if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog &&
                 (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
                  ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
             {
@@ -734,7 +692,7 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
 
                 sdnpsim_anlgInWrite(dbPoint, value);
             }
-            else if (dbPoint->type == TMWSIM_TYPE_BINARY &&
+            else if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary &&
                      (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
                       ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
             {
@@ -745,6 +703,43 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
                 sdnputil_getDateTime(sys.protocol_dependencies->dnp3.pSession, &dbPoint->timeStamp);
 
                 sdnpsim_binInWrite(dbPoint, static_cast<bool>(value));
+            } else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt16) || 
+                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt32) ||
+                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPF32) ||
+                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnalogOS)) &&
+                        (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
+
+            ){
+                TMWTYPES_ANALOG_VALUE analogValue;
+                analogValue.type = TMWTYPES_ANALOG_TYPE_DOUBLE;
+                if (((FlexPoint *)(dbPoint->flexPointHandle))->scale == 0.0)
+                {
+                    analogValue.value.dval = value;
+                }
+                else
+                {
+                    analogValue.value.dval = value * ((FlexPoint *)(dbPoint->flexPointHandle))->scale;
+                }
+                check_limits_server(dbPoint, analogValue.value.dval);
+                ((FlexPoint *)dbPoint->flexPointHandle)->operate_value = analogValue.value.dval;
+                ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
+                sdnpsim_anlgOutWrite(dbPoint, &analogValue);
+            }
+            else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::BinaryOS) || 
+                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::CROB)) &&
+                        (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
+
+            ){
+                bool bool_value = static_cast<bool>(value);
+                if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
+                {
+                    bool_value = !bool_value;
+                }
+                ((FlexPoint *)dbPoint->flexPointHandle)->operate_value = static_cast<double>(bool_value);
+                ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
+                sdnpsim_binOutSetValue(dbPoint, bool_value);
             }
             else if (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
             {
@@ -755,7 +750,7 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
 
         return ok;
     }
-    else // single-set
+    else if (uriType == 2) // single-set
     {
         if (sys.debug)
         {
@@ -780,58 +775,17 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
             }
             return false;
         }
-        else if (((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::Analog && ((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::Binary)
-        {
-            sys.db_mutex.lock();
-            if (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri))
-            {
-                if (dbPoint->type == TMWSIM_TYPE_ANALOG)
-                {
-                    TMWTYPES_ANALOG_VALUE analogValue;
-                    double value = jval_to_double(to_set);
-                    analogValue.type = TMWTYPES_ANALOG_TYPE_DOUBLE;
-                    if (((FlexPoint *)(dbPoint->flexPointHandle))->scale == 0.0)
-                    {
-                        analogValue.value.dval = value;
-                    }
-                    else
-                    {
-                        analogValue.value.dval = value * ((FlexPoint *)(dbPoint->flexPointHandle))->scale;
-                    }
 
-                    sdnpsim_anlgOutOperate(dbPoint, &analogValue);
-                }
-                else if (dbPoint->type == TMWSIM_TYPE_BINARY)
-                {
-                    double value = jval_to_double(to_set);
-                    bool bool_value = static_cast<bool>(value);
-                    if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
-                    {
-                        bool_value = !bool_value;
-                    }
-                    sdnpsim_binOutOperate(dbPoint, (TMWTYPES_UCHAR)(bool_value ? DNPDEFS_CROB_CTRL_LATCH_ON : DNPDEFS_CROB_CTRL_LATCH_OFF), 0, 0, 0);
-                }
-            }
-            else
-            {
-                if (sys.debug > 0)
-                {
-                    FPS_ERROR_LOG("with single-pub uri: '%s', point is not an INPUT type (analog input or binary input)", sys.fims_dependencies->uri_view);
-                    FPS_LOG_IT("pub_to_wrong_type");
-                }
-                return false;
-            }
-            sys.db_mutex.unlock();
-        }
-
-        if (!sys.fims_dependencies->uri_requests.contains_local_uri)
+        if (!sys.fims_dependencies->uri_requests.contains_local_uri && 
+                (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog ||
+                ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary))
         {
             setInputPointOnline(dbPoint);
         }
 
         double value = jval_to_double(to_set);
         sys.db_mutex.lock();
-        if (dbPoint->type == TMWSIM_TYPE_ANALOG &&
+        if ((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog) &&
             (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
              ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
         {
@@ -840,10 +794,10 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
                 value = ((FlexPoint *)dbPoint->flexPointHandle)->scale * value;
             }
             sdnputil_getDateTime(sys.protocol_dependencies->dnp3.pSession, &dbPoint->timeStamp);
-
+            check_limits_server(dbPoint, value);
             sdnpsim_anlgInWrite(dbPoint, value);
         }
-        else if ((((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
+        else if ((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary) && (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
                   ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
         {
             if (((FlexPoint *)dbPoint->flexPointHandle)->scale < 0)
@@ -853,7 +807,44 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
             sdnputil_getDateTime(sys.protocol_dependencies->dnp3.pSession, &dbPoint->timeStamp);
 
             sdnpsim_binInWrite(dbPoint, static_cast<bool>(value));
-        }
+        } else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt16) || 
+                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt32) ||
+                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPF32) ||
+                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnalogOS)) &&
+                        (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
+
+            ){
+                TMWTYPES_ANALOG_VALUE analogValue;
+                analogValue.type = TMWTYPES_ANALOG_TYPE_DOUBLE;
+                if (((FlexPoint *)(dbPoint->flexPointHandle))->scale == 0.0)
+                {
+                    analogValue.value.dval = value;
+                }
+                else
+                {
+                    analogValue.value.dval = value * ((FlexPoint *)(dbPoint->flexPointHandle))->scale;
+                }
+                check_limits_server(dbPoint, analogValue.value.dval);
+                ((FlexPoint *)dbPoint->flexPointHandle)->operate_value = analogValue.value.dval;
+                ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
+                sdnpsim_anlgOutWrite(dbPoint, &analogValue);
+            }
+            else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::BinaryOS) || 
+                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::CROB)) &&
+                        (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
+
+            ){
+                bool bool_value = static_cast<bool>(value);
+                if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
+                {
+                    bool_value = !bool_value;
+                }
+                ((FlexPoint *)dbPoint->flexPointHandle)->operate_value = static_cast<double>(bool_value);
+                ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
+                sdnpsim_binOutSetValue(dbPoint, bool_value);
+            }
         else if (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
         {
             ((FlexPoint *)dbPoint->flexPointHandle)->standby_value = value;
@@ -984,7 +975,9 @@ int main(int argc, char *argv[])
 
         while (serverSys.keep_running)
         {
+            serverSys.db_mutex.lock();
             tmwappl_checkForInput(serverSys.protocol_dependencies->dnp3.pApplContext);
+            serverSys.db_mutex.unlock();
             tmwpltmr_checkTimer();
             tmwtarg_sleep(1);
         }

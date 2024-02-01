@@ -40,6 +40,7 @@
 #include "gcom_dnp3_watchdog.h"
 #include "gcom_dnp3_heartbeat.h"
 #include "gcom_dnp3_flags.h"
+#include "shared_utils.hpp"
 
 using namespace std;
 
@@ -433,6 +434,28 @@ TMWSIM_POINT *getDbVar(GcomSystem &sys, std::string_view uri, std::string_view n
             return point->second;
         }
     }
+    it = sys.outputStatusUriMap.find(suri);
+    if (it != sys.outputStatusUriMap.end())
+    {
+        // dbvar_map
+        auto dvar = it->second;
+        auto dbm = dvar->dbmap;
+
+        if (dvar->multi && name.size() > 0)
+        {
+            std::map<std::string, TMWSIM_POINT *>::iterator itd = dbm.find({name.begin(), name.end()});
+
+            if (itd != dbm.end())
+            {
+                return itd->second;
+            }
+        }
+        else
+        {
+            auto point = dbm.begin();
+            return point->second;
+        }
+    }
     return NULL;
 };
 
@@ -468,9 +491,9 @@ void showNewUris(GcomSystem &sys)
 /// @return 
 int getSubs(GcomSystem &sys, const char **subs, int num, int who)
 {
-    if (num < static_cast<int32_t>(sys.dburiMap.size()))
+    if (num < (static_cast<int32_t>(sys.dburiMap.size()) + static_cast<int32_t>(sys.outputStatusUriMap.size())))
     {
-        return sys.dburiMap.size();
+        return (sys.dburiMap.size() + static_cast<int32_t>(sys.outputStatusUriMap.size()));
     }
     int idx = 0;
     if (subs)
@@ -488,6 +511,14 @@ int getSubs(GcomSystem &sys, const char **subs, int num, int who)
             sys.fims_dependencies->subs.push_back(sys.local_uri);
         }
         for (it = sys.dburiMap.begin(); it != sys.dburiMap.end(); ++it)
+        {
+            subs[idx++] = it->first.c_str();
+            if (it->second->multi)
+            {
+                sys.fims_dependencies->subs.push_back(it->first.c_str());
+            }
+        }
+        for (it = sys.outputStatusUriMap.begin(); it != sys.outputStatusUriMap.end(); ++it)
         {
             subs[idx++] = it->first.c_str();
             if (it->second->multi)
@@ -532,6 +563,28 @@ void addDbUri(GcomSystem &sys, const char *uri, TMWSIM_POINT *dbPoint)
         sys.dburiMap[full_uri.c_str()] = new varList_t(full_uri.c_str());
     }
     vl = sys.dburiMap[full_uri.c_str()];
+    vl->multi = false;
+    vl->addDb(dbPoint);
+};
+
+void addOutputStatusUri(GcomSystem &sys, const char *uri, TMWSIM_POINT *dbPoint)
+{
+    if (sys.outputStatusUriMap.find(uri) == sys.outputStatusUriMap.end())
+    {
+        sys.outputStatusUriMap[uri] = new varList_t(uri);
+    }
+
+    varList_t *vl = sys.outputStatusUriMap[uri];
+    vl->multi = true;
+    vl->addDb(dbPoint);
+
+    std::string full_uri(uri);
+    full_uri.append("/").append(((FlexPoint *)(dbPoint->flexPointHandle))->name);
+    if (sys.outputStatusUriMap.find(full_uri.c_str()) == sys.outputStatusUriMap.end())
+    {
+        sys.outputStatusUriMap[full_uri.c_str()] = new varList_t(full_uri.c_str());
+    }
+    vl = sys.outputStatusUriMap[full_uri.c_str()];
     vl->multi = false;
     vl->addDb(dbPoint);
 };
@@ -1513,6 +1566,63 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
         }
     }
 
+    if (ret)
+    {
+        ret = getCJbool(cj, "pub_outputs", sys.protocol_dependencies->dnp3.pub_outputs, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'pub_outputs' must be a boolean.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJbool(cj, "show_output_status", sys.protocol_dependencies->dnp3.show_output_status, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'show_output_status' must be a boolean.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJstr(cj, "output_status_uri", sys.protocol_dependencies->dnp3.output_status_uri, false);
+        if (!ret)
+        {
+            FPS_ERROR_LOG("Error: 'output_status_uri' must be a string.");
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJdouble(cj, "resend_tolerance", sys.protocol_dependencies->dnp3.resend_tolerance, false);
+        if (!ret || sys.protocol_dependencies->dnp3.resend_tolerance < 0)
+        {
+            FPS_ERROR_LOG("Error: 'resend_tolerance' must be an float greater than 0.");
+            sys.protocol_dependencies->dnp3.resend_tolerance = 0;
+            final_ret = false;
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        ret = getCJdouble(cj, "resend_rate", sys.protocol_dependencies->dnp3.resend_rate_ms, false);
+        if (!ret || sys.protocol_dependencies->dnp3.resend_rate_ms < 0)
+        {
+            FPS_ERROR_LOG("Error: 'resend_rate' must be an integer greater than 0.");
+            sys.protocol_dependencies->dnp3.resend_rate_ms = 0;
+            final_ret = false;
+            ret = true;
+        }
+    }
+
     // fixup base_uri
     char tmp[1024];
     const char *sys_id = sys.id;
@@ -1600,6 +1710,7 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
         cJSON *cjfmt, *cjtout;
         cJSON *cjcstring, *cjctrue, *cjcint, *event_pub;
         cJSON *batch_pub_rate, *interval_pub_rate, *batch_set_rate, *interval_set_rate;
+        cJSON *show_output_status, *resend_tolerance, *resend_rate_ms, *output_status_uri;
 
         // heartbeat stuff
         // cJSON *min, *max, *incr;
@@ -1645,6 +1756,10 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
         batch_pub_rate = cJSON_GetObjectItem(obj, "batch_pub_rate");
         interval_pub_rate = cJSON_GetObjectItem(obj, "interval_pub_rate");
         event_pub = cJSON_GetObjectItem(obj, "event_pub");
+        show_output_status = cJSON_GetObjectItem(obj, "show_output_status");
+        output_status_uri = cJSON_GetObjectItem(obj, "output_status_uri");
+        resend_tolerance = cJSON_GetObjectItem(obj, "resend_tolerance");
+        resend_rate_ms = cJSON_GetObjectItem(obj, "resend_rate");
 
         //        if (id == NULL || offset == NULL || id->valuestring == NULL)
         if (id == NULL || id->valuestring == NULL)
@@ -1756,6 +1871,65 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
             else
             {
                 ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub = sys.protocol_dependencies->dnp3.event_pub;
+            }
+
+            if (show_output_status && (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB))
+            {
+                ((FlexPoint *)(dbPoint->flexPointHandle))->show_output_status = cJSON_IsTrue(show_output_status);
+                if(output_status_uri) {
+                    ((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri = strdup(output_status_uri->valuestring);
+                } else if (sys.protocol_dependencies->dnp3.output_status_uri) {
+                    ((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri = strdup(sys.protocol_dependencies->dnp3.output_status_uri);
+                }
+            } else if (sys.protocol_dependencies->dnp3.show_output_status && (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB)){
+                ((FlexPoint *)(dbPoint->flexPointHandle))->show_output_status = sys.protocol_dependencies->dnp3.show_output_status;
+                if(output_status_uri) {
+                    ((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri = strdup(output_status_uri->valuestring);
+                } else if (sys.protocol_dependencies->dnp3.output_status_uri) {
+                    ((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri = strdup(sys.protocol_dependencies->dnp3.output_status_uri);
+                }
+            }
+            if(((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri){
+                addOutputStatusUri(sys, ((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri, dbPoint);
+            } else {
+                sys.protocol_dependencies->dnp3.show_output_status = false;
+            }
+
+            if (resend_tolerance && (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB))
+            {
+                ((FlexPoint *)(dbPoint->flexPointHandle))->resend_tolerance = resend_tolerance->valuedouble;
+                if(resend_rate_ms) {
+                    ((FlexPoint *)(dbPoint->flexPointHandle))->resend_rate_ms = resend_rate_ms->valuedouble;
+                } else if (sys.protocol_dependencies->dnp3.resend_rate_ms) {
+                    ((FlexPoint *)(dbPoint->flexPointHandle))->resend_rate_ms = sys.protocol_dependencies->dnp3.resend_rate_ms;
+                }
+            } else if (sys.protocol_dependencies->dnp3.show_output_status && (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB)){
+                ((FlexPoint *)(dbPoint->flexPointHandle))->resend_tolerance = sys.protocol_dependencies->dnp3.resend_tolerance;
+                if(resend_rate_ms) {
+                    ((FlexPoint *)(dbPoint->flexPointHandle))->resend_rate_ms = resend_rate_ms->valuedouble;
+                } else if (sys.protocol_dependencies->dnp3.resend_rate_ms) {
+                    ((FlexPoint *)(dbPoint->flexPointHandle))->resend_rate_ms = sys.protocol_dependencies->dnp3.resend_rate_ms;
+                }
             }
 
             // batch set rate

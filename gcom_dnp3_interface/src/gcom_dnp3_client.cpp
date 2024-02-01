@@ -6,6 +6,7 @@
 #include <shared_mutex>
 #include "shared_utils.hpp"
 #include "gcom_dnp3_system_structs.h"
+#include "gcom_dnp3_point_utils.h"
 #include "gcom_dnp3_fims.h"
 #include "Jval_buif.hpp"
 #include "rigtorp/MPMCQueue.h"
@@ -49,6 +50,83 @@ void signal_handler(int sig)
     signal(sig, SIG_DFL);
 };
 
+void assignToPubWork(GcomSystem *sys, PubPoint *point, std::string uri, std::string name, bool event_pub) {
+    // the section below 1) checks if a uri currently exists with pub work for that point
+    // 2) if not, it creates a vector to store this pub work and any future pub work for the uri. It also adds new pub work to the pub work queue.
+    // 3) if the uri already exists with pub work, check to see if that point is contained within that uri's set of pub work
+    // 4) if it is, keep looking until we find pub work for that uri that doesn't contain that point, then add the point
+    // 5) if it isn't, add that point to the pub_work
+    PubWork *pub_work;
+    sys->fims_dependencies->uris_with_data_mutex.lock();
+    auto pub_work_it = sys->fims_dependencies->uris_with_data.find(uri);
+    if (pub_work_it == sys->fims_dependencies->uris_with_data.end())
+    {
+        pub_work = new PubWork();
+        std::vector<PubWork *> pub_work_uri_vector;
+        pub_work->pub_uri = uri;
+        bool added_to_pub_q = sys->fims_dependencies->pub_q.try_push(pub_work);
+        if (!added_to_pub_q){
+            if (pub_work)
+                delete pub_work;
+            if(point)
+                delete point;
+            return;
+        }
+        pub_work_uri_vector.push_back(pub_work);
+        sys->fims_dependencies->uris_with_data[uri] = pub_work_uri_vector;
+        pub_work_it = sys->fims_dependencies->uris_with_data.find(uri);
+        if (pub_work_it == sys->fims_dependencies->uris_with_data.end())
+        {
+            if(!spam_limit(sys, sys->point_errors))
+            {
+                FPS_ERROR_LOG("Someting went wrong when attempting to add point [%s] to pub work.", name.c_str());
+            }
+            if(point){
+                delete point;
+            }
+            return;
+        }
+    }
+
+    bool inserted_into_pub_work = false;
+    std::vector<PubWork *> &pub_work_uri_vector = pub_work_it->second;
+    // check all sets of pub work to see where we need to insert the value
+    for (size_t i = 0; i < pub_work_uri_vector.size(); i++)
+    {
+        if (pub_work_uri_vector.at(i)->pub_vals.find(name) != pub_work_uri_vector[i]->pub_vals.end())
+        {
+            continue; // the point is already in this set of pub vals
+        }
+        else
+        { // the point is not already in this set of pub vals so add it
+            pub_work_uri_vector.at(i)->pub_vals[name] = point;
+            inserted_into_pub_work = true;
+            break;
+        }
+    }
+    if (!inserted_into_pub_work && (pub_work_uri_vector.size() == 0 || event_pub)) // if we get through all of them and haven't found a pub_work with space for this point
+    {
+        pub_work = new PubWork();
+        pub_work->pub_uri = uri;
+        bool added_to_pub_q = sys->fims_dependencies->pub_q.try_push(pub_work);
+        if (!added_to_pub_q){
+            if (pub_work)
+                delete pub_work;
+            if(point)
+                delete point;
+            return;
+        }
+        pub_work->pub_vals[name] = point;
+        sys->fims_dependencies->uris_with_data[uri].push_back(pub_work);
+        inserted_into_pub_work = true;
+    }
+    sys->fims_dependencies->uris_with_data_mutex.unlock();
+    if (!inserted_into_pub_work){
+        if(point)
+            delete point;
+    }
+}
+
 /**
  * @brief Add a dbPoint to a queue for publishing.
  * 
@@ -73,77 +151,87 @@ void addPointToPubWork(void *pDbPoint)
     }
     bool needs_lock = !sys->protocol_dependencies->dnp3.pub_all && !isDirectPub(dbPoint);
     while(needs_lock &&!sys->db_mutex.try_lock_shared()){};
-    PubWork *pub_work;
+    
     PubPoint *point = new PubPoint();
+    PubPoint *status_point = nullptr;
     point->dbPoint = dbPoint;
-    if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+    point->flags = dbPoint->flags;
+    point->changeTime = dbPoint->timeStamp;
+    if(((FlexPoint *)(dbPoint->flexPointHandle))->show_output_status){
+        status_point = new PubPoint();
+        status_point->dbPoint = dbPoint;
+        status_point->flags = dbPoint->flags;
+        status_point->changeTime = dbPoint->timeStamp;
+    }
+
+    if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
     {
         point->value = dbPoint->data.analog.value;
     }
-    else
+    else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Binary)
     {
         point->value = static_cast<double>(dbPoint->data.binary.value);
+    }else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS||
+    ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+    ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+    ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32)
+    {
+        if(((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate){
+            if (((FlexPoint *)(dbPoint->flexPointHandle))->show_output_status) {
+                point->value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value;
+                if(status_point)
+                    status_point->value = dbPoint->data.analog.value;
+
+                if( ((FlexPoint *)(dbPoint->flexPointHandle))->resend_tolerance > 0 &&
+                abs(((FlexPoint *)(dbPoint->flexPointHandle))->operate_value - static_cast<double>(dbPoint->data.analog.value)) >= ((FlexPoint *)(dbPoint->flexPointHandle))->resend_tolerance) {
+                    if (abs(get_time_double() - ((FlexPoint *)(dbPoint->flexPointHandle))->last_operate_time) >= ((FlexPoint *)(dbPoint->flexPointHandle))->resend_rate_ms/1000.0){
+                        send_analog_command_callback((void *)(&((FlexPoint *)(dbPoint->flexPointHandle))->set_work)); // shouldn't need to re-prepare set_work because the value should still be in there
+                    }
+                }
+            } else {
+                point->value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value;
+            }
+        } else {
+            point->value = dbPoint->data.analog.value;
+            if (((FlexPoint *)(dbPoint->flexPointHandle))->show_output_status) {
+                if(status_point)
+                    status_point->value = dbPoint->data.analog.value;
+            }
+        }
     }
-    point->flags = dbPoint->flags;
-    point->changeTime = dbPoint->timeStamp;
+    else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS || 
+    ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB)
+    {
+        if(((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate){
+            if (((FlexPoint *)(dbPoint->flexPointHandle))->show_output_status) {
+                point->value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value;
+                if(status_point)
+                    status_point->value = static_cast<double>(dbPoint->data.binary.value);
+
+                if( ((FlexPoint *)(dbPoint->flexPointHandle))->resend_tolerance > 0 &&
+                abs(((FlexPoint *)(dbPoint->flexPointHandle))->operate_value - static_cast<double>(dbPoint->data.binary.value)) >= ((FlexPoint *)(dbPoint->flexPointHandle))->resend_tolerance) {
+                    if (abs(get_time_double() - ((FlexPoint *)(dbPoint->flexPointHandle))->last_operate_time) >= ((FlexPoint *)(dbPoint->flexPointHandle))->resend_rate_ms/1000.0){
+                        send_binary_command_callback((void *)(&((FlexPoint *)(dbPoint->flexPointHandle))->set_work)); // shouldn't need to re-prepare set_work because the value should still be in there
+                    }
+                }
+            } else {
+                point->value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value;
+            }
+        } else {
+            point->value = static_cast<double>(dbPoint->data.binary.value);
+            if (((FlexPoint *)(dbPoint->flexPointHandle))->show_output_status) {
+                if(status_point)
+                    status_point->value = static_cast<double>(dbPoint->data.binary.value);
+            }
+        }
+    }
+    
     if(needs_lock){
         sys->db_mutex.unlock_shared();
     }
-    // the section below 1) checks if a uri currently exists with pub work for that point
-    // 2) if not, it creates a vector to store this pub work and any future pub work for the uri. It also adds new pub work to the pub work queue.
-    // 3) if the uri already exists with pub work, check to see if that point is contained within that uri's set of pub work
-    // 4) if it is, keep looking until we find pub work for that uri that doesn't contain that point, then add the point
-    // 5) if it isn't, add that point to the pub_work
-    sys->fims_dependencies->uris_with_data_mutex.lock();
-    auto pub_work_it = sys->fims_dependencies->uris_with_data.find(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
-    if (pub_work_it == sys->fims_dependencies->uris_with_data.end())
-    {
-        pub_work = new PubWork();
-        std::vector<PubWork *> pub_work_uri_vector;
-        pub_work->pub_uri = ((FlexPoint *)(dbPoint->flexPointHandle))->uri;
-        sys->fims_dependencies->pub_q.try_push(pub_work);
-        pub_work_uri_vector.push_back(pub_work);
-        sys->fims_dependencies->uris_with_data[((FlexPoint *)(dbPoint->flexPointHandle))->uri] = pub_work_uri_vector;
-        pub_work_it = sys->fims_dependencies->uris_with_data.find(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
-        if (pub_work_it == sys->fims_dependencies->uris_with_data.end())
-        {
-            if(!spam_limit(sys, sys->point_errors))
-            {
-                FPS_ERROR_LOG("Someting went wrong when attempting to add point [%s] to pub work.", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
-            }
-            if(point){
-                delete point;
-            }
-            return;
-        }
-    }
-
-    bool inserted_into_pub_work = false;
-    std::vector<PubWork *> &pub_work_uri_vector = pub_work_it->second;
-    // check all sets of pub work to see where we need to insert the value
-    for (size_t i = 0; i < pub_work_uri_vector.size(); i++)
-    {
-        if (pub_work_uri_vector.at(i)->pub_vals.find(((FlexPoint *)(dbPoint->flexPointHandle))->name) != pub_work_uri_vector[i]->pub_vals.end())
-        {
-            continue; // the point is already in this set of pub vals
-        }
-        else
-        { // the point is not already in this set of pub vals so add it
-
-            pub_work_uri_vector.at(i)->pub_vals[((FlexPoint *)(dbPoint->flexPointHandle))->name] = point;
-            inserted_into_pub_work = true;
-            break;
-        }
-    }
-    if (!inserted_into_pub_work && (pub_work_uri_vector.size() == 0 || ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub)) // if we get through all of them and haven't found a pub_work with space for this point
-    {
-        pub_work = new PubWork();
-        pub_work->pub_uri = ((FlexPoint *)(dbPoint->flexPointHandle))->uri;
-        sys->fims_dependencies->pub_q.try_push(pub_work);
-        pub_work->pub_vals[((FlexPoint *)(dbPoint->flexPointHandle))->name] = point;
-        sys->fims_dependencies->uris_with_data[((FlexPoint *)(dbPoint->flexPointHandle))->uri].push_back(pub_work);
-    }
-    sys->fims_dependencies->uris_with_data_mutex.unlock();
+    assignToPubWork(sys, point, ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name, ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub);
+    if(status_point)
+        assignToPubWork(sys, status_point, ((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name, ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub);
     // if it's not a direct pub, then we've moved on from the original message's call to queuePubs
     // so we need to call it again to make sure the point is pubbed
     if (needs_lock)
@@ -285,19 +373,83 @@ void updatePointCallback(void *pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_OBJ_GR
         }
         else if (objectGroup == DNPDEFS_OBJ_40_ANA_OUT_STATUSES)
         {
-            // TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)mdnpsim_analogOutputLookupPoint(pDbHandle, pointNumber);
-            // if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr)
-            // {
-            //     GcomSystem *sys = ((FlexPoint *)(dbPoint->flexPointHandle))->sys;
-            // }
+            TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)mdnpsim_analogOutputLookupPoint(pDbHandle, pointNumber);
+            if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr)
+            {
+                GcomSystem *sys = ((FlexPoint *)(dbPoint->flexPointHandle))->sys;
+                if (sys->protocol_dependencies->dnp3.pub_outputs){
+                    if (sys->protocol_dependencies->dnp3.pub_all || isDirectPub(dbPoint))
+                    {
+                        addPointToPubWork(dbPoint);
+                    }
+                    else if (((FlexPoint *)(dbPoint->flexPointHandle))->batch_pubs && ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub)
+                    {
+                        if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer))
+                        {
+                            tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
+                                        ((FlexPoint *)(dbPoint->flexPointHandle))->batch_pub_rate,
+                                        sys->protocol_dependencies->dnp3.pChannel,
+                                        addPointToPubWork,
+                                        dbPoint);
+                        }
+                    }
+                    else if (((FlexPoint *)(dbPoint->flexPointHandle))->interval_pubs && ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub)
+                    {
+                        if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer))
+                        {
+                            tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
+                                        ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate,
+                                        sys->protocol_dependencies->dnp3.pChannel,
+                                        addPointToIntervalPubWork,
+                                        dbPoint);
+                        }
+                    }
+                }
+            }
         }
-        else if (objectGroup == DNPDEFS_OBJ_10_BIN_OUT_STATUSES)
+        else if (objectGroup == DNPDEFS_OBJ_10_BIN_OUT_STATUSES )
         {
-            // TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)mdnpsim_binaryOutputLookupPoint(pDbHandle, pointNumber);
-            // if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr)
-            // {
-            //     GcomSystem *sys = ((FlexPoint *)(dbPoint->flexPointHandle))->sys;
-            // }
+            TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)mdnpsim_binaryOutputLookupPoint(pDbHandle, pointNumber);
+            if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr)
+            {
+                GcomSystem *sys = ((FlexPoint *)(dbPoint->flexPointHandle))->sys;
+                if (sys->protocol_dependencies->dnp3.pub_outputs){
+                    if (sys->protocol_dependencies->dnp3.pub_all || isDirectPub(dbPoint))
+                    {
+                        addPointToPubWork(dbPoint);
+                    }
+                    else if (((FlexPoint *)(dbPoint->flexPointHandle))->batch_pubs && ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub)
+                    {
+                        if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer))
+                        {
+                            tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
+                                        ((FlexPoint *)(dbPoint->flexPointHandle))->batch_pub_rate,
+                                        sys->protocol_dependencies->dnp3.pChannel,
+                                        addPointToPubWork,
+                                        dbPoint);
+                        }
+                    }
+                    else if (((FlexPoint *)(dbPoint->flexPointHandle))->interval_pubs && ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub)
+                    {
+                        if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer))
+                        {
+                            tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
+                                        ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate,
+                                        sys->protocol_dependencies->dnp3.pChannel,
+                                        addPointToIntervalPubWork,
+                                        dbPoint);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if(!spam_limit(&clientSys, clientSys.point_errors))
+                {
+                    FPS_ERROR_LOG("unable to find binary output point number %d ", pointNumber);
+                    FPS_LOG_IT("could_not_find_point");
+                }
+            }
         }
     }
 }
@@ -357,242 +509,8 @@ void queuePubs(GcomSystem *sys)
             PubPoint *point = pair.second;
             auto &dbPoint = point->dbPoint;
             has_one_point = true;
-            if (((FlexPoint *)(dbPoint->flexPointHandle))->format == FimsFormat::Naked)
-            {
-                if (dbPoint->type == TMWSIM_TYPE_ANALOG)
-                {
-                    if ((((FlexPoint *)(dbPoint->flexPointHandle))->scale) == 0.0)
-                    {
-                        if (dbPoint->defaultStaticVariation == Group30Var1 || dbPoint->defaultStaticVariation == Group30Var3)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{},)", pair.first, static_cast<int32_t>(point->value));
-                        }
-                        else if (dbPoint->defaultStaticVariation == Group30Var2 || dbPoint->defaultStaticVariation == Group30Var4)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{},)", pair.first, static_cast<int16_t>(point->value));
-                        }
-                        else if (dbPoint->defaultStaticVariation == Group30Var5)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{:.{}g},)", pair.first, static_cast<float>(point->value), std::numeric_limits<double>::max_digits10 - 1);
-                        }
-                        else
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{:.{}g},)", pair.first, point->value, std::numeric_limits<double>::max_digits10 - 1);
-                        }
-                    }
-                    else
-                    {
-                        if (dbPoint->defaultStaticVariation == Group30Var1 || dbPoint->defaultStaticVariation == Group30Var3)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{:.{}g},)", pair.first, static_cast<int32_t>(point->value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-                        }
-                        else if (dbPoint->defaultStaticVariation == Group30Var2 || dbPoint->defaultStaticVariation == Group30Var4)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{:.{}g},)", pair.first, static_cast<int16_t>(point->value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-                        }
-                        else if (dbPoint->defaultStaticVariation == Group30Var5)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{:.{}g},)", pair.first, static_cast<float>(point->value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-                        }
-                        else
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{:.{}g},)", pair.first, point->value / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-                        }
-                    }
-                }
-                else
-                {
-                    if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
-                    {
-                        if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_string)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":"{}",)", pair.first, static_cast<bool>(point->value) ? (((FlexPoint *)(dbPoint->flexPointHandle))->crob_false) : (((FlexPoint *)(dbPoint->flexPointHandle))->crob_true));
-                        }
-                        else if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_int)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{},)", pair.first, static_cast<bool>(point->value) ? 0 : 1);
-                        }
-                        else
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{},)", pair.first, static_cast<bool>(point->value) ? "false" : "true");
-                        }
-                    }
-                    else
-                    {
-                        if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_string)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":"{}",)", pair.first, static_cast<bool>(point->value) ? (((FlexPoint *)(dbPoint->flexPointHandle))->crob_true) : (((FlexPoint *)(dbPoint->flexPointHandle))->crob_false));
-                        }
-                        else if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_int)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{},)", pair.first, static_cast<bool>(point->value) ? 1 : 0);
-                        }
-                        else
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{},)", pair.first, static_cast<bool>(point->value) ? "true" : "false");
-                        }
-                    }
-                }
-            }
-            else if (((FlexPoint *)(dbPoint->flexPointHandle))->format == FimsFormat::Clothed)
-            {
-                if (dbPoint->type == TMWSIM_TYPE_ANALOG)
-                {
-                    if ((((FlexPoint *)(dbPoint->flexPointHandle))->scale) == 0.0)
-                    {
-                        if (dbPoint->defaultStaticVariation == Group30Var1 || dbPoint->defaultStaticVariation == Group30Var3)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}}},)", pair.first, static_cast<int32_t>(point->value));
-                        }
-                        else if (dbPoint->defaultStaticVariation == Group30Var2 || dbPoint->defaultStaticVariation == Group30Var4)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}}},)", pair.first, static_cast<int16_t>(point->value));
-                        }
-                        else if (dbPoint->defaultStaticVariation == Group30Var5)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{:.{}g}}},)", pair.first, static_cast<float>(point->value), std::numeric_limits<double>::max_digits10 - 1);
-                        }
-                        else
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{:.{}g}}},)", pair.first, point->value, std::numeric_limits<double>::max_digits10 - 1);
-                        }
-                    }
-                    else
-                    {
-                        if (dbPoint->defaultStaticVariation == Group30Var1 || dbPoint->defaultStaticVariation == Group30Var3)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{:.{}g}}},)", pair.first, static_cast<int32_t>(point->value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-                        }
-                        else if (dbPoint->defaultStaticVariation == Group30Var2 || dbPoint->defaultStaticVariation == Group30Var4)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{:.{}g}}},)", pair.first, static_cast<int16_t>(point->value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-                        }
-                        else if (dbPoint->defaultStaticVariation == Group30Var5)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{:.{}g}}},)", pair.first, static_cast<float>(point->value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-                        }
-                        else
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{:.{}g}}},)", pair.first, point->value / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
-                        }
-                    }
-                }
-                else
-                {
-                    if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
-                    {
-                        if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_string)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":"{}"}},)", pair.first, static_cast<bool>(point->value) ? (((FlexPoint *)(dbPoint->flexPointHandle))->crob_false) : (((FlexPoint *)(dbPoint->flexPointHandle))->crob_true));
-                        }
-                        else if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_int)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}}},)", pair.first, static_cast<bool>(point->value) ? 0 : 1);
-                        }
-                        else
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}}},)", pair.first, static_cast<bool>(point->value) ? "false" : "true");
-                        }
-                    }
-                    else
-                    {
-                        if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_string)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":"{}"}},)", pair.first, static_cast<bool>(point->value) ? (((FlexPoint *)(dbPoint->flexPointHandle))->crob_true) : (((FlexPoint *)(dbPoint->flexPointHandle))->crob_false));
-                        }
-                        else if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_int)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}}},)", pair.first, static_cast<bool>(point->value) ? 1 : 0);
-                        }
-                        else
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}}},)", pair.first, static_cast<bool>(point->value) ? "true" : "false");
-                        }
-                    }
-                }
-            }
-            else // Full
-            {
-                TMWDTIME *tmpPtr = &(point->changeTime);
-                if (dbPoint->type == TMWSIM_TYPE_ANALOG)
-                {
-                    if ((((FlexPoint *)(dbPoint->flexPointHandle))->scale) == 0.0)
-                    {
-                        if (dbPoint->defaultStaticVariation == Group30Var1 || dbPoint->defaultStaticVariation == Group30Var3)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, static_cast<int32_t>(point->value), DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                        else if (dbPoint->defaultStaticVariation == Group30Var2 || dbPoint->defaultStaticVariation == Group30Var4)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, static_cast<int16_t>(point->value), DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                        else if (dbPoint->defaultStaticVariation == Group30Var5)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{:.{}g}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, static_cast<float>(point->value), std::numeric_limits<double>::max_digits10 - 1, DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                        else
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{:.{}g}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, point->value, DNP_FLAGS{point->flags}, std::numeric_limits<double>::max_digits10 - 1, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                    }
-                    else
-                    {
-                        if (dbPoint->defaultStaticVariation == Group30Var1 || dbPoint->defaultStaticVariation == Group30Var3)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{:.{}g}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, static_cast<int32_t>(point->value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1, DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                        else if (dbPoint->defaultStaticVariation == Group30Var2 || dbPoint->defaultStaticVariation == Group30Var4)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{:.{}g}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, static_cast<int16_t>(point->value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1, DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                        else if (dbPoint->defaultStaticVariation == Group30Var5)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{:.{}g}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, static_cast<float>(point->value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1, DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                        else
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{:.{}g}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, point->value / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1, DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                    }
-                }
-                else
-                {
-                    if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
-                    {
-                        if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_string)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, (static_cast<bool>(point->value) ? (((FlexPoint *)(dbPoint->flexPointHandle))->crob_false) : (((FlexPoint *)(dbPoint->flexPointHandle))->crob_true)), DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                        else if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_int)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, static_cast<bool>(point->value) ? 0 : 1, DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                        else
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, static_cast<bool>(point->value) ? "false" : "true", DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                    }
-                    else
-                    {
-                        if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_string)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, static_cast<bool>(point->value) ? (((FlexPoint *)(dbPoint->flexPointHandle))->crob_true) : (((FlexPoint *)(dbPoint->flexPointHandle))->crob_false), DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                        else if (((FlexPoint *)(dbPoint->flexPointHandle))->crob_int)
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, static_cast<bool>(point->value) ? 1 : 0, DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                        else
-                        {
-                            FORMAT_TO_BUF(send_buf, R"("{}":{{"value":{}, "flags":{}, "timestamp":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}"}},)", pair.first, static_cast<bool>(point->value) ? "true" : "false", DNP_FLAGS{point->flags}, tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
-                        }
-                    }
-                }
-            }
-            if (pair.second)
-            {
-                delete pair.second;
-            }
+            format_point_with_key(send_buf, dbPoint, point->value, point->flags, &point->changeTime);
+            FORMAT_TO_BUF(send_buf, R"(,)");
         }
 
         if(sys->heartbeat){
@@ -621,6 +539,7 @@ void queuePubs(GcomSystem *sys)
                 if (pub_work)
                 {
                     delete pub_work;
+                    pub_work = nullptr;
                 }
                 return;
             }
@@ -630,6 +549,7 @@ void queuePubs(GcomSystem *sys)
         if (pub_work)
         {
             delete pub_work;
+            pub_work = nullptr;
         }
         has_values = sys->fims_dependencies->pub_q.try_pop(pub_work);
     }
@@ -921,7 +841,7 @@ void check_limits_client(TMWSIM_POINT *dbPoint, double &value)
             value = std::numeric_limits<int32_t>::lowest();
             if(!spam_limit(sys, sys->point_errors))
             {
-                FPS_ERROR_LOG("Set request to analog output point [%d] (32-bit signed int) exceeded minimum (-2,147,483,647). Setting to minimum value instead.", dbPoint->pointNumber);
+                FPS_ERROR_LOG("Set request to analog output point [%d] (32-bit signed int) exceeded minimum (-2,147,483,648). Setting to minimum value instead.", dbPoint->pointNumber);
             }
         }
     }
@@ -947,28 +867,28 @@ void check_limits_client(TMWSIM_POINT *dbPoint, double &value)
     }
     else if (dbPoint->defaultStaticVariation == Group40Var3)
     {
-        if (value > std::numeric_limits<float>::max())
+        if (value > TMWDEFS_SFLOAT_MAX)
         {
             value = std::numeric_limits<float>::max();
             if(!spam_limit(sys, sys->point_errors))
             {
-                FPS_ERROR_LOG("Set request to analog output point [%d] (32-bit float) exceeded maximum (%g). Setting to maximum value instead.", dbPoint->pointNumber, std::numeric_limits<float>::max());
+                FPS_ERROR_LOG("Set request to analog output point [%d] (32-bit float) exceeded maximum (%g). Setting to maximum value instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_MAX);
             }
         }
-        else if (value < -std::numeric_limits<float>::max())
+        else if (value < TMWDEFS_SFLOAT_MIN)
         {
-            value = -std::numeric_limits<float>::max();
+            value = TMWDEFS_SFLOAT_MIN;
             if(!spam_limit(sys, sys->point_errors))
             {
-                FPS_ERROR_LOG("Set request to analog output point [%d] (32-bit float) exceeded minimum (-%g). Setting to minimum value instead.", dbPoint->pointNumber, std::numeric_limits<float>::max());
+                FPS_ERROR_LOG("Set request to analog output point [%d] (32-bit float) exceeded minimum (%g). Setting to minimum value instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_MIN);
             }
         }
-        else if (value != 0.0 && abs(value) < std::numeric_limits<float>::min())
+        else if (value != 0.0 && abs(value) < TMWDEFS_SFLOAT_SMALLEST)
         {
             value = 0.0;
             if(!spam_limit(sys, sys->point_errors))
             {
-                FPS_ERROR_LOG("Set request to analog output point [%d] (32-bit float) exceeded minimum exponent value (%g). Setting to 0 instead.", dbPoint->pointNumber, std::numeric_limits<float>::min());
+                FPS_ERROR_LOG("Set request to analog output point [%d] (32-bit float) exceeded minimum exponent value (%g). Setting to 0 instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_SMALLEST);
             }
         }
     }
@@ -996,6 +916,10 @@ void send_analog_command_callback(void *pSetWork)
 
     check_limits_client(dbPoint, analogValue.value.value.dval);
 
+    ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value = analogValue.value.value.dval;
+    ((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate = true;
+    ((FlexPoint *)(dbPoint->flexPointHandle))->last_operate_time = get_time_double();
+
     mdnpbrm_analogCommand(&(((FlexPoint *)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pAnalogCommandRequestDesc, TMWDEFS_NULL, DNPDEFS_FC_DIRECT_OP, MDNPBRM_AUTO_MODE_NONE, 0,
                           DNPDEFS_QUAL_16BIT_INDEX, dbPoint->defaultStaticVariation, 1, &analogValue);
 }
@@ -1017,6 +941,11 @@ void send_binary_command_callback(void *pSetWork)
     CROBInfo.control = (TMWTYPES_UCHAR)(bool_value ? DNPDEFS_CROB_CTRL_LATCH_ON : DNPDEFS_CROB_CTRL_LATCH_OFF);
     CROBInfo.onTime = 0;
     CROBInfo.offTime = 0;
+
+    ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value = static_cast<double>(bool_value);
+    ((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate = true;
+    ((FlexPoint *)(dbPoint->flexPointHandle))->last_operate_time = get_time_double();
+    
     mdnpbrm_binaryCommand(&(((FlexPoint *)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pBinaryCommandRequestDesc, TMWDEFS_NULL, DNPDEFS_FC_DIRECT_OP, MDNPBRM_AUTO_MODE_NONE, 0,
                           DNPDEFS_QUAL_16BIT_INDEX, 1, &CROBInfo);
 }
@@ -1148,7 +1077,8 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
     // now set onto channels based on multi or single set uri:
     Jval_buif to_set;
     bool ok = true;
-    if (uriIsMultiOrSingle(sys, sys.fims_dependencies->uri_view)) // multi-set
+    int uriType = getUriType(sys, sys.fims_dependencies->uri_view);
+    if (uriType == 1) // multi-set
     {
         simdjson::ondemand::object set_obj;
         if (const auto err = doc.get(set_obj); err)
@@ -1229,7 +1159,7 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
                 ok = false;
                 if (sys.debug > 0)
                 {
-                    FPS_ERROR_LOG("with single-pub uri: '%s', point is not an OUTPUT type (analog output or binary output)", sys.fims_dependencies->uri_view);
+                    FPS_ERROR_LOG("Error with set to uri: '%s', point '%s' is not an OUTPUT type (analog output or binary output)", sys.fims_dependencies->uri_view, key_view);
                     FPS_LOG_IT("set_to_wrong_type");
                 }
                 continue;
@@ -1258,6 +1188,7 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
                     }
 
                     check_limits_client(dbPoint, analogValue.value.value.dval);
+                    ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value = analogValue.value.value.dval;
                 }
                 else if (dbPoint->defaultStaticVariation == Group40Var2) // 16 bit int
                 {
@@ -1275,6 +1206,7 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
                     }
 
                     check_limits_client(dbPoint, analogValue.value.value.dval);
+                    ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value = analogValue.value.value.dval;
                 }
                 else if (dbPoint->defaultStaticVariation == Group40Var3)
                 { // 32 bit float
@@ -1292,6 +1224,7 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
                     }
 
                     check_limits_client(dbPoint, analogValue.value.value.dval);
+                    ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value = analogValue.value.value.dval;
                 }
                 else // 64 bit float
                 {
@@ -1307,9 +1240,11 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
                     {
                         analogValue.value.value.dval = value * ((FlexPoint *)(dbPoint->flexPointHandle))->scale;
                     }
-
+                    ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value = analogValue.value.value.dval;
                     // if we exceed any limits here, I think it's already taken care of...
                 }
+                ((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate = true;
+                ((FlexPoint *)(dbPoint->flexPointHandle))->last_operate_time = get_time_double();
             }
             else // TMWSIM_TYPE_BINARY
             {
@@ -1324,6 +1259,9 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
                 CROBInfo.control = (TMWTYPES_UCHAR)(bool_value ? DNPDEFS_CROB_CTRL_LATCH_ON : DNPDEFS_CROB_CTRL_LATCH_OFF);
                 CROBInfo.onTime = 0;
                 CROBInfo.offTime = 0;
+                ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value = static_cast<double>(bool_value);
+                ((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate = true;
+                ((FlexPoint *)(dbPoint->flexPointHandle))->last_operate_time = get_time_double();
             }
         }
         if (num_analog_requests > 0)
@@ -1356,7 +1294,7 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
         }
         return ok;
     }
-    else // single-set
+    else if (uriType == 2) // single-set
     {
         if (sys.debug)
         {
@@ -1391,7 +1329,7 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
         {
             if (sys.debug > 0)
             {
-                FPS_ERROR_LOG("with single-pub uri: '%s', point is not an OUTPUT type (analog output or binary output)", sys.fims_dependencies->uri_view);
+                FPS_ERROR_LOG("with single-set uri: '%s', point is not an OUTPUT type (analog output or binary output)", sys.fims_dependencies->uri_view);
                 FPS_LOG_IT("set_to_wrong_type");
             }
             return false;
@@ -1579,6 +1517,12 @@ int main(int argc, char *argv[])
         clientSys.watchdog_future.get();
         clientSys.heartbeat_future.get();
         shutdown_tmw(&clientSys.protocol_dependencies->dnp3);
+        if (clientSys.heartbeat) {
+            delete clientSys.heartbeat;
+        }
+        if (clientSys.watchdog) {
+            delete clientSys.watchdog;
+        }
 
         FPS_INFO_LOG("fims listen thread complete: %s", done_listening ? "true" : "false");
         FPS_INFO_LOG("pub stats thread complete: %s", done_pubbing ? "true" : "false");

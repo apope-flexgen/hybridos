@@ -117,16 +117,23 @@ public:
     bool direct_sets;
     bool direct_pubs;
     bool event_pub;
+    bool show_output_status = false; // do we want to publish the output status in addition to the operate value? (i.e. 40 AND 41? or just 41?)
+    bool sent_operate = false;
 
     Register_Types type;
     std::string name;     // how this point is identified
     const char *site_uri; // when running in server mode this will be the uri we listen to pubs on -- This may need to be per site (not per point)
     const char *uri;      // fims uri
+    char *output_status_uri; // the fims uri that we publish output status to
 
     double scale;         // scale based on how we're representing the value on this side of the connection (e.g. x1000, x10, /1000, /10)
     double offset;        // shift based off of how we're representing the value on this side of the connection
     double timeout;       // used to detect COMM_LOSS
-    double standby_value; // value is currently in LOCAL_FORCED mode, and we are saving this value for when we clear that flag
+    double standby_value = 0; // value is currently in LOCAL_FORCED mode, and we are saving this value for when we clear that flag
+    double operate_value = 0; // the last value sent as an operate command from the client (12 or 41); this is what we will publish by default
+    double resend_tolerance = 0; // do we send another operate command if the output status differs by specific tolerance? (only after value has adjusted)
+    double resend_rate_ms = 0; // how often do we send another operate command if the output status differs by specific tolerance? Measured in milliseconds.
+    double last_operate_time = 0; // measured in seconds
 
     std::chrono::time_point<std::chrono::system_clock> last_pub; // time of last update
     TMWTYPES_UCHAR lastFlags;
@@ -149,6 +156,8 @@ public:
     FlexPoint_t(GcomSystem *pSys, const char *iname, const char *iuri)
     {
         site_uri = nullptr;
+        output_status_uri = nullptr;
+        show_output_status = false;
         sys = pSys;
         scale = 0.0;
         timeout = 0.0;
@@ -197,6 +206,10 @@ public:
         {
             free((void *)site_uri);
         }
+        if (output_status_uri != nullptr)
+        {
+            free((void *)output_status_uri);
+        }
         if (uri != nullptr)
         {
             free((void *)uri);
@@ -233,6 +246,15 @@ struct PubWork
 {
     std::string pub_uri;
     std::map<std::string, PubPoint *> pub_vals;
+
+    ~PubWork(){
+        for(auto pair : pub_vals){
+            if(pair.second){
+                delete pair.second;
+                pair.second = nullptr;
+            }
+        }
+    }
 };
 struct FimsDependencies
 {
@@ -271,6 +293,16 @@ struct FimsDependencies
         receiver_bufs.data_buf = nullptr;
         data_buf = nullptr;
         format = FimsFormat::Naked;
+    };
+
+    ~FimsDependencies()
+    {
+        for (auto pair : uris_with_data) {
+            for (auto pub_work_item : pair.second) {
+                if (pub_work_item)
+                    delete pub_work_item;
+            }
+        }
     };
 };
 
@@ -319,12 +351,17 @@ struct DNP3Dependencies
     Timings *timings;
     int stats_pub_frequency = 0;
     char *stats_pub_uri;
+    char *output_status_uri;
     PointStatusInfo *point_status_info;
     std::map<std::string, PointGroup> point_group_map;
 
+    bool pub_outputs = false;
+    bool show_output_status = false;
     bool pub_all = false;
     bool sign = true;
 
+    double resend_tolerance = 0;
+    double resend_rate_ms = 0;
     int freq1 = 0;
     int freq2 = 0;
     int freq3 = 0;
@@ -349,6 +386,7 @@ struct DNP3Dependencies
         pUserHandle = nullptr;
         dbHandle = nullptr;
         stats_pub_uri = nullptr;
+        output_status_uri = nullptr;
         analogOutputVar1Values = nullptr;
         analogOutputVar2Values = nullptr;
         analogOutputVar3Values = nullptr;
@@ -365,6 +403,7 @@ struct DNP3Dependencies
         batch_pub_rate = 0;
         interval_pub_rate = 0;
         event_pub = true;
+        show_output_status = false;
     };
 
     ~DNP3Dependencies()
@@ -372,6 +411,10 @@ struct DNP3Dependencies
         if (stats_pub_uri != nullptr)
         {
             free(stats_pub_uri);
+        }
+        if (output_status_uri != nullptr)
+        {
+            free(output_status_uri);
         }
     };
 };
@@ -483,6 +526,7 @@ struct GcomSystem
 
     std::map<const char *, std::pair<TMWSIM_POINT *, int>, char_dcmp> bitsMap;
     std::map<std::string, varList *> dburiMap;
+    std::map<std::string, varList *> outputStatusUriMap;
     std::shared_mutex db_mutex; // for R/W locking of TMWSIM_POINTs
     std::mutex error_mutex;
     int parse_errors;
@@ -575,6 +619,14 @@ struct GcomSystem
             }
         }
         dburiMap.clear(); // Clear the map
+        for (auto &pair : outputStatusUriMap)
+        {
+            if (pair.second != nullptr)
+            {
+                delete pair.second; // Deallocate memory for varList* value
+            }
+        }
+        outputStatusUriMap.clear(); // Clear the map
 
         for (auto &pair : bitsMap)
         {
@@ -674,14 +726,14 @@ struct fmt::formatter<PointGroup>
             fmt::format_to(ctx.out(), R"("{}": )", it->first);
             fmt::format_to(ctx.out(), R"({{)");
             fmt::format_to(ctx.out(), R"("uri": "{}", )", ((FlexPoint *)dbPoint->flexPointHandle)->uri);
-            fmt::format_to(ctx.out(), R"("status": {})", DNP_FLAGS{dbPoint->flags});
+            fmt::format_to(ctx.out(), R"("flags": {})", DNP_FLAGS{dbPoint->flags});
             fmt::format_to(ctx.out(), R"(}}, )");
         }
         const TMWSIM_POINT *dbPoint = it->second;
         fmt::format_to(ctx.out(), R"("{}": )", it->first);
         fmt::format_to(ctx.out(), R"({{)");
         fmt::format_to(ctx.out(), R"("uri": "{}", )", ((FlexPoint *)dbPoint->flexPointHandle)->uri);
-        fmt::format_to(ctx.out(), R"("status": {})", DNP_FLAGS{dbPoint->flags});
+        fmt::format_to(ctx.out(), R"("flags": {})", DNP_FLAGS{dbPoint->flags});
         fmt::format_to(ctx.out(), R"(}})");
         return fmt::format_to(ctx.out(), R"(}})");
     }

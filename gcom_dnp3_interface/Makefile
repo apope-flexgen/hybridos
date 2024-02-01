@@ -62,6 +62,7 @@ BUILD_OBJS += $(OBJ_DIR)gcom_dnp3_heartbeat.o
 BUILD_OBJS += $(OBJ_DIR)gcom_dnp3_watchdog.o
 BUILD_OBJS += $(OBJ_DIR)gcom_dnp3_fims.o
 BUILD_OBJS += $(OBJ_DIR)gcom_dnp3_utils.o
+BUILD_OBJS += $(OBJ_DIR)gcom_dnp3_point_utils.o
 BUILD_OBJS += $(OBJ_DIR)version.o
 
 TEST_DIR = test/unit_tests/test_obj/
