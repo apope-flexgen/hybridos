@@ -37,6 +37,28 @@ func init() {
 	ServerConn.isConnected.Store(false)
 }
 
+// Returns a list of cipher suites that are safe to allow clients to use to connect to the WebSocket server.
+func getAllowedCipherSuites() []uint16 {
+	return []uint16{
+		// AEADs w/ ECDHE
+		tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+		tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+		tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305, tls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,
+
+		// CBC w/ ECDHE
+		tls.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, tls.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+		tls.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, tls.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+
+		// AEADs w/o ECDHE
+		tls.TLS_RSA_WITH_AES_128_GCM_SHA256,
+		tls.TLS_RSA_WITH_AES_256_GCM_SHA384,
+
+		// CBC w/o ECDHE
+		tls.TLS_RSA_WITH_AES_128_CBC_SHA,
+		tls.TLS_RSA_WITH_AES_256_CBC_SHA,
+	}
+}
+
 // Configures an HTTPS server and starts listening for a client connection.
 func StartServer(port int) error {
 	// load certificate and private key
@@ -50,6 +72,8 @@ func StartServer(port int) error {
 		Addr: fmt.Sprintf(":%d", port),
 		TLSConfig: &tls.Config{
 			Certificates: []tls.Certificate{cert},
+			CipherSuites: getAllowedCipherSuites(),
+			MinVersion:   tls.VersionTLS12,
 		},
 	}
 
