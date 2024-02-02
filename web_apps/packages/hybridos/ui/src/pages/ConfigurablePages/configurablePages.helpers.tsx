@@ -286,6 +286,7 @@ export const getUpdatedComponentFunctions: (data: ConfigurablePageDTO['displayGr
   Object.entries(data).forEach(([displayGroupID, displayGroup]) => {
     updatedComponentFunctions[displayGroupID] = {
       displayName: displayGroup.displayName || displayGroupID,
+      tabKey: displayGroup.tabKey || Math.random(),
       statusFunctions: getStatusComponentFunctions(
         displayGroup.status,
         displayGroupID,

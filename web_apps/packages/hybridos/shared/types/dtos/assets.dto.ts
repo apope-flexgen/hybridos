@@ -22,6 +22,7 @@ export class Control {
 export class Info {
   alarmFields?: string[]
   assetKey?: string
+  tabKey?: string | number
   baseURI?: string
   customRegex?: string
   extension?: string

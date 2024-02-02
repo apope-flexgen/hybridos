@@ -6,102 +6,11 @@
         "faultFields": []
       },
       "allControls": [],
-      "controls": [
-        {
-          "inputType": "switch",
-          "name": "Start Site Command",
-          "units": "",
-          "scalar": "",
-          "uri": "/remote_enable_flag"
-        },
-        {
-          "inputType": "switch",
-          "name": "Disable Site Command",
-          "units": "",
-          "scalar": "",
-          "uri": "/remote_disable_flag"
-        },
-        {
-          "inputType": "switch",
-          "name": "Clear Faults Command",
-          "units": "",
-          "scalar": "",
-          "uri": "/remote_clear_faults"
-        },
-        {
-          "inputType": "number",
-          "name": "Frequency Response Enable Word",
-          "units": "",
-          "scalar": "",
-          "uri": "/fr_response_enable_mask"
-        },
-        {
-          "inputType": "number",
-          "name": "Baseload Power Command",
-          "scalar": "1000",
-          "units": "MW",
-          "uri": "/fr_baseload_cmd_mw"
-        },
-        {
-          "inputType": "number",
-          "name": "FFR Inactive Power Command",
-          "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_ffr_inactive_cmd_mw"
-        },
-        {
-          "inputType": "number",
-          "name": "FRRS UF Inactive Power Command",
-          "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_frrs_up_inactive_cmd_mw"
-        },
-        {
-          "inputType": "number",
-          "name": "FRRS OF Inactive Power Command",
-          "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_frrs_down_inactive_cmd_mw"
-        },
-        {
-          "inputType": "number",
-          "name": "FRRS Up Active Power Command",
-          "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_frrs_up_active_cmd_mw"
-        },
-        {
-          "inputType": "number",
-          "name": "FRRS Down Active Power Command",
-          "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_frrs_down_active_cmd_mw"
-        },
-        {
-          "inputType": "number",
-          "name": "FFR Active Power Command",
-          "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_ffr_active_cmd_mw"
-        },
-        {
-          "inputType": "number",
-          "name": "Auto-PFR Up Active Power Command",
-          "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_pfr_up_active_cmd_mw"
-        },
-        {
-          "inputType": "number",
-          "name": "Auto-PFR Down Active Power Command",
-          "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_pfr_down_active_cmd_mw"
-        }
-      ],
+      "controls": [],
       "info": {
         "alarmFields": [],
         "assetKey": "sites_tab",
+        "tabKey": "lima",
         "baseURI": "",
         "extension": "/lima",
         "faultFields": [],
@@ -504,99 +413,502 @@
       "controls": [
         {
           "inputType": "switch",
-          "name": "Start Site Command",
+          "name": "Override Generation Base Point",
           "units": "",
           "scalar": "",
-          "uri": "/remote_enable_flag"
+          "uri": "/basepoint_gen_override"
+        },
+        {
+          "name": "Generation Base Point",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/basepoint_gen_manual"
         },
         {
           "inputType": "switch",
-          "name": "Disable Site Command",
+          "name": "Override Load Base Point",
           "units": "",
           "scalar": "",
-          "uri": "/remote_disable_flag"
+          "uri": "/basepoint_load_override"
+        },
+        {
+          "name": "Load Base Point",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/basepoint_load_manual"
         },
         {
           "inputType": "switch",
-          "name": "Clear Faults Command",
+          "name": "Override Emergency Ramp Down Rate Generation",
           "units": "",
           "scalar": "",
-          "uri": "/remote_clear_faults"
+          "uri": "/emergency_down_ramp_rate_gen_override"
         },
         {
-          "inputType": "number",
-          "name": "Frequency Response Enable Word",
+          "name": "Emergency Ramp Down Rate Generation",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/emergency_down_ramp_rate_gen_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Emergency Ramp Down Rate Load",
           "units": "",
           "scalar": "",
-          "uri": "/fr_response_enable_mask"
+          "uri": "/emergency_down_ramp_rate_load_override"
         },
         {
-          "inputType": "number",
-          "name": "Baseload Power Command",
-          "scalar": "1000",
+          "name": "Emergency Ramp Down Rate Load",
           "units": "MW",
-          "uri": "/fr_baseload_cmd_mw"
+          "scalar": "1000000",
+          "uri": "/emergency_down_ramp_rate_load_manual"
         },
         {
-          "inputType": "number",
-          "name": "FFR Inactive Power Command",
-          "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_ffr_inactive_cmd_mw"
+          "inputType": "switch",
+          "name": "Override Emergency Ramp Up Rate Generation",
+          "units": "",
+          "scalar": "",
+          "uri": "/emergency_up_ramp_rate_gen_override"
         },
         {
-          "inputType": "number",
-          "name": "FRRS UF Inactive Power Command",
+          "name": "Emergency Ramp Up Rate Generation",
           "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_frrs_up_inactive_cmd_mw"
+          "scalar": "1000000",
+          "uri": "/emergency_up_ramp_rate_gen_manual"
         },
         {
-          "inputType": "number",
-          "name": "FRRS OF Inactive Power Command",
-          "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_frrs_down_inactive_cmd_mw"
+          "inputType": "switch",
+          "name": "Override Emergency Ramp Up Rate Load",
+          "units": "",
+          "scalar": "",
+          "uri": "/emergency_up_ramp_rate_load_override"
         },
         {
-          "inputType": "number",
-          "name": "FRRS Up Active Power Command",
+          "name": "Emergency Ramp Up Rate Load",
           "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_frrs_up_active_cmd_mw"
+          "scalar": "1000000",
+          "uri": "/emergency_up_ramp_rate_load_manual"
         },
         {
-          "inputType": "number",
-          "name": "FRRS Down Active Power Command",
-          "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_frrs_down_active_cmd_mw"
+          "inputType": "switch",
+          "name": "Override FRRS Down Gen Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_down_gen_requirement_override"
         },
         {
-          "inputType": "number",
-          "name": "FFR Active Power Command",
+          "name": "FRRS Down Gen Requirement",
           "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_ffr_active_cmd_mw"
+          "scalar": "1000000",
+          "uri": "/frrs_down_gen_requirement_manual"
         },
         {
-          "inputType": "number",
-          "name": "Auto-PFR Up Active Power Command",
-          "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_pfr_up_active_cmd_mw"
+          "inputType": "switch",
+          "name": "Override FRRS Down Gen Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_down_gen_responsibility_override"
         },
         {
-          "inputType": "number",
-          "name": "Auto-PFR Down Active Power Command",
+          "name": "FRRS Down Gen Responsibility",
           "units": "MW",
-          "scalar": "1000",
-          "uri": "/fr_pfr_down_active_cmd_mw"
+          "scalar": "1000000",
+          "uri": "/frrs_down_gen_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Down Load Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_down_load_requirement_override"
+        },
+        {
+          "name": "FRRS Down Load Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_down_load_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Down Load Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_down_load_responsibility_override"
+        },
+        {
+          "name": "FRRS Down Load Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_down_load_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Up Gen Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_up_gen_requirement_override"
+        },
+        {
+          "name": "FRRS Up Gen Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_up_gen_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Up Gen Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_up_gen_responsibility_override"
+        },
+        {
+          "name": "FRRS Up Gen Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_up_gen_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Up Load Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_up_load_requirement_override"
+        },
+        {
+          "name": "FRRS Up Load Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_up_load_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Up Load Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_up_load_responsibility_override"
+        },
+        {
+          "name": "FRRS Up Load Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_up_load_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Generation Max Charge",
+          "units": "",
+          "scalar": "",
+          "uri": "/gen_max_charge_mw_override"
+        },
+        {
+          "name": "Generation Max Charge",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/gen_max_charge_mw_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Generation Max Discharge",
+          "units": "",
+          "scalar": "",
+          "uri": "/gen_max_discharge_mw_override"
+        },
+        {
+          "name": "Generation Max Discharge",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/gen_max_discharge_mw_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Non-Spinning Gen Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/non_spin_gen_requirement_override"
+        },
+        {
+          "name": "Non-Spinning Gen Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/non_spin_gen_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Non-Spinning Gen Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/non_spin_gen_responsibility_override"
+        },
+        {
+          "name": "Non-Spinning Gen Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/non_spin_gen_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Non-Spinning Load Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/non_spin_load_requirement_override"
+        },
+        {
+          "name": "Non-Spinning Load Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/non_spin_load_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Non-Spinning Load Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/non_spin_load_responsibility_override"
+        },
+        {
+          "name": "Non-Spinning Load Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/non_spin_load_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Normal Down Ramp Rate Generation",
+          "units": "",
+          "scalar": "",
+          "uri": "/normal_down_ramp_rate_gen_override"
+        },
+        {
+          "name": "Normal Down Ramp Rate Generation",
+          "units": "MW/s",
+          "scalar": "1000000",
+          "uri": "/normal_down_ramp_rate_gen_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Normal Down Ramp Rate Load",
+          "units": "",
+          "scalar": "",
+          "uri": "/normal_down_ramp_rate_load_override"
+        },
+        {
+          "name": "Normal Down Ramp Rate Load",
+          "units": "MW/s",
+          "scalar": "1000000",
+          "uri": "/normal_down_ramp_rate_load_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Normal Up Ramp Rate Generation",
+          "units": "",
+          "scalar": "",
+          "uri": "/normal_up_ramp_rate_gen_override"
+        },
+        {
+          "name": "Normal Up Ramp Rate Generation",
+          "units": "MW/s",
+          "scalar": "1000000",
+          "uri": "/normal_up_ramp_rate_gen_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Normal Up Ramp Rate Load",
+          "units": "",
+          "scalar": "",
+          "uri": "/normal_up_ramp_rate_load_override"
+        },
+        {
+          "name": "Normal Up Ramp Rate Load",
+          "units": "MW/s",
+          "scalar": "1000000",
+          "uri": "/normal_up_ramp_rate_load_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Updated Generation Base Point",
+          "units": "",
+          "scalar": "",
+          "uri": "/updated_basepoint_gen_override"
+        },
+        {
+          "name": "Updated Generation Base Point",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/updated_basepoint_gen_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Updated Load Base Point",
+          "units": "",
+          "scalar": "",
+          "uri": "/updated_basepoint_load_override"
+        },
+        {
+          "name": "Updated Load Base Point",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/updated_basepoint_load_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Down Generation Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_down_gen_requirement_override"
+        },
+        {
+          "name": "Regulation Down Generation Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_down_gen_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Down Generation Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_down_gen_responsibility_override"
+        },
+        {
+          "name": "Regulation Down Generation Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_down_gen_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Down Load Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_down_load_requirement_override"
+        },
+        {
+          "name": "Regulation Down Load Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_down_load_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Down Load Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_down_load_responsibility_override"
+        },
+        {
+          "name": "Regulation Down Load Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_down_load_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Up Generation Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_up_gen_requirement_override"
+        },
+        {
+          "name": "Regulation Up Generation Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_up_gen_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Up Generation Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_up_gen_responsibility_override"
+        },
+        {
+          "name": "Regulation Up Generation Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_up_gen_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Up Load Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_up_load_requirement_override"
+        },
+        {
+          "name": "Regulation Up Load Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_up_load_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Up Load Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_up_load_responsibility_override"
+        },
+        {
+          "name": "Regulation Up Load Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_up_load_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Resource Status Generation",
+          "units": "",
+          "scalar": "",
+          "uri": "/resource_status_gen_override"
+        },
+        {
+          "name": "Resource Status Generation",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/resource_status_gen_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Resource Status Load",
+          "units": "",
+          "scalar": "",
+          "uri": "/resource_status_load_override"
+        },
+        {
+          "name": "Resource Status Load",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/resource_status_load_manual"
         }
       ],
       "info": {
         "alarmFields": [],
         "assetKey": "sites_tab",
+        "tabKey": "lima",
+        "baseURI": "/ercotAs",
+        "extension": "/lima",
+        "faultFields": [],
+        "hasAllControls": false,
+        "hasSummary": false,
+        "itemName": "Lima ERCOT Controls and Statuses",
+        "name": "",
+        "numberOfItems": "1",
+        "sourceURI": "/fleet/features"
+      },
+      "statuses": [],
+      "summary": [],
+      "summaryControls": []
+    },
+    {
+      "alarms": {
+        "alarmFields": [],
+        "faultFields": []
+      },
+      "allControls": [],
+      "controls": [],
+      "info": {
+        "alarmFields": [],
+        "assetKey": "sites_tab",
+        "tabKey": "sudden_valley",
         "baseURI": "",
         "extension": "/sudden_valley",
         "faultFields": [],
@@ -1257,6 +1569,500 @@
           "uri": "/fr_frrs_down_cooldown_status"
         }
       ],
+      "summary": [],
+      "summaryControls": []
+    },
+    {
+      "alarms": {
+        "alarmFields": [],
+        "faultFields": []
+      },
+      "allControls": [],
+      "controls": [
+        {
+          "inputType": "switch",
+          "name": "Override Generation Base Point",
+          "units": "",
+          "scalar": "",
+          "uri": "/basepoint_gen_override"
+        },
+        {
+          "name": "Generation Base Point",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/basepoint_gen_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Load Base Point",
+          "units": "",
+          "scalar": "",
+          "uri": "/basepoint_load_override"
+        },
+        {
+          "name": "Load Base Point",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/basepoint_load_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Emergency Ramp Down Rate Generation",
+          "units": "",
+          "scalar": "",
+          "uri": "/emergency_down_ramp_rate_gen_override"
+        },
+        {
+          "name": "Emergency Ramp Down Rate Generation",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/emergency_down_ramp_rate_gen_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Emergency Ramp Down Rate Load",
+          "units": "",
+          "scalar": "",
+          "uri": "/emergency_down_ramp_rate_load_override"
+        },
+        {
+          "name": "Emergency Ramp Down Rate Load",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/emergency_down_ramp_rate_load_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Emergency Ramp Up Rate Generation",
+          "units": "",
+          "scalar": "",
+          "uri": "/emergency_up_ramp_rate_gen_override"
+        },
+        {
+          "name": "Emergency Ramp Up Rate Generation",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/emergency_up_ramp_rate_gen_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Emergency Ramp Up Rate Load",
+          "units": "",
+          "scalar": "",
+          "uri": "/emergency_up_ramp_rate_load_override"
+        },
+        {
+          "name": "Emergency Ramp Up Rate Load",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/emergency_up_ramp_rate_load_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Down Gen Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_down_gen_requirement_override"
+        },
+        {
+          "name": "FRRS Down Gen Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_down_gen_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Down Gen Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_down_gen_responsibility_override"
+        },
+        {
+          "name": "FRRS Down Gen Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_down_gen_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Down Load Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_down_load_requirement_override"
+        },
+        {
+          "name": "FRRS Down Load Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_down_load_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Down Load Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_down_load_responsibility_override"
+        },
+        {
+          "name": "FRRS Down Load Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_down_load_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Up Gen Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_up_gen_requirement_override"
+        },
+        {
+          "name": "FRRS Up Gen Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_up_gen_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Up Gen Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_up_gen_responsibility_override"
+        },
+        {
+          "name": "FRRS Up Gen Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_up_gen_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Up Load Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_up_load_requirement_override"
+        },
+        {
+          "name": "FRRS Up Load Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_up_load_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override FRRS Up Load Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/frrs_up_load_responsibility_override"
+        },
+        {
+          "name": "FRRS Up Load Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/frrs_up_load_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Generation Max Charge",
+          "units": "",
+          "scalar": "",
+          "uri": "/gen_max_charge_mw_override"
+        },
+        {
+          "name": "Generation Max Charge",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/gen_max_charge_mw_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Generation Max Discharge",
+          "units": "",
+          "scalar": "",
+          "uri": "/gen_max_discharge_mw_override"
+        },
+        {
+          "name": "Generation Max Discharge",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/gen_max_discharge_mw_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Non-Spinning Gen Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/non_spin_gen_requirement_override"
+        },
+        {
+          "name": "Non-Spinning Gen Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/non_spin_gen_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Non-Spinning Gen Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/non_spin_gen_responsibility_override"
+        },
+        {
+          "name": "Non-Spinning Gen Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/non_spin_gen_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Non-Spinning Load Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/non_spin_load_requirement_override"
+        },
+        {
+          "name": "Non-Spinning Load Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/non_spin_load_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Non-Spinning Load Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/non_spin_load_responsibility_override"
+        },
+        {
+          "name": "Non-Spinning Load Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/non_spin_load_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Normal Down Ramp Rate Generation",
+          "units": "",
+          "scalar": "",
+          "uri": "/normal_down_ramp_rate_gen_override"
+        },
+        {
+          "name": "Normal Down Ramp Rate Generation",
+          "units": "MW/s",
+          "scalar": "1000000",
+          "uri": "/normal_down_ramp_rate_gen_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Normal Down Ramp Rate Load",
+          "units": "",
+          "scalar": "",
+          "uri": "/normal_down_ramp_rate_load_override"
+        },
+        {
+          "name": "Normal Down Ramp Rate Load",
+          "units": "MW/s",
+          "scalar": "1000000",
+          "uri": "/normal_down_ramp_rate_load_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Normal Up Ramp Rate Generation",
+          "units": "",
+          "scalar": "",
+          "uri": "/normal_up_ramp_rate_gen_override"
+        },
+        {
+          "name": "Normal Up Ramp Rate Generation",
+          "units": "MW/s",
+          "scalar": "1000000",
+          "uri": "/normal_up_ramp_rate_gen_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Normal Up Ramp Rate Load",
+          "units": "",
+          "scalar": "",
+          "uri": "/normal_up_ramp_rate_load_override"
+        },
+        {
+          "name": "Normal Up Ramp Rate Load",
+          "units": "MW/s",
+          "scalar": "1000000",
+          "uri": "/normal_up_ramp_rate_load_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Updated Generation Base Point",
+          "units": "",
+          "scalar": "",
+          "uri": "/updated_basepoint_gen_override"
+        },
+        {
+          "name": "Updated Generation Base Point",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/updated_basepoint_gen_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Updated Load Base Point",
+          "units": "",
+          "scalar": "",
+          "uri": "/updated_basepoint_load_override"
+        },
+        {
+          "name": "Updated Load Base Point",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/updated_basepoint_load_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Down Generation Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_down_gen_requirement_override"
+        },
+        {
+          "name": "Regulation Down Generation Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_down_gen_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Down Generation Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_down_gen_responsibility_override"
+        },
+        {
+          "name": "Regulation Down Generation Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_down_gen_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Down Load Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_down_load_requirement_override"
+        },
+        {
+          "name": "Regulation Down Load Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_down_load_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Down Load Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_down_load_responsibility_override"
+        },
+        {
+          "name": "Regulation Down Load Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_down_load_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Up Generation Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_up_gen_requirement_override"
+        },
+        {
+          "name": "Regulation Up Generation Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_up_gen_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Up Generation Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_up_gen_responsibility_override"
+        },
+        {
+          "name": "Regulation Up Generation Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_up_gen_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Up Load Requirement",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_up_load_requirement_override"
+        },
+        {
+          "name": "Regulation Up Load Requirement",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_up_load_requirement_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Regulation Up Load Responsibility",
+          "units": "",
+          "scalar": "",
+          "uri": "/regulation_up_load_responsibility_override"
+        },
+        {
+          "name": "Regulation Up Load Responsibility",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/regulation_up_load_responsibility_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Resource Status Generation",
+          "units": "",
+          "scalar": "",
+          "uri": "/resource_status_gen_override"
+        },
+        {
+          "name": "Resource Status Generation",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/resource_status_gen_manual"
+        },
+        {
+          "inputType": "switch",
+          "name": "Override Resource Status Load",
+          "units": "",
+          "scalar": "",
+          "uri": "/resource_status_load_override"
+        },
+        {
+          "name": "Resource Status Load",
+          "units": "MW",
+          "scalar": "1000000",
+          "uri": "/resource_status_load_manual"
+        }
+      ],
+      "info": {
+        "alarmFields": [],
+        "assetKey": "sites_tab",
+        "tabKey": "sudden_valley",
+        "baseURI": "/ercotAs",
+        "extension": "/sudden_valley",
+        "faultFields": [],
+        "hasAllControls": false,
+        "hasSummary": false,
+        "itemName": "Sudden Valley ERCOT Controls",
+        "name": "",
+        "numberOfItems": "1",
+        "sourceURI": "/fleet/features"
+      },
+      "statuses": [],
       "summary": [],
       "summaryControls": []
     }

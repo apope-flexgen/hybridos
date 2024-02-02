@@ -41,73 +41,75 @@ export class AssetsPageService {
     enableAssetPageControls: boolean,
   ): Promise<Observable<ConfigurablePageDTO>> {
     const individualMetadataArray = await this.getIndividualMetadata(assetKey);
-    const individualMetadata = individualMetadataArray ? individualMetadataArray[0] : null;
 
     const defaultUri = DEFAULT_URIS[assetKey];
 
-    if (individualMetadata === null && defaultUri === undefined) {
+    if (individualMetadataArray === null && defaultUri === undefined) {
       console.error(
         `No custom or default configuration found for assetKey ${assetKey}, no response will be returned`,
       );
       return;
     }
 
-    let queryUri = individualMetadata
-      ? `${individualMetadata.info.sourceURI}${individualMetadata.info.baseURI}`
-      : defaultUri;
+    let queryURIsArray = individualMetadataArray?.map((individualMetadata) => {
+      let uri = individualMetadata
+        ? `${individualMetadata.info.sourceURI}${individualMetadata.info.baseURI}`
+        : defaultUri;
 
-    if (
-      individualMetadata !== null &&
-      'extension' in individualMetadata.info &&
-      individualMetadata.info.extension.lastIndexOf('/') !== 0
-    ) {
-      console.warn('config includes partial baseURI in extension, please move this to baseURI');
-      queryUri += individualMetadata.info.extension.slice(
-        0,
-        individualMetadata.info.extension.lastIndexOf('/'),
-      );
-    }
-
-    let isClothed = true;
-    for (const nakedURI of NAKED_URIS) {
-      if (queryUri.startsWith(nakedURI)) {
-        isClothed = false;
-        break;
+      if (
+        individualMetadata !== null &&
+        'extension' in individualMetadata.info &&
+        individualMetadata.info.extension.lastIndexOf('/') !== 0
+      ) {
+        console.warn('config includes partial baseURI in extension, please move this to baseURI');
+        uri += individualMetadata.info.extension.slice(
+          0,
+          individualMetadata.info.extension.lastIndexOf('/'),
+        );
       }
+
+      return uri;
+    });
+
+    if (!queryURIsArray || queryURIsArray.length === 0) {
+      queryURIsArray = [defaultUri];
     }
 
     // const initialDataFromFims = await this.fimsService.get(queryUri);
     // let summaryData = initialDataFromFims.body as summaryDataFromFims;
 
-    let initialRawData = await this.getInitialRawData(queryUri, individualMetadataArray);
+    let initialRawData = await this.getInitialRawData(queryURIsArray, individualMetadataArray);
 
     let keys = Object.keys(initialRawData);
     if (keys.length === 1 && keys[0] === '/assets') {
       initialRawData = initialRawData['/assets'];
-      keys = Object.keys(initialRawData);
+      keys = Object.keys(initialRawData); 
     }
 
-    const uriCandidates = keys.filter((key) => key !== 'summary');
+    const uriCandidates = keys.filter((key) => !key.includes('summary'));
 
     // for clothed bodies, if no value on the URI has a ui_type that
     // should be displayed, there is no reason to send that data to the UI
-    const URIs = isClothed
-      ? uriCandidates.filter((uriCandidate) => {
-        for (const value of Object.values(initialRawData[uriCandidate])) {
-          if (value !== null && typeof value === 'object' && 'ui_type' in value) {
-            if (value.ui_type !== 'none') return true;
-          }
+    const URIs = uriCandidates.filter((uriCandidate) => {
+      for (const value of Object.values(initialRawData[uriCandidate])) {
+        if (value !== null && typeof value === 'object' && 'ui_type' in value) {
+          if (value.ui_type !== 'none') return true;
         }
+      }
+      return false;
+    })
 
-        return false;
-      })
-      : uriCandidates;
+    let isClothedValues = {};
+    URIs.forEach((uri) => {
+      const isClothed = !NAKED_URIS.some(nakedURI => uri.startsWith(nakedURI));
+      isClothedValues = {...isClothedValues, [uri]: isClothed};
+    });
 
     const initialSendData = await this.getInitialSendData(
       initialRawData,
       URIs,
-      isClothed,
-      queryUri,
+      isClothedValues,
+      queryURIsArray,
       enableAssetPageControls,
       individualMetadataArray,
     );
@@ -115,34 +117,42 @@ export class AssetsPageService {
     return this.getMergedStream(
       initialSendData,
       URIs,
-      queryUri,
+      queryURIsArray,
       initialRawData,
       enableAssetPageControls,
       individualMetadataArray,
-      isClothed,
+      isClothedValues,
     );
   }
 
   private getInitialRawData = async (
-    queryUri: string,
+    queryURIsArray: string[],
     individualMetadata?: metadataFromDBI[],
   ): Promise<summaryDataFromFims> => {
     if (!individualMetadata) {
-      return (await this.fimsService.get(queryUri)).body as summaryDataFromFims;
+      const fimsData = (await this.fimsService.get(queryURIsArray[0])).body as summaryDataFromFims;
+      
+      const initialRawData: summaryDataFromFims = {};
+      Object.entries(fimsData).forEach(([key, value]) => {
+        const { name, ...fields } = value;
+        initialRawData[`${queryURIsArray[0]}/${key}`] = { name, ...fields };
+      });
+      
+      return initialRawData;
     }
 
     const initialRawData: summaryDataFromFims = {};
 
-    individualMetadata.forEach((individualMetadata) => {
-      if (!individualMetadata.info) {
+    individualMetadata.forEach((metadata, index) => {
+      if (!metadata.info) {
         console.warn(
-          `found initial metadata for ${queryUri} but no info found in the metadata, getting initial data will fail`,
+          `found initial metadata for ${queryURIsArray[index]} but no info found in the metadata, getting initial data will fail`,
         );
       }
 
       // if the metadata includes the hasMaintenanceActions field
       // add a new control to the metadata for the maintenanceActions control
-      if (individualMetadata?.info.hasMaintenanceActions) {
+      if (metadata.info.hasMaintenanceActions) {
         const maintenanceActionControl = {
           inputType: 'maint_action_control',
           name: 'Start Maintenance Action',
@@ -151,25 +161,25 @@ export class AssetsPageService {
 
         // if this asset is configured to include a control for maintenance mode
         // put the maintenance actions right after the maintenance mode control so they appear together
-        const indexOfMaintMode = individualMetadata.controls.findIndex((control) => control.name.toLowerCase() ==="maintenance mode");
+        const indexOfMaintMode = metadata.controls.findIndex((control) => control.name.toLowerCase() === "maintenance mode");
         if (indexOfMaintMode !== -1) {
-          individualMetadata.controls.splice(indexOfMaintMode + 1, 0, maintenanceActionControl)
+          metadata.controls.splice(indexOfMaintMode + 1, 0, maintenanceActionControl)
         } else { 
-          individualMetadata.controls.push(maintenanceActionControl)
+          metadata.controls.push(maintenanceActionControl)
         }
       }
-
-      let extension = individualMetadata.info.extension ?? '';
-      const maybeNumber = Number(individualMetadata.info.numberOfItems);
+  
+      let extension = metadata.info.extension ?? '';
+      const maybeNumber = Number(metadata.info.numberOfItems);
       const numItems = isNaN(maybeNumber) ? -1 : maybeNumber;
-      const range = individualMetadata.info.range;
-      const baseName = individualMetadata.info.name ?? '';
-      const itemName = individualMetadata.info.itemName ?? '';
+      const range = metadata.info.range
+      const baseName = metadata.info.name ?? '';
+      const itemName = metadata.info.itemName ?? '';
 
       numItems < 0 &&
         (range === undefined || range.length < 1) &&
         console.warn(
-          `numberOfItems for ${queryUri} is not configured, getting initial data will fail`,
+          `numberOfItems for ${queryURIsArray[index]} is not configured, getting initial data will fail`,
         );
 
       const leadingZero = (() => {
@@ -185,49 +195,47 @@ export class AssetsPageService {
         let numericExtensions = [];
         range.forEach((rangeItem) => {
           if (typeof rangeItem === 'string' && rangeItem.includes('..')) {
-            const arrayOfRange = rangeItem.split('..');
-            const startNumber = Number(arrayOfRange[0]);
-            const endNumber = Number(arrayOfRange[1]);
-            if (startNumber > endNumber || Number.isNaN(startNumber) || Number.isNaN(endNumber)) {
-              console.warn(
-                `received an invalid string within range array for ${queryUri}, getting initial data will fail`,
-              );
-            }
-            for (var i = startNumber; i < endNumber + 1; i++) {
-              numericExtensions.push(i);
-            }
+              const arrayOfRange = rangeItem.split('..')
+              const startNumber = Number(arrayOfRange[0]);
+              const endNumber = Number(arrayOfRange[1]);
+              if (startNumber > endNumber || Number.isNaN(startNumber) || Number.isNaN(endNumber)) {
+                console.warn(
+                  `received an invalid string within range array for ${queryURIsArray[index]}, getting initial data will fail`,
+                );
+              }
+              for (var i = startNumber; i < endNumber + 1; i++) {
+                numericExtensions.push(i)
+              }
           } else {
             numericExtensions.push(Number(rangeItem));
           }
         });
         numericExtensions.forEach((rangeItem) => {
-          const assetID = `${extension}${rangeItem < 10 ? leadingZero : ''}${rangeItem}`.substring(
-            1,
-          );
-
-          initialRawData[assetID] = {
+          const assetID = `${extension}${rangeItem < 10 ? leadingZero : ''}${rangeItem}`.substring(1);
+    
+          initialRawData[`${queryURIsArray[index]}/${assetID}`] = {
             name: `${baseName} ${itemName} ${rangeItem}`,
-            ...this.getClothedBodyFieldsForConfiguredAsset(individualMetadata),
+            ...this.getClothedBodyFieldsForConfiguredAsset(metadata),
           };
         });
       } else {
-        for (let i = 1; i <= numItems; i++) {
-          const templatedItem: boolean =
-            extension.slice(-1) === '_' || extension.slice(-2) === '_0';
-          const assetID = templatedItem
-            ? `${extension}${i < 10 ? leadingZero : ''}${i}`.substring(1)
+        for (let j = 1; j <= numItems; j++) {
+          const templatedItem: boolean = extension.slice(-1) === '_' || extension.slice(-2) === '_0';
+          const assetID = 
+            templatedItem ?
+            `${extension}${j < 10 ? leadingZero : ''}${j}`.substring(1)
             : `${extension}`.substring(1);
-
-          const name = templatedItem ? `${baseName} ${itemName} ${i}` : itemName || `${baseName}`;
-
-          initialRawData[assetID] = {
+    
+          const name = templatedItem ?  `${baseName} ${itemName} ${j}` : (itemName || `${baseName}`);
+    
+          initialRawData[`${queryURIsArray[index]}/${assetID}`] = {
             name: name,
-            ...this.getClothedBodyFieldsForConfiguredAsset(individualMetadata),
+            ...this.getClothedBodyFieldsForConfiguredAsset(metadata),
           };
         }
       }
-    });
-
+    })   
+   
     return initialRawData;
   };
 
@@ -288,21 +296,7 @@ export class AssetsPageService {
         `No metadata found for assetKey ${assetKey}, will use a default configuration if available, but this should be added to assets.json`,
       );
       return null;
-    } else if (filteredMetadata.length > 1) {
-      const arrayOfExtensions = filteredMetadata.map(function (item) {
-        return item.info.extension;
-      });
-
-      var containsDuplicateExtensions = arrayOfExtensions.some(function (item, idx) {
-        return arrayOfExtensions.indexOf(item) != idx;
-      });
-
-      if (containsDuplicateExtensions) {
-        console.error(
-          `Multiple metadata found for assetKey ${assetKey} with the same extension, the last found instance of this extension will be used, but duplicates should be removed from assets.json`,
-        );
-      }
-    }
+    } 
 
     return filteredMetadata;
   };
@@ -310,11 +304,11 @@ export class AssetsPageService {
   private getMergedStream = (
     initialSendData: ConfigurablePageDTO,
     URIs: string[],
-    baseUri: string,
+    baseURIsArray: string[],
     summaryData: summaryDataFromFims,
     enableAssetPageControls: boolean,
     dbiMetadata: metadataFromDBI[],
-    isClothed: boolean,
+    isClothedValues: { [uri: string]: boolean },
   ): Observable<ConfigurablePageDTO> => {
     const base = new Observable<ConfigurablePageDTO>((observer) => {
       observer.next(initialSendData);
@@ -322,34 +316,36 @@ export class AssetsPageService {
 
     const hasAllControls = dbiMetadata?.[0].info.hasAllControls;
     const hasMaintenanceActions = dbiMetadata?.[0].info.hasMaintenanceActions;
-
-    let uriSpecificObservables = URIs.map((assetID) => {
+    let uriSpecificObservables = URIs.map((uri) => {
       return this.getUriSpecificObservable(
-        `${baseUri}/${assetID}`,
-        summaryData[assetID]['name'],
+        uri,
+        summaryData[uri]['name'],
         enableAssetPageControls,
         dbiMetadata,
-        isClothed,
+        isClothedValues[uri],
         false,
         hasAllControls,
         hasMaintenanceActions,
       );
     });
 
-    if (dbiMetadata && dbiMetadata[0].info.hasSummary) {
-      uriSpecificObservables.push(
-        this.getUriSpecificObservable(
-          `${baseUri}/summary`,
-          'Summary',
-          enableAssetPageControls,
-          dbiMetadata,
-          false,
-          true,
-          hasAllControls,
-          hasMaintenanceActions,
-        ),
-      );
-    }
+    dbiMetadata?.forEach((metadata, index) => {
+      const hasAllControls = metadata.info.hasAllControls;
+      if (metadata.info.hasSummary) {
+        uriSpecificObservables.push(
+          this.getUriSpecificObservable(
+            `${baseURIsArray[index]}/summary`,
+            'Summary',
+            enableAssetPageControls,
+            dbiMetadata,
+            false,
+            true,
+            hasAllControls,
+            hasMaintenanceActions
+          )
+        )
+      }
+    });
 
     const merged = merge(base, ...uriSpecificObservables);
 
@@ -369,31 +365,33 @@ export class AssetsPageService {
   private getIndividualAssetMetadata = (uri: string, dbiMetadata: metadataFromDBI[]) => {
     let indexOfMetadata = -1;
     dbiMetadata.every((metadata, index) => {
-      // check if the extension listed in this metadata is the full uri
+      // check if the uri listed in this metadata matches the uri passed in 
       // if so, this is the correct metadata for this uri
-      if (metadata.info.extension === `/${uri}`) {
+      const metadataUri = `${metadata.info.sourceURI}${metadata.info.baseURI}${metadata.info.extension}`;
+
+      if (metadataUri === uri) {
         indexOfMetadata = index;
         return false;
       }
-      // check if there is a range object in the metadata
+      // check if there is a range object in the metadata 
       // if so and if the asset number from this uri is listed in this range,
       // this is the correct metadata for this uri
       else if ('range' in metadata.info) {
-        const lastUnderscore = uri.lastIndexOf('_');
-        const assetNumber = uri.slice(lastUnderscore + 1);
-        let numericExtensions = [];
+        const lastUnderscore = uri.lastIndexOf("_")
+        const assetNumber = uri.slice(lastUnderscore + 1)
+        let numericExtensions = []
         metadata.info.range.forEach((rangeItem) => {
           if (typeof rangeItem === 'string' && rangeItem.includes('..')) {
-            const arrayOfRange = rangeItem.split('..');
+            const arrayOfRange = rangeItem.split('..')
             const startNumber = Number(arrayOfRange[0]);
             const endNumber = Number(arrayOfRange[1]);
             for (var i = startNumber; i < endNumber + 1; i++) {
-              numericExtensions.push(i);
+              numericExtensions.push(i)
             }
           } else {
-            numericExtensions.push(Number(rangeItem));
+            numericExtensions.push(Number(rangeItem))
           }
-        });
+        })
         if (numericExtensions.includes(Number(assetNumber))) {
           indexOfMetadata = index;
           return false;
@@ -408,9 +406,9 @@ export class AssetsPageService {
       ) {
         indexOfMetadata = index;
         return false;
-      }
+      };
       return true;
-    });
+    })
 
     if (indexOfMetadata === -1) {
       console.warn(`error getting metadata for uri ${uri}`);
@@ -426,17 +424,18 @@ export class AssetsPageService {
     // get initial data to send to frontend
     const entries = await Promise.all(
       URIs.map(async (uri, index) => {
-        const indiviudalMetadata = await this.fimsService.get(`${baseUri}/${URIs[index]}/actions`)
+        const indiviudalMetadata = await this.fimsService.get(`${uri}/actions`)
         return [uri, indiviudalMetadata.body];
       })
     );
     return Object.fromEntries(entries);
   }
+
   private getInitialSendData = async (
     summaryData: summaryDataFromFims,
     URIs: string[],
-    isClothed: boolean,
-    baseUri: string,
+    isClothedValues: { [uri: string]: boolean },
+    baseURIsArray: string[],
     enableAssetPageControls: boolean,
     dbiMetadata: metadataFromDBI[],
   ): Promise<ConfigurablePageDTO> => {
@@ -448,28 +447,28 @@ export class AssetsPageService {
       displayGroups: {},
     };
 
-    const maintenanceActionsMetadata = hasMaintenanceActions ? await this.getInitialMaintenanceActionsData(URIs, baseUri) : undefined;
+    const maintenanceActionsMetadata = hasMaintenanceActions ? await this.getInitialMaintenanceActionsData(URIs, baseURIsArray[0]) : undefined;
 
-    URIs.forEach((uri) => {
-      const parsedData: DisplayGroupDTO = isClothed
+    URIs.forEach((uri, index) => {
+      const parsedData: DisplayGroupDTO = isClothedValues[uri]
         ? parseClothedData(
-          summaryData[uri],
-          this.setLockMode(`${baseUri}/${uri}`),
-          true,
-          enableAssetPageControls,
-          this.siteConfiguration,
-        )
+            summaryData[uri],
+            this.setLockMode(uri),
+            true,
+            enableAssetPageControls,
+            this.siteConfiguration,
+          )
         : parseNakedData(
-          summaryData[uri],
-          this.setLockMode(`${baseUri}/${uri}`),
-          this.getIndividualAssetMetadata(uri, dbiMetadata),
-          true,
-          enableAssetPageControls,
-          this.siteConfiguration,
-          maintenanceActionsMetadata?.[uri],
-        );
+            summaryData[uri],
+            this.setLockMode(uri),
+            this.getIndividualAssetMetadata(uri, dbiMetadata),
+            true,
+            enableAssetPageControls,
+            this.siteConfiguration,
+            maintenanceActionsMetadata?.[uri],
+          );
 
-      const displayName = summaryData[uri]['name'] ?? `${baseUri}/${uri}`;
+      const displayName = summaryData[uri]['name'] ?? uri;
       // const displayName =
       //   dbiMetadata &&
       //   dbiMetadata?.info?.itemName !== 'undefined' &&
@@ -478,26 +477,31 @@ export class AssetsPageService {
       //     ? `${dbiMetadata.info.itemName} ${uri.substring(uri.lastIndexOf('_') + 1)}`
       //     : summaryData[uri]['name'] ?? `${baseUri}/${uri}`;
       // FIXME: hardcoded
-      returnWithMetadata.displayGroups[`${baseUri}/${uri}`] = {
+      returnWithMetadata.displayGroups[uri] = {
         ...parsedData,
         displayName,
+        tabKey: dbiMetadata?.[index]?.info.tabKey || Math.random() 
       };
     });
 
-    if (dbiMetadata !== null && dbiMetadata[0].info.hasSummary) {
-      const initialSummaryData = await this.fimsService.get(`${baseUri}/summary`);
-      if (initialSummaryData.method === 'error')
-        console.warn(`error while getting ${baseUri}/summary`);
-      returnWithMetadata.displayGroups[`${baseUri}/summary`] = {
-        ...parseSummaryData(
-          dbiMetadata[0],
-          initialSummaryData.body['summary'] || initialSummaryData.body,
-          true,
-          enableAssetPageControls,
-          this.siteConfiguration,
-        ),
-        displayName: 'Summary',
-      };
+    if (dbiMetadata) {
+      for (let i = 0; i < dbiMetadata.length; i++) {
+        if (dbiMetadata[i].info.hasSummary) {
+          const initialSummaryData = await this.fimsService.get(`${baseURIsArray[i]}/summary`);
+          if (initialSummaryData.method === 'error')
+            console.warn(`error while getting ${baseURIsArray[i]}/summary`);
+          returnWithMetadata.displayGroups[`${baseURIsArray[i]}/summary`] = {
+            ...parseSummaryData(
+              dbiMetadata[i],
+              initialSummaryData.body['summary'] || initialSummaryData.body,
+              true,
+              enableAssetPageControls,
+              this.siteConfiguration,
+            ),
+            displayName: 'Summary',
+          };
+        }
+      }
     }
 
     // initial send with metadata
@@ -518,8 +522,6 @@ export class AssetsPageService {
 
     const observableForMeta: Observable<ConfigurablePageDTO> = fimsSubscribe.pipe(
       map((event) => {
-        const assetURI = uri.substring(uri.lastIndexOf('/') + 1, uri.length);
-
         // if this event body contains information about maintenance actions
         // and this page is configured to show maintenance actions
         // send action data to frontend
@@ -528,17 +530,17 @@ export class AssetsPageService {
 
         const parsedData = isSummary
           ? parseSummaryData(
-            this.getIndividualAssetMetadata(assetURI, dbiMetadata),
-            event.body,
-            false,
-            enableAssetPageControls,
-            this.siteConfiguration,
-          )
+              this.getIndividualAssetMetadata(uri, dbiMetadata),
+              event.body,
+              false,
+              enableAssetPageControls,
+              this.siteConfiguration,
+            )
           : !isClothed
             ? parseNakedData(
               event.body as nakedBodyFromFims,
               this.setLockMode(uri),
-              this.getIndividualAssetMetadata(assetURI, dbiMetadata),
+              this.getIndividualAssetMetadata(uri, dbiMetadata),
               false,
               enableAssetPageControls,
               this.siteConfiguration,
@@ -559,6 +561,7 @@ export class AssetsPageService {
             [uri]: {
               ...parsedData,
               displayName: name || uri,
+              tabKey: !isClothed ? (this.getIndividualAssetMetadata(uri, dbiMetadata).info.tabKey || Math.random()) : Math.random()
             },
           },
         };

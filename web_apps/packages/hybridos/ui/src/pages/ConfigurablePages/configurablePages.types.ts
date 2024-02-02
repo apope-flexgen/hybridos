@@ -41,6 +41,7 @@ export type ConfigurableComponentFunction = (
 
 export type DisplayGroupFunctions = {
   displayName: string
+  tabKey: string | number
   statusFunctions: ConfigurableComponentFunction[]
   controlFunctions: ConfigurableComponentFunction[]
   maintenanceActionsFunctions: ConfigurableComponentFunction[]

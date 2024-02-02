@@ -19,8 +19,28 @@ const AssetsPage = (props: AssetsPageProps) => {
   } = props;
 
   useEffect(() => {
-    const updatedTabComponents = Object.entries(componentFunctions).map(
-      ([displayGroupID, displayGroup]) => {
+    const updatedTabComponents: JSX.Element[] = [];
+    Object.entries(componentFunctions).forEach(([displayGroupID, displayGroup]) => {
+      const { tabKey } = displayGroup;
+      const existingTabKeyComponent = updatedTabComponents
+        .find((component) => component.key === tabKey);
+
+      if (existingTabKeyComponent) {
+        Object.entries(displayGroup.statusFunctions).forEach(([, statusFunction]) => {
+          if (!componentFunctions[existingTabKeyComponent.props.value]
+            .statusFunctions.includes(statusFunction)) {
+            componentFunctions[existingTabKeyComponent.props.value]
+              .statusFunctions.push(statusFunction);
+          }
+        });
+        Object.entries(displayGroup.controlFunctions).forEach(([, controlFunction]) => {
+          if (!componentFunctions[existingTabKeyComponent.props.value]
+            .controlFunctions.includes(controlFunction)) {
+            componentFunctions[existingTabKeyComponent.props.value]
+              .controlFunctions.push(controlFunction);
+          }
+        });
+      } else {
         let icon;
         const color = 'primary';
         const alerts = alertState[displayGroupID];
@@ -30,19 +50,19 @@ const AssetsPage = (props: AssetsPageProps) => {
         else if (maintModeState && maintModeState[displayGroupID].value) icon = 'Build';
         if (alerts.alarmInformation.length > 0 && alerts.faultInformation.length > 0) icon = 'Fault';
 
-        return (
+        updatedTabComponents.push(
           <Tab
             color={color as ColorType}
             alignment="left"
             label={displayGroup.displayName}
             value={displayGroupID}
             iconPosition="end"
-            key={displayGroupID}
+            key={displayGroup.tabKey}
             icon={icon as IconList}
-          />
+          />,
         );
-      },
-    );
+      }
+    });
 
     updatedTabComponents.sort((a, b) => {
       if (a.props.label.toLowerCase() === 'summary') return -1;
