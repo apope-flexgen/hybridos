@@ -21,6 +21,7 @@ export class SystemStatusService {
             fimsSubscribe.pipe(
                 map((event) => {
                     const serviceName = event.uri.split("/").pop()
+                    if (event.uri.includes("system")) return null
                     const parsedFimsData = this.parseSystemStatusData(event.body, serviceName)
                     return parsedFimsData
                 })

@@ -22,11 +22,12 @@ const SystemStatus: React.FunctionComponent = () => {
   const axiosInstance = useAxiosWebUIInstance();
 
   const handleSystemStatusData = (newDataFromSocket: SystemStatusObject) => {
+    if (!newDataFromSocket) return;
     setSystemStatusData((prevState) => {
       const tempArray = prevState;
       const newServiceName = newDataFromSocket.serviceName;
       const indexOfService = tempArray.findIndex((item) => item.serviceName === newServiceName);
-      // if service already in table, replace it's entry with new data
+      // if service already in table, replace its entry with new data
       if (indexOfService !== -1) {
         tempArray[indexOfService] = newDataFromSocket;
         return [...tempArray];

@@ -24,6 +24,11 @@ func (dataman *DataManager) start(coll Collector) {
 
 	for {
 		scrape := coll.scrape()
+		// Ignore process collector for publishing purposes. Only use proc collector internally for COPS.
+		if scrape["collector"] == "process" {
+			continue
+		}
+		// Log whether any of our system collectors did not report data.
 		if len(scrape) == 1 {
 			log.Infof("did not receive scrape from %v collector", scrape["collector"])
 			continue

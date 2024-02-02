@@ -179,7 +179,7 @@ func (process *ProcessCollector) getProcessInfo() map[string]interface{} {
 				delete(process.procInfos, name)
 				go process.refreshPID(name, temp)
 			}
-			log.Errorf("could not collect data for %s... re-finding PID", name)
+			log.Errorf("could not collect data for %s... re-finding PID: %v", name, err)
 			continue
 		}
 		// CPU usage

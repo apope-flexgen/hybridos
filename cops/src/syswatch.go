@@ -19,9 +19,8 @@ func runCollectors(prof string) {
 	// Start collection of system metrics.
 	sys.StartCollectors()
 
-	// TODO: handle pub stats in later ticket
 	// Begin periodic pubs to FIMS containing system data.
-	//go sys.PublishSystemStats(f)
+	go sys.PublishSystemStats(f)
 
 	if prof == "trace" {
 		signalChan := make(chan os.Signal, 1)
