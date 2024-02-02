@@ -157,6 +157,7 @@
                 ],
                 "hasAllControls": true,
                 "hasSummary": false,
+		"hasMaintenanceActions": true,
                 "itemName": "",
                 "name": "ESS Block",
                 "numberOfItems": "12",

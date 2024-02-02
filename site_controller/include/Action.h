@@ -36,6 +36,7 @@ public:
     bool parse(cJSON* object);
     void exit_automation(Action_Status& action_status, ACTION_STATUS_STATE status);
     void enter_automation(Action_Status& action_status, std::string action_id);
+    void clear_action(Action_Status& action_status);
     std::string status_string() const;
     void update_status(Action_Status& action_status);
     void call_sequence(Action_Status& action_status);

@@ -156,6 +156,7 @@
                     "watchdog_fault"
                 ],
                 "hasAllControls": true,
+		"hasMaintenanceActions": true,
                 "hasSummary": false,
                 "itemName": "",
                 "name": "ESS Block",

@@ -691,6 +691,16 @@ Config_Validation_Result Asset_ESS::configure_ui_controls(Type_Configurator* con
             }
             validation_result.absorb(control_result);
         }
+
+        // ######## HANDLE ACTIONS HERE ########
+        cJSON* maint_actions_ctl_obj = cJSON_GetObjectItem(ui_controls, "maint_actions_ctl");
+        if (maint_actions_ctl_obj != nullptr) {
+            control_result = maint_actions_select_ctl.configure_actions_UI(maint_actions_ctl_obj);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("Failed to configure actions. (maint_actions_ctl)")));
+            }
+        }
     }
     return validation_result;
 }
@@ -983,6 +993,11 @@ bool Asset_ESS::generate_asset_ui(fmt::memory_buffer& buf, const char* const var
     // Close contactors only if stopped (not faulted) and contactors are not closed
     close_dc_contactors_ctl.enabled = inMaintenance && !isRunning && !inStandby && !dc_contactors_closed.value.value_bool && !is_in_local_mode();
     goodBody = close_dc_contactors_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    // Only need to maintain the maint_actions_select_ctl if there are any actions
+    // (TODO: JUD) Might could get away with not pubbing this info at all.
+    maint_actions_select_ctl.enabled = inMaintenance && action_status.current_sequence_name.empty();
+    goodBody = maint_actions_select_ctl.makeJSONObjectWithActionOptions(buf, actions); 
 
     return (goodBody);
 }

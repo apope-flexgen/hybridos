@@ -53,6 +53,9 @@
                                     "ui_type": "control",
                                     "unit": "W"
                                 },
+                                "maint_actions_ctl": {
+                                    "name": "Maint Actions Control"
+                                },
                                 "maint_mode": {
                                     "name": "Maintenance Mode",
                                     "type": "Bool",

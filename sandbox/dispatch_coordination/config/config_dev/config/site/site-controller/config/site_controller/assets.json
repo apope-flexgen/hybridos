@@ -96,6 +96,9 @@
                                     "name": "Maintenance Mode",
                                     "type": "Bool"
                                 },
+                                "maint_actions_ctl": {
+                                    "name": "Maintenance Mode Actions"
+                                },
                                 "maint_rack_voltage_limits_enable": {
                                     "name": "Enable Maintenance Rack voltage limits",
                                     "type": "Bool"
@@ -395,6 +398,9 @@
                         {
                             "component_id": "ess_real_hs",
                             "ui_controls": {
+                                "maint_actions_ctl": {
+                                    "name": "Maintenance Mode Actions"
+                                },
                                 "autobalancing_disable": {
                                     "name": "Disable Auto-Balancing",
                                     "register_id": "equalization_control",

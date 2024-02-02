@@ -169,7 +169,6 @@ protected:
     fimsCtl close_dc_contactors_ctl;
     fimsCtl maint_active_power_setpoint_ctl;
     fimsCtl maint_reactive_power_setpoint_ctl;
-
     fimsCtl maint_chargeable_min_limit_ctl;
     fimsCtl maint_dischargeable_min_limit_ctl;
     fimsCtl maint_min_soc_limit_ctl;
@@ -178,6 +177,7 @@ protected:
     fimsCtl maint_max_cell_voltage_limit_ctl;
     fimsCtl maint_min_rack_voltage_limit_ctl;
     fimsCtl maint_max_rack_voltage_limit_ctl;
+    fimsCtl maint_actions_select_ctl;
 
     // status
     bool energy_configured;  // Flag to indicate whether chargeable/dischargeable_energy was configured

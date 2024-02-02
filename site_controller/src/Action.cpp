@@ -101,6 +101,25 @@ std::string Action::status_string() const {
     }
 }
 
+/**
+ * @brief Clears an action
+ *
+ * @param action_status (Action_Status&) 
+ * Whenever this is called you should repub that the status is 
+ * now inactive. Note that sequence_rest does nothing for Actions but 
+ * is modified by this function. You can ignore it. 
+ */
+void Action::clear_action(Action_Status& action_status) {
+    Sequence::reset_sequence(action_status);
+    status = ACTION_STATUS_STATE::INACTIVE;
+    action_status.should_pub = true;
+}
+
+/**
+ * @brief Puts an action into an active state. Only one active action is currently supported.
+ *
+ * @param action_status (Action_Status&) Need to tell actions to pub. And make this the IN_PROGRESS action.
+ */
 void Action::enter_automation(Action_Status& action_status, std::string action_id) {
     current_step_index = 0;
     check_current_step_index = 0;
@@ -116,6 +135,13 @@ void Action::enter_automation(Action_Status& action_status, std::string action_i
     status = ACTION_STATUS_STATE::IN_PROGRESS;
 }
 
+/**
+ * @brief Puts an action into an exited state (Stopped, completed) state. 
+ * Pass whatever state you want to exit with.
+ *
+ * @param action_status (Action_Status&) Need to tell actions to pub. And that another action
+ * can now occur.
+ */
 void Action::exit_automation(Action_Status& action_status, ACTION_STATUS_STATE set_status) {
     action_status.current_sequence_name.clear();
     action_status.should_pub = true;

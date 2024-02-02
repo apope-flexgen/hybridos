@@ -23,6 +23,7 @@
 #include <Site_Controller_Utils.h>
 #include <Configurator.h>
 #include <Types.h>
+#include "Action.h"
 #include "Asset_Feeder.h"
 #include "Fims_Object.h"
 #include "Step.h"
@@ -1526,6 +1527,15 @@ bool Asset::handle_actions_set(fims_message& msg) {
                 }
  
                 //emit_event();
+            } else if (desired_action == "clear") {
+                switch (action.status){
+                    case ACTION_STATUS_STATE::IN_PROGRESS:
+                        FPS_WARNING_LOG("Action requested (%s), but no action taken because asset is in progress. Actions can only clear when in a static state.", msg.uri);
+                        break;
+                    default:
+                        action.clear_action(action_status);
+                        break;
+                }
             } else if (desired_action == "stop") {
                 if (action_status.current_sequence_name == action_id && action.status == ACTION_STATUS_STATE::IN_PROGRESS) {
                     action.exit_automation(action_status, ACTION_STATUS_STATE::ABORTED); 
@@ -2453,6 +2463,47 @@ Config_Validation_Result fimsCtl::configure(cJSON* cfg_json, jsonBuildOption bui
 }
 
 /**
+ * @brief      Configures the actions UI control object.
+ *
+ * @param      JSON (cJSON*) The maint_actions_ctl object in assets.json
+ *
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+Config_Validation_Result fimsCtl::configure_actions_UI(cJSON* JSON) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
+    if (configured) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details("Actions configured twice for asset"));
+        return validation_result;
+    }
+
+    // allow user to configure the name, but provide default if they don't. 
+    cJSON* control_name_json;
+    if ((control_name_json = cJSON_GetObjectItem(JSON, "name")) == NULL || (control_name_json->valuestring == NULL)) {
+        validation_result.WARNING_details.push_back(Result_Details(fmt::format("{}: no 'name' field given in UI control configuration object. Providing default name.", obj_name)));
+        varName = strdup("actions");
+    } else {
+        varName = strdup(control_name_json->valuestring);
+    }
+
+    // garbage variables we will never use for this ctl
+    reg_name = nullptr;
+    scaler = 1;
+    unit = nullptr;
+    options = nullJson;
+    vt = Random_Enum;
+    enabled = false;
+    uiType = enumStr;
+    boolString = false;
+    pDisplay = nullptr;
+
+    // mark as configured
+    configured = true;
+    return validation_result;
+}
+
+/**
  * @brief      Sends a json object over fims. Will not send and return true if the controller
  *             is secondary or the component receiving the message is in local mode
  *
@@ -2723,6 +2774,36 @@ bool fimsCtl::makeJSONObject(fmt::memory_buffer& buf, const char* const var, boo
         bufJSON_EndObject(buf);  // } UiItemVar
 
     return (true);
+}
+
+/**
+ * @brief builds the actions control portion of the UI
+ * TODO:(JUD) make name human legible or a different value altogether. 
+ *
+ * @param buf (fmt::memory_buffer&) buf to add to
+ * @param actions (std::vector<Action>) this assests actions
+ */
+bool fimsCtl::makeJSONObjectWithActionOptions(fmt::memory_buffer& buf, std::vector<Action> actions) const {
+    // Skip building JSON object for UI controls that are not configured
+    if (!configured) {
+        return true;
+    }
+
+    bufJSON_AddId(buf, "maint_actions_ctl"); // maint_actions_ctl 
+    bufJSON_StartObject(buf);// {
+    bufJSON_AddBool(buf, "enabled", enabled);
+    bufJSON_AddId(buf, "options");
+    bufJSON_StartArray(buf);  // UiItemOption [
+    for (const Action& action : actions) {
+        bufJSON_StartObject(buf); // {
+        bufJSON_AddString(buf, "name", action.sequence_name.c_str());
+        bufJSON_AddString(buf, "return_value", action.sequence_name.c_str());
+        bufJSON_EndObject(buf); // }
+    }
+    bufJSON_RemoveTrailingComma(buf);
+    bufJSON_EndArray(buf);  // ] UiItemOption ]
+    bufJSON_EndObject(buf); // end actions_ctl }
+    return true;
 }
 
 void build_on_off_option(fmt::memory_buffer& bufJactivePwrSetpointOption) {
