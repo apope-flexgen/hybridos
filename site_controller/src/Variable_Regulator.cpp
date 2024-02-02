@@ -41,7 +41,7 @@ Variable_Regulator::Variable_Regulator() {
 
 Variable_Regulator::~Variable_Regulator() {}
 
-void Variable_Regulator::set_update_rate(int update_rate) {
+void Variable_Regulator::set_update_rate(float update_rate) {
     updates_per_second = update_rate;
 }
 
@@ -117,6 +117,8 @@ bool Variable_Regulator::regulate_variable_offset(float base_case_input, float r
     delta_time_us += (current_time.tv_nsec - prev_time.tv_nsec) / 1000;
     if (delta_time_us < (1000000 / updates_per_second))
         return false;
+
+    FPS_DEBUG_LOG("variable regulator execute");
 
     // Set offset value based on base_case_input and timers
     // Set the offset value to default if appropriate according to the base_case_input comparison

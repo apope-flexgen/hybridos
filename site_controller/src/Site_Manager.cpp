@@ -2536,7 +2536,7 @@ void Site_Manager::init_state(void) {
     active_power_closed_loop.regulator.default_offset = active_power_closed_loop.default_offset.value.value_int;
     // Set up update rate (updates per second) based on the millisecond rate given, with the fastest rate being 10ms
     active_power_closed_loop.update_rate_ms.value.set(std::max(active_power_closed_loop.update_rate_ms.value.value_int, 10));
-    active_power_closed_loop.regulator.set_update_rate(1000 / active_power_closed_loop.update_rate_ms.value.value_int);
+    active_power_closed_loop.regulator.set_update_rate(1000 / static_cast<float>(active_power_closed_loop.update_rate_ms.value.value_int));
     // Set up steady state deadband condition as false for any value above the deadband
     active_power_closed_loop.regulator.set_default_condition(active_power_closed_loop.steady_state_deadband_kW.value.value_float, Variable_Regulator::VALUE_ABOVE);
     // Set up regulation deadband condition as false for any value above the 0.5% accuracy deadband compared to the POI

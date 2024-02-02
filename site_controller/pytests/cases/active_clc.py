@@ -2,8 +2,34 @@ import pytest
 
 from pytest_cases import parametrize, fixture
 from ..assertion_framework import Assertion_Type, Flex_Assertion, Tolerance_Type
+from ..pytest_framework import Site_Controller_Instance
 from ..pytest_steps import Setup, Steps, Teardown
 
+# Generate configs changes
+def make_it_2000():
+    edits: list[dict] = [
+        {
+            "uri": "/dbi/site_controller/variables/variables/features/standalone_power/active_power_closed_loop_update_rate_ms",
+            "up": {"name":"Active Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":2000,"var_type":"Int"},
+            "down": {"name":"Active Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":10,"var_type":"Int"},
+        },
+        {
+            "uri": "/dbi/site_controller/variables/variables/features/standalone_power/reactive_power_closed_loop_update_rate_ms",
+            "up": {"name":"Reactive Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":2000,"var_type":"Int"},
+            "down": {"name":"Reactive Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":10,"var_type":"Int"},
+        },
+        {
+            "uri": "/dbi/site_controller/variables/variables/features/standalone_power/active_power_closed_loop_step_size_kW",
+            "up": {"name":"Reactive Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":10,"var_type":"Int"},
+            "down": {"name":"Reactive Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":1,"var_type":"Int"},
+        },
+        {
+            "uri": "/dbi/site_controller/variables/variables/features/standalone_power/reactive_power_closed_loop_step_size_kW",
+            "up": {"name":"Reactive Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":10,"var_type":"Int"},
+            "down": {"name":"Reactive Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":1,"var_type":"Int"},
+        },
+    ]
+    return edits
 
 # Frequency Response with CLC
 @ fixture
@@ -729,7 +755,7 @@ def test_solar_tsoc_clc(test):
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", -1000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", -1450, wait_secs=10), 
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", -1450, wait_secs=15), 
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 1000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -1450)
         ]
@@ -779,3 +805,121 @@ def test_solar_tsoc_clc(test):
 ])
 def test_active_clc_zero_bypass(test):
     return test
+
+# vibe check no divide by zero
+@ fixture
+@ parametrize("test", [
+    # Preconditions
+    Setup(
+        "fr_clc_slow",
+        {
+            "/features/active_power/runmode1_kW_mode_cmd": 2,
+            "/features/standalone_power/fr_mode_enable_flag": True,
+            "/features/active_power/asset_priority_runmode1": 0,
+            "/features/standalone_power/fr_enable_mask": 24,
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+            "/features/standalone_power/poi_limits_enable": False,
+            "/features/standalone_power/active_power_closed_loop_enable": False,
+            "/features/standalone_power/active_power_closed_loop_step_size_kW": 10,  # Large step size to speed up tests
+            "/components/bess_aux/active_power_setpoint": -1000
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 2),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", True),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/asset_priority_runmode1", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_enable_mask", 24),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_enable", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_step_size_kW", 10),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/bess_aux/active_power", 1000, wait_secs=10),
+        ]
+    ),
+    Steps(
+        {},
+        [],
+        post_lambda= [
+            lambda: Site_Controller_Instance.get_instance().mig.upload(make_it_2000()),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller()
+            ]
+    ),
+    Steps(
+        {
+            **Steps.disable_solar_and_gen(),
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_update_rate_ms", 2000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_update_rate_ms", 2000),
+        ]
+    ),
+    Steps(
+        {
+            "/features/active_power/active_power_setpoint_kW_cmd": -5000
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -5000),
+            # Load makes POI value inaccurate
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", 6000)
+        ]
+    ),
+    Steps(
+        {
+            "/features/standalone_power/active_power_closed_loop_enable": True
+        },
+        [
+            # Demand is modified around 15*10kw (aka once every 2 seconds at a 10kw step)
+            # -5000 + 150 offset
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -4850, wait_secs=30, tolerance_type=Tolerance_Type.abs, tolerance=50),
+            # CLC closes in on the commanded value
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", 5900, tolerance_type=Tolerance_Type.abs, tolerance=50)
+        ]
+    ),
+    # Put all assets in maint mode. There should not be any CLC offset in this state (once correction slews to 0)
+    Steps(
+        {
+            "/assets/ess/ess_1/maint_mode": True,
+            "/assets/ess/ess_2/maint_mode": True
+        },
+        [
+            # Offset goes to 0 as there are no assets available
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_total_correction", 0, wait_secs=30),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", 1050)
+        ]
+    ),
+    # Now exit maint mode
+    Steps(
+        {
+            "/assets/ess/ess_1/maint_mode": False,
+            "/assets/ess/ess_2/maint_mode": False
+        },
+        [
+            # First make sure there is no windup. CLC should restart at offset 0. Cannot use demand as it slews instantly
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_total_correction", 0, wait_secs=0),
+            # POI inaccurate
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", 1050, wait_secs=0),
+            # Then make sure CLC closes in on the value as it did previously
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -4850, wait_secs=30, tolerance_type=Tolerance_Type.abs, tolerance=50),
+            # CLC closes in on the commanded value
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", 5900, tolerance_type=Tolerance_Type.abs, tolerance=50)
+        ]
+    ),
+    # Cleanup
+    Teardown(
+        {
+            **Steps.enable_solar_and_gen(),
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+            "/features/standalone_power/active_power_closed_loop_enable": False,
+            "/components/bess_aux/active_power_setpoint": 0,
+            "/features/standalone_power/fr_mode_enable_flag": False
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_enable", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/bess_aux/active_power_setpoint", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", False),
+        ]
+    )
+])
+def test_slow_clc_update_rate(test):
+    return test
+
+

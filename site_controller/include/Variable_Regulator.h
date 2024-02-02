@@ -36,7 +36,7 @@ public:
     void set_default_condition(float threshold, COMPARISON_TYPE check_below_or_above);
     // Note: update rate calculated as updates per second not the ms rate
     // i.e. 1000(ms/s) / update rate(ms) gives the updates per second passed to this function
-    void set_update_rate(int update_rate);
+    void set_update_rate(float update_rate);
     void set_control_high_threshold(float threshold);
     void set_decrease_timer_duration_ms(int duration_in_ms);
     void set_control_low_threshold(float threshold);
@@ -67,7 +67,7 @@ private:
     unsigned long delta_time_us;         // Time since last update in microseconds
     bool timerStarted;
     timespec current_time, prev_time;
-    uint updates_per_second;
+    float updates_per_second;
 
     void update_decrease_timer(float control_value);
     void update_increase_timer(float control_value);

@@ -38,7 +38,7 @@ void features::Reactive_Power_Closed_Loop_Control::init() {
     regulator.default_offset = default_offset.value.value_int;
     // Set up update rate (updates per second) based on the millisecond rate given, with the fastest rate being 10ms
     update_rate_ms.value.set(std::max(update_rate_ms.value.value_int, 10));
-    regulator.set_update_rate(1000 / update_rate_ms.value.value_int);
+    regulator.set_update_rate(1000 / static_cast<float>(update_rate_ms.value.value_int));
     // Set up steady state deadband condition as false for any value above the deadband
     regulator.set_default_condition(steady_state_deadband_kW.value.value_float, Variable_Regulator::VALUE_ABOVE);
     // Set up regulation deadband condition as false for any value above the accuracy deadband compared to the POI
