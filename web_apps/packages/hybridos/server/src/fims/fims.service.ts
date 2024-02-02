@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { filter, fromEvent, Observable } from 'rxjs';
+import { filter, fromEvent, map, Observable } from 'rxjs';
+import { cloneDeep } from 'lodash';
 
 import { UriIsRootOfUri } from '../utils/utils';
 import FimsListener from './FimsListener';
@@ -180,6 +181,7 @@ export class FimsService implements IFimsService {
         }
         return false;
       }),
+      map((e) => cloneDeep(e)),
     );
 
     if (!req) {
