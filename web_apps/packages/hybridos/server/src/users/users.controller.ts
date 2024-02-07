@@ -57,6 +57,7 @@ export class UsersController {
 
   @ApiOkResponse({ type: AllUsersResponse })
   @Get()
+  @ApprovedRoles(Roles.Admin, Roles.Developer)
   async all(
     @Query() query: AllUsers,
     @UserFromAccessToken() user: User,
@@ -116,6 +117,7 @@ export class UsersController {
 
   @ApiOkResponse({ type: UserResponse })
   @Get(':id')
+  @ApprovedRoles(Roles.Admin, Roles.Developer)
   async read(
     @Param() params: ReadUserParams,
     @UserFromAccessToken() user: User,
