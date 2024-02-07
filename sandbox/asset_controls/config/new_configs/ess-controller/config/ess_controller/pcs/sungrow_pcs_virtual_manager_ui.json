@@ -1,0 +1,695 @@
+{
+    "/assets/pcs/summary": {
+        "active_power": {
+            "value": 0
+        },
+        "active_power_ramp_rate": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/pcs:ActivePowerRampRate"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to set the active power ramp rate",
+            "value": 0
+        },
+        "active_power_ramp_rate_feedback": {
+            "value": 0
+        },
+        "active_power_setpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/pcs:ActivePowerSetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to set the active power setpoint",
+            "value": 0
+        },
+        "active_power_setpoint_feedback": {
+            "value": 0
+        },
+        "alarms": {
+            "options": [],
+            "value": 0
+        },
+        "apparent_power": {
+            "value": 0
+        },
+        "clear_faults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/pcs:ClearFaults@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/pcs:ClearFaults"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to initiate clear faults command routine",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "comms_ok": {
+            "value": false
+        },
+        "dc_current": {
+            "value": 0
+        },
+        "dc_power": {
+            "value": 0
+        },
+        "dc_voltage": {
+            "value": 0
+        },
+        "faults": {
+            "options": [],
+            "value": 0
+        },
+        "frequency": {
+            "value": 0
+        },
+        "frequency_setpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "outValue": true,
+                                "uri": "/controls/pcs:FrequencySetpoint@triggerCmd"
+                            },
+                            {
+                                "uri": "/controls/pcs:FrequencySetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to set the frequency setpoint while the PCS is in grid-forming (VF)",
+            "value": 0
+        },
+        "frequency_setpoint_feedback": {
+            "value": 0
+        },
+        "grid_follow_pq": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/pcs:GridFollowPQ@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 1,
+                                "uri": "/controls/pcs:GridFollowPQ"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to initiate command routine for setting PCS to grid-following",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "grid_form_vf": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/pcs:GridFormVF@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 2,
+                                "uri": "/controls/pcs:GridFormVF"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to initiate command routine for setting PCS to grid-forming (voltage and frequency)",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "grid_form_vsg": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/pcs:GridFormVSG@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 3,
+                                "uri": "/controls/pcs:GridFormVSG"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to initiate command routine for setting PCS to grid-forming (virtual synchronous generator)",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "grid_mode": {
+            "value": "INIT"
+        },
+        "l1_current": {
+            "value": 0
+        },
+        "l1_l2_voltage": {
+            "value": 0
+        },
+        "l2_current": {
+            "value": 0
+        },
+        "l2_l3_voltage": {
+            "value": 0
+        },
+        "l3_current": {
+            "value": 0
+        },
+        "l3_l1_voltage": {
+            "value": 0
+        },
+        "maint_mode": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/summary:clear_faults@enabled"
+                            },
+                            {
+                                "uri": "/assets/pcs/summary:active_power_ramp_rate@enabled"
+                            },
+                            {
+                                "uri": "/assets/pcs/summary:reactive_power_ramp_rate@enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note": "UI control variable used to set the current asset in maintenance mode",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "max_charge_power": {
+            "value": 0
+        },
+        "max_discharge_power": {
+            "value": 0
+        },
+        "max_igbt_temperature": {
+            "value": 0
+        },
+        "power_factor": {
+            "value": 0
+        },
+        "rated_active_power": {
+            "value": 0
+        },
+        "rated_apparent_power": {
+            "value": 0
+        },
+        "rated_power_factor": {
+            "value": 0
+        },
+        "rated_reactive_power": {
+            "value": 0
+        },
+        "reactive_power": {
+            "value": 0
+        },
+        "reactive_power_ramp_rate": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/pcs:ReactivePowerRampRate"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to set the reactive power ramp rate",
+            "value": 0
+        },
+        "reactive_power_ramp_rate_feedback": {
+            "value": 0
+        },
+        "reactive_power_setpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/pcs:ReactivePowerSetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to set the reactive power setpoint",
+            "value": 0
+        },
+        "reactive_power_setpoint_feedback": {
+            "value": 0
+        },
+        "standby": {
+            "name": "Standby PCS",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "note": "Enabled conditions: [/status/bms/DCClosed] && [/assets/pcs/summary/maint_mode] && [/status/pcs/SystemState == (Stop || Run)]",
+            "ui_type": "control",
+            "type": "enum_button",
+            "aname": "pcs",
+            "uri":"/sched/pcs:LocalStandbyPCS",
+            "every":0.5,
+            "offset":0,
+            "debug":0,
+            "actions":	{
+                "onSet":	[{
+                    "func":	[
+                        {"inValue":true, "func": "RunSched"}
+                    ]
+                }]
+            }
+        },
+        "start": {
+            "name": "Start PCS",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "note": "Enabled conditions: [/status/bms/DCClosed] && [/assets/pcs/summary/maint_mode] && ![/status/pcs/IsFaulted]",
+            "ui_type": "control",
+            "type": "enum_button",   
+            "aname": "pcs",
+            "uri":"/sched/pcs:LocalStartPCS",
+            "every":0.5,
+            "offset":0,
+            "debug":0,
+            "actions":	{
+                "onSet":	[{
+                    "func":	[
+                        {"inValue":true, "func": "RunSched"}
+                    ]
+                }]
+            }
+        },
+        "status": {
+            "value": "INIT"
+        },
+        "stop": {
+            "name": "Stop PCS",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "note": "Enabled conditions: [/assets/pcs/summary/maint_mode] && [/status/pcs/SystemState != Stop]",
+            "ui_type": "control",
+            "type": "enum_button",
+            "aname": "pcs",
+            "uri":"/sched/pcs:LocalStopPCS",
+            "every":0.5,
+            "offset":0,
+            "debug":0,
+            "actions":	{
+                "onSet":	[{
+                    "func":	[
+                        {"inValue":true, "func": "RunSched"}
+                    ]
+                }]
+            }
+        },
+        "system_state": {
+            "value": "INIT"
+        },
+        "voltage_setpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "pcs",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "outValue": true,
+                                "uri": "/controls/pcs:VoltageSetpoint@triggerCmd"
+                            },
+                            {
+                                "uri": "/controls/pcs:VoltageSetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to set the voltage setpoint while the PCS is in grid-forming (VF)",
+            "value": 0
+        },
+        "voltage_setpoint_feedback": {
+            "value": 0
+        }
+    },
+    "/vlinks/pcs": {
+        "ui_active_power": {
+            "default": 0,
+            "value": "/assets/pcs/summary:active_power",
+            "vlink": "/status/pcs:ActivePower"
+        },
+        "ui_active_power_ramp_rate_feedback": {
+            "default": 0,
+            "value": "/assets/pcs/summary:active_power_ramp_rate_feedback",
+            "vlink": "/status/pcs:ActivePowerRampRateFeedback"
+        },
+        "ui_active_power_setpoint_feedback": {
+            "default": 0,
+            "value": "/assets/pcs/summary:active_power_setpoint_feedback",
+            "vlink": "/status/pcs:ActivePowerSetpointFeedback"
+        },
+        "ui_apparent_power": {
+            "default": 0,
+            "value": "/assets/pcs/summary:apparent_power",
+            "vlink": "/status/pcs:ApparentPower"
+        },
+        "ui_comms_ok": {
+            "default": false,
+            "value": "/assets/pcs/summary:comms_ok",
+            "vlink": "/status/pcs:CommsOK"
+        },
+        "ui_dc_current": {
+            "default": 0,
+            "value": "/assets/pcs/summary:dc_current",
+            "vlink": "/status/pcs:DCCurrent"
+        },
+        "ui_dc_power": {
+            "default": 0,
+            "value": "/assets/pcs/summary:dc_power",
+            "vlink": "/status/pcs:DCPower"
+        },
+        "ui_dc_voltage": {
+            "default": 0,
+            "value": "/assets/pcs/summary:dc_voltage",
+            "vlink": "/status/pcs:DCVoltage"
+        },
+        "ui_frequency": {
+            "default": 0,
+            "value": "/assets/pcs/summary:frequency",
+            "vlink": "/status/pcs:Frequency"
+        },
+        "ui_frequency_setpoint_feedback": {
+            "default": 0,
+            "value": "/assets/pcs/summary:frequency_setpoint_feedback",
+            "vlink": "/status/pcs:FrequencySetpointFeedback"
+        },
+        "ui_grid_mode": {
+            "default": "INIT",
+            "value": "/assets/pcs/summary:grid_mode",
+            "vlink": "/status/pcs:GridMode"
+        },
+        "ui_l1_current": {
+            "default": 0,
+            "value": "/assets/pcs/summary:l1_current",
+            "vlink": "/status/pcs:L1Current"
+        },
+        "ui_l1_l2_voltage": {
+            "default": 0,
+            "value": "/assets/pcs/summary:l1_l2_voltage",
+            "vlink": "/status/pcs:L1L2Voltage"
+        },
+        "ui_l2_current": {
+            "default": 0,
+            "value": "/assets/pcs/summary:l2_current",
+            "vlink": "/status/pcs:L2Current"
+        },
+        "ui_l2_l3_voltage": {
+            "default": 0,
+            "value": "/assets/pcs/summary:l2_l3_voltage",
+            "vlink": "/status/pcs:L2L3Voltage"
+        },
+        "ui_l3_current": {
+            "default": 0,
+            "value": "/assets/pcs/summary:l3_current",
+            "vlink": "/status/pcs:L3Current"
+        },
+        "ui_l3_l1_voltage": {
+            "default": 0,
+            "value": "/assets/pcs/summary:l3_l1_voltage",
+            "vlink": "/status/pcs:L3L1Voltage"
+        },
+        "ui_max_charge_power": {
+            "default": 0,
+            "value": "/assets/pcs/summary:max_charge_power",
+            "vlink": "/limits/pcs:MaxPCSChargePower"
+        },
+        "ui_max_discharge_power": {
+            "default": 0,
+            "value": "/assets/pcs/summary:max_discharge_power",
+            "vlink": "/limits/pcs:MaxPCSDischargePower"
+        },
+        "ui_max_igbt_temperature": {
+            "default": 0,
+            "value": "/assets/pcs/summary:max_igbt_temperature",
+            "vlink": "/status/pcs:MaxIGBTTemperature"
+        },
+        "ui_power_factor": {
+            "default": 0,
+            "value": "/assets/pcs/summary:power_factor",
+            "vlink": "/status/pcs:PowerFactor"
+        },
+        "ui_rated_active_power": {
+            "default": 0,
+            "value": "/assets/pcs/summary:rated_active_power",
+            "vlink": "/limits/pcs:RatedActivePower"
+        },
+        "ui_rated_apparent_power": {
+            "default": 0,
+            "value": "/assets/pcs/summary:rated_apparent_power",
+            "vlink": "/limits/pcs:RatedApparentPower"
+        },
+        "ui_rated_power_factor": {
+            "default": 0,
+            "value": "/assets/pcs/summary:rated_power_factor",
+            "vlink": "/config/pcs:RatedPowerFactor"
+        },
+        "ui_rated_reactive_power": {
+            "default": 0,
+            "value": "/assets/pcs/summary:rated_reactive_power",
+            "vlink": "/limits/pcs:RatedReactivePower"
+        },
+        "ui_reactive_power": {
+            "default": 0,
+            "value": "/assets/pcs/summary:reactive_power",
+            "vlink": "/status/pcs:ReactivePower"
+        },
+        "ui_reactive_power_ramp_rate_feedback": {
+            "default": 0,
+            "value": "/assets/pcs/summary:reactive_power_ramp_rate_feedback",
+            "vlink": "/status/pcs:ReactivePowerRampRateFeedback"
+        },
+        "ui_reactive_power_setpoint_feedback": {
+            "default": 0,
+            "value": "/assets/pcs/summary:reactive_power_setpoint_feedback",
+            "vlink": "/status/pcs:ReactivePowerSetpointFeedback"
+        },
+        "ui_status": {
+            "default": "INIT",
+            "value": "/assets/pcs/summary:status",
+            "vlink": "/status/pcs:Status"
+        },
+        "ui_system_state": {
+            "default": "INIT",
+            "value": "/assets/pcs/summary:system_state",
+            "vlink": "/status/pcs:SystemState"
+        },
+        "ui_voltage_setpoint_feedback": {
+            "default": 0,
+            "value": "/assets/pcs/summary:voltage_setpoint_feedback",
+            "vlink": "/status/pcs:VoltageSetpointFeedback"
+        }
+    }
+}

@@ -1,0 +1,52 @@
+{
+    "/controls/##BMS_ID##_##RACK_ID##": {
+        "ClearFaults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "note": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "useExpr": false,
+            "value": 0
+        }
+    },
+    "/schedule/wake_monitor/##BMS_ID##_##RACK_ID##": {
+        "/controls/##BMS_ID##_##RACK_ID##:ClearFaults": {
+            "amap": "##BMS_ID##_##RACK_ID##",
+            "func": "HandleCmd"
+        }
+    },
+    "/status/##BMS_ID##_##RACK_ID##": {
+        "ClearFaultsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": "Clear",
+                                "uri": "/faults/##BMS_ID##_##RACK_ID##:clear_faults"
+                            },
+                            {
+                                "outValue": "Clear",
+                                "uri": "/alarms/##BMS_ID##_##RACK_ID##:clear_alarms"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##_##RACK_ID##:enable",
+            "ifChanged": false,
+            "note": "When this variable is set, /faults/##BMS_ID##_##RACK_ID##:clear_faults and /alarms/##BMS_ID##_##RACK_ID##:clear_alarms will be set to Clear",
+            "value": false
+        }
+    }
+}

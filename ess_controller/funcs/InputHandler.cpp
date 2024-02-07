@@ -18,7 +18,6 @@
 
 
 
-
 namespace InputHandler
 {
 
@@ -37,6 +36,7 @@ namespace InputHandler
     {
     
         if(0)FPS_PRINT_INFO("{}", __func__);
+        // DataUtility::PrintAssetVar(aV, assetVar::ATypes::AINT);
         FunctionUtility::SharedInputHandlerLocalFunction(vmap, amap, aname, p_fims, aV, __func__);
     }
 
@@ -165,9 +165,9 @@ namespace InputHandler
             essAv = amap[relname];
 
             linkVals(*vm, vmap, amap, aname, "/reload", reload, bmsRelName);
-            bmsAv = amap[relname];
+            bmsAv = amap[bmsRelName];
             linkVals(*vm, vmap, amap, aname, "/reload", reload, pcsRelName);
-            pcsAv = amap[relname];
+            pcsAv = amap[pcsRelName];
 
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /site/ess/start_stop
@@ -521,6 +521,10 @@ namespace InputHandler
     {
 
         if(0)FPS_PRINT_INFO("{}", __func__);
+        // FPS_PRINT_INFO("Before Test");
+        // BatteryBalancingUtility::TestVoltageArbitration();
+        // BatteryBalancingUtility::TestActivePowerBalancing();
+        // FPS_PRINT_INFO("After Test");
        
 
         int reload = 0;
@@ -539,8 +543,7 @@ namespace InputHandler
 
         std::string uri = "battery_rack_balance_coarse";
 
-
-        auto relname = fmt::format("{}_{}_{}", __func__, "ess", bmsch).c_str() ;
+        auto relname = fmt::format("{}_{}_{}", __func__, "ess", bmsch).c_str();
         assetVar* essAv = amap[relname];
         if (!essAv || (reload = essAv->getiVal()) == 0)
         {
@@ -550,9 +553,11 @@ namespace InputHandler
         // Set up
         if (reload == 0)
         {
+            FPS_PRINT_INFO("reload == 0");
 
             linkVals(*vm, vmap, amap, aname, "/reload", reload, relname);
             essAv = amap[relname];
+
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /sched/ess/BatteryRackBalanceCoarse
                 DataUtility::AssetVarInfo("/sched/ess", "BatteryRackBalanceCoarse", assetVar::ATypes::ABOOL),
@@ -576,32 +581,70 @@ namespace InputHandler
                 DataUtility::AssetVarInfo("/controls/pcs", "ActivePowerSetpoint", assetVar::ATypes::AFLOAT)
             };
 
-
-            // int numRacks = amap["NumRacks"]->getiVal();
-            // for (int i = 1; i > numRacks; i++) {
-            //     std::string rackUri = fmt::format("/status/{}_rack_{}", bmsch, i);
-            //     std::string dcClosedName = fmt::format("DCClosed_rack_{}", i);
-            //     std::string dcVoltageName = fmt::format("DCVoltage_rack_{}", i);
-            //     assetVarVector.push_back(
-            //         DataUtility::AssetVarInfo(rackUri.c_str(), "DCClosed", dcClosedName.c_str(), assetVar::ATypes::ABOOL)
-            //     );
-            //     assetVarVector.push_back(
-            //         DataUtility::AssetVarInfo(rackUri.c_str(), "DCVoltage", dcVoltageName.c_str(), assetVar::ATypes::AFLOAT)
-            //     );
-
-            // } 
-
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
-            
+
+
+            // DataUtility::PrintAssetVar(amap["battery_rack_balance_coarse"], assetVar::ATypes::ABOOL);
+            // FPS_PRINT_INFO("Before Test");
+            // BatteryBalancingUtility::TestVoltageArbitration(amap);
+            // FPS_PRINT_INFO("After Test");
+
 
             reload = 1;
             essAv->setVal(reload);
-            
+
+            if(amap[uri.c_str()]->getbVal() == false) {
+                FunctionUtility::PullOffScheduler(amap, aV, uri.c_str());
+            }
+
             return;
         }
 
-        // Fault Checking
+        // Set up
         if (reload == 1)
+        {
+
+            int numRacks = amap["NumRacks"]->getiVal();
+            FPS_PRINT_INFO("reload == 1 | numRacks[{}]", numRacks);
+            if(numRacks > 0) {
+                 std::vector<DataUtility::AssetVarInfo> rackVector = {};
+                for (int i = 1; i > numRacks; i++) {
+                    std::string rackUri = fmt::format("/status/{}_rack_{}", bmsch, i);
+                    std::string dcClosedName = fmt::format("DCClosed_rack_{}", i);
+                    std::string dcVoltageName = fmt::format("DCVoltage_rack_{}", i);
+
+                    // FPS_PRINT_INFO("rackUri - {}", rackUri);
+                    // FPS_PRINT_INFO("dcClosedName - {}", dcClosedName);
+                    // FPS_PRINT_INFO("dcVoltageName - {}", dcVoltageName);
+
+                    rackVector.push_back(
+                        DataUtility::AssetVarInfo(rackUri.c_str(), "DCClosed", dcClosedName.c_str(), assetVar::ATypes::ABOOL)
+                    );
+                    rackVector.push_back(
+                        DataUtility::AssetVarInfo(rackUri.c_str(), "DCVoltage", dcVoltageName.c_str(), assetVar::ATypes::AFLOAT)
+                    );
+
+                } 
+
+                amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, rackVector);
+
+                reload = 2;
+                essAv->setVal(reload);
+
+            }
+            
+
+            // DataUtility::PrintAssetVar(amap["battery_rack_balance_coarse"], assetVar::ATypes::ABOOL);
+            // FPS_PRINT_INFO("Before Test");
+            // BatteryBalancingUtility::TestVoltageArbitration(amap);
+            // FPS_PRINT_INFO("After Test");
+
+            return;
+        }
+
+
+        // Fault Checking
+        if (reload == 2)
         {
 
             if(amap[uri.c_str()]->getbVal() == false) {
@@ -636,7 +679,7 @@ namespace InputHandler
         }
 
         //Start BMS
-        if(reload == 2){
+        if(reload == 3){
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
@@ -658,7 +701,7 @@ namespace InputHandler
         }
 
         //Start PCS
-        if(reload == 3){
+        if(reload == 4){
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
@@ -682,7 +725,7 @@ namespace InputHandler
 
         //Set Active Power Setpoint
         // TODO make this function
-        if(reload == 4){
+        if(reload == 5){
 
             double currentActivePowerSetpoint = amap["ActivePowerSetpoint"]->getdVal();
 
@@ -698,6 +741,11 @@ namespace InputHandler
 
                 amap["ActivePowerSetpoint"]->setVal(newActivePowerSetpoint);
             }
+
+            //state machine in this state
+            //state 1 is voltage arbitration
+            //state 2 is active power balancing
+            //state 3 is maninpulating rack contactors
 
             // double deadband = amap["battery_rack_balance_coarse"]->getdParam("targetVoltageDeadband");
             // //TODO make getting rack info a 1 time thing
@@ -719,7 +767,7 @@ namespace InputHandler
         }
 
         //Stop PCS
-        if(reload == 5){
+        if(reload == 6){
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 
@@ -740,7 +788,7 @@ namespace InputHandler
         }
 
         //Stop BMS
-        if(reload == 6){
+        if(reload == 7){
 
             amap[uri.c_str()]->setParam("every", aV->getdParam("every"));
 

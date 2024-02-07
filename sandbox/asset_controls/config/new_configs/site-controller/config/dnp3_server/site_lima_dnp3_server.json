@@ -1,0 +1,622 @@
+{
+    "fileInfo": {
+        "outputFileCreated": "2023-02-15T16:03:20.430Z",
+        "outputFileName": "dnp3_server.json",
+        "outputFileType": "dnp3",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModified": "2023-02-15T16:02:42.000Z",
+        "sourceFileLastModifiedBy": "Matthew Myers",
+        "sourceFileName": "tx100_dnp3_server.xlsx"
+    },
+    "registers": [
+        {
+            "map": [
+                {
+                    "id": "watchdog_pet",
+                    "name": "Watchdog Pet",
+                    "offset": 0,
+                    "uri": "/features/site_operation"
+                },
+                {
+                    "id": "fr_enable_mask_dnp3",
+                    "name": "Frequency Response Enable Word",
+                    "offset": 1,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_baseload_cmd_kw_dnp3",
+                    "name": "Baseload Power Command",
+                    "offset": 2,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "uf_ffr_inactive_cmd_kw_dnp3",
+                    "name": "FFR Inactive Power Command",
+                    "offset": 3,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "uf_frrs_inactive_cmd_kw_dnp3",
+                    "name": "UF FRRS Inactive Power Command",
+                    "offset": 4,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "of_frrs_inactive_cmd_kw_dnp3",
+                    "name": "FRRS Inactive Power Command",
+                    "offset": 5,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "uf_frrs_active_cmd_kw_dnp3",
+                    "name": "UF FRRS Active Power Command",
+                    "offset": 6,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "of_frrs_active_cmd_kw_dnp3",
+                    "name": "OF FRRS Active Power Command",
+                    "offset": 7,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "uf_ffr_active_cmd_kw_dnp3",
+                    "name": "FFR Active Power Command",
+                    "offset": 8,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "uf_pfr_active_cmd_kw_dnp3",
+                    "name": "UF PFR Active Power Command",
+                    "offset": 9,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "of_pfr_active_cmd_kw_dnp3",
+                    "name": "OF PFR Active Power Command",
+                    "offset": 10,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "FM_timestamp",
+                    "name": "Fleet Manager Metrics Timestamp",
+                    "offset": 11,
+                    "uri": "/metrics/timestamp"
+                },
+                {
+                    "id": "active_voltage_cmd_dnp3",
+                    "name": "Active Voltage Regulation Command",
+                    "offset": 12,
+                    "uri": "/features/reactive_power"
+                },
+                {
+                    "id": "reactive_setpoint_kVAR_cmd_dnp3",
+                    "name": "Reactive Power Setpoint",
+                    "offset": 13,
+                    "uri": "/features/reactive_power"
+                },
+                {
+                    "id": "runmode1_kVAR_mode_cmd_dnp3",
+                    "name": "Mode Select - Run Mode 1 Reactive Power",
+                    "offset": 13,
+                    "uri": "/features/reactive_power"
+                }
+            ],
+            "number_of_registers": 14,
+            "starting_offset": 0,
+            "type": "AnOPF32"
+        },
+        {
+            "map": [
+                {
+                    "id": "ess_total_active_power",
+                    "name": "Site - Active Power Total Gross",
+                    "offset": 0,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_total_reactive_power",
+                    "name": "Site - Reactive Power Total Gross",
+                    "offset": 1,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_total_apparent_power",
+                    "name": "Site - Apparent Power Total Gross",
+                    "offset": 2,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "active_power",
+                    "name": "Site - Active Power Total Net",
+                    "offset": 3,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "reactive_power",
+                    "name": "Site - Reactive Power Total Net",
+                    "offset": 4,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "apparent_power",
+                    "name": "Site - Apparent Power Total Net",
+                    "offset": 5,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "frequency",
+                    "name": "Site - Frequency",
+                    "offset": 6,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "voltage_l1_l2",
+                    "name": "Site - Voltage L1-L2",
+                    "offset": 7,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "voltage_l2_l3",
+                    "name": "Site - Voltage L2-L3",
+                    "offset": 8,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "voltage_l3_l1",
+                    "name": "Site - Voltage L3-L1",
+                    "offset": 9,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_average_soc",
+                    "name": "Battery - State of Charge %",
+                    "offset": 10,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_chargeable_energy",
+                    "name": "Battery - Chargable energy kWh",
+                    "offset": 11,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_dischargeable_energy",
+                    "name": "Battery - Dischargeable energy kWh",
+                    "offset": 12,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_chargeable_power",
+                    "name": "Battery - Chargeable power",
+                    "offset": 13,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_dischargeable_power",
+                    "name": "Battery - Dischargeable power",
+                    "offset": 14,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "num_ess_available",
+                    "name": "Battery - Number ESS Available",
+                    "offset": 15,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "num_ess_running",
+                    "name": "Battery - Number ESS Online",
+                    "offset": 16,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "heartbeat_counter",
+                    "name": "Heartbeat Counter",
+                    "offset": 17,
+                    "uri": "/features/site_operation",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "kwh_delivered",
+                    "name": "Site - kWh Delivered",
+                    "offset": 18,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "kwh_received",
+                    "name": "Site - kWh Received",
+                    "offset": 19,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "FM_timestamp",
+                    "name": "Fleet Manager Metrics Timestamp Response",
+                    "offset": 20,
+                    "uri": "/metrics/timestamp",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "transformer_low_side_voltage",
+                    "name": "Transformer Low Side Voltage",
+                    "offset": 21,
+                    "uri": "/metrics/transformer_low_side_voltage",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "gen_gross_active_power",
+                    "name": "Generation Gross Active Power",
+                    "offset": 22,
+                    "uri": "/metrics/gen_gross_active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "gen_gross_reactive_power",
+                    "name": "Generation Gross Reactive Power",
+                    "offset": 23,
+                    "uri": "/metrics/gen_gross_reactive_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "aux_load_active_power",
+                    "name": "Auxiliary Load Active Power",
+                    "offset": 24,
+                    "uri": "/metrics/aux_load_active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "aux_load_reactive_power",
+                    "name": "Auxiliary Load Reactive Power",
+                    "offset": 25,
+                    "uri": "/metrics/aux_load_reactive_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "gsu_transformer_flow_active_power",
+                    "name": "GSU Transformer Flow Active Power",
+                    "offset": 26,
+                    "uri": "/metrics/gsu_transformer_flow_active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "gsu_transformer_flow_reactive_power",
+                    "name": "GSU Transformer Flow  Reactive Power",
+                    "offset": 27,
+                    "uri": "/metrics/gsu_transformer_flow_reactive_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "pcs_aux_load_active_power",
+                    "name": "Estimated PCS Auxiliary Power",
+                    "offset": 28,
+                    "uri": "/metrics/aux_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "battery_load_active_power",
+                    "name": "Measured BMS Auxiliary Power",
+                    "offset": 29,
+                    "uri": "/metrics/battery_load_active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "fr_enable_mask",
+                    "name": "Frequency Response Enable Word",
+                    "offset": 30,
+                    "uri": "/metrics/active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "fr_baseload_cmd_kw",
+                    "name": "Baseload Power Command",
+                    "offset": 31,
+                    "uri": "/metrics/active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "uf_ffr_inactive_cmd_kw",
+                    "name": "FFR Inactive Power Command",
+                    "offset": 32,
+                    "uri": "/metrics/active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "uf_frrs_inactive_cmd_kw",
+                    "name": "FRRS UF Inactive Power Command",
+                    "offset": 33,
+                    "uri": "/metrics/active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "of_frrs_inactive_cmd_kw",
+                    "name": "FRRS OF Inactive Power Command",
+                    "offset": 34,
+                    "uri": "/metrics/active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "uf_frrs_active_cmd_kw",
+                    "name": "FRRS Up Active Power Command",
+                    "offset": 35,
+                    "uri": "/metrics/active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "of_frrs_active_cmd_kw",
+                    "name": "FRRS Down Active Power Command",
+                    "offset": 36,
+                    "uri": "/metrics/active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "uf_ffr_active_cmd_kw",
+                    "name": "FFR Active Power Command",
+                    "offset": 37,
+                    "uri": "/metrics/active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "uf_pfr_active_cmd_kw",
+                    "name": "Auto-PFR Up Active Power Command",
+                    "offset": 38,
+                    "uri": "/metrics/active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "of_pfr_active_cmd_kw",
+                    "name": "Auto-PFR Down Active Power Command",
+                    "offset": 39,
+                    "uri": "/metrics/active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "total_site_kW_charge_limit",
+                    "name": "Site Active Power Charge Limit",
+                    "offset": 40,
+                    "uri": "/features/active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "total_site_kW_discharge_limit",
+                    "name": "Site Active Power Discharge Limit",
+                    "offset": 41,
+                    "uri": "/features/active_power",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #1 System Mode",
+                    "offset": 42,
+                    "uri": "/assets/ess/ess_01",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #1 System SOC",
+                    "offset": 43,
+                    "uri": "/assets/ess/ess_01",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #1 Number of Active Racks",
+                    "offset": 44,
+                    "uri": "/assets/ess/ess_01",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "ess_status",
+                    "name": "ESS Container #2 System Mode",
+                    "offset": 45,
+                    "uri": "/assets/ess/ess_02",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "soc",
+                    "name": "ESS Container #2 System SOC",
+                    "offset": 46,
+                    "uri": "/assets/ess/ess_02",
+                    "variation": "Group30Var5"
+                },
+                {
+                    "id": "bms_racks_in_service",
+                    "name": "ESS Container #2 Number of Active Racks",
+                    "offset": 47,
+                    "uri": "/assets/ess/ess_02",
+                    "variation": "Group30Var5"
+                }
+            ],
+            "number_of_registers": 70,
+            "starting_offset": 0,
+            "type": "analog"
+        },
+        {
+            "map": [
+                {
+                    "id": "breaker_status",
+                    "name": "Main Breaker Closed",
+                    "offset": 0,
+                    "uri": "/components/sel_651r"
+                },
+                {
+                    "id": "running_status_flag",
+                    "name": "Running Status",
+                    "offset": 1,
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "alarm_status_flag",
+                    "name": "Alarm Status",
+                    "offset": 2,
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "fault_status_flag",
+                    "name": "Fault Status",
+                    "offset": 3,
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "uf_ffr_active_response_status",
+                    "name": "FFR UF Response Status",
+                    "offset": 4,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "uf_ffr_in_cooldown",
+                    "name": "FFR UF Cooldown Status",
+                    "offset": 5,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "uf_pfr_active_response_status",
+                    "name": "PFR UF Response Status",
+                    "offset": 6,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "uf_pfr_in_cooldown",
+                    "name": "PFR UF Cooldown Status",
+                    "offset": 7,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "of_pfr_active_response_status",
+                    "name": "PFR OF Response Status",
+                    "offset": 8,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "of_pfr_in_cooldown",
+                    "name": "PFR OF Cooldown Status",
+                    "offset": 9,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "uf_frrs_active_response_status",
+                    "name": "FRRS UF Response Status",
+                    "offset": 10,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "uf_frrs_in_cooldown",
+                    "name": "FRRS UF Cooldown Status",
+                    "offset": 11,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "of_frrs_active_response_status",
+                    "name": "FRRS OF Response Status",
+                    "offset": 12,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "of_frrs_in_cooldown",
+                    "name": "FRRS OF Cooldown Status",
+                    "offset": 13,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "virtual_switch_status",
+                    "name": "Virtual MV Breaker Status (SEL-351s)",
+                    "offset": 14,
+                    "uri": "/metrics/breaker_status"
+                },
+                {
+                    "id": "avr_status",
+                    "name": "Generation AVR Status",
+                    "offset": 15,
+                    "uri": "/metrics/avr_status"
+                },
+                {
+                    "id": "reactive_setpoint_status",
+                    "name": "Generation Reactive Setpoint Status",
+                    "offset": 16,
+                    "uri": "/metrics/reactive_setpoint_status"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #1 Fault Flag",
+                    "offset": 17,
+                    "uri": "/assets/ess/ess_01"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #1 Alarm Flag",
+                    "offset": 18,
+                    "uri": "/assets/ess/ess_01"
+                },
+                {
+                    "id": "faults",
+                    "name": "ESS Container #2 Fault Flag",
+                    "offset": 19,
+                    "uri": "/assets/ess/ess_02"
+                },
+                {
+                    "id": "alarms",
+                    "name": "ESS Container #2 Alarm Flag",
+                    "offset": 20,
+                    "uri": "/assets/ess/ess_02"
+                }
+            ],
+            "number_of_registers": 83,
+            "starting_offset": 0,
+            "type": "binary"
+        },
+        {
+            "map": [
+                {
+                    "id": "enable_flag_dnp3",
+                    "name": "Start Site Command",
+                    "offset": 0,
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "disable_flag",
+                    "name": "Disable Site Command",
+                    "offset": 1,
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "clear_faults_flag_dnp3",
+                    "name": "Clear Faults Command",
+                    "offset": 2,
+                    "uri": "/site/operation"
+                }
+            ],
+            "number_of_registers": 3,
+            "starting_offset": 0,
+            "type": "CROB"
+        }
+    ],
+    "system": {
+        "frequency": 5000,
+        "id": "lima_dnp3_server",
+        "ip_address": "0.0.0.0",
+        "local_uri": "/local_server",
+        "name": "FlexGen HybridOS",
+        "port": 20000,
+        "protocol": "DNP3",
+        "version": "0.2"
+    }
+}

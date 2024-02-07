@@ -1,0 +1,54 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/acuvim",
+			"publishRate": 500,
+			"inputs": [
+				{
+					"uri": "/components/psm_acuvim",
+					"registers": {
+						"active_power": "p",
+						"apparent_power": "s",
+						"current_l1": "i",
+						"current_l2": "i",
+						"current_l3": "i",
+						"current_rms": "i",
+						"frequency": "f1",
+						"power_factor": "pf",
+						"reactive_power": "q",
+						"voltage_l1": "v1",
+						"voltage_l1_l2": "v1",
+						"voltage_l2": "v1",
+						"voltage_l2_l3": "v1",
+						"voltage_l3": "v1",
+						"voltage_l3_l1": "v1"
+					}
+				}
+			],
+			"echo": {
+				"active_power_demand": 0,
+				"active_power_l1": 0,
+				"active_power_l2": 0,
+				"active_power_l3": 0,
+				"apparent_power_demand": 0,
+				"apparent_power_l1": 0,
+				"apparent_power_l2": 0,
+				"apparent_power_l3": 0,
+				"current_n": 0,
+				"kvarh_delivered": 0,
+				"kvarh_received": 0,
+				"kwh_delivered": 0,
+				"kwh_received": 0,
+				"power_factor_l1": 0,
+				"power_factor_l2": 0,
+				"power_factor_l3": 0,
+				"reactive_power_demand": 0,
+				"reactive_power_l1": 0,
+				"reactive_power_l2": 0,
+				"reactive_power_l3": 0,
+				"voltage_ll_rms": 0,
+				"voltage_ln_rms": 0
+			}
+		}
+	]
+}

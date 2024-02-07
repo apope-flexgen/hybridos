@@ -33,7 +33,7 @@ namespace OutputHandler {
     FunctionUtility::FunctionReturnObj OpenContactors(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
-        if(1)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
+        if(0)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
 
         FunctionUtility::FunctionReturnObj returnObject; 
 
@@ -52,6 +52,7 @@ namespace OutputHandler {
             bmsch = aV->getcParam("bms");
         }
 
+
         auto relname = fmt::format("{}_{}", __func__, bmsch).c_str() ;
         assetVar* cAv = amap[relname];
 
@@ -60,25 +61,39 @@ namespace OutputHandler {
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
+        FunctionUtility::HandleCmdProcessUris uris;
+        uris.controlsUri = (fmt::format("OpenContactors_{}", bmsch));
+        uris.verifyControlsUri = (fmt::format("VerifyOpenContactors_{}", bmsch));
+        uris.controlsSuccessUri = (fmt::format("OpenContactorsSuccess_{}", bmsch));
+        uris.verifyControlsSuccessUri = (fmt::format("VerifyOpenContactorsSuccess_{}", bmsch));
+        uris.controlsAlarmUri = (fmt::format("OpenContactors_ALARM_{}", bmsch));
+        uris.verifyControlsAlarmUri = (fmt::format("VerifyOpenContactors_ALARM_{}", bmsch));
+
 
         if (reload < 2)
         {
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
             cAv = amap[relname];
 
+
+            std::string status = (fmt::format("/status/{}", bmsch));
+            std::string controls = (fmt::format("/controls/{}", bmsch));
+            std::string alarms = (fmt::format("/alarms/{}", bmsch));
+
+
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/bms/OpenContactorsSuccess
-                DataUtility::AssetVarInfo("/status/bms", "OpenContactorsSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "OpenContactorsSuccess", uris.controlsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /status/bms/VerifyOpenContactorsSuccess
-                DataUtility::AssetVarInfo("/status/bms", "VerifyOpenContactorsSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "VerifyOpenContactorsSuccess", uris.verifyControlsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /controls/bms/OpenContactors
-                DataUtility::AssetVarInfo("/controls/bms", "OpenContactors", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo(controls.c_str(), "OpenContactors",  uris.controlsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /controls/bms:VerifyOpenContactors
-                DataUtility::AssetVarInfo("/controls/bms", "VerifyOpenContactors", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo(controls.c_str(), "VerifyOpenContactors",  uris.verifyControlsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /alarms/bms:OpenContactors
-                DataUtility::AssetVarInfo("/alarms/bms", "OpenContactors", "OpenContactors_ALARM", assetVar::ATypes::ASTRING),
+                DataUtility::AssetVarInfo(alarms.c_str(), "OpenContactors",  uris.controlsAlarmUri.c_str(), assetVar::ATypes::ASTRING),
                 // /alarms/bms:VerifyOpenContactors
-                DataUtility::AssetVarInfo("/alarms/bms", "VerifyOpenContactors", "VerifyOpenContactors_ALARM", assetVar::ATypes::ASTRING)
+                DataUtility::AssetVarInfo(alarms.c_str(), "VerifyOpenContactors",  uris.verifyControlsAlarmUri.c_str(), assetVar::ATypes::ASTRING)
             };
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
@@ -99,8 +114,8 @@ namespace OutputHandler {
         }
 
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "OpenContactors", "VerifyOpenContactors");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, bmsch, p_fims, aV, "OpenContactors");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, uris.controlsUri.c_str(), uris.verifyControlsUri.c_str());
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, bmsch, p_fims, aV, uris);
 
         return returnObject;
 
@@ -118,7 +133,7 @@ namespace OutputHandler {
     FunctionUtility::FunctionReturnObj CloseContactors(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* processOriginUri)
     {
 
-        if(1)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
+        if(0)FPS_PRINT_INFO("{} | {}", __func__, processOriginUri);
 
  
         FunctionUtility::FunctionReturnObj returnObject; 
@@ -135,6 +150,7 @@ namespace OutputHandler {
             bmsch = aV->getcParam("bms");
         }
 
+
         auto relname = fmt::format("{}_{}", __func__, bmsch).c_str();
         assetVar* cAv = amap[relname];
         if (!cAv || (reload = cAv->getiVal()) == 0)
@@ -142,26 +158,44 @@ namespace OutputHandler {
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
+
+        FunctionUtility::HandleCmdProcessUris uris;
+        uris.controlsUri = (fmt::format("CloseContactors_{}", bmsch));
+        uris.verifyControlsUri = (fmt::format("VerifyCloseContactors_{}", bmsch));
+        uris.controlsSuccessUri = (fmt::format("CloseContactorsSuccess_{}", bmsch));
+        uris.verifyControlsSuccessUri = (fmt::format("VerifyCloseContactorsSuccess_{}", bmsch));
+        uris.controlsAlarmUri = (fmt::format("CloseContactors_ALARM_{}", bmsch));
+        uris.verifyControlsAlarmUri = (fmt::format("VerifyCloseContactors_ALARM_{}", bmsch));
+
+
+
+
         if (reload < 2)
         {
 
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
             cAv = amap[relname];
 
+            std::string status = (fmt::format("/status/{}", bmsch));
+            std::string controls = (fmt::format("/controls/{}", bmsch));
+            std::string alarms = (fmt::format("/alarms/{}", bmsch));
+
+
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/bms/CloseContactorsSuccess
-                DataUtility::AssetVarInfo("/status/bms", "CloseContactorsSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "CloseContactorsSuccess", uris.controlsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /status/bms/VerifyCloseContactorsSuccess
-                DataUtility::AssetVarInfo("/status/bms", "VerifyCloseContactorsSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "VerifyCloseContactorsSuccess", uris.verifyControlsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /controls/bms/CloseContactors
-                DataUtility::AssetVarInfo("/controls/bms", "CloseContactors", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo(controls.c_str(), "CloseContactors", uris.controlsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /controls/bms:VerifyCloseContactors
-                DataUtility::AssetVarInfo("/controls/bms", "VerifyCloseContactors", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo(controls.c_str(), "VerifyCloseContactors", uris.verifyControlsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /alarms/bms:CloseContactors
-                DataUtility::AssetVarInfo("/alarms/bms", "CloseContactors", "CloseContactors_ALARM", assetVar::ATypes::ASTRING),
+                DataUtility::AssetVarInfo(alarms.c_str(), "CloseContactors", uris.controlsAlarmUri.c_str(), assetVar::ATypes::ASTRING),
                 // /alarms/bms:VerifyCloseContactors
-                DataUtility::AssetVarInfo("/alarms/bms", "VerifyCloseContactors", "VerifyCloseContactors_ALARM", assetVar::ATypes::ASTRING)
+                DataUtility::AssetVarInfo(alarms.c_str(), "VerifyCloseContactors", uris.verifyControlsAlarmUri.c_str(), assetVar::ATypes::ASTRING)
             };
+
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
@@ -178,8 +212,8 @@ namespace OutputHandler {
         }
 
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "CloseContactors", "VerifyCloseContactors");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, bmsch, p_fims, aV, "CloseContactors");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, uris.controlsUri.c_str(), uris.verifyControlsUri.c_str());
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, bmsch, p_fims, aV, uris);
 
         return returnObject;
     }
@@ -219,6 +253,14 @@ namespace OutputHandler {
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
+        FunctionUtility::HandleCmdProcessUris uris;
+        uris.controlsUri = (fmt::format("Start_{}", pcsch));
+        uris.verifyControlsUri = (fmt::format("VerifyStart_{}", pcsch));
+        uris.controlsSuccessUri = (fmt::format("StartSuccess_{}", pcsch));
+        uris.verifyControlsSuccessUri = (fmt::format("VerifyStartSuccess_{}", pcsch));
+        uris.controlsAlarmUri = (fmt::format("Start_ALARM_{}", pcsch));
+        uris.verifyControlsAlarmUri = (fmt::format("VerifyStart_ALARM_{}", pcsch));
+
         if (reload < 2)
         {
 
@@ -227,17 +269,17 @@ namespace OutputHandler {
 
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/pcs/StartSuccess
-                DataUtility::AssetVarInfo("/status/pcs", "StartSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/pcs", "StartSuccess", uris.controlsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /status/bms/VerifyStartSuccess
-                DataUtility::AssetVarInfo("/status/bms", "VerifyStartSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/bms", "VerifyStartSuccess", uris.verifyControlsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /controls/pcs/Start
-                DataUtility::AssetVarInfo("/controls/pcs", "Start", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/pcs", "Start", uris.controlsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /controls/pcs:VerifyStart
-                DataUtility::AssetVarInfo("/controls/pcs", "VerifyStart", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/pcs", "VerifyStart", uris.verifyControlsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /alarms/pcs:Start
-                DataUtility::AssetVarInfo("/alarms/pcs", "Start", "Start_ALARM", assetVar::ATypes::ASTRING),
+                DataUtility::AssetVarInfo("/alarms/pcs", "Start", uris.controlsAlarmUri.c_str(), assetVar::ATypes::ASTRING),
                 // /alarms/pcs:VerifyStart
-                DataUtility::AssetVarInfo("/alarms/pcs", "VerifyStart", "VerifyStart_ALARM", assetVar::ATypes::ASTRING)
+                DataUtility::AssetVarInfo("/alarms/pcs", "VerifyStart", uris.verifyControlsAlarmUri.c_str(), assetVar::ATypes::ASTRING)
             };
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
@@ -255,8 +297,8 @@ namespace OutputHandler {
             cAv->setVal(reload);
         }
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "Start", "VerifyStart");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, "Start");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, uris.controlsUri.c_str(), uris.verifyControlsUri.c_str());
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, uris);
 
         return returnObject;
     }
@@ -297,24 +339,33 @@ namespace OutputHandler {
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
+        FunctionUtility::HandleCmdProcessUris uris;
+        uris.controlsUri = (fmt::format("Stop_{}", pcsch));
+        uris.verifyControlsUri = (fmt::format("VerifyStop_{}", pcsch));
+        uris.controlsSuccessUri = (fmt::format("StopSuccess_{}", pcsch));
+        uris.verifyControlsSuccessUri = (fmt::format("VerifyStopSuccess_{}", pcsch));
+        uris.controlsAlarmUri = (fmt::format("Stop_ALARM_{}", pcsch));
+        uris.verifyControlsAlarmUri = (fmt::format("VerifyStop_ALARM_{}", pcsch));
+
         if (reload < 2)
         {
+
             linkVals(*vm, vmap, amap, pcsch, "/reload", reload, relname);
             cAv = amap[relname];
 
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/pcs/StopSuccess
-                DataUtility::AssetVarInfo("/status/pcs", "StopSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/pcs", "StopSuccess", uris.controlsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /status/bms/VerifyStopSuccess
-                DataUtility::AssetVarInfo("/status/bms", "VerifyStopSuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/bms", "VerifyStopSuccess", uris.verifyControlsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /controls/pcs/Stop
-                DataUtility::AssetVarInfo("/controls/pcs", "Stop", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/pcs", "Stop", uris.controlsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /controls/pcs:VerifyStop
-                DataUtility::AssetVarInfo("/controls/pcs", "VerifyStop", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/pcs", "VerifyStop", uris.verifyControlsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /alarms/pcs:Stop
-                DataUtility::AssetVarInfo("/alarms/pcs", "Stop", "Stop_ALARM", assetVar::ATypes::ASTRING),
+                DataUtility::AssetVarInfo("/alarms/pcs", "Stop", uris.controlsAlarmUri.c_str(), assetVar::ATypes::ASTRING),
                 // /alarms/pcs:VerifyStop
-                DataUtility::AssetVarInfo("/alarms/pcs", "VerifyStop", "VerifyStop_ALARM", assetVar::ATypes::ASTRING)
+                DataUtility::AssetVarInfo("/alarms/pcs", "VerifyStop", uris.verifyControlsAlarmUri.c_str(), assetVar::ATypes::ASTRING)
             };
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
@@ -334,8 +385,8 @@ namespace OutputHandler {
         }
 
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "Stop", "VerifyStop");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, "Stop");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, uris.controlsUri.c_str(), uris.verifyControlsUri.c_str());
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, uris);
 
         return returnObject;
     }
@@ -376,24 +427,33 @@ namespace OutputHandler {
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
+        FunctionUtility::HandleCmdProcessUris uris;
+        uris.controlsUri = (fmt::format("Standby_{}", pcsch));
+        uris.verifyControlsUri = (fmt::format("VerifyStandby_{}", pcsch));
+        uris.controlsSuccessUri = (fmt::format("StandbySuccess_{}", pcsch));
+        uris.verifyControlsSuccessUri = (fmt::format("VerifyStandbySuccess_{}", pcsch));
+        uris.controlsAlarmUri = (fmt::format("Standby_ALARM_{}", pcsch));
+        uris.verifyControlsAlarmUri = (fmt::format("VerifyStandby_ALARM_{}", pcsch));
+
         if (reload < 2)
         {
+
             linkVals(*vm, vmap, amap, pcsch, "/reload", reload, relname);
             cAv = amap[relname];
 
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/pcs/StandbySuccess
-                DataUtility::AssetVarInfo("/status/pcs", "StandbySuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/pcs", "StandbySuccess", uris.controlsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /status/bms/VerifyStandbySuccess
-                DataUtility::AssetVarInfo("/status/bms", "VerifyStandbySuccess", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/bms", "VerifyStandbySuccess", uris.verifyControlsSuccessUri.c_str(), assetVar::ATypes::ABOOL),
                 // /controls/pcs/Standby
-                DataUtility::AssetVarInfo("/controls/pcs", "Standby", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/pcs", "Standby", uris.controlsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /controls/pcs:VerifyStandby
-                DataUtility::AssetVarInfo("/controls/pcs", "VerifyStandby", assetVar::ATypes::AFLOAT),
+                DataUtility::AssetVarInfo("/controls/pcs", "VerifyStandby", uris.verifyControlsUri.c_str(), assetVar::ATypes::AFLOAT),
                 // /alarms/pcs:Standby
-                DataUtility::AssetVarInfo("/alarms/pcs", "Standby", "Standby_ALARM", assetVar::ATypes::ASTRING),
+                DataUtility::AssetVarInfo("/alarms/pcs", "Standby", uris.controlsAlarmUri.c_str(), assetVar::ATypes::ASTRING),
                 // /alarms/pcs:VerifyStandby
-                DataUtility::AssetVarInfo("/alarms/pcs", "VerifyStandby", "VerifyStandby_ALARM", assetVar::ATypes::ASTRING)
+                DataUtility::AssetVarInfo("/alarms/pcs", "VerifyStandby", uris.verifyControlsAlarmUri.c_str(), assetVar::ATypes::ASTRING)
             };
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
@@ -413,8 +473,8 @@ namespace OutputHandler {
         }
 
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, "Standby", "VerifyStandby");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, "Standby");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, processOriginUri, uris.controlsUri.c_str(), uris.verifyControlsUri.c_str());
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, uris);
 
         return returnObject;
     }

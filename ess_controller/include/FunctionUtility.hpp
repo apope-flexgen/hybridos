@@ -50,9 +50,34 @@ namespace FunctionUtility
 
     varmap& SharedAmapReset(varmap& amap, VarMapUtils* vm, const char* uiUriKey, const char* controlsUriKey, const char* verifyControlsUriKey);
 
-    FunctionReturnObj SharedHandleCmdProcess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, std::string controlString);
+    struct HandleCmdProcessUris {
+        std::string controlsUri = "";
+        std::string verifyControlsUri = "";
+        std::string controlsSuccessUri = "";
+        std::string verifyControlsSuccessUri = "";
+        std::string controlsAlarmUri = "";
+        std::string verifyControlsAlarmUri = "";
 
-    FunctionReturnObj SharedIndividualHandleCmdLogic(varmap& amap, const char* aname, fims* p_fims, assetVar* aV, std::string controlString);
+        HandleCmdProcessUris() = default;
+
+        HandleCmdProcessUris(std::string a, std::string b,  std::string c, std::string d, std::string e, std::string f) 
+            : controlsUri(a), verifyControlsUri(b), controlsSuccessUri(c), verifyControlsSuccessUri(d), controlsAlarmUri(e), verifyControlsAlarmUri(f)  {}
+    };
+
+    struct HandleCmdLogicUris {
+        std::string controlsUri = "";
+        std::string controlsSuccessUri = "";
+        std::string controlsAlarmUri = "";
+
+        HandleCmdLogicUris() = default;
+
+        HandleCmdLogicUris(std::string a, std::string b,  std::string c) 
+            : controlsUri(a), controlsSuccessUri(b), controlsAlarmUri(c)  {}
+    };
+
+    FunctionReturnObj SharedHandleCmdProcess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, HandleCmdProcessUris uris);
+
+    FunctionReturnObj SharedIndividualHandleCmdLogic(varmap& amap, const char* aname, fims* p_fims, assetVar* aV, HandleCmdLogicUris uris);
 
 }
 

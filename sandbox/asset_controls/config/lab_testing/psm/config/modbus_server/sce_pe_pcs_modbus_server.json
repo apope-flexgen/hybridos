@@ -1,0 +1,4916 @@
+{
+	"fileInfo":{},
+	"system":{
+		"device_id": 1,
+		"id": "PCMS",
+		"ip_address": "0.0.0.0",
+		"name": "PCMS",
+		"port": 40100,
+		"protocol": "Modbus_TCP",
+		"version": "6.0_WIP"
+	},
+	"registers":{
+		"holding_registers": [
+			{
+				"id": "user_pw",
+				"name": "User Password",
+				"offset": 4,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "seconds",
+				"name": "seconds",
+				"offset": 5,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "minutes",
+				"name": "Minutes",
+				"offset": 6,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hours",
+				"name": "Hours",
+				"offset": 7,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "day",
+				"name": "Day",
+				"offset": 8,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "month",
+				"name": "Month",
+				"offset": 9,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "year",
+				"name": "Year",
+				"offset": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "utc",
+				"name": "UTC offset",
+				"offset": 11,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vdc_low",
+				"name": "Vdc Low",
+				"offset": 30,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vac_low",
+				"name": "Vac Low",
+				"offset": 31,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vac_high",
+				"name": "Vac High",
+				"offset": 32,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "start_delay",
+				"name": "Start Delay",
+				"offset": 35,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "p_limit",
+				"name": "P Limit",
+				"offset": 100,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "q_limit",
+				"name": "Q Limit",
+				"offset": 101,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "p_q_priority",
+				"name": "P / Q Priority",
+				"offset": 102,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "s_limit",
+				"name": "S limit",
+				"offset": 103,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "p_algo_pri",
+				"name": "P algorithm priority",
+				"offset": 104,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lvrt_ref",
+				"name": "LVRT Reference",
+				"offset": 192,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "ovrt_ref",
+				"name": "OVRT Reference",
+				"offset": 193,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "night_mode_enable",
+				"name": "Night Mode Enable",
+				"offset": 260,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "night_mode_q_ref",
+				"name": "Night Mode Q ref",
+				"offset": 261,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "night_mode_vbus_ref",
+				"name": "Night Mode Vbus Ref",
+				"offset": 262,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "night_mode_activate",
+				"name": "Night Mode Activate",
+				"offset": 263,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "start_grad_p_enable",
+				"name": "P Start Gradient Enable",
+				"offset": 276,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "start_grad_p",
+				"name": "P Start Gradient",
+				"offset": 277,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "start_grad_q_enable",
+				"name": "Q Start Gradient Enable",
+				"offset": 278,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "start_grad_q",
+				"name": "Q Start Gradient",
+				"offset": 279,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "rise_grad_p_enable",
+				"name": "P Rise Gradient Enable",
+				"offset": 280,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "rise_grad_p",
+				"name": "P Rise Gradient",
+				"offset": 281,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "rise_grad_q_enable",
+				"name": "Q Rise Gradient Enable",
+				"offset": 282,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "rise_grad_q",
+				"name": "Q Rise Gradient",
+				"offset": 283,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "drop_grad_p_enable",
+				"name": "P Drop Gradient Enable",
+				"offset": 284,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "drop_grad_p",
+				"name": "P Drop Gradient",
+				"offset": 285,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "drop_grad_q_enable",
+				"name": "Q Drop Gradient Enable",
+				"offset": 286,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "drop_grad_q",
+				"name": "Q Drop Gradient",
+				"offset": 287,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "stop_grad_p_enable",
+				"name": "P Stop Gradient Enable",
+				"offset": 288,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "stop_grad_p",
+				"name": "P Stop Gradient",
+				"offset": 289,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "stop_grad_q_enable",
+				"name": "Q Stop Gradient Enable",
+				"offset": 290,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "stop_grad_q",
+				"name": "Q Stop Gradient",
+				"offset": 291,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "tracker_enable",
+				"name": "Trackers Enable",
+				"offset": 292,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "tracker_vac_out",
+				"name": "Trackers Vac Out",
+				"offset": 293,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "tracker_vac_min",
+				"name": "Trackers Vac min",
+				"offset": 294,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "tracker_time_start",
+				"name": "Trackers Time Start",
+				"offset": 295,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_enable",
+				"name": "LV Protections Enable",
+				"offset": 300,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_slow",
+				"name": "LV Slow Protection",
+				"offset": 301,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_delay_slow",
+				"name": "LV Delay Slow Protection",
+				"offset": 302,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_fast",
+				"name": "LV Fast Protection",
+				"offset": 303,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_delay_fast",
+				"name": "LV Delay Fast Protection",
+				"offset": 304,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_very_fast",
+				"name": "LV Very Fast Protection",
+				"offset": 305,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_delay_very_fast",
+				"name": "LV Delay Very Fast Protection",
+				"offset": 306,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_interpolation",
+				"name": "LV Interpolation",
+				"offset": 308,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_enable",
+				"name": "HV Protections Enable",
+				"offset": 310,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_slow",
+				"name": "HV Slow Protection",
+				"offset": 311,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_delay_slow",
+				"name": "HV Delay Slow Protection",
+				"offset": 312,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_fast",
+				"name": "HV Fast Protection",
+				"offset": 313,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_delay_fast",
+				"name": "HV Delay Fast Protection",
+				"offset": 314,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_very_fast",
+				"name": "HV Very Fast Protection",
+				"offset": 315,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_delay_very_fast",
+				"name": "HV Delay Very Fast Protection",
+				"offset": 316,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_interpolation",
+				"name": "HV Interpolation",
+				"offset": 317,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lf_enable",
+				"name": "LF Protections Enable",
+				"offset": 320,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lf_slow",
+				"name": "LF Slow Protection",
+				"offset": 321,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lf_delay_slow",
+				"name": "LF Delay Slow Protection",
+				"offset": 322,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lf_fast",
+				"name": "LF Fast Protection",
+				"offset": 323,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lf_delay_fast",
+				"name": "LF Delay Fast Protection",
+				"offset": 324,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lf_very_fast",
+				"name": "LF Very Fast Protection",
+				"offset": 325,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lf_delay_very_fast",
+				"name": "LF Delay Very Fast Protection",
+				"offset": 326,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hf_enable",
+				"name": "HF Protections Enable",
+				"offset": 330,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hf_slow",
+				"name": "HF Slow Protection",
+				"offset": 331,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hf_delay_slow",
+				"name": "HF Delay Slow Protection",
+				"offset": 332,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hf_fast",
+				"name": "HF Fast Protection",
+				"offset": 333,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hf_delay_fast",
+				"name": "HF Delay Fast Protection",
+				"offset": 334,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hf_very_fast",
+				"name": "HF Very Fast Protection",
+				"offset": 335,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hf_delay_very_fast",
+				"name": "HF Delay Very Fast Protection",
+				"offset": 336,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "unbalance_enable",
+				"name": "Unbalance Protections",
+				"offset": 340,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "unbalance_i_threshold",
+				"name": "I unbalance",
+				"offset": 341,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "unbalance_i_delay",
+				"name": "Delay I unbalance",
+				"offset": 342,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "unbalance_v_threshold",
+				"name": "Unbalance V",
+				"offset": 343,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "unbalance_v_delay",
+				"name": "Delay Unbalance V",
+				"offset": 344,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "unbalance_i_min",
+				"name": "I unbalance min",
+				"offset": 347,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "antiislanding_enable",
+				"name": "Anti Islanding Enable",
+				"offset": 350,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "igbt_temp_thres_fit",
+				"name": "IGBTs temp thres fit=125 C",
+				"offset": 360,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "igbt_temp_hist",
+				"name": "IGBTs temp hist =10 C",
+				"offset": 361,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "module_temp_thres_fit",
+				"name": "Module temp thres fit=85 C",
+				"offset": 362,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "module_temp_hist",
+				"name": "Module temp thist=10 C",
+				"offset": 363,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "internal_temp_thres_fit",
+				"name": "Internal temp thres fit=85 C",
+				"offset": 364,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "earth_current",
+				"name": "Earth Current",
+				"offset": 370,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "high_vdc_delay",
+				"name": "Delay High Vdc = 1 s",
+				"offset": 371,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "du_overcurrent",
+				"name": "DU Overcurrent = 400.0 A",
+				"offset": 372,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_fast_2",
+				"name": "LV Fast Protection 2",
+				"offset": 375,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_delay_fast_2",
+				"name": "LV Delay Fast Protection 2",
+				"offset": 376,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_very_fast_2",
+				"name": "LV Very Fast Protection 2",
+				"offset": 377,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_delay_very_fast_2",
+				"name": "LV Delay Very Fast Protection 2",
+				"offset": 378,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_fast_2",
+				"name": "HV Fast Protection 2",
+				"offset": 379,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_delay_fast_2",
+				"name": "HV Delay Fast Protection 2",
+				"offset": 380,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_very_fast_2",
+				"name": "HV Very Fast Protection 2",
+				"offset": 381,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_delay_very_fast_2",
+				"name": "HV Delay Very Fast Protection 2",
+				"offset": 382,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lf_slow_2",
+				"name": "LF Slow 2 Protection",
+				"offset": 383,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lf_delay_slow_2",
+				"name": "LF Delay Slow 2 Protection",
+				"offset": 384,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lf_very_fast_2",
+				"name": "LF Very Fast 2 Protection",
+				"offset": 385,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lf_delay_very_fast_2",
+				"name": "LF Delay Very Fast 2 Protection",
+				"offset": 386,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hf_slow_2",
+				"name": "HF Slow 2 Protection",
+				"offset": 387,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hf_delay_slow_2",
+				"name": "HF Delay Slow 2 Protection",
+				"offset": 388,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hf_very_fast_2",
+				"name": "HF Very Fast 2 Protection",
+				"offset": 389,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hf_delay_very_fast_2",
+				"name": "HF Delay Very Fast 2 Protection",
+				"offset": 390,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hvpl_enable",
+				"name": "HVPL Enable 5.9.1",
+				"offset": 391,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hvpl_activation_level_5",
+				"name": "HVPL Activation Level = 5%",
+				"offset": 392,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hvpl_scale_1000",
+				"name": "HVPL Scale = 1000",
+				"offset": 393,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hvpl_fault_level_0",
+				"name": "HVPL Fault Level = 0",
+				"offset": 394,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hvpl_filter_hz_100_hz",
+				"name": "HVPL filter = 0.100 Hz",
+				"offset": 395,
+				"scale": 1000,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hvpl_delay_fault_s_0_s",
+				"name": "HVPL delay fault = 2.0 s",
+				"offset": 396,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hvpl_start_test",
+				"name": "HVPL Start Test",
+				"offset": 397,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hvpl_test_level_20",
+				"name": "HVPL Test Level = -20%",
+				"offset": 398,
+				"scale": 1,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "display_baudrate",
+				"name": "Display Baudrate = 115200",
+				"offset": 400,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "modbus_address",
+				"name": "Modbus Address=150",
+				"offset": 401,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "modbus_baudrate",
+				"name": "Modbus Baudrate=19200 bps",
+				"offset": 402,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "modbus_parity",
+				"name": "Modbus Parity",
+				"offset": 403,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "modbus_stop_bits",
+				"name": "Modbus Stop bits",
+				"offset": 404,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "modbus_master",
+				"name": "Modbus Master",
+				"offset": 405,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "automatic_ip",
+				"name": "Automatic IP",
+				"offset": 410,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "assigned_ip_a",
+				"name": "Assigned IP A",
+				"offset": 411,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "assigned_ip_b",
+				"name": "Assigned IP B",
+				"offset": 412,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "assigned_ip_c",
+				"name": "Assigned IP C",
+				"offset": 413,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "assigned_ip_d",
+				"name": "Assigned IP D",
+				"offset": 414,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "assigned_subnet_a",
+				"name": "Assigned Subnet A",
+				"offset": 415,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "assigned_subnet_b",
+				"name": "Assigned Subnet B",
+				"offset": 416,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "assigned_subnet_c",
+				"name": "Assigned Subnet C",
+				"offset": 417,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "assigned_subnet_d",
+				"name": "Assigned Subnet D",
+				"offset": 418,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "assigned_gateway_a",
+				"name": "Assigned Gateway A",
+				"offset": 419,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "assigned_gateway_b",
+				"name": "Assigned Gateway B",
+				"offset": 420,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "assigned_gateway_c",
+				"name": "Assigned Gateway C",
+				"offset": 421,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "assigned_gateway_d",
+				"name": "Assigned Gateway D",
+				"offset": 422,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "ip_address_a",
+				"name": "IP address A",
+				"offset": 423,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "ip_address_b",
+				"name": "IP address B",
+				"offset": 424,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "ip_address_c",
+				"name": "IP address C",
+				"offset": 425,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "ip_address_d",
+				"name": "IP address D",
+				"offset": 426,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "subnet_a",
+				"name": "Subnet A",
+				"offset": 427,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "subnet_b",
+				"name": "Subnet B",
+				"offset": 428,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "subnet_c",
+				"name": "Subnet C",
+				"offset": 429,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "subnet_d",
+				"name": "Subnet D",
+				"offset": 430,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "gateway_a",
+				"name": "Gateway A",
+				"offset": 431,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "gateway_b",
+				"name": "Gateway B",
+				"offset": 432,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "gateway_c",
+				"name": "Gateway C",
+				"offset": 433,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "gateway_d",
+				"name": "Gateway D",
+				"offset": 434,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "mac_a",
+				"name": "Mac A",
+				"offset": 435,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "mac_b",
+				"name": "Mac B",
+				"offset": 436,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "mac_c",
+				"name": "Mac C",
+				"offset": 437,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "mac_d",
+				"name": "Mac D",
+				"offset": 438,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "mac_e",
+				"name": "Mac E",
+				"offset": 439,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "mac_f",
+				"name": "Mac F",
+				"offset": 440,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_lf_enable",
+				"name": "Enable 5.4b.4.1",
+				"offset": 472,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_lf_V",
+				"name": "V4 = 80%",
+				"offset": 473,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_lf_f",
+				"name": "f4 = 58.00 Hz",
+				"offset": 474,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_lf_t",
+				"name": "t4 = 1.0 s",
+				"offset": 475,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "mv_manometer_fault",
+				"name": "MV manometer fault = off",
+				"offset": 480,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "mv_manometer_delay",
+				"name": "MV manometer delay = 10 s",
+				"offset": 481,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_manometer_fault",
+				"name": "LV manometer fault = off",
+				"offset": 482,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_manometer_delay",
+				"name": "LV manometer delay = 10 s",
+				"offset": 483,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "auto_reset_enable",
+				"name": "Auto Reset Enable",
+				"offset": 500,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "number_of_retries",
+				"name": "Number of Retries",
+				"offset": 501,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "delay_between_retries_s_s",
+				"name": "Delay between retries = 30 s",
+				"offset": 502,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "reset_retries_timeout",
+				"name": "Reset Retries timeout",
+				"offset": 503,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "all_faults_enabled",
+				"name": "All Faults enabled",
+				"offset": 504,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_allowed_number",
+				"name": "Faults allowed number = 0",
+				"offset": 505,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_allowed_1",
+				"name": "Faults allowed 1 = No Faults",
+				"offset": 506,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_allowed_2",
+				"name": "Faults allowed 2 = No Faults",
+				"offset": 507,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_allowed_3",
+				"name": "Faults allowed 3 = No Faults",
+				"offset": 508,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_allowed_4",
+				"name": "Faults allowed 4 = No Faults",
+				"offset": 509,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_allowed_5",
+				"name": "Faults allowed 5 = No Faults",
+				"offset": 510,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_allowed_6",
+				"name": "Faults allowed 6 = No Faults",
+				"offset": 511,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_allowed_7",
+				"name": "Faults allowed 7 = No Faults",
+				"offset": 512,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_allowed_8",
+				"name": "Faults allowed 8 = No Faults",
+				"offset": 513,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_allowed_9",
+				"name": "Faults allowed 9 = No Faults",
+				"offset": 514,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_allowed_10",
+				"name": "Faults allowed 10 = No Faults",
+				"offset": 515,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_exception_number",
+				"name": "Faults exception number = 0",
+				"offset": 516,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_exception_1",
+				"name": "Faults exception 1 = No faults",
+				"offset": 517,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_exception_2",
+				"name": "Faults exception 2 = No faults",
+				"offset": 518,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_exception_3",
+				"name": "Faults exception 3 = No faults",
+				"offset": 519,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_exception_4",
+				"name": "Faults exception 4 = No faults",
+				"offset": 520,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_exception_5",
+				"name": "Faults exception 5 = No faults",
+				"offset": 521,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_exception_6",
+				"name": "Faults exception 6 = No faults",
+				"offset": 522,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_exception_7",
+				"name": "Faults exception 7 = No faults",
+				"offset": 523,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_exception_8",
+				"name": "Faults exception 8 = No faults",
+				"offset": 524,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_exception_9",
+				"name": "Faults exception 9 = No faults",
+				"offset": 525,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "faults_exception_10",
+				"name": "Faults exception 10 = No faults",
+				"offset": 526,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "svr_enable",
+				"name": "SVR Enable",
+				"offset": 540,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "svr_v1_threshold",
+				"name": "SVR V1 Threshold",
+				"offset": 541,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "svr_v2_threshold",
+				"name": "SVR V2 Threshold",
+				"offset": 542,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "svr_v1_hysteresis",
+				"name": "SVR V1 Hysteresis",
+				"offset": 543,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "svr_v2_hysetresis",
+				"name": "SVR V2 Hysteresis",
+				"offset": 544,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "svr_grad_inject",
+				"name": "SVR Grad Inj Q",
+				"offset": 545,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "svr_grad_recover_q",
+				"name": "SVR Grad Recover Q",
+				"offset": 546,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "svr_grad_reduction_p",
+				"name": "SVR Grad Reduction P",
+				"offset": 547,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "svr_grad_recover_p",
+				"name": "SVR Grad Recover P",
+				"offset": 548,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "svr_cosfi_limit",
+				"name": "SVR CosFi limit",
+				"offset": 549,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "p_control_mode",
+				"name": "P control Mode",
+				"offset": 550,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "q_control_mode",
+				"name": "Q control Mode = Q",
+				"offset": 551,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "p_p_reference",
+				"name": "P reference = 100%",
+				"offset": 552,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "p_id_reference",
+				"name": "Id reference = 100%",
+				"offset": 553,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "q_cosphi_reference",
+				"name": "Cos phi reference = 1.000",
+				"offset": 555,
+				"scale": 1000,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "q_iq_reference",
+				"name": "Iq reference = 0",
+				"offset": 556,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "q_q_reference",
+				"name": "Q reference = 0.0%",
+				"offset": 557,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "excitation",
+				"name": "Excitation",
+				"offset": 558,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "q_v_reference",
+				"name": "Vref = 100.00%",
+				"offset": 575,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_v1",
+				"name": "V1=90%",
+				"offset": 576,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_v2",
+				"name": "V2 = 92.00%",
+				"offset": 577,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_v3",
+				"name": "V3 = 108.00%",
+				"offset": 578,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_v4",
+				"name": "V4 =  110.00%",
+				"offset": 579,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_q1",
+				"name": "Q1 = 48.43%",
+				"offset": 580,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_q2",
+				"name": "Q2 = 0.00%",
+				"offset": 581,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_q3",
+				"name": "Q3 = 0.00%",
+				"offset": 582,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_q4",
+				"name": "Q4 = 48.43%",
+				"offset": 583,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_hysterisis",
+				"name": "V hysterisis = 1.0%",
+				"offset": 584,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_p_activation",
+				"name": "P activation = 20%",
+				"offset": 585,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_p_deactivation",
+				"name": "P deactivation = 5.0%",
+				"offset": 586,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_response_delay",
+				"name": "Response Tdelay = 0.3 s",
+				"offset": 587,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vq_response_time",
+				"name": "Response Time = 5.0 s",
+				"offset": 588,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "q_reference_1",
+				"name": "Q reference 1 = 0.00%",
+				"offset": 597,
+				"scale": 5.50964187,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "q_reference_2",
+				"name": "Q reference 2 = 0.00%",
+				"offset": 598,
+				"scale": 5.50964187,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "q_reference_3",
+				"name": "Q reference 3 = 0.00%",
+				"offset": 599,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "enabled_nec",
+				"name": "Enabled NEC = NEC 2017",
+				"offset": 648,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "du_type",
+				"name": "Du Type = HEM",
+				"offset": 649,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "working_mode",
+				"name": "Working Mode = GFDI + IMI",
+				"offset": 650,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_hf_enable",
+				"name": "Enable 5.4b.1.1",
+				"offset": 730,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_hf_V",
+				"name": "V1 = 120%",
+				"offset": 731,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_hf_f",
+				"name": "f1 = 62.00 Hz",
+				"offset": 732,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_hf_t",
+				"name": "t1 = 1.0 s",
+				"offset": 733,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_hf_enable",
+				"name": "Enable 5.4b.2.1",
+				"offset": 734,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_hf_V",
+				"name": "V2 = 80%",
+				"offset": 735,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_hf_f",
+				"name": "f2 = 62.00 Hz",
+				"offset": 736,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "lv_hf_t",
+				"name": "t2 = 1.0 s",
+				"offset": 737,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_lf_enable",
+				"name": "Enable 5.4b.3.1",
+				"offset": 738,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_lf_V",
+				"name": "V3 = 120%",
+				"offset": 739,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_lf_f",
+				"name": "f3 = 58.00 Hz",
+				"offset": 740,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "hv_lf_t",
+				"name": "t3 = 1.0 s",
+				"offset": 741,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vp_ref_power",
+				"name": "V/P Ref Power Rel",
+				"offset": 818,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vp_rec_mode",
+				"name": "V/P Recover Mode",
+				"offset": 819,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vp_enable",
+				"name": "V/P Enable",
+				"offset": 820,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vp_v1",
+				"name": "V/P V1",
+				"offset": 821,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vp_v2",
+				"name": "V/P V2",
+				"offset": 822,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vp_p1",
+				"name": "V/P P1",
+				"offset": 823,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vp_p2",
+				"name": "V/P P2",
+				"offset": 824,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vp_hysteresis",
+				"name": "V/P Hysteresis",
+				"offset": 825,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vp_delay_hysteresis",
+				"name": "V/P Delay Hysterisis",
+				"offset": 827,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "vp_response_tiime",
+				"name": "V/P Response Time",
+				"offset": 828,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "selector_config",
+				"name": "Selector Config",
+				"offset": 2013,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "start_control_mode",
+				"name": "Start Control Mode",
+				"offset": 2040,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "selector_status",
+				"name": "Selector Status",
+				"offset": 2041,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "start",
+				"name": "Start",
+				"offset": 3009,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "stop",
+				"name": "Stop",
+				"offset": 3010,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "reset",
+				"name": "Reset",
+				"offset": 3011,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "e_stop",
+				"name": "E-Stop",
+				"offset": 3199,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "ppc_watchdog_ref",
+				"name": "Watchdog timer input",
+				"offset": 4251,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "reset_refs_time_s",
+				"name": "Reset refs time = 4s",
+				"offset": 4252,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "comms_fault_time_s_s",
+				"name": "Comms Fault time = 60 s",
+				"offset": 4253,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "home_p_ref_0_0",
+				"name": "Home P ref  = 0.0%",
+				"offset": 4254,
+				"scale": 100,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "home_q_ref_0_0",
+				"name": "Home Q ref = 0.0%",
+				"offset": 4255,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "active_bal_activate",
+				"name": "Active Balancing Activate",
+				"offset": 7021,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "bank_bal_activate",
+				"name": "Bank Balancing Activate",
+				"offset": 7024,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "bank_bal_reconnect_grad",
+				"name": "Bank Balancing Reconnect Gradient",
+				"offset": 7027,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "cvsb_activate",
+				"name": "Constant Voltage Standby Activate",
+				"offset": 7029,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "cvsb_time_to_enter",
+				"name": "Constant Voltage Standby  Time to Enter",
+				"offset": 7030,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "battery_module_model",
+				"name": "Battery Module Model",
+				"offset": 7050,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "bms_banks_enabled",
+				"name": "BMS Banks Enabled",
+				"offset": 7051,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "p_dc_reference_1",
+				"name": "P DC reference 1 = 100%",
+				"offset": 7141,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "p_dc_reference_2",
+				"name": "P DC reference 2 = 100%",
+				"offset": 7142,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "p_dc_reference_3",
+				"name": "P DC reference 3 = 100%",
+				"offset": 7143,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "p_ac_reference_1",
+				"name": "P AC reference 1 = 100%",
+				"offset": 7144,
+				"scale": 5.50964187,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "p_ac_reference_2",
+				"name": "P AC reference 2 = 100%",
+				"offset": 7145,
+				"scale": 5.50964187,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "p_ac_reference_3",
+				"name": "P AC reference 3 = 100%",
+				"offset": 7146,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_protection_type_1",
+				"name": "Leak Protection Type",
+				"offset": 7150,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_imi_activation_1",
+				"name": "IMI Activation",
+				"offset": 7151,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_fault_threshold_1",
+				"name": "Fault Threshold = 5.0kOhms",
+				"offset": 7152,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_fault_recover_threshold_1",
+				"name": "Fault Recover Threshold = 115%",
+				"offset": 7153,
+				"scale": 2000,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_warning_theshold_1",
+				"name": "Warning Theshold=50.0kOhms",
+				"offset": 7154,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_self_test_exec_period_1",
+				"name": "Self Test exec per = 1440",
+				"offset": 7157,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_self_test_manual_command_1",
+				"name": "Self Test Manual Command",
+				"offset": 7158,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_protection_type_2",
+				"name": "Leak Protection Type",
+				"offset": 7160,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_imi_activation_2",
+				"name": "IMI Activation",
+				"offset": 7161,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_fault_threshold_2",
+				"name": "Fault Threshold = 5.0kOhms",
+				"offset": 7162,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_fault_recover_threshold_2",
+				"name": "Fault Recover Threshold = 115%",
+				"offset": 7163,
+				"scale": 2000,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_warning_theshold_2",
+				"name": "Warning Theshold=50.0kOhms",
+				"offset": 7164,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_self_test_exec_period_2",
+				"name": "Self Test exec per = 1440",
+				"offset": 7167,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_self_test_manual_command_2",
+				"name": "Self Test Manual Command",
+				"offset": 7168,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_protection_type_3",
+				"name": "Leak Protection Type",
+				"offset": 7170,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_imi_activation_3",
+				"name": "IMI Activation",
+				"offset": 7171,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_fault_threshold_3",
+				"name": "Fault Threshold = 5.0kOhms",
+				"offset": 7172,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_fault_recover_threshold_3",
+				"name": "Fault Recover Threshold = 115%",
+				"offset": 7173,
+				"scale": 2000,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_warning_theshold_3",
+				"name": "Warning Theshold=50.0kOhms",
+				"offset": 7174,
+				"scale": 10,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_self_test_exec_period_3",
+				"name": "Self Test exec per = 1440",
+				"offset": 7177,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "leak_self_test_manual_command_3",
+				"name": "Self Test Manual Command",
+				"offset": 7178,
+				"scale": 1,
+				"uri": "/components/pe_pcs_controls"
+			}
+		],
+		"input_registers": [
+			{
+				"id": "access",
+				"name": "Access Code",
+				"offset": 2,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "user",
+				"name": "User",
+				"offset": 3,
+				"uri": "/components/pe_pcs_controls"
+			},
+			{
+				"id": "grid_voltage_rs",
+				"name": "Grid voltage RS",
+				"offset": 1000,
+				"scale": 1,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "grid_voltage_st",
+				"name": "Grid voltage ST",
+				"offset": 1001,
+				"scale": 1,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "grid_voltage_tr",
+				"name": "Grid voltage TR",
+				"offset": 1002,
+				"scale": 1,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "grid_current_1",
+				"name": "Grid current I1",
+				"offset": 1003,
+				"scale": 1,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "grid_current_2",
+				"name": "Grid current I2",
+				"offset": 1004,
+				"scale": 1,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "grid_current_3",
+				"name": "Grid current I3",
+				"offset": 1005,
+				"scale": 1,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "active_power",
+				"name": "P",
+				"offset": 1007,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "reactive_power",
+				"name": "Q",
+				"offset": 1008,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "apparent_power",
+				"name": "S",
+				"offset": 1009,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "cosphi",
+				"name": "Cos phi",
+				"offset": 1010,
+				"scale": 1000,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "grid_frequency",
+				"name": "Grid frequency",
+				"offset": 1011,
+				"scale": 1000,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "poi_v_est",
+				"name": "POI V estimated",
+				"offset": 1013,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "grid_voltage_rs_lv",
+				"name": "Grid voltage RS LV",
+				"offset": 1020,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "grid_voltage_st_lv",
+				"name": "Grid voltage ST LV",
+				"offset": 1021,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "grid_voltage_tr_lv",
+				"name": "Grid voltage TR LV",
+				"offset": 1022,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "vdc_last_linp",
+				"name": "DC voltage last linp",
+				"offset": 1052,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "dc_p_input",
+				"name": "DC input power",
+				"offset": 1060,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "dc_total_i_input",
+				"name": "DC input current total",
+				"offset": 1061,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_status_1",
+				"name": "Insulation Status",
+				"offset": 1102,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_resistor_msb_1",
+				"name": "Insulation Resistor MSB",
+				"offset": 1103,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_resistor_lsb_1",
+				"name": "Resistor LSB",
+				"offset": 1104,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_measurement_started_time_1",
+				"name": "Insulation Measurement started time",
+				"offset": 1105,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_self_test_started_time_1",
+				"name": "Insulation Self-test started time",
+				"offset": 1106,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_self_test_exec_countdown_1",
+				"name": "Insulation Self-test exec countdown",
+				"offset": 1107,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_status_update_1",
+				"name": "Insulation Status update",
+				"offset": 1108,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "current_fault",
+				"name": "Current fault",
+				"offset": 1120,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "current_warning",
+				"name": "Current warning",
+				"offset": 1121,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "current_status",
+				"name": "Current status",
+				"offset": 1122,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "internal_temperature",
+				"name": "Internal temperature",
+				"offset": 1123,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "max_igbts_temperature",
+				"name": "Max IGBTs temperature",
+				"offset": 1124,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "max_modules_temperature",
+				"name": "Max modules temperature",
+				"offset": 1125,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "internal_input_status",
+				"name": "Internal input status",
+				"offset": 1126,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "internal_output_status",
+				"name": "Internal output status",
+				"offset": 1127,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "ac_module_admission_temperature",
+				"name": "AC module admission temperature",
+				"offset": 1128,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "current_normative",
+				"name": "Current normative",
+				"offset": 1129,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "current_fault_module",
+				"name": "Current fault module",
+				"offset": 1130,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "internal_humidity",
+				"name": "Internal humidity",
+				"offset": 1131,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "lv_manometer",
+				"name": "LV manometer",
+				"offset": 1132,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "power_source_1",
+				"name": "Power source 1",
+				"offset": 1134,
+				"scale": 100,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "power_source_2",
+				"name": "Power source 2",
+				"offset": 1135,
+				"scale": 100,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "p_limit_inst",
+				"name": "P limit inst",
+				"offset": 1140,
+				"scale": 10000,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "q_limit_inst",
+				"name": "Q limit inst",
+				"offset": 1141,
+				"scale": 10000,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "r_mohm",
+				"name": "R (mOhm)",
+				"offset": 1145,
+				"scale": 100,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "l_uh",
+				"name": "L (uH)",
+				"offset": 1146,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "c_uf",
+				"name": "C (uF)",
+				"offset": 1147,
+				"scale": 100,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "lc_uh",
+				"name": "Lc (uH)",
+				"offset": 1148,
+				"scale": 100,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "start_conditions_all",
+				"name": "Start conditions all",
+				"offset": 1150,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "start_conditions_v",
+				"name": "Start conditions V",
+				"offset": 1151,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "start_conditions_f",
+				"name": "Start conditions f",
+				"offset": 1152,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "start_conditions_vdc",
+				"name": "Start conditions Vdc",
+				"offset": 1153,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "start_conditions_p",
+				"name": "Start conditions P",
+				"offset": 1155,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "start_conditions_soc_no",
+				"name": "Start conditions SOC = No",
+				"offset": 1156,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "nominal_ac_voltage",
+				"name": "Nominal AC voltage",
+				"offset": 1160,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "max_ac_current",
+				"name": "Max AC current",
+				"offset": 1161,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "nominal_bus_voltage",
+				"name": "Nominal bus voltage",
+				"offset": 1162,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "max_dc_current",
+				"name": "Max DC current",
+				"offset": 1163,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "nominal_s",
+				"name": "Nominal S",
+				"offset": 1164,
+				"scale": 100,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "number_of_modules",
+				"name": "Number of modules",
+				"offset": 1165,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "number_of_mpps",
+				"name": "Number of MPPs",
+				"offset": 1166,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "number_of_bus",
+				"name": "Number of BUS = 2",
+				"offset": 1169,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "inverter_type",
+				"name": "Inverter type",
+				"offset": 1182,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "inductive_i_limit",
+				"name": "Inductive I limit",
+				"offset": 1183,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "capacitive_i_limit",
+				"name": "Capacitive I limit",
+				"offset": 1184,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "max_p_limit",
+				"name": "Max P limit",
+				"offset": 1185,
+				"scale": 100,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "max_q_limit",
+				"name": "Max Q limit",
+				"offset": 1186,
+				"scale": 100,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "max_s_limit",
+				"name": "Max S limit",
+				"offset": 1187,
+				"scale": 100,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "status_gen_switch",
+				"name": "Status Gen. Switch (Breaker Status)",
+				"offset": 1195,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "select_module",
+				"name": "Select module",
+				"offset": 1200,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "daily_energy_msb",
+				"name": "Daily energy MSB",
+				"offset": 1201,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "daily_energy_lsb",
+				"name": "Daily energy LSB",
+				"offset": 1202,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "yesterday_energy_msb",
+				"name": "Yesterday energy MSB",
+				"offset": 1203,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "yesterday_energy_lsb",
+				"name": "Yesterday energy LSB",
+				"offset": 1204,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "current_month_energy_msb",
+				"name": "Current month energy MSB",
+				"offset": 1205,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "current_month_energy_lsb",
+				"name": "Current month energy LSB",
+				"offset": 1206,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_month_energy_msb",
+				"name": "Last month energy MSB",
+				"offset": 1207,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_month_energy_lsb",
+				"name": "Last month energy LSB",
+				"offset": 1208,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "total_energy_msb",
+				"name": "Total energy MSB",
+				"offset": 1209,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "total_energy_lsb",
+				"name": "Total energy LSB",
+				"offset": 1210,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "select_module_reactive_energy",
+				"name": "Select module reactive energy",
+				"offset": 1211,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "daily_reactive_energy_msb",
+				"name": "Daily reactive energy MSB",
+				"offset": 1212,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "daily_reactive_energy_lsb",
+				"name": "Daily reactive energy LSB",
+				"offset": 1213,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "yesterday_reactive_energy_msb",
+				"name": "Yesterday reactive energy MSB",
+				"offset": 1214,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "yesterday_reactive_energy_lsb",
+				"name": "Yesterday reactive energy LSB",
+				"offset": 1215,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "current_month_reactive_energy_msb",
+				"name": "Current month reactive energy MSB",
+				"offset": 1216,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "current_month_reactive_energy_lsb",
+				"name": "Current month reactive energy LSB",
+				"offset": 1217,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_month_reactive_energy_msb",
+				"name": "Last month reactive energy MSB",
+				"offset": 1218,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_month_reactive_energy_lsb",
+				"name": "Last month reactive energy LSB",
+				"offset": 1219,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "total_reactive_energy_msb",
+				"name": "Total reactive energy MSB",
+				"offset": 1220,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "total_reactive_energy_lsb",
+				"name": "Total reactive energy LSB",
+				"offset": 1221,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "total_run_time_years",
+				"name": "Total run time years",
+				"offset": 1222,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "total_run_time_days",
+				"name": "Total run time days",
+				"offset": 1223,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "total_run_time_hours",
+				"name": "Total run time hours",
+				"offset": 1224,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "partial_run_time_years",
+				"name": "Partial run time years",
+				"offset": 1225,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "partial_run_time_days",
+				"name": "Partial run time days",
+				"offset": 1226,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "partial_run_time_hours",
+				"name": "Partial run time hours",
+				"offset": 1227,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "total_grid_connections",
+				"name": "Total number of grid connections",
+				"offset": 1228,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "partial_grid_connections",
+				"name": "Partial number of grid connections",
+				"offset": 1229,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "consum_daily_energy_msb",
+				"name": "Consum. daily energy MSB",
+				"offset": 1230,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "consum_daily_energy_lsb",
+				"name": "Consum. daily energy LSB",
+				"offset": 1231,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "consum_total_energy_msb",
+				"name": "Consum. total energy MSB",
+				"offset": 1232,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "consum_total_energy_lsb",
+				"name": "Consum. total energy LSB",
+				"offset": 1233,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_fault",
+				"name": "Last fault",
+				"offset": 1250,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_fault_date",
+				"name": "Date of last fault",
+				"offset": 1251,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_fault_time",
+				"name": "Time of last fault",
+				"offset": 1252,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "ninth_fault",
+				"name": "9th fault",
+				"offset": 1253,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "ninth_fault_date",
+				"name": "Date of 9th fault",
+				"offset": 1254,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "ninth_fault_time",
+				"name": "Time of 9th fault",
+				"offset": 1255,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "eighth_fault",
+				"name": "8th fault",
+				"offset": 1256,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "eighth_fault_date",
+				"name": "Date of 8th fault",
+				"offset": 1257,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "eighth_fault_time",
+				"name": "Time of 8th fault",
+				"offset": 1258,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "seventh_fault",
+				"name": "7th fault",
+				"offset": 1259,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "seventh_fault_date",
+				"name": "Date of 7th fault",
+				"offset": 1260,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "seventh_fault_time",
+				"name": "Time of 7th fault",
+				"offset": 1261,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "sixth_fault",
+				"name": "6th fault",
+				"offset": 1262,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "sixth_fault_date",
+				"name": "Date of 6th fault",
+				"offset": 1263,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "sixth_fault_time",
+				"name": "Time of 6h fault",
+				"offset": 1264,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fifth_fault",
+				"name": "5th fault",
+				"offset": 1265,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fifth_fault_date",
+				"name": "Date of 5th fault",
+				"offset": 1266,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fifth_fault_time",
+				"name": "Time of 5th fault",
+				"offset": 1267,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fourth_fault",
+				"name": "4th fault",
+				"offset": 1268,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fourth_fault_date",
+				"name": "Date of 4th fault",
+				"offset": 1269,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fourth_fault_time",
+				"name": "Time of 4th fault",
+				"offset": 1270,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "third_fault",
+				"name": "3rd fault",
+				"offset": 1271,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "third_fault_date",
+				"name": "Date of 3rd fault",
+				"offset": 1272,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "third_fault_time",
+				"name": "Time of 3rd fault",
+				"offset": 1273,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "second_fault",
+				"name": "2nd fault",
+				"offset": 1274,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "second_fault_date",
+				"name": "Date of 2nd fault",
+				"offset": 1275,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "second_fault_time",
+				"name": "Time of 2nd fault",
+				"offset": 1276,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "first_fault",
+				"name": "1st fault",
+				"offset": 1277,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "first_fault_date",
+				"name": "Date of 1st fault",
+				"offset": 1278,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "first_fault_time",
+				"name": "Time of 1st fault",
+				"offset": 1279,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_warning",
+				"name": "Last warning",
+				"offset": 1300,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_warning_date",
+				"name": "Date of last warning",
+				"offset": 1301,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_warning_time",
+				"name": "Time of last warning",
+				"offset": 1302,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "ninth_warning",
+				"name": "9th warning",
+				"offset": 1303,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "ninth_warning_date",
+				"name": "Date of 9th warning",
+				"offset": 1304,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "ninth_warning_time",
+				"name": "Time of 9th warning",
+				"offset": 1305,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "eighth_warning",
+				"name": "8th warning",
+				"offset": 1306,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "eighth_warning_date",
+				"name": "Date of 8th warning",
+				"offset": 1307,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "eighth_warning_time",
+				"name": "Time of 8th warning",
+				"offset": 1308,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "seventh_warning",
+				"name": "7th warning",
+				"offset": 1309,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "seventh_warning_date",
+				"name": "Date of 7th warning",
+				"offset": 1310,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "seventh_warning_time",
+				"name": "Time of 7th warning",
+				"offset": 1311,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "sixth_warning",
+				"name": "6th warning",
+				"offset": 1312,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "sixth_warning_date",
+				"name": "Date of 6th warning",
+				"offset": 1313,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "sixth_warning_time",
+				"name": "Time of 6h warning",
+				"offset": 1314,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fifth_warning",
+				"name": "5th warning",
+				"offset": 1315,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fifth_warning_date",
+				"name": "Date of 5th warning",
+				"offset": 1316,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fifth_warning_time",
+				"name": "Time of 5th warning",
+				"offset": 1317,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fourth_warning",
+				"name": "4th warning",
+				"offset": 1318,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fourth_warning_date",
+				"name": "Date of 4th warning",
+				"offset": 1319,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fourth_warning_time",
+				"name": "Time of 4th warning",
+				"offset": 1320,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "third_warning",
+				"name": "3rd warning",
+				"offset": 1321,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "third_warning_date",
+				"name": "Date of 3rd warning",
+				"offset": 1322,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "third_warning_time",
+				"name": "Time of 3rd warning",
+				"offset": 1323,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "second_warning",
+				"name": "2nd warning",
+				"offset": 1324,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "second_warning_date",
+				"name": "Date of 2nd warning",
+				"offset": 1325,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "second_warning_time",
+				"name": "Time of 2nd warning",
+				"offset": 1326,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "first_warning",
+				"name": "1st warning",
+				"offset": 1327,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "first_warning_date",
+				"name": "Date of 1st warning",
+				"offset": 1328,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "first_warning_time",
+				"name": "Time of 1st warning",
+				"offset": 1329,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_event",
+				"name": "Last event",
+				"offset": 1350,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_event_date",
+				"name": "Date of last event",
+				"offset": 1351,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "last_event_time",
+				"name": "Time of last event",
+				"offset": 1352,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "ninth_event",
+				"name": "9th event",
+				"offset": 1353,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "ninth_event_date",
+				"name": "Date of 9th event",
+				"offset": 1354,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "ninth_event_time",
+				"name": "Time of 9th event",
+				"offset": 1355,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "eighth_event",
+				"name": "8th event",
+				"offset": 1356,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "eighth_event_date",
+				"name": "Date of 8th event",
+				"offset": 1357,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "eighth_event_time",
+				"name": "Time of 8th event",
+				"offset": 1358,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "seventh_event",
+				"name": "7th event",
+				"offset": 1359,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "seventh_event_date",
+				"name": "Date of 7th event",
+				"offset": 1360,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "seventh_event_time",
+				"name": "Time of 7th event",
+				"offset": 1361,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "sixth_event",
+				"name": "6th event",
+				"offset": 1362,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "sixth_event_date",
+				"name": "Date of 6th event",
+				"offset": 1363,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "sixth_event_time",
+				"name": "Time of 6h event",
+				"offset": 1364,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fifth_event",
+				"name": "5th event",
+				"offset": 1365,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fifth_event_date",
+				"name": "Date of 5th event",
+				"offset": 1366,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fifth_event_time",
+				"name": "Time of 5th event",
+				"offset": 1367,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fourth_event",
+				"name": "4th event",
+				"offset": 1368,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fourth_event_date",
+				"name": "Date of 4th event",
+				"offset": 1369,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "fourth_event_time",
+				"name": "Time of 4th event",
+				"offset": 1370,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "third_event",
+				"name": "3rd event",
+				"offset": 1371,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "third_event_date",
+				"name": "Date of 3rd event",
+				"offset": 1372,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "third_event_time",
+				"name": "Time of 3rd event",
+				"offset": 1373,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "second_event",
+				"name": "2nd event",
+				"offset": 1374,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "second_event_date",
+				"name": "Date of 2nd event",
+				"offset": 1375,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "second_event_time",
+				"name": "Time of 2nd event",
+				"offset": 1376,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "first_event",
+				"name": "1st event",
+				"offset": 1377,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "first_event_date",
+				"name": "Date of 1st event",
+				"offset": 1378,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "first_event_time",
+				"name": "Time of 1st event",
+				"offset": 1379,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "running_modules",
+				"name": "Running modules",
+				"offset": 1390,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "num_running_modules",
+				"name": "Num running modules",
+				"offset": 1391,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "next_starting_module",
+				"name": "Next starting module",
+				"offset": 1392,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "modules_start_stop",
+				"name": "Modules start stop",
+				"offset": 1393,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "modules_enable_reg",
+				"name": "Modules enable reg",
+				"offset": 1394,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "selected_module",
+				"name": "Selected module",
+				"offset": 1400,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_status",
+				"name": "Module status",
+				"offset": 1401,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "current_r",
+				"name": "Current R",
+				"offset": 1402,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "current_s",
+				"name": "Current S",
+				"offset": 1403,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "current_t",
+				"name": "Current T",
+				"offset": 1404,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "dc_current",
+				"name": "DC current",
+				"offset": 1405,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "dc_voltage_p",
+				"name": "DC voltage (P)",
+				"offset": 1406,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "dc_voltage_n",
+				"name": "DC voltage (N)",
+				"offset": 1407,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "dc_voltage",
+				"name": "DC voltage",
+				"offset": 1408,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "p",
+				"name": "P",
+				"offset": 1409,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "q",
+				"name": "Q",
+				"offset": 1410,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "ambient_temperature",
+				"name": "Ambient temperature",
+				"offset": 1411,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "max_temperature",
+				"name": "Max temperature",
+				"offset": 1412,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "i_o_status",
+				"name": "I/O status",
+				"offset": 1413,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "temperature_r1",
+				"name": "Temperature R1",
+				"offset": 1416,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "temperature_r2",
+				"name": "Temperature R2",
+				"offset": 1417,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "temperature_r3",
+				"name": "Temperature R3",
+				"offset": 1418,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "temperature_s1",
+				"name": "Temperature S1",
+				"offset": 1419,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "temperature_s2",
+				"name": "Temperature S2",
+				"offset": 1420,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "temperature_s3",
+				"name": "Temperature S3",
+				"offset": 1421,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "temperature_t1",
+				"name": "Temperature T1",
+				"offset": 1422,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "temperature_t2",
+				"name": "Temperature T2",
+				"offset": 1423,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "temperature_t3",
+				"name": "Temperature T3",
+				"offset": 1424,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_status",
+				"name": "Module 1 Status",
+				"offset": 5000,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_current_r",
+				"name": "Module 1 Current R",
+				"offset": 5001,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_current_s",
+				"name": "Module 1 Current S",
+				"offset": 5002,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_current_t",
+				"name": "Module 1 Current T",
+				"offset": 5003,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_dc_current",
+				"name": "Module 1 DC current",
+				"offset": 5004,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_dc_voltage_p",
+				"name": "Module 1 DC voltage (P)",
+				"offset": 5005,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_dc_voltage_n",
+				"name": "Module 1 DC voltage (N)",
+				"offset": 5006,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_dc_voltage",
+				"name": "Module 1 DC voltage",
+				"offset": 5007,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_p",
+				"name": "Module 1 P",
+				"offset": 5008,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_q",
+				"name": "Module 1 Q",
+				"offset": 5009,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_ambient_temp",
+				"name": "Module 1 Ambient temperature",
+				"offset": 5010,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_max_temp",
+				"name": "Module 1 Max temperature",
+				"offset": 5011,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_i_o_status",
+				"name": "Module 1 I/O status",
+				"offset": 5012,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_temp_r1",
+				"name": "Module 1 Temperature R1",
+				"offset": 5022,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_temp_r2",
+				"name": "Module 1 Temperature R2",
+				"offset": 5023,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_temp_r3",
+				"name": "Module 1 Temperature R3",
+				"offset": 5024,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_temp_s1",
+				"name": "Module 1 Temperature S1",
+				"offset": 5025,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_temp_s2",
+				"name": "Module 1 Temperature S2",
+				"offset": 5026,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_temp_s3",
+				"name": "Module 1 Temperature S3",
+				"offset": 5027,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_temp_t1",
+				"name": "Module 1 Temperature T1",
+				"offset": 5028,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_temp_t2",
+				"name": "Module 1 Temperature T2",
+				"offset": 5029,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_1_temp_t3",
+				"name": "Module 1 Temperature T3",
+				"offset": 5030,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_status",
+				"name": "Module 2 Status",
+				"offset": 5032,
+				"repeat_of_offset": 5000,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_current_r",
+				"name": "Module 2 Current R",
+				"offset": 5033,
+				"repeat_of_offset": 5001,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_current_s",
+				"name": "Module 2 Current S",
+				"offset": 5034,
+				"repeat_of_offset": 5002,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_current_t",
+				"name": "Module 2 Current T",
+				"offset": 5035,
+				"repeat_of_offset": 5003,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_dc_current",
+				"name": "Module 2 DC current",
+				"offset": 5036,
+				"repeat_of_offset": 5004,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_dc_voltage_p",
+				"name": "Module 2 DC voltage (P)",
+				"offset": 5037,
+				"repeat_of_offset": 5005,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_dc_voltage_n",
+				"name": "Module 2 DC voltage (N)",
+				"offset": 5038,
+				"repeat_of_offset": 5006,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_dc_voltage",
+				"name": "Module 2 DC voltage",
+				"offset": 5039,
+				"repeat_of_offset": 5007,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_p",
+				"name": "Module 2 P",
+				"offset": 5040,
+				"repeat_of_offset": 5008,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_q",
+				"name": "Module 2 Q",
+				"offset": 5041,
+				"repeat_of_offset": 5009,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_ambient_temp",
+				"name": "Module 2 Ambient temperature",
+				"offset": 5042,
+				"repeat_of_offset": 5010,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_max_temp",
+				"name": "Module 2 Max temperature",
+				"offset": 5043,
+				"repeat_of_offset": 5011,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_i_o_status",
+				"name": "Module 2 I/O status",
+				"offset": 5044,
+				"repeat_of_offset": 5012,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_temp_r1",
+				"name": "Module 2 Temperature R1",
+				"offset": 5054,
+				"repeat_of_offset": 5022,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_temp_r2",
+				"name": "Module 2 Temperature R2",
+				"offset": 5055,
+				"repeat_of_offset": 5023,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_temp_r3",
+				"name": "Module 2 Temperature R3",
+				"offset": 5056,
+				"repeat_of_offset": 5024,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_temp_s1",
+				"name": "Module 2 Temperature S1",
+				"offset": 5057,
+				"repeat_of_offset": 5025,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_temp_s2",
+				"name": "Module 2 Temperature S2",
+				"offset": 5058,
+				"repeat_of_offset": 5026,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_temp_s3",
+				"name": "Module 2 Temperature S3",
+				"offset": 5059,
+				"repeat_of_offset": 5027,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_temp_t1",
+				"name": "Module 2 Temperature T1",
+				"offset": 5060,
+				"repeat_of_offset": 5028,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_temp_t2",
+				"name": "Module 2 Temperature T2",
+				"offset": 5061,
+				"repeat_of_offset": 5029,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_2_temp_t3",
+				"name": "Module 2 Temperature T3",
+				"offset": 5062,
+				"repeat_of_offset": 5030,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_status",
+				"name": "Module 3 Status",
+				"offset": 5064,
+				"repeat_of_offset": 5000,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_current_r",
+				"name": "Module 3 Current R",
+				"offset": 5065,
+				"repeat_of_offset": 5001,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_current_s",
+				"name": "Module 3 Current S",
+				"offset": 5066,
+				"repeat_of_offset": 5002,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_current_t",
+				"name": "Module 3 Current T",
+				"offset": 5067,
+				"repeat_of_offset": 5003,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_dc_current",
+				"name": "Module 3 DC current",
+				"offset": 5068,
+				"repeat_of_offset": 5004,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_dc_voltage_p",
+				"name": "Module 3 DC voltage (P)",
+				"offset": 5069,
+				"repeat_of_offset": 5005,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_dc_voltage_n",
+				"name": "Module 3 DC voltage (N)",
+				"offset": 5070,
+				"repeat_of_offset": 5006,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_dc_voltage",
+				"name": "Module 3 DC voltage",
+				"offset": 5071,
+				"repeat_of_offset": 5007,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_p",
+				"name": "Module 3 P",
+				"offset": 5072,
+				"repeat_of_offset": 5008,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_q",
+				"name": "Module 3 Q",
+				"offset": 5073,
+				"repeat_of_offset": 5009,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_ambient_temp",
+				"name": "Module 3 Ambient temperature",
+				"offset": 5074,
+				"repeat_of_offset": 5010,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_max_temp",
+				"name": "Module 3 Max temperature",
+				"offset": 5075,
+				"repeat_of_offset": 5011,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_i_o_status",
+				"name": "Module 3 I/O status",
+				"offset": 5076,
+				"repeat_of_offset": 5012,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_temp_r1",
+				"name": "Module 3 Temperature R1",
+				"offset": 5086,
+				"repeat_of_offset": 5022,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_temp_r2",
+				"name": "Module 3 Temperature R2",
+				"offset": 5087,
+				"repeat_of_offset": 5023,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_temp_r3",
+				"name": "Module 3 Temperature R3",
+				"offset": 5088,
+				"repeat_of_offset": 5024,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_temp_s1",
+				"name": "Module 3 Temperature S1",
+				"offset": 5089,
+				"repeat_of_offset": 5025,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_temp_s2",
+				"name": "Module 3 Temperature S2",
+				"offset": 5090,
+				"repeat_of_offset": 5026,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_temp_s3",
+				"name": "Module 3 Temperature S3",
+				"offset": 5091,
+				"repeat_of_offset": 5027,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_temp_t1",
+				"name": "Module 3 Temperature T1",
+				"offset": 5092,
+				"repeat_of_offset": 5028,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_temp_t2",
+				"name": "Module 3 Temperature T2",
+				"offset": 5093,
+				"repeat_of_offset": 5029,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_3_temp_t3",
+				"name": "Module 3 Temperature T3",
+				"offset": 5094,
+				"repeat_of_offset": 5030,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_status",
+				"name": "Module 4 Status",
+				"offset": 5096,
+				"repeat_of_offset": 5000,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_current_r",
+				"name": "Module 4 Current R",
+				"offset": 5097,
+				"repeat_of_offset": 5001,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_current_s",
+				"name": "Module 4 Current S",
+				"offset": 5098,
+				"repeat_of_offset": 5002,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_current_t",
+				"name": "Module 4 Current T",
+				"offset": 5099,
+				"repeat_of_offset": 5003,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_dc_current",
+				"name": "Module 4 DC current",
+				"offset": 5100,
+				"repeat_of_offset": 5004,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_dc_voltage_p",
+				"name": "Module 4 DC voltage (P)",
+				"offset": 5101,
+				"repeat_of_offset": 5005,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_dc_voltage_n",
+				"name": "Module 4 DC voltage (N)",
+				"offset": 5102,
+				"repeat_of_offset": 5006,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_dc_voltage",
+				"name": "Module 4 DC voltage",
+				"offset": 5103,
+				"repeat_of_offset": 5007,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_p",
+				"name": "Module 4 P",
+				"offset": 5104,
+				"repeat_of_offset": 5008,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_q",
+				"name": "Module 4 Q",
+				"offset": 5105,
+				"repeat_of_offset": 5009,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_ambient_temp",
+				"name": "Module 4 Ambient temperature",
+				"offset": 5106,
+				"repeat_of_offset": 5010,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_max_temp",
+				"name": "Module 4 Max temperature",
+				"offset": 5107,
+				"repeat_of_offset": 5011,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_i_o_status",
+				"name": "Module 4 I/O status",
+				"offset": 5108,
+				"repeat_of_offset": 5012,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_temp_r1",
+				"name": "Module 4 Temperature R1",
+				"offset": 5118,
+				"repeat_of_offset": 5022,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_temp_r2",
+				"name": "Module 4 Temperature R2",
+				"offset": 5119,
+				"repeat_of_offset": 5023,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_temp_r3",
+				"name": "Module 4 Temperature R3",
+				"offset": 5120,
+				"repeat_of_offset": 5024,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_temp_s1",
+				"name": "Module 4 Temperature S1",
+				"offset": 5121,
+				"repeat_of_offset": 5025,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_temp_s2",
+				"name": "Module 4 Temperature S2",
+				"offset": 5122,
+				"repeat_of_offset": 5026,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_temp_s3",
+				"name": "Module 4 Temperature S3",
+				"offset": 5123,
+				"repeat_of_offset": 5027,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_temp_t1",
+				"name": "Module 4 Temperature T1",
+				"offset": 5124,
+				"repeat_of_offset": 5028,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_temp_t2",
+				"name": "Module 4 Temperature T2",
+				"offset": 5125,
+				"repeat_of_offset": 5029,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_4_temp_t3",
+				"name": "Module 4 Temperature T3",
+				"offset": 5126,
+				"repeat_of_offset": 5030,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_status",
+				"name": "Module 5 Status",
+				"offset": 5128,
+				"repeat_of_offset": 5000,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_current_r",
+				"name": "Module 5 Current R",
+				"offset": 5129,
+				"repeat_of_offset": 5001,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_current_s",
+				"name": "Module 5 Current S",
+				"offset": 5130,
+				"repeat_of_offset": 5002,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_current_t",
+				"name": "Module 5 Current T",
+				"offset": 5131,
+				"repeat_of_offset": 5003,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_dc_current",
+				"name": "Module 5 DC current",
+				"offset": 5132,
+				"repeat_of_offset": 5004,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_dc_voltage_p",
+				"name": "Module 5 DC voltage (P)",
+				"offset": 5133,
+				"repeat_of_offset": 5005,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_dc_voltage_n",
+				"name": "Module 5 DC voltage (N)",
+				"offset": 5134,
+				"repeat_of_offset": 5006,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_dc_voltage",
+				"name": "Module 5 DC voltage",
+				"offset": 5135,
+				"repeat_of_offset": 5007,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_p",
+				"name": "Module 5 P",
+				"offset": 5136,
+				"repeat_of_offset": 5008,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_q",
+				"name": "Module 5 Q",
+				"offset": 5137,
+				"repeat_of_offset": 5009,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_ambient_temp",
+				"name": "Module 5 Ambient temperature",
+				"offset": 5138,
+				"repeat_of_offset": 5010,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_max_temp",
+				"name": "Module 5 Max temperature",
+				"offset": 5139,
+				"repeat_of_offset": 5011,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_i_o_status",
+				"name": "Module 5 I/O status",
+				"offset": 5140,
+				"repeat_of_offset": 5012,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_temp_r1",
+				"name": "Module 5 Temperature R1",
+				"offset": 5150,
+				"repeat_of_offset": 5022,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_temp_r2",
+				"name": "Module 5 Temperature R2",
+				"offset": 5151,
+				"repeat_of_offset": 5023,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_temp_r3",
+				"name": "Module 5 Temperature R3",
+				"offset": 5152,
+				"repeat_of_offset": 5024,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_temp_s1",
+				"name": "Module 5 Temperature S1",
+				"offset": 5153,
+				"repeat_of_offset": 5025,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_temp_s2",
+				"name": "Module 5 Temperature S2",
+				"offset": 5154,
+				"repeat_of_offset": 5026,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_temp_s3",
+				"name": "Module 5 Temperature S3",
+				"offset": 5155,
+				"repeat_of_offset": 5027,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_temp_t1",
+				"name": "Module 5 Temperature T1",
+				"offset": 5156,
+				"repeat_of_offset": 5028,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_temp_t2",
+				"name": "Module 5 Temperature T2",
+				"offset": 5157,
+				"repeat_of_offset": 5029,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_5_temp_t3",
+				"name": "Module 5 Temperature T3",
+				"offset": 5158,
+				"repeat_of_offset": 5030,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_status",
+				"name": "Module 6 Status",
+				"offset": 5160,
+				"repeat_of_offset": 5000,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_current_r",
+				"name": "Module 6 Current R",
+				"offset": 5161,
+				"repeat_of_offset": 5001,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_current_s",
+				"name": "Module 6 Current S",
+				"offset": 5162,
+				"repeat_of_offset": 5002,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_current_t",
+				"name": "Module 6 Current T",
+				"offset": 5163,
+				"repeat_of_offset": 5003,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_dc_current",
+				"name": "Module 6 DC current",
+				"offset": 5164,
+				"repeat_of_offset": 5004,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_dc_voltage_p",
+				"name": "Module 6 DC voltage (P)",
+				"offset": 5165,
+				"repeat_of_offset": 5005,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_dc_voltage_n",
+				"name": "Module 6 DC voltage (N)",
+				"offset": 5166,
+				"repeat_of_offset": 5006,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_dc_voltage",
+				"name": "Module 6 DC voltage",
+				"offset": 5167,
+				"repeat_of_offset": 5007,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_p",
+				"name": "Module 6 P",
+				"offset": 5168,
+				"repeat_of_offset": 5008,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_q",
+				"name": "Module 6 Q",
+				"offset": 5169,
+				"repeat_of_offset": 5009,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_ambient_temp",
+				"name": "Module 6 Ambient temperature",
+				"offset": 5170,
+				"repeat_of_offset": 5010,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_max_temp",
+				"name": "Module 6 Max temperature",
+				"offset": 5171,
+				"repeat_of_offset": 5011,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_i_o_status",
+				"name": "Module 6 I/O status",
+				"offset": 5172,
+				"repeat_of_offset": 5012,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_temp_r1",
+				"name": "Module 6 Temperature R1",
+				"offset": 5182,
+				"repeat_of_offset": 5022,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_temp_r2",
+				"name": "Module 6 Temperature R2",
+				"offset": 5183,
+				"repeat_of_offset": 5023,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_temp_r3",
+				"name": "Module 6 Temperature R3",
+				"offset": 5184,
+				"repeat_of_offset": 5024,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_temp_s1",
+				"name": "Module 6 Temperature S1",
+				"offset": 5185,
+				"repeat_of_offset": 5025,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_temp_s2",
+				"name": "Module 6 Temperature S2",
+				"offset": 5186,
+				"repeat_of_offset": 5026,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_temp_s3",
+				"name": "Module 6 Temperature S3",
+				"offset": 5187,
+				"repeat_of_offset": 5027,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_temp_t1",
+				"name": "Module 6 Temperature T1",
+				"offset": 5188,
+				"repeat_of_offset": 5028,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_temp_t2",
+				"name": "Module 6 Temperature T2",
+				"offset": 5189,
+				"repeat_of_offset": 5029,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "module_6_temp_t3",
+				"name": "Module 6 Temperature T3",
+				"offset": 5190,
+				"repeat_of_offset": 5030,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "vdc_bus_1",
+				"name": "DC Voltage Bus 1",
+				"offset": 7400,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "vdc_bus_2",
+				"name": "DC Voltage Bus 2",
+				"offset": 7401,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "vdc_bus_3",
+				"name": "DC Voltage Bus 3",
+				"offset": 7402,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bess_1_v",
+				"name": "BESS 1 voltage bus",
+				"offset": 7403,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bess_2_v",
+				"name": "BESS 2 voltage bus",
+				"offset": 7404,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bess_3_v",
+				"name": "BESS 3 voltage bus",
+				"offset": 7405,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bess_1_p_input",
+				"name": "BESS1 DC input power",
+				"offset": 7406,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bess_2_p_input",
+				"name": "BESS2 DC input power",
+				"offset": 7407,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bess_3_p_input",
+				"name": "BESS3 DC input power",
+				"offset": 7408,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "dc_1_i_input",
+				"name": "DC input current 1",
+				"offset": 7409,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "dc_2_i_input",
+				"name": "DC input current 2",
+				"offset": 7410,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "dc_3_i_input",
+				"name": "DC input current 3",
+				"offset": 7411,
+				"signed": true,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bess_1_idcref",
+				"name": "Ref current DC BESS1",
+				"offset": 7412,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bess_2_idcref",
+				"name": "Ref current DC BESS2",
+				"offset": 7413,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bess_3_idcref",
+				"name": "Ref current DC BESS3",
+				"offset": 7414,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "du_feedback_status",
+				"name": "DU Feedback Status",
+				"offset": 7423,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms1_status",
+				"name": "BMS Status",
+				"offset": 7450,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms1_strings_in_service",
+				"name": "Strings In Service",
+				"offset": 7451,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms1_total_strings_count",
+				"name": "Total Strings Count",
+				"offset": 7452,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms1_system_voltage",
+				"name": "System Voltage",
+				"offset": 7453,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms1_system_current",
+				"name": "System Current",
+				"offset": 7454,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms1_system_soc",
+				"name": "System SOC",
+				"offset": 7455,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms2_status",
+				"name": "BMS Status",
+				"offset": 7456,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms2_strings_in_service",
+				"name": "Strings In Service",
+				"offset": 7457,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms2_total_strings_count",
+				"name": "Total Strings Count",
+				"offset": 7458,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms2_system_voltage",
+				"name": "System Voltage",
+				"offset": 7459,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms2_system_current",
+				"name": "System Current",
+				"offset": 7460,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms2_system_soc",
+				"name": "System SOC",
+				"offset": 7461,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms3_status",
+				"name": "BMS Status",
+				"offset": 7462,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms3_strings_in_service",
+				"name": "Strings In Service",
+				"offset": 7463,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms3_total_strings_count",
+				"name": "Total Strings Count",
+				"offset": 7464,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms3_system_voltage",
+				"name": "System Voltage",
+				"offset": 7465,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms3_system_current",
+				"name": "System Current",
+				"offset": 7466,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms3_system_soc",
+				"name": "System SOC",
+				"offset": 7467,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_status_2",
+				"name": "Insulation Status",
+				"offset": 7482,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_resistor_msb_2",
+				"name": "Insulation Resistor MSB",
+				"offset": 7483,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_resistor_lsb_2",
+				"name": "Resistor LSB",
+				"offset": 7484,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_measurement_started_time_2",
+				"name": "Insulation Measurement started time",
+				"offset": 7485,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_self_test_started_time_2",
+				"name": "Insulation Self-test started time",
+				"offset": 7486,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_self_test_exec_countdown_2",
+				"name": "Insulation Self-test exec countdown",
+				"offset": 7487,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_status_update_2",
+				"name": "Insulation Status update",
+				"offset": 7488,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_status_3",
+				"name": "Insulation Status",
+				"offset": 7491,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_resistor_msb_3",
+				"name": "Insulation Resistor MSB",
+				"offset": 7492,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_resistor_lsb_3",
+				"name": "Resistor LSB",
+				"offset": 7493,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_measurement_started_time_3",
+				"name": "Insulation Measurement started time",
+				"offset": 7494,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_self_test_started_time_3",
+				"name": "Insulation Self-test started time",
+				"offset": 7495,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_self_test_exec_countdown_3",
+				"name": "Insulation Self-test exec countdown",
+				"offset": 7496,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "insulation_status_update_3",
+				"name": "Insulation Status update",
+				"offset": 7497,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_select",
+				"name": "BMS Select",
+				"offset": 7500,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_sys_heartbeat",
+				"name": "Sys heartbeat",
+				"offset": 7501,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_strings_service",
+				"name": "Strings In Service",
+				"offset": 7502,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_total_strings_count",
+				"name": "Total Strings Count",
+				"offset": 7503,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_service_voltage",
+				"name": "Service Voltage",
+				"offset": 7504,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_service_soc",
+				"name": "Service SOC",
+				"offset": 7505,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_voltage",
+				"name": "System Voltage",
+				"offset": 7506,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_current",
+				"name": "System Current",
+				"offset": 7507,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_soc",
+				"name": "System SOC",
+				"offset": 7508,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_soh",
+				"name": "System SOH",
+				"offset": 7509,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_mode",
+				"name": "System Mode",
+				"offset": 7510,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_max_v",
+				"name": "Max Cell Volt Sys",
+				"offset": 7511,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_min_v",
+				"name": "Min Cell Volt Sys",
+				"offset": 7512,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_max_temp",
+				"name": "Max Cell Temp Sys",
+				"offset": 7513,
+				"scale": 100,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_min_temp",
+				"name": "Min Cell Temp Sys",
+				"offset": 7514,
+				"scale": 100,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_min_partial_strings",
+				"name": "Min. Partial String",
+				"offset": 7515,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_partial_voltage",
+				"name": "Partial Diff Voltage",
+				"offset": 7516,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_config_status",
+				"name": "Sys Config Status",
+				"offset": 7517,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_protection_4",
+				"name": "Protection 014",
+				"offset": 7518,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_protection_3",
+				"name": "Protection 013",
+				"offset": 7519,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_protection_2",
+				"name": "Protection 012",
+				"offset": 7520,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_protection_1",
+				"name": "Protection 011",
+				"offset": 7521,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_alarm_4",
+				"name": "Alarm 014",
+				"offset": 7522,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_alarm_3",
+				"name": "Alarm 013",
+				"offset": 7523,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_alarm_2",
+				"name": "Alarm 012",
+				"offset": 7524,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_alarm_1",
+				"name": "Alarm 011",
+				"offset": 7525,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_dcl",
+				"name": "DCL",
+				"offset": 7526,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_ccl",
+				"name": "CCL",
+				"offset": 7527,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_watchdog_response",
+				"name": "Watchdog response",
+				"offset": 7528,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_dio_status",
+				"name": "Digital Input Status",
+				"offset": 7529,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bms_alarm_status",
+				"name": "System Alarm Status",
+				"offset": 7530,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_door_contact",
+				"name": "Door Contact",
+				"offset": 7650,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_fcp_alarm",
+				"name": "FCP Alarm",
+				"offset": 7651,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_fcp_predischarge",
+				"name": "FCP Predischarge",
+				"offset": 7652,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_fcp_release",
+				"name": "FCP Agent Release",
+				"offset": 7653,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_fcp_sup",
+				"name": "FCP Trouble Sup",
+				"offset": 7654,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_dc_disconnected_1",
+				"name": "DC 1 Disconnected",
+				"offset": 7655,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_dc_disconnected_2",
+				"name": "DC 2 Disconnected",
+				"offset": 7656,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_emergency_stop",
+				"name": "Emergency Stop",
+				"offset": 7657,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_ups_failure",
+				"name": "UPS Battery Failure",
+				"offset": 7658,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_ups_ok",
+				"name": "UPS DC OK",
+				"offset": 7659,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_temp_humidity_t",
+				"name": "Temp Humidity T",
+				"offset": 7660,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_temp_humidity_h",
+				"name": "Temp Humidity H",
+				"offset": 7661,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_temp_1",
+				"name": "Temp 1",
+				"offset": 7662,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_temp_2",
+				"name": "Temp 2",
+				"offset": 7663,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_temp_3",
+				"name": "Temp 3",
+				"offset": 7664,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_temp_4",
+				"name": "Temp 4",
+				"offset": 7665,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_temp_5",
+				"name": "Temp 5",
+				"offset": 7666,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "bmsenc_temp_6",
+				"name": "Temp 6",
+				"offset": 7667,
+				"scale": 10,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "transformer_alarms",
+				"name": "Transformer Alarms",
+				"offset": 7680,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "hvac_signals_1",
+				"name": "HVAC signals 1",
+				"offset": 7690,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "hvac_signals_2",
+				"name": "HVAC signals 2",
+				"offset": 7691,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "hvac_signals_3",
+				"name": "HVAC signals 3",
+				"offset": 7692,
+				"uri": "/components/pe_pcs_info"
+			},
+			{
+				"id": "hvac_signals_4",
+				"name": "HVAC signals 4",
+				"offset": 7693,
+				"uri": "/components/pe_pcs_info"
+			}
+		]
+	}
+}

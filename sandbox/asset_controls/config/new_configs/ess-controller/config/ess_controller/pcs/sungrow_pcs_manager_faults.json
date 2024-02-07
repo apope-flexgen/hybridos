@@ -1,0 +1,1059 @@
+{
+    "/alarms/##PCS_ID##": {
+        "ActivePowerCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS ActivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 0 - PCS ActivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[0]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending active power command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "ActivePowerRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS ActivePowerRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 1 - PCS ActivePowerRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[1]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending active power ramp rate command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "ClearFaults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 2 - PCS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[2]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending clear faults command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "FrequencySetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS FrequencySetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 3 - PCS FrequencySetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[3]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending frequency setpoint command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "GridFollowPQ": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS GridFollowPQ - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 4 - PCS GridFollowPQ - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[4]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending grid-following mode command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "GridFormVF": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS GridFormVF - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 5 - PCS GridFormVF - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[5]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending grid-forming mode (VF) command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "GridFormVSG": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS GridFormVSG - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 6 - PCS GridFormVSG - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[6]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending grid-forming mode (VSG) command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "HeartbeatRead": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "MonitorVarAlarm": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": "ActivePower_limit_max",
+                                "note": "Bit 0 - PCS ActivePower - Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_alarms[0]"
+                            },
+                            {
+                                "inValue": "DCVoltage_limit_max",
+                                "note": "Bit 1 - PCS DCVoltage - Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_alarms[1]"
+                            },
+                            {
+                                "inValue": "DCVoltage_limit_min",
+                                "note": "Bit 2 - PCS DCVoltage - Min Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_alarms[2]"
+                            },
+                            {
+                                "inValue": "HeartbeatRead_state",
+                                "outValue": "PCS Communication Failure",
+                                "uri": "/alarms/##PCS_ID##:HeartbeatRead"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note1": "Contains last recently reported alarm from any monitoring variable",
+            "note2": "Useful for reporting alarm states to an external management system (e.g. Site Controller) or modifying the alarm message before it is reported on the UI",
+            "value": "Normal"
+        },
+        "ReactivePowerCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS ReactivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 7 - PCS ReactivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[7]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending reactive power command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "ReactivePowerRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS ReactivePowerRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 8 - PCS ReactivePowerRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[8]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending reactive power ramp rate command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "Standby": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS Standby - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 9 - PCS Standby - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[9]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending standby command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "Start": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS Start - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 10 - PCS Start - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[10]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending start command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "Stop": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS Stop - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 11 - PCS Stop - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[11]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending stop command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyActivePowerCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyActivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 12 - PCS VerifyActivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[12]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS's actual active power setpoint after sending the command is not expected",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyActivePowerRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyActivePowerRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 13 - PCS VerifyActivePowerRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[13]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS's actual active power ramp rate after sending the command is not expected",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyFrequencySetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyFrequencySetpoint - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 14 - PCS VerifyFrequencySetpoint - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[14]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS's actual frequency setpoint after sending the command is not expected",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyGridFollowPQ": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyGridFollowPQ - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 15 - PCS VerifyGridFollowPQ - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[15]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS failed to transition to grid-following",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyGridFormVF": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyGridFormVF - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 16 - PCS VerifyGridFormVF - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[16]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS failed to transition to grid-forming (VF)",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyGridFormVSG": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyGridFormVSG - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 17 - PCS VerifyGridFormVSG - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[17]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS failed to transition to grid-forming (VSG)",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyReactivePowerCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyReactivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 18 - PCS VerifyReactivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[18]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS's actual reactive power setpoint after sending the command is not expected",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyReactivePowerRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyReactivePowerRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 19 - PCS VerifyReactivePowerRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[19]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS's actual reactive power ramp rate after sending the command is not expected",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyStandby": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyStandby - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 20 - PCS VerifyStandby - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[20]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS failed to transition to standby",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyStart": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyStart - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 21 - PCS VerifyStart - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[21]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS failed to start",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyStop": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyStop - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 22 - PCS VerifyStop - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[22]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS failed to stop",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyVoltageSetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyVoltageSetpoint - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 23 - PCS VerifyVoltageSetpoint - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[23]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS's actual voltage setpoint after sending the command is not expected",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VoltageSetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VoltageSetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 24 - PCS VoltageSetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[24]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending voltage setpoint command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "clear_alarms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note1": "When this variable is set to Clear, all alarm variables (defined in /alarms/##PCS_ID##) will be reset to the normal state (defined in /config/##PCS_ID##:NoAlarmMsg)",
+            "note2": "Also, all monitoring variables (defined in variable) will have their alarm/fault states reset",
+            "numVars": 3,
+            "type": "alarm",
+            "value": "Normal",
+            "variable1": "ActivePower",
+            "variable2": "DCVoltage",
+            "variable3": "HeartbeatRead"
+        }
+    },
+    "/faults/##PCS_ID##": {
+        "HeartbeatRead": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "MonitorVarFault": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": "ActivePower_limit_max",
+                                "note": "Bit 0 - PCS ActivePower - Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_faults[0]"
+                            },
+                            {
+                                "inValue": "DCVoltage_limit_max",
+                                "note": "Bit 1 - PCS DCVoltage - Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_faults[1]"
+                            },
+                            {
+                                "inValue": "DCVoltage_limit_min",
+                                "note": "Bit 2 - PCS DCVoltage - Min Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_faults[2]"
+                            },
+                            {
+                                "inValue": "HeartbeatRead_state",
+                                "outValue": "PCS Communication Failure",
+                                "uri": "/faults/##PCS_ID##:HeartbeatRead"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note1": "Contains last recently reported fault from any monitoring variable",
+            "note2": "Useful for reporting fault states to an external management system (e.g. Site Controller) or modifying the fault message before it is reported on the UI",
+            "value": "Normal"
+        },
+        "clear_faults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note1": "When this variable is set to Clear, all fault variables (defined in /faults/##PCS_ID##) will be reset to the normal state (defined in /config/##PCS_ID##:NoFaultMsg)",
+            "note2": "Also, all monitoring variables (defined in variable) will have their alarm/fault states reset",
+            "numVars": 3,
+            "type": "fault",
+            "value": "Normal",
+            "variable1": "ActivePower",
+            "variable2": "DCVoltage",
+            "variable3": "HeartbeatRead"
+        }
+    },
+    "/schedule/wake_monitor/##PCS_ID##": {
+        "/status/##PCS_ID##:ActivePower": {
+            "amap": "##PCS_ID##",
+            "func": "CheckMonitorVar"
+        },
+        "/status/##PCS_ID##:DCVoltage": {
+            "amap": "##PCS_ID##",
+            "func": "CheckMonitorVar"
+        },
+        "/status/##PCS_ID##:HeartbeatRead": {
+            "amap": "##PCS_ID##",
+            "func": "CheckMonitorVar"
+        },
+        "/status/##PCS_ID##:IsAlarming": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##PCS_ID##:IsFaulted": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##PCS_ID##:TotalAlarmCnt": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##PCS_ID##:TotalFaultCnt": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/##PCS_ID##": {
+        "ActivePower": {
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": true,
+            "MaxAlarmThreshold": 3510,
+            "MaxAlarmTimeout": 1,
+            "MaxFaultThreshold": 3525,
+            "MaxFaultTimeout": 1.5,
+            "MaxRecoverTimeout": 1.4,
+            "MaxResetValue": 3510,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for over active power conditions",
+            "value": 0
+        },
+        "AlarmCnt": 0,
+        "ClearFaultsDone": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_alarms"
+                            },
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_faults"
+                            },
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": false,
+            "note": "When this variable is set, the alarm/fault bitfields will be set to 0 to clear all bits",
+            "value": false
+        },
+        "DCVoltage": {
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "EnableMinValCheck": false,
+            "MaxAlarmThreshold": 3000,
+            "MaxAlarmTimeout": 0,
+            "MaxFaultThreshold": 4000,
+            "MaxFaultTimeout": 0,
+            "MaxRecoverTimeout": 0,
+            "MaxResetValue": 2000,
+            "MinAlarmThreshold": 1200,
+            "MinAlarmTimeout": 0,
+            "MinFaultThreshold": 1100,
+            "MinFaultTimeout": 1,
+            "MinRecoverTimeout": 1,
+            "MinResetValue": 1140,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for over/under DC voltage conditions",
+            "value": 0
+        },
+        "FaultCnt": 0,
+        "FaultShutdown": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/status/pcs:FaultShutdown"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "note": "When the PCS instance faults, the fault shutdown event will be propagated to its parent",
+            "value": false
+        },
+        "HeartbeatRead": {
+            "AlarmTimeout": 10,
+            "EnableAlert": false,
+            "EnableCommsCheck": false,
+            "EnableStateCheck": false,
+            "FaultTimeout": 15,
+            "RecoverTimeout": 0.1,
+            "Type": "int",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault if ESS Controller loses communications with PCS",
+            "value": 0
+        },
+        "IsAlarming": {
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} > 0",
+            "numVars": 1,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/##PCS_ID##:TotalAlarmCnt"
+        },
+        "IsFaulted": {
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} or {2} > 0",
+            "numVars": 2,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/##PCS_ID##:SystemFault",
+            "variable2": "/status/##PCS_ID##:TotalFaultCnt"
+        },
+        "SystemFault": false,
+        "TotalAlarmCnt": {
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1}",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:AlarmCnt"
+        },
+        "TotalFaultCnt": {
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1}",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:FaultCnt"
+        }
+    }
+}

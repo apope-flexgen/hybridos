@@ -1,0 +1,446 @@
+{
+    "/config/##BMS_ID##": {
+        "AlarmDestination": "/assets/bms/##BMS_ID##:alarms",
+        "CurrentBeforeStopThreshold": 35,
+        "FaultDestination": "/assets/bms/##BMS_ID##:faults",
+        "NoAlarmMsg": "Normal",
+        "NoFaultMsg": "Normal",
+        "enable": false,
+        "enum_opt": false
+    },
+
+
+    "/assets/bms/##BMS_ID##": {
+        "close_contactors": {
+            "name": "Close DC Contactor",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "note": "Enabled conditions: ![/status/bms/DCClosed] && [/assets/bms/summary/maint_mode] && ![/status/bms/IsFaulted]",
+            "ui_type": "control",
+            "type": "enum_button",   
+            "aname": "##BMS_ID##",
+            "uri":"/sched/##BMS_ID##:LocalStartBMS",
+            "every":0.5,
+            "offset":0,
+            "debug": 0,
+            "actions":	{
+                "onSet":	[{
+                    "func":	[
+                        {"inValue":true, "func": "RunSched"}
+                    ]
+                }]
+            }
+        },
+        "open_contactors": {
+            "name": "Open DC Contactor",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "note": "Enabled conditions: [/status/bms/DCClosed] && ![/status/pcs/DCClosed] && [/assets/bms/summary/maint_mode]",
+            "ui_type": "control",
+            "type": "enum_button",
+            "aname": "##BMS_ID##",
+            "uri":"/sched/##BMS_ID##:LocalStopBMS",
+            "every":0.5,
+            "offset":0,
+            "debug":0,
+            "actions":	{
+                "onSet":	[{
+                    "func":	[
+                        {"inValue":true, "func": "RunSched"}
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/sched/##BMS_ID##": {
+        "pubAssetsSummary_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "mode": "ui",
+            "note": "Publishes UI summary data (/assets/bms/summary)",
+            "table": "/assets/##BMS_ID##/summary",
+            "value": 1
+        },
+        "runMonitor_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "RunMonitor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "aname": "##BMS_ID##",
+            "enable": "/config/##BMS_ID##:enable",
+            "monitor": "wake_monitor",
+            "note": "Periodically runs functions for variables defined in /schedule/wake_monitor/bms",
+            "value": 1
+        },
+        "LocalStartBMS": {
+            "every": 0.5,
+            "value": "LocalStartBMS",
+            "bms": "##BMS_ID##",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "LocalStartBMS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "LocalStopBMS": {
+            "every": 0.5,
+            "value": "LocalStopBMS",
+            "bms": "##BMS_ID##",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "LocalStopBMS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "CloseContactorsEnable": {
+            "value": "CloseContactorsEnable",
+            "bms": "##BMS_ID##",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "CloseContactorsEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "OpenContactorsEnable": {
+            "value": "OpenContactorsEnable",
+            "bms": "##BMS_ID##",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "OpenContactorsEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+
+    "/schedule/wake_monitor/##BMS_ID##":{
+        "/status/##BMS_ID##:DCPower"          : { "enable": true, "amap": "##BMS_ID##", "func": "CalculateVar"    },
+        "/status/##BMS_ID##:RacksInService"   : { "enable": true, "amap": "##BMS_ID##", "func": "CalculateVar"    },
+        "/status/##BMS_ID##:ChargeableEnergy" : { "enable": true, "amap": "##BMS_ID##", "func": "CalculateVar"    },
+        "/status/##BMS_ID##:DCVoltage"        : { "enable": true, "amap": "##BMS_ID##", "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##:DCCurrent"        : { "enable": true, "amap": "##BMS_ID##", "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##:SOH"              : { "enable": true, "amap": "##BMS_ID##", "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##:SOC"              : { "enable": true, "amap": "##BMS_ID##", "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##:MaxCellVoltage"   : { "enable": true, "amap": "##BMS_ID##", "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##:MinCellVoltage"   : { "enable": true, "amap": "##BMS_ID##", "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##:MaxCellTemp"      : { "enable": true, "amap": "##BMS_ID##", "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##:MinCellTemp"      : { "enable": true, "amap": "##BMS_ID##", "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##:CVersion"         : { "enable": true, "amap": "##BMS_ID##", "func": "CalculateVar"    },
+        "/status/##BMS_ID##:RVersion"         : { "enable": true, "amap": "##BMS_ID##", "func": "CalculateVar"    },
+        "/status/##BMS_ID##:VVersion"         : { "enable": true, "amap": "##BMS_ID##", "func": "CalculateVar"    }
+    },
+
+    "/status/##BMS_ID##": {
+        "DCPower": {
+            "numVars": 2,
+            "variable1": "/status/##BMS_ID##:DCVoltage",
+            "variable2": "/status/##BMS_ID##:DCCurrent",
+            "scale": 1000,
+            "operation": "*"
+        },
+        "ChargeableEnergy": {
+            "value": 0,
+            "numVars": 1,
+            "variable1" : "##BMS_ID##:ChargeableEnergy" ,
+            "operation": "+"
+        },
+        "RacksInService": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "##BMS_ID##:InService",
+            "operation": "+"
+        },
+        "DCVoltage": {
+            "value": 1250,
+			
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": true,
+            "EnableMinValCheck": false,
+
+            "MinAlarmThreshold": 1077,
+            "MaxAlarmThreshold": 1344,
+            "MinFaultThreshold": 1064,
+            "MaxFaultThreshold": 1375,
+            "MinResetValue": 1080,
+            "MaxResetValue": 1340,
+
+            "MinAlarmTimeout": 0,
+            "MaxAlarmTimeout": 0,
+            "MinFaultTimeout": 1,
+            "MaxFaultTimeout": 0,
+            "MinRecoverTimeout": 1,
+            "MaxRecoverTimeout": 0,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "DCCurrent": {
+            "value": 0,
+			
+            "EnableFaultCheck": false,
+            "EnableMaxValCheck": false,
+            "EnableMinValCheck": false,
+
+            "MinAlarmThreshold": -310,
+            "MinFaultThreshold": -320,
+            "MaxAlarmThreshold": 310,
+            "MaxFaultThreshold": 320,
+
+            "MinAlarmTimeout": 1,
+            "MaxAlarmTimeout": 1,
+            "MinFaultTimeout": 2.5,
+            "MaxFaultTimeout": 2.5,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "SOC": {
+            "value": 0,
+
+            "EnableMinValCheck": false,
+            "EnableMaxValCheck": false,
+            "EnableFaultCheck": false,
+
+            "MinAlarmTimeout": 5.5,
+            "MinFaultTimeout": 2.5,
+            "MinRecoverTimeout": 1.4,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "SOH": {
+            "value": 0,
+            "EnableMinValCheck": false,
+            "EnableFaultCheck": false,
+            "EnableMaxValCheck": false,
+            "MinAlarmThreshold": 60,
+            "MinFaultThreshold": 50,
+            "MinResetValue": 60,
+
+            "MinAlarmTimeout": 5.5,
+            "MinFaultTimeout": 2.5,
+            "MinRecoverTimeout": 1.4,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "MaxCellVoltage":{
+            "value": 0,
+
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": true,
+            "MaxAlarmThreshold": 3.60,
+            "MaxFaultThreshold": 3.63,
+            "MaxResetValue": 3.61,
+
+            "MaxAlarmTimeout": 2.5,
+            "MaxFaultTimeout": 0,
+            "MaxRecoverTimeout": 1.4,
+            "actions":{
+                "onSet":[{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "MinCellVoltage":{
+            "value": 0,
+
+            "EnableFaultCheck": false,
+            "EnableMinValCheck": false,
+            "MinAlarmThreshold": 2.80,
+            "MinFaultThreshold": 2.70,
+            "MinResetValue": 2.72,
+
+            "MinAlarmTimeout": 2.5,
+            "MinFaultTimeout": 0.5,
+            "MinRecoverTimeout": 1.4,
+            "actions":{
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "MaxCellTemp": {
+            "value": 0,
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": true,
+
+            "MaxAlarmThreshold": 48,
+            "MaxFaultThreshold": 55,
+            "MaxResetValue": 47,
+
+            "MaxAlarmTimeout": 2.5,
+            "MaxFaultTimeout": 1.0,
+            "MaxRecoverTimeout": 1.4,
+            "actions":{
+                "onSet":[{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "MinCellTemp": {
+            "value": 0,
+            "EnableFaultCheck": false,
+            "EnableMinValCheck": false,
+
+            "MinAlarmThreshold": 10,
+            "MinFaultThreshold": 1,
+            "MinResetValue": 11,
+
+            "MinAlarmTimeout": 2.5,
+            "MinFaultTimeout": 0.5,
+            "MinRecoverTimeout": 1.4,
+            "actions":{
+                "onSet":[{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+
+
+        "CVersion": {
+            "value": -1,
+            "numVars": 2,
+            "variable1": "/status/##BMS_ID##:CSubVersion",
+            "variable2": "/status/##BMS_ID##:CMainVersion",
+            "scale": 1,
+            "useExpr": true,
+            "expression": "{1} / 10 + {2}"
+        },
+        "RVersion": {
+            "value": -1,
+            "numVars": 2,
+            "variable1": "/status/##BMS_ID##:RSubVersion",
+            "variable2": "/status/##BMS_ID##:RMainVersion",
+            "scale": 1,
+            "useExpr": true,
+            "expression": "{1} / 10 + {2}"
+        },
+        "VVersion": {
+            "value": -1,
+            "numVars": 2,
+            "variable1": "/status/##BMS_ID##:VSubVersion",
+            "variable2": "/status/##BMS_ID##:VMainVersion",
+            "scale": 1,
+            "useExpr": true,
+            "expression": "{1} / 10 + {2}"
+        }
+    },
+
+    "/system/commands": {
+        "runOpts_##BMS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "note1": "Sets schedule variables (defined in /sched/bms) to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "options": [
+                {
+                    "aname": "##BMS_ID##",
+                    "every": 1,
+                    "uri": "/sched/##BMS_ID##:pubAssetsSummary_bms",
+                    "value": 1
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "every": 0.1,
+                    "uri": "/sched/##BMS_ID##:runMonitor_bms",
+                    "value": 1
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "value":0, 
+                    "uri":"/sched/##BMS_ID##:LocalStartBMS",
+                    "every":0,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "value":0, 
+                    "uri":"/sched/##BMS_ID##:LocalStopBMS",
+                    "every":0,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "value":0, 
+                    "uri":"/sched/##BMS_ID##:CloseContactorsEnable",
+                    "every":0.1,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "value":0, 
+                    "uri":"/sched/##BMS_ID##:OpenContactorsEnable",
+                    "every":0.1,
+                    "offset":0,
+                    "debug":0
+                }
+            ],
+            "targav": "/system/commands:run",
+            "value": false
+        }
+    },
+
+    "/vlinks/##BMS_ID##": {
+        "ui_##BMS_ID##_c_version": { "vlink": "/status/##BMS_ID##:CVersion", "value": "/assets/bms/##BMS_ID##:CVersion"},
+        "ui_##BMS_ID##_r_version": { "vlink": "/status/##BMS_ID##:RVersion", "value": "/assets/bms/##BMS_ID##:RVersion"},
+        "ui_##BMS_ID##_v_version": { "vlink": "/status/##BMS_ID##:VVersion", "value": "/assets/bms/##BMS_ID##:VVersion"}
+    }
+}

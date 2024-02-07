@@ -1,0 +1,372 @@
+{
+    "/config/##PCS_ID##": {
+        "AlarmDestination": "/assets/pcs/##PCS_ID##:alarms",
+        "FaultDestination": "/assets/pcs/##PCS_ID##:faults",
+        "FrequencySetpointMargin": 5,
+        "NoAlarmMsg": "Normal",
+        "NoFaultMsg": "Normal",
+        "PowerSetpointMargin": 5,
+        "RampRateMargin": 5,
+        "RatedActivePower": 1200,
+        "RatedApparentPower": 1350,
+        "RatedPowerFactor": 0.8,
+        "RatedReactivePower": 1100,
+        "VoltageSetpointMargin": 5,
+        "enable": false,
+        "enum_opt": false
+    },
+    "/controls/##PCS_ID##": {
+        "ActivePowerSetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandlePowerCmd",
+                                "inAv": "/sched/##PCS_ID##:handlePowerCmd_##PCS_ID##"
+                            },
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "CalculateVar",
+                                "inAv": "/controls/##PCS_ID##:ActivePowerCmdConvert"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "note": "Used to trigger power command handling function on a value set",
+            "value": 0
+        },
+        "ReactivePowerSetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandlePowerCmd",
+                                "inAv": "/sched/##PCS_ID##:handlePowerCmd_##PCS_ID##"
+                            },
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "CalculateVar",
+                                "inAv": "/controls/##PCS_ID##:ReactivePowerCmdConvert"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "note": "Used to trigger power command handling function on a value set",
+            "value": 0
+        }
+    },
+    "/links/##PCS_ID##": {
+        "ActivePowerCmdReal": {
+            "value": "/controls/##PCS_ID##:ActivePowerCmdReal"
+        },
+        "ActivePowerSetpoint": {
+            "value": "/controls/##PCS_ID##:ActivePowerSetpoint"
+        },
+        "MaxPCSChargePower": {
+            "value": "/limits/##PCS_ID##:MaxPCSChargePower"
+        },
+        "MaxPCSDischargePower": {
+            "value": "/limits/##PCS_ID##:MaxPCSDischargePower"
+        },
+        "RatedActivePower": {
+            "value": "/limits/##PCS_ID##:RatedActivePower"
+        },
+        "RatedApparentPower": {
+            "value": "/limits/##PCS_ID##:RatedApparentPower"
+        },
+        "RatedReactivePower": {
+            "value": "/limits/##PCS_ID##:RatedReactivePower"
+        },
+        "ReactivePowerCmdReal": {
+            "value": "/controls/##PCS_ID##:ReactivePowerCmdReal"
+        },
+        "ReactivePowerSetpoint": {
+            "value": "/controls/##PCS_ID##:ReactivePowerSetpoint"
+        }
+    },
+    "/sched/##PCS_ID##": {
+        "handlePowerCmd_##PCS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandlePowerCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "bms": "##BMS_ID##",
+            "ess": "##ESS_ID##",
+            "note": "Processes active and reactive power commands before they are sent",
+            "pcs": "##PCS_ID##",
+            "value": 1
+        },
+        "pubAssets_##PCS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "mode": "ui",
+            "note": "Publishes UI asset data (/assets/pcs/##PCS_ID##)",
+            "table": "/assets/pcs/##PCS_ID##",
+            "value": 1
+        },
+        "runMonitor_##PCS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "RunMonitor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "aname": "##PCS_ID##",
+            "enable": "/config/##PCS_ID##:enable",
+            "monitor": "wake_monitor",
+            "note": "Periodically runs functions for variables defined in /schedule/wake_monitor/##PCS_ID##",
+            "value": 1
+        },
+        "updateHeartbeatWrite_##PCS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "CalculateVar",
+                                "inAv": "/status/##PCS_ID##:HeartbeatWrite"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "note": "Periodically updates the heartbeat write variable defined in /status/##PCS_ID##:HeartbeatWrite",
+            "value": 1
+        }
+    },
+    "/status/##PCS_ID##": {
+        "CommsOK": true,
+        "DCClosed": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/##PCS_ID##:DCVoltage@EnableMaxValCheck"
+                            },
+                            {
+                                "uri": "/status/##PCS_ID##:DCVoltage@EnableMinValCheck"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "note": "Enables/disables monitoring variables if PCS DC contactors are closed/opened",
+            "value": false
+        },
+        "GridMode": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": []
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "note1": "Contains the PCS's current grid mode, which can be one of the following: FollowPQ, FormVF, FormVSG",
+            "value": "INIT"
+        },
+        "HeartbeatWrite": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "fims": "set",
+                                "uri": "/components/##PCS_ID##:heartbeat_write"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "excludeFromDefaultSched": true,
+            "expression": "if (({1} >= 59), 0, ({1} + 1))",
+            "note": "Updates and then sends the heartbeat write value",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:HeartbeatWrite"
+        },
+        "Status": "INIT",
+        "SystemState": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Stop",
+                                "outValue": false,
+                                "uri": "/status/##PCS_ID##:DCClosed"
+                            },
+                            {
+                                "inValue": "Run",
+                                "outValue": true,
+                                "uri": "/status/##PCS_ID##:DCClosed"
+                            },
+                            {
+                                "inValue": "Fault",
+                                "outValue": false,
+                                "uri": "/status/##PCS_ID##:DCClosed"
+                            },
+                            {
+                                "inValue": "Standby",
+                                "outValue": true,
+                                "uri": "/status/##PCS_ID##:DCClosed"
+                            },
+                            {
+                                "inValue": "Stop",
+                                "outValue": false,
+                                "uri": "/status/##PCS_ID##:IsRunning"
+                            },
+                            {
+                                "inValue": "Run",
+                                "outValue": true,
+                                "uri": "/status/##PCS_ID##:IsRunning"
+                            },
+                            {
+                                "inValue": "Fault",
+                                "outValue": false,
+                                "uri": "/status/##PCS_ID##:IsRunning"
+                            },
+                            {
+                                "inValue": "Standby",
+                                "outValue": false,
+                                "uri": "/status/##PCS_ID##:IsRunning"
+                            },
+                            {
+                                "inValue": "Stop",
+                                "outValue": false,
+                                "uri": "/status/##PCS_ID##:SystemFault"
+                            },
+                            {
+                                "inValue": "Run",
+                                "outValue": false,
+                                "uri": "/status/##PCS_ID##:SystemFault"
+                            },
+                            {
+                                "inValue": "Fault",
+                                "outValue": true,
+                                "uri": "/status/##PCS_ID##:SystemFault"
+                            },
+                            {
+                                "inValue": "Standby",
+                                "outValue": false,
+                                "uri": "/status/##PCS_ID##:SystemFault"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "note1": "Contains the PCS's current state, which can be one of the following: Stop, Run, Fault, Standby",
+            "note2": "Updates various PCS status variables depending on this variable's value",
+            "value": "INIT"
+        }
+    },
+    "/system/commands": {
+        "runOpts_##PCS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "note1": "Sets schedule variables (defined in /sched/##PCS_ID##) to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "options": [
+                {
+                    "aname": "##PCS_ID##",
+                    "every": 1,
+                    "uri": "/sched/##PCS_ID##:pubAssets_##PCS_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##PCS_ID##",
+                    "every": 0.1,
+                    "uri": "/sched/##PCS_ID##:runMonitor_##PCS_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##PCS_ID##",
+                    "every": 1,
+                    "uri": "/sched/##PCS_ID##:checkInputs_##PCS_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##PCS_ID##",
+                    "every": 1,
+                    "uri": "/sched/##PCS_ID##:updateHeartbeatWrite_##PCS_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##PCS_ID##",
+                    "every": 0.1,
+                    "uri": "/sched/##PCS_ID##:handlePowerCmd_##PCS_ID##",
+                    "value": 1
+                }
+            ],
+            "targav": "/system/commands:run",
+            "value": false
+        }
+    }
+}

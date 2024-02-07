@@ -1,0 +1,237 @@
+{
+    "/components/catl_bms_ems_r": {
+        "bms_poweron": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": 0,
+                                "outValue": "Normal",
+                                "uri": "/status/##BMS_ID##:Status"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": "Normal",
+                                "uri": "/status/##BMS_ID##:Status"
+                            },
+                            {
+                                "inValue": 2,
+                                "outValue": "On Fault",
+                                "uri": "/status/##BMS_ID##:Status"
+                            },
+                            {
+                                "inValue": 3,
+                                "outValue": "Off Fault",
+                                "uri": "/status/##BMS_ID##:Status"
+                            },
+                            {
+                                "inValue": 0,
+                                "outValue": false,
+                                "uri": "/status/##BMS_ID##:DCClosed"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": true,
+                                "uri": "/status/##BMS_ID##:DCClosed"
+                            },
+                            {
+                                "inValue": 2,
+                                "outValue": false,
+                                "uri": "/status/##BMS_ID##:DCClosed"
+                            },
+                            {
+                                "inValue": 3,
+                                "outValue": true,
+                                "uri": "/status/##BMS_ID##:DCClosed"
+                            },
+                            {
+                                "enable": "/config/bms:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/bms:status@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "note": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        }
+    },
+    "/components/##BMS_ID##": {
+        "fire_fault_active": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": false,
+                                "uri": "/status/##BMS_ID##:FireFaultActive"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": true,
+                                "uri": "/status/##BMS_ID##:FireFaultActive"
+                            },
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:fire_fault_active@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        }
+    },
+    "/sched/##BMS_ID##": {
+        "checkInputs_##BMS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:status@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:fire_fault_active@ifChanged"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "note": "Sets ifChanged to false to process inputs for various interface variables with actions regardless of value change",
+            "value": 0
+        }
+    },
+    "/vlinks/##BMS_ID##": {
+        "avg_cell_temp": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:avg_cell_temp",
+            "vlink": "/status/##BMS_ID##:AvgCellTemp"
+        },
+        "avg_cell_voltage": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:avg_cell_voltage",
+            "vlink": "/status/##BMS_ID##:AvgCellVoltage"
+        },
+        "chargeable_energy": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:chargeable_energy",
+            "vlink": "/status/##BMS_ID##:ChargeableEnergy"
+        },
+        "dc_current": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:dc_current",
+            "vlink": "/status/##BMS_ID##:DCCurrent"
+        },
+        "dc_power": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:dc_power",
+            "vlink": "/status/##BMS_ID##:DCPower"
+        },
+        "dc_voltage": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:dc_voltage",
+            "vlink": "/status/##BMS_ID##:DCVoltage"
+        },
+        "dischargeable_energy": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:dischargeable_energy",
+            "vlink": "/status/##BMS_ID##:DischargeableEnergy"
+        },
+        "heartbeat_read": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:heartbeat_read",
+            "vlink": "/status/##BMS_ID##:HeartbeatRead"
+        },
+        "max_cell_temp": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:max_cell_temp",
+            "vlink": "/status/##BMS_ID##:MaxCellTemp"
+        },
+        "max_cell_voltage": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:max_cell_voltage",
+            "vlink": "/status/##BMS_ID##:MaxCellVoltage"
+        },
+        "max_charge_current": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:max_charge_current",
+            "vlink": "/limits/##BMS_ID##:ChargeCurrentLimit"
+        },
+        "max_charge_power": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:max_charge_power",
+            "vlink": "/limits/##BMS_ID##:ChargePowerLimit"
+        },
+        "max_discharge_current": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:max_discharge_current",
+            "vlink": "/limits/##BMS_ID##:DischargeCurrentLimit"
+        },
+        "max_discharge_power": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:max_discharge_power",
+            "vlink": "/limits/##BMS_ID##:DischargePowerLimit"
+        },
+        "min_cell_temp": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:min_cell_temp",
+            "vlink": "/status/##BMS_ID##:MinCellTemp"
+        },
+        "min_cell_voltage": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:min_cell_voltage",
+            "vlink": "/status/##BMS_ID##:MinCellVoltage"
+        },
+        "num_racks_online": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:num_racks_online",
+            "vlink": "/status/##BMS_ID##:NumRacksOnline"
+        },
+        "soc": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:soc",
+            "vlink": "/status/##BMS_ID##:SOC"
+        },
+        "soh": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##BMS_ID##:soh",
+            "vlink": "/status/##BMS_ID##:SOH"
+        }
+    }
+}

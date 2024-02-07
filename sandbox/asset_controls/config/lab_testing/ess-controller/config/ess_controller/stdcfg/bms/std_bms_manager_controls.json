@@ -1,0 +1,38 @@
+{
+    "/status/pcs": {
+        "SystemStateStatus": "N/A"
+    },
+
+    "/schedule/wake_monitor/##BMS_ID##":{
+        "/controls/##BMS_ID##:ClearFaults"           : {"func": "HandleCmd", "amap": "bms"}
+    },
+
+    "/controls/bms": {
+        "OpenContactors"  : {"options": [{"uri":"/controls/##BMS_ID##:OpenContactors@triggerCmd"  , "value":true}]},
+        "CloseContactors" : {"options": [{"uri":"/controls/##BMS_ID##:CloseContactors@triggerCmd" , "value":true}]},
+        "ClearFaults"     : {"options": [{"uri":"/controls/##BMS_ID##:ClearFaults@triggerCmd"     , "value":true}]}
+    },
+
+    "/controls/##BMS_ID##": {
+        "ClearFaults": {
+            "value": 0,
+            "enableAlert": true
+        }
+    },
+    "/status/##BMS_ID##": {
+        "ClearFaultsSuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/site:fg_bms_control_alarms_1[0]" , "outValue": true                                         },
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/##BMS_ID##:ClearFaultsCmd"       , "outValue": "Command preconditions were not met, the command was not sent. Details can be found in the ESS Events log." },
+                        
+                        {"inValue": true , "ifChanged": false, "uri": "/faults/##BMS_ID##:clear_faults"         , "outValue": "Clear"                                      },
+                        {"inValue": true , "ifChanged": false, "uri": "/alarms/##BMS_ID##:clear_alarms"         , "outValue": "Clear"                                      }
+                    ]
+                }]
+            }
+        }
+    }
+}

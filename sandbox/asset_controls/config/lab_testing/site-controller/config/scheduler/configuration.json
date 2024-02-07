@@ -1,0 +1,25 @@
+{
+    "local_schedule": {
+        "id": "lima",
+        "name": "Lima",
+        "setpoint_enforcement": {
+            "enabled": false,
+            "frequency_seconds": 5
+        }
+    },
+    "scada": {
+        "max_num_events": 60,
+        "num_bools": 0,
+        "num_floats": 2,
+        "num_ints": 0,
+        "num_strings": 0,
+        "stage_size": 24
+    },
+    "scheduler_type": "SC",
+    "web_sockets": {
+        "server": {
+            "enabled": true,
+            "port": 9000
+        }
+    }
+}

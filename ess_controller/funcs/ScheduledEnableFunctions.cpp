@@ -51,61 +51,88 @@ namespace ScheduledEnableFunctions
         }
 
 
+        std::string maint_mode = (fmt::format("maint_mode_{}", bmsch));
+        std::string close_contactors = (fmt::format("close_contactors_{}", bmsch));
+        std::string DCClosed = (fmt::format("DCClosed_{}", bmsch));
+        std::string IsFaulted = (fmt::format("IsFaulted_{}", bmsch));
+        std::string CloseContactorsEnabled = (fmt::format("CloseContactorsEnabled_{}", bmsch));
+        std::string CloseContactorsEnable = (fmt::format("CloseContactorsEnable_{}", bmsch));
+
+
         if(reload == 0){
+
+
+            std::string assetsString = "";
+            if (std::strcmp(bmsch, "bms") == 0) {
+                assetsString = "summary";
+            } else {
+                assetsString = bmsch;
+            }
+
+            std::string assets = (fmt::format("/assets/bms/{}", assetsString));
+            std::string status = (fmt::format("/status/{}", bmsch));
+            std::string controls = (fmt::format("/controls/{}", bmsch));
 
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
             cAv = amap[relname];
 
+
+            std::string maint_mode = (fmt::format("maint_mode_{}", bmsch));
+            std::string close_contactors = (fmt::format("close_contactors_{}", bmsch));
+            std::string DCClosed = (fmt::format("DCClosed_{}", bmsch));
+            std::string IsFaulted = (fmt::format("IsFaulted_{}", bmsch));
+            std::string CloseContactorsEnabled = (fmt::format("CloseContactorsEnabled_{}", bmsch));
+            std::string CloseContactorsEnable = (fmt::format("CloseContactorsEnable_{}", bmsch));
+            
+
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /assets/bms/summary/maint_mode
-                DataUtility::AssetVarInfo("/assets/bms/summary", "maint_mode", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(assets.c_str(), "maint_mode", maint_mode.c_str(), assetVar::ATypes::ABOOL),
                 // /assets/bms/summary/close_contactors
-                DataUtility::AssetVarInfo("/assets/bms/summary", "close_contactors", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(assets.c_str(), "close_contactors", close_contactors.c_str(), assetVar::ATypes::ABOOL),
                 // /status/bms/DCClosed
-                DataUtility::AssetVarInfo("/status/bms", "DCClosed", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "DCClosed", DCClosed.c_str(), assetVar::ATypes::ABOOL),
                 // /status/bms/IsFaulted
-                DataUtility::AssetVarInfo("/status/bms", "IsFaulted", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "IsFaulted", IsFaulted.c_str(), assetVar::ATypes::ABOOL),
                 // /status/bms/CloseContactorsEnabled
-                DataUtility::AssetVarInfo("/status/bms", "CloseContactorsEnabled", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "CloseContactorsEnabled", CloseContactorsEnabled.c_str(), assetVar::ATypes::ABOOL),
                 // /controls/bms/CloseContactorsEnable
-                DataUtility::AssetVarInfo("/controls/bms", "CloseContactorsEnable", assetVar::ATypes::ABOOL)
+                DataUtility::AssetVarInfo(controls.c_str(), "CloseContactorsEnable", CloseContactorsEnable.c_str(), assetVar::ATypes::ABOOL)
             };
 
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
             reload = 1;
-            cAv->setVal(reload);
         }
 
         if(reload == 1){
-
             std::string message = "";
 
-            if (!amap["DCClosed"]->getbVal() && amap["maint_mode"]->getbVal() && !amap["IsFaulted"]->getbVal()) {
+            if (!amap[DCClosed.c_str()]->getbVal() && amap[maint_mode.c_str()]->getbVal() && !amap[IsFaulted.c_str()]->getbVal()) {
                 message += "CloseContactorsEnable TRUE";
-                amap["close_contactors"]->setParam("enabled", true);
-                amap["CloseContactorsEnabled"]->setVal(true);
+                amap[close_contactors.c_str()]->setParam("enabled", true);
+                amap[CloseContactorsEnabled.c_str()]->setVal(true);
                 cAv->setVal(reload);
             } else {
                 message += fmt::format(
                     " ---> Condition(s): [{}:{}] == false && [{}:{}] == true && [{}:{}] == false",
-                    amap["DCClosed"]->getfName(), 
-                    amap["DCClosed"]->getbVal(),
-                    amap["maint_mode"]->getfName(), 
-                    amap["maint_mode"]->getbVal(),
-                    amap["IsFaulted"]->getfName(), 
-                    amap["IsFaulted"]->getbVal()
+                    amap[DCClosed.c_str()]->getfName(), 
+                    amap[DCClosed.c_str()]->getbVal(),
+                    amap[maint_mode.c_str()]->getfName(), 
+                    amap[maint_mode.c_str()]->getbVal(),
+                    amap[IsFaulted.c_str()]->getfName(), 
+                    amap[IsFaulted.c_str()]->getbVal()
                 );
                 DataUtility::UpdateEnabledLogicMessage("close_contactors", message);
-                amap["close_contactors"]->setParam("enabled", false);
-                amap["CloseContactorsEnabled"]->setVal(false);
+                amap[close_contactors.c_str()]->setParam("enabled", false);
+                amap[CloseContactorsEnabled.c_str()]->setVal(false);
                 cAv->setVal(reload);
             }
 
             if(0)FPS_PRINT_INFO("{}", message);
-
         }
 
+        cAv->setVal(reload);
     }
 
     /**
@@ -142,22 +169,43 @@ namespace ScheduledEnableFunctions
             reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
         }
 
+
+        std::string maint_mode = (fmt::format("maint_mode_{}", bmsch));
+        std::string open_contactors = (fmt::format("open_contactors_{}", bmsch));
+        std::string DCClosed = (fmt::format("DCClosed_{}", bmsch));
+        std::string OpenContactorsEnabled = (fmt::format("OpenContactorsEnabled_{}", bmsch));
+        std::string OpenContactorsEnable = (fmt::format("OpenContactorsEnable_{}", bmsch));
+        
+
         if(reload == 0){
+
+            std::string assetsString = "";
+            if (std::strcmp(bmsch, "bms") == 0) {
+                assetsString = "summary";
+            } else {
+                assetsString = bmsch;
+            }
 
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
             cAv = amap[relname];
 
+            std::string assets = (fmt::format("/assets/bms/{}", assetsString));
+            std::string status = (fmt::format("/status/{}", bmsch));
+            std::string controls = (fmt::format("/controls/{}", bmsch));
+
+
+
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /assets/bms/summary/maint_mode
-                DataUtility::AssetVarInfo("/assets/bms/summary", "maint_mode", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(assets.c_str(), "maint_mode", maint_mode.c_str(), assetVar::ATypes::ABOOL),
                 // /assets/bms/summary/open_contactors
-                DataUtility::AssetVarInfo("/assets/bms/summary", "open_contactors", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(assets.c_str(), "open_contactors", open_contactors.c_str(), assetVar::ATypes::ABOOL),
                 // /status/bms/DCClosed
-                DataUtility::AssetVarInfo("/status/bms", "DCClosed", "DCClosed_BMS", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "DCClosed", DCClosed.c_str(), assetVar::ATypes::ABOOL),
                 // /status/bms/OpenContactorsEnabled
-                DataUtility::AssetVarInfo("/status/bms", "OpenContactorsEnabled", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(status.c_str(), "OpenContactorsEnabled", OpenContactorsEnabled.c_str(), assetVar::ATypes::ABOOL),
                 // /controls/bms/OpenContactorsEnable
-                DataUtility::AssetVarInfo("/controls/bms", "OpenContactorsEnable", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo(controls.c_str(), "OpenContactorsEnable", OpenContactorsEnable.c_str(), assetVar::ATypes::ABOOL),
                 // /status/pcs/DCClosed
                 DataUtility::AssetVarInfo("/status/pcs", "DCClosed", "DCClosed_PCS", assetVar::ATypes::ABOOL)
             };
@@ -165,33 +213,34 @@ namespace ScheduledEnableFunctions
             amap = DataUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
             reload = 1;
-            cAv->setVal(reload);
         }
 
         if(reload == 1){
             std::string message = "";
 
-            if (amap["DCClosed_BMS"]->getbVal() && !amap["DCClosed_PCS"]->getbVal() && amap["maint_mode"]->getbVal()) {
+            if (amap[DCClosed.c_str()]->getbVal() && !amap["DCClosed_PCS"]->getbVal() && amap[maint_mode.c_str()]->getbVal()) {
                 message += fmt::format("{} TRUE", __func__);
-                amap["open_contactors"]->setParam("enabled", true);
-                amap["OpenContactorsEnabled"]->setVal(true);
+                amap[open_contactors.c_str()]->setParam("enabled", true);
+                amap[OpenContactorsEnabled.c_str()]->setVal(true);
             } else {
                 message += fmt::format(
                     " ---> Condition(s): [{}:{}] == true && [{}:{}] == false && [{}:{}] == true",
-                    amap["DCClosed_BMS"]->getfName(), 
-                    amap["DCClosed_BMS"]->getbVal(),
+                    amap[DCClosed.c_str()]->getfName(), 
+                    amap[DCClosed.c_str()]->getbVal(),
                     amap["DCClosed_PCS"]->getfName(), 
                     amap["DCClosed_PCS"]->getbVal(),
-                    amap["maint_mode"]->getfName(), 
-                    amap["maint_mode"]->getbVal()
+                    amap[maint_mode.c_str()]->getfName(), 
+                    amap[maint_mode.c_str()]->getbVal()
                 );
                 DataUtility::UpdateEnabledLogicMessage("open_contactors", message);
-                amap["open_contactors"]->setParam("enabled", false);
-                amap["OpenContactorsEnabled"]->setVal(false);
+                amap[open_contactors.c_str()]->setParam("enabled", false);
+                amap[OpenContactorsEnabled.c_str()]->setVal(false);
             }
 
             if(0)FPS_PRINT_INFO("{}", message);
         }
+
+        cAv->setVal(reload);
 
     }
 
@@ -235,7 +284,7 @@ namespace ScheduledEnableFunctions
 
             std::vector<DataUtility::AssetVarInfo> assetVarVector = {
                 // /status/bms/DCClosed
-                DataUtility::AssetVarInfo("/status/bms", "DCClosed", assetVar::ATypes::ABOOL),
+                DataUtility::AssetVarInfo("/status/bms", "DCClosed", "DCClosed_bms", assetVar::ATypes::ABOOL),
                 // /assets/pcs/summary/maint_mode
                 DataUtility::AssetVarInfo("/assets/pcs/summary", "maint_mode", assetVar::ATypes::ABOOL),
                 // /assets/pcs/summary/start
@@ -270,7 +319,7 @@ namespace ScheduledEnableFunctions
 
             std::string message = "";
 
-            if (amap["DCClosed"]->getbVal() && amap["maint_mode"]->getbVal() && (systemState) && !amap["IsFaulted"]->getbVal()) {
+            if (amap["DCClosed_bms"]->getbVal() && amap["maint_mode"]->getbVal() && (systemState) && !amap["IsFaulted"]->getbVal()) {
                 message += fmt::format("{} TRUE", __func__);
                 amap["start"]->setParam("enabled", true);
                 amap["StartEnabled"]->setVal(true);
@@ -285,8 +334,8 @@ namespace ScheduledEnableFunctions
 
                 message += fmt::format(
                     " ---> Condition(s): [{}:{}] == true && [{}:{}] == true && [{}:{}] == (Stop or Standby) && [{}:{}] == false",
-                    amap["DCClosed"]->getfName(), 
-                    amap["DCClosed"]->getbVal(),
+                    amap["DCClosed_bms"]->getfName(), 
+                    amap["DCClosed_bms"]->getbVal(),
                     amap["maint_mode"]->getfName(), 
                     amap["maint_mode"]->getbVal(),
                     amap["SystemState"]->getfName(), 

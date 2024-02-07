@@ -1,0 +1,66 @@
+{
+    "/components/bms": {
+        "fire_fault_active": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": false,
+                                "uri": "/status/bms:FireFaultActive"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": true,
+                                "uri": "/status/bms:FireFaultActive"
+                            },
+                            {
+                                "enable": "/config/bms:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/bms:fire_fault_active@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        }
+    },
+    "/sched/bms": {
+        "checkInputs_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": false,
+                                "uri": "/components/bms:status@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/bms:fire_fault_active@ifChanged"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Sets ifChanged to false to process inputs for various interface variables with actions regardless of value change",
+            "value": 0
+        }
+    },
+    "/vlinks/bms": {
+        "heartbeat_read": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/bms:heartbeat_read",
+            "vlink": "/status/bms:HeartbeatRead"
+        }
+    }
+}

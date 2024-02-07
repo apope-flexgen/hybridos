@@ -1,0 +1,1586 @@
+{
+    "/controls/##PCS_ID##": {
+        "ActivePowerCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "expression": "{1} != Stop and {1} != Fault",
+            "note1": "Send active power command to PCS",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:SystemState"
+        },
+        "ActivePowerCmdConvert": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:ActivePowerCmd@triggerCmd"
+                            },
+                            {
+                                "uri": "/controls/##PCS_ID##:ActivePowerCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1}",
+            "ifChanged": false,
+            "note": "Pass kW command to ActivePowerCmd",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/controls/##PCS_ID##:ActivePowerCmdReal"
+        },
+        "ActivePowerRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "expression": "{1} > 0",
+            "note1": "Send active power ramp rate to PCS",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/controls/##PCS_ID##:ActivePowerRampRateCmd"
+        },
+        "ActivePowerRampRateCmdConvert": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:ActivePowerRampRateCmd@triggerCmd"
+                            },
+                            {
+                                "uri": "/controls/##PCS_ID##:ActivePowerRampRateCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1}",
+            "ifChanged": false,
+            "note": "Pass kW/s command to ActivePowerRampRateCmd",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/controls/##PCS_ID##:ActivePowerRampRate"
+        },
+        "ActivePowerSetpointEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:active_power_setpoint@enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} and {2} != Stop and {2} != Fault",
+            "note": "Enable active power setpoint UI control if the PCS is not in Stop and Fault and the PCS is in maintenance mode",
+            "numVars": 2,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/assets/pcs/##PCS_ID##:maint_mode",
+            "variable2": "/status/##PCS_ID##:SystemState"
+        },
+        "ClearFaults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "note": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "useExpr": false,
+            "value": 0
+        },
+        "FrequencySetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "expression": "{1} >= 55 and {1} <= 65 and {2} == FormVF",
+            "note1": "Send frequency setpoint command to PCS as long as the setpoint is between 55 and 65 Hz and the PCS is in grid-forming (VF)",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 2,
+            "useExpr": true,
+            "value": 60,
+            "variable1": "/controls/##PCS_ID##:FrequencySetpoint",
+            "variable2": "/status/##PCS_ID##:GridMode"
+        },
+        "FrequencySetpointEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:frequency_setpoint@enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} and {2} == FormVF",
+            "note": "Enable frequency setpoint UI control if the PCS is in maintenance mode and grid-forming (VF)",
+            "numVars": 2,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/assets/pcs/##PCS_ID##:maint_mode",
+            "variable2": "/status/##PCS_ID##:GridMode"
+        },
+        "GridFollowPQ": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "expression": "{1} == Stop or {1} == Fault",
+            "note1": "Grid-following mode command to send to PCS if the PCS is in Stop or Fault",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 1,
+            "sendCmdTimeout": 3,
+            "useExpr": true,
+            "value": 1,
+            "variable1": "/status/##PCS_ID##:SystemState"
+        },
+        "GridFollowPQEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:grid_follow_pq@enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} and ({2} == Stop or {2} == Fault) and {3} != FollowPQ",
+            "note": "Enable grid-following mode UI control if the PCS is in Stop or Fault, the PCS is not in grid-following, and the PCS is in maintenance mode",
+            "numVars": 3,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/assets/pcs/##PCS_ID##:maint_mode",
+            "variable2": "/status/##PCS_ID##:SystemState",
+            "variable3": "/status/##PCS_ID##:GridMode"
+        },
+        "GridFormVF": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "expression": "{1} == Stop or {1} == Fault",
+            "note1": "Grid-forming mode (VF) command to send to PCS if the PCS is in Stop or Fault",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 1,
+            "sendCmdTimeout": 3,
+            "useExpr": true,
+            "value": 2,
+            "variable1": "/status/##PCS_ID##:SystemState"
+        },
+        "GridFormVFEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:grid_form_vf@enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} and ({2} == Stop or {2} == Fault) and {3} == FollowPQ",
+            "note": "Enable grid-forming mode (VF) UI control if the PCS is in Stop or Fault, the PCS is in grid-following, and the PCS is in maintenance mode",
+            "numVars": 3,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/assets/pcs/##PCS_ID##:maint_mode",
+            "variable2": "/status/##PCS_ID##:SystemState",
+            "variable3": "/status/##PCS_ID##:GridMode"
+        },
+        "GridFormVSG": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "expression": "{1} == Stop or {1} == Fault",
+            "note1": "Grid-forming mode (VSG) command to send to PCS if the PCS is in Stop or Fault",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 1,
+            "sendCmdTimeout": 3,
+            "useExpr": true,
+            "value": 3,
+            "variable1": "/status/##PCS_ID##:SystemState"
+        },
+        "GridFormVSGEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:grid_form_vsg@enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} and ({2} == Stop or {2} == Fault) and {3} == FollowPQ",
+            "note": "Enable grid-forming mode (VSG) UI control if the PCS is in Stop or Fault, the PCS is in grid-following, and the PCS is in maintenance mode",
+            "numVars": 3,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/assets/pcs/##PCS_ID##:maint_mode",
+            "variable2": "/status/##PCS_ID##:SystemState",
+            "variable3": "/status/##PCS_ID##:GridMode"
+        },
+        "ReactivePowerCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "expression": "{1} != Stop and {1} != Fault",
+            "note1": "Send reactive power command to PCS",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:SystemState"
+        },
+        "ReactivePowerCmdConvert": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:ReactivePowerCmd@triggerCmd"
+                            },
+                            {
+                                "uri": "/controls/##PCS_ID##:ReactivePowerCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1}",
+            "ifChanged": false,
+            "note": "Pass kVAR command to ReactivePowerCmd",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/controls/##PCS_ID##:ReactivePowerCmdReal"
+        },
+        "ReactivePowerRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "expression": "{1} > 0",
+            "note1": "Send reactive power ramp rate to PCS",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/controls/##PCS_ID##:ReactivePowerRampRateCmd"
+        },
+        "ReactivePowerRampRateCmdConvert": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:ReactivePowerRampRateCmd@triggerCmd"
+                            },
+                            {
+                                "uri": "/controls/##PCS_ID##:ReactivePowerRampRateCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1}",
+            "ifChanged": false,
+            "note": "Pass kVAR/s command to ReactivePowerRampRateCmd",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/controls/##PCS_ID##:ReactivePowerRampRate"
+        },
+        "ReactivePowerSetpointEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:reactive_power_setpoint@enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} and {2} != Stop and {2} != Fault",
+            "note": "Enable reactive power setpoint UI control if the PCS is not in Stop and Fault and the PCS is in maintenance mode",
+            "numVars": 2,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/assets/pcs/##PCS_ID##:maint_mode",
+            "variable2": "/status/##PCS_ID##:SystemState"
+        },
+        "Standby": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "expression": "{1} and ({2} == Stop or {2} == Run) and {3}",
+            "note1": "Standby command to send to PCS if the PCS is in Stop or Run, the BMS DC contactors are closed, and the BMS current is within an acceptable level",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 3,
+            "sendCmdTimeout": 3,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##:CurrentBeforeStopIsOK",
+            "variable2": "/status/##PCS_ID##:SystemState",
+            "variable3": "/status/##BMS_ID##:DCClosed"
+        },
+        "StandbyEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:standby@enabled"
+                            },
+                            {
+                                "uri": "/status/##PCS_ID##:StandbyEnabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} and {2} and ({3} == Stop or {3} == Run)",
+            "note": "Enable Standby UI control if BMS DC Contactors are closed, the PCS is in Stop or Run, and the PCS is in maintenance mode",
+            "numVars": 3,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/##BMS_ID##:DCClosed",
+            "variable2": "/assets/pcs/##PCS_ID##:maint_mode",
+            "variable3": "/status/##PCS_ID##:SystemState"
+        },
+        "Start": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "expression": "({1} == Stop or {1} == Standby) and {2} and not {3}",
+            "note1": "Start command to send to PCS if the PCS is in Stop or Standby, the BMS DC contactors are closed, and the PCS is not faulted",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 3,
+            "sendCmdTimeout": 3,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:SystemState",
+            "variable2": "/status/##BMS_ID##:DCClosed",
+            "variable3": "/status/##PCS_ID##:IsFaulted"
+        },
+        "StartEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:start@enabled"
+                            },
+                            {
+                                "uri": "/status/##PCS_ID##:StartEnabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} and {2} and ({3} == Stop or {3} == Standby) and not {4}",
+            "note": "Enable Start UI control if BMS DC Contactors are closed, the PCS is in Stop or Standby, the PCS is not faulted, and the PCS is in maintenance mode",
+            "numVars": 4,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/##BMS_ID##:DCClosed",
+            "variable2": "/assets/pcs/##PCS_ID##:maint_mode",
+            "variable3": "/status/##PCS_ID##:SystemState",
+            "variable4": "/status/##PCS_ID##:IsFaulted"
+        },
+        "Stop": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "expression": "{1} and ({2} == Standby or {2} == Run) and {3}",
+            "note1": "Stop command to send to PCS if the PCS is in Standby or Run, the BMS DC contactors are closed, and the BMS current is within an acceptable level",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 3,
+            "sendCmdTimeout": 3,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##:CurrentBeforeStopIsOK",
+            "variable2": "/status/##PCS_ID##:SystemState",
+            "variable3": "/status/##BMS_ID##:DCClosed"
+        },
+        "StopEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:stop@enabled"
+                            },
+                            {
+                                "uri": "/status/##PCS_ID##:StopEnabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} and {2} != Stop",
+            "note": "Enable Stop UI control if the PCS is not in Stop and the PCS is in maintenance mode",
+            "numVars": 2,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/assets/pcs/##PCS_ID##:maint_mode",
+            "variable2": "/status/##PCS_ID##:SystemState"
+        },
+        "VerifyActivePowerCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "({1} - {3}) <= {2} and ({1} + {3}) >= {2}",
+            "numVars": 3,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/controls/##PCS_ID##:ActivePowerCmd",
+            "variable2": "/status/##PCS_ID##:ActivePowerSetpointFeedback",
+            "variable3": "/config/##PCS_ID##:PowerSetpointMargin"
+        },
+        "VerifyActivePowerRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "({1} - {3}) <= {2} and ({1} + {3}) >= {2}",
+            "numVars": 3,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/controls/##PCS_ID##:ActivePowerRampRateCmd",
+            "variable2": "/status/##PCS_ID##:ActivePowerRampRateFeedback",
+            "variable3": "/config/##PCS_ID##:RampRateMargin"
+        },
+        "VerifyFrequencySetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "({1} - {3}) <= {2} and ({1} + {3}) >= {2}",
+            "numVars": 3,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/controls/##PCS_ID##:FrequencySetpoint",
+            "variable2": "/status/##PCS_ID##:FrequencySetpointFeedback",
+            "variable3": "/config/##PCS_ID##:FrequencySetpointMargin"
+        },
+        "VerifyGridFollowPQ": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "{1} == GridFollowPQ",
+            "numVars": 1,
+            "sendCmdTimeout": 10,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:GridMode"
+        },
+        "VerifyGridFormVF": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "{1} == GridFormVF",
+            "numVars": 1,
+            "sendCmdTimeout": 10,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:GridMode"
+        },
+        "VerifyGridFormVSG": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "{1} == GridFormVSG",
+            "numVars": 1,
+            "sendCmdTimeout": 10,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:GridMode"
+        },
+        "VerifyReactivePowerCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "({1} - {3}) <= {2} and ({1} + {3}) >= {2}",
+            "numVars": 3,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/controls/##PCS_ID##:ReactivePowerCmd",
+            "variable2": "/status/##PCS_ID##:ReactivePowerSetpointFeedback",
+            "variable3": "/config/##PCS_ID##:PowerSetpointMargin"
+        },
+        "VerifyReactivePowerRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "({1} - {3}) <= {2} and ({1} + {3}) >= {2}",
+            "numVars": 3,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/controls/##PCS_ID##:ReactivePowerRampRateCmd",
+            "variable2": "/status/##PCS_ID##:ReactivePowerRampRateFeedback",
+            "variable3": "/config/##PCS_ID##:RampRateMargin"
+        },
+        "VerifyStandby": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "{1} == Standby",
+            "numVars": 1,
+            "sendCmdTimeout": 10,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:SystemState"
+        },
+        "VerifyStart": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "{1} == Run",
+            "numVars": 1,
+            "sendCmdTimeout": 10,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:SystemState"
+        },
+        "VerifyStop": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "{1} == Stop or {1} == Fault",
+            "numVars": 1,
+            "sendCmdTimeout": 10,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:SystemState"
+        },
+        "VerifyVoltageSetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "({1} - {3}) <= {2} and ({1} + {3}) >= {2}",
+            "numVars": 3,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/controls/##PCS_ID##:VoltageSetpoint",
+            "variable2": "/status/##PCS_ID##:VoltageSetpointFeedback",
+            "variable3": "/config/##PCS_ID##:VoltageSetpointMargin"
+        },
+        "VoltageSetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "expression": "{1} >= 460 and {1} <= 500 and {2} == FormVF",
+            "note1": "Send voltage setpoint command to PCS as long as the setpoint is between 460 and 500 V and the PCS is in grid-forming (VF)",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 2,
+            "useExpr": true,
+            "value": 480,
+            "variable1": "/controls/##PCS_ID##:VoltageSetpoint",
+            "variable2": "/status/##PCS_ID##:GridMode"
+        },
+        "VoltageSetpointEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:voltage_setpoint@enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} and {2} == FormVF",
+            "note": "Enable voltage setpoint UI control if the PCS is in maintenance mode and grid-forming (VF)",
+            "numVars": 2,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/assets/pcs/##PCS_ID##:maint_mode",
+            "variable2": "/status/##PCS_ID##:GridMode"
+        }
+    },
+    "/schedule/wake_monitor/##PCS_ID##": {
+        "/controls/##PCS_ID##:ActivePowerCmd": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:ActivePowerCmdConvert": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:ActivePowerRampRateCmd": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:ActivePowerRampRateCmdConvert": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:ActivePowerSetpointEnable": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:ClearFaults": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:FrequencySetpoint": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:FrequencySetpointEnable": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:GridFollowPQ": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:GridFollowPQEnable": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:GridFormVF": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:GridFormVFEnable": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:GridFormVSG": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:GridFormVSGEnable": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:ReactivePowerCmd": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:ReactivePowerCmdConvert": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:ReactivePowerRampRateCmd": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:ReactivePowerRampRateCmdConvert": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:ReactivePowerSetpointEnable": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:Standby": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:StandbyEnable": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:Start": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:StartEnable": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:Stop": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:StopEnable": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##PCS_ID##:VerifyActivePowerCmd": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VerifyActivePowerRampRateCmd": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VerifyFrequencySetpoint": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VerifyGridFollowPQ": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VerifyGridFormVF": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VerifyGridFormVSG": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VerifyReactivePowerCmd": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VerifyReactivePowerRampRateCmd": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VerifyStandby": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VerifyStart": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VerifyStop": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VerifyVoltageSetpoint": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VoltageSetpoint": {
+            "amap": "##PCS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##PCS_ID##:VoltageSetpointEnable": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/##PCS_ID##": {
+        "ActivePowerCmdSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS ActivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:ActivePowerCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "Used to validate /controls/##PCS_ID##:ActivePowerCmd",
+            "value": false
+        },
+        "ActivePowerRampRateCmdSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS ActivePowerRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:ActivePowerRampRateCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "Used to validate /controls/##PCS_ID##:ActivePowerRampRateCmd",
+            "value": false
+        },
+        "ClearFaultsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:ClearFaults"
+                            },
+                            {
+                                "outValue": "Clear",
+                                "uri": "/faults/##PCS_ID##:clear_faults"
+                            },
+                            {
+                                "outValue": "Clear",
+                                "uri": "/alarms/##PCS_ID##:clear_alarms"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "When this variable is set, /faults/##PCS_ID##:clear_faults and /alarms/##PCS_ID##:clear_alarms will be set to Clear",
+            "value": false
+        },
+        "FrequencySetpointSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS FrequencySetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:FrequencySetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "Used to validate /controls/##PCS_ID##:FrequencySetpoint",
+            "value": false
+        },
+        "GridFollowPQSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:VerifyGridFollowPQ@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##PCS_ID##:VerifyGridFollowPQ"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": "PCS GridFollowPQ - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:GridFollowPQ"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the grid-following mode command has been successfully sent to the PCS, verify that the PCS is now in grid-following. Otherwise, send an alarm",
+            "value": false
+        },
+        "GridFormVFSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:VerifyGridFormVF@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##PCS_ID##:VerifyGridFormVF"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": "PCS GridFormVF - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:GridFormVF"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the grid-forming mode (VF) command has been successfully sent to the PCS, verify that the PCS is now in grid-forming (VF). Otherwise, send an alarm",
+            "value": false
+        },
+        "GridFormVSGSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:VerifyGridFormVSG@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##PCS_ID##:VerifyGridFormVSG"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": "PCS GridFormVSG - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:GridFormVSG"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the grid-forming mode (VSG) command has been successfully sent to the PCS, verify that the PCS is now in grid-forming (VSG). Otherwise, send an alarm",
+            "value": false
+        },
+        "ReactivePowerCmdSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS ReactivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:ReactivePowerCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "Used to validate /controls/##PCS_ID##:ReactivePowerCmd",
+            "value": false
+        },
+        "ReactivePowerRampRateCmdSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS ReactivePowerRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:ReactivePowerRampRateCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "Used to validate /controls/##PCS_ID##:ReactivePowerRampRateCmd",
+            "value": false
+        },
+        "StandbySuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:VerifyStandby@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##PCS_ID##:VerifyStandby"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": "PCS Standby - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:Standby"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the standby command has been successfully sent to the PCS, verify that the PCS is now on standby. Otherwise, send an alarm",
+            "value": false
+        },
+        "StartSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:VerifyStart@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##PCS_ID##:VerifyStart"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": "PCS Start - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:Start"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the start command has been successfully sent to the PCS, verify that the PCS is now running. Otherwise, send an alarm",
+            "value": false
+        },
+        "StopSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:VerifyStop@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##PCS_ID##:VerifyStop"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": "PCS Stop - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:Stop"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the stop command has been successfully sent to the PCS, verify that the PCS has stopped. Otherwise, send an alarm",
+            "value": false
+        },
+        "VerifyActivePowerCmdSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VerifyActivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##PCS_ID##:VerifyActivePowerCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the PCS's actual active power setpoint does not match or is not near the active power setpoint sent, send an alarm",
+            "value": false
+        },
+        "VerifyActivePowerRampRateCmdSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VerifyActivePowerRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##PCS_ID##:VerifyActivePowerRampRateCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the PCS's actual active power ramp rate does not match or is not near the active power ramp rate sent, send an alarm",
+            "value": false
+        },
+        "VerifyFrequencySetpointSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VerifyFrequencySetpoint - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##PCS_ID##:VerifyFrequencySetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the PCS's actual frequency setpoint does not match or is not near the frequency setpoint sent, send an alarm",
+            "value": false
+        },
+        "VerifyGridFollowPQSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VerifyGridFollowPQ - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##PCS_ID##:VerifyGridFollowPQ"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the PCS is not in grid-following after an elasped time, send an alarm",
+            "value": false
+        },
+        "VerifyGridFormVFSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VerifyGridFormVF - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##PCS_ID##:VerifyGridFormVF"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the PCS is not in grid-forming (VF) after an elasped time, send an alarm",
+            "value": false
+        },
+        "VerifyGridFormVSGSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VerifyGridFormVSG - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##PCS_ID##:VerifyGridFormVSG"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the PCS is not in grid-forming (VSG) after an elasped time, send an alarm",
+            "value": false
+        },
+        "VerifyReactivePowerCmdSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VerifyReactivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##PCS_ID##:VerifyReactivePowerCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the PCS's actual reactive power setpoint does not match or is not near the reactive power setpoint sent, send an alarm",
+            "value": false
+        },
+        "VerifyReactivePowerRampRateCmdSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VerifyReactivePowerRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##PCS_ID##:VerifyReactivePowerRampRateCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the PCS's actual reactive power ramp rate does not match or is not near the reactive power ramp rate sent, send an alarm",
+            "value": false
+        },
+        "VerifyStandbySuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VerifyStandby - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##PCS_ID##:VerifyStandby"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the PCS is not on standby after an elasped time, send an alarm",
+            "value": false
+        },
+        "VerifyStartSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VerifyStart - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##PCS_ID##:VerifyStart"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the PCS is not running after an elasped time, send an alarm",
+            "value": false
+        },
+        "VerifyStopSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VerifyStop - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##PCS_ID##:VerifyStop"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the PCS is not stopped after an elasped time, send an alarm",
+            "value": false
+        },
+        "VerifyVoltageSetpointSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VerifyVoltageSetpoint - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##PCS_ID##:VerifyVoltageSetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the PCS's actual voltage setpoint does not match or is not near the voltage setpoint sent, send an alarm",
+            "value": false
+        },
+        "VoltageSetpointSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "PCS VoltageSetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##PCS_ID##:VoltageSetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note": "Used to validate /controls/##PCS_ID##:VoltageSetpoint",
+            "value": false
+        }
+    }
+}

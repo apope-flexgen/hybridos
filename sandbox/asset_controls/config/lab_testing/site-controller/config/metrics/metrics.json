@@ -1,0 +1,1147 @@
+{
+    "listenRate": 2,
+    "metricsUri": "/metrics/kpi",
+    "publishRate": 100,
+    "publishUris": [
+        {
+            "metrics": [
+                {
+                    "id": "ui",
+                    "inputs": [
+                        {
+                            "id": "reserved_bool_11",
+                            "uri": "/site/configuration"
+                        }
+                    ],
+                    "operation": "echo",
+                    "outputs": [
+                        {
+                            "id": "ui",
+                            "uri": "/site/input_sources"
+                        }
+                    ]
+                },
+                {
+                    "id": "scheduler",
+                    "inputs": [
+                        {
+                            "id": "reserved_bool_13",
+                            "uri": "/site/configuration"
+                        }
+                    ],
+                    "operation": "echo",
+                    "outputs": [
+                        {
+                            "id": "scheduler",
+                            "uri": "/site/input_sources"
+                        }
+                    ]
+                }
+            ],
+            "naked": false,
+            "uri": "/metrics/input_sources"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "FM_timestamp",
+                    "inputs": [
+                        {
+                            "id": "FM_timestamp",
+                            "uri": "/metrics/timestamp"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "comment": "Change to operation to millisecondsToRFC3339 when a newer version of metrics is deployed",
+                    "id": "FM_time_UTC",
+                    "inputs": [
+                        {
+                            "id": "FM_timestamp",
+                            "uri": "/metrics/timestamp"
+                        }
+                    ],
+                    "operation": "echo",
+                    "param": {
+                        "operation": "zulu"
+                    }
+                }
+            ],
+            "naked": true,
+            "uri": "/metrics/timestamp"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "battery_load_active_power",
+                    "inputs": [
+                        {
+                            "id": "52f1_active_power_flipped",
+                            "uri": "/metrics/52f1_active_power_flipped"
+                        },
+                        {
+                            "id": "52f2_active_power_flipped",
+                            "uri": "/metrics/52f2_active_power_flipped"
+                        }
+                    ],
+                    "name": "Battery Load Active Power",
+                    "operation": "sum",
+                    "param": {
+                        "operations": "++"
+                    }
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/battery_load_active_power"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "battery_load_reactive_power",
+                    "inputs": [
+                        {
+                            "id": "52f1_reactive_power_flipped",
+                            "uri": "/metrics/52f1_reactive_power_flipped"
+                        },
+                        {
+                            "id": "52f2_reactive_power_flipped",
+                            "uri": "/metrics/52f2_reactive_power_flipped"
+                        }
+                    ],
+                    "name": "Battery Load Reactive Power",
+                    "operation": "sum",
+                    "param": {
+                        "operations": "++"
+                    }
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/battery_load_reactive_power"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "active_power_dynamic_offset",
+                    "inputs": [
+                        {
+                            "id": "num_ess_running",
+                            "uri": "/assets/ess/summary"
+                        }
+                    ],
+                    "name": "Active Power Dynamic Offset",
+                    "operation": "product",
+                    "param": {
+                        "gain": 7
+                    }
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/active_power_dynamic_offset"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "active_power_total_offset",
+                    "inputs": [
+                        {
+                            "id": "active_power_dynamic_offset",
+                            "uri": "/metrics/active_power_dynamic_offset"
+                        }
+                    ],
+                    "name": "Active Power Total Offset",
+                    "operation": "sum",
+                    "param": {
+                        "offset": 150
+                    }
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/active_power_total_offset"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "aux_load_active_power",
+                    "inputs": [
+                        {
+                            "id": "3p_active_power_x",
+                            "uri": "/components/acuvim"
+                        },
+                        {
+                            "id": "pcs_aux_load_active_power",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Auxiliary Load Active Power",
+                    "operation": "sum",
+                    "param": {
+                        "operations": "+-"
+                    }
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/aux_load_active_power"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "aux_load_reactive_power",
+                    "inputs": [
+                        {
+                            "id": "3p_reactive_power_x",
+                            "uri": "/components/acuvim"
+                        }
+                    ],
+                    "name": "Auxiliary Load Reactive Power",
+                    "operation": "echo"
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/aux_load_reactive_power"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "gen_gross_active_power",
+                    "inputs": [
+                        {
+                            "id": "battery_load_active_power",
+                            "uri": "/metrics/battery_load_active_power"
+                        },
+                        {
+                            "id": "pcs_aux_load_active_power",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Generation Gross Active Power",
+                    "operation": "sum",
+                    "param": {
+                        "operations": "++"
+                    }
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/gen_gross_active_power"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "battery_load_active_power",
+                    "inputs": [
+                        {
+                            "id": "52f1_active_power_flipped",
+                            "uri": "/metrics/52f1_active_power_flipped"
+                        },
+                        {
+                            "id": "52f2_active_power_flipped",
+                            "uri": "/metrics/52f2_active_power_flipped"
+                        }
+                    ],
+                    "name": "Battery Load Active Power",
+                    "operation": "sum",
+                    "param": {
+                        "operations": "++"
+                    }
+                },
+                {
+                    "id": "battery_load_reactive_power",
+                    "inputs": [
+                        {
+                            "id": "52f1_reactive_power_flipped",
+                            "uri": "/metrics/52f1_reactive_power_flipped"
+                        },
+                        {
+                            "id": "52f2_reactive_power_flipped",
+                            "uri": "/metrics/52f2_reactive_power_flipped"
+                        }
+                    ],
+                    "name": "Battery Load Reactive Power",
+                    "operation": "sum",
+                    "param": {
+                        "operations": "++"
+                    }
+                },
+                {
+                    "id": "aux_load_active_power",
+                    "inputs": [
+                        {
+                            "id": "3p_active_power_x",
+                            "uri": "/components/acuvim"
+                        },
+                        {
+                            "id": "pcs_aux_load_active_power",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Auxiliary Load Active Power",
+                    "operation": "sum",
+                    "param": {
+                        "operations": "+-"
+                    }
+                },
+                {
+                    "id": "aux_load_reactive_power",
+                    "inputs": [
+                        {
+                            "id": "3p_reactive_power_x",
+                            "uri": "/components/acuvim"
+                        }
+                    ],
+                    "name": "Auxiliary Load Reactive Power",
+                    "operation": "echo"
+                },
+                {
+                    "id": "battery_load_active_power_abs_flag",
+                    "inputs": [
+                        {
+                            "id": "battery_load_active_power",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Battery Load Active Power Absolute Value Flag",
+                    "operation": "compare",
+                    "param": {
+                        "operation": "lt",
+                        "reference": 0
+                    }
+                },
+                {
+                    "id": "battery_load_active_power_flip",
+                    "inputs": [
+                        {
+                            "id": "battery_load_active_power",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Battery Load Active Power Flip",
+                    "operation": "product",
+                    "param": {
+                        "gain": -1.0
+                    }
+                },
+                {
+                    "id": "battery_load_active_power_abs",
+                    "inputs": [
+                        {
+                            "id": "battery_load_active_power_abs_flag",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "battery_load_active_power_flip",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "battery_load_active_power",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Battery Load Active Power Absolute Value",
+                    "operation": "select",
+                    "param": {}
+                },
+                {
+                    "id": "gen_gross_active_power_above_one_percent",
+                    "initialValue": false,
+                    "inputs": [
+                        {
+                            "id": "battery_load_active_power_abs",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Generation Gross Active Power > 1%",
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gt",
+                        "reference": 1013.1
+                    }
+                },
+                {
+                    "id": "gen_gross_active_power_below_one_percent",
+                    "initialValue": false,
+                    "inputs": [
+                        {
+                            "id": "battery_load_active_power_abs",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Generation Gross Active Power <= 1%",
+                    "operation": "compare",
+                    "param": {
+                        "operation": "lte",
+                        "reference": 1013.1
+                    }
+                },
+                {
+                    "id": "gen_gross_active_power_above_one_percent_prev",
+                    "initialInput": false,
+                    "inputs": [
+                        {
+                            "id": "gen_gross_active_power_above_one_percent",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Generation Gross Active Power > 1% Previous Value",
+                    "operation": "echo"
+                },
+                {
+                    "id": "gen_gross_active_power_below_one_percent_prev",
+                    "initialInput": false,
+                    "inputs": [
+                        {
+                            "id": "gen_gross_active_power_below_one_percent",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Generation Gross Active Power <= 1% Previous Value",
+                    "operation": "echo"
+                },
+                {
+                    "id": "sustain_above_one_percent_pulse_output",
+                    "initialValue": false,
+                    "inputs": [
+                        {
+                            "id": "above_one_percent_compare",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Generation Gross Active Power > 1% Within Last specified time parameter",
+                    "operation": "pulse",
+                    "param": {
+                        "time": 2000
+                    }
+                },
+                {
+                    "id": "sustain_below_one_percent_pulse_output",
+                    "initialValue": false,
+                    "inputs": [
+                        {
+                            "id": "below_one_percent_compare",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Indicates that system was below 1% for the duration specified in the time parameter",
+                    "operation": "pulse",
+                    "param": {
+                        "time": 2000
+                    }
+                },
+                {
+                    "id": "above_one_percent_compare",
+                    "initialValue": false,
+                    "inputs": [
+                        {
+                            "id": "gen_gross_active_power_above_one_percent",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "gen_gross_active_power_above_one_percent_prev",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Present Generation Gross Active Power - Previous Generation Gross Active Power (HSL > 1%)",
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gt"
+                    }
+                },
+                {
+                    "id": "below_one_percent_compare",
+                    "initialValue": false,
+                    "inputs": [
+                        {
+                            "id": "gen_gross_active_power_below_one_percent",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "gen_gross_active_power_below_one_percent_prev",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Present Generation Gross Active Power - Previous Generation Gross Active Power (HSL <= 1%)",
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gt"
+                    }
+                },
+                {
+                    "id": "sustained_above_one_percent",
+                    "initialValue": false,
+                    "inputs": [
+                        {
+                            "id": "gen_gross_active_power_above_one_percent",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "sustain_above_one_percent_pulse_output",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Ensures that we only trigger above 1% if dip below 1% was not transitory",
+                    "operation": "compareand",
+                    "param": {
+                        "operation": "eq",
+                        "reference": true
+                    }
+                },
+                {
+                    "id": "sustained_below_one_percent",
+                    "initialValue": false,
+                    "inputs": [
+                        {
+                            "id": "gen_gross_active_power_below_one_percent",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "sustain_below_one_percent_pulse_output",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Ensures that we only trigger below 1% if it is not transitory",
+                    "operation": "compareand",
+                    "param": {
+                        "operation": "eq",
+                        "reference": true
+                    }
+                },
+                {
+                    "id": "above_one_percent_pulse_output",
+                    "initialValue": false,
+                    "inputs": [
+                        {
+                            "id": "sustained_above_one_percent",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Above 1% Pulse Output",
+                    "operation": "pulse",
+                    "param": {
+                        "time": 1200000
+                    }
+                },
+                {
+                    "id": "below_one_percent_pulse_output",
+                    "initialValue": false,
+                    "inputs": [
+                        {
+                            "id": "sustained_below_one_percent",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Below 1% Pulse Output",
+                    "operation": "pulse",
+                    "param": {
+                        "time": 1200000
+                    }
+                },
+                {
+                    "id": "above_one_percent_mux_output",
+                    "inputs": [
+                        {
+                            "id": "above_one_percent_pulse_output",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Above 1% Mux",
+                    "operation": "select",
+                    "param": {
+                        "falseCase": 462,
+                        "trueCase": 445.5
+                    }
+                },
+                {
+                    "id": "below_one_percent_mux_output",
+                    "inputs": [
+                        {
+                            "id": "below_one_percent_pulse_output",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Below 1% Mux",
+                    "operation": "select",
+                    "param": {
+                        "falseCase": 82.5,
+                        "trueCase": 445.5
+                    }
+                },
+                {
+                    "id": "pcs_aux_load_active_power_on",
+                    "inputs": [
+                        {
+                            "id": "gen_gross_active_power_above_one_percent",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "above_one_percent_mux_output",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "below_one_percent_mux_output",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "PCS Auxiliary Active Power with PCS On",
+                    "operation": "select"
+                },
+                {
+                    "id": "pcs_running",
+                    "inputs": [
+                        {
+                            "id": "num_ess_running",
+                            "uri": "/assets/ess/summary"
+                        }
+                    ],
+                    "name": "Is a PCS Running?",
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gt",
+                        "reference": 0
+                    }
+                },
+                {
+                    "id": "pcs_aux_load_active_power_est",
+                    "inputs": [
+                        {
+                            "id": "pcs_running",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "pcs_aux_load_active_power_on",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "PCS Auxiliary Active Power",
+                    "operation": "select",
+                    "param": {
+                        "falseCase": 9.9
+                    }
+                },
+                {
+                    "id": "poi_discharge_check",
+                    "inputs": [
+                        {
+                            "id": "active_power",
+                            "uri": "/components/sel_735"
+                        }
+                    ],
+                    "name": "Is power flowing out of the POI",
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gt",
+                        "reference": 0
+                    }
+                },
+                {
+                    "id": "poi_active_power_flip",
+                    "inputs": [
+                        {
+                            "id": "active_power",
+                            "uri": "/components/sel_735"
+                        }
+                    ],
+                    "name": "POI Active Power Flip",
+                    "operation": "product",
+                    "param": {
+                        "gain": -1.0
+                    }
+                },
+                {
+                    "id": "poi_active_power_abs",
+                    "inputs": [
+                        {
+                            "id": "poi_discharge_check",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "active_power",
+                            "uri": "/components/sel_735"
+                        },
+                        {
+                            "id": "poi_active_power_flip",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "POI Active Power Absolute Value",
+                    "operation": "select",
+                    "param": {}
+                },
+                {
+                    "id": "ess_active_power_adj",
+                    "inputs": [
+                        {
+                            "id": "battery_load_active_power_abs",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "3p_active_power_x",
+                            "uri": "/components/acuvim"
+                        }
+                    ],
+                    "name": "POI Active Power minus Battery Aux Power",
+                    "operation": "sum",
+                    "param": {
+                        "operations": "++"
+                    }
+                },
+                {
+                    "id": "ess_discharge_check",
+                    "inputs": [
+                        {
+                            "id": "battery_load_active_power",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Is ESS power greater than zero, thus indicating a discharge?",
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gte",
+                        "reference": 0
+                    }
+                },
+                {
+                    "id": "ess_adj_final",
+                    "inputs": [
+                        {
+                            "id": "ess_discharge_check",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "ess_active_power_adj",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Set pcs aux limit to zero if adjusted ESS is less than zero",
+                    "operation": "select",
+                    "param": {
+                        "trueCase": 0
+                    }
+                },
+                {
+                    "id": "pcs_aux_max",
+                    "inputs": [
+                        {
+                            "id": "ess_discharge_check",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "battery_load_active_power_abs",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "PCS Auxiliary Active Power",
+                    "operation": "select",
+                    "param": {
+                        "trueCase": 0
+                    }
+                },
+                {
+                    "id": "pcs_aux_limited",
+                    "inputs": [
+                        {
+                            "id": "pcs_aux_max",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "pcs_aux_load_active_power_est",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Is Maximum PCS Aux Power Limit Less Than Estimated PCS Aux Power?",
+                    "operation": "compare",
+                    "param": {
+                        "operation": "lt"
+                    }
+                },
+                {
+                    "id": "pcs_aux_load_active_power",
+                    "initialValue": 462,
+                    "inputs": [
+                        {
+                            "id": "pcs_aux_limited",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "pcs_aux_max",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "pcs_aux_load_active_power_est",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "PCS Auxiliary Active Power",
+                    "operation": "select"
+                },
+                {
+                    "id": "gen_gross_active_power",
+                    "inputs": [
+                        {
+                            "id": "battery_load_active_power",
+                            "uri": "/metrics/aux_power"
+                        },
+                        {
+                            "id": "pcs_aux_load_active_power",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Generation Gross Active Power",
+                    "operation": "sum",
+                    "param": {
+                        "operations": "++"
+                    }
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/aux_power"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "pcs_aux_load_active_power",
+                    "inputs": [
+                        {
+                            "id": "pcs_aux_load_active_power",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Estimated PCS Aux Load Active Power",
+                    "operation": "echo",
+                    "outputs": [
+                        {
+                            "id": "pcs_aux_load_active_power",
+                            "uri": "/metrics/sel_3530_rtac"
+                        }
+                    ]
+                },
+                {
+                    "id": "watchdog_pet",
+                    "inputs": [
+                        {
+                            "id": "heartbeat_counter",
+                            "uri": "/features/site_operation"
+                        }
+                    ],
+                    "operation": "echo",
+                    "outputs": [
+                        {
+                            "id": "watchdog_pet",
+                            "uri": "/metrics/sel_3530_rtac"
+                        }
+                    ]
+                },
+                {
+                    "id": "watchdog_true",
+                    "inputs": [
+                        {
+                            "id": "pcs_aux_load_active_power",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gte",
+                        "reference": 0
+                    }
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/sel_3530_rtac"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "gen_gross_reactive_power",
+                    "inputs": [
+                        {
+                            "id": "battery_load_reactive_power",
+                            "uri": "/metrics/battery_load_reactive_power"
+                        }
+                    ],
+                    "name": "Generation Gross Reactive Power",
+                    "operation": "echo"
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/gen_gross_reactive_power"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "gsu_transformer_flow_active_power",
+                    "inputs": [
+                        {
+                            "id": "52f1_active_power_flipped",
+                            "uri": "/metrics/52f1_active_power_flipped"
+                        },
+                        {
+                            "id": "52f2_active_power_flipped",
+                            "uri": "/metrics/52f2_active_power_flipped"
+                        },
+                        {
+                            "id": "3p_active_power_x",
+                            "uri": "/components/acuvim"
+                        }
+                    ],
+                    "name": "GSU Transformer Flow Active Power",
+                    "operation": "sum",
+                    "param": {
+                        "operations": "+++"
+                    }
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/gsu_transformer_flow_active_power"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "gsu_transformer_flow_reactive_power",
+                    "inputs": [
+                        {
+                            "id": "52f1_reactive_power_flipped",
+                            "uri": "/metrics/52f1_reactive_power_flipped"
+                        },
+                        {
+                            "id": "52f2_reactive_power_flipped",
+                            "uri": "/metrics/52f2_reactive_power_flipped"
+                        },
+                        {
+                            "id": "3p_reactive_power_x",
+                            "uri": "/components/acuvim"
+                        }
+                    ],
+                    "name": "GSU Transformer Flow  Reactive Power",
+                    "operation": "sum",
+                    "param": {
+                        "operations": "+++"
+                    }
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/gsu_transformer_flow_reactive_power"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "transformer_low_side_voltage",
+                    "inputs": [
+                        {
+                            "id": "voltage_l1_l2",
+                            "uri": "/components/sel_735"
+                        },
+                        {
+                            "id": "voltage_l2_l3",
+                            "uri": "/components/sel_735"
+                        },
+                        {
+                            "id": "voltage_l3_l1",
+                            "uri": "/components/sel_735"
+                        }
+                    ],
+                    "name": "Transformer Low Side Voltage",
+                    "operation": "average"
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/transformer_low_side_voltage"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "avr_status",
+                    "inputs": [
+                        {
+                            "id": "runmode1_kVAR_mode_cmd",
+                            "uri": "/features/reactive_power"
+                        }
+                    ],
+                    "name": "AVR Status Flag",
+                    "operation": "compare",
+                    "param": {
+                        "operation": "eq",
+                        "reference": 0
+                    }
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/avr_status"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "reactive_setpoint_status",
+                    "inputs": [
+                        {
+                            "id": "features_kVAR_mode_cmd",
+                            "uri": "/features/reactive_power"
+                        }
+                    ],
+                    "name": "Reactive Setpoint Flag",
+                    "operation": "compare",
+                    "param": {
+                        "operation": "eq",
+                        "reference": 2
+                    }
+                }
+            ],
+            "naked": "true",
+            "uri": "/metrics/reactive_setpoint_status"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "fr_enable_mask",
+                    "inputs": [
+                        {
+                            "id": "fr_enable_mask",
+                            "uri": "/features/active_power"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "fr_baseload_cmd_kw",
+                    "inputs": [
+                        {
+                            "id": "fr_baseload_cmd_kw",
+                            "uri": "/features/active_power"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "uf_ffr_inactive_cmd_kw",
+                    "inputs": [
+                        {
+                            "id": "uf_ffr_inactive_cmd_kw",
+                            "uri": "/features/active_power"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "uf_frrs_inactive_cmd_kw",
+                    "inputs": [
+                        {
+                            "id": "uf_frrs_inactive_cmd_kw",
+                            "uri": "/features/active_power"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "of_frrs_inactive_cmd_kw",
+                    "inputs": [
+                        {
+                            "id": "of_frrs_inactive_cmd_kw",
+                            "uri": "/features/active_power"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "uf_frrs_active_cmd_kw",
+                    "inputs": [
+                        {
+                            "id": "uf_frrs_active_cmd_kw",
+                            "uri": "/features/active_power"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "of_frrs_active_cmd_kw",
+                    "inputs": [
+                        {
+                            "id": "of_frrs_active_cmd_kw",
+                            "uri": "/features/active_power"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "uf_ffr_active_cmd_kw",
+                    "inputs": [
+                        {
+                            "id": "uf_ffr_active_cmd_kw",
+                            "uri": "/features/active_power"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "uf_pfr_active_cmd_kw",
+                    "inputs": [
+                        {
+                            "id": "uf_pfr_active_cmd_kw",
+                            "uri": "/features/active_power"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "of_pfr_active_cmd_kw",
+                    "inputs": [
+                        {
+                            "id": "of_pfr_active_cmd_kw",
+                            "uri": "/features/active_power"
+                        }
+                    ],
+                    "operation": "echo"
+                }
+            ],
+            "naked": true,
+            "uri": "/metrics/active_power"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "aux_load_active_power",
+                    "inputs": [
+                        {
+                            "id": "aux_load_active_power",
+                            "uri": "/metrics/aux_load_active_power"
+                        }
+                    ],
+                    "name": "Auxiliary Load Active Power",
+                    "operation": "echo"
+                },
+                {
+                    "id": "pcs_aux_load_active_power",
+                    "inputs": [
+                        {
+                            "id": "pcs_aux_load_active_power",
+                            "uri": "/metrics/aux_power"
+                        }
+                    ],
+                    "name": "Estimated PCS Aux Load Active Power",
+                    "operation": "echo"
+                },
+                {
+                    "id": "bms_aux_load_active_power",
+                    "inputs": [
+                        {
+                            "id": "3p_active_power_x",
+                            "uri": "/components/acuvim"
+                        }
+                    ],
+                    "name": "BMS Aux Load Active Power",
+                    "operation": "echo"
+                },
+                {
+                    "id": "bms_aux_load_reactive_power",
+                    "inputs": [
+                        {
+                            "id": "3p_reactive_power_x",
+                            "uri": "/components/acuvim"
+                        }
+                    ],
+                    "name": "BMS Aux Load Reactive Power",
+                    "operation": "echo"
+                }
+            ],
+            "naked": true,
+            "uri": "/components/processed_acuvim"
+        }
+    ]
+}

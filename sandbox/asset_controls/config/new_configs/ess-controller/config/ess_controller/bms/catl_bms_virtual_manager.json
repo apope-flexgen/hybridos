@@ -1,0 +1,757 @@
+{
+    "/config/bms": {
+        "AlarmDestination": "/assets/bms/summary:alarms",
+        "CurrentBeforeStopThreshold": 35,
+        "FaultDestination": "/assets/bms/summary:faults",
+        "NoAlarmMsg": "Normal",
+        "NoFaultMsg": "Normal",
+        "enable": false,
+        "enum_opt": false,
+        "NumRacks": 9
+    },
+    "/limits/bms": {
+        "ChargeCurrentLimit": {
+            "enable": "/config/bms:enable",
+            "note": "Calculates the total charge current limit reported by all BMS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "bms:ChargeCurrentLimit"
+        },
+        "ChargePowerLimit": {
+            "enable": "/config/bms:enable",
+            "note": "Calculates the total charge power limit reported by all BMS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "bms:ChargePowerLimit"
+        },
+        "DischargeCurrentLimit": {
+            "enable": "/config/bms:enable",
+            "note": "Calculates the total discharge current limit reported by all BMS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "bms:DischargeCurrentLimit"
+        },
+        "DischargePowerLimit": {
+            "enable": "/config/bms:enable",
+            "note": "Calculates the total discharge power limit reported by all BMS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "bms:DischargePowerLimit"
+        }
+    },
+    "/links/bms": {
+        "ChargeCurrentLimit": {
+            "value": "/limits/bms:ChargeCurrentLimit"
+        },
+        "ChargePowerLimit": {
+            "value": "/limits/bms:ChargePowerLimit"
+        },
+        "DischargeCurrentLimit": {
+            "value": "/limits/bms:DischargeCurrentLimit"
+        },
+        "DischargePowerLimit": {
+            "value": "/limits/bms:DischargePowerLimit"
+        }
+    },
+    "/sched/bms": {
+        "pubAssetsSummary_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "mode": "ui",
+            "note": "Publishes UI summary data (/assets/bms/summary)",
+            "table": "/assets/bms/summary",
+            "value": 1
+        },
+        "runMonitor_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "RunMonitor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "aname": "bms",
+            "enable": "/config/bms:enable",
+            "monitor": "wake_monitor",
+            "note": "Periodically runs functions for variables defined in /schedule/wake_monitor/bms",
+            "value": 1
+        },
+        "updateHeartbeatWrite_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CalculateVar",
+                                "inAv": "/status/bms:HeartbeatWrite"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Periodically updates the heartbeat write variable defined in /status/bms:HeartbeatWrite",
+            "value": 1
+        },
+        "LocalStartBMS": {
+            "every": 0.5,
+            "value":    "LocalStartBMS",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "LocalStartBMS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "LocalStopBMS": {
+            "every": 0.5,
+            "value":    "LocalStopBMS",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "LocalStopBMS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "CloseContactorsEnable": {
+            "value":    "CloseContactorsEnable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CloseContactorsEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "OpenContactorsEnable": {
+            "value":    "OpenContactorsEnable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "OpenContactorsEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/schedule/wake_monitor/bms": {
+        "/limits/bms:ChargeCurrentLimit": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/limits/bms:ChargePowerLimit": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/limits/bms:DischargeCurrentLimit": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/limits/bms:DischargePowerLimit": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:AvgCellTemp_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:AvgCellVoltage_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:CellTempDelta_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:CellVoltageDelta_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:ChargeableEnergy": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:CommsOK": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:DCCharging": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:DCClosed": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:DCCurrent_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:DCDischarging": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:DCPower": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:DCVoltage_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:DischargeableEnergy": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:MaxCellTemp_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:MaxCellVoltage_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:MinCellTemp_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:MinCellVoltage_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:NumRacksOnline_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:NumRacksTotal": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:SOC_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/status/bms:SOH_Calculated": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/bms": {
+        "AvgCellTemp_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:AvgCellTemp"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the average cell temperature reported by all BMS instances",
+            "numVars": 1,
+            "operation": "avg",
+            "value": 0,
+            "variable1": "bms:AvgCellTemp"
+        },
+        "AvgCellVoltage_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:AvgCellVoltage"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the average cell voltage reported by all BMS instances",
+            "numVars": 1,
+            "operation": "avg",
+            "value": 0,
+            "variable1": "bms:AvgCellVoltage"
+        },
+        "CellTempDelta_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:CellTempDelta"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the max difference between the max and min cell temperatures reported by all BMS instances",
+            "numVars": 1,
+            "operation": "max",
+            "value": 0,
+            "variable1": "bms:CellTempDelta"
+        },
+        "CellVoltageDelta_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:CellVoltageDelta"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the max difference between the max and min cell voltages reported by all BMS instances",
+            "numVars": 1,
+            "operation": "max",
+            "value": 0,
+            "variable1": "bms:CellVoltageDelta"
+        },
+        "ChargeableEnergy": {
+            "enable": "/config/bms:enable",
+            "note": "Calculates the total chargeable energy reported by all BMS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "bms:ChargeableEnergy"
+        },
+        "CommsOK": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": true,
+                                "uri": "/site/ess:comms_faults[1]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Updates the UI/EMS communication status variables (ONLINE/OFFLINE) depending on the current status of the communications monitoring variable",
+            "numVars": 1,
+            "operation": "and",
+            "value": true,
+            "variable1": "bms:CommsOK"
+        },
+        "DCCharging": {
+            "enable": "/config/bms:enable",
+            "expression": "{1} < 0",
+            "note": "Determines if the BMS is charging",
+            "numVars": 1,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/bms:DCCurrent"
+        },
+        "DCClosed": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:DCCurrent@EnableMaxValCheck"
+                            },
+                            {
+                                "uri": "/status/bms:DCCurrent@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/bms:NumRacksOnline@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/bms:SOH@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/bms:MaxCellVoltage@EnableMaxValCheck"
+                            },
+                            {
+                                "uri": "/status/bms:MinCellVoltage@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/bms:MaxCellTemp@EnableMaxValCheck"
+                            },
+                            {
+                                "uri": "/status/bms:MinCellTemp@EnableMinValCheck"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note1": "Enables/disables monitoring variables if BMS DC contactors are closed/opened",
+            "note2": "Also reports the BMS DC contactor status to the UI",
+            "note3": "TODO: Decode or calculate DC contactors closed status and remap/link value to this variable",
+            "numVars": 1,
+            "operation": "and",
+            "value": false,
+            "variable1": "bms:DCClosed"
+        },
+        "DCCurrent_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:DCCurrent"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the total DC current reported by all BMS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "bms:DCCurrent"
+        },
+        "DCDischarging": {
+            "enable": "/config/bms:enable",
+            "expression": "{1} > 0",
+            "note": "Determines if the BMS is discharging",
+            "numVars": 1,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/bms:DCCurrent"
+        },
+        "DCPower": {
+            "enable": "/config/bms:enable",
+            "note": "Calculates the total DC power reported by all BMS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "bms:DCPower"
+        },
+        "DCVoltage_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:DCVoltage"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the average DC voltage reported by all BMS instances",
+            "numVars": 1,
+            "operation": "avg",
+            "value": 0,
+            "variable1": "bms:DCVoltage"
+        },
+        "DischargeableEnergy": {
+            "enable": "/config/bms:enable",
+            "note": "Calculates the total dischargeable energy reported by all BMS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "bms:DischargeableEnergy"
+        },
+        "HeartbeatWrite": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "fims": "set",
+                                "uri": "/components/bms:heartbeat_write"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "excludeFromDefaultSched": true,
+            "expression": "if (({1} >= 59), 0, ({1} + 1))",
+            "note": "Updates and then sends the heartbeat write value",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/bms:HeartbeatWrite"
+        },
+        "MaxCellTemp_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:MaxCellTemp"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the maximum cell temperature reported by all BMS instances",
+            "numVars": 1,
+            "operation": "max",
+            "value": 0,
+            "variable1": "bms:MaxCellTemp"
+        },
+        "MaxCellVoltage_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:MaxCellVoltage"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the maximum cell voltage reported by all BMS instances",
+            "numVars": 1,
+            "operation": "max",
+            "value": 0,
+            "variable1": "bms:MaxCellVoltage"
+        },
+        "MinCellTemp_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:MinCellTemp"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the minimum cell temperature reported by all BMS instances",
+            "numVars": 1,
+            "operation": "min",
+            "value": 0,
+            "variable1": "bms:MinCellTemp"
+        },
+        "MinCellVoltage_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:MinCellVoltage"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the minimum cell voltage reported by all BMS instances",
+            "numVars": 1,
+            "operation": "min",
+            "value": 0,
+            "variable1": "bms:MinCellVoltage"
+        },
+        "NumRacksOnline_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:NumRacksOnline"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the total number of racks online reported by all BMS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "bms:NumRacksOnline"
+        },
+        "NumRacksTotal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:NumRacksTotal"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the total number of racks reported by all BMS instances",
+            "numVars": 1,
+            "operation": "+",
+            "value": 0,
+            "variable1": "bms:NumRacksTotal"
+        },
+        "SOC_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:SOC"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the average SOC reported by all BMS instances",
+            "numVars": 1,
+            "operation": "avg",
+            "value": 0,
+            "variable1": "bms:SOC"
+        },
+        "SOH_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/bms:SOH"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Calculates the min SOH reported by all BMS instances",
+            "numVars": 1,
+            "operation": "min",
+            "value": 0,
+            "variable1": "bms:SOH"
+        },
+        "Status": "INIT"
+    },
+    "/system/commands": {
+        "runOpts_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "note1": "Sets schedule variables (defined in /sched/bms) to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "options": [
+                {
+                    "aname": "bms",
+                    "every": 1,
+                    "uri": "/sched/bms:pubAssetsSummary_bms",
+                    "value": 1
+                },
+                {
+                    "aname": "bms",
+                    "every": 0.1,
+                    "uri": "/sched/bms:runMonitor_bms",
+                    "value": 1
+                },
+                {
+                    "aname": "bms",
+                    "every": 1,
+                    "uri": "/sched/bms:checkInputs_bms",
+                    "value": 1
+                },
+                {
+                    "aname": "bms",
+                    "every": 1,
+                    "uri": "/sched/bms:updateHeartbeatWrite_bms",
+                    "value": 1
+                },
+                {
+                    "aname": "bms",
+                    "value":0, 
+                    "uri":"/sched/bms:LocalStartBMS",
+                    "every":0,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "bms",
+                    "value":0, 
+                    "uri":"/sched/bms:LocalStopBMS",
+                    "every":0,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "bms",
+                    "value":0, 
+                    "uri":"/sched/bms:CloseContactorsEnable",
+                    "every":0.1,
+                    "offset":0,
+                    "debug":0
+                },
+                {
+                    "aname": "bms",
+                    "value":0, 
+                    "uri":"/sched/bms:OpenContactorsEnable",
+                    "every":0.1,
+                    "offset":0,
+                    "debug":0
+                }
+            ],
+            "targav": "/system/commands:run",
+            "value": false
+        }
+    }
+}
