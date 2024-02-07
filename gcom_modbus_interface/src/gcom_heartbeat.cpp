@@ -11,6 +11,49 @@
 #include "gcom_modbus_utils.h"
 
 
+
+void hbSendWrite(cfg::heartbeat_struct *myhb)
+{
+    auto io_write_point = myhb->heartbeat_write_point;
+    auto io_read_point = myhb->heartbeat_read_point;
+    bool debug = false;
+
+    if(io_read_point && io_write_point)
+    {
+        std::string smode("set");
+        double tNow = get_time_double();
+
+        auto raw_val = io_write_point->raw_val + 1 ;
+        if (io_write_point->is_enabled)
+        {
+            auto io_work = make_work(io_write_point->register_type, io_write_point->device_id, io_write_point->offset,  io_write_point->off_by_one,
+                    io_write_point->size,
+                io_write_point->reg16, io_write_point->reg8, strToWorkType(smode, false));
+            io_work->wtype = WorkTypes::Set;
+            set_reg16_from_uint64(io_write_point, raw_val, io_work->buf16);
+
+            // io_work->buf16[0] = raw_val;
+            // io_work->buf16[1] = 0;
+
+            io_work->io_points.emplace_back(io_write_point);
+            io_work->tNow = tNow;
+            io_work->work_name = std::string("");
+            io_work->erase_group = true;
+            io_work->work_group = 1;
+            io_work->work_id = 1;
+
+            setWork(io_work);
+        
+        }
+        else
+        {
+            if(debug)
+                std::cout << " heartbeat wtite point  [" << io_write_point->id << "]  disabled no hb write "  
+                    << std::endl;
+        }
+    }
+
+}
 void hbCallback(std::shared_ptr<TimeObject> t, void *p)
 {
     bool debug = false;
@@ -212,7 +255,8 @@ void hbCallback(std::shared_ptr<TimeObject> t, void *p)
                         io_write_point->size,
                     io_write_point->reg16, io_write_point->reg8, strToWorkType(smode, false));
                 io_work->wtype = WorkTypes::Set;
-                io_work->buf16[0] = myhb->value;
+                set_reg16_from_uint64(io_write_point, myhb->value, io_work->buf16);
+                //io_work->buf16[0] = myhb->value;
 
                 io_work->io_points.emplace_back(io_write_point);
                 io_work->tNow = tNow;

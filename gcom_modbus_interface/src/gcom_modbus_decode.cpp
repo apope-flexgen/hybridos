@@ -1661,10 +1661,11 @@ void get_io_point_full(std::shared_ptr<cfg::io_point_struct> io_point, std::stri
     ss << "\"care_mask\": \"" << hex_to_str(io_point->care_mask) << "\", ";
     ss << "\"uses_mask\": " << (io_point->uses_masks ? "true" : "false") << ", ";
 
-    ss << "\"is_float\": " << (io_point->is_float ? "true" : "false") << ", ";
-    ss << "\"is_signed\": " << (io_point->is_signed ? "true" : "false") << ", ";
+    ss << "\"off_by_one\": " << (io_point->off_by_one ? "true" : "false") << ", ";
     ss << "\"is_byte_swap\": " << (io_point->is_byte_swap ? "true" : "false") << ", ";
     ss << "\"word_order\": " << io_point->word_order << ", ";
+    ss << "\"is_float\": " << (io_point->is_float ? "true" : "false") << ", ";
+    ss << "\"is_signed\": " << (io_point->is_signed ? "true" : "false") << ", ";
     ss << "\"is_bit_string_type\": " << (io_point->is_bit_string_type ? "true" : "false") << ", ";
     ss << "\"is_individual_bits\": " << (io_point->is_individual_bits ? "true" : "false") << ", ";
     ss << "\"is_bit_field\": " << (io_point->is_bit_field ? "true" : "false") << ", ";

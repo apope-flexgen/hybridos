@@ -34,6 +34,7 @@ int IO_Work::wnum = 0;
 
 void discardGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg, bool ok);
 void addTimeStamp(std::stringstream &ss);
+int check_socket_alive(std::shared_ptr<IO_Thread> io_thread, int timeout_sec, int timeout_usec);
 
 
 // function code is invalid.EMBXILFUN  112345679
@@ -505,7 +506,8 @@ void runThreadError(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std
     // if it was connected try to reconnect
     if(wasConnected)
     {
-        if(0)std::cout << " was connected .. io_work " << io_work->mynum 
+        if(0)
+            std::cout << " was connected .. io_work " << io_work->mynum 
                         << " error code :" << io_work->errno_code
                         << std::endl;
 
@@ -527,8 +529,8 @@ void runThreadError(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std
                         // else this will do
                         ctime = SetupModbusForThread(myCfg, io_thread, debug);
                     } 
-                    //if (debug)
-                    if(0)std::cout << " was connected .. io_work " << io_work->mynum << "   done ModbusSetup; connect_time :" << ctime << std::endl;
+                    if (0)
+                        std::cout << " was connected .. io_work " << io_work->mynum << "   done ModbusSetup; connect_time :" << ctime << std::endl;
                 }
                 if (!io_thread->ctx)
                 {
@@ -560,7 +562,8 @@ void runThreadError(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std
     }
 
     io_thread->fails++;
-    if(0)std::cout << " was not connected .. io_work " << io_work->mynum 
+    if(0)
+        std::cout << " was not connected .. io_work " << io_work->mynum 
                 << "   local  :" << io_work->local 
                 << "   data_error  :" << io_work->data_error 
                 << "   error code  :" << io_work->errno_code 
@@ -808,15 +811,24 @@ void handle_point_error(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread,
         // note this may be redundant
         if(io_point->is_disconnected == false) 
         {
+            if(io_point->gap > 0)
+            {
+                FPS_INFO_LOG ("thread_id %d %s failed for [%s] offset %d with gap [%d] err %d -> [%s]; gap removed  ", 
+                    io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, io_point->gap, err, modbus_strerror(io_point->errno_code));
+
+            } 
+            else
+            {
 
 //            io_point->is_enabled = false;
-            io_point->is_disconnected = true;
-            double tNow = get_time_double();
-            io_point->reconnect = tNow + 5.0;
+                io_point->is_disconnected = true;
+                double tNow = get_time_double();
+                io_point->reconnect = tNow + 5.0;
 
 
-            FPS_INFO_LOG ("thread_id %d %s failed for [%s] offset %d err %d -> [%s] point disconnected ", 
-                    io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, err, modbus_strerror(io_point->errno_code));
+                FPS_INFO_LOG ("thread_id %d %s failed for [%s] offset %d err %d -> [%s] point disconnected ", 
+                        io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, err, modbus_strerror(io_point->errno_code));
+            }
         }
     }
     else
@@ -1389,7 +1401,6 @@ void runThreadWork(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std:
         else if (io_work->wtype == WorkTypes::Noop)
         {
             io_done = true;
-            ;
 
             randomDelay(100, 500);
             io_work->errors = 1;
@@ -1449,7 +1460,7 @@ void runThreadWork(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std:
         else
         {
             // if (io_work->test_range) return false
-            std::cout << " runthreaderror for io_work num " << io_work->mynum << " "<<std::endl;
+            //std::cout << " runthreaderror for io_work num " << io_work->mynum << " "<<std::endl;
             // this will try a reconnect
             runThreadError(myCfg, io_thread, io_work, io_done, io_tries, max_io_tries, debug);
         }
@@ -1530,6 +1541,16 @@ void ioThreadFunc(ThreadControl &control, struct cfg &myCfg, std::shared_ptr<IO_
             {
                 if (io_threadChan.receive(signal, delay))
                 {
+
+                    if (signal == 2)
+                    {
+                        if (check_socket_alive(io_thread, /*timeout_sec*/ 0 , /* timeout_usec*/ 20) > 0)
+                        {
+                            //printf(" >>>>>>>>>>>>>>>>%s shutting socket down \n",__func__);
+                            CloseModbusForThread(io_thread, true);
+                            DisConnect(myCfg, threadControl, io_thread);
+                        }
+                    }
                     if (signal == 0)
                         run = false;
                     if (signal == 1)
@@ -1563,6 +1584,14 @@ void ioThreadFunc(ThreadControl &control, struct cfg &myCfg, std::shared_ptr<IO_
                         }
                     }
                 }
+                // else
+                // {
+                //     if (check_socket_alive(io_thread, /*timeout_sec*/ 0 , /* timeout_usec*/ 20) > 0)
+                //     {
+                //         CloseModbusForThread(io_thread, true);
+                //     }
+
+                // }
             }
         }
         else
@@ -1821,8 +1850,12 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
                         state_str = "true";
                     else
                         state_str = "false";
-                    string_stream << ",\"modbus_heartbeat\":" << component->heartbeat->last_val << "";
+                    //Bug 02_01_2024 use myhb->heartbeat_read_point
+                    string_stream << ",\"modbus_heartbeat\":" << component->heartbeat->heartbeat_read_point->raw_val << "";
                     string_stream << ",\"component_connected\":\"" << state_str << "\"";
+                    void hbSendWrite(cfg::heartbeat_struct *myhb);
+                    hbSendWrite(component->heartbeat);
+
                 }
                 else
                 {
@@ -2493,6 +2526,12 @@ std::shared_ptr<IO_Work> make_work(cfg::Register_Types register_type, int device
     return (io_work);
 }
 
+bool testThread()
+{
+    io_threadChan.send(2);
+    return true;
+}
+
 // bool pollWork (std::shared_ptr<IO_Work> io_work) {
 // bool setWork (std::shared_ptr<IO_Work> io_work) {
 bool pollWork(std::shared_ptr<IO_Work> io_work)
@@ -2793,6 +2832,48 @@ int wait_socket_ready(modbus_t *ctx, int timeout_sec)
     }
 
     return -1; // Connection failed or timed out
+}
+
+int check_socket_alive(std::shared_ptr<IO_Thread> io_thread, int timeout_sec, int timeout_usec)
+{
+
+    int socket_fd = modbus_get_socket(io_thread->ctx);
+    if (socket_fd == -1)
+    {
+        return -1; // Invalid socket
+    }
+
+    fd_set except_set, read_set;
+    struct timeval timeout;
+
+    FD_ZERO(&except_set);
+    FD_ZERO(&read_set);
+    FD_SET(socket_fd, &except_set);
+    FD_SET(socket_fd, &read_set);
+    timeout.tv_sec = timeout_sec;
+    timeout.tv_usec = timeout_usec;
+
+    int result = select(socket_fd + 1, &read_set, NULL, &except_set, &timeout);
+    // printf( " %s socket test result %d \n", __func__, result);
+
+    if (result > 0)
+    {
+        // // Check if exception occured
+        // int optval;
+        // socklen_t optlen = sizeof(optval);
+        // if (getsockopt(socket_fd, SOL_SOCKET, SO_ERROR, &optval, &optlen) == 0) {
+        //     if (optval == 0) {
+        //         return 0; // Connection successful
+        //     }
+        // }
+        auto foo_read = FD_ISSET(socket_fd,&read_set);
+        //auto foo_except = FD_ISSET(socket_fd,&except_set);
+        //printf( " socket test result %d read %d except %d\n", result, foo_read, foo_except);
+        // if we get a read , in this case it is an error
+        return foo_read;
+    }
+
+    return 0; // Connection failed or timed out
 }
 
 // new function to run a fast reconnect after a timeout

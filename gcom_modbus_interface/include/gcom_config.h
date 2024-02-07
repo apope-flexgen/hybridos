@@ -137,6 +137,7 @@ struct cfg
 
         int offset;
         int size;
+        int gap = 0;
 
         int starting_bit_pos;
         int number_of_bits;
@@ -241,8 +242,8 @@ struct cfg
         int number_of_registers;
         int device_id;
         bool enabled = true;
-        bool is_byte_swap = false;
-        bool off_by_one = false;
+        bool is_byte_swap;// = false;
+        bool off_by_one;// = false;
 
         int word_order=0; // 1234 , 1324, 3412 etc used to decode 4 register systemsfrom odd servers
 
@@ -508,7 +509,8 @@ struct cfg
     int num_fims = 0;
     int max_fims = 32;
     int max_fims_wait = 100;
-    
+
+    bool allow_gaps = true; 
 
     Version git_version_info;
 };
@@ -834,7 +836,7 @@ int getFirstOffset(const std::vector<std::shared_ptr<cfg::io_point_struct>> elem
  * 
  * @pre io_point_map is sorted by offset
 */
-int getTotalNumRegisters(std::vector<std::shared_ptr<cfg::io_point_struct>> io_point_map);
+int getTotalNumRegisters(std::vector<std::shared_ptr<cfg::io_point_struct>> io_point_map, struct cfg &myCfg);
 
 /**
  * @brief Reassign a config instance to a new config structure. Used by reload.

@@ -78,6 +78,8 @@
 std::mutex cb_output_mutex;
 
 int GetNumThreads(struct cfg *myCfg);
+bool testThread();
+
 
 void pubCallback(std::shared_ptr<TimeObject>t, void *p)
 {
@@ -252,7 +254,8 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
     {
         //its not a bug but we need to know
         //if(1)std::cout << " too many pending pubs  aborting poll; name: "<<t->name<<"  num_threads :" << num_threads << std::endl;
-        FPS_INFO_LOG("Server stall  too many pending pubs,  aborting poll name: %s num_threads : %d", t->name.c_str(), num_threads);
+        FPS_INFO_LOG("Server stall  too many pending pubs [%d],  aborting poll name: %s num_threads : %d", mypub->pending, t->name.c_str(), num_threads);
+        testThread();
 
     }
     else

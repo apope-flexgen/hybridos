@@ -112,10 +112,12 @@ int main(const int argc, const char *argv[]) noexcept
     FPS_INFO_LOG("commit: %s", myCfg.git_version_info.get_commit());
     FPS_INFO_LOG("tag: %s", myCfg.git_version_info.get_tag());
 
-    bool fileOk = gcom_load_cfg_file(gcom_map, filename, myCfg, debug);
 
 
     myCfg.connection.debug = false;
+    
+    //bool fileOk = gcom_load_overrides(myCfg, command_line_overrides_start, argc, argv);
+    bool fileOk = gcom_load_cfg_file(gcom_map, filename, myCfg, debug);
     fileOk |= gcom_load_overrides(myCfg, command_line_overrides_start, argc, argv);
 
     if (!fileOk)
