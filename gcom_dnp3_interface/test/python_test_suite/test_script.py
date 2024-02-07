@@ -99,21 +99,21 @@ if args.new:
     build_output_files()
     write_command_files()
     write_expected_message_files()
-    for (test_set_num, [client_filename, server_filename]) in enumerate(all_config_file_pairs):
-        expected_test_output.update(all_expected_messages[test_set_num][0])
-        expected_test_output.update(all_expected_messages[test_set_num][1])
+    for (test_set_num, [client_filename, server_filename]) in enumerate(ALL_CONFIG_FILE_PAIRS):
+        expected_test_output.update(ALL_EXPECTED_MESSAGES[test_set_num][0])
+        expected_test_output.update(ALL_EXPECTED_MESSAGES[test_set_num][1])
     print("Done")
 else:
     get_config_file_pairs()
     get_config_pairs()
     get_test_register_sets()
-    for [client_filename, server_filename] in all_config_file_pairs:
+    for [client_filename, server_filename] in ALL_CONFIG_FILE_PAIRS:
         client_filename = "expected_fims_output_" + client_filename
         server_filename = "expected_fims_output_" + server_filename
         client_test_cases = parse_test_cases(client_filename)
         server_test_cases = parse_test_cases(server_filename)
         if client_test_cases != None and server_test_cases != None:
-            all_expected_messages.append([client_test_cases,server_test_cases])
+            ALL_EXPECTED_MESSAGES.append([client_test_cases,server_test_cases])
             expected_test_output.update(client_test_cases)
             expected_test_output.update(server_test_cases)
 
@@ -135,7 +135,7 @@ date = f"Test date: {timestamp.print_fmt}"
 print(date)
 test_result_output += date + "\n"
 
-for (test_set_num, [client_file,server_file]) in enumerate(all_config_file_pairs):
+for (test_set_num, [client_file,server_file]) in enumerate(ALL_CONFIG_FILE_PAIRS):
     client_file = client_file.replace(".json","")
     server_file = server_file.replace(".json","")
     pub_test_id = test_register_sets[test_set_num][0].client_id

@@ -2,8 +2,7 @@
 This module implements a custom thread class that adds a stop event to the function's
 parameters and returns the functions return value once it has stopped.
 '''
-from threading import *
-import time
+from threading import Thread, Event
 
 class CustomThread(Thread):
     '''
@@ -11,7 +10,7 @@ class CustomThread(Thread):
     parameters and returns the functions return value once it has stopped.
     '''
     def __init__(self, group=None, target=None, name=None,
-                 args=(), kwargs={}, Verbose=None):
+                 args=(), kwargs={}):
         '''
         Initialize a custom thread. See threading.Thread for more information.
         '''
@@ -33,7 +32,7 @@ class CustomThread(Thread):
         if self._target is not None:
             self._return = self._target(*self._args)
 
-    def join(self, join_command_func=None, join_args=None, *args):
+    def join(self, timeout=None, join_command_func=None, join_args=None):
         '''
         Used to join the thread and return the return value from the function.
         Example usage:
@@ -42,5 +41,5 @@ class CustomThread(Thread):
         self._stop_event.set()
         if join_command_func is not None:
             join_command_func(join_args)
-        Thread.join(self, timeout=1)
+        Thread.join(self, timeout=timeout)
         return self._return

@@ -1,15 +1,21 @@
-from flask import Flask, request
+'''
+A very basic Flask application that runs commands from within a
+docker container. Required because `docker exec` is too slow.
+'''
 import subprocess
+from flask import Flask, request
 
 app = Flask(__name__)
 
-
 @app.route('/docker/run_command')
 def run_command():
+    '''
+    Run a command using the /bin/bash of a Docker container.
+    '''
     command = request.args.get("command")
     if "+" in command:
         print(command)
-    subprocess.run(command, shell=True)
+    subprocess.run(command, shell=True, check=False)
     return "Ran all commands"
 
 if __name__ == '__main__':

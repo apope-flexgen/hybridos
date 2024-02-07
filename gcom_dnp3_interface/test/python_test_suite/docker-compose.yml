@@ -1,0 +1,43 @@
+version: "1.0"
+
+services:
+  server_container:
+    build: .
+    container_name: server_container
+    ports:
+      - 4040:443
+    networks:
+      localnet:
+        ipv4_address: 172.10.0.3
+    tty: true
+    volumes:
+      - //c/Users/StephanieReynolds/.ssh:/tmp/.ssh:ro
+      - //c/flexgen/hybridos:/home/docker/hybridos
+      - //c/flexgen/hybridos/gcom_dnp3_interface/build/release/gcom_dnp3_client:/usr/local/bin/gcom_dnp3_client
+      - //c/flexgen/hybridos/gcom_dnp3_interface/build/release/gcom_dnp3_server:/usr/local/bin/gcom_dnp3_server
+      - //c/flexgen/hybridos/gcom_modbus_interface/build/release/gcom_modbus_client:/usr/local/bin/gcom_modbus_client
+      - //c/flexgen/hybridos/gcom_modbus_interface/build/release/gcom_modbus_server:/usr/local/bin/gcom_modbus_server
+
+  client_container:
+    build: .
+    container_name: client_container
+    ports:
+      - 4041:443
+    networks:
+      localnet:
+        ipv4_address: 172.10.0.4
+    tty: true
+    volumes:
+      - //c/Users/StephanieReynolds/.ssh:/tmp/.ssh:ro
+      - //c/flexgen/hybridos:/home/docker/hybridos
+      - //c/flexgen/hybridos/gcom_dnp3_interface/build/release/gcom_dnp3_client:/usr/local/bin/gcom_dnp3_client
+      - //c/flexgen/hybridos/gcom_dnp3_interface/build/release/gcom_dnp3_server:/usr/local/bin/gcom_dnp3_server
+      - //c/flexgen/hybridos/gcom_modbus_interface/build/release/gcom_modbus_client:/usr/local/bin/gcom_modbus_client
+      - //c/flexgen/hybridos/gcom_modbus_interface/build/release/gcom_modbus_server:/usr/local/bin/gcom_modbus_server
+
+networks:
+  localnet:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.10.0.0/28
