@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ThemeType } from '@flexgen/storybook';
 import { Box } from '@mui/material';
 
@@ -66,7 +67,7 @@ export const alertContainerSx = {
   marginTop: '1rem',
 };
 
-export const tabsContainerSx = (theme: ThemeType) => ({
+export const getTabsContainerSx = (theme: ThemeType) => ({
   display: 'flex',
   flexDirection: 'column',
   width: 'min-content',
@@ -114,15 +115,14 @@ export const getControlInnerBoxSx = (theme: ThemeType) => ({
   borderRadius: '2px',
 });
 
-
-export const statusOuterBoxSx = {
+export const getStatusOuterBoxSx = (theme: ThemeType) => ({
   width: '100%',
   minHeight: '100%',
   display: 'flex',
   padding: '24px',
   flexDirection: 'column',
-  backgroundColor: '#F9FAFB',
-};
+  backgroundColor: theme.fgc.pageHeader.color.background,
+});
 
 export const getAllControlsBoxSx = (theme: ThemeType) => ({
   marginBottom: '16px',
@@ -143,7 +143,7 @@ export const getAllControlsInnerBoxSx = () => ({
   gap: '10px',
 });
 
-export const statusAndMaintenanceActionsBoxSx = {display: 'flex', flexDirection: 'column', gap: '10px'};
+export const statusAndMaintenanceActionsBoxSx = { display: 'flex', flexDirection: 'column', gap: '10px' };
 
 export const statusPadding = { padding: '20px 15px 20px 15px' };
 
@@ -151,4 +151,6 @@ export const statusPointsDisplayOuterBoxSx = { display: 'flex', flexDirection: '
 
 export const statusPointsDisplaySubheaderBoxSx = { marginBottom: '12px', width: '100%', padding: '20px 15px 0px 15px' };
 
-export const maintenanceActionsBoxSx = { display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', padding: '24px 16px 24px 16px' };
+export const maintenanceActionsBoxSx = {
+  display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', padding: '24px 16px 24px 16px',
+};

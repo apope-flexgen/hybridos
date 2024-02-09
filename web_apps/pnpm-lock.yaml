@@ -264,7 +264,7 @@ importers:
       '@babel/plugin-proposal-nullish-coalescing-operator': ^7.18.6
       '@babel/plugin-proposal-optional-chaining': ^7.18.9
       '@cypress/webpack-dev-server': ^3.2.2
-      '@flexgen/storybook': ^0.2.218
+      '@flexgen/storybook': ^0.2.224
       '@mui/lab': ^5.0.0-alpha.117
       '@mui/material': ^5.11.13
       '@mui/system': ^5.11.13
@@ -319,7 +319,7 @@ importers:
     dependencies:
       '@babel/plugin-proposal-nullish-coalescing-operator': 7.18.6
       '@babel/plugin-proposal-optional-chaining': 7.21.0
-      '@flexgen/storybook': 0.2.218_4xtjz2lzknrfvf6xatpvzjkoji
+      '@flexgen/storybook': 0.2.224_4xtjz2lzknrfvf6xatpvzjkoji
       '@mui/lab': 5.0.0-alpha.126_3s4dnupztyagn6qsu5ojimuy6y
       '@mui/material': 5.12.0_puuzjadfv64tjpjwi3qllwuniy
       '@mui/system': 5.12.0_aoxwbmlfj6hwnimj5m3kry62qm
@@ -3550,14 +3550,14 @@ packages:
     resolution: {integrity: sha512-K7tGdKszZob1sLUSnqYAplf11pjVmTrKcSTiwz2m6seLNJSbCEv+JBgNplXG2Io/9U7ufYYZ3Rv0Gt/cX7m5vA==, tarball: '@flexgen/fims/-/@flexgen/fims-1.4.0.tgz'}
     dev: false
 
-  /@flexgen/storybook/0.2.218_4xtjz2lzknrfvf6xatpvzjkoji:
-    resolution: {integrity: sha512-F8iIPIv/y5yQURUKEtVQOct65BWxhB2PK6WG1Qkt/uttnyg17RqlMNnuQq9S/jFFjYghBJA/gXKkwBVThUV7Qw==, tarball: '@flexgen/storybook/-/@flexgen/storybook-0.2.218.tgz'}
+  /@flexgen/storybook/0.2.224_4xtjz2lzknrfvf6xatpvzjkoji:
+    resolution: {integrity: sha512-CwQ8bnFzLNKEljlBfXlKAkJ01bo4sbLfILSHejfP42tntp9H2ansv9YwYZ+kGEal1AZcmXiZhonG3csaeHHacg==, tarball: '@flexgen/storybook/-/@flexgen/storybook-0.2.224.tgz'}
     dependencies:
       '@emotion/react': 11.10.6_aoxwbmlfj6hwnimj5m3kry62qm
       '@emotion/styled': 11.10.6_khgiysqzv5tamvgmw5bnwiu5gi
       '@fontsource/inter': 5.0.3
       '@fontsource/saira': 5.0.3
-      '@mui/base': 5.0.0-beta.32_puuzjadfv64tjpjwi3qllwuniy
+      '@mui/base': 5.0.0-beta.29_puuzjadfv64tjpjwi3qllwuniy
       '@mui/icons-material': 5.11.16_mf4h35grdpccn3ymf6vhlrvnra
       '@mui/material': 5.12.0_sqkm7jcyhegewkbgxnpr247aui
       '@mui/styled-engine-sc': 5.12.0_w4pv56i7idi7s5c7r4goc5iaxi
@@ -4659,6 +4659,29 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-is: 18.2.0
+    dev: false
+
+  /@mui/base/5.0.0-beta.29_puuzjadfv64tjpjwi3qllwuniy:
+    resolution: {integrity: sha512-OXfUssYrB6ch/xpBVHMKAjThPlI9VyGGKdvQLMXef2j39wXfcxPlUVQlwia/lmE3rxWIGvbwkZsDtNYzLMsDUg==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0
+      react: ^17.0.0 || ^18.0.0
+      react-dom: ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.23.8
+      '@floating-ui/react-dom': 2.0.6_biqbaboplfbrettd7655fr4n2y
+      '@mui/types': 7.2.13_@types+react@18.0.34
+      '@mui/utils': 5.15.5_aoxwbmlfj6hwnimj5m3kry62qm
+      '@popperjs/core': 2.11.8
+      '@types/react': 18.0.34
+      clsx: 2.1.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /@mui/base/5.0.0-beta.32_puuzjadfv64tjpjwi3qllwuniy:
@@ -8300,7 +8323,7 @@ packages:
       babel-plugin-syntax-jsx: 6.18.0
       lodash: 4.17.21
       picomatch: 2.3.1
-      styled-components: 5.3.9_7i5myeigehqah43i5u7wbekgba
+      styled-components: 5.3.9_react@18.2.0
     dev: false
 
   /babel-plugin-syntax-jsx/6.18.0:

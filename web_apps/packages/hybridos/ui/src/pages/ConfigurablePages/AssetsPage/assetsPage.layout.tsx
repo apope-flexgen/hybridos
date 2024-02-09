@@ -11,7 +11,7 @@ import {
 import { useTheme } from 'styled-components';
 import AssetControl from './AssetControl';
 import AssetStatus from './AssetStatus';
-import { tabsAndStatusContainerSx, tabsContainerSx, internalTabsAndStatusContainerSx } from './assetsPage.styles';
+import { tabsAndStatusContainerSx, getTabsContainerSx, internalTabsAndStatusContainerSx } from './assetsPage.styles';
 
 export type AssetsPageLayoutProps = {
   tabValue: string;
@@ -23,7 +23,6 @@ export type AssetsPageLayoutProps = {
   componentFunctions?: DisplayGroupFunctions;
   allControlsState?: any;
   maintenanceActionsState?: boolean;
-  maintActionsControlState?: any;
   currentUser?: any;
 };
 
@@ -50,7 +49,7 @@ const TabsColumn = ({ tabComponents, handleTabChange, tabValue }: TabsColumnProp
   const theme = useTheme() as ThemeType;
 
   return (
-    <Box sx={tabsContainerSx(theme)}>
+    <Box sx={getTabsContainerSx(theme)}>
       <Tabs onChange={handleTabChange} orientation="vertical" value={tabValue} variant="scrollable">
         {tabComponents}
       </Tabs>

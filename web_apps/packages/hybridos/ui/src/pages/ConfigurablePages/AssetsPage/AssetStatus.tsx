@@ -1,5 +1,5 @@
 import {
-  Divider, Typography, EmptyContainer, Chip, CardContainer,
+  Divider, Typography, EmptyContainer, Chip, CardContainer, ThemeType,
 } from '@flexgen/storybook';
 import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -9,11 +9,12 @@ import {
   ConfigurableComponentFunction,
   ConfigurablePageStateStructure,
 } from 'src/pages/ConfigurablePages/configurablePages.types';
+import { useTheme } from 'styled-components';
 import AlertContainer from './AlertContainer';
 import {
   maintenanceActionsBoxSx,
   statusAndMaintenanceActionsBoxSx,
-  statusOuterBoxSx,
+  getStatusOuterBoxSx,
   statusPadding,
   statusPointsDisplaySubheaderBoxSx,
 } from './assetsPage.styles';
@@ -106,6 +107,8 @@ const AssetStatus: React.FC<SingleAssetProps> = (props: SingleAssetProps): React
     maintenanceActionsState,
   } = props;
 
+  const theme = useTheme() as ThemeType;
+
   const statusChildrenMapped = statusChildren.map((child) => (
     <Grid item xs={1}>
       {child(assetState)}
@@ -117,7 +120,7 @@ const AssetStatus: React.FC<SingleAssetProps> = (props: SingleAssetProps): React
     : [];
 
   return (
-    <Box sx={statusOuterBoxSx}>
+    <Box sx={getStatusOuterBoxSx(theme)}>
       <Box sx={statusAndMaintenanceActionsBoxSx}>
         <Header headerText={assetName} maintModeStatus={maintModeStatus || false} />
         {
