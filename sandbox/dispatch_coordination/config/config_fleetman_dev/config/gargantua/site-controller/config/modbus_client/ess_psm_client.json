@@ -1,0 +1,317 @@
+{
+    "components": [
+        {
+            "add_timings": false,
+            "frequency": 200,
+            "id": "ess_psm",
+            "offset_time": 0,
+            "registers": [
+                {
+                    "map": [
+                        {
+                            "echo_id": "/components/psm_ess_1/ctrlword1",
+                            "id": "start_stop",
+                            "name": "Start/Stop",
+                            "offset": 10100
+                        },
+                        {
+                            "id": "clear_faults",
+                            "name": "Clear Faults",
+                            "offset": 10101
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/ctrlword3",
+                            "id": "on_off_grid_mode",
+                            "name": "Grid Mode",
+                            "offset": 10102
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/pcmd",
+                            "float": true,
+                            "id": "active_power_setpoint",
+                            "name": "Active Power Setpoint",
+                            "offset": 10103,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/qcmd",
+                            "float": true,
+                            "id": "reactive_power_setpoint",
+                            "name": "Reactive Power Setpoint",
+                            "offset": 10105,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/vcmd",
+                            "float": true,
+                            "id": "voltage_setpoint",
+                            "name": "Voltage Setpoint",
+                            "offset": 10107,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/fcmd",
+                            "float": true,
+                            "id": "frequency_setpoint",
+                            "name": "Frequency Setpoint",
+                            "offset": 10109,
+                            "size": 2
+                        },
+                        {
+                            "id": "equalization_control",
+                            "name": "Equalization Control",
+                            "offset": 10111
+                        }
+                    ],
+                    "number_of_registers": 12,
+                    "starting_offset": 10100,
+                    "type": "Holding Registers"
+                },
+                {
+                    "map": [
+                        {
+                            "bit_field": true,
+                            "bit_strings": [
+                                "PCS1 Communication Offline",
+                                "PCS2 Communication Offline",
+                                "BMS1 Communication Offline",
+                                "BMS2 Communication Offline",
+                                "EMMU1 Communication Offline",
+                                "EMMU2 Communication Offline"
+                            ],
+                            "id": "com_status",
+                            "name": "Communication Status",
+                            "offset": 20000
+                        },
+                        {
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Test Alarm 1",
+                                "Test Alarm 2",
+                                "Test Alarm 3"
+                            ],
+                            "id": "alarms",
+                            "name": "Test Alarms",
+                            "offset": 20001
+                        },
+                        {
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Test Fault 1",
+                                "Test Fault 2",
+                                "Test Fault 3"
+                            ],
+                            "id": "faults",
+                            "name": "Test Faults",
+                            "offset": 20002
+                        },
+                        {
+                            "float": true,
+                            "id": "chargeable_energy",
+                            "name": "Chargeable Energy",
+                            "offset": 20003,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/plow",
+                            "float": true,
+                            "id": "chargeable_power",
+                            "name": "chargeable_power",
+                            "offset": 20005,
+                            "size": 2
+                        },
+                        {
+                            "float": true,
+                            "id": "dischargeable_energy",
+                            "name": "Dischargeable Energy",
+                            "offset": 20007,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/phigh",
+                            "float": true,
+                            "id": "dischargeable_power",
+                            "name": "Dischargeable Power",
+                            "offset": 20009,
+                            "size": 2
+                        },
+                        {
+                            "id": "bms_fault",
+                            "name": "BMS Fault",
+                            "offset": 20011
+                        },
+                        {
+                            "id": "emmu_fault",
+                            "name": "Emmu Fault",
+                            "offset": 20012
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/v",
+                            "float": true,
+                            "id": "pcs_voltage_l1_l2",
+                            "name": "PCS Voltage AB",
+                            "offset": 20013,
+                            "size": 2
+                        },
+                        {
+                            "float": true,
+                            "id": "pcs_voltage_l2_l3",
+                            "name": "PCS Voltage BC",
+                            "offset": 20015,
+                            "size": 2
+                        },
+                        {
+                            "float": true,
+                            "id": "pcs_voltage_l3_l1",
+                            "name": "PCS Voltage CA",
+                            "offset": 20017,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/i",
+                            "float": true,
+                            "id": "pcs_current_l1",
+                            "name": "PCS Current L1",
+                            "offset": 20019,
+                            "size": 2
+                        },
+                        {
+                            "float": true,
+                            "id": "pcs_current_l2",
+                            "name": "PCS Current L2",
+                            "offset": 20021,
+                            "size": 2
+                        },
+                        {
+                            "float": true,
+                            "id": "pcs_current_l3",
+                            "name": "PCS Current L3",
+                            "offset": 20023,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/f",
+                            "float": true,
+                            "id": "pcs_frequency",
+                            "name": "PCS Frequency",
+                            "offset": 20025,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/p",
+                            "float": true,
+                            "id": "pcs_active_power",
+                            "name": "PCS Active Power",
+                            "offset": 20027,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/q",
+                            "float": true,
+                            "id": "pcs_reactive_power",
+                            "name": "PCS Reactive Power",
+                            "offset": 20029,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/s",
+                            "float": true,
+                            "id": "pcs_apparent_power",
+                            "name": "PCS Apparent Power",
+                            "offset": 20031,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/vdc",
+                            "float": true,
+                            "id": "pcs_voltage_dc",
+                            "name": "PCS DC Voltage",
+                            "offset": 20033,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/idc",
+                            "float": true,
+                            "id": "pcs_current_dc",
+                            "name": "PCS DC Current",
+                            "offset": 20035,
+                            "size": 2
+                        },
+                        {
+                            "bit_strings": [
+                                "Stopped",
+                                "Running"
+                            ],
+                            "bool": true,
+                            "echo_id": "/components/psm_ess_1/on",
+                            "enum": true,
+                            "id": "pcs_working_state",
+                            "name": "PCS Working State",
+                            "offset": 20037
+                        },
+                        {
+                            "float": true,
+                            "id": "bms_max_cell_temp",
+                            "name": "BMS Maximum Cell Temperature",
+                            "offset": 20038,
+                            "size": 2
+                        },
+                        {
+                            "float": true,
+                            "id": "bms_min_cell_temp",
+                            "name": "BMS Minimum Cell Temperature",
+                            "offset": 20040,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/soc",
+                            "float": true,
+                            "id": "bms_soc",
+                            "name": "BMS SOC",
+                            "offset": 20042,
+                            "size": 2
+                        },
+                        {
+                            "float": true,
+                            "id": "bms_soh",
+                            "name": "BMS SOH",
+                            "offset": 20044,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/racksinservice",
+                            "id": "bms_num_racks_online",
+                            "name": "BMS Number of Racks Online",
+                            "offset": 20046
+                        },
+                        {
+                            "echo_id": "/components/psm_ess_1/dccontactor",
+                            "id": "dc_contactors_closed",
+                            "name": "DC Contactors Closed",
+                            "offset": 20047
+                        },
+                        {
+                            "id": "modbus_heartbeat",
+                            "name": "Modbus Heartbeat",
+                            "offset": 20048
+                        },
+                        {
+                            "id": "component_connected",
+                            "name": "Component Connected",
+                            "offset": 20049
+                        }
+                    ],
+                    "number_of_registers": 50,
+                    "starting_offset": 20000,
+                    "type": "Input Registers"
+                }
+            ]
+        }
+    ],
+    "connection": {
+        "device_id": 1,
+        "ip_address": "172.3.27.202",
+        "name": "ess_psm",
+        "port": 10004
+    }
+}

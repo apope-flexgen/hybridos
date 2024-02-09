@@ -157,7 +157,7 @@ def check_environment():
     global hybridos_image_tag
     global hybridos_image_suffix
     if product == site_product:
-        hybridos_image_tag = read_override_version(os.path.normpath(os.path.join(site_to_machine_to_config_dir[site_to_run]['twins'], '../twins-01.yml')))
+        hybridos_image_tag = read_override_version(os.path.normpath(os.path.join(site_to_machine_to_config_dir[site_to_run]['psm'], '../psm-01.yml')))
     elif product == fleet_product:
         # for simplicity, assume the same tag is used across everything
         hybridos_image_tag = read_override_version(os.path.normpath(os.path.join(site_to_machine_to_config_dir['fleet-manager']['fleet-manager'], '../fleet-manager-01.yml')))
@@ -420,18 +420,18 @@ def start_site_controller():
     if product != site_product:
         return
 
-    # start TWINS container
-    print("starting TWINS Docker container")
-    run(['sudo', 'docker', 'network', 'create', '--subnet=172.3.27.0/24', 'twins_network'])
-    launch_container_command = ["sudo", "docker", "run", "--name", "twins", "-dit", "-v", site_to_machine_to_config_dir[site_to_run]['twins'] +
-                                ":/home/config", "--net", "twins_network", "--ip", "172.3.27.2", "flexgen/twins" + hybridos_image_suffix + ":" + hybridos_image_tag]
+    # start PSM container
+    print("starting PSM Docker container")
+    run(['sudo', 'docker', 'network', 'create', '--subnet=172.3.27.0/24', 'psm_network'])
+    launch_container_command = ["sudo", "docker", "run", "--name", "psm", "-dit", "-v", site_to_machine_to_config_dir[site_to_run]['psm'] +
+                                ":/home/config", "--net", "psm_network", "--ip", "172.3.27.2", "flexgen/psm" + hybridos_image_suffix + ":" + hybridos_image_tag]
     print(' '.join(launch_container_command))
     run(launch_container_command)
 
     # bootstrap's run.sh sleeps for a total of 10 seconds before launching all modbus/dnp3 servers, but disconnection messages are still seen when sleep time is 10.
     # using 15 seconds gives enough buffer for the servers to be started and spun up based on guess-and-check adjustments to startup time value
     component_server_startup_time = sleeptime * 15
-    print(f"Waiting {component_server_startup_time} seconds to give TWINS container's servers time to boot.")
+    print(f"Waiting {component_server_startup_time} seconds to give PSM container's servers time to boot.")
     time.sleep(sleeptime * component_server_startup_time)
 
     start_fps_service(site_product, machine_config_dir_symlink)

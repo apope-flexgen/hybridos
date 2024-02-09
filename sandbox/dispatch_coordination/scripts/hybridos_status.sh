@@ -17,7 +17,7 @@ hybridos=(
     'ftd'
     'cloud_sync'
     'dts'
-    'twins'
+    'psm'
     'echo'
     'config'
     'config_fleetman'

@@ -60,7 +60,7 @@ def stop_hybridos():
 
     print('Stopping Docker containers')
     rm_docker_containers('site')
-    rm_docker_containers('twins')
+    rm_docker_containers('psm')
     run(['docker', 'network', 'prune', '--force'])
     print('Stopped all Docker containers')
 

@@ -96,7 +96,7 @@ def revert_local_bit_field_config():
         ]
     ),
     Steps(
-        {"/components/ess_twins/local_mode_signal": 1},
+        {"/components/ess_psm/local_mode_signal": 1},
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/local_mode_status", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_controllable", 1),
@@ -105,7 +105,7 @@ def revert_local_bit_field_config():
         ]
     ),
     Teardown(
-        {"/components/ess_twins/local_mode_signal": 0},
+        {"/components/ess_psm/local_mode_signal": 0},
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/local_mode_status", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_controllable", 2),
@@ -139,7 +139,7 @@ def test_default_local_mode(test):
     ),
     # Multiple values, 1 and 2 should be matched by the bit field mask 0x6 (0b110)
     Steps(
-        {"/components/ess_twins/local_mode_signal": 1},
+        {"/components/ess_psm/local_mode_signal": 1},
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/local_mode_status", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_available", 1),
@@ -148,13 +148,13 @@ def test_default_local_mode(test):
         ],
         # Reset to remote mode
         post_lambda=[
-            lambda: fims_set("/components/ess_twins/local_mode_signal", 0), lambda: sleep(1),
+            lambda: fims_set("/components/ess_psm/local_mode_signal", 0), lambda: sleep(1),
             lambda: Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/local_mode_status", False).make_assertion()
         ]
     ),
     # Multiple values, 1 and 2 should be matched by the bit field mask 0x6 (0b110)
     Steps(
-        {"/components/ess_twins/local_mode_signal": 2},
+        {"/components/ess_psm/local_mode_signal": 2},
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/local_mode_status", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_available", 1),
@@ -163,7 +163,7 @@ def test_default_local_mode(test):
         ]
     ),
     Teardown(
-        {"/components/ess_twins/local_mode_signal": 0},
+        {"/components/ess_psm/local_mode_signal": 0},
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/local_mode_status", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_available", 2),
@@ -201,7 +201,7 @@ def test_asset_bit_field_local_mode(test):
     ),
     # Multiple values, 1 and 2 should be matched by the bit field mask 0x6 (0b110)
     Steps(
-        {"/components/ess_twins/local_mode_signal": 1},
+        {"/components/ess_psm/local_mode_signal": 1},
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/local_mode_status", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_controllable", 1),
@@ -210,13 +210,13 @@ def test_asset_bit_field_local_mode(test):
         ],
         # Reset to remote mode
         post_lambda=[
-            lambda: fims_set("/components/ess_twins/local_mode_signal", 0), lambda: sleep(1),
+            lambda: fims_set("/components/ess_psm/local_mode_signal", 0), lambda: sleep(1),
             lambda: Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/local_mode_status", False).make_assertion()
         ]
     ),
     # Multiple values, 1 and 2 should be matched by the bit field mask 0x6 (0b110)
     Steps(
-        {"/components/ess_twins/local_mode_signal": 2},
+        {"/components/ess_psm/local_mode_signal": 2},
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/local_mode_status", True, wait_secs=15),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_controllable", 1),
@@ -225,7 +225,7 @@ def test_asset_bit_field_local_mode(test):
         ]
     ),
     Teardown(
-        {"/components/ess_twins/local_mode_signal": 0},
+        {"/components/ess_psm/local_mode_signal": 0},
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/local_mode_status", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_controllable", 2),

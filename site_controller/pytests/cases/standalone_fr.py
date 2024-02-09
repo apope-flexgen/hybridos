@@ -4,7 +4,7 @@ from pytests.fims import fims_set, fims_del
 from pytests.pytest_framework import Site_Controller_Instance
 from pytests.assertion_framework import Assertion_Type, Flex_Assertion
 from pytests.pytest_steps import Setup, Steps, Teardown
-from pytests.controls import run_twins_command
+from pytests.controls import run_psm_command
 
 # Test standalone FR interactions with other features. Adapted from original standalone PFR tests
 
@@ -103,7 +103,7 @@ def remove_underfrequency_configs():
             
         ],
         pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
@@ -120,7 +120,7 @@ def remove_underfrequency_configs():
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/uf_pfr_active_cmd_kw", 0),
         ],
         pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ]
     )
 ])
@@ -167,7 +167,7 @@ def test_pfr_untracked_load(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -6000),
         ],
         pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
@@ -180,7 +180,7 @@ def test_pfr_untracked_load(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0)
         ],
                 pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ]
     )
 ])
@@ -227,7 +227,7 @@ def test_pfr_offset_load(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -6000),
         ],
         pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
@@ -242,7 +242,7 @@ def test_pfr_offset_load(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 60),
         ],
         pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ]
     )
 ])
@@ -297,7 +297,7 @@ def test_pfr_minimum_load(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -3000),
         ],
         pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
@@ -318,7 +318,7 @@ def test_pfr_minimum_load(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 10000)
         ],
         pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ]
     )
 ])
@@ -373,7 +373,7 @@ def test_pfr_untracked_load_poi_lim(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -4000),
         ],
         pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
@@ -394,7 +394,7 @@ def test_pfr_untracked_load_poi_lim(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 10000)
         ],
         pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ]
     )
 ])
@@ -449,7 +449,7 @@ def test_pfr_offset_load_poi_lim(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -4000),
         ],
         pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
@@ -470,7 +470,7 @@ def test_pfr_offset_load_poi_lim(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 10000)
         ],
         pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ]
     )
 ])
@@ -531,7 +531,7 @@ def test_pfr_minimum_load_poi_lim(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -5000),
         ],
         pre_lambda=[
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
@@ -547,7 +547,7 @@ def test_pfr_minimum_load_poi_lim(test):
         ],
         pre_lambda=[
             lambda: remove_underfrequency_configs(),
-            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ],
     )
 ])

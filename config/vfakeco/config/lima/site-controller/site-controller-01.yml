@@ -1,4 +1,4 @@
-version: 11.3.0.beta.4
+version: 11.3.1.alpha.1
 
 modbus_client:
   apc_ups_modbus_client.json:
@@ -24,8 +24,8 @@ modbus_client:
     port: 10003
 
 dnp3_server: 
-  site_sudden_valley_dnp3_server.json:
-    ip: 0.0.0.0
+  site_lima_dnp3_server.json:
+    ip: 10.10.1.10
     port: 20000
 
 scheduler_server:

@@ -1,0 +1,22 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/split_feeder",
+			"publishRate": 500,
+			"inputs": [
+				{
+					"uri": "/components/psm_split_feeder",
+					"registers": {
+						"active_power": "p",
+						"apparent_power": "s",
+						"current": "i",
+						"frequency": "f1",
+						"power_factor": "pf",
+						"reactive_power": "q",
+						"voltage": "v1"
+					}
+				}
+			]
+		}
+	]
+}

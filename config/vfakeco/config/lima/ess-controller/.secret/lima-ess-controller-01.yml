@@ -1,8 +1,12 @@
-version: 11.3.0.beta.4
-
-modbus_client: 
-  ess_1_bms_modbus_client.json: { ip: 192.168.11.5, port: 504}
-  ess_1_pcs_modbus_client.json: { ip: 192.168.11.5, port: 505}
-
-modbus_server: 
-  ess_1_modbus_server.json: { ip: 0.0.0.0, port: 502}
+version: 11.3.1.alpha.1
+modbus_client:
+  ess_1_bms_modbus_client.json:
+    ip: 192.168.11.5
+    port: 504
+  ess_1_pcs_modbus_client.json:
+    ip: 192.168.11.5
+    port: 505
+modbus_server:
+  ess_1_modbus_server.json:
+    ip: 0.0.0.0
+    port: 502

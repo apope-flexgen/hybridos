@@ -9,19 +9,19 @@
                 {
                     "map": [
                         {
-                            "echo_id": "/components/twins_pv_04/ctrlword1",
+                            "echo_id": "/components/psm_pv_04/ctrlword1",
                             "id": "start_stop",
                             "name": "Start/Stop",
                             "offset": 10100
                         },
                         {
-                            "echo_id": "/components/twins_pv_04/ctrlword2",
+                            "echo_id": "/components/psm_pv_04/ctrlword2",
                             "id": "reactive_power_mode",
                             "name": "Reactive Power Mode",
                             "offset": 10101
                         },
                         {
-                            "echo_id": "/components/twins_pv_04/i",
+                            "echo_id": "/components/psm_pv_04/i",
                             "float": true,
                             "id": "ac_current_l1",
                             "offset": 10102,
@@ -40,7 +40,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_pv_04/v1",
+                            "echo_id": "/components/psm_pv_04/v1",
                             "float": true,
                             "id": "ac_voltage_l1",
                             "offset": 10108,
@@ -59,21 +59,21 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_pv_04/p",
+                            "echo_id": "/components/psm_pv_04/p",
                             "float": true,
                             "id": "active_power",
                             "offset": 10114,
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_pv_04/q",
+                            "echo_id": "/components/psm_pv_04/q",
                             "float": true,
                             "id": "reactive_power",
                             "offset": 10116,
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_pv_04/s",
+                            "echo_id": "/components/psm_pv_04/s",
                             "float": true,
                             "id": "apparent_power",
                             "offset": 10118,
@@ -86,7 +86,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_pv_04/f",
+                            "echo_id": "/components/psm_pv_04/f",
                             "float": true,
                             "id": "frequency",
                             "offset": 10122,
@@ -110,28 +110,28 @@
                                 "Running"
                             ],
                             "bool": true,
-                            "echo_id": "/components/twins_pv_04/on",
+                            "echo_id": "/components/psm_pv_04/on",
                             "enum": true,
                             "id": "status",
                             "name": "PV Status",
                             "offset": 10128
                         },
                         {
-                            "echo_id": "/components/twins_pv_04/qcmd",
+                            "echo_id": "/components/psm_pv_04/qcmd",
                             "float": true,
                             "id": "reactive_power_setpoint",
                             "offset": 10129,
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_pv_04/pcmd",
+                            "echo_id": "/components/psm_pv_04/pcmd",
                             "float": true,
                             "id": "active_power_setpoint",
                             "offset": 10131,
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_pv_04/pfcmd",
+                            "echo_id": "/components/psm_pv_04/pfcmd",
                             "float": true,
                             "id": "power_factor_setpoint",
                             "offset": 10133,

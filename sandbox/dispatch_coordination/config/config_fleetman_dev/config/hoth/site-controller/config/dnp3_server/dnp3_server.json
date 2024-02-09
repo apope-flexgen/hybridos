@@ -104,49 +104,49 @@
                     "id": "active_power",
                     "name": "Site - Active Power Total Net",
                     "offset": 3,
-                    "uri": "/components/sel_735",
+                    "uri": "/components/shared_poi",
                     "variation": "Group30Var5"
                 },
                 {
                     "id": "reactive_power",
                     "name": "Site - Reactive Power Total Net",
                     "offset": 4,
-                    "uri": "/components/sel_735",
+                    "uri": "/components/shared_poi",
                     "variation": "Group30Var5"
                 },
                 {
                     "id": "apparent_power",
                     "name": "Site - Apparent Power Total Net",
                     "offset": 5,
-                    "uri": "/components/sel_735",
+                    "uri": "/components/shared_poi",
                     "variation": "Group30Var5"
                 },
                 {
                     "id": "frequency",
                     "name": "Site - Frequency",
                     "offset": 6,
-                    "uri": "/components/sel_735",
+                    "uri": "/components/shared_poi",
                     "variation": "Group30Var5"
                 },
                 {
                     "id": "grid_voltage_l1_l2",
                     "name": "Site - Voltage L1-L2",
                     "offset": 7,
-                    "uri": "/components/sel_651r",
+                    "uri": "/components/shared_poi",
                     "variation": "Group30Var5"
                 },
                 {
                     "id": "grid_voltage_l2_l3",
                     "name": "Site - Voltage L2-L3",
                     "offset": 8,
-                    "uri": "/components/sel_651r",
+                    "uri": "/components/shared_poi",
                     "variation": "Group30Var5"
                 },
                 {
                     "id": "grid_voltage_l3_l1",
                     "name": "Site - Voltage L3-L1",
                     "offset": 9,
-                    "uri": "/components/sel_651r",
+                    "uri": "/components/shared_poi",
                     "variation": "Group30Var5"
                 },
                 {
@@ -160,14 +160,14 @@
                     "id": "ess_chargeable_energy",
                     "name": "Battery - Chargable energy kWh",
                     "offset": 11,
-                    "uri": "/metrics/ess",
+                    "uri": "/assets/ess/summary",
                     "variation": "Group30Var5"
                 },
                 {
                     "id": "ess_dischargeable_energy",
                     "name": "Battery - Dischargeable energy kWh",
                     "offset": 12,
-                    "uri": "/metrics/ess",
+                    "uri": "/assets/ess/summary",
                     "variation": "Group30Var5"
                 },
                 {
@@ -293,14 +293,14 @@
                     "id": "kwh_delivered",
                     "name": "Site - kWh Delivered",
                     "offset": 30,
-                    "uri": "/components/sel_735",
+                    "uri": "/components/shared_poi",
                     "variation": "Group30Var5"
                 },
                 {
                     "id": "kwh_received",
                     "name": "Site - kWh Received",
                     "offset": 31,
-                    "uri": "/components/sel_735",
+                    "uri": "/components/shared_poi",
                     "variation": "Group30Var5"
                 },
                 {
@@ -406,7 +406,7 @@
                     "id": "breaker_status",
                     "name": "Main Breaker Closed",
                     "offset": 0,
-                    "uri": "/components/sel_651r"
+                    "uri": "/components/shared_poi"
                 },
                 {
                     "id": "running_status_flag",

@@ -33,19 +33,19 @@ from pytests.pytest_steps import Setup, Steps, Teardown
             "/features/active_power/active_power_setpoint_kW_cmd": -11000
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/active_power_setpoint", -5500),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_psm/active_power_setpoint", -5500),
             Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_real_hs/active_power_setpoint", -5500)
         ]
     ),
     Steps(
         {
             # High soc, start derating
-            "/components/ess_twins/bms_soc": 94,
+            "/components/ess_psm/bms_soc": 94,
             "/components/ess_real_ls/bms_soc": 95
         },
         [
             # Make sure the demand and setpoints are both derated and still negative (have not flipped sign due to previous bug)
-            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/active_power_setpoint", -3500, tolerance=0.5, duration_secs=5),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_psm/active_power_setpoint", -3500, tolerance=0.5, duration_secs=5),
             Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_real_hs/active_power_setpoint", -2500, tolerance=0.5, duration_secs=5),
         ]
     ),
@@ -53,12 +53,12 @@ from pytests.pytest_steps import Setup, Steps, Teardown
         {
             # 100% soc within site controller but not 100% raw soc
             # Derated to minimum site controller value, as some component chargeable power is still available
-            "/components/ess_twins/bms_soc": 97,
+            "/components/ess_psm/bms_soc": 97,
             "/components/ess_real_ls/bms_soc": 98
         },
         [
             # Make sure the demand and setpoints are both derated and still negative (have not flipped sign due to previous bug)
-            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/active_power_setpoint", -100, tolerance=0.5, duration_secs=5),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_psm/active_power_setpoint", -100, tolerance=0.5, duration_secs=5),
             Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_real_hs/active_power_setpoint", -100, tolerance=0.5, duration_secs=5)
         ]
     ),
@@ -67,12 +67,12 @@ from pytests.pytest_steps import Setup, Steps, Teardown
         {
             **Steps.enable_solar_and_gen(),
             "/features/active_power/active_power_setpoint_kW_cmd": 0,
-            "/components/ess_twins/bms_soc": 50,
+            "/components/ess_psm/bms_soc": 50,
             "/components/ess_real_ls/bms_soc": 60
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/bms_soc", 50),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_psm/bms_soc", 50),
             Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_real_ls/bms_soc", 60),
         ]
     )
@@ -107,7 +107,7 @@ def test_ess_chargeable_derate(test):
             "/features/active_power/active_power_setpoint_kW_cmd": 11000
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/active_power_setpoint", 5500),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_psm/active_power_setpoint", 5500),
             Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_real_hs/active_power_setpoint", 5500)
         ]
     ),
@@ -115,12 +115,12 @@ def test_ess_chargeable_derate(test):
         {
             # Low soc, start derating
             # soc is a little bit higher than the equivalent for the chargeable tests due to asymmetric battery capacity (4-97%)
-            "/components/ess_twins/bms_soc": 7,
+            "/components/ess_psm/bms_soc": 7,
             "/components/ess_real_ls/bms_soc": 6
         },
         [
             # Make sure the demand and setpoints are both derated and still negative (have not flipped sign due to previous bug)
-            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/active_power_setpoint", 3500, tolerance=0.5, duration_secs=5),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_psm/active_power_setpoint", 3500, tolerance=0.5, duration_secs=5),
             Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_real_hs/active_power_setpoint", 2500, tolerance=0.5, duration_secs=5),
         ]
     ),
@@ -128,12 +128,12 @@ def test_ess_chargeable_derate(test):
         {
             # 0% soc within site controller but not 0% raw soc
             # Derated to minimum site controller value, as some component dischargeable power is still available
-            "/components/ess_twins/bms_soc": 3,
+            "/components/ess_psm/bms_soc": 3,
             "/components/ess_real_ls/bms_soc": 2
         },
         [
             # Make sure the demand and setpoints are both derated and still positive (have not flipped sign due to previous bug)
-            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/active_power_setpoint", 100, tolerance=0.5, duration_secs=5),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_psm/active_power_setpoint", 100, tolerance=0.5, duration_secs=5),
             Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_real_hs/active_power_setpoint", 100, tolerance=0.5, duration_secs=5)
         ]
     ),
@@ -142,12 +142,12 @@ def test_ess_chargeable_derate(test):
         {
             **Steps.enable_solar_and_gen(),
             "/features/active_power/active_power_setpoint_kW_cmd": 0,
-            "/components/ess_twins/bms_soc": 50,
+            "/components/ess_psm/bms_soc": 50,
             "/components/ess_real_ls/bms_soc": 60
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/bms_soc", 50),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_psm/bms_soc", 50),
             Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_real_ls/bms_soc", 60),
         ]
     )
@@ -203,10 +203,10 @@ def test_ess_dischargeable_derate(test):
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_controllable", 1),
-            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/active_power_setpoint", -3),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_psm/active_power_setpoint", -3),
         ],
         post_lambda=[
-            lambda: no_fims_msgs("/components/ess_twins/active_power_setpoint")
+            lambda: no_fims_msgs("/components/ess_psm/active_power_setpoint")
         ]
     ),
     # Cleanup
@@ -274,10 +274,10 @@ def test_maint_active_power_rounding(test):
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_controllable", 1),
-            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/reactive_power_setpoint", -3),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_psm/reactive_power_setpoint", -3),
         ],
         post_lambda=[
-            lambda: no_fims_msgs("/components/ess_twins/reactive_power_setpoint")
+            lambda: no_fims_msgs("/components/ess_psm/reactive_power_setpoint")
         ]
     ),
     # Cleanup

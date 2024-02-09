@@ -24,15 +24,15 @@ def test_dischargeable_power():
 def set_bms_soc(value: int):
     for i in range(0, 9):
         uri = "/components/bms_1/sbmu_" + str(i) + "_soc_value"
-        fims_set(uri, value, destination="twins")
+        fims_set(uri, value, destination="psm")
 
 def disable_bms_faults():
     uri = "/components/bms_1/disablefault"
-    fims_set(uri, True, destination="twins")
+    fims_set(uri, True, destination="psm")
 
 def enable_bms_faults():
     uri = "/components/bms_1/disablefault"
-    fims_set(uri, False, destination="twins")
+    fims_set(uri, False, destination="psm")
 
 def test_component_chargeable_power_respected():
     comp_charge = fims_get("/components/flexgen_ess_01/ess_max_charge_power")
@@ -649,7 +649,7 @@ def test_maint_cell_volt_limits(test):
 
 # This test will put an ESS in maint_mode and then 
 # test the Rack Volt limits functionality 
-# This test is kinda sad, but I'm limited by twins functionality as far as I'm aware
+# This test is kinda sad, but I'm limited by psm functionality as far as I'm aware
 @ fixture
 @ parametrize("test", [
     # place all assets in maint_mode
@@ -682,7 +682,7 @@ def test_maint_cell_volt_limits(test):
             lambda: set_bms_soc(97)
         ]
     ),
-    # set max rack volt limit to 1281 which is just below what twins spits out
+    # set max rack volt limit to 1281 which is just below what psm spits out
     # You won't be able to charge
     Steps(
         {

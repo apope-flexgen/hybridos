@@ -40,10 +40,10 @@ class Run_Cmd:
         print(' '.join(self.cmd))
 
 
-class Twins:
+class Psm:
     def __init__(self, site_num, version_num, image_suffix, base_cfg=cfg_path, site_name="", detached=True):
-        self.name = f"{site_name}_twins"
-        self.config = os.path.join(base_cfg, "twins/config")
+        self.name = f"{site_name}_psm"
+        self.config = os.path.join(base_cfg, "psm/config")
         self.ip = '172.3.27.{o:d}'.format(o=200+site_num)
         self.ports = []
         self.image = f'flexgen/psm{image_suffix}:{version_num}'
@@ -70,11 +70,11 @@ class Site:
 
 class Vsaap:
     def __init__(self, site_num, image_tag, image_suffix, site_detached=True, base_cfg=cfg_path, site_name=""):
-        self.twins = Twins(site_num, image_tag, image_suffix, base_cfg, site_name)
+        self.psm = Psm(site_num, image_tag, image_suffix, base_cfg, site_name)
         self.site = Site(site_num, image_tag, image_suffix, base_cfg, site_name, site_detached)
 
     def launch(self):
-        self.twins.launch()
+        self.psm.launch()
         run(['cp', '-rf', os.path.join(self.site.config, 'web_server/permissions_copy.json'), os.path.join(self.site.config, 'web_server/permissions.json')])
         self.site.launch()
 

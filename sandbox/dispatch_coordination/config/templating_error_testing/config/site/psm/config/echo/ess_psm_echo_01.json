@@ -1,0 +1,56 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/ess_psm_01",
+			"publishRate": 200,
+			"inputs": [
+				{
+					"uri": "/components/psm_ess_1",
+					"registers": {
+						"active_power_setpoint": "pcmd",
+						"bms_num_racks_online": "racksinservice",
+						"bms_soc": "soc",
+						"chargeable_power": "plow",
+						"dc_contactors_closed": "dccontactor",
+						"dischargeable_power": "phigh",
+						"frequency_setpoint": "fcmd",
+						"on_off_grid_mode": "ctrlword3",
+						"pcs_active_power": "p",
+						"pcs_apparent_power": "s",
+						"pcs_current_dc": "idc",
+						"pcs_current_l1": "i",
+						"pcs_frequency": "f",
+						"pcs_reactive_power": "q",
+						"pcs_voltage_dc": "vdc",
+						"pcs_voltage_l1_l2": "v",
+						"pcs_working_state": "on",
+						"reactive_power_setpoint": "qcmd",
+						"start_stop": "ctrlword1",
+						"voltage_setpoint": "vcmd"
+					}
+				}
+			],
+			"echo": {
+				"alarms": 0,
+				"bms_fault": 0,
+				"bms_max_cell_temp": 0,
+				"bms_min_cell_temp": 0,
+				"bms_soh": 0,
+				"chargeable_energy": 0,
+				"clear_faults": 0,
+				"com_status": 0,
+				"component_connected": 1,
+				"dischargeable_energy": 0,
+				"emmu_fault": 0,
+				"equalization_control": 0,
+				"faults": 0,
+				"local_mode_signal": 0,
+				"modbus_heartbeat": 0,
+				"pcs_current_l2": 0,
+				"pcs_current_l3": 0,
+				"pcs_voltage_l2_l3": 0,
+				"pcs_voltage_l3_l1": 0
+			}
+		}
+	]
+}

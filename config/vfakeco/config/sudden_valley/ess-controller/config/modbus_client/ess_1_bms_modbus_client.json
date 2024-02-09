@@ -11,7 +11,7 @@
     },
     "connection": {
       "name": "Clou_ESS_Controller",
-      "ip_address": "192.168.11.5",
+      "ip_address": "192.168.13.5",
       "port": 5030
     },
     "components": [

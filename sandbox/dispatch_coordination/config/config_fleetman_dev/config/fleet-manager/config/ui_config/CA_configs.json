@@ -25,37 +25,37 @@
           {
             "name": "Site - Active Power Total Gross",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/ess_total_active_power"
           },
           {
             "name": "Site - Reactive Power Total Gross",
             "units": "MVAR",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/ess_total_reactive_power"
           },
           {
             "name": "Site - Apparent Power Total Gross",
             "units": "MVA",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/ess_total_apparent_power"
           },
           {
             "name": "Site - Active Power Total Net",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/active_power"
           },
           {
             "name": "Site - Reactive Power Total Net",
             "units": "MVAR",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/reactive_power"
           },
           {
             "name": "Site - Apparent Power Total Net",
             "units": "MVA",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/apparent_power"
           },
           {
@@ -91,25 +91,25 @@
           {
             "name": "Battery - Chargable Energy MWh",
             "units": "MWh",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/ess_chargeable_energy"
           },
           {
             "name": "Battery - Dischargeable energy MWh",
             "units": "MWh",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/ess_dischargeable_energy"
           },
           {
             "name": "Battery - Chargeable Power MW",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/ess_chargeable_power"
           },
           {
             "name": "Battery - Dischargeable Power MW",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/ess_dischargeable_power"
           },
           {
@@ -205,13 +205,13 @@
           {
             "name": "Site - MWh Delivered",
             "units": "MWh",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/mwh_delivered"
           },
           {
             "name": "Site - MWh Received",
             "units": "MWh",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/mwh_received"
           },
           {
@@ -223,67 +223,67 @@
           {
             "name": "Baseload Power Command",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/fr_baseload_cmd_mw_in"
           },
           {
             "name": "FFR Inactive Power Command",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/fr_ffr_inactive_cmd_mw_in"
           },
           {
             "name": "FRRS UF Inactive Power Command",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/fr_frrs_up_inactive_cmd_mw_in"
           },
           {
             "name": "FRRS OF Inactive Power Command",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/fr_frrs_down_inactive_cmd_mw_in"
           },
           {
             "name": "FRRS Up Active Power Command",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/fr_frrs_up_active_cmd_mw_in"
           },
           {
             "name": "FRRS Down Active Power Command",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/fr_frrs_down_active_cmd_mw_in"
           },
           {
             "name": "FFR Active Power Command",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/fr_ffr_active_cmd_mw_in"
           },
           {
             "name": "Auto-PFR Up Active Power Command",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/fr_pfr_up_active_cmd_mw_in"
           },
           {
             "name": "Auto-PFR Down Active Power Command",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/fr_pfr_down_active_cmd_mw_in"
           },
           {
             "name": "Site Active Power Charge Limit",
             "units": "MW",
-            "scalar": "-1000",
+            "scalar": "-1000000",
             "uri": "/site_chargeable_mw"
           },
           {
             "name": "Site Active Power Discharge Limit",
             "units": "MW",
-            "scalar": "1000",
+            "scalar": "1000000",
             "uri": "/site_dischargeable_mw"
           },
           {

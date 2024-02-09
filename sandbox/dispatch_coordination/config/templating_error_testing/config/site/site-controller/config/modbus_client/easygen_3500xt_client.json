@@ -9,7 +9,7 @@
                 {
                     "map": [
                         {
-                            "echo_id": "/components/twins_easygen_3500xt/pcmd",
+                            "echo_id": "/components/psm_easygen_3500xt/pcmd",
                             "float": true,
                             "id": "active_power_setpoint",
                             "name": "Active Power Setpoint",
@@ -17,7 +17,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_easygen_3500xt/qcmd",
+                            "echo_id": "/components/psm_easygen_3500xt/qcmd",
                             "float": true,
                             "id": "reactive_power_setpoint",
                             "name": "Reactive Power Setpoint",
@@ -48,7 +48,7 @@
                             "offset": 10004
                         },
                         {
-                            "echo_id": "/components/twins_easygen_3500xt/ctrlword1",
+                            "echo_id": "/components/psm_easygen_3500xt/ctrlword1",
                             "id": "start_stop",
                             "name": "Start/Stop",
                             "offset": 10006
@@ -59,7 +59,7 @@
                                 "Running"
                             ],
                             "bool": true,
-                            "echo_id": "/components/twins_easygen_3500xt/on",
+                            "echo_id": "/components/psm_easygen_3500xt/on",
                             "enum": true,
                             "id": "status",
                             "name": "Gen Status",
@@ -112,7 +112,7 @@
                             "offset": 10011
                         },
                         {
-                            "echo_id": "/components/twins_easygen_3500xt/ctrlword2",
+                            "echo_id": "/components/psm_easygen_3500xt/ctrlword2",
                             "id": "on_off_grid_mode",
                             "name": "Grid Mode",
                             "offset": 10102
@@ -123,7 +123,7 @@
                 {
                     "map": [
                         {
-                            "echo_id": "/components/twins_easygen_3500xt/p",
+                            "echo_id": "/components/psm_easygen_3500xt/p",
                             "id": "active_power",
                             "offset": 20410,
                             "scale": 1000,
@@ -131,7 +131,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_easygen_3500xt/q",
+                            "echo_id": "/components/psm_easygen_3500xt/q",
                             "id": "reactive_power",
                             "offset": 20412,
                             "scale": 1000,
@@ -139,7 +139,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_easygen_3500xt/s",
+                            "echo_id": "/components/psm_easygen_3500xt/s",
                             "id": "apparent_power",
                             "offset": 20414,
                             "scale": 1000,
@@ -147,7 +147,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_easygen_3500xt/f",
+                            "echo_id": "/components/psm_easygen_3500xt/f",
                             "id": "frequency",
                             "offset": 20416,
                             "scale": 100,
@@ -155,7 +155,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_easygen_3500xt/i",
+                            "echo_id": "/components/psm_easygen_3500xt/i",
                             "id": "ac_current_l1",
                             "offset": 20418,
                             "scale": 1000,
@@ -163,7 +163,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_easygen_3500xt/v",
+                            "echo_id": "/components/psm_easygen_3500xt/v",
                             "id": "ac_voltage_l1_l2",
                             "offset": 20420,
                             "scale": 10,

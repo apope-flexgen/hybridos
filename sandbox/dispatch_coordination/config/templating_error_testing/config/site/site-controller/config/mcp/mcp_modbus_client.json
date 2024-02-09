@@ -9,35 +9,35 @@
         },
         {
             "args": [
-                "/usr/local/etc/config/modbus_client/ess_twins_client_01.json"
+                "/usr/local/etc/config/modbus_client/ess_psm_client_01.json"
             ],
             "max_restarts": -1,
             "name": "/usr/local/bin/modbus_client"
         },
         {
             "args": [
-                "/usr/local/etc/config/modbus_client/ess_twins_client_02.json"
+                "/usr/local/etc/config/modbus_client/ess_psm_client_02.json"
             ],
             "max_restarts": -1,
             "name": "/usr/local/bin/modbus_client"
         },
         {
             "args": [
-                "/usr/local/etc/config/modbus_client/ess_twins_client_03.json"
+                "/usr/local/etc/config/modbus_client/ess_psm_client_03.json"
             ],
             "max_restarts": -1,
             "name": "/usr/local/bin/modbus_client"
         },
         {
             "args": [
-                "/usr/local/etc/config/modbus_client/ess_twins_client_04.json"
+                "/usr/local/etc/config/modbus_client/ess_psm_client_04.json"
             ],
             "max_restarts": -1,
             "name": "/usr/local/bin/modbus_client"
         },
         {
             "args": [
-                "/usr/local/etc/config/modbus_client/ess_twins_client_05.json"
+                "/usr/local/etc/config/modbus_client/ess_psm_client_05.json"
             ],
             "max_restarts": -1,
             "name": "/usr/local/bin/modbus_client"

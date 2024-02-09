@@ -1,0 +1,870 @@
+{
+    "updateRate": 500,
+    "publishRate": 500,
+    "timeMultiplier": 1,
+    "manualTick": false,
+    "grids": {
+        "vcmd": {
+            "default": 480,
+            "units": "Volts"
+        },
+        "fcmd": {
+            "default": 60,
+            "units": "Hz"
+        }
+    },
+    "feeds": {
+        "pmax": {
+            "default": 100000,
+            "expression": [{"MAX":["$child.Plim","$child.Phigh", "$child.Pmax", "$child.Sn"]}, "*", "$child", "*", 1.2],
+            "units": "kVA",
+            "note0": "numChildren * MAX(childrenPlim)",
+            "note1": "$child returns number of child assets"
+        },
+        "qmax": {
+            "default": 100000,
+            "expression": [{"MAX":["$child.Qlim", "$child.Qhigh", "$child.Sn"]}, "*", "$child",  "*", 1.2],
+            "units": "kVAR",
+            "note0": "numChildren * MAX(childrenQlim)"
+        },
+        "smax": {
+            "default": 100000,
+            "expression": [{"MAX":["$child.Slim","$child.Phigh", "$child.Plim", "$child.Pmax", "$child.Sn"]}, "*", "$child",  "*", 1.2],
+            "units": "kW",
+            "note0": "numChildren * MAX(childrenSlim)"
+        },
+        "polrev": {
+            "default": false
+        },
+        "closecmd": {
+            "default": true
+        },
+        "opencmd": {
+            "default": false
+        },
+        "tripcmd": {
+            "default": false
+        },
+        "ctrlwordenabled": {
+            "default": false
+        },
+        "V": {
+            "default": 480,
+            "expression": [{"MAX":["$parent.V", "$parent.Vcmd", "$parent.Vn"]}]
+        }
+    },
+    "ess": {
+        "Note00": "This is the default configuration for the energy storage system psm model",
+        "Note01": "This is NOT an ESS Controller, but instead models a PCS and BMS together",
+        "Cap": {
+            "default": 8000,
+            "expression": ["$this.Phigh", "*", 4],
+            "units": "kWh"
+        },
+        "Oncmd": {
+            "default": true
+        },
+        "Offcmd": {
+            "default": false
+        },
+        "StandbyCmd": {
+            "default": false
+        },
+        "ContactorControl": {
+            "default": false
+        },
+        "AcContactorOpenCmd": {
+            "default": false
+        },
+        "AcContactorCloseCmd": {
+            "default": true
+        },
+        "DcContactorOpenCmd": {
+            "default": false
+        },
+        "DcContactorCloseCmd": {
+            "default": true
+        },
+        "Racks": {
+            "default": 1
+        },
+        "Pcmd": {
+            "default": 0,
+            "units": "kVA"
+        },
+        "Phigh": {
+            "default": 5000,
+            "units": "kVA"
+        },
+        "Plow": {
+            "default": -5000,
+            "units": "kVA"
+        },
+        "Qcmd": {
+            "default": 0,
+            "units": "kVAR"
+        },
+        "Qhigh": {
+            "default": 5000,
+            "units": "kVAR"
+        },
+        "Qlow": {
+            "default": -5000,
+            "units": "kVAR"
+        },
+        "Soc": {
+            "default": 50
+        },
+        "Rte": {
+            "default": 96
+        },
+        "Idleloss": {
+            "default": 10,
+            "units": "kVA"
+        },
+        "Vcmd": {
+            "default": 480,
+            "units": "Volts"
+        },
+        "Fcmd": {
+            "default": 60,
+            "units": "Hz"
+        },
+        "PfMode": {
+            "default": false
+        },
+        "PfCmd": {
+            "default": 1
+        },
+        "Noise": {
+            "default": 0,
+            "units": "varies (depeding on what Noise parameter is applied to, usually kW, kVA, kVAR)"
+        },
+        "GridFormingCmd": {
+            "default": false
+        },
+        "GridFollowingCmd": {
+            "default": true
+        },
+        "StatusCfg": {
+            "default": [
+                {
+                    "default":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "default":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ]
+        },
+        "CtrlWord1Cfg": {
+            "default": [
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "dccontactorclosecmd", "value": true },
+                        { "field": "accontactorclosecmd", "value": true },
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "dccontactoropencmd", "value": true },
+                        { "field": "accontactoropencmd", "value": true },
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true }
+                    ]
+                }
+            ]
+        },
+        "CtrlWord2Cfg": {
+            "default": []
+        },
+        "CtrlWord3Cfg": {
+            "default": []
+        },
+        "CtrlWord4Cfg": {
+            "default": []
+        }
+    },
+    "gens": {
+        "Oncmd": {
+            "default": true
+        },
+        "Offcmd": {
+            "default": false
+        },
+        "Pcmd": {
+            "default": 0,
+            "units": "kVA"
+        },
+        "Qcmd": {
+            "default": 0,
+            "units": "kVAR"
+        },
+        "Pramp": {
+            "expression": [[5000, "/", "$dt"], "*", 1000, "*", 60],
+            "default": 600000,
+            "units": "kVA/min",
+            "note": "Expression is to size this such that a command delta of less than 5000 will ramp within one time step"
+        },
+        "Qramp": {
+            "expression": [[5000, "/", "$dt"], "*", 1000, "*", 60],
+            "default": 600000,
+            "units": "kVA/min",
+            "note": "Expression is to size this such that a command delta of less than 5000 will ramp within one time step"
+        },
+        "PfMode": {
+            "default": false
+        },
+        "PfCmd": {
+            "default": 1
+        },
+        "Noise": {
+            "default": 0,
+            "units": "varies (depeding on what Noise parameter is applied to, usually kW, kVA, kVAR)"
+        },
+        "Vcmd": {
+            "default": 480,
+            "units": "Volts"
+        },
+        "Fcmd": {
+            "default": 60,
+            "units": "Hz"
+        },
+        "GridFormingCmd": {
+            "default": false
+        },
+        "GridFollowingCmd": {
+            "default": true
+        },
+        "StatusCfg": {
+            "default": [
+                {
+                    "default":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "default":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ]
+        },
+        "CtrlWord1Cfg": {
+            "default": [
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true }
+                    ]
+                }
+            ]
+        },
+        "CtrlWord2Cfg": {
+            "default": []
+        },
+        "CtrlWord3Cfg": {
+            "default": []
+        },
+        "CtrlWord4Cfg": {
+            "default": []
+        }
+    },
+    "solar": {
+        "Oncmd": {
+            "default": true
+        },
+        "Offcmd": {
+            "default": false
+        },
+        "Pcmd": {
+            "default": 0,
+            "units": "kVA"
+        },
+        "Plim": {
+            "default": 5000,
+            "units": "kVA"
+        },
+        "Phigh": {
+            "default": 100,
+            "note0": "used with percentcmd to scale plim by a percentage",
+            "note1": "Percent, 100 = 100% (differs from other psm assets where 1.0 = 100%)"
+        },
+        "Qcmd": {
+            "default": 0,
+            "units": "kVAR"
+        },
+        "Pramp": {
+            "expression": ["$this.Plim", "/", "$dt", "*", 1000, "*", 60],
+            "default": 600000,
+            "units": "kVA/min",
+            "note":"Expression is to size this such that any command will ramp within one time step"
+        },
+        "Qramp": {
+            "expression": ["$this.Plim", "/", "$dt", "*", 1000, "*", 60],
+            "default": 600000,
+            "units": "kVAR/min",
+            "note":"Expression is to size this such that any command will ramp within one time step"
+        },
+        "PercentCmd": {
+            "default": false
+        },
+        "PfMode": {
+            "default": false
+        },
+        "Noise": {
+            "default": 0,
+            "units": "varies (depeding on what Noise parameter is applied to, usually kW, kVA, kVAR)"
+        },
+        "PfCmd": {
+            "default": 1
+        },
+        "StatusCfg": {
+            "default": [
+                {
+                    "default":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "default":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ]
+        },
+        "CtrlWord1Cfg": {
+            "default": [
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true }
+                    ]
+                }
+            ]
+        },
+        "CtrlWord2Cfg": {
+            "default": []
+        }
+    },
+    "loads": {
+        "Oncmd": {
+            "default": true
+        },
+        "Offcmd": {
+            "default": false
+        },
+        "Pcmd": {
+            "default": 0,
+            "units": "kVA"
+        },
+        "Pmax": {
+            "default": 200,
+            "units": "kVA"
+        },
+        "Pmin": {
+            "default": -200,
+            "units": "kVA"
+        },
+        "Qmax": {
+            "default": 200,
+            "units": "kVAR"
+        },
+        "Qmin": {
+            "default": -200,
+            "units": "kVAR"
+        },
+        "Qcmd": {
+            "default": 0,
+            "units": "kVAR"
+        },
+        "Pramp": {
+            "expression": [[5000, "/", "$dt"], "*", 1000, "*", 60],
+            "default": 600000,
+            "units": "kVA/min",
+            "note": "Expression is to size this such that a command delta of less than 5000 will ramp within one time step"
+        },
+        "Qramp": {
+            "expression": [[5000, "/", "$dt"], "*", 1000, "*", 60],
+            "default": 600000,
+            "units": "kVA/min",
+            "note": "Expression is to size this such that a command delta of less than 5000 will ramp within one time step"
+        },
+        "Noise": {
+            "default": 0,
+            "units": "varies (depeding on what Noise parameter is applied to, usually kW, kVA, kVAR)"
+        },
+        "RandomWalk": {
+            "default": false
+        },
+        "CtrlWord1Cfg": {
+            "default": [
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true }
+                    ]
+                }
+            ]
+        }
+    },
+    "transformers": {
+        "Sn": {
+            "expression":[1.2, "*", {"MAX":["$child.Slim", "$child.Plim", "$child.Smax", "$child.Pmax"]}, "*", "$child"],
+            "default": 14000,
+            "units": "kVA",
+            "note":  "Nominal apparent power rating"
+        },
+        "Vn": {
+            "expression":[{"MAX":["$parent.Vcmd", "$parent.V"]}],
+            "default": 480,
+            "units": "Volts",
+            "note":  "Nominal voltage rating"
+        },
+        "N": {
+            "default": 1,
+            "note":  "Turns ratio"
+        },
+        "Zpu": {
+            "default": 7,
+            "note0":  "Per unit impedance",
+            "note1": "Percent, 100 = 100% (differs from other psm assets where 1.0 = 100%)"
+        },
+        "XoR": {
+            "default": 6,
+            "note0":  "Reactance to resistance ratio (X over R)"
+        },
+        "Mag": {
+            "default": 0.3,
+            "units": "Per unit magnitization current",
+            "note0":  "Percent, 100 = 100% (differs from other psm assets where 1.0 = 100%)"
+        },
+        "Eff": {
+            "default": 99,
+            "note0":  "Transformer rated efficiency",
+            "note1": "Percent, 100 = 100% (differs from other psm assets where 1.0 = 100%)"
+        }
+    },
+    "bms": {
+        "Cap": {
+            "expression": [{"MAX": ["$parent.Slim", "$Parent.Plim"]}, "*", 4],
+            "default": 8000,
+            "units": "kWh",
+            "note0": "Total battery capacity",
+            "note1": "Expression is to size battery for 4 hour discharge at max converter power",
+            "note2": "In actuality this is a measure of energy, but battery vendors tend to list battery 'capacity' as energy."
+        },
+        "Vnom": {
+            "default": 1330.0,
+            "units": "kW"
+        },
+        "Idleloss": {
+            "default": 0.5,
+            "units": "kW"
+        },
+        "Rte": {
+            "default": 99.0,
+            "units": "percent"
+        },
+        "Pmax": {
+            "expression": [{"MAX": ["$parent.Slim", "$Parent.Plim"]}, "*", 1.2],
+            "default": 8000.0,
+            "units": "kW"
+        },
+        "VdcProfile":{
+            "default": [1282, 1320, 1330],
+            "expression": [
+                ["$this.Vnom", "*", 0.964],
+                ["$this.Vnom", "*", 0.9925],
+                ["$this.Vnom"]
+            ],
+            "units": "Volts"
+        },
+        "SocProfile": {
+            "default": [20, 67, 100],
+            "units": "Percent SOC"
+        },
+        "CapRange": {
+            "default": 0.0,
+            "units": "kW",
+            "note0": "SBMU capacity variation generator"
+        },
+        "LossRange": {
+            "default": 0.005,
+            "units": "kW",
+            "note0": "SMBU losses"
+        },
+        "CellVoltRange": {
+            "default": 0.05,
+            "units": "Volts",
+            "note0": "Cell voltage deviation generator"
+        },
+        "NumSbmus": {
+            "default": 1,
+            "units": "count",
+            "note0": "Number of SBMUs"
+        },
+        "Soc": {
+                "value":{
+                    "default": 50.0,
+                    "units": "percent SOC"
+                },
+                "faulthighthreshold": {
+                    "default": 95,
+                    "units": "percent SOC"
+                },
+                "alarmhighthreshold": {
+                    "default": 90,
+                    "units": "percent SOC"
+                },
+                "alarmlowthreshold": {
+                    "default": 10,
+                    "units": "percent SOC"
+                },
+                "faultlowthreshold": {
+                    "default": 5,
+                    "units": "percent SOC"
+                }
+        },
+        "StatusCfg": {
+            "default": [
+                {
+                    "default":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "default":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ]
+        },
+        "CtrlWord1Cfg": {
+            "default": [
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "dccontactorclosecmd", "value": true },
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "dccontactoropencmd", "value": true },
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true }
+                    ]
+                }
+            ]
+        },
+        "CtrlWord2Cfg": {
+            "default": []
+        },
+        "CtrlWord3Cfg": {
+            "default": []
+        },
+        "CtrlWord4Cfg": {
+            "default": []
+        },
+        "Oncmd": {
+            "default": true
+        },
+        "Offcmd": {
+            "default": false
+        },
+        "DcContactorOpenCmd": {
+            "default": false
+        },
+        "DcContactorCloseCmd": {
+            "default": true
+        },
+        "DisableFault": {
+            "default": false
+        },
+        "sbmu":{
+            "default": [
+                {
+                    "ctrlword1cfg":[
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        } 
+    },
+    "pcs": {   
+        "Note00": "This is the default configuration container for PCS assets",
+        "Plim":{
+            "default": 5000.0,
+            "units": "kVA",
+            "note0": "PCS active power limit"
+        },
+        "Qlim": {
+            "default": 5000.0,
+            "units": "kVAR",
+            "note0": "PCS reactive power limit"
+        },
+        "Slim": {
+            "expression": ["$this.Plim", "*", 1.4],
+            "default": 7000.0,
+            "units": "kW",
+            "note0": "PCS apparent power limit"
+        },
+        "Noise": {
+            "default": 0.0,
+            "units": "kW",
+            "note0": "Average value of noise in kW to seed noise generator"
+        },
+        "Rte":{
+            "default": 95.6,
+            "units": "kW",
+            "note0": "Round-trip efficiency"
+        },
+        "Idleloss": {
+            "default": 5.0,
+            "units": "kW",
+            "note0": "Component idle losses"
+        },
+        "StatusCfg": {
+            "default": [
+                {
+                    "value":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "value":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ],
+            "note0": "status configuration for UI reporting"
+        },
+        "CtrlWord1Cfg": {
+            "default": [
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "dccontactorclosecmd", "value": true },
+                        { "field": "accontactorclosecmd", "value": true },
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "dccontactoropencmd", "value": true },
+                        { "field": "accontactoropencmd", "value": true },
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true }
+                    ]
+                }
+            ],
+            "note0": "ctrlword1 configuration"
+        },
+        "CtrlWord2Cfg": {
+            "default": [],
+            "note0": "ctrlword2 configuration"
+        },
+        "CtrlWord3Cfg": {
+            "default": [],
+            "note0": "ctrlword3 configuration"
+        },
+        "CtrlWord4Cfg": {
+            "default": [],
+            "note0": "ctrlword4 configuration"
+        },
+        "Oncmd":{
+            "default": true,
+            "note0": "Turns on PCS"
+        },
+        "Offcmd":{
+            "default": false,
+            "note0": "Turns off PCS"
+        },
+        "StandbyCmd": {
+            "default": false,
+            "note0": "Puts PCS into standby mode"
+        },
+        "ContactorControl":{
+            "default": true,
+            "note0": "Closes PCS contactors (both AC and DC)"
+        },
+        "AcContactorOpenCmd":{
+            "default": false,
+            "note0": "Opens AC contactors"
+        },
+        "DcContactorOpenCmd":{
+            "default": false,
+            "note0": "Opens DC contactors"
+        },
+        "DcContactorCloseCmd":{
+            "default": true,
+            "note0": "Closes DC contactors"
+        },
+        "VACcmd": {
+            "default": 480.0,
+            "units": "Volts",
+            "note0": "PCS AC voltage setpoint"
+        },
+        "VDCcmd": {
+            "expression": [{"AVG": ["$child.Vnom"]}],
+            "default": 1330.0,
+            "units": "Volts",
+            "note0": "PCS DC voltage setpoint"
+            },
+        "Fcmd":{
+            "default": 60.0,
+            "note0": "PCS AC frequency setpoint"
+        },
+        "PfMode":{
+            "default": false,
+            "note0": "Enables PCS power factor correction mode"
+        },
+        "PfCmd":{
+            "default": 1.0,
+            "note0": "PCS power factor setpoint"
+        },
+        "GridFormingCmd": {
+            "default": false,
+            "note0": "Enables PCS grid-forming mode"
+        },
+        "GridFollowingCmd":{
+            "default": true,
+            "note0": "Enables PCS grid-following mode"
+        },
+        "PRampStartEnable":{
+            "default": false,
+            "note0": "Enables PCS active power ramp rate at start-up"
+        },
+        "PRampStart": {
+            "expression": ["$this.Slim", "/", ["$dT", "/", 1000]],
+            "default": 1000.0,
+            "units": "kW/s",
+            "note0": "PCS active power start-up ramp rate"
+        },
+        "PRampRiseEnable": {
+            "default": false,
+            "note0": "Enables PCS active power ramp-up rate during operation"
+        },
+        "PRampRise": {
+            "expression": ["$this.Slim", "/", ["$dT", "/", 1000]],
+            "default": 1000.0,
+            "units": "kW/s",
+            "note0": "PCS active power ramp-up rate during operation"
+        },
+        "PRampDropEnable": {
+            "default": false,
+            "note0": "Enables PCS active power ramp-down rate during operation"
+        },
+        "PRampDrop": {
+            "expression": ["$this.Slim", "/", ["$dT", "/", 1000]],
+            "default": 1000.0,
+            "units": "kW/s",
+            "note0": "PCS active power ramp-down rate during operation"
+        },
+        "PRampStopEnable": {
+            "default": false,
+            "note0": "Enables PCS active power ramp rate at stop"
+        },
+        "PRampStop": {
+            "expression": ["$this.Slim", "/", ["$dT", "/", 1000]],
+            "default": 1000.0,
+            "units": "kW/s",
+            "note0": "PCS active power ramp-down rate during operation"
+        },
+        "QRampStartEnable":{
+            "default": false,
+            "note0": "Enables PCS reactive power ramp rate at start-up"
+        },
+        "QRampStart": {
+            "expression": ["$this.Slim", "/", ["$dT", "/", 1000]],
+            "default": 1000.0,
+            "units": "kW/s",
+            "note0": "PCS reactive power start-up ramp rate"
+        },
+        "QRampRiseEnable": {
+            "default": false,
+            "note0": "Enables PCS reactive power ramp-up rate during operation"
+        },
+        "QRampRise": {
+            "expression": ["$this.Slim", "/", ["$dT", "/", 1000]],
+            "default": 1000.0,
+            "units": "kW/s",
+            "note0": "PCS reactive power ramp-up rate during operation"
+        },
+        "QRampDropEnable": {
+            "default": false,
+            "note0": "Enables PCS reactive power ramp-down rate during operation"
+        },
+        "QRampDrop": {
+            "expression": ["$this.Slim", "/", ["$dT", "/", 1000]],
+            "default": 1000.0,
+            "units": "kW/s",
+            "note0": "PCS reactive power ramp-down rate during operation"
+        },
+        "QRampStopEnable": {
+            "default": false,
+            "note0": "Enables PCS reactive power ramp rate at stop"
+        },
+        "QRampStop": {
+            "expression": ["$this.Slim", "/", ["$dT", "/", 1000]],
+            "default": 1000.0,
+            "units": "kW/s",
+            "note0": "PCS reactive power ramp-down rate during operation"
+        }
+    }
+}
+

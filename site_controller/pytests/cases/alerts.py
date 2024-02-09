@@ -83,8 +83,8 @@ def generate_alerts_config():
     # Ensure site level ess fault & 1 num_faulted
     Steps(
         [{}, {
-            "/components/ess_twins": {"test_alarms": [{"string": "Something alarming is happening", "value": 1}]},
-            "/components/ess_twins": {"test_alarms": [{"string": "It is alarming", "value": 2}]}
+            "/components/ess_psm": {"test_alarms": [{"string": "Something alarming is happening", "value": 1}]},
+            "/components/ess_psm": {"test_alarms": [{"string": "It is alarming", "value": 2}]}
         }],
         [
             Flex_Assertion(Assertion_Type.obj_eq, "/site/operation",
@@ -115,7 +115,7 @@ def generate_alerts_config():
     # Ensure site level ess fault & 1 num_faulted
     Steps(
         [{}, {
-            "/components/ess_twins": {"test_faults": [{"value": 1, "string": "Something faulty is happening"}, {"value": 2, "string": "It is my fault"}]},
+            "/components/ess_psm": {"test_faults": [{"value": 1, "string": "Something faulty is happening"}, {"value": 2, "string": "It is my fault"}]},
         }],
         [
             Flex_Assertion(Assertion_Type.obj_eq, "/site/operation",

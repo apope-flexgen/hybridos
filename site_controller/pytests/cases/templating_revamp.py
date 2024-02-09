@@ -22,7 +22,7 @@ It assesses the following:
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_controllable", 5),
         ]
     ),
-    # pub a fault to ess_twins_01 and make sure ess_01 picks it up
+    # pub a fault to ess_psm_01 and make sure ess_01 picks it up
     Steps(
         [
             # setup (of which there are none)
@@ -30,7 +30,7 @@ It assesses the following:
             },
             # pubs
             {
-                "/components/ess_twins_01": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
+                "/components/ess_psm_01": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
             }
         ],
         [
@@ -50,7 +50,7 @@ It assesses the following:
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_available", 5),
         ]
     ),
-    # pub a fault to ess_twins_02 and make sure ess_02 picks it up
+    # pub a fault to ess_psm_02 and make sure ess_02 picks it up
     Steps(
         [
             # setup (of which there are none)
@@ -58,7 +58,7 @@ It assesses the following:
             },
             # pubs
             {
-                "/components/ess_twins_02": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
+                "/components/ess_psm_02": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
             }
         ],
         [
@@ -78,7 +78,7 @@ It assesses the following:
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_available", 5),
         ]
     ),
-    # pub a fault to ess_twins_03 and make sure ess_03 picks it up
+    # pub a fault to ess_psm_03 and make sure ess_03 picks it up
     Steps(
         [
             # setup (of which there are none)
@@ -86,7 +86,7 @@ It assesses the following:
             },
             # pubs
             {
-                "/components/ess_twins_03": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
+                "/components/ess_psm_03": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
             }
         ],
         [
@@ -106,7 +106,7 @@ It assesses the following:
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_available", 5),
         ]
     ),
-    # pub a fault to ess_twins_04 and make sure ess_04 picks it up
+    # pub a fault to ess_psm_04 and make sure ess_04 picks it up
     Steps(
         [
             # setup (of which there are none)
@@ -114,7 +114,7 @@ It assesses the following:
             },
             # pubs
             {
-                "/components/ess_twins_04": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
+                "/components/ess_psm_04": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
             }
         ],
         [
@@ -134,7 +134,7 @@ It assesses the following:
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_available", 5),
         ]
     ),
-    # pub a fault to ess_twins_05 and make sure ess_05 picks it up
+    # pub a fault to ess_psm_05 and make sure ess_05 picks it up
     Steps(
         [
             # setup (of which there are none)
@@ -142,7 +142,7 @@ It assesses the following:
             },
             # pubs
             {
-                "/components/ess_twins_05": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
+                "/components/ess_psm_05": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
             }
         ],
         [

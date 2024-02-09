@@ -8,7 +8,7 @@
                     "chg_soc_end": 101.0,
                     "components": [
                         {
-                            "component_id": "ess_twins_#",
+                            "component_id": "ess_psm_#",
                             "ui_controls": {
                                 "autobalancing_disable": {
                                     "name": "Disable Auto-Balancing",
@@ -333,7 +333,7 @@
                     "chg_soc_end": 101.0,
                     "components": [
                         {
-                            "component_id": "ess_twins_#",
+                            "component_id": "ess_psm_#",
                             "ui_controls": {
                                 "autobalancing_disable": {
                                     "name": "Disable Auto-Balancing",

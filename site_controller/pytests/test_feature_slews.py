@@ -4,7 +4,7 @@ import time
 import math
 import statistics
 
-from .controls import start_site, toggle_solar_and_gen_maintenance_mode, run_twins_command
+from .controls import start_site, toggle_solar_and_gen_maintenance_mode, run_psm_command
 from .fims import fims_set, fims_get, fims_del, poll_until_uri_is_at_value, parse_time_from_fims_trigger_output
 from .pytest_framework import Site_Controller_Instance
 
@@ -238,7 +238,7 @@ def test_reactive_setpoint_slew_rate(setup_cleanup_test_slew_rate):
             target_comparison_trigger = '-g'
         if target_value < 0:
             target_comparison_trigger = '-l'
-        fims_trigger = subprocess.Popen(['fims_trigger', '-s', '/features/reactive_power/reactive_setpoint_kVAR_cmd', '-e', str(reactive_setpoint_cmd), '-s', '/components/ess_twins/reactive_power_setpoint', target_comparison_trigger, str(target_value)],
+        fims_trigger = subprocess.Popen(['fims_trigger', '-s', '/features/reactive_power/reactive_setpoint_kVAR_cmd', '-e', str(reactive_setpoint_cmd), '-s', '/components/ess_psm/reactive_power_setpoint', target_comparison_trigger, str(target_value)],
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         # Set the slew rate
         fims_set('/features/reactive_power/reactive_setpoint_kVAR_slew_rate', slew_rate)
@@ -327,7 +327,7 @@ def test_active_power_setpoint_slew_rate(setup_cleanup_test_slew_rate):
             target_comparison_trigger = '-g'
         if target_value < 0:
             target_comparison_trigger = '-l'
-        fims_trigger = subprocess.Popen(['fims_trigger', '-s', '/features/active_power/active_power_setpoint_kW_cmd', '-e', str(export_target_cmd), '-s', '/components/ess_twins/active_power_setpoint', target_comparison_trigger, str(target_value)],
+        fims_trigger = subprocess.Popen(['fims_trigger', '-s', '/features/active_power/active_power_setpoint_kW_cmd', '-e', str(export_target_cmd), '-s', '/components/ess_psm/active_power_setpoint', target_comparison_trigger, str(target_value)],
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         # Set the slew rate
         fims_set('/features/active_power/active_power_setpoint_kW_slew_rate', slew_rate)

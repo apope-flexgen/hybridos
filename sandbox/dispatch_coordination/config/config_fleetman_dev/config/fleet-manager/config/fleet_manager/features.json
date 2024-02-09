@@ -14,7 +14,8 @@
                 "inactive_cmd_min_limit_mw": -99.9,
                 "inactive_cmd_max_limit_mw": 99.9,
                 "baseload_cmd_min_limit_mw": -99.9,
-                "baseload_cmd_max_limit_mw": 99.9
+                "baseload_cmd_max_limit_mw": 99.9,
+                "pfr_enable_revised_capacity": false
             },
             "hoth": {},
             "gargantua": {}

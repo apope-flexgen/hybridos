@@ -92,7 +92,7 @@ def validate_action_pubs(uri: Union[str, None] = None, expected_info: Union[List
         expected_info: a list of tests (holds expected data)
         start: should this start the action. (provide uri to send true if so)
         abort_on_step: will issue a stop command
-        set_SoC_on_step: will set ess_twins SoC on provided step
+        set_SoC_on_step: will set ess_psm SoC on provided step
         ignore_step: will ignore this step if found (needed in case sequences executes multiple steps before a pub is issued)
         action_name: name of the action to inspect
     """
@@ -138,7 +138,7 @@ def validate_action_pubs(uri: Union[str, None] = None, expected_info: Union[List
                         if abort_on_step is not None and reply.body['actions'][action_name]['step_name'] == abort_on_step:
                             fims_set("/assets/ess/ess_1/actions/Calibration1/stop", True)
                         if set_SoC_on_step is not None and reply.body['actions'][action_name]['step_name'] == set_SoC_on_step[0]: 
-                            fims_set("/components/ess_twins/bms_soc", set_SoC_on_step[1])
+                            fims_set("/components/ess_psm/bms_soc", set_SoC_on_step[1])
 
                         info_index = info_index + 1
 
@@ -329,7 +329,7 @@ test4.append(listen_reply_validator(path_name="ESS Calibration (Discharge to bot
     Steps(
         {
             "/assets/ess/ess_1/stop": True,
-            "/components/ess_twins/bms_soc": 50
+            "/components/ess_psm/bms_soc": 50
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/status", "Stopped", wait_secs=5),
@@ -349,7 +349,7 @@ test4.append(listen_reply_validator(path_name="ESS Calibration (Discharge to bot
     ),
     Steps(
         {
-            "/components/ess_twins/bms_soc": 85
+            "/components/ess_psm/bms_soc": 85
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/soc", 85),

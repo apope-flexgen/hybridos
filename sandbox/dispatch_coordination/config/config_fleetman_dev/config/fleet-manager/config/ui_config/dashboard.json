@@ -31,21 +31,21 @@
           },
           {
             "name": "Baseload Power Command",
-            "scalar": null,
+            "scalar": "1000000",
             "sourceURI": "/sites",
             "units": "MW",
             "uri": "/fr_baseload_cmd_mw_in"
           },
           {
             "name": "POI Active Power",
-            "scalar": null,
+            "scalar": "1000000",
             "sourceURI": "/sites",
             "units": "MW",
             "uri": "/active_power"
           },
           {
             "name": "POI Reactive Power",
-            "scalar": null,
+            "scalar": "1000000",
             "sourceURI": "/sites",
             "units": "MVAR",
             "uri": "/reactive_power"
@@ -72,14 +72,14 @@
           },
           {
             "name": "ESS Active Power",
-            "scalar": null,
+            "scalar": "1000000",
             "sourceURI": "/sites",
             "units": "MW",
             "uri": "/ess_total_active_power"
           },
           {
             "name": "ESS Reactive Power",
-            "scalar": null,
+            "scalar": "1000000",
             "sourceURI": "/sites",
             "units": "MVAR",
             "uri": "/ess_total_reactive_power"
@@ -93,28 +93,28 @@
           },
           {
             "name": "ESS Chargeable Energy",
-            "scalar": null,
+            "scalar": "1000000",
             "sourceURI": "/sites",
             "units": "MWh",
             "uri": "/ess_chargeable_energy"
           },
           {
             "name": "ESS Dischargeable Energy",
-            "scalar": null,
+            "scalar": "1000000",
             "sourceURI": "/sites",
             "units": "MWh",
             "uri": "/ess_dischargeable_energy"
           },       
           {
             "name": "ESS Chargeable Power",
-            "scalar": null,
+            "scalar": "1000000",
             "sourceURI": "/sites",
             "units": "MW",
             "uri": "/ess_chargeable_power"
           },
           {
             "name": "ESS Dischargeable Power",
-            "scalar": null,
+            "scalar": "1000000",
             "sourceURI": "/sites",
             "units": "MW",
             "uri": "/ess_dischargeable_power"

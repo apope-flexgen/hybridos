@@ -27,11 +27,11 @@ def toggle_solar_and_gen_maintenance_mode(on_off: bool) -> None:
     fims_set('/assets/solar/solar_2/maint_mode', on_off)
     assert fims_get('/assets/solar/solar_2/maint_mode')['value'] == on_off
 
-def run_twins_command(cmd: str):
+def run_psm_command(cmd: str):
     """
         Runs given command inside TWINS Docker container.
     """
-    result = subprocess.run(f'docker exec twins {cmd}', universal_newlines=True, stdout=subprocess.PIPE, stderr=sys.stderr, shell=True)
+    result = subprocess.run(f'docker exec psm {cmd}', universal_newlines=True, stdout=subprocess.PIPE, stderr=sys.stderr, shell=True)
     if result.returncode != 0:
         return f'Command failed with return code {result.returncode}.'
     return json.loads(result.stdout.strip())

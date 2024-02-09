@@ -1255,6 +1255,18 @@
                     "unit": "V",
                     "value": 141000
                 },
+                "avr_cmd_volts_max": {
+                    "name": "AVR Voltage Setpoint Maximum",
+                    "ui_type": "control",
+                    "unit": "V",
+                    "value": 142000
+                },
+                "avr_cmd_volts_min": {
+                    "name": "AVR Voltage Setpoint Minimum",
+                    "ui_type": "control",
+                    "unit": "V",
+                    "value": 140000
+                },
                 "avr_over_deadband_volts": {
                     "name": "Deadband",
                     "ui_type": "none",
@@ -2461,7 +2473,7 @@
                     ],
                     "type": "enum_slider",
                     "ui_type": "none",
-                    "value": true,
+                    "value": false,
                     "var_type": "Bool"
                 }
             }

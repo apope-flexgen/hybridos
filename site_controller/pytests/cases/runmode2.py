@@ -66,7 +66,7 @@ def test_load_support(test):
             "/features/active_power/runmode2_kW_mode_cmd": 1,
             "/features/standalone_power/solar_shed_enable": True,
             "/components/bess_aux/active_power_setpoint": -50,
-            "/components/ess_twins/bms_soc": 50,
+            "/components/ess_psm/bms_soc": 50,
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode2_kW_mode_cmd", 1),
@@ -118,7 +118,7 @@ def test_load_support(test):
     # SoC above LDSS threshold but below max solar shedding
     Steps(
         {
-            "/components/ess_twins/bms_soc", 90
+            "/components/ess_psm/bms_soc", 90
         },
         [
             # Solar still uncurtailed
@@ -149,7 +149,7 @@ def test_load_support(test):
     Steps(
         {
             "/components/bess_aux/active_power_setpoint", -50,
-            "/components/ess_twins/bms_soc", 95
+            "/components/ess_psm/bms_soc", 95
         },
         [
             # Solar still uncurtailed
@@ -164,7 +164,7 @@ def test_load_support(test):
     # SoC drops below LDSS min threshold, generator comes back online
     Steps(
         {
-            "/components/ess_twins/bms_soc", 5
+            "/components/ess_psm/bms_soc", 5
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/solar_kW_cmd", 0),

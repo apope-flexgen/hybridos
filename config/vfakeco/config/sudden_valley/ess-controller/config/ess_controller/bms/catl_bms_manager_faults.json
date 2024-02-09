@@ -815,7 +815,7 @@
             "value": 0
         },
         "MinCellTemp": {
-            "EnableFaultCheck": true,
+            "EnableFaultCheck": false,
             "EnableMinValCheck": false,
             "MinAlarmThreshold": 10,
             "MinAlarmTimeout": 2.5,

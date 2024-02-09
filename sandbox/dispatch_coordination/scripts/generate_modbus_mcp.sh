@@ -50,8 +50,8 @@ add_entry () {
 }
 
 # load component names into array from components.txt
-mapfile -t components < $config_dir/twins/components.txt
-num_components=$(wc -l < $config_dir/twins/components.txt)
+mapfile -t components < $config_dir/psm/components.txt
+num_components=$(wc -l < $config_dir/psm/components.txt)
 i=$1
 # loop through each component and add an entry for each one
 # include a comma at the end of each entry except for the last one

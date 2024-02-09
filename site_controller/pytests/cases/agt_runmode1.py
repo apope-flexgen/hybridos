@@ -34,7 +34,7 @@ from ..pytest_steps import Setup, Steps, Teardown
     Steps(
         {
             # ESS stops charging at it's desired target
-            "/components/ess_twins/bms_soc": 88,  # 88 = is 90% after SoC scaling
+            "/components/ess_psm/bms_soc": 88,  # 88 = is 90% after SoC scaling
             "/components/bess_aux/active_power_setpoint": -50  # reset load to default so ess could charge more if it wanted
         },
         [
@@ -46,7 +46,7 @@ from ..pytest_steps import Setup, Steps, Teardown
     Steps(
         {
             # ESS also does nothing in maint mode
-            "/components/ess_twins/bms_soc": 50,  # reset SoC back to a charging value
+            "/components/ess_psm/bms_soc": 50,  # reset SoC back to a charging value
             "/assets/ess/ess_1/maint_mode": True
         },
         [

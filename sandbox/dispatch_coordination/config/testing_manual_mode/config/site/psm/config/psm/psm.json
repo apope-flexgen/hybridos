@@ -1,0 +1,737 @@
+{
+    "updateRate": 10,
+    "publishRate": 10,
+    "timeMultiplier": 1,
+    "manualTick": false,
+    "grids": [
+        {
+            "id": "grid",
+            "v": 115000,
+            "f": 60
+        }
+    ],
+    "feeds": [
+        {
+            "id": "psm_shared_poi",
+            "pmax": 3000000,
+            "qmax": 3000000,
+            "smax": 3000000,
+            "polrev": true,
+            "ctrlwordenabled": true,
+            "ctrlword1": 1,
+            "ctrlword1cfg": [
+                {
+                    "value": 1,
+                    "controls": [
+                        {
+                            "field": "closecmd",
+                            "value": true
+                        },
+                        {
+                            "field": "opencmd",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "value": 2,
+                    "controls": [
+                        {
+                            "field": "opencmd",
+                            "value": true
+                        },
+                        {
+                            "field": "closecmd",
+                            "value": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "psm_split_feeder",
+            "pmax": 3000000,
+            "qmax": 3000000,
+            "smax": 3000000,
+            "polrev": true,
+            "closecmd": true
+        },
+        {
+            "id": "psm_bess_aux",
+            "pmax": 13000,
+            "qmax": 13000,
+            "smax": 13000,
+            "polrev": true,
+            "closecmd": true
+        },
+        {
+            "id": "psm_control_cabinet",
+            "pmax": 1000,
+            "qmax": 1000,
+            "smax": 1000,
+            "polrev": true,
+            "closecmd": true
+        }
+    ],
+    "ess": [
+        {
+            "id": "psm_ess_1",
+            "cap": 1000000,
+            "racks": 3,
+            "soc": 50,
+            "phigh": 1000000,
+            "plow": 1000000,
+            "idleloss": 10,
+            "rte": 92.0,
+            "kseparate": true,
+            "ctrlword1": 206,
+            "ctrlword2": 2,
+            "ctrlword3": 0,
+            "ctrlword1cfg": [
+                {
+                    "value": 207,
+                    "controls": [
+                        {
+                            "field": "oncmd",
+                            "value": true
+                        },
+                        {
+                            "field": "kacclosecmd",
+                            "value": true
+                        }
+                    ]
+                },
+                {
+                    "value": 206,
+                    "controls": [
+                        {
+                            "field": "offcmd",
+                            "value": true
+                        },
+                        {
+                            "field": "kacopencmd",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+            "ctrlword2cfg": [
+                {
+                    "value": 2,
+                    "controls": [
+                        {
+                            "field": "kdcclosecmd",
+                            "value": true
+                        }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "controls": [
+                        {
+                            "field": "kdcopencmd",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+            "ctrlword3cfg": [
+                {
+                    "value": 0,
+                    "controls": [
+                        {
+                            "field": "gridfollowingcmd",
+                            "value": true
+                        },
+                        {
+                            "field": "gridformingcmd",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "controls": [
+                        {
+                            "field": "gridfollowingcmd",
+                            "value": false
+                        },
+                        {
+                            "field": "gridformingcmd",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+            "ctrlword4cfg": [
+                {
+                    "value": 205,
+                    "controls": [
+                        {
+                            "field": "standbycmd",
+                            "value": true
+                        }
+                    ]
+                },
+                {
+                    "value": 207,
+                    "controls": [
+                        {
+                            "field": "oncmd",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value": 2,
+                    "string": "Running",
+                    "field": "on"
+                },
+                {
+                    "value": 4,
+                    "string": "Stopped",
+                    "field": "on",
+                    "invert": true
+                }
+            ],
+            "dactive": {
+                "ynom": 5500,
+                "xnom": 60,
+                "percent": 0.05
+            },
+            "dreactive": {
+                "ynom": 5500,
+                "xnom": 480,
+                "percent": 0.05
+            }
+        },
+        {
+            "id": "psm_ess_2",
+            "cap": 1000000,
+            "racks": 3,
+            "soc": 60,
+            "phigh": 1000000,
+            "plow": 1000000,
+            "idleloss": 10,
+            "rte": 92.0,
+            "kseparate": true,
+            "ctrlword1": 206,
+            "ctrlword2": 2,
+            "ctrlword3": 0,
+            "ctrlword1cfg": [
+                {
+                    "value": 207,
+                    "controls": [
+                        {
+                            "field": "oncmd",
+                            "value": true
+                        },
+                        {
+                            "field": "kacclosecmd",
+                            "value": true
+                        }
+                    ]
+                },
+                {
+                    "value": 206,
+                    "controls": [
+                        {
+                            "field": "offcmd",
+                            "value": true
+                        },
+                        {
+                            "field": "kacopencmd",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+            "ctrlword2cfg": [
+                {
+                    "value": 2,
+                    "controls": [
+                        {
+                            "field": "kdcclosecmd",
+                            "value": true
+                        }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "controls": [
+                        {
+                            "field": "kdcopencmd",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+            "ctrlword3cfg": [
+                {
+                    "value": 0,
+                    "controls": [
+                        {
+                            "field": "gridfollowingcmd",
+                            "value": true
+                        },
+                        {
+                            "field": "gridformingcmd",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "controls": [
+                        {
+                            "field": "gridfollowingcmd",
+                            "value": false
+                        },
+                        {
+                            "field": "gridformingcmd",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+            "ctrlword4cfg": [
+                {
+                    "value": 205,
+                    "controls": [
+                        {
+                            "field": "standbycmd",
+                            "value": true
+                        }
+                    ]
+                },
+                {
+                    "value": 207,
+                    "controls": [
+                        {
+                            "field": "oncmd",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value": 1,
+                    "string": "Stopped",
+                    "field": "on",
+                    "invert": true
+                },
+                {
+                    "value": 2,
+                    "string": "Running",
+                    "field": "on"
+                }
+            ],
+            "dactive": {
+                "ynom": 5500,
+                "xnom": 60,
+                "percent": 1.0
+            },
+            "dreactive": {
+                "ynom": 5500,
+                "xnom": 480,
+                "percent": 1.0
+            }
+        }
+    ],
+    "gen": [
+        {
+            "id": "psm_easygen_3500xt",
+            "pramp": 60000000,
+            "qramp": 60000000,
+            "ctlwordenabled": true,
+            "ctrlword1": 0,
+            "ctrlword1cfg": [
+                {
+                    "value": 1467,
+                    "controls": [
+                        {
+                            "field": "oncmd",
+                            "value": true
+                        },
+                        {
+                            "field": "offcmd",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "value": 381,
+                    "controls": [
+                        {
+                            "field": "offcmd",
+                            "value": true
+                        },
+                        {
+                            "field": "oncmd",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "value": 1749,
+                    "controls": [
+                        {
+                            "field": "offcmd",
+                            "value": true
+                        },
+                        {
+                            "field": "oncmd",
+                            "value": false
+                        }
+                    ]
+                }
+            ],
+            "ctrlword2": 0,
+            "ctrlword2cfg": [
+                {
+                    "value": 0,
+                    "controls": [
+                        {
+                            "field": "gridfollowingcmd",
+                            "value": true
+                        },
+                        {
+                            "field": "gridformingcmd",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "controls": [
+                        {
+                            "field": "gridfollowingcmd",
+                            "value": false
+                        },
+                        {
+                            "field": "gridformingcmd",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value": 0,
+                    "string": "Running",
+                    "field": "on"
+                },
+                {
+                    "value": 1,
+                    "string": "Stopped",
+                    "field": "on",
+                    "invert": true
+                }
+            ]
+        }
+    ],
+    "solar": [
+        {
+            "id": "psm_pv_1",
+            "pramp": 30000000,
+            "qramp": 30000000,
+            "phigh": 500000,
+            "plim": 500000,
+            "pcmd": 2000,
+            "percentcmd": false,
+            "pfcmd": 0.8,
+            "ctrlword2": 1072,
+            "ctrlwordenabled": true,
+            "ctrlword1cfg": [
+                {
+                    "value": 1467,
+                    "controls": [
+                        {
+                            "field": "oncmd",
+                            "value": true
+                        },
+                        {
+                            "field": "offcmd",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "value": 381,
+                    "controls": [
+                        {
+                            "field": "offcmd",
+                            "value": true
+                        },
+                        {
+                            "field": "oncmd",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "value": 1749,
+                    "controls": [
+                        {
+                            "field": "offcmd",
+                            "value": true
+                        },
+                        {
+                            "field": "oncmd",
+                            "value": false
+                        }
+                    ]
+                }
+            ],
+            "ctrlword2cfg": [
+                {
+                    "value": 1075,
+                    "controls": [
+                        {
+                            "field": "pfmode",
+                            "value": true
+                        }
+                    ]
+                },
+                {
+                    "value": 1072,
+                    "controls": [
+                        {
+                            "field": "pfmode",
+                            "value": false
+                        }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value": 1,
+                    "string": "Running",
+                    "field": "on"
+                },
+                {
+                    "value": 0,
+                    "string": "Stopped",
+                    "field": "on",
+                    "invert": true
+                }
+            ]
+        },
+        {
+            "id": "psm_pv_2",
+            "pramp": 30000000,
+            "qramp": 30000000,
+            "phigh": 500000,
+            "plim": 500000,
+            "pcmd": 2000,
+            "percentcmd": false,
+            "pfcmd": 0.8,
+            "ctrlword2": 1072,
+            "ctrlwordenabled": true,
+            "ctrlword1cfg": [
+                {
+                    "value": 1467,
+                    "controls": [
+                        {
+                            "field": "oncmd",
+                            "value": true
+                        },
+                        {
+                            "field": "offcmd",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "value": 381,
+                    "controls": [
+                        {
+                            "field": "offcmd",
+                            "value": true
+                        },
+                        {
+                            "field": "oncmd",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "value": 1749,
+                    "controls": [
+                        {
+                            "field": "offcmd",
+                            "value": true
+                        },
+                        {
+                            "field": "oncmd",
+                            "value": false
+                        }
+                    ]
+                }
+            ],
+            "ctrlword2cfg": [
+                {
+                    "value": 1075,
+                    "controls": [
+                        {
+                            "field": "pfmode",
+                            "value": true
+                        }
+                    ]
+                },
+                {
+                    "value": 1072,
+                    "controls": [
+                        {
+                            "field": "pfmode",
+                            "value": false
+                        }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value": 1,
+                    "string": "Running",
+                    "field": "on"
+                },
+                {
+                    "value": 0,
+                    "string": "Stopped",
+                    "field": "on",
+                    "invert": true
+                }
+            ]
+        }
+    ],
+    "loads": [
+        {
+            "id": "biomass_plant_load",
+            "on": true,
+            "pramp": 10000,
+            "qramp": 10000,
+            "pcmd": 0.0,
+            "qcmd": 0.0
+        },
+        {
+            "id": "bess_aux_load",
+            "on": true,
+            "pramp": 10000,
+            "qramp": 10000,
+            "pcmd": -500.0,
+            "qcmd": -500.0,
+            "ctrlword1": 1,
+            "ctrlword1cfg": [
+                {
+                    "value": 1,
+                    "controls": [
+                        {
+                            "field": "oncmd",
+                            "value": true
+                        },
+                        {
+                            "field": "offcmd",
+                            "value": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "control_cabinet_load",
+            "on": true,
+            "pramp": 100,
+            "qramp": 100,
+            "pcmd": 0.0,
+            "qcmd": 0.0
+        }
+    ],
+    "transformers": [
+        {
+            "id": "tx_grid",
+            "sn": 23000,
+            "vn": 15000,
+            "zpu": 7.86,
+            "xor": 7.1,
+            "n": 1.202887
+        },
+        {
+            "id": "tx_aux",
+            "sn": 500,
+            "vn": 12470,
+            "zpu": 7.86,
+            "xor": 7.1,
+            "n": 25.979167
+        },
+        {
+            "id": "tx_control_cabinet",
+            "sn": 15,
+            "vn": 12470,
+            "zpu": 7.86,
+            "xor": 7.1,
+            "n": 103.916667
+        }
+    ],
+    "root": {
+        "id": "grid",
+        "children": [
+            {
+                "id": "psm_shared_poi",
+                "children": [
+                    {
+                        "id": "tx_grid",
+                        "children": [
+                            {
+                                "id": "biomass_plant_load"
+                            },
+                            {
+                                "id": "psm_split_feeder",
+                                "children": [
+                                    {
+                                        "id": "psm_ess_1"
+                                    },
+                                    {
+                                        "id": "psm_ess_2"
+                                    },
+                                    {
+                                        "id": "psm_pv_1"
+                                    },
+                                    {
+                                        "id": "psm_pv_2"
+                                    },
+                                    {
+                                        "id": "psm_easygen_3500xt"
+                                    },
+                                    {
+                                        "id": "psm_bess_aux",
+                                        "children": [
+                                            {
+                                                "id": "bess_aux_load"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "psm_control_cabinet",
+                                        "children": [
+                                            {
+                                                "id": "tx_control_cabinet",
+                                                "children": [
+                                                    {
+                                                        "id": "control_cabinet_load"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

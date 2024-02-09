@@ -18,7 +18,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/ctrlword1",
+                            "echo_id": "/components/psm_ess_2/ctrlword1",
                             "id": "start_stop",
                             "name": "Start/Stop/Standby Command",
                             "offset": 1002
@@ -29,13 +29,13 @@
                             "offset": 1003
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/ctrlword3",
+                            "echo_id": "/components/psm_ess_2/ctrlword3",
                             "id": "on_off_grid_mode",
                             "name": "On/Off grid mode setting",
                             "offset": 1004
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/pcmd",
+                            "echo_id": "/components/psm_ess_2/pcmd",
                             "float": true,
                             "id": "active_power_setpoint",
                             "name": "Active Power Setpoint",
@@ -43,7 +43,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/qcmd",
+                            "echo_id": "/components/psm_ess_2/qcmd",
                             "float": true,
                             "id": "reactive_power_setpoint",
                             "name": "Reactive Power Setpoint",
@@ -61,13 +61,13 @@
                             "uri": "/site/ess_hs"
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/ctrlword2",
+                            "echo_id": "/components/psm_ess_2/ctrlword2",
                             "id": "bms_dc_contactors",
                             "name": "BMS DC Contactor Control",
                             "offset": 1010
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/fcmd",
+                            "echo_id": "/components/psm_ess_2/fcmd",
                             "float": true,
                             "id": "frequency_setpoint",
                             "name": "Frequency Setpoint",
@@ -75,7 +75,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/vcmd",
+                            "echo_id": "/components/psm_ess_2/vcmd",
                             "float": true,
                             "id": "voltage_setpoint",
                             "name": "Voltage Setpoint",
@@ -119,7 +119,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/plow",
+                            "echo_id": "/components/psm_ess_2/plow",
                             "float": true,
                             "id": "chargeable_power",
                             "name": "Chargeable Power",
@@ -127,7 +127,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/phigh",
+                            "echo_id": "/components/psm_ess_2/phigh",
                             "float": true,
                             "id": "dischargeable_power",
                             "name": "Dischargeable Power",
@@ -140,7 +140,7 @@
                                 "Running"
                             ],
                             "bool": true,
-                            "echo_id": "/components/twins_ess_2/on",
+                            "echo_id": "/components/psm_ess_2/on",
                             "enum": true,
                             "id": "system_state",
                             "name": "System State",
@@ -201,7 +201,7 @@
                             "uri": "/site/ess_ls"
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/v",
+                            "echo_id": "/components/psm_ess_2/v",
                             "float": true,
                             "id": "voltage_l1_l2",
                             "name": "Grid Voltage 1",
@@ -223,7 +223,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/i",
+                            "echo_id": "/components/psm_ess_2/i",
                             "float": true,
                             "id": "current_l1",
                             "name": "Grid Current 1",
@@ -245,7 +245,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/f",
+                            "echo_id": "/components/psm_ess_2/f",
                             "float": true,
                             "id": "frequency",
                             "name": "Frequency",
@@ -253,7 +253,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/p",
+                            "echo_id": "/components/psm_ess_2/p",
                             "float": true,
                             "id": "active_power",
                             "name": "Active Power",
@@ -261,7 +261,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/q",
+                            "echo_id": "/components/psm_ess_2/q",
                             "float": true,
                             "id": "reactive_power",
                             "name": "Reactive Power",
@@ -269,7 +269,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/s",
+                            "echo_id": "/components/psm_ess_2/s",
                             "float": true,
                             "id": "apparent_power",
                             "name": "Apparent Power",
@@ -277,7 +277,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/pf",
+                            "echo_id": "/components/psm_ess_2/pf",
                             "float": true,
                             "id": "pf",
                             "name": "Power Factor",
@@ -285,7 +285,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/vdc",
+                            "echo_id": "/components/psm_ess_2/vdc",
                             "float": true,
                             "id": "voltage_dc",
                             "name": "DC Voltage",
@@ -293,7 +293,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/idc",
+                            "echo_id": "/components/psm_ess_2/idc",
                             "float": true,
                             "id": "current_dc",
                             "name": "DC Current",
@@ -350,7 +350,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/soc",
+                            "echo_id": "/components/psm_ess_2/soc",
                             "float": true,
                             "id": "bms_soc",
                             "name": "BMS SOC",
@@ -368,7 +368,7 @@
                             "bit_strings": [
                                 "dc_contactors_closed"
                             ],
-                            "echo_id": "/components/twins_ess_2/dccontactors",
+                            "echo_id": "/components/psm_ess_2/dccontactors",
                             "id": "dc_contactors_closed",
                             "individual_bits": true,
                             "name": "DC Contactors Closed Status",
@@ -376,7 +376,7 @@
                             "uri": "/site/ess_ls"
                         },
                         {
-                            "echo_id": "/components/twins_ess_2/racksinservice",
+                            "echo_id": "/components/psm_ess_2/racksinservice",
                             "id": "racks_in_service",
                             "name": "Number of Battery Racks in Service",
                             "offset": 2217

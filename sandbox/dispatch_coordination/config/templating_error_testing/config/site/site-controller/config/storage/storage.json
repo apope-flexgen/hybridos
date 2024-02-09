@@ -62,11 +62,11 @@
         },
         {
             "db": "test_database",
-            "from": "ess_twins",
+            "from": "ess_psm",
             "groupBy": "time(1m), *",
             "into": "test_database",
-            "measurement": "ess_twins",
-            "name": "ess_twins_1min_cq",
+            "measurement": "ess_psm",
+            "name": "ess_psm_1min_cq",
             "rp": "120_day_rp",
             "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
         },
@@ -172,11 +172,11 @@
         },
         {
             "db": "test_database",
-            "from": "ess_twins",
+            "from": "ess_psm",
             "groupBy": "time(10m), *",
             "into": "test_database",
-            "measurement": "ess_twins",
-            "name": "ess_twins_10min_cq",
+            "measurement": "ess_psm",
+            "name": "ess_psm_10min_cq",
             "rp": "infinite_rp",
             "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
         },
@@ -233,9 +233,9 @@
         },
         {
             "baseUri": "/components",
-            "measurement": "ess_twins",
+            "measurement": "ess_psm",
             "source": [
-                "ess_twins"
+                "ess_psm"
             ]
         },
         {

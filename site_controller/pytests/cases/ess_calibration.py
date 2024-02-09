@@ -52,26 +52,26 @@ def test_component_dischargeable_power_respected():
 def set_bms_soc(value: int):
     for i in range(0, 9):
         uri = "/components/bms_1/sbmu_" + str(i) + "_soc_value"
-        fims_set(uri, value, destination="twins")
+        fims_set(uri, value, destination="psm")
 
     for i in range(0, 9):
         uri = "/components/bms_2/sbmu_" + str(i) + "_soc_value"
-        fims_set(uri, value, destination="twins")
+        fims_set(uri, value, destination="psm")
 
 def disable_bms_faults():
     uri = "/components/bms_1/disablefault"
-    fims_set(uri, True, destination="twins")
+    fims_set(uri, True, destination="psm")
 
     uri = "/components/bms_2/disablefault"
-    fims_set(uri, True, destination="twins")
+    fims_set(uri, True, destination="psm")
 
 
 def enable_bms_faults():
     uri = "/components/bms_1/disablefault"
-    fims_set(uri, False, destination="twins")
+    fims_set(uri, False, destination="psm")
 
     uri = "/components/bms_2/disablefault"
-    fims_set(uri, False, destination="twins")
+    fims_set(uri, False, destination="psm")
 
 
 @ fixture

@@ -359,7 +359,7 @@ def test_auto_restart_prevention(test):
     # turn gen off SHOULD RESTART with valid soc
     Steps(
         {
-            "/components/ess_twins/bms_soc": 10,
+            "/components/ess_psm/bms_soc": 10,
             "/assets/generators/gen_1/stop": True,
         },
         [
@@ -376,7 +376,7 @@ def test_auto_restart_prevention(test):
     ),
     Teardown(
         {
-            "/components/ess_twins/bms_soc": 50,
+            "/components/ess_psm/bms_soc": 50,
             "/assets/solar/solar_1/maint_mode": False,
             "/assets/solar/solar_2/maint_mode": False,
             "/site/operation/clear_faults_flag": True,
@@ -467,7 +467,7 @@ def test_auto_restart_prevention_agt(test):
             # pubs
             {
                 # pubbing a fault should enter final runmode with just gen
-                "/components/ess_twins": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
+                "/components/ess_psm": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
             },
         ],
         [
@@ -513,7 +513,7 @@ def test_auto_restart_prevention_agt(test):
             # pubs
             {
                 # pubbing a fault should enter Shutdown loop
-                "/components/ess_twins": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
+                "/components/ess_psm": {"faults": [{"string": "Something alarming is happening", "value": 1}]}
             },
         ],
         [
@@ -544,7 +544,7 @@ def test_auto_restart_prevention_agt(test):
     #            },
     #            # pubs
     #            {
-    #                "/components/ess_twins": {"faults": [{"string": "Something alarming is happening", "value": 1}]}, # pubbing a fault should enter Shutdown loop
+    #                "/components/ess_psm": {"faults": [{"string": "Something alarming is happening", "value": 1}]}, # pubbing a fault should enter Shutdown loop
     #                "/components/easygen_3500xt": {"faults": [{"string": "Something alarming is happening", "value": 1}]}, # pubbing a fault should enter Shutdown loop
     #            },
     #         ],

@@ -15,7 +15,7 @@
         "device protocol version": "6.0 WIP",
         "device name": "pe_pcs_1",
         "device id string": "pe_pcs_1",
-        "ip_address": "192.168.11.5",
+        "ip_address": "192.168.13.5",
         "port": 5031,
         "data bits (8 typical)": "Columns marked in green are REQUIRED"
     },

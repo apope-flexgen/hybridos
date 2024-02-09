@@ -3,7 +3,15 @@ version: 11.3.0.beta.4
 dnp3_client: 
   site_lima_dnp3_client.json:
     ip: 10.10.1.10
-    port: 502
+    port: 20000
   site_sudden_valley_dnp3_client.json:
     ip: 10.10.1.11
-    port: 502
+    port: 20000
+  
+dnp3_server:
+  lima_dnp3_server.json:
+    ip: 0.0.0.0
+    port: 20101
+  sudden_valley_dnp3_server.json:
+    ip: 0.0.0.0
+    port: 20101

@@ -9,7 +9,7 @@
                 {
                     "map": [
                         {
-                            "echo_id": "/components/twins_shared_poi/v1",
+                            "echo_id": "/components/psm_shared_poi/v1",
                             "float": true,
                             "id": "grid_voltage_l1",
                             "name": "Grid Voltage L1",
@@ -31,7 +31,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_shared_poi/f1",
+                            "echo_id": "/components/psm_shared_poi/f1",
                             "float": true,
                             "id": "frequency",
                             "name": "Frequency",
@@ -39,7 +39,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_shared_poi/i",
+                            "echo_id": "/components/psm_shared_poi/i",
                             "float": true,
                             "id": "current_l1",
                             "name": "Current L1",
@@ -82,7 +82,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_shared_poi/p",
+                            "echo_id": "/components/psm_shared_poi/p",
                             "float": true,
                             "id": "active_power",
                             "name": "Active Power",
@@ -90,7 +90,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_shared_poi/q",
+                            "echo_id": "/components/psm_shared_poi/q",
                             "float": true,
                             "id": "reactive_power",
                             "name": "Reactive Power",
@@ -98,7 +98,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_shared_poi/s",
+                            "echo_id": "/components/psm_shared_poi/s",
                             "float": true,
                             "id": "apparent_power",
                             "name": "Apparent Power",
@@ -106,7 +106,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_shared_poi/pf",
+                            "echo_id": "/components/psm_shared_poi/pf",
                             "float": true,
                             "id": "power_factor",
                             "name": "Power Factor",
@@ -114,7 +114,7 @@
                             "size": 2
                         },
                         {
-                            "echo_id": "/components/twins_shared_poi/ctrlword1",
+                            "echo_id": "/components/psm_shared_poi/ctrlword1",
                             "id": "breaker_control",
                             "name": "Breaker Control",
                             "offset": 1028
@@ -125,7 +125,7 @@
                 {
                     "map": [
                         {
-                            "echo_id": "/components/twins_shared_poi/closed",
+                            "echo_id": "/components/psm_shared_poi/closed",
                             "id": "breaker_status",
                             "name": "Breaker Status",
                             "offset": 2000

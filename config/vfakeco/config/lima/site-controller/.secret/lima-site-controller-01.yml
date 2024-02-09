@@ -1,13 +1,30 @@
-version: 11.3.0.beta.4
-
-modbus_client: 
-  acuvim_aux_modbus_client.json: { ip: 192.168.10.250, port: 502}
-  apc_ups_modbus_client.json: { ip: 192.168.10.250, port: 503}
-  ess_1_modbus_client.json: { ip: 192.168.10.10, port: 502}
-  ess_2_modbus_client.json: { ip: 192.168.10.250, port: 506}
-  ess_3_modbus_client.json: { ip: 192.168.10.250, port: 507}
-  sel_651r_modbus_client.json: { ip: 192.168.10.250, port: 509}
-  sel_735_modbus_client.json: { ip: 192.168.10.250, port: 510}
-
-dnp3_server: 
-  site_lima_dnp3_server.json: { ip: 0.0.0.0, port: 502}
+version: 11.3.1.alpha.1
+dnp3_server:
+  site_lima_dnp3_server.json:
+    ip: 0.0.0.0
+    port: 502
+modbus_client:
+  acuvim_aux_modbus_client.json:
+    ip: 192.168.10.250
+    port: 502
+  apc_ups_modbus_client.json:
+    ip: 192.168.10.250
+    port: 503
+  ess_1_modbus_client.json:
+    ip: 192.168.10.10
+    port: 502
+  ess_2_modbus_client.json:
+    ip: 192.168.10.250
+    port: 506
+  ess_3_modbus_client.json:
+    ip: 192.168.10.250
+    port: 507
+  sel_651r_modbus_client.json:
+    ip: 192.168.10.250
+    port: 509
+  sel_735_modbus_client.json:
+    ip: 192.168.10.250
+    port: 510
+scheduler_server:
+  configuration.json:
+    port: 9000
