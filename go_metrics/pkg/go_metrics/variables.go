@@ -34,7 +34,6 @@ var filtersMutex sync.RWMutex
 var echoMutex sync.RWMutex
 var filterNeedsEvalMutex sync.RWMutex
 var pubDataChangedMutex sync.RWMutex
-var msgBodyMutex sync.RWMutex
 var echoMsgBodyMutex sync.RWMutex
 var directSetMutex sync.RWMutex
 var elementValueMutex sync.Mutex
@@ -65,7 +64,6 @@ var echoOutputToInputNum map[string]int            // full echo register uri to 
 var echoPublishUristoEchoNum map[string]int        // the pub uri to the echo object number
 
 // local variables used for publishing messages
-var msgBody map[string]interface{}
 var setMsgBody map[string]interface{}
 var pubMsgBody map[string]interface{}
 var echoMsgBody map[string]interface{}
@@ -105,3 +103,4 @@ var elemMap map[string]*simdjson.Iter
 // timing variables
 var processFimsTiming Timing
 var evalExpressionsTiming Timing
+var t0 time.Time

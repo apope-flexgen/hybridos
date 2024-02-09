@@ -53,7 +53,7 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 		}
 	}()
 
-	t0 := time.Now()
+	t0 = time.Now()
 	MDOtick := time.NewTicker(10000 * time.Millisecond)
 	for j := 0; j < len(tickers); j += 1 {
 		go func(tickerIndex int) {
@@ -71,7 +71,6 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 					for uriGroup := range PublishUris {
 						if len(uriGroup) > 0 {
 							if needsPub := pubDataChanged[uriGroup]; needsPub {
-								msgBodyMutex.Lock()
 								PrepareBody(uriGroup)
 								if strings.Contains(uriGroup, "[") {
 									temp_uri = uriGroup[0:strings.Index(uriGroup, "[")]
@@ -116,7 +115,6 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 										})
 									}
 								}
-								msgBodyMutex.Unlock()
 								pubDataChanged[uriGroup] = false
 							}
 
@@ -350,7 +348,6 @@ func ProcessDirectSets() {
 	for directSetUriGroup, active := range uriToDirectSetActive {
 		if active {
 			pubDataChangedMutex.Lock()
-			msgBodyMutex.Lock()
 			PrepareBody(directSetUriGroup)
 			if strings.Contains(directSetUriGroup, "[") {
 				directSetUri = directSetUriGroup[0:strings.Index(directSetUriGroup, "[")]
@@ -377,7 +374,6 @@ func ProcessDirectSets() {
 					})
 				}
 			}
-			msgBodyMutex.Unlock()
 			pubDataChanged[directSetUriGroup] = false
 			uriToDirectSetActive[directSetUriGroup] = false
 			pubDataChangedMutex.Unlock()

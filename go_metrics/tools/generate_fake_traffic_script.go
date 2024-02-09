@@ -9,7 +9,6 @@ import (
 	"os"
 	"time"
 	"strings"
-	"strconv"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyz" +
@@ -38,6 +37,34 @@ func String(length int) string {
 	return StringWithCharset(length, charset)
 }
 
+func GetParentUri(str string) string {
+	ind := strings.LastIndex(str, "/")
+	if ind < 0 {
+		if len(str) > 0 {
+			return "/" + str
+		}
+		return str
+	} else if ind == 0 {
+		return str
+	}
+	if ind > 0 && strings.Index(str, "/") != 0 {
+		return "/" + str[0:ind]
+	}
+	return str[0:ind]
+}
+
+/*
+ * Gets one level above for URI
+ * returns original URI, if no parent
+ */
+func GetUriElement(str string) string {
+	ind := strings.LastIndex(str, "/")
+	if ind < 0 {
+		return str
+	}
+	return str[ind+1:]
+}
+
 func main() {
 	data, err := os.ReadFile(os.Args[1])
 	if err != nil {
@@ -50,53 +77,45 @@ func main() {
 	}
 
 	file := `#!/bin/bash
-start () {
+
 while true
 do
 `
+	parent_uri_map := make(map[string]map[string]interface{},0)
 	for i := 0; i < 10; i++ {
-	for inputKey, input := range inputData.Inputs {
+	for _, input := range inputData.Inputs {
 		if input.Uri != ""{
-		if strings.Contains(inputKey, "##"){
-			for j := 1; j < 10; j++{
-				file += fmt.Sprintf("fims_send -m set -u %s ", strings.ReplaceAll(input.Uri, "##", strconv.Itoa(j)))
+			parent_uri := GetParentUri(input.Uri)
+			element := GetUriElement(input.Uri)
+			if _,ok := parent_uri_map[parent_uri]; !ok {
+				parent_uri_map[parent_uri] = make(map[string]interface{})
+			}
 			switch input.Type {
 			case "string":
-				file += "\\\"" + String(rand.Intn(10)) + "\\\"" + "\n"
+				parent_uri_map[parent_uri][element] = String(rand.Intn(10))
 			case "float":
-				file += fmt.Sprintf("%f\n", rand.Float64()*100)
+				parent_uri_map[parent_uri][element] = rand.Float64()*100
 			case "bool":
 				if math.Round(rand.Float64()) == 0 {
-					file += fmt.Sprintf("false\n")
+					parent_uri_map[parent_uri][element] = false
 				} else {
-					file += fmt.Sprintf("true\n")
+					parent_uri_map[parent_uri][element] = true
 				}
 			default:
-				file += fmt.Sprintf("%f\n", rand.Float64()*100)
+				if math.Round(rand.Float64()) == 0 {
+					parent_uri_map[parent_uri][element] = 0
+				} else {
+					parent_uri_map[parent_uri][element] = 1
+				}
 			}
-			file += "sleep 0.001\n"
-			}
-		} else {
-		file += fmt.Sprintf("fims_send -m set -u %s ", input.Uri)
-		switch input.Type {
-		case "string":
-			file += "\\\"" + String(rand.Intn(10)) + "\\\"" + "\n"
-		case "float":
-			file += fmt.Sprintf("%f\n", rand.Float64()*100)
-		case "bool":
-			if math.Round(rand.Float64()) == 0 {
-				file += fmt.Sprintf("false\n")
-			} else {
-				file += fmt.Sprintf("true\n")
-			}
-		default:
-			file += fmt.Sprintf("%f\n", rand.Float64()*100)
 		}
-		file += "sleep 0.001\n"
 	}
-	}}
+	for parent_uri, body := range parent_uri_map {
+		new_body, _:= json.Marshal(body)
+		file += fmt.Sprintf("fims_send -m pub -u %s '%s'\n", parent_uri, new_body)
+	}
 }
-
+file += "done\n"
 	f, err := os.Create("run_data.sh")
 	f.WriteString(file)
 	f.Close()
