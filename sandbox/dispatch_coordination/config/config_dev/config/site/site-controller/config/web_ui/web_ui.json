@@ -25,5 +25,9 @@
         "W": "M",
         "W/s": "M",
         "Wh": "M"
+    },
+    "customer": {
+        "name": "VFakeCo",
+        "server": "Site Controller"
     }
 }

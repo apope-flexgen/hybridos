@@ -7,7 +7,7 @@ export interface LoginPageProps {
 
 const LoginPage = ({ loginComponent }: LoginPageProps): JSX.Element => {
   const LoginPageBackground = styled.div`
-            background: linear-gradient(180deg, #404040 0%, #020202 100%);
+            background: linear-gradient(180deg, #0A2956 0%, #000000 100%);
             background-size: cover;
             min-height: 100%;
             min-width: 100%;
