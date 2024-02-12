@@ -6,21 +6,35 @@ import { ValidationErrors } from '../exceptions/validationErrors.exception';
 import { AppConfig } from './AppConfig';
 import * as appConsts from './appEnv.constants';
 import { IAppEnvService } from 'src/environment/appEnv.interface';
+import {
+  ISecretGenerationService,
+  SECRET_GENERATION_SERVICE,
+} from 'src/environment/secretGeneration/interfaces/secretGeneration.interface';
 
 @Injectable()
 export class AppEnvService implements IAppEnvService {
   appConfig: AppConfig;
+  jwtSecretKey: string;
+  jwtSecretKeyMFA: string;
+  jwtSecretKeyPasswordExpiration: string;
+
   constructor(
     @Inject('WEB_UI_CONFIG_PATH')
     private webUiConfigPath: string,
     @Inject('WEB_SERVER_CONFIG_PATH')
     private webServerConfigPath: string,
+    @Inject(SECRET_GENERATION_SERVICE)
+    private readonly secretGenerationService: ISecretGenerationService,
   ) {
     const { serverDataParsed, uiDataParsed } = this.load();
     this.appConfig = new AppConfig(serverDataParsed, uiDataParsed);
     validateOrReject(this.appConfig).catch((errors) => {
       throw new ValidationErrors(errors);
     });
+
+    this.jwtSecretKey = secretGenerationService.generateSecret('base64', 32);
+    this.jwtSecretKeyMFA = secretGenerationService.generateSecret('base64', 32);
+    this.jwtSecretKeyPasswordExpiration = secretGenerationService.generateSecret('base64', 32);
   }
 
   getMongoUri(): string {
@@ -78,15 +92,15 @@ export class AppEnvService implements IAppEnvService {
   }
 
   getJwtSecretKey(): string {
-    return process.env.JWT_SECRET_KEY;
+    return this.jwtSecretKey;
   }
 
   getJwtSecretKeyMFA(): string {
-    return process.env.JWT_SECRET_KEY_MFA;
+    return this.jwtSecretKeyMFA;
   }
 
   getJwtSecretKeyPasswordExp(): string {
-    return process.env.JWT_SECRET_KEY_PASSWORD_EXPIRATION;
+    return this.jwtSecretKeyPasswordExpiration;
   }
 
   getSiteConfiguration(): SiteConfiguration {
