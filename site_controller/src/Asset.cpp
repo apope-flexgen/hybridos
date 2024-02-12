@@ -1791,9 +1791,9 @@ void Asset::process_asset_actions() {
         // after identifying action process it.
         if (quick_action_access != nullptr) {
             quick_action_access->process(action_status);
-        } {
-            FPS_WARNING_LOG("Attempting to process actions but quick_action_access ptr is nullptr. Something very bad has occurred.");
-        }
+            return;
+        } 
+        FPS_WARNING_LOG("Attempting to process actions but quick_action_access ptr is nullptr. Something very bad has occurred.");
     }
 }
 
