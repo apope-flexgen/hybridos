@@ -1077,6 +1077,13 @@
                     "value": false,
                     "var_type": "Bool"
                 },
+                "avr_kVAR_slew_rate": {
+                    "name": "Automatic Voltage Regulation kVAR response Slew Rate",
+                    "ui_type": "control",
+                    "unit": "kVAR/s",
+                    "value": 1000,
+                    "var_type": "Int"
+                },
                 "constant_power_factor_absolute_mode": {
                     "name": "Constant Power Factor Absolute Mode Enable",
                     "type": "enum_slider",

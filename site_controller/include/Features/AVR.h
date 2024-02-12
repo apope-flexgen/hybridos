@@ -28,6 +28,8 @@ public:
     Fims_Object actual_volts;      // actual measured voltage to calculate deviation with
     Fims_Object status_flag;       // true flag when response is nonzero
     Fims_Object request;           // request produced in response to voltage deviation
+    Fims_Object kVAR_slew_rate;    // Slew rate on the correction calculated by AVR based on voltage deviations
+    Slew_Object kVAR_slew;         // Slew object that calculates the AVR slewed cmd
 
     bool symmetric_variables = true;  // indicates if over/undervoltage variables should be symmetric, in which case the configured overvoltage values are used for both cases
                                       // set false by parse_json_config() function if undervoltage variables are found during config parsing

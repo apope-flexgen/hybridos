@@ -2517,6 +2517,7 @@ void Site_Manager::init_state(void) {
     ess_kVAR_cmd_slew.reset_slew_target();
     solar_kVAR_cmd_slew.reset_slew_target();
     reactive_setpoint.kVAR_cmd_slew.reset_slew_target();
+    avr.kVAR_slew.reset_slew_target();
 
     // initialize watt_var points
     watt_var.init_curve();
@@ -2554,6 +2555,7 @@ void Site_Manager::init_state(void) {
     manual_power_mode.manual_solar_kW_slew.set_slew_rate(manual_power_mode.manual_solar_kW_slew_rate.value.value_int);
     manual_power_mode.manual_ess_kW_slew.set_slew_rate(manual_power_mode.manual_ess_kW_slew_rate.value.value_int);
     manual_power_mode.manual_gen_kW_slew.set_slew_rate(manual_power_mode.manual_gen_kW_slew_rate.value.value_int);
+    avr.kVAR_slew.set_slew_rate(avr.kVAR_slew_rate.value.value_int);
     ess_kVAR_cmd_slew.set_slew_rate(ess_kVAR_slew_rate.value.value_int);
     gen_kVAR_cmd_slew.set_slew_rate(gen_kVAR_slew_rate.value.value_int);
     solar_kVAR_cmd_slew.set_slew_rate(solar_kVAR_slew_rate.value.value_int);
@@ -2778,6 +2780,7 @@ void Site_Manager::shutdown_state(void) {
     ess_kVAR_cmd_slew.reset_slew_target();
     solar_kVAR_cmd_slew.reset_slew_target();
     reactive_setpoint.kVAR_cmd_slew.reset_slew_target();
+    avr.kVAR_slew.reset_slew_target();
 
     // Reset load shed value to max
     load_shed.reset();

@@ -1299,6 +1299,13 @@
                     "unit": "VAR",
                     "scaler": 1000
                 },
+                "avr_kVAR_slew_rate": {
+                    "name": "Automatic Voltage Regulation kVAR response Slew Rate",
+                    "ui_type": "control",
+                    "unit": "kVAR/s",
+                    "value": 1000,
+                    "var_type": "Int"
+                },
                 "available_features_runmode1_kVAR_mode": {
                     "name": "Available Feature Modes - Run Mode 1 Reactive Power",
                     "options": [

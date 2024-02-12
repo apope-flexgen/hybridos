@@ -851,6 +851,7 @@ TEST_F(site_manager_test, automatic_voltage_mode) {
         float under_deadband;
         float under_droop;
         float under_rated_kVAR;
+        int slew_rate;
         float expected_site_kVAR_demand;
         float expected_solar_kVAR_cmd;
         float expected_ess_kVAR_cmd;
@@ -858,11 +859,15 @@ TEST_F(site_manager_test, automatic_voltage_mode) {
     };
 
     std::vector<avr_test> tests = {
-        { 800, 400, 200, 400, 400, 425, 375, 50, 20, 1000, 100, 50, 500, 0, 0, 0, 0 },             // zero
-        { 800, 400, 200, 500, 400, 425, 375, 50, 20, 700, 100, 50, 500, -700, -400, -200, -100 },  // overvoltage limited
-        { 500, 400, 100, 460, 400, 425, 375, 50, 20, 1000, 100, 50, 500, -500, -250, -200, -50 },  // overvoltage less potential
-        { 800, 400, 200, 300, 400, 425, 375, 100, 50, 500, 50, 20, 700, 700, 400, 200, 100 },      // undervoltage limited
-        { 500, 400, 100, 340, 400, 425, 375, 100, 50, 500, 50, 20, 1000, 500, 250, 200, 50 }       // undervoltage less potential
+        { 800, 400, 200, 400, 400, 425, 375, 50, 20, 1000, 100, 50, 500, 1000000, 0, 0, 0, 0 },              // zero
+        { 800, 400, 200, 460, 400, 425, 375, 50, 20, 1400, 100, 50, 500, 1000000, -700, -400, -200, -100 },  // overvoltage no limit
+        { 800, 400, 200, 500, 400, 425, 375, 50, 20, 700, 100, 50, 500, 1000000, -700, -400, -200, -100 },   // overvoltage limited by rated
+        { 500, 400, 100, 460, 400, 425, 375, 50, 20, 1000, 100, 50, 500, 1000000, -500, -250, -200, -50 },   // overvoltage limited by potential
+        { 500, 400, 100, 460, 400, 425, 375, 50, 20, 1000, 100, 50, 500, 10000, -100, -50, -40, -10 },       // overvoltage limited by slew rate (100kVAR/us)
+        { 800, 400, 200, 340, 400, 425, 375, 100, 50, 500, 50, 20, 1400, 1000000, 700, 400, 200, 100 },      // undervoltage no limit
+        { 800, 400, 200, 300, 400, 425, 375, 100, 50, 500, 50, 20, 700, 1000000, 700, 400, 200, 100 },       // undervoltage limited by rated
+        { 500, 400, 100, 340, 400, 425, 375, 100, 50, 500, 50, 20, 1000, 1000000, 500, 250, 200, 50 },       // undervoltage limited by potential
+        { 500, 400, 100, 340, 400, 425, 375, 100, 50, 500, 50, 20, 1000, 10000, 100, 50, 40, 10 }            // undervoltage limited by slew rate (100kVAR/us)
     };
 
     int test_id = 1;
@@ -878,6 +883,15 @@ TEST_F(site_manager_test, automatic_voltage_mode) {
         asset_cmd.gen_data.potential_kVAR = test.gen_potential_kVAR;
         asset_cmd.calculate_total_potential_kVAR();
         // set avr variables
+        // Setup one iteration of time for slew object, resetting back to zero for each test
+        avr.kVAR_slew.update_slew_target(0);
+        usleep(10000);
+        avr.kVAR_slew.set_slew_rate(1000000);
+        avr.kVAR_slew.update_slew_target(0);
+        usleep(10000);
+        avr.kVAR_slew_rate.value.set(test.slew_rate);
+        avr.kVAR_slew.set_slew_rate(avr.kVAR_slew_rate.value.value_int);
+        avr.kVAR_slew.update_slew_target(0);
         avr.symmetric_variables = false;
         avr.over_deadband.value.value_float = test.over_deadband;
         avr.over_droop.value.value_float = test.over_droop;
@@ -891,10 +905,10 @@ TEST_F(site_manager_test, automatic_voltage_mode) {
         avr.actual_volts.value.value_float = test.actual_volts;
         avr.execute(asset_cmd, asset_pf_flag);
         asset_cmd.dispatch_reactive_power();
-        t_log.float_results.push_back({ test.expected_site_kVAR_demand, asset_cmd.site_kVAR_demand, "Site kVAR Demand" });
-        t_log.float_results.push_back({ test.expected_solar_kVAR_cmd, asset_cmd.solar_data.kVAR_cmd, "Solar kVAR Command" });
-        t_log.float_results.push_back({ test.expected_ess_kVAR_cmd, asset_cmd.ess_data.kVAR_cmd, "ESS kVAR Command" });
-        t_log.float_results.push_back({ test.expected_gen_kVAR_cmd, asset_cmd.gen_data.kVAR_cmd, "Generator kVAR Command" });
+        t_log.range_results.push_back({ test.expected_site_kVAR_demand, 0.03f, asset_cmd.site_kVAR_demand, "Site kVAR Demand" });
+        t_log.range_results.push_back({ test.expected_solar_kVAR_cmd, 0.03f, asset_cmd.solar_data.kVAR_cmd, "Solar kVAR Command" });
+        t_log.range_results.push_back({ test.expected_ess_kVAR_cmd, 0.03f, asset_cmd.ess_data.kVAR_cmd, "ESS kVAR Command" });
+        t_log.range_results.push_back({ test.expected_gen_kVAR_cmd, 0.03f, asset_cmd.gen_data.kVAR_cmd, "Generator kVAR Command" });
         t_log.check_solution();
     }
 }

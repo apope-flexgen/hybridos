@@ -8,11 +8,9 @@
 features::AVR::AVR() {
     feature_vars = {};  // initialized below by initialize_feature_vars()
 
-    variable_ids = {
-        { &enable_flag, "avr_enable_flag" },       { &over_deadband, "avr_over_deadband_volts" }, { &over_droop, "avr_over_droop_volts" }, { &over_rated_kVAR, "avr_over_rated_kVAR" }, { &under_deadband, "avr_under_deadband_volts" },
-        { &under_droop, "avr_under_droop_volts" }, { &under_rated_kVAR, "avr_under_rated_kVAR" }, { &voltage_cmd, "avr_cmd_volts" },       { &voltage_cmd_max, "avr_cmd_volts_max" },   { &voltage_cmd_min, "avr_cmd_volts_min" },
-        { &actual_volts, "avr_actual_volts" },     { &status_flag, "avr_status_flag" },           { &request, "avr_request_kVAR" },
-    };
+    variable_ids = { { &enable_flag, "avr_enable_flag" },       { &over_deadband, "avr_over_deadband_volts" }, { &over_droop, "avr_over_droop_volts" }, { &over_rated_kVAR, "avr_over_rated_kVAR" }, { &under_deadband, "avr_under_deadband_volts" },
+                     { &under_droop, "avr_under_droop_volts" }, { &under_rated_kVAR, "avr_under_rated_kVAR" }, { &voltage_cmd, "avr_cmd_volts" },       { &voltage_cmd_max, "avr_cmd_volts_max" },   { &voltage_cmd_min, "avr_cmd_volts_min" },
+                     { &actual_volts, "avr_actual_volts" },     { &status_flag, "avr_status_flag" },           { &request, "avr_request_kVAR" },        { &kVAR_slew_rate, "avr_kVAR_slew_rate" } };
 }
 
 /**
@@ -64,9 +62,9 @@ Config_Validation_Result features::AVR::parse_json_config(cJSON* JSON_config, bo
  */
 void features::AVR::initialize_feature_vars() {
     if (symmetric_variables) {
-        feature_vars = { &over_deadband, &over_droop, &over_rated_kVAR, &voltage_cmd, &voltage_cmd_max, &voltage_cmd_min, &actual_volts, &status_flag, &request };
+        feature_vars = { &over_deadband, &over_droop, &over_rated_kVAR, &voltage_cmd, &voltage_cmd_max, &voltage_cmd_min, &actual_volts, &status_flag, &request, &kVAR_slew_rate };
     } else {
-        feature_vars = { &over_deadband, &over_droop, &over_rated_kVAR, &under_deadband, &under_droop, &under_rated_kVAR, &voltage_cmd, &voltage_cmd_max, &voltage_cmd_min, &actual_volts, &status_flag, &request };
+        feature_vars = { &over_deadband, &over_droop, &over_rated_kVAR, &under_deadband, &under_droop, &under_rated_kVAR, &voltage_cmd, &voltage_cmd_max, &voltage_cmd_min, &actual_volts, &status_flag, &request, &kVAR_slew_rate };
     }
 }
 
@@ -93,6 +91,9 @@ features::AVR::External_Outputs features::AVR::execute_helper(const External_Inp
         under_droop.value.set(fabsf(under_droop.value.value_float));
         under_rated_kVAR.value.set(fabsf(under_rated_kVAR.value.value_float));
     }
+    // Ensure slew rate is in range
+    kVAR_slew_rate.value.set(range_check(kVAR_slew_rate.value.value_int, 100000000, 1));
+    kVAR_slew.set_slew_rate(kVAR_slew_rate.value.value_int);
 
     // ensure nominal voltage command is within limits
     voltage_cmd.value.set(range_check(voltage_cmd.value.value_float, voltage_cmd_max.value.value_float, voltage_cmd_min.value.value_float));
@@ -131,10 +132,15 @@ features::AVR::External_Outputs features::AVR::execute_helper(const External_Inp
     } else {
         kVAR_request = std::min(kVAR_request, under_rated_kVAR.value.value_float);
     }
-    request.value.set(kVAR_request);
 
-    float new_site_kVAR_demand = std::min(inputs.total_potential_kVAR, fabsf(kVAR_request));
-    new_site_kVAR_demand *= (std::signbit(kVAR_request)) ? -1 : 1;
+    // Limit kVAR cmd based on slew
+    float slewed_cmd = kVAR_slew.get_slew_target(kVAR_request);
+    // Update the slew target to be used in the next iteration
+    kVAR_slew.update_slew_target(slewed_cmd);
+    request.value.set(slewed_cmd);
+
+    float new_site_kVAR_demand = std::min(inputs.total_potential_kVAR, fabsf(slewed_cmd));
+    new_site_kVAR_demand *= (std::signbit(slewed_cmd)) ? -1 : 1;
 
     // this mode does not use power factor control
     bool new_asset_pf_flag = false;
@@ -156,6 +162,10 @@ void features::AVR::handle_fims_set(std::string uri_endpoint, const cJSON& msg_v
             under_deadband.set_fims_float(uri_endpoint.c_str(), msg_value.valuedouble);
             under_droop.set_fims_float(uri_endpoint.c_str(), msg_value.valuedouble);
             under_rated_kVAR.set_fims_float(uri_endpoint.c_str(), msg_value.valuedouble);
+        }
+        // Update internal slew object immediately if a new rate is received
+        if (kVAR_slew_rate.set_fims_int(uri_endpoint.c_str(), range_check(msg_value.valueint, 100000000, 1))) {
+            kVAR_slew.set_slew_rate(kVAR_slew_rate.value.value_int);
         }
     }
 }
