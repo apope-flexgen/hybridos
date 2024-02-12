@@ -9,6 +9,7 @@ import {
 import { UseWsFilters } from '../../decorators/ws.filters.decorator';
 import { UseWsInterceptors } from '../../decorators/ws.interceptors.decorator';
 import { Inject } from '@nestjs/common';
+import { SiteStatusPruningInterceptor } from 'src/bff/SiteStatusBar/interceptors/siteStatus.pruning.interceptor';
 
 @WebSocketGateway({
   cors: {
@@ -25,7 +26,7 @@ export class SiteStatusGateway {
   @WebSocketServer()
   server: Server;
 
-  @UseWsInterceptors()
+  @UseWsInterceptors(SiteStatusPruningInterceptor)
   @SubscribeMessage('sitestatus')
   async siteStatus(): Promise<Observable<SiteStatusResponse>> {
     const subscribeObservable = await this.siteStatusService.subscribeToSiteStatus();

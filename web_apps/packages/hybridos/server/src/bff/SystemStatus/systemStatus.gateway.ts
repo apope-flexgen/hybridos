@@ -5,11 +5,12 @@ import { SystemStatusService } from './systemStatus.service';
 import { UseWsFilters } from '../../decorators/ws.filters.decorator';
 import { UseWsInterceptors } from '../../decorators/ws.interceptors.decorator';
 import { ServiceStatusResponse } from './dto/serviceStatusResponse.dto';
+import { SystemStatusPruningInterceptor } from 'src/bff/SystemStatus/interceptors/systemStatus.pruning.interceptor';
 
 @WebSocketGateway({
-    cors: {
-        origin: '*',
-    },
+  cors: {
+    origin: '*',
+  },
 })
 @UseWsFilters()
 export class SystemStatusGateway {
@@ -19,7 +20,7 @@ export class SystemStatusGateway {
   server: Server;
 
   @SubscribeMessage('systemStatus')
-  @UseWsInterceptors()
+  @UseWsInterceptors(SystemStatusPruningInterceptor)
   systemStatus(): Observable<ServiceStatusResponse> {
     const systemStatusDataStream = this.systemStatusService.subscribeToSystemStatus();
 

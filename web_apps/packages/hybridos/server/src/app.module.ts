@@ -29,6 +29,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CoreHttpExceptionsFilter } from './filters/core.http.exception.filter';
 import { HttpExceptionsFilter } from './filters/http.exception.filter';
 import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
+import { DataPruningModule } from 'src/dataPruning/dataPruning.module';
 
 @Module({
   imports: [
@@ -78,6 +79,7 @@ import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interfac
       }),
     }),
     LoggingModule,
+    DataPruningModule,
   ],
   controllers: [],
   providers: [

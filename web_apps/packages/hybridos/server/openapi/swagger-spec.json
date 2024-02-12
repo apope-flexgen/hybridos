@@ -3829,11 +3829,7 @@
 					"data"
 				]
 			},
-			"SiteStatusDataPointsDTO": {
-				"type": "object",
-				"properties": {}
-			},
-			"SiteStatusDataObject": {
+			"SiteStatusBaseDataDTO": {
 				"type": "object",
 				"properties": {
 					"siteName": {
@@ -3851,6 +3847,29 @@
 					"siteState": {
 						"type": "string",
 						"description": "The site status to display on the right hand side of the siste status bar, comes from /site/summary fims response, site_status field"
+					}
+				},
+				"required": [
+					"siteName",
+					"activeFaults",
+					"activeAlarms",
+					"siteState"
+				]
+			},
+			"SiteStatusDataPointsDTO": {
+				"type": "object",
+				"properties": {}
+			},
+			"SiteStatusDataObject": {
+				"type": "object",
+				"properties": {
+					"baseData": {
+						"description": "Object containing data used on the site status bar",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/SiteStatusBaseDataDTO"
+							}
+						]
 					},
 					"dataPoints": {
 						"description": "Object containing data points to display in the site status bar, comes from the site_status.json config file",
@@ -3862,10 +3881,7 @@
 					}
 				},
 				"required": [
-					"siteName",
-					"activeFaults",
-					"activeAlarms",
-					"siteState",
+					"baseData",
 					"dataPoints"
 				]
 			},

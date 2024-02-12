@@ -3,10 +3,11 @@ import { Observable } from 'rxjs';
 import { Server } from 'ws';
 import { ConfigurablePageDTO } from 'shared/types/dtos/configurablePages.dto';
 import { DashboardService } from './dashboard.service';
-import { DashboardLayoutInterceptor } from './tableDashboard.interceptor';
+import { DashboardLayoutInterceptor } from './interceptors/dashboard.layout.interceptor';
 import { UseWsFilters } from '../../../decorators/ws.filters.decorator';
 import { DashboardConfigNotFoundExceptionsFilter } from './filters/dashboard.filters';
 import { UseWsInterceptors } from '../../../decorators/ws.interceptors.decorator';
+import { DashboardPruningInterceptor } from 'src/bff/ConfigurablePages/Dashboard/interceptors/dashboard.pruning.interceptor';
 
 @WebSocketGateway({
   cors: {
@@ -14,7 +15,7 @@ import { UseWsInterceptors } from '../../../decorators/ws.interceptors.decorator
   },
 })
 @UseWsFilters(DashboardConfigNotFoundExceptionsFilter)
-@UseWsInterceptors(DashboardLayoutInterceptor)
+@UseWsInterceptors(DashboardLayoutInterceptor, DashboardPruningInterceptor)
 export class DashboardGateway {
   constructor(private readonly dashboardService: DashboardService) {}
   @WebSocketServer()

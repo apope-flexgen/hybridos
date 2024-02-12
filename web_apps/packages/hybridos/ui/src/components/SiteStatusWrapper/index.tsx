@@ -20,33 +20,30 @@ const SiteStatusWrapper = () => {
 
   const handleNewMessage = useCallback((newInformationFromSocket: any) => {
     const parsedData = newInformationFromSocket.data;
+    const { baseData, dataPoints } = parsedData;
 
-    if (parsedData && parsedData.siteStatusLabel !== undefined) {
-      setSiteStatusLabel(parsedData.siteStatusLabel);
+    if (baseData?.siteStatusLabel !== undefined) {
+      setSiteStatusLabel(baseData.siteStatusLabel);
     }
 
-    if (parsedData && parsedData.activeFaults !== undefined) {
-      setActiveFaults(parseInt(parsedData.activeFaults, 10));
+    if (baseData?.activeFaults !== undefined) {
+      setActiveFaults(parseInt(baseData.activeFaults, 10));
     }
 
-    if (parsedData && parsedData.activeAlarms !== undefined) {
-      setActiveAlarms(parseInt(parsedData.activeAlarms, 10));
+    if (baseData?.activeAlarms !== undefined) {
+      setActiveAlarms(parseInt(baseData.activeAlarms, 10));
     }
 
-    if (parsedData && parsedData.siteState !== undefined) {
-      setSiteState(parsedData.siteState);
+    if (baseData?.siteState !== undefined) {
+      setSiteState(baseData.siteState);
     }
 
-    if (
-      parsedData
-      && parsedData.dataPoints !== undefined
-      && Object.keys(parsedData.dataPoints).length !== 0
-    ) {
+    if (dataPoints !== undefined && Object.keys(dataPoints).length !== 0) {
       setData(
         (prevState) => ({
           ...prevState,
-          ...parsedData.dataPoints,
-        }) as { [uri: string]: DataProps },
+          ...dataPoints,
+        } as { [uri: string]: DataProps }),
       );
     }
   }, []);

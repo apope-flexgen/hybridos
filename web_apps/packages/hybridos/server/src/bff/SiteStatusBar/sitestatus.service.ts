@@ -76,10 +76,12 @@ export class SiteStatusService implements ISiteStatusService {
       map((fimsData) => {
         const newDTO: SiteStatusResponse = {
           data: {
-            activeFaults: fimsData.body['active_faults'],
-            activeAlarms: fimsData.body['active_alarms'],
-            siteState: fimsData.body['site_state'],
-            siteStatusLabel: this.config?.siteStatusLabel || '',
+            baseData: {
+              activeFaults: fimsData.body['active_faults'],
+              activeAlarms: fimsData.body['active_alarms'],
+              siteState: fimsData.body['site_state'],
+              siteStatusLabel: this.config?.siteStatusLabel || '',
+            },
           },
         };
 

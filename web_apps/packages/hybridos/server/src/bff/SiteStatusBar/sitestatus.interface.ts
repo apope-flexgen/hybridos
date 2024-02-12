@@ -27,12 +27,16 @@ export type SiteStatusDataPointsDTO = {
   [uri: string]: SiteStatusDataPointInfo;
 };
 
+export type SiteStatusBaseDataDTO = {
+  siteStatusLabel?: string;
+  activeFaults?: number;
+  activeAlarms?: number;
+  siteState?: string;
+};
+
 export type SiteStatusResponse = {
   data: {
-    siteStatusLabel?: string;
-    activeFaults?: number;
-    activeAlarms?: number;
-    siteState?: string;
+    baseData?: SiteStatusBaseDataDTO;
     dataPoints?: SiteStatusDataPointsDTO;
   };
 };
