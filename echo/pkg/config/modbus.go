@@ -18,7 +18,7 @@ type ModClient struct {
 	Eid           map[string]interface{} // stores the generated echo.json
 	Handler       ArrHandler
 	Uris          []string
-	Offsethistory []float64
+	Offsethistory map[int64]map[string][]float64 // stores a map of component : register type : offsets
 }
 
 // Perform modbus client file validation here
@@ -44,17 +44,32 @@ func (c *Client) getModConfig(filename string) error {
 	if err != nil {
 		log.Fatalf("error retrieving client config data: %v", err)
 	}
-	json.Unmarshal(configBytes, &mc.Config)
+	err = json.Unmarshal(configBytes, &mc.Config)
+	if err != nil {
+		log.Fatalf("error unmarshalling client config data: %v", err)
+	}
 
 	// Validate our data
 	if err := mc.Validate(); err != nil {
 		log.Fatalf("error validating modbus client data: %v", err)
 	}
 	// Set all the Uris that are in the client file
-	for _, comp := range mc.Config["components"].([]interface{}) {
-		// Generate newuri and add it
-		newUri := fmt.Sprintf("/components/" + comp.(map[string]interface{})["id"].(string))
-		mc.Uris = append(mc.Uris, newUri)
+	if component_list, ok := mc.Config["components"]; ok {
+		for _, comp := range component_list.([]interface{}) {
+			// Generate newuri and add it
+			if component_map, ok := comp.(map[string]interface{}); ok {
+				if component_id, ok := component_map["id"]; ok {
+					if component_id_string, ok := component_id.(string); ok {
+						newUri := fmt.Sprintf("/components/" + component_id_string)
+						if !findString(newUri, mc.Uris) {
+							mc.Uris = append(mc.Uris, newUri)
+						}
+					}
+				}
+			}
+		}
+	} else {
+		log.Fatalf("error retrieving 'components' field from client config")
 	}
 
 	// Set config to main client
@@ -75,7 +90,7 @@ func (mc *ModClient) GenerateEchoStruct() (Layout, error) {
 }
 
 // Function that sets up the "system" object in our modbus server file
-func (mc *ModClient) SystemInfoCreation(ipaddress string) error {
+func (mc *ModClient) SystemInfoCreation(ipaddress string, is_gcom_modbus bool) error {
 	var err error
 	var fileInfo map[string]interface{} = make(map[string]interface{})
 	var systemInfo map[string]interface{} = make(map[string]interface{})
@@ -114,11 +129,16 @@ func (mc *ModClient) SystemInfoCreation(ipaddress string) error {
 	} else {
 		systemInfo["ip_address"] = ipaddress
 	}
-	systemInfo["port"] = connMap["port"].(float64)
+
+	if port, ok := connMap["port"]; ok {
+		systemInfo["port"] = port.(float64)
+	}
 	if connMap["device_id"] != nil {
 		systemInfo["device_id"] = connMap["device_id"]
 	} else {
-		systemInfo["device_id"] = 1
+		if (!is_gcom_modbus) {
+			systemInfo["device_id"] = float64(1)
+		}
 	}
 	mc.Server["fileInfo"] = fileInfo
 	mc.Server["system"] = systemInfo
@@ -127,15 +147,30 @@ func (mc *ModClient) SystemInfoCreation(ipaddress string) error {
 }
 
 // This function iterates through modbus client data and alters/stores it back to modbus struct
-func (mc *ModClient) CreateServerFile() ([]byte, error) {
-	var ServerRegInfo = make(map[string][]map[string]interface{})
+func (mc *ModClient) CreateServerFile(is_gcom_modbus bool) ([]byte, error) {
+	var ServerRegInfo = make(map[string]interface{})
+	var AllServerRegGroups = make([]map[string]interface{}, 0)
 	var regType string
 	var uri string
 	var offbyone bool
+	var component_id_string string
+	device_id := int64(1)
+	system_level_device_id := false
+	if !is_gcom_modbus {
+		if mc.Server["system"] != nil {
+			if _, ok := mc.Server["system"].(map[string]interface{}); ok {
+				if mc.Server["system"].(map[string]interface{})["device_id"] != nil {
+					device_id_float := mc.Server["system"].(map[string]interface{})["device_id"].(float64)
+					device_id = int64(device_id_float)
+					system_level_device_id = true
+				}
+			}
+		}
+	}
 	var echoMap url.Values = url.Values{}
 
 	// Define some register level actions to perform
-	regfunc := func(m map[string]interface{}, handler ArrHandler) error {
+	regfunc := func(m map[string]interface{}, current_device_id int64, handler ArrHandler) error {
 
 		// If m Map refers to our register type array
 		if m["map"] != nil {
@@ -146,28 +181,34 @@ func (mc *ModClient) CreateServerFile() ([]byte, error) {
 			}
 
 			// Get regType
-			regType = m["type"].(string)
-			regType = strings.ToLower(regType)
-			regType = strings.Replace(regType, " ", "_", -1)
+			if register_group_type, ok := m["type"]; ok {
+				regType = register_group_type.(string)
+				regType = strings.ToLower(regType)
+				regType = strings.Replace(regType, " ", "_", -1)
+			}
+			mc.Offsethistory[current_device_id][regType] = make([]float64, 0)
 
 			// Recursively iterate down into our maps for given register type
 			jsonparser.ArrayEach(b, handler)
 
 			// Else we have selected a specific register
 		} else if m["offset"] != nil {
-			if !findInt(m["offset"].(float64), mc.Offsethistory) {
-				mc.Offsethistory = append(mc.Offsethistory, m["offset"].(float64))
+			if !findInt(m["offset"].(float64), mc.Offsethistory[current_device_id][regType]) {
+				mc.Offsethistory[current_device_id][regType] = append(mc.Offsethistory[current_device_id][regType], m["offset"].(float64))
 				if offbyone {
 					m["offset"] = m["offset"].(float64) - 1
 				}
-				if m["echo_id"] == nil {
+				if m["echo_id"] == nil && m["id"] != nil {
 					echoMap.Add(uri, m["id"].(string)) //Used to make a list of all the registers that dont have an echo_id
 				}
 				// Set our component uri
 				m["uri"] = uri
 				delete(m, "echo_id")
 				// Append result
-				ServerRegInfo[regType] = append(ServerRegInfo[regType], m)
+				if ServerRegInfo[regType] == nil {
+					ServerRegInfo[regType] = make([]map[string]interface{}, 0)
+				}
+				ServerRegInfo[regType] = append(ServerRegInfo[regType].([]map[string]interface{}), m)
 			} else {
 				log.Fatalf("There is a duplicate offset, please fix component id: %s, register_id: %s, register offset: %f\n", uri, m["id"], m["offset"])
 			}
@@ -179,16 +220,81 @@ func (mc *ModClient) CreateServerFile() ([]byte, error) {
 	compfunc := func(m map[string]interface{}, handler ArrHandler) error {
 
 		// Create our array of unique component ID's, compUri is used down the line in func handlers
-		uri = "/components/" + m["id"].(string)
+		if m["id"] != nil {
+			var ok bool
+			if component_id_string, ok = m["id"].(string); ok {
+				uri = "/components/" + component_id_string
+				if mc.Offsethistory == nil {
+					mc.Offsethistory = make(map[int64]map[string][]float64)
+				}
+				if m["device_id"] != nil {
+					var device_id_float float64
+					device_id_float, ok = m["device_id"].(float64)
+					device_id = int64(device_id_float)
+					if system_level_device_id && !is_gcom_modbus {
+						mc.Server["system"].(map[string]interface{})["device_id"] = device_id
+					}
+				} 
+				if !ok {
+					device_id = int64(1)
+				}
+				if mc.Offsethistory[device_id] == nil {
+					mc.Offsethistory[device_id] = make(map[string][]float64)
+				}
 
-		for _, reg := range m["registers"].([]interface{}) {
-			// Perform actions
-			if err := regfunc(reg.(map[string]interface{}), mc.Handler); err != nil {
-				log.Fatalf(" > Iterator() >> error unmarshaling register: %v", err)
+				if len(ServerRegInfo) > 0 && is_gcom_modbus{
+					added := false
+					for i, register_group := range AllServerRegGroups {
+						if temp_device_id, ok := register_group["device_id"]; ok {
+							device_id_int := temp_device_id.(int64)
+							if device_id_int == device_id {
+								AllServerRegGroups[i] = ServerRegInfo
+								added = true
+							}
+						}
+					}
+					if !added {
+						AllServerRegGroups = append(AllServerRegGroups, ServerRegInfo)
+					}
+				}
+
+				set_reg_group := false
+				for _, register_group := range AllServerRegGroups {
+					if temp_device_id, ok := register_group["device_id"]; ok {
+						device_id_int := temp_device_id.(int64)
+						if device_id_int == device_id {
+							ServerRegInfo = register_group
+							set_reg_group = true
+						}
+					}
+				}
+				if !set_reg_group && is_gcom_modbus {
+					ServerRegInfo = make(map[string]interface{})
+					ServerRegInfo["device_id"] = device_id
+				}
+				
+			}
+		
+			if register_groups, ok := m["registers"]; ok {
+				for _, reg := range register_groups.([]interface{}) {
+					// Perform actions
+					reg_map, ok := reg.(map[string]interface{})
+					if ok {
+						if is_gcom_modbus && reg_map["device_id"] != nil {
+							device_id = reg_map["device_id"].(int64)
+						}
+						if err := regfunc(reg_map, device_id, mc.Handler); err != nil {
+							log.Fatalf(" > Iterator() >> error unmarshaling register: %v", err)
+						}
+					}
+				}
+			} else {
+				log.Fatalf("Could not find registers mapping in client config")
 			}
 		}
 		return nil
 	}
+
 	mc.Handler = func(data []byte, dataType jsonparser.ValueType, offset int, err error) {
 		var m map[string]interface{}
 
@@ -202,7 +308,7 @@ func (mc *ModClient) CreateServerFile() ([]byte, error) {
 		}
 
 		// Perform actions
-		if err := regfunc(m, mc.Handler); err != nil {
+		if err := regfunc(m, device_id, mc.Handler); err != nil {
 			log.Fatalf(" > Iterator() >> error unmarshaling register: %v", err)
 		}
 	}
@@ -220,7 +326,26 @@ func (mc *ModClient) CreateServerFile() ([]byte, error) {
 		}
 	}
 	// Set our registers back to the server
-	mc.Server["registers"] = ServerRegInfo
+	if is_gcom_modbus {
+		if len(ServerRegInfo) > 0{
+			added := false
+			for i, register_group := range AllServerRegGroups {
+				if temp_device_id, ok := register_group["device_id"]; ok {
+					device_id_int := temp_device_id.(int64)
+					if device_id_int == device_id {
+						AllServerRegGroups[i] = ServerRegInfo
+						added = true
+					}
+				}
+			}
+			if !added {
+				AllServerRegGroups = append(AllServerRegGroups, ServerRegInfo)
+			}
+		}
+		mc.Server["registers"] = AllServerRegGroups
+	} else {
+		mc.Server["registers"] = ServerRegInfo
+	}
 
 	// Order our server file by specific order
 	output, err := MarshalOrderJSON(mc.Server, []string{"fileInfo", "system", "registers"})
@@ -263,7 +388,7 @@ func GenerateModbusOutputs(opuris []string, emap map[string]interface{}, cfgs ma
 		op.Echo = make(map[string]interface{})
 		ip := make([]Input, 0)
 		op.Inputs = ip
-		if cfgs["components"].([]interface{})[i].(map[string]interface{})["heartbeat_enabled"] != nil {
+		if cfgs["components"].([]interface{})[i].(map[string]interface{})["heartbeat_enabled"] != nil && cfgs["components"].([]interface{})[i].(map[string]interface{})["component_heartbeat_read_uri"] != nil {
 			if cfgs["components"].([]interface{})[i].(map[string]interface{})["heartbeat_enabled"].(bool) {
 				op.Heartbeat = cfgs["components"].([]interface{})[i].(map[string]interface{})["component_heartbeat_read_uri"].(string)
 			}

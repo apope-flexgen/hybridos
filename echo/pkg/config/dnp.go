@@ -40,7 +40,10 @@ func (c *Client) getDNPConfig(filename string) error {
 	if err != nil {
 		return fmt.Errorf("error retrieving client config data: %v", err)
 	}
-	json.Unmarshal(configBytes, &dc.Config)
+	err = json.Unmarshal(configBytes, &dc.Config)
+	if err != nil {
+		return fmt.Errorf("error unmarshalling client config data: %v", err)
+	}
 
 	// Validate our data
 	if err := dc.Validate(); err != nil {
@@ -53,7 +56,7 @@ func (c *Client) getDNPConfig(filename string) error {
 }
 
 // Function fills the "system" object in our dnp3 server file
-func (dc *dnpClient) SystemInfoCreation(ipaddress string) error {
+func (dc *dnpClient) SystemInfoCreation(ipaddress string, is_gcom_modbus bool) error {
 	var systemInfo map[string]interface{} = make(map[string]interface{})
 	var fileInfo map[string]interface{} = make(map[string]interface{})
 	dc.Server = make(map[string]interface{})
@@ -75,8 +78,13 @@ func (dc *dnpClient) SystemInfoCreation(ipaddress string) error {
 		systemInfo["ip_address"] = ipaddress
 	}
 
-	systemInfo["connection name"] = strings.Replace(systemInfo["connection name"].(string), " ", "_", -1)
-	systemInfo["name"] = strings.Replace(systemInfo["name"].(string), " ", "_", -1)
+	if connection_name, ok := systemInfo["connection name"]; ok {
+		systemInfo["connection name"] = strings.Replace(connection_name.(string), " ", "_", -1)
+	}
+	if name, ok := systemInfo["name"]; ok {
+		systemInfo["name"] = strings.Replace(name.(string), " ", "_", -1)
+	}
+	
 
 	// Set our server values
 	dc.Server["system"] = systemInfo
@@ -86,35 +94,48 @@ func (dc *dnpClient) SystemInfoCreation(ipaddress string) error {
 }
 
 // Function iterates through our dnp client "registers" object and populates the dnp struct server data
-func (dc *dnpClient) CreateServerFile() ([]byte, error) {
+func (dc *dnpClient) CreateServerFile(is_gcom_modbus bool) ([]byte, error) {
 	var err error
 	var serverRegInfo = make([]map[string]interface{}, 0)
 	var echoReg url.Values = url.Values{}
 
 	// Iterate through register map and then map map to get the type and register name
-	for _, reg := range dc.Config["registers"].([]interface{}) {
-		var v map[string]interface{}
-		b, err1 := json.Marshal(reg)
-		if err1 != nil {
-			fmt.Errorf("could not marsh register: %v", err1)
-		}
-		json.Unmarshal(b, &v)
-		var regType = make(map[string]interface{})
-
-		regType["type"] = v["type"]
-
-		for _, echo := range v["map"].([]interface{}) {
-			if !findString(echo.(map[string]interface{})["uri"].(string), dc.Uris) { //Makes sure that all uris are unique
-				dc.Uris = append(dc.Uris, echo.(map[string]interface{})["uri"].(string))
+	if register_groups, ok := dc.Config["registers"]; ok {
+		for i, reg := range register_groups.([]interface{}) {
+			var v map[string]interface{}
+			b, err1 := json.Marshal(reg)
+			if err1 != nil {
+				return nil, fmt.Errorf("could not marshal register group #%d into json structure: %v", i, err1)
 			}
-			if echo.(map[string]interface{})["echo_id"] == nil { //Make sure that all registers that dont have echo_ids are being saved
-				echoReg.Add(echo.(map[string]interface{})["uri"].(string), echo.(map[string]interface{})["id"].(string))
+			err = json.Unmarshal(b, &v)
+			if err != nil {
+				return nil, fmt.Errorf("error unmarshalling register group into map[string]interface{} #%d: %v", i, err)
 			}
-			delete(echo.(map[string]interface{}), "echo_id")
-		}
+			var regType = make(map[string]interface{})
+			
+			regType["type"] = v["type"]
 
-		regType["map"] = v["map"]
-		serverRegInfo = append(serverRegInfo, regType)
+			if register_mapping, ok := v["map"]; ok {
+				for _, echo := range register_mapping.([]interface{}) {
+					if echo_uri, ok := echo.(map[string]interface{})["uri"]; ok {
+						if !findString(echo_uri.(string), dc.Uris) { //Makes sure that all uris are unique
+							dc.Uris = append(dc.Uris, echo_uri.(string))
+						}
+						if echo_id, ok := echo.(map[string]interface{})["id"]; ok && echo.(map[string]interface{})["echo_id"] == nil { //Make sure that all registers that dont have echo_ids are being saved
+							echoReg.Add(echo_uri.(string), echo_id.(string))
+						}
+						delete(echo.(map[string]interface{}), "echo_id")
+					}
+				}
+			} else {
+				continue
+			}
+
+			regType["map"] = v["map"]
+			serverRegInfo = append(serverRegInfo, regType)
+		}
+	} else {
+		return nil, fmt.Errorf("did not find any register groups in client config")
 	}
 
 	// Set register array back to our server file
@@ -176,7 +197,7 @@ func GenerateDNPOutputs(opuris []string, emap map[string]interface{}, cfgs map[s
 	}
 	for _, op := range outputs {
 		for i := range cfgs["registers"].([]interface{}) {
-			if cfgs["registers"].([]interface{})[i].(map[string]interface{})["heartbeat_enabled"] != nil {
+			if cfgs["registers"].([]interface{})[i].(map[string]interface{})["heartbeat_enabled"] != nil  && cfgs["registers"].([]interface{})[i].(map[string]interface{})["component_heartbeat_read_uri"] != nil {
 				if cfgs["registers"].([]interface{})[i].(map[string]interface{})["heartbeat_enabled"].(bool) {
 					op.Heartbeat = cfgs["registers"].([]interface{})[i].(map[string]interface{})["component_heartbeat_read_uri"].(string)
 				}
@@ -245,7 +266,9 @@ func generateDNPInputMap(regmaps []interface{}, ipm map[string]interface{}, uri 
 			}
 
 			// Add a new entry for a given reg id = echo id
-			ipm[euri].(map[string]string)[reg.(map[string]interface{})["id"].(string)] = echo_id
+			if _, ok := reg.(map[string]interface{})["id"]; ok {
+				ipm[euri].(map[string]string)[reg.(map[string]interface{})["id"].(string)] = echo_id
+			}
 		}
 	}
 	return ipm, nil

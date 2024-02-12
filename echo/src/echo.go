@@ -74,7 +74,7 @@ func main() {
 	cfgpath := os.Args[len(os.Args)-1]
 
 	// Handle inital flag inputs for cli commands
-	flag.StringVar(&mode, "mode", "", "set mode: [modbus | dnp3]")
+	flag.StringVar(&mode, "mode", "", "set mode: [modbus | dnp3 | gcom_modbus]")
 	flag.StringVar(&scfg, "c", "", "client config file path for server echo generation only")
 	flag.StringVar(&outputpath, "output", "", "this is the file path where the server and echo file will be going")
 	flag.StringVar(&ipaddress, "ip", "0.0.0.0", "address used in the server files fo r client server connection")

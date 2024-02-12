@@ -5,7 +5,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
+	"log"
 	"os"
 	"strings"
 
@@ -33,8 +34,8 @@ type Input struct {
 // Client interface implements methods for modbus and dnp file management
 type ClientConfig interface {
 	Validate() error
-	SystemInfoCreation(ipaddress string) error
-	CreateServerFile() ([]byte, error)
+	SystemInfoCreation(ipaddress string, is_gcom_modbus bool) error
+	CreateServerFile(is_gcom_modbus bool) ([]byte, error)
 	GenerateEchoStruct() (Layout, error)
 }
 
@@ -52,26 +53,27 @@ func GenerateClientAndServerFile(mode string, cfgfile string, outputpath string,
 	switch mode {
 	case "dnp3", "dnp", "d":
 		if err := c.getDNPConfig(cfgfile); err != nil {
-			fmt.Errorf("error retrieving dnp3 config file: %v", err)
+			log.Fatalf("error retrieving dnp3 config file: %v", err)
 		}
-	case "modbus", "mod", "m":
+	case "modbus", "mod", "m", "gcom_modbus", "gcom", "g":
 		if err := c.getModConfig(cfgfile); err != nil {
-			fmt.Errorf("error retrieving modbus config file: %v", err)
+			log.Fatalf("error retrieving modbus config file: %v", err)
 		}
 	default:
-		fmt.Errorf("error determining mode. Pick [modbus|dnp3], use -h for help")
+		log.Fatalf("error determining mode. Pick [modbus|dnp3], use -h for help")
 	}
 
 	// Create system settings
-	err := c.cfgType.SystemInfoCreation(ipaddress)
+	is_gcom_modbus := (mode == "gcom_modbus" || mode == "gcom" || mode == "g")
+	err := c.cfgType.SystemInfoCreation(ipaddress, is_gcom_modbus)
 	if err != nil {
-		fmt.Errorf("Error setting up server system info")
+		log.Fatalf("Error setting up server system info")
 	}
 
 	// Makes the server.json
-	output, err := c.cfgType.CreateServerFile()
+	output, err := c.cfgType.CreateServerFile(is_gcom_modbus)
 	if err != nil {
-		fmt.Errorf("Error adjusting client register maps")
+		log.Fatalf("Error adjusting client register maps")
 	}
 
 	//Adding the server.json suffix
@@ -94,9 +96,9 @@ func GenerateClientAndServerFile(mode string, cfgfile string, outputpath string,
 	}
 
 	// Output the data to the file
-	err = ioutil.WriteFile(outputpath, output, 0644)
+	err = os.WriteFile(outputpath, output, 0644)
 	if err != nil {
-		fmt.Errorf("Error writing to output file")
+		log.Fatalf("Error writing to output file")
 	}
 	return c, nil
 }
@@ -133,7 +135,7 @@ func (c *Client) GenerateEchoJSONFile(cfgfile string, outputpath string) error {
 	}
 
 	// Write out our echo.json file
-	if err := ioutil.WriteFile(outputpath, ceptBytes, 0644); err != nil {
+	if err := os.WriteFile(outputpath, ceptBytes, 0644); err != nil {
 		return fmt.Errorf("error writing to output file: %v", err)
 	}
 
@@ -193,12 +195,16 @@ func GetFileBytes(filename string) ([]byte, error) {
 	// Open file
 	file, err := os.Open(filename)
 	if err != nil {
-		return nil, fmt.Errorf("error opening our modbus client file: %v", err)
+		return nil, fmt.Errorf("error opening input client file: %v", err)
 	}
 	defer file.Close()
 
 	// Retrieve byte format of file
-	fileBytes, _ := ioutil.ReadAll(file)
+	fileBytes, err := io.ReadAll(file)
+
+	if err != nil {
+		return nil, fmt.Errorf("error reading input client file: %v", err)
+	}
 
 	return fileBytes, nil
 }
