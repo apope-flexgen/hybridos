@@ -984,7 +984,14 @@ Config_Validation_Result Asset::configure_single_fims_var(Fims_Object* fims_var,
             FPS_ERROR_LOG("%s: there is something wrong with this build. Component map passed to function is NULL. Cannot insert variable.", name);
             exit(1);
         }
-        (*configurator->pCompVarMap)[fims_var->get_component_uri()].push_back(fims_var);
+        auto component_uri = fims_var->get_component_uri();
+        if (component_uri == NULL) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: variable {} is misconfigured.", name, var_id)));
+            return validation_result;
+        }
+
+        (*configurator->pCompVarMap)[component_uri].push_back(fims_var);
     } else {
         // Update the variable with the provided fields
         update_fims_var(fims_var, type, default_float, default_int, default_bool, var_id, var_name, var_units, var_scaler);
@@ -2254,7 +2261,7 @@ Config_Validation_Result Asset::parse_variable(cJSON* var_json, std::string comp
         // Set to valid ui_type or float if invalid
         if (!valid) {
             validation_result.is_valid_config = false;
-            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid ui_type {} provided for variable {}", comp_id, ui_type->valuestring, variable_string)));
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid ui_type {} provided for variable {}", name, ui_type->valuestring, variable_string)));
         } else {
             component_variable->set_ui_type(ui_type->valuestring);
         }
