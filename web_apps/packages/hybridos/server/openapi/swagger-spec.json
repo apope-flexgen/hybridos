@@ -2577,30 +2577,6 @@
 					"role": {
 						"type": "object",
 						"description": "HybridOS user role - valid roles: [user,admin,rest,developer,observer,restreadwrite]"
-					},
-					"password": {
-						"type": "object",
-						"description": "HybridOS user password."
-					},
-					"old_passwords": {
-						"type": "object",
-						"description": "List of previous user passwords, used for password expiration (when users password expires and certain password settings are set, they may not use new passwords that are in this list)."
-					},
-					"pwdUpdatedDate": {
-						"type": "object",
-						"description": "Date that password was last updated."
-					},
-					"shared_key": {
-						"type": "object",
-						"description": "MFA shared key."
-					},
-					"mfa_enabled": {
-						"type": "object",
-						"description": "Status of MFA for user."
-					},
-					"version": {
-						"type": "object",
-						"description": "Version of User Model."
 					}
 				}
 			},

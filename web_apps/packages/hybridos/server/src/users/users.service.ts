@@ -28,6 +28,7 @@ import { AllUsersResponse } from './responses/allusers.response';
 import { DeleteUserResponse } from './responses/deleteuser.response';
 import { UserResponse } from './responses/user.response';
 import { User, UserDocument } from './user.schema';
+import { CreateUserResponse } from 'src/users/responses/createuser.response';
 
 @Injectable()
 export class UsersService implements IUsersService {
@@ -38,7 +39,7 @@ export class UsersService implements IUsersService {
     private readonly defaultUserService: IDefaultUserService,
   ) {}
 
-  public async create(userDto: UserDto): Promise<UserResponse> {
+  public async create(userDto: UserDto): Promise<CreateUserResponse> {
     userDto = await this.hydrateUser(userDto);
     const newUser = await this.userModel.create(userDto);
 
@@ -102,16 +103,10 @@ export class UsersService implements IUsersService {
         | Roles.Developer
         | Roles.Observer
         | Roles.RestReadWrite,
-      password: result.password,
-      old_passwords: result.old_passwords,
-      pwdUpdatedDate: result.pwdUpdatedDate,
-      shared_key: result.shared_key,
-      mfa_enabled: result.mfa_enabled,
-      version: result.version,
     };
   }
 
-  public async readByUsername(username: string): Promise<UserResponse> {
+  public async readByUsername(username: string): Promise<UserDto> {
     const result = await this.userModel.findOne({ username: username });
 
     if (result == null) {
@@ -175,12 +170,6 @@ export class UsersService implements IUsersService {
           | Roles.Developer
           | Roles.Observer
           | Roles.RestReadWrite,
-        password: result.password,
-        old_passwords: result.old_passwords,
-        pwdUpdatedDate: result.pwdUpdatedDate,
-        shared_key: result.shared_key,
-        mfa_enabled: result.mfa_enabled,
-        version: result.version,
       });
     });
 
@@ -235,12 +224,6 @@ export class UsersService implements IUsersService {
         | Roles.Developer
         | Roles.Observer
         | Roles.RestReadWrite,
-      password: result.password,
-      old_passwords: result.old_passwords,
-      pwdUpdatedDate: result.pwdUpdatedDate,
-      shared_key: result.shared_key,
-      mfa_enabled: result.mfa_enabled,
-      version: result.version,
     };
   }
 

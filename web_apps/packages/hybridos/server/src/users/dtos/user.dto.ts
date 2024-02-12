@@ -1,36 +1,38 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsOptional } from 'class-validator'
-import { UserDescriptions } from '../users.constants'
-import { IsValidPassword } from '../validators/IsValidPassword'
-import { IsValidRole } from '../validators/IsValidRole'
-import { IsValidUsername } from '../validators/IsValidUsername'
+import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
+import { UserDescriptions } from '../users.constants';
+import { IsValidPassword } from '../validators/IsValidPassword';
+import { IsValidRole } from '../validators/IsValidRole';
+import { IsValidUsername } from '../validators/IsValidUsername';
 
 export class User {
-    @ApiProperty({ description: UserDescriptions.username })
-    @IsOptional()
-    @IsValidUsername()
-    username?: string
+  id?: string;
 
-    @ApiProperty({
-        description: 'HybridOS user role',
-    })
-    @ApiProperty({ description: UserDescriptions.role })
-    @IsOptional()
-    @IsValidRole()
-    role?: string
+  @ApiProperty({ description: UserDescriptions.username })
+  @IsOptional()
+  @IsValidUsername()
+  username?: string;
 
-    @ApiProperty({ description: UserDescriptions.password })
-    @IsOptional()
-    @IsValidPassword()
-    password?: string
+  @ApiProperty({
+    description: 'HybridOS user role',
+  })
+  @ApiProperty({ description: UserDescriptions.role })
+  @IsOptional()
+  @IsValidRole()
+  role?: string;
 
-    old_passwords?: Array<string>
+  @ApiProperty({ description: UserDescriptions.password })
+  @IsOptional()
+  @IsValidPassword()
+  password?: string;
 
-    pwdUpdatedDate?: Date
+  old_passwords?: Array<string>;
 
-    shared_key?: string
+  pwdUpdatedDate?: Date;
 
-    mfa_enabled?: boolean
+  shared_key?: string;
 
-    version?: string
+  mfa_enabled?: boolean;
+
+  version?: string;
 }
