@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <cstring>
 #include <string>
+#include <vector>
 /* C++ Standard Library Dependencies */
 /* External Dependencies */
 /* System Internal Dependencies */
@@ -43,6 +44,8 @@ Action::Action() {
     paths = {};
     debounce_reset = true;
     status = ACTION_STATUS_STATE::INACTIVE;
+    shutdown_sequence = ""; 
+    is_shutdown_sequence = false;
 }
 
 /** 
@@ -57,6 +60,25 @@ bool Action::parse(cJSON* object) {
         return false;
     }
     sequence_name = JSON_name->valuestring;
+    
+    cJSON* shutdown_name = cJSON_GetObjectItem(object, "shutdown_sequence");
+    if (shutdown_name != nullptr) {
+        if ((!static_cast<bool>(cJSON_IsString(shutdown_name)) && (shutdown_name->valuestring != nullptr))) {
+            FPS_ERROR_LOG("Provided a shutdown_sequence for action \"%s\", but did not provide a string.", sequence_name);
+            return false;
+        }
+        shutdown_sequence = shutdown_name->valuestring;
+    }
+
+    cJSON* is_shutdown = cJSON_GetObjectItem(object, "is_shutdown_sequence");
+    if (is_shutdown != nullptr) {
+        if (!static_cast<bool>(cJSON_IsBool(is_shutdown))) {
+            FPS_ERROR_LOG("Attempted to configure is_shutdown parameter for action %s, but used a type other than Bool.", sequence_name);
+            return false;
+        }
+        is_shutdown_sequence = static_cast<bool>(is_shutdown->valueint);
+    }
+
     cJSON* JSON_paths = cJSON_GetObjectItem(object, "paths");
     if (JSON_paths == NULL || cJSON_GetArraySize(JSON_paths) == 0) {
         FPS_ERROR_LOG("no paths found or paths array empty");
@@ -95,10 +117,117 @@ std::string Action::status_string() const {
             return "Failed";
         case ACTION_STATUS_STATE::ABORTED:
             return "Aborted";
+        case ACTION_STATUS_STATE::EXITING:
+            return "Exiting";
         default:
             FPS_ERROR_LOG("Something very strange has happened. Unrecognized action_status_state: %d", status);
             return "Error State";
     }
+}
+
+/**
+ * @brief assigns this actions->asset->quick_action_access variable to nullptr.
+ */
+void Action::decouple_quick_action_access() {
+    // #### disable out quick access pointer ####
+    switch (sequence_type) {
+        case (Sequence_Type::Asset_ESS):
+            asset_ess->quick_action_access = nullptr;
+            break;
+        case (Sequence_Type::Asset_Solar):
+            asset_solar->quick_action_access = nullptr;
+            break;
+        case (Sequence_Type::Asset_Generator):
+            asset_generator->quick_action_access = nullptr;
+            break;
+        case (Sequence_Type::Asset_Feeder):
+            asset_feeder->quick_action_access = nullptr;
+            break;
+        default:
+            FPS_ERROR_LOG("Entered state not intended. Action has invalid sequence_type.");
+    }
+}
+
+/**
+ * @brief assigns a pointer to this actions->asset->quick_action_access variable
+ * to this action. Prevents the need to loop over the actions vector multiple times.
+ */
+void Action::couple_quick_action_access() {
+    // #### disable out quick access pointer ####
+    switch (sequence_type) {
+        case (Sequence_Type::Asset_ESS):
+            asset_ess->quick_action_access = this;
+            break;
+        case (Sequence_Type::Asset_Solar):
+            asset_solar->quick_action_access = this;
+            break;
+        case (Sequence_Type::Asset_Generator):
+            asset_generator->quick_action_access = this;
+            break;
+        case (Sequence_Type::Asset_Feeder):
+            asset_feeder->quick_action_access = this;
+            break;
+        default:
+            FPS_ERROR_LOG("Entered state not intended. Action has invalid sequence_type.");
+    }
+}
+
+/**
+ * @brief Grab a pointer to this assets shutdown_actions vector.
+ * Does the following 
+ * this->asset->shutdown_actions
+ *
+ * @return std::vector<Action>* 
+ */
+std::vector<Action>* Action::get_shutdown_actions() {
+    // #### Handle the Shutdown sequence ####
+    std::vector<Action>* actions_ref = nullptr;
+    switch (sequence_type) {
+        case (Sequence_Type::Asset_ESS):
+            actions_ref = &asset_ess->shutdown_actions;
+            break;
+        case (Sequence_Type::Asset_Solar):
+            actions_ref = &asset_ess->shutdown_actions;
+            break;
+        case (Sequence_Type::Asset_Generator):
+            actions_ref = &asset_ess->shutdown_actions;
+            break;
+        case (Sequence_Type::Asset_Feeder):
+            actions_ref = &asset_ess->shutdown_actions;
+            break;
+        default:
+            FPS_ERROR_LOG("Entered state not intended. Action has invalid sequence_type.");
+    }
+    return actions_ref;
+}
+
+/**
+ * @brief Grab a pointer to this assets actions vector.
+ * Does the following 
+ * this->asset->shutdown_actions
+ *
+ * @return std::vector<Action>* 
+ */
+std::vector<Action>* Action::get_actions() {
+    // #### Handle the Shutdown sequence ####
+    std::vector<Action>* actions_ref = nullptr;
+    switch (sequence_type) {
+        case (Sequence_Type::Asset_ESS):
+            actions_ref = &asset_ess->actions;
+            break;
+        case (Sequence_Type::Asset_Solar):
+            actions_ref = &asset_ess->actions;
+            break;
+        case (Sequence_Type::Asset_Generator):
+            actions_ref = &asset_ess->actions;
+            break;
+        case (Sequence_Type::Asset_Feeder):
+            actions_ref = &asset_ess->actions;
+            break;
+        default:
+            FPS_ERROR_LOG("Entered state not intended. Action has invalid sequence_type.");
+    }
+    return actions_ref;
 }
 
 /**
@@ -143,9 +272,34 @@ void Action::enter_automation(Action_Status& action_status, std::string action_i
  * can now occur.
  */
 void Action::exit_automation(Action_Status& action_status, ACTION_STATUS_STATE set_status) {
-    action_status.current_sequence_name.clear();
     action_status.should_pub = true;
-    status = set_status;
+    decouple_quick_action_access();
+
+    if (shutdown_sequence.empty()) {
+        // if this is a shutdown_sequence you should also update the EXITING non-shutdown action
+        // conveniently it is only possible for 1 action to be exiting so we don't need to know 
+        // exactly which action called this shutdown. We can deduce based off of EXITING.
+        if (is_shutdown_sequence) {
+            for (Action& action : *get_actions()) {
+                if (action.status == ACTION_STATUS_STATE::EXITING) {
+                    action.status = action.status_swap;
+                }
+            }
+        }
+        status = set_status;
+        action_status.current_sequence_name.clear();
+        return;
+    }
+
+    status = ACTION_STATUS_STATE::EXITING;
+    status_swap = set_status;
+
+    for (Action& action : *get_shutdown_actions()) {
+        if (action.sequence_name == shutdown_sequence) {
+            action.enter_automation(action_status, shutdown_sequence);
+            action.couple_quick_action_access();
+        }
+    }
 }
 
 /**
@@ -196,4 +350,22 @@ void Action::call_sequence(Action_Status& action_status) {
 
         exit_automation(action_status, ACTION_STATUS_STATE::FAILED);
     }
+}
+
+/**
+ * @brief Handles calling sequence funtions for an action as well as exit_automation();
+ * Updates faults and alarms.
+ */
+void Action::process(Action_Status& action_status) {
+    if (!is_shutdown_sequence) {
+        // if the action has faulted "shutdown" the action
+        if (check_faults()) {
+            check_alarms();
+            // goto failed state
+            exit_automation(action_status, ACTION_STATUS_STATE::FAILED);
+            return;
+        } 
+        check_alarms(); // update alarms
+    }
+    call_sequence(action_status); // call the sequence functions
 }

@@ -40,9 +40,17 @@ public:
     std::string status_string() const;
     void update_status(Action_Status& action_status);
     void call_sequence(Action_Status& action_status);
-
+    void process(Action_Status& action_status);
+    void decouple_quick_action_access();
+    void couple_quick_action_access();
+    std::vector<Action>* get_shutdown_actions();
+    std::vector<Action>* get_actions();
     // ##### PUBLIC DATA #####
     ACTION_STATUS_STATE status;
+    ACTION_STATUS_STATE status_swap; // This is used to swap in the reason for calling a shutdown_sequence if an action has one.
+    bool is_shutdown_sequence;
+    std::string shutdown_sequence; // This allows the user to configure a "Shutdown Sequence" where the action can 
+                                   // switch to this whenever they exit this sequence. This will allow the user to "restore state"
 };
 
 #endif /* INCLUDE_ACTION_H_ */

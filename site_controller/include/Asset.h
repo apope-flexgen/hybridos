@@ -92,6 +92,7 @@ public:
     Asset();
     virtual ~Asset() = default;
     std::vector<Action> actions;
+    std::vector<Action> shutdown_actions;
 
     // configuration
     Config_Validation_Result configure(Type_Configurator* configurator);
@@ -104,6 +105,7 @@ public:
 
     // actions status
     Action_Status action_status;
+    Action* quick_action_access;
     // These are for actions specifically they will only pub if they are active/"have bits high"
     Fims_Object actions_faults;
     Fims_Object actions_alarms;
@@ -170,8 +172,8 @@ public:
     bool handle_get(fims_message* pmsg);
     bool add_asset_data_to_buffer(fmt::memory_buffer& buf);
     bool add_variable_to_buffer(std::string uri, const char* variable, fmt::memory_buffer& buf);
-    bool list_action_info(fmt::memory_buffer& buf);
-    bool list_specific_action(fmt::memory_buffer& buf, std::string action_name);
+    bool list_action_info(fmt::memory_buffer& buf, bool is_shutdown = false);
+    bool list_specific_action(fmt::memory_buffer& buf, std::string action_name, bool is_shutdown = false);
     bool list_reduced_action_info(fmt::memory_buffer& buf);
     virtual bool handle_set(std::string uri, cJSON& body) = 0;
     bool handle_generic_asset_controls_set(std::string uri, cJSON& body);

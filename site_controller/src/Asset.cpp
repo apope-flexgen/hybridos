@@ -542,8 +542,9 @@ Config_Validation_Result Asset::configure(Type_Configurator* configurator) {
                 path.asset_solar = dynamic_cast<Asset_Solar*>(this); // pass the asset* to every path so it can call sequence functions
             }
         }
-
-        this->actions.push_back(action);
+        // seperate them into their two groups. 
+        // idea is to keep the shutdown sequences away from the actual actions
+        action.is_shutdown_sequence ? this->shutdown_actions.push_back(action) : this->actions.push_back(action);
     }
 
     // Check configured component variables against list of required component variables to ensure all were found and configured
@@ -1254,7 +1255,6 @@ bool Asset::handle_get(fims_message* pmsg) {
     }
 
     // A request for asset actions information has been made
-    // TODO: provide gets on an individual action
     if (strncmp(pmsg->pfrags[3],"actions", strlen("actions")) == 0) {
         FPS_DEBUG_LOG("A get was sent on the actions endpoint of an asset.");
         if (pmsg->nfrags == 4) {
@@ -1265,6 +1265,25 @@ bool Asset::handle_get(fims_message* pmsg) {
         } else if (pmsg->nfrags == 5) {
             if (!list_specific_action(send_FIMS_buf, pmsg->pfrags[4])) {
                 FPS_ERROR_LOG("Could not find specific action");
+                return false;
+            }
+        } else {
+            FPS_ERROR_LOG("Unreachable API request made: there is no actions endpoint with this number of uri fragments.");
+            return false;
+        }
+        return send_buffer_to(pmsg->replyto, send_FIMS_buf);
+    }
+    
+    if (strncmp(pmsg->pfrags[3],"shutdown_actions", strlen("shutdown_actions")) == 0) {
+        FPS_DEBUG_LOG("A get was sent on the shutdown_actions endpoint of an asset.");
+        if (pmsg->nfrags == 4) {
+            if (!list_action_info(send_FIMS_buf, true)) {
+                FPS_ERROR_LOG("Failed to list shutdown_action info.");
+                return false;
+            }
+        } else if (pmsg->nfrags == 5) {
+            if (!list_specific_action(send_FIMS_buf, pmsg->pfrags[4], true)) {
+                FPS_ERROR_LOG("Could not find specific shutdown_action");
                 return false;
             }
         } else {
@@ -1370,8 +1389,8 @@ bool Asset::list_reduced_action_info(fmt::memory_buffer& buf) {
         }       
         bufJSON_AddNumber(buf, "path_index", action.current_path_index);
         bufJSON_AddNumber(buf, "step_index", action.current_step_index);
-        bufJSON_AddNumber(buf, "time_left_in_step_s", action.collect_seconds_remaining_in_current_step());
-        bufJSON_AddNumber(buf, "time_left_in_action_s", action.collect_seconds_remaining_in_action());
+        bufJSON_AddNumber(buf, "time_left_in_step_ms", action.collect_seconds_remaining_in_current_step());
+        bufJSON_AddNumber(buf, "time_left_in_action_ms", action.collect_seconds_remaining_in_action());
         bufJSON_AddString(buf, "status", action.status_string().c_str());
         bufJSON_EndObject(buf);
     }
@@ -1387,8 +1406,9 @@ bool Asset::list_reduced_action_info(fmt::memory_buffer& buf) {
  * @param action_name the action we want to return
  * @return success (bool)
  */
-bool Asset::list_specific_action(fmt::memory_buffer& buf, std::string action_name) {
-    for (auto& action : actions) {
+bool Asset::list_specific_action(fmt::memory_buffer& buf, std::string action_name, bool is_shutdown) {
+    std::vector<Action>& actions_ref = is_shutdown ? shutdown_actions : actions;
+    for (auto& action : actions_ref) {
         if (action.sequence_name == action_name) {
             bufJSON_StartObject(buf);
             bufJSON_AddString(buf, "path_name", action.paths[action.current_path_index].path_name.c_str());
@@ -1399,8 +1419,8 @@ bool Asset::list_specific_action(fmt::memory_buffer& buf, std::string action_nam
             }
             bufJSON_AddNumber(buf, "path_index", action.current_path_index);
             bufJSON_AddNumber(buf, "step_index", action.current_step_index);
-            bufJSON_AddNumber(buf, "time_left_in_step_s", action.collect_seconds_remaining_in_current_step());
-            bufJSON_AddNumber(buf, "time_left_in_action_s", action.collect_seconds_remaining_in_action());
+            bufJSON_AddNumber(buf, "time_left_in_step_ms", action.collect_seconds_remaining_in_current_step());
+            bufJSON_AddNumber(buf, "time_left_in_action_ms", action.collect_seconds_remaining_in_action());
             bufJSON_AddString(buf, "status", action.status_string().c_str());
             bufJSON_EndObjectNoComma(buf);
             return true;
@@ -1415,9 +1435,10 @@ bool Asset::list_specific_action(fmt::memory_buffer& buf, std::string action_nam
  * @param buf (fmt::memory_buffer&) The buffer to add to.
  * @return success (bool)
  */
-bool Asset::list_action_info(fmt::memory_buffer& buf) {
+bool Asset::list_action_info(fmt::memory_buffer& buf, bool is_shutdown) {
     bufJSON_StartObject(buf);
-    for (Action& action : actions) {
+    std::vector<Action>& actions_ref = is_shutdown ? shutdown_actions : actions;
+    for (Action& action : actions_ref) {
         bufJSON_AddId(buf, action.sequence_name.c_str());
         bufJSON_StartObject(buf);
         bufJSON_AddNumber(buf, "path_index", action.current_path_index);
@@ -1743,26 +1764,35 @@ void Asset::process_local_mode_status() {
 
 /**
  * @brief If there is a current sequence active, 
- * this function handles call_sequence() and 
- * performs faults and alarms checks. 
+ * this function this function finds the appropriate action if 
+ * needed. Then processes the action.
  */
 void Asset::process_asset_actions() {
     // if we have an active sequence
     if (!action_status.current_sequence_name.empty()) {
-        // find the correct action
-        for (auto& action : actions) {
-            if (action.sequence_name == action_status.current_sequence_name) {
-                // if the action has faulted "shutdown" the action
-                if (action.check_faults()) {
-                    action.check_alarms();
-                    // goto failed state
-                    action.exit_automation(action_status, ACTION_STATUS_STATE::FAILED);
-
-                } else {
-                    action.check_alarms(); // update alarms
-                    action.call_sequence(action_status); // call the sequence functions
+        if (quick_action_access == nullptr) {
+            // find the correct action
+            for (auto& action : actions) {
+                if (action.sequence_name == action_status.current_sequence_name) {
+                    quick_action_access = &action;
                 }
             }
+            // if still null
+            // Must be trying to find a shutdown action
+            if (quick_action_access == nullptr) {
+                for (auto& action : shutdown_actions) {
+                    if (action.sequence_name == action_status.current_sequence_name) {
+                        quick_action_access = &action;
+                    }
+                }
+            }
+        }
+
+        // after identifying action process it.
+        if (quick_action_access != nullptr) {
+            quick_action_access->process(action_status);
+        } {
+            FPS_WARNING_LOG("Attempting to process actions but quick_action_access ptr is nullptr. Something very bad has occurred.");
         }
     }
 }

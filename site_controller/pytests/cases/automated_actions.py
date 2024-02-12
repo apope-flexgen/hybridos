@@ -120,27 +120,31 @@ def validate_action_pubs(uri: Union[str, None] = None, expected_info: Union[List
         reply = grok_reply()
         if reply is not None:
             stdout = []
-            print("not none")
             if reply.contains_action_pub():
-                print("evaluating")
                 if expected_info is not None and len(expected_info) > 0:
                     if info_index <= len(expected_info) -1:
                         if ignore_step is not None and ignore_step == reply.body['actions'][action_name]['step_name']:
-                            break # this step is hard to catch in pubs because it is so fast
+                            continue # this step is hard to catch in pubs because it is so fast
                         print(reply)
                         print(expected_info[info_index])
                         print(info_index)
 
-                        assert reply.body['actions'][action_name]['path_name'] == expected_info[info_index].path_name
-                        assert reply.body['actions'][action_name]['step_name'] == expected_info[info_index].step_name
-                        assert reply.body['actions'][action_name]['status'] == expected_info[info_index].status
+                        # if you are supposed to find exiting check for it otherwise skip it
+                        # why? Because exiting can appear in many pubs and it's hard to make it pub consistently
+                        # whats important is that we see the exiting step and then eventually make it out.
+                        if reply.body['actions'][action_name]['status'] == "Exiting" and expected_info[info_index].status != "Exiting":
+                            continue
+                        else: 
+                            assert reply.body['actions'][action_name]['path_name'] == expected_info[info_index].path_name
+                            assert reply.body['actions'][action_name]['step_name'] == expected_info[info_index].step_name
+                            assert reply.body['actions'][action_name]['status'] == expected_info[info_index].status
 
-                        if abort_on_step is not None and reply.body['actions'][action_name]['step_name'] == abort_on_step:
-                            fims_set("/assets/ess/ess_1/actions/Calibration1/stop", True)
-                        if set_SoC_on_step is not None and reply.body['actions'][action_name]['step_name'] == set_SoC_on_step[0]: 
-                            fims_set("/components/ess_psm/bms_soc", set_SoC_on_step[1])
+                            if abort_on_step is not None and reply.body['actions'][action_name]['step_name'] == abort_on_step:
+                                fims_set("/assets/ess/ess_1/actions/Calibration1/stop", True)
+                            if set_SoC_on_step is not None and reply.body['actions'][action_name]['step_name'] == set_SoC_on_step[0]: 
+                                fims_set("/components/ess_psm/bms_soc", set_SoC_on_step[1])
 
-                        info_index = info_index + 1
+                            info_index = info_index + 1
 
                 if reply.body['actions'][action_name]['status'] == "Completed" or reply.body['actions'][action_name]['status'] == "Aborted" or reply.body['actions'][action_name]['status'] == "Failed":
                     proc.kill()
@@ -152,6 +156,7 @@ def validate_action_pubs(uri: Union[str, None] = None, expected_info: Union[List
 
 # This test will put an ESS in maint_mode and then 
 # call an automated action and wait for it it complete
+# This test will simply charge to 80%
 
 test1 = []
 test1.append(listen_reply_validator(path_name="ESS Calibration", step_name="Start ESS", status="In Progress"))
@@ -159,6 +164,7 @@ test1.append(listen_reply_validator(path_name="ESS Calibration", step_name="Setu
 test1.append(listen_reply_validator(path_name="ESS Calibration", step_name="Enable limits", status="In Progress"))
 test1.append(listen_reply_validator(path_name="ESS Calibration", step_name="Set Maint Active Power", status="In Progress"))
 test1.append(listen_reply_validator(path_name="ESS Calibration", step_name="Set Maint Active Power 0", status="In Progress"))
+test1.append(listen_reply_validator(path_name="ESS Calibration", step_name="Completed", status="Exiting"))
 test1.append(listen_reply_validator(path_name="ESS Calibration", step_name="Completed", status="Completed"))
 
 @ fixture
@@ -169,6 +175,8 @@ test1.append(listen_reply_validator(path_name="ESS Calibration", step_name="Comp
         "Test clean run",
         {
             **Steps.config_dev_place_assets_in_maint(),
+            # Stop the ESS so that the action can start it up
+            "/assets/ess/ess_1/stop": True,
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/maint_mode", True),
@@ -176,15 +184,6 @@ test1.append(listen_reply_validator(path_name="ESS Calibration", step_name="Comp
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/gen_1/maint_mode", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_2/maint_mode", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_2/maint_mode", True),
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/status", "Running"),
-        ]
-    ),
-    # Stop the ESS so that the action can start it up
-    Steps(
-        {
-            "/assets/ess/ess_1/stop": True,
-        },
-        [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/status", "Stopped", wait_secs=5),
         ]
     ),
@@ -198,6 +197,15 @@ test1.append(listen_reply_validator(path_name="ESS Calibration", step_name="Comp
             lambda: validate_action_pubs(uri="/assets/ess/ess_1", expected_info=test1, start="/assets/ess/ess_1/actions/Calibration1/start", 
                                          ignore_step="Charge to 80%", set_SoC_on_step=("Setup limits", 75)),
         ]    
+    ),
+    # Pause for 10 seconds to let the shutdown_sequence execute
+    Steps(
+        {
+        },
+        [
+            # shutdown_sequence should stop the action
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/status", "Stopped", wait_secs=10),
+        ]
     ),
     # Turn off maint_mode
     Teardown(
@@ -225,6 +233,7 @@ def test_completed_automated_action(test):
 test2 = []
 test2.append(listen_reply_validator(path_name="ESS Calibration", step_name="Start ESS", status="In Progress"))
 test2.append(listen_reply_validator(path_name="ESS Calibration", step_name="Setup limits", status="In Progress"))
+test2.append(listen_reply_validator(path_name="ESS Calibration", step_name="Setup limits", status="Exiting"))
 test2.append(listen_reply_validator(path_name="ESS Calibration", step_name="Setup limits", status="Aborted"))
 
 @ fixture
@@ -264,6 +273,15 @@ test2.append(listen_reply_validator(path_name="ESS Calibration", step_name="Setu
             lambda: validate_action_pubs(uri="/assets/ess/ess_1", expected_info=test2, start="/assets/ess/ess_1/actions/Calibration1/start", abort_on_step="Setup limits", ignore_step="Charge to 80%"),
         ]    
     ),
+    # Pause for 10 seconds to let the shutdown_sequence execute
+    Steps(
+        {
+        },
+        [
+            # shutdown_sequence should stop the action
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/status", "Stopped", wait_secs=10),
+        ]
+    ),
     # Turn off maint_mode
     Teardown(
         {
@@ -284,6 +302,7 @@ def test_aborted_automated_action(test):
 
 # This test will put an ESS in maint_mode and then 
 # call an automated action that has a path switch
+# both paths will be tested. The switch is based on SoC
 
 test3 = []
 # for some reason the pathswitch is only pubbed if there is not a switch performed. 
@@ -294,6 +313,7 @@ test3.append(listen_reply_validator(path_name="ESS Calibration (Charge to top)",
 test3.append(listen_reply_validator(path_name="ESS Calibration (Charge to top)", step_name="Enable limits", status="In Progress"))
 test3.append(listen_reply_validator(path_name="ESS Calibration (Charge to top)", step_name="Set Maint Active Power", status="In Progress"))
 test3.append(listen_reply_validator(path_name="ESS Calibration (Charge to top)", step_name="Set Maint Active Power 0", status="In Progress"))
+test3.append(listen_reply_validator(path_name="ESS Calibration (Charge to top)", step_name="Completed", status="Exiting"))
 test3.append(listen_reply_validator(path_name="ESS Calibration (Charge to top)", step_name="Completed", status="Completed"))
 
 test4 = []
@@ -305,6 +325,7 @@ test4.append(listen_reply_validator(path_name="ESS Calibration (Discharge to bot
 test4.append(listen_reply_validator(path_name="ESS Calibration (Discharge to bottom)", step_name="Enable limits", status="In Progress"))
 test4.append(listen_reply_validator(path_name="ESS Calibration (Discharge to bottom)", step_name="Set Maint Active Power", status="In Progress"))
 test4.append(listen_reply_validator(path_name="ESS Calibration (Discharge to bottom)", step_name="Set Maint Active Power 0", status="In Progress"))
+test4.append(listen_reply_validator(path_name="ESS Calibration (Discharge to bottom)", step_name="Completed", status="Exiting"))
 test4.append(listen_reply_validator(path_name="ESS Calibration (Discharge to bottom)", step_name="Completed", status="Completed"))
 
 @ fixture
@@ -347,6 +368,15 @@ test4.append(listen_reply_validator(path_name="ESS Calibration (Discharge to bot
             lambda: time.sleep(2)
         ]    
     ),
+    # Pause for 10 seconds to let the shutdown_sequence execute
+    Steps(
+        {
+        },
+        [
+            # shutdown_sequence should stop the action
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/status", "Stopped", wait_secs=10),
+        ]
+    ),
     Steps(
         {
             "/components/ess_psm/bms_soc": 85
@@ -364,6 +394,15 @@ test4.append(listen_reply_validator(path_name="ESS Calibration (Discharge to bot
             # starts the action in function so we can start listening before the first pub
             lambda: validate_action_pubs(uri="/assets/ess/ess_1", expected_info=test4, start="/assets/ess/ess_1/actions/Calibration2/start", ignore_step="Discharge to 20%", action_name="Calibration2", set_SoC_on_step=("Start ESS", 15)),
         ]    
+    ),
+    # Pause for 10 seconds to let the shutdown_sequence execute
+    Steps(
+        {
+        },
+        [
+            # shutdown_sequence should stop the action
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/status", "Stopped", wait_secs=10),
+        ]
     ),
     # Turn off maint_mode
     Teardown(
@@ -410,7 +449,6 @@ def test_path_switch_automated_action(test):
         [
         ],
         pre_lambda=[
-            # starts the action in function so we can start listening before the first pub
             lambda: validate_pubs_silent(timeout=20),
         ]    
     ),
@@ -437,6 +475,7 @@ def test_silent_automated_action(test):
 # ensure the action exits as failed
 
 test5 = []
+test5.append(listen_reply_validator(path_name="ESS Calibration 3", step_name="Pub Fault", status="Exiting"))
 test5.append(listen_reply_validator(path_name="ESS Calibration 3", step_name="Pub Fault", status="Failed"))
 
 @ fixture
@@ -527,12 +566,13 @@ test6.append(listen_reply_validator(path_name="ESS Calibration 4", step_name="Pu
             lambda: validate_action_pubs(uri="/assets/ess/ess_1", expected_info=test6, start="/assets/ess/ess_1/actions/Calibration4/start", action_name="Calibration4"),
         ]    
     ),
+    # Pause for 10 seconds to let the shutdown_sequence execute
     Steps(
         {
         },
         [
-            # ensure the asset is not stopped
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/status", "Running", wait_secs=5),
+            # shutdown_sequence should stop the action
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/status", "Stopped", wait_secs=10),
         ]
     ),
     # Turn off maint_mode

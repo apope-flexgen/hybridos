@@ -2,6 +2,7 @@
     "actions": {
         "ESS_Cali": {
             "action_name": "Calibration1",
+	    "shutdown_sequence": "ESS Shutdown",
             "asset_types": [
                 "ess"
             ],
@@ -91,6 +92,7 @@
         },
         "ESS_Cali_2": {
             "action_name": "Calibration2",
+	    "shutdown_sequence": "ESS Shutdown",
             "asset_types": [
                 "ess"
             ],
@@ -273,6 +275,7 @@
         },
         "ESS_Cali_3": {
             "action_name": "Calibration3",
+	    "shutdown_sequence": "ESS Shutdown",
             "asset_types": [
                 "ess"
             ],
@@ -303,6 +306,7 @@
         },
         "ESS_Cali_4": {
             "action_name": "Calibration4",
+	    "shutdown_sequence": "ESS Shutdown",
             "asset_types": [
                 "ess"
             ],
@@ -338,6 +342,7 @@
         },
         "ESS_Cali_5": {
             "action_name": "Calibration5",
+	    "shutdown_sequence": "ESS Shutdown",
             "asset_types": [
                 "ess"
             ],
@@ -419,6 +424,37 @@
                             "exit_conditions": {
                                 "route": "/get_maint_active_power_setpoint",
                                 "value": 0,
+                                "debounce_timer": 5000
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "ESS_Shutdown": {
+            "action_name": "ESS Shutdown",
+	    "is_shutdown_sequence": true,
+            "asset_types": [
+                "ess"
+            ],
+            "paths": [
+                {
+                    "path_name": "ESS Shutdown",
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "steps": [
+                        {
+                            "step_name": "Stop",
+                            "entry_actions": {
+                                "route": "/stop",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/is_stopped",
+                                "value": true,
                                 "debounce_timer": 5000
                             }
                         }
