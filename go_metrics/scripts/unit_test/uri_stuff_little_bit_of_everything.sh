@@ -18,11 +18,11 @@ gitdir=$(cd `dirname $0` && cd ../.. && pwd)
 gitdirs=$(cd `dirname $0` && cd ../.. && pwd)
 echo "git1 " $gitdir
 source $gitdir/scripts/test_funcs.sh unit_test
-timeout=20
+timeout=30
 gitdir=$gitdirs
 echo "git2 " $gitdir
 
-
+## NOTE THAT WE EXPECT 2 TESTS TO FAIL FOR THIS
 
 test()
 {
@@ -138,6 +138,22 @@ test()
     runget $expect $get
 
     ### TEST 5 ###
+    ### TEST DON'T RESPOND TO GETS ON INPUTS
+    ### NOTE: WE EXPECT THIS TEST TO FAIL
+    usetime 2
+    expect="Receive Timeout."
+    get="fims_send -m get -r /$$ -u /some/input/uri"
+    runget $get
+
+    ### TEST 6 ###
+    ### TEST DON'T RESPOND TO GETS ON INPUTS
+    ### NOTE: WE EXPECT THIS TEST TO FAIL
+    usetime 2
+    expect="Receive Timeout."
+    get="fims_send -m get -r /$$ -u /some/input/uri/accontactor"
+    runget $get
+
+    ### TEST 7 ###
 
 
     fims_send -m pub -u /some/input/uri/accontactor '{"value":51}'
@@ -209,6 +225,8 @@ test()
     expect='{"clothed_bobcat":{"scale":1000,"ui_type":"none","units":"degC","value":222},"clothed_cheetah":{"scale":1000,"ui_type":"none","units":"degC","value":222}}'
     get="fims_send -m get -r /$$ -u /some/two"
     runget $expect $get
+
+    
 
     usetime $timeleft
 

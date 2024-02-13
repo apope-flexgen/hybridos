@@ -97,9 +97,6 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 			}
 			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: msgBody})
 			pubDataChangedMutex.Unlock()
-		} else if _, ok := UriElements[msg.Uri]; ok { // asking for data from a set of publish URIs
-			msgBody := GetOutputMsgBody(msg.Uri).(map[string]interface{})
-			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: msgBody})
 		} else if last_urilast_uri_element_is_input && len(msg.Frags) > 0 && msg.Frags[0] == "inputs" { // asking for a specific input
 			inputScopeMutex.RLock()
 			input := InputScope[msg.Frags[len(msg.Frags)-1]]

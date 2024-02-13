@@ -1,11 +1,14 @@
 # `/scripts`
 
-Scripts to perform various build, install, analysis, etc operations.
+Scripts to test go_metrics functionality
 
-These scripts keep the root level Makefile small and simple.
+## Running tests
+In `scripts/test_funcs.sh` change 'dir' (Line 21) to the directory that your test script resides in. Then, from the hybridos/go_metrics directory, run `sh scripts/<dir>/<script> start`
 
-Examples:
-
-* https://github.com/kubernetes/helm/tree/master/scripts
-* https://github.com/cockroachdb/cockroach/tree/master/scripts
-* https://github.com/hashicorp/terraform/tree/master/scripts
+## Running all tests in a folder
+In `scripts/test_funcs.sh` change 'dir' (Line 21) to the directory that your test scripts resides in. Then, from the hybridos/go_metrics directory, run
+```
+for f in scripts/<dir>/*.sh; do
+  bash "$f" start
+done
+```

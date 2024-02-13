@@ -19,8 +19,8 @@ fi
 #timeused=0
 
 dir=echo
-dir=$(basename $(dirname "$0"))
-echo "dir is $dir_name"
+# dir=$(basename $(dirname "$0"))
+echo "dir is $dir"
 
 
 # if [ $# -gt 0 ] ; then 
@@ -33,7 +33,7 @@ timeused=0
 PASS=0
 FAIL=0
 
-gitdir=$(cd `dirname $0` && cd .. && pwd)
+gitdir=$(cd `dirname $0` && cd ../.. && pwd)
 #gitdir='/home/docker/hybridos/go_metrics'
 echo "gitdir #2 is $gitdir"
 #. $gitdir/scripts/test_finctions.sh
@@ -92,8 +92,9 @@ usetime()
 
 runget ()
 {
-    expect=$1
+    if [[ "$1" != "fims_send" ]] ; then
     shift
+    fi
     echo -n "response =>" 
     #echo $@
     #echo $expect
