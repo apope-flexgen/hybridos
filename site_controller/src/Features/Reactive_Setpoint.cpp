@@ -44,5 +44,8 @@ void features::Reactive_Setpoint::handle_fims_set(std::string uri_endpoint, cons
     if (msg_value.type == cJSON_Number) {
         kVAR_cmd.set_fims_float(uri_endpoint.c_str(), msg_value.valuedouble);
         kVAR_slew_rate.set_fims_int(uri_endpoint.c_str(), msg_value.valueint);
+        if (kVAR_slew_rate.set_fims_int(uri_endpoint.c_str(), range_check(msg_value.valueint, 100000000, 1))) {
+        kVAR_cmd_slew.set_slew_rate(kVAR_slew_rate.value.value_int);
+        }
     }
 }
