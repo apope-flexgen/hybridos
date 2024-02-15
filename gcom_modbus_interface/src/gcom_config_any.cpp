@@ -552,19 +552,19 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
     ok &= getItemFromMap(jsonMapOfConfig, "connection.force_multi_sets", myCfg.force_multi_sets, false, true, true, false);
 
     // max_register_group_size
-    ok &= getItemFromMap(jsonMapOfConfig, "connection.max_register_group_size", myCfg.max_register_group_size, 125, true, true, false);
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.max_register_group_size", myCfg.max_register_group_size, 124, true, true, false);
     if (ok && myCfg.max_register_group_size <= 0)
     {
-        FPS_INFO_LOG("max register size must be greater than 0. Configured value is [%d]. Using default of 125.", myCfg.max_register_group_size);
-        myCfg.max_register_group_size = 125;
+        FPS_INFO_LOG("max register size must be greater than 0. Configured value is [%d]. Using default of 124.", myCfg.max_register_group_size);
+        myCfg.max_register_group_size = 124;
     }
 
     // max_bit_size
-    ok &= getItemFromMap(jsonMapOfConfig, "connection.max_bit_size", myCfg.max_bit_size, 125, true, true, false);
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.max_bit_size", myCfg.max_bit_size, 124, true, true, false);
     if (ok && myCfg.max_bit_size <= 0)
     {
-        FPS_INFO_LOG("max bit size must be greater than 0. Configured value is [%d]. Using default of 125.", myCfg.max_bit_size);
-        myCfg.max_bit_size = 125;
+        FPS_INFO_LOG("max bit size must be greater than 0. Configured value is [%d]. Using default of 124.", myCfg.max_bit_size);
+        myCfg.max_bit_size = 124;
     }
     // service
     std::string service;
