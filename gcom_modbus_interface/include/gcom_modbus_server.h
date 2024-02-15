@@ -26,6 +26,9 @@ typedef struct {
     bool low_debug; 
 
     bool bypass_init;
+    int bad_id_count;
+    int max_bad_id_count;
+
     modbus_t *mb;
 } system_config;
 

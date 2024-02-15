@@ -235,6 +235,8 @@ int establish_connection(system_config* config)
 int parse_system(cJSON *system, system_config *config)
 {
     memset(config, 0, sizeof(system_config));
+    config->max_bad_id_count = 64;
+    
     cJSON *system_name = cJSON_GetObjectItem(system, "id");
     if (system_name == NULL || system_name->valuestring == NULL)
     {
@@ -1592,7 +1594,11 @@ bool process_fims_message(fims_message* msg, system_config* sys_cfg, bool* reloa
                 body_map::iterator body_it = uri_it->second->find(id_obj->string);
                 if(body_it == uri_it->second->end())
                 {
-                    FPS_ERROR_PRINT("Bad id [%s] for uri : [%s]\n", id_obj->string, msg->uri);
+                    if (sys_cfg->bad_id_count < sys_cfg->max_bad_id_count)
+                    {
+                        FPS_ERROR_PRINT("Bad id [%s] for uri : [%s]\n", id_obj->string, msg->uri);
+                        sys_cfg->bad_id_count++;
+                    }
                     // Value not in our array ignore
                     continue;
                 }
