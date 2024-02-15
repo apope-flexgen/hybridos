@@ -15,13 +15,13 @@ struct String_Storage_Handle
 // auto x = sizeof(Str_Storage_Handle);
 
 // NOTE(WALKER): This points inside the Simple_Arena
-// also max number of chars is max of u16 -> 65535 chars
+// also max number of chars is max of u32 -> 4,294,967,295 chars
 struct String_Storage
 {
-    static constexpr auto Max_Str_Storage_Size = std::numeric_limits<uint16_t>::max();
+    static constexpr auto Max_Str_Storage_Size = std::numeric_limits<uint32_t>::max();
 
-    uint16_t allocated = 0;
-    uint16_t current_idx = 0;
+    uint32_t allocated = 0;
+    uint32_t current_idx = 0;
     char* data = nullptr;
 
     String_Storage_Handle append_str(std::string_view str)
@@ -33,7 +33,7 @@ struct String_Storage
         memcpy(data + current_idx, str.data(), str.size());
         handle.size = static_cast<uint8_t>(str.size());
         handle.idx = current_idx;
-        current_idx += static_cast<uint16_t>(str.size());
+        current_idx += static_cast<uint32_t>(str.size());
         return handle;
     }
 

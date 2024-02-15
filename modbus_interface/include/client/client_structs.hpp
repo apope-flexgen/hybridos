@@ -793,7 +793,7 @@ static bool allocate_main_workspace_from_config(const config_loader::Client_Conf
 
     // string storage:
     if (!main_workspace.arena.allocate(main_workspace.string_storage.data, configs_array.total_str_length)) return false;
-    main_workspace.string_storage.allocated = static_cast<u16>(configs_array.total_str_length);
+    main_workspace.string_storage.allocated = static_cast<u32>(configs_array.total_str_length);
     main_workspace.string_storage.current_idx = 0; // for reload purposes (in case this function is called again)
 
     // client workspaces (pointers):
