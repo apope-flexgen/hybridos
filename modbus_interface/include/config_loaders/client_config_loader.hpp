@@ -128,7 +128,7 @@ struct Connection
     s64 frequency = 0;
     u64 device_id = 255; // aka: "slave_address"
     s64 debounce = 0;
-    u64 connection_timeout = 2;
+    double connection_timeout = 0.5; // this is the libmodbus default
 
     // derived information:
     Conn_Types conn_type;
@@ -247,10 +247,10 @@ struct Connection
     bool check_connection_timeout(Error_Location& err_loc)
     {
         // TODO(WALKER): What is a good check for baud_rate?
-        if (connection_timeout < 1 || connection_timeout > 10 )
+        if (connection_timeout <= 0.0 || connection_timeout > 10.0 )
         {
             err_loc.err_msg = fmt::format(R"(connection_timeout  (currently: \"{}\") resetting to 2)", connection_timeout);
-            connection_timeout = 2;
+            connection_timeout = 2.0;
         }
         return true;
     }

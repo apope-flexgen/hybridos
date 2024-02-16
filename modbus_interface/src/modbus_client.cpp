@@ -447,16 +447,16 @@ static bool listener_thread(const u8 client_idx) noexcept
     // setup the timeout to be 2 seconds (so we can stop listener thread without it spinning infinitely on errors):
     struct timeval tv;
 
-    tv.tv_sec  = connection_timeout;
+    tv.tv_sec  = 2;
     tv.tv_usec = 0;
     if (setsockopt(fims_gateway.get_socket(), SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv)) == -1)
     {
-        NEW_FPS_ERROR_PRINT("listener for \"{}\": could not set socket timeout to {} seconds. Exiting\n", client_name, connection_timeout);
+        NEW_FPS_ERROR_PRINT("listener for \"{}\": could not set socket timeout to 2 seconds. Exiting\n", client_name);
         return false;
     }
 
-    if(connection_timeout != 2)
-        NEW_FPS_ERROR_PRINT("listener for \"{}\": set socket connection timeout to {} seconds\n", client_name, connection_timeout);
+    if(connection_timeout != 0.5)
+        NEW_FPS_ERROR_PRINT("listener for \"{}\": set modbus connection timeout to {} seconds\n", client_name, connection_timeout);
     // main loop:
     while (my_workspace.keep_running)
     {
