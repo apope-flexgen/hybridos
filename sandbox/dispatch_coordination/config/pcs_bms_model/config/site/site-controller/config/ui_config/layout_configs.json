@@ -3,6 +3,7 @@
     "data": [
         {
             "info": {
+                "icon": "ViewModule",
                 "key": "ess_tab",
                 "name": "ESS"
             }
@@ -19,6 +20,13 @@
                 "icon": "SpaceDashboard",
                 "key": "solar_tab",
                 "name": "Solar"
+            }
+        },
+        {
+            "info": {
+                "icon": "Feeders",
+                "key": "feeders_tab",
+                "name": "Feeders"
             }
         }
     ]

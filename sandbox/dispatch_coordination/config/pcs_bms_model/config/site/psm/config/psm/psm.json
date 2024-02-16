@@ -254,6 +254,8 @@
             "id": "bms_1",
             "cap": 17916,
             "racks": 9,
+            "disablefault": true,
+            "disableluts": true,
             "soc":{
                 "value": 50.0,
                 "faulthighthreshold": 100,
@@ -457,6 +459,8 @@
         {
             "id": "bms_2",
             "cap": 17916,
+            "disablefault": true,
+            "disableluts": true,
             "racks": 9,
             "soc":{
                 "value": 50.0,

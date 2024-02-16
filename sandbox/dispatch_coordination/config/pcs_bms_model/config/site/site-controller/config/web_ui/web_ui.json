@@ -3,7 +3,7 @@
     "ess": false,
     "events": true,
     "features": true,
-    "feeders": true,
+    "feeders": false,
     "fleet_manager_dashboard": true,
     "gen": false,
     "inspectorComponentsName": "test_controller",

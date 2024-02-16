@@ -1,4 +1,5 @@
 # Maint mode tests
+# requires the pcs_bms_model sandbox configs
 from pytest_cases import parametrize, fixture
 from pytests.fims import fims_get, fims_set
 from time import sleep
@@ -36,7 +37,7 @@ def enable_bms_faults():
 
 def test_component_chargeable_power_respected():
     comp_charge = fims_get("/components/flexgen_ess_01/ess_max_charge_power")
-    comp_charge = comp_charge * -1
+    comp_charge = abs(comp_charge) * -1
     Flex_Assertion(Assertion_Type.greater_than_eq, "/assets/ess/ess_01/active_power", comp_charge, 
                    tolerance_type=Tolerance_Type.abs, tolerance=300).make_assertion(),
 
@@ -94,17 +95,17 @@ def test_component_dischargeable_power_respected():
     ),
     # set min charge limit to 4 MW
     # set charge to 4 MW
-    # Should be derated below min charge make sure we are charging at min charge
+    # Should not be derated and have full rated power
     Steps(
         {
             "/assets/ess/ess_01/maint_chargeable_min_limit": 4000,
             "/assets/ess/ess_01/maint_active_power_setpoint": -4000,
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_chargeable_min_limit", 4000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/system_chargeable_power", 4000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_active_power_setpoint", -4000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", -4000, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_chargeable_min_limit", 3000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/system_chargeable_power", 4200, tolerance_type=Tolerance_Type.abs, tolerance=0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_active_power_setpoint", -4200),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", -4200, tolerance_type=Tolerance_Type.abs, tolerance=100),
         ],
         pre_lambda=[
             lambda: test_chargeable_power(),
@@ -148,17 +149,32 @@ def test_component_dischargeable_power_respected():
             lambda: set_bms_soc(98),
         ]
     ),
-    # remove min limits and make sure we charge derated
+    # remove min limits and make sure we still are not derated
     Steps(
         {
-            "/assets/ess/ess_01/maint_active_power_setpoint": -4000,
+            "/assets/ess/ess_01/maint_active_power_setpoint": -4200,
             "/assets/ess/ess_01/maint_min_charge_discharge_enable": False,
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_active_power_setpoint", -4000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_active_power_setpoint", -4200),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_min_charge_discharge_enable", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/system_chargeable_power", 4200, tolerance_type=Tolerance_Type.abs, tolerance=0),
+            Flex_Assertion(Assertion_Type.less_than_eq, "/assets/ess/ess_01/active_power", -4200),
+        ],
+        pre_lambda=[
+            lambda: test_chargeable_power(),
+            lambda: test_component_chargeable_power_respected(),
+        ]
+    ),
+    # add back protection buffers and confirm the charge is derated
+    Steps(
+        {
+            "/assets/ess/ess_01/maint_soc_protection_buffers_disable": False,
+        },
+        [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_min_charge_discharge_enable", False),
             Flex_Assertion(Assertion_Type.less_than_eq, "/assets/ess/ess_01/system_chargeable_power", 4199, tolerance_type=Tolerance_Type.abs, tolerance=0),
-            Flex_Assertion(Assertion_Type.less_than_eq, "/assets/ess/ess_01/active_power", -1000),
+            Flex_Assertion(Assertion_Type.less_than_eq, "/assets/ess/ess_01/active_power", -4199, tolerance_type=Tolerance_Type.abs, tolerance=0),
         ],
         pre_lambda=[
             lambda: test_chargeable_power(),
@@ -196,15 +212,16 @@ def test_component_dischargeable_power_respected():
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/system_dischargeable_power", 4000),
         ]
     ),
-    # set discharge to 4 MW
-    # Should be derated below min discharge make sure we are discharging at min discharge
+    # set discharge to 5 MW
+    # Should not be derated below min discharge. Make sure we are discharging at requested setpoint
     Steps(
         {
-            "/assets/ess/ess_01/maint_active_power_setpoint": 4000,
+            "/assets/ess/ess_01/maint_active_power_setpoint": 4200,
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_active_power_setpoint", 4000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", 4000, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/system_dischargeable_power", 4200, tolerance_type=Tolerance_Type.abs, tolerance=0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_active_power_setpoint", 4200),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", 4200, tolerance_type=Tolerance_Type.abs, tolerance=100),
         ],
         pre_lambda=[
             lambda: test_dischargeable_power(),
@@ -226,12 +243,27 @@ def test_component_dischargeable_power_respected():
         ]
     ),
     # remove min SoC limit
-    # check the discharge is derated
+    # check the discharge still is not derated
     Steps(
         {
             "/assets/ess/ess_01/maint_min_soc_limit": 2,
             "/assets/ess/ess_01/maint_min_charge_discharge_enable": False,
-            "/assets/ess/ess_01/maint_active_power_setpoint": 4000,
+            "/assets/ess/ess_01/maint_active_power_setpoint": 4200,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_min_charge_discharge_enable", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/system_dischargeable_power", 4200, tolerance_type=Tolerance_Type.abs, tolerance=0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", 4200, tolerance_type=Tolerance_Type.abs, tolerance=0),
+        ],
+        pre_lambda=[
+            lambda: test_dischargeable_power(),
+            lambda: test_component_dischargeable_power_respected(),
+        ]
+    ),
+    # add back protection buffers and confirm the discharge is derated
+    Steps(
+        {
+            "/assets/ess/ess_01/maint_soc_protection_buffers_disable": False,
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_min_charge_discharge_enable", False),
@@ -251,13 +283,13 @@ def test_component_dischargeable_power_respected():
             "/assets/ess/ess_01/maint_soc_protection_buffers_disable": True,
             "/assets/ess/ess_01/maint_min_charge_discharge_enable": True,
             "/assets/ess/ess_01/maint_chargeable_min_limit": 10000,
-            "/assets/ess/ess_01/maint_active_power_setpoint": -4000,
+            "/assets/ess/ess_01/maint_active_power_setpoint": -4200,
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/components/flexgen_ess_01/bms_soc", 97, tolerance_type=Tolerance_Type.abs,  tolerance=1, wait_secs=1),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_soc_protection_buffers_disable", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/maint_min_charge_discharge_enable", True),
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", -4000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", -4200),
         ],
         pre_lambda=[
             lambda: set_bms_soc(97),
@@ -270,11 +302,11 @@ def test_component_dischargeable_power_respected():
     Steps(
         {
             "/assets/ess/ess_01/maint_dischargeable_min_limit": 10000,
-            "/assets/ess/ess_01/maint_active_power_setpoint": 4000,
+            "/assets/ess/ess_01/maint_active_power_setpoint": 4200,
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/components/flexgen_ess_01/bms_soc", 3, tolerance_type=Tolerance_Type.abs,  tolerance=1, wait_secs=1),
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", 4000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", 4200),
         ],
         pre_lambda=[
             lambda: set_bms_soc(3),
@@ -289,7 +321,7 @@ def test_component_dischargeable_power_respected():
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/components/flexgen_ess_01/bms_soc", 50, tolerance_type=Tolerance_Type.abs,  tolerance=1, wait_secs=1),
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", 4000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", 4200),
         ],
         pre_lambda=[
             lambda: set_bms_soc(50),
@@ -301,11 +333,11 @@ def test_component_dischargeable_power_respected():
     # set the min limits to above rated power. Make sure we charge at rated power.
     Steps(
         {
-            "/assets/ess/ess_01/maint_active_power_setpoint": -4000,
+            "/assets/ess/ess_01/maint_active_power_setpoint": -4200,
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/components/flexgen_ess_01/bms_soc", 50, tolerance_type=Tolerance_Type.abs,  tolerance=1, wait_secs=1),
-            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", -4000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", -4200),
         ],
         pre_lambda=[
             lambda: set_bms_soc(50),

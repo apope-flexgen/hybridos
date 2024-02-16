@@ -341,6 +341,7 @@ void Asset_ESS::set_calibration_vars(ESS_Calibration_Settings settings) {
     raw_calibration_setpoint = settings.raw_feature_setpoint;
 
     if (!inMaintenance) {
+        // the Calibration feature will send true when it's enabled and false when it's disabled
         soc_protection_buffers_disable_flag = settings.soc_protection_buffers_disable;
     } else {
         soc_protection_buffers_disable_flag = maint_soc_protection_buffers_disable_flag;
@@ -997,7 +998,7 @@ bool Asset_ESS::generate_asset_ui(fmt::memory_buffer& buf, const char* const var
     // Only need to maintain the maint_actions_select_ctl if there are any actions
     // (TODO: JUD) Might could get away with not pubbing this info at all.
     maint_actions_select_ctl.enabled = inMaintenance && action_status.current_sequence_name.empty();
-    goodBody = maint_actions_select_ctl.makeJSONObjectWithActionOptions(buf, actions); 
+    goodBody = maint_actions_select_ctl.makeJSONObjectWithActionOptions(buf, actions);
 
     return (goodBody);
 }
@@ -1042,7 +1043,7 @@ void Asset_ESS::process_asset() {
         soc.value.value_float = process_soc(soc_raw.value.value_float);
 
     // limit chargeable power as soc reaches high end of range
-    if (greater_than_or_near(soc.value.value_float, chgSocBegin, 0.001f)) {
+    if (!soc_protection_buffers_disable_flag && greater_than_or_near(soc.value.value_float, chgSocBegin, 0.001f)) {
         float max_limit = 0.0f;
         if (inMaintenance && maint_min_charge_discharge_enable_flag)
             max_limit = maint_chargeable_min_limit;
@@ -1060,7 +1061,7 @@ void Asset_ESS::process_asset() {
         chargeable_power.value.value_float = fabsf(chargeable_power_raw.value.value_float);
 
     // limit dischargeable power as soc reaches low end of range
-    if (less_than_or_near(soc.value.value_float, dischgSocBegin, 0.001f)) {
+    if (!soc_protection_buffers_disable_flag && less_than_or_near(soc.value.value_float, dischgSocBegin, 0.001f)) {
         float min_limit = 0.0f;
         if (inMaintenance && maint_min_charge_discharge_enable_flag)
             min_limit = maint_dischargeable_min_limit;
@@ -1237,7 +1238,7 @@ float Asset_ESS::process_soc(float rawSoc) {
  *
  * @param cmd (const char*) the function name.
  * @param value (Value_Object*) the expected return value.
- * @param tolerance_percent (int) allows for a tolerance percent. 
+ * @param tolerance_percent (int) allows for a tolerance percent.
  * @return success (bool)
  */
 bool Asset_ESS::call_action_functions(const char* cmd, Value_Object* value, int tolerance_percent) {

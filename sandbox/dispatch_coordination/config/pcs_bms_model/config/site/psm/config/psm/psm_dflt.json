@@ -23,7 +23,7 @@
         },
         "qmax": {
             "default": 100000,
-            "expression": [{"MAX":["$child.Qlim", "$child.Qhigh", "$child.Sn"]}, "*", "$child",  "*", 1.2],
+            "expression": [{"MAX":["$child.Qlim", "$child.Qhigh", "$child.Sn", "$child.Qmax"]}, "*", "$child",  "*", 1.2],
             "units": "kVAR",
             "note0": "numChildren * MAX(childrenQlim)"
         },
@@ -193,7 +193,7 @@
             "default": []
         }
     },
-    "gens": {
+    "gen": {
         "Oncmd": {
             "default": true
         },
@@ -560,6 +560,53 @@
                     "units": "percent SOC"
                 }
         },
+        "MaxCellTemp": {
+            "value":{
+                "default": 30.0,
+                "units": "Degrees C"
+            },"faulthighthreshold": {
+                "default": 60.0,
+                "units": "Degrees C"
+            },
+            "alarmhighthreshold": {
+                "default": 55.0,
+                "units": "Degrees C"
+            },
+            "alarmlowthreshold": {
+                "default": -30.0,
+                "units": "Degrees C"
+            },
+            "faultlowthreshold": {
+                "default": -35.0,
+                "units": "Degrees C"
+            }
+        },
+        "MinCellTemp": {
+            "value":{
+                "default": 24.0,
+                "units": "Degrees C"
+            },"faulthighthreshold": {
+                "default": 60.0,
+                "units": "Degrees C"
+            },
+            "alarmhighthreshold": {
+                "default": 55.0,
+                "units": "Degrees C"
+            },
+            "alarmlowthreshold": {
+                "default": -30.0,
+                "units": "Degrees C"
+            },
+            "faultlowthreshold": {
+                "default": -35.0,
+                "units": "Degrees C"
+            }
+        },
+        "AvgCellTemp": {
+            "default": 25.0,
+            "units": "count",
+            "note0": "Average CellTemp"
+        },
         "StatusCfg": {
             "default": [
                 {
@@ -574,6 +621,18 @@
                     "invert":true
                 }
             ]
+        },
+        "SocChargeVec": {
+            "default": [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 91, 92, 93, 94, 95, 100]
+        },
+        "PChargeVec": {
+            "default": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.7, 0.3, 0.1, 0, 0]
+        },
+        "SocDischargeVec": {
+            "default": [0, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+        },
+        "PDischargeVec": {
+            "default": [0, 0, 0.1, 0.3, 0.7, 0.95, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         },
         "CtrlWord1Cfg": {
             "default": [
@@ -864,7 +923,38 @@
             "default": 1000.0,
             "units": "kW/s",
             "note0": "PCS reactive power ramp-down rate during operation"
+        },
+        "RampEnable": {
+            "default": false,
+            "note0": "Enables all PCS ramp rate operations"
+        },
+        "AbsRampRate": {
+            "default": false,
+            "note0": "Signals that ramp rates are measured in absolute value of power per second instead of percentage of maximum power per second"
+        }
+    },
+    "dcbus": {
+        "Plim": {
+            "expression": [{"MAX": ["$parent.Slim", "$Parent.Plim", "$Parent.Pmax"]}, "*", 1.2, "*", "$child"],
+            "default": 8000.0,
+            "units": "kW"
+        },
+        "Vnom": {
+            "expression": [{"AVG": ["$child.Vnom"]}],
+            "default": 1330,
+            "units": "kW"
+        }
+    },
+    "dcdc": {
+        "Plim": {
+            "expression": [{"MAX": ["$parent.Slim", "$Parent.Plim", "$Parent.Pmax"]}, "*", "$child"],
+            "default": 8000.0,
+            "units": "kW"
+        },
+        "Vnom": {
+            "expression": [{"AVG": ["$child.Vnom"]}],
+            "default": 1330,
+            "units": "kW"
         }
     }
 }
-
