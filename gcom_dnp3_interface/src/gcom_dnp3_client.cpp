@@ -171,6 +171,9 @@ void addPointToPubWork(void *pDbPoint)
     else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Binary)
     {
         point->value = static_cast<double>(dbPoint->data.binary.value);
+    }else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+    {
+        point->value = static_cast<double>(dbPoint->data.counter.value);
     }else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS||
     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
@@ -277,8 +280,7 @@ void addPointToIntervalPubWork(void *pDbPoint)
  * @param type TMWSIM_EVENT_TYPE, which will likely only ever be TMWSIM_POINT_UPDATE (though
  * it could potentially also be TMWSIM_POINT_ADD, TMWSIM_POINT_DELETE, or TMWSIM_CLEAR_DATABASE.)
  * @param objectGroup DNPDEFS_OBJ_GROUP_ID corresponds to any valid DNP3 group number. This
- * function currently only handles Group 30/32, Group 1/2, Group 40 (if watchdog point), and
- * Group 10 (if watchdog point).
+ * function currently only handles Group 30/32, Group 1/2, Group 40, Group 10, and Group 20/22.
  * @param pointNumber TMWTYPES_UINT the point number for the current point being handled
 */
 void updatePointCallback(void *pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_OBJ_GROUP_ID objectGroup, TMWTYPES_USHORT pointNumber)
@@ -447,6 +449,48 @@ void updatePointCallback(void *pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_OBJ_GR
                 if(!spam_limit(&clientSys, clientSys.point_errors))
                 {
                     FPS_ERROR_LOG("unable to find binary output point number %d ", pointNumber);
+                    FPS_LOG_IT("could_not_find_point");
+                }
+            }
+        } else if (objectGroup == DNPDEFS_OBJ_20_RUNNING_CNTRS || objectGroup == DNPDEFS_OBJ_22_CNTR_EVENTS)
+        {
+            TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterLookupPoint(pDbHandle, pointNumber);
+            if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr)
+            {
+                GcomSystem *sys = ((FlexPoint *)(dbPoint->flexPointHandle))->sys;
+                checkPointCommLost(dbPoint);
+                if (sys->protocol_dependencies->dnp3.pub_all || isDirectPub(dbPoint))
+                {
+                    addPointToPubWork(dbPoint);
+                }
+                else if (((FlexPoint *)(dbPoint->flexPointHandle))->batch_pubs && ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub)
+                {
+                    if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer))
+                    {
+                        tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
+                                       ((FlexPoint *)(dbPoint->flexPointHandle))->batch_pub_rate,
+                                       sys->protocol_dependencies->dnp3.pChannel,
+                                       addPointToPubWork,
+                                       dbPoint);
+                    }
+                }
+                else if (((FlexPoint *)(dbPoint->flexPointHandle))->interval_pubs && ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub)
+                {
+                    if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer))
+                    {
+                        tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
+                                       ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate,
+                                       sys->protocol_dependencies->dnp3.pChannel,
+                                       addPointToIntervalPubWork,
+                                       dbPoint);
+                    }
+                }
+            }
+            else
+            {
+                if(!spam_limit(&clientSys, clientSys.point_errors))
+                {
+                    FPS_ERROR_LOG("unable to find counter point number %d ", pointNumber);
                     FPS_LOG_IT("could_not_find_point");
                 }
             }
@@ -1337,9 +1381,10 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
 
         double value = jval_to_double(to_set);
         handle_batch_sets(dbPoint, value);
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 #ifndef DNP3_TEST_MODE

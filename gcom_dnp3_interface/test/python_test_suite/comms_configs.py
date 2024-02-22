@@ -53,7 +53,8 @@ class MergedRegister:
             self.register_type in binary_output_registers):
             self.method = "set"
         elif (self.register_type in analog_input_registers or
-              self.register_type in binary_input_registers):
+              self.register_type in binary_input_registers or
+              self.register_type == "counter"):
             self.method = "pub"
         else:
             return
@@ -81,11 +82,19 @@ class MergedRegister:
             elif (self.client_variation in ["Group30Var6"] or
                   self.server_variation in ["Group30Var6"]):
                 self.data_type = "float64"
+        elif self.register_type in 'counter':
+            if self.client_variation is None and self.server_variation is None:
+                self.data_type = "uint32"
+            elif (self.client_variation in ["Group20Var1","Group20Var3","Group20Var5","Group20Var7"] or
+                  self.server_variation in ["Group20Var1","Group20Var3","Group20Var5","Group20Var7"]):
+                self.data_type = "uint32"
+            elif (self.client_variation in ["Group20Var2","Group20Var4","Group20Var6","Group20Var8"] or
+                  self.server_variation in ["Group20Var2","Group20Var4","Group20Var6","Group20Var8"]):
+                self.data_type = "uint16"
         elif (self.register_type in binary_input_registers or
               self.register_type in binary_output_registers):
             self.data_type = "bool"
         elif self.register_type in ['AnOPInt32', 'AnOPInt16', 'AnOPF32', 'analogOS']:
-
             if self.client_variation is None and self.server_variation is None:
                 if self.register_type == 'AnOPInt32':
                     self.data_type = "int32"

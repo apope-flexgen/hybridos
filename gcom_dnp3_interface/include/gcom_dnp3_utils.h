@@ -99,6 +99,7 @@ enum Type_of_Var
     Type_Binary,   // Group 1 both variations: Binary Inputs
     Type_AnalogOS, // Group 40 all variations: Analog Output Status
     Type_BinaryOS, // Group 10 all variations: Binary Output Status
+    Type_Counter,  // Group 20 all variations: Counters
     NumTypes
 };
 
@@ -177,6 +178,32 @@ enum AnalogInputEventVariations
     Group32Var6,// 64-bit float without time
     Group32Var7,// 32-bit float with time
     Group32Var8 // 64-bit float with time
+};
+
+enum CounterVariations
+{
+    Group20Var0, // non-existent placeholder
+    Group20Var1, // 32-bit unsigned integer with flag
+    Group20Var2, // 16-bit unsigned integer with flag
+    Group20Var3, // 32-bit unsigned integer with flag, delta
+    Group20Var4, // 16-bit unsigned integer with flag, delta
+    Group20Var5, // 32-bit unsigned integer without flag
+    Group20Var6, // 16-bit unsigned integer without flag
+    Group20Var7, // 32-bit unsigned integer without flag, delta
+    Group20Var8, // 16-bit unsigned integer without flag, delta
+};
+
+enum CounterEventVariations
+{
+    Group22Var0, // non-existent placeholder
+    Group22Var1, // 32-bit unsigned integer with flag
+    Group22Var2, // 16-bit unsigned integer with flag
+    Group22Var3, // 32-bit unsigned integer with flag, delta
+    Group22Var4, // 16-bit unsigned integer with flag, delta
+    Group22Var5, // 32-bit unsigned integer with flag and time
+    Group22Var6, // 16-bit unsigned integer with flag and time
+    Group22Var7, // 32-bit unsigned integer with flag and time, delta
+    Group22Var8, // 16-bit unsigned integer with flag and time, delta
 };
 
 enum

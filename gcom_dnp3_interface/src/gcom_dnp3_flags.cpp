@@ -2,6 +2,7 @@
 extern "C"
 {
 #include "tmwscl/dnp/sdnpo002.h"
+#include "tmwscl/dnp/sdnpo022.h"
 #include "tmwscl/dnp/sdnpo032.h"
 #include "tmwscl/dnp/sdnpsim.h"
 #include "tmwscl/dnp/mdnpsim.h"
@@ -92,6 +93,29 @@ void pointTimeout(void *pPointTimeoutStruct)
             dnp3_sys->point_status_info->num_analog_inputs_online--;
             dnp3_sys->point_status_info->num_analog_inputs_comm_lost++;
             dnp3_sys->point_status_info->point_status_mutex.unlock();
+        }else if (dbPoint->type == TMWSIM_TYPE_COUNTER)
+        {
+            TMWTYPES_ULONG counterValue;
+            ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
+            counterValue = tmwsim_getCounterValue(dbPoint);
+            ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
+            TMWDTIME timeStamp;
+            sdnputil_getDateTime(((TMWSESN *)(dbPoint->pSCLHandle)), &timeStamp);
+            if (((FlexPoint *)dbPoint->flexPointHandle)->event_pub)
+            {
+                ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
+                sdnpo022_addEvent(((TMWSESN *)(dbPoint->pSCLHandle)), dbPoint->pointNumber, counterValue, dbPoint->flags, &timeStamp);
+                ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
+            }
+            if(!spam_limit(sys, sys->comms_errors))
+            {
+                FPS_ERROR_LOG("Counter [%d] status is [COMM_LOST]", dbPoint->pointNumber);
+                FPS_LOG_IT("comm_lost");
+            }
+            dnp3_sys->point_status_info->point_status_mutex.lock();
+            dnp3_sys->point_status_info->num_counters_online--;
+            dnp3_sys->point_status_info->num_counters_comm_lost++;
+            dnp3_sys->point_status_info->point_status_mutex.unlock();
         }
         else
         {
@@ -143,6 +167,18 @@ void initTimers(GcomSystem &sys)
             tmwtimer_start(&((FlexPoint *)dbPoint->flexPointHandle)->timeout_timer, ((FlexPoint *)dbPoint->flexPointHandle)->timeout, dnp3_sys->pChannel, pointTimeout, point_timeout_struct);
         }
     }
+    for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+    {
+        dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+
+        if (dbPoint && (dbPoint->flexPointHandle != nullptr) && ((FlexPoint *)dbPoint->flexPointHandle)->timeout > 0)
+        {
+            PointTimeoutStruct *point_timeout_struct = new PointTimeoutStruct();
+            point_timeout_struct->dbPoint = dbPoint;
+            point_timeout_struct->dnp3_sys = dnp3_sys;
+            tmwtimer_start(&((FlexPoint *)dbPoint->flexPointHandle)->timeout_timer, ((FlexPoint *)dbPoint->flexPointHandle)->timeout, dnp3_sys->pChannel, pointTimeout, point_timeout_struct);
+        }
+    }
     for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs); i++)
     {
         dbPoint = (TMWSIM_POINT *)sdnpsim_binInGetEnabledPoint(dnp3_sys->dbHandle, i);
@@ -164,7 +200,7 @@ void setInputPointOnline(TMWSIM_POINT *dbPoint)
     ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock();
     if ((dbPoint->flags & DNPDEFS_DBAS_FLAG_COMM_LOST) != 0)
     {
-        if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+        if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
         {
             dnp3_sys->point_status_info->point_status_mutex.lock();
             dnp3_sys->point_status_info->num_analog_inputs_comm_lost--;
@@ -173,6 +209,17 @@ void setInputPointOnline(TMWSIM_POINT *dbPoint)
             if(!spam_limit(sys, sys->comms_errors))
             {
                 FPS_INFO_LOG("Analog input point [%d] status is [ONLINE]", dbPoint->pointNumber);
+            }
+        }
+        else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+        {
+            dnp3_sys->point_status_info->point_status_mutex.lock();
+            dnp3_sys->point_status_info->num_counters_comm_lost--;
+            dnp3_sys->point_status_info->num_counters_online++;
+            dnp3_sys->point_status_info->point_status_mutex.unlock();
+            if(!spam_limit(sys, sys->comms_errors))
+            {
+                FPS_INFO_LOG("Counter [%d] status is [ONLINE]", dbPoint->pointNumber);
             }
         }
         else
@@ -189,11 +236,17 @@ void setInputPointOnline(TMWSIM_POINT *dbPoint)
     }
     else if ((dbPoint->flags & DNPDEFS_DBAS_FLAG_RESTART) != 0)
     {
-        if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+        if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
         {
             dnp3_sys->point_status_info->point_status_mutex.lock();
             dnp3_sys->point_status_info->num_analog_inputs_restart--;
             dnp3_sys->point_status_info->num_analog_inputs_online++;
+            dnp3_sys->point_status_info->point_status_mutex.unlock();
+        } else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+        {
+            dnp3_sys->point_status_info->point_status_mutex.lock();
+            dnp3_sys->point_status_info->num_counters_restart--;
+            dnp3_sys->point_status_info->num_counters_online++;
             dnp3_sys->point_status_info->point_status_mutex.unlock();
         }
         else
@@ -233,11 +286,19 @@ void checkPointCommLost(TMWSIM_POINT *dbPoint)
     {
         if ((dbPoint->flags & DNPDEFS_DBAS_FLAG_COMM_LOST) != 0)
         {
-            if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+            if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
             {
                 if(!spam_limit(sys, sys->comms_errors))
                 {
                     FPS_ERROR_LOG("Analog input point [%d] status is [COMM_LOST]", dbPoint->pointNumber);
+                    FPS_LOG_IT("comm_lost");
+                }
+            }
+            else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+            {
+                if(!spam_limit(sys, sys->comms_errors))
+                {
+                    FPS_ERROR_LOG("Counter [%d] status is [COMM_LOST]", dbPoint->pointNumber);
                     FPS_LOG_IT("comm_lost");
                 }
             }
@@ -252,11 +313,18 @@ void checkPointCommLost(TMWSIM_POINT *dbPoint)
         }
         else if ((dbPoint->flags & DNPDEFS_DBAS_FLAG_ON_LINE) != 0 && (((FlexPoint *)dbPoint->flexPointHandle)->lastFlags & DNPDEFS_DBAS_FLAG_COMM_LOST) != 0)
         {
-            if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+            if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
             {
                 if(!spam_limit(sys, sys->comms_errors))
                 {
                     FPS_INFO_LOG("Analog input point [%d] status is [ONLINE]", dbPoint->pointNumber);
+                }
+            }
+            else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+            {
+                if(!spam_limit(sys, sys->comms_errors))
+                {
+                    FPS_INFO_LOG("Counter [%d] status is [ONLINE]", dbPoint->pointNumber);
                 }
             }
             else
@@ -269,7 +337,7 @@ void checkPointCommLost(TMWSIM_POINT *dbPoint)
         }
         if ((dbPoint->flags & DNPDEFS_DBAS_FLAG_OVER_RANGE) != 0)
         {
-            if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+            if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
             {
                 if(!spam_limit(sys, sys->comms_errors))
                 {
@@ -277,14 +345,28 @@ void checkPointCommLost(TMWSIM_POINT *dbPoint)
                     FPS_LOG_IT("overflow");
                 }
             }
-        }
-        else if ((dbPoint->flags & DNPDEFS_DBAS_FLAG_OVER_RANGE) == 0 && (((FlexPoint *)dbPoint->flexPointHandle)->lastFlags & DNPDEFS_DBAS_FLAG_OVER_RANGE) != 0)
-        {
-            if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+            else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
             {
                 if(!spam_limit(sys, sys->comms_errors))
                 {
-                    FPS_INFO_LOG("Analog input point [%d] status is back in range.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG("Counter [%d] status is [ROLLOVER]", dbPoint->pointNumber);
+                    FPS_LOG_IT("overflow");
+                }
+            }
+        }
+        else if ((dbPoint->flags & DNPDEFS_DBAS_FLAG_OVER_RANGE) == 0 && (((FlexPoint *)dbPoint->flexPointHandle)->lastFlags & DNPDEFS_DBAS_FLAG_OVER_RANGE) != 0)
+        {
+            if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
+            {
+                if(!spam_limit(sys, sys->comms_errors))
+                {
+                    FPS_INFO_LOG("Analog input point [%d] is back in range.", dbPoint->pointNumber);
+                }
+            } else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+            {
+                if(!spam_limit(sys, sys->comms_errors))
+                {
+                    FPS_INFO_LOG("Counter [%d] is back in range.", dbPoint->pointNumber);
                 }
             }
         }
@@ -306,16 +388,19 @@ void updatePointStatus(GcomSystem &sys)
     sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_online = 0;
     sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_online = 0;
     sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_online = 0;
+    sys.protocol_dependencies->dnp3.point_status_info->num_counters_online = 0;
 
     sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart = 0;
     sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_restart = 0;
     sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_restart = 0;
     sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_restart = 0;
+    sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart = 0;
 
     sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost = 0;
     sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_comm_lost = 0;
     sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_comm_lost = 0;
     sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_comm_lost = 0;
+    sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost = 0;
 
     dbPoint = tmwsim_tableGetFirstPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogOutputs);
     for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogOutputs); i++)
@@ -408,6 +493,29 @@ void updatePointStatus(GcomSystem &sys)
         }
         dbPoint = tmwsim_tableGetNextPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs, dbPoint);
     }
+
+    dbPoint = tmwsim_tableGetFirstPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters);
+    for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+    {
+        if (dbPoint && dbPoint->flexPointHandle != TMWDEFS_NULL)
+        {
+            sys.db_mutex.lock_shared();
+            if ((dbPoint->flags & DNPDEFS_DBAS_FLAG_ON_LINE) != 0)
+            {
+                sys.protocol_dependencies->dnp3.point_status_info->num_counters_online++;
+            }
+            else if ((dbPoint->flags & DNPDEFS_DBAS_FLAG_RESTART) != 0)
+            {
+                sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart++;
+            }
+            else if ((dbPoint->flags & DNPDEFS_DBAS_FLAG_COMM_LOST) != 0)
+            {
+                sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost++;
+            }
+            sys.db_mutex.unlock_shared();
+        }
+        dbPoint = tmwsim_tableGetNextPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters, dbPoint);
+    }
 }
 
 /// @brief 
@@ -436,11 +544,17 @@ void checkInputOverflow(TMWSIM_POINT *dbPoint)
         }
         else if ((dbPoint->flags & DNPDEFS_DBAS_FLAG_OVER_RANGE) == 0 && (((FlexPoint *)dbPoint->flexPointHandle)->lastFlags & DNPDEFS_DBAS_FLAG_OVER_RANGE) != 0)
         {
-            if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+            if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
             {
                 if(!spam_limit(sys, sys->point_errors))
                 {
                     FPS_INFO_LOG("Analog input point [%d] is back in range.", dbPoint->pointNumber);
+                }
+            } else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+            {
+                if(!spam_limit(sys, sys->point_errors))
+                {
+                    FPS_INFO_LOG("Counter [%d] is back in range.", dbPoint->pointNumber);
                 }
             } else if (dbPoint->type == TMWSIM_TYPE_BINARY){
                 if(!spam_limit(sys, sys->point_errors))

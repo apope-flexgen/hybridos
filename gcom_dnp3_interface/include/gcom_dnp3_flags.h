@@ -33,21 +33,25 @@ struct PointStatusInfo {
     uint64_t num_binary_inputs = 0;
     uint64_t num_analog_outputs = 0;
     uint64_t num_binary_outputs = 0;
+    uint64_t num_counters = 0;
 
     uint64_t num_analog_inputs_online = 0;
     uint64_t num_binary_inputs_online = 0;
     uint64_t num_analog_outputs_online = 0;
     uint64_t num_binary_outputs_online = 0;
+    uint64_t num_counters_online = 0;
 
     uint64_t num_analog_inputs_restart = 0;
     uint64_t num_binary_inputs_restart = 0;
     uint64_t num_analog_outputs_restart = 0;
     uint64_t num_binary_outputs_restart = 0;
+    uint64_t num_counters_restart = 0;
 
     uint64_t num_analog_inputs_comm_lost = 0;
     uint64_t num_binary_inputs_comm_lost = 0;
-    uint64_t num_analog_outputs_comm_lost = 0; // does this make sense to have?
-    uint64_t num_binary_outputs_comm_lost = 0; // does this make sense to have?
+    uint64_t num_analog_outputs_comm_lost = 0;
+    uint64_t num_binary_outputs_comm_lost = 0;
+    uint64_t num_counters_comm_lost = 0;
 };
 
 /**
@@ -250,12 +254,21 @@ struct fmt::formatter<PointStatusInfo>
         fmt::format_to(ctx.out(), R"("total": {}, )", point_status_info.num_analog_outputs);
         fmt::format_to(ctx.out(), R"("online": {}, )", point_status_info.num_analog_outputs_online);
         fmt::format_to(ctx.out(), R"("restart": {})", point_status_info.num_analog_outputs_restart);
+        // no comm_lost because online = ready for commands
         fmt::format_to(ctx.out(), R"(}}, )");
 
         fmt::format_to(ctx.out(), R"("binary_outputs": {{)");
         fmt::format_to(ctx.out(), R"("total": {}, )", point_status_info.num_binary_outputs); 
         fmt::format_to(ctx.out(), R"("online": {}, )", point_status_info.num_binary_outputs_online);
         fmt::format_to(ctx.out(), R"("restart": {})", point_status_info.num_binary_outputs_restart);
+        // no comm_lost because online = ready for commands
+        fmt::format_to(ctx.out(), R"(}}, )");
+
+        fmt::format_to(ctx.out(), R"("counters": {{)");
+        fmt::format_to(ctx.out(), R"("total": {}, )", point_status_info.num_counters); 
+        fmt::format_to(ctx.out(), R"("online": {}, )", point_status_info.num_counters_online);
+        fmt::format_to(ctx.out(), R"("restart": {}, )", point_status_info.num_counters_restart);
+        fmt::format_to(ctx.out(), R"("comm_lost": {})", point_status_info.num_counters_comm_lost);
         return fmt::format_to(ctx.out(), R"(}})");
     }
 };

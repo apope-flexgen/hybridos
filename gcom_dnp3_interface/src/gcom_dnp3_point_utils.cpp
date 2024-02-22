@@ -76,6 +76,63 @@ void format_point_value(fmt::memory_buffer &send_buf, TMWSIM_POINT *dbPoint, dou
             }
         }
     }
+    else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+    {
+        if ((((FlexPoint *)(dbPoint->flexPointHandle))->scale) == 0.0)
+        {
+            switch (dbPoint->defaultStaticVariation)
+            {
+            case Group20Var1:
+            case Group20Var3:
+            case Group20Var5:
+            case Group20Var7:
+            {
+                FORMAT_TO_BUF(send_buf, R"({})", static_cast<uint32_t>(value));
+                break;
+            }
+            case Group20Var2:
+            case Group20Var4:
+            case Group20Var6:
+            case Group20Var8:
+            {
+                FORMAT_TO_BUF(send_buf, R"({})", static_cast<uint16_t>(value));
+                break;
+            }
+            default:
+            {
+                FORMAT_TO_BUF(send_buf, R"({:.{}g})", value, std::numeric_limits<double>::max_digits10 - 1);
+                break;
+            }
+            }
+        }
+        else
+        {
+            switch (dbPoint->defaultStaticVariation)
+            {
+            case Group20Var1:
+            case Group20Var3:
+            case Group20Var5:
+            case Group20Var7:
+            {
+                FORMAT_TO_BUF(send_buf, R"({:.{}g})", static_cast<uint32_t>(value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
+                break;
+            }
+            case Group20Var2:
+            case Group20Var4:
+            case Group20Var6:
+            case Group20Var8:
+            {
+                FORMAT_TO_BUF(send_buf, R"({:.{}g})", static_cast<uint16_t>(value) / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
+                break;
+            }
+            default:
+            {
+                FORMAT_TO_BUF(send_buf, R"({:.{}g})", value / (((FlexPoint *)(dbPoint->flexPointHandle))->scale), std::numeric_limits<double>::max_digits10 - 1);
+                break;
+            }
+            }
+        }
+    }
     else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
              ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
              ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||

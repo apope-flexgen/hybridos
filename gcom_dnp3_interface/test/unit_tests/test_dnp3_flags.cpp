@@ -196,6 +196,21 @@ TEST_SUITE("dnp3_flags")
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 0);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == 0);
 
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+                sys.protocol_dependencies->dnp3.point_status_info->num_counters_online++;
+                sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart--;
+            }
+        }
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == 5);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 0);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == 0);
+
         for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs); i++)
         {
             dbPoint = (TMWSIM_POINT *)sdnpsim_binInGetEnabledPoint(dnp3_sys->dbHandle, i);
@@ -227,6 +242,26 @@ TEST_SUITE("dnp3_flags")
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_online == (5-count));
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 0);
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == count);
+                delete pPointTimeoutStruct;
+            }
+        }
+
+        count = 0;
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                count++;
+                PointTimeoutStruct *pPointTimeoutStruct = new PointTimeoutStruct();
+                pPointTimeoutStruct->dbPoint = dbPoint;
+                pPointTimeoutStruct->dnp3_sys = dnp3_sys;
+                pointTimeout(pPointTimeoutStruct);
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_COMM_LOST);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == (5-count));
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 0);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == count);
                 delete pPointTimeoutStruct;
             }
         }
@@ -270,6 +305,11 @@ TEST_SUITE("dnp3_flags")
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 5);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == 0);
 
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == 0);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 5);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == 0);
+
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs == 5);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_online == 0);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_restart == 5);
@@ -289,6 +329,23 @@ TEST_SUITE("dnp3_flags")
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_online == 0);
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 5);
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == 0);
+            }
+        }
+
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                PointTimeoutStruct *pPointTimeoutStruct = new PointTimeoutStruct();
+                pPointTimeoutStruct->dbPoint = dbPoint;
+                pPointTimeoutStruct->dnp3_sys = dnp3_sys;
+                pointTimeout(pPointTimeoutStruct);
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == 0);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 5);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == 0);
             }
         }
 
@@ -331,6 +388,15 @@ TEST_SUITE("dnp3_flags")
             }
         }
 
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                REQUIRE(!((FlexPoint *)dbPoint->flexPointHandle)->timeout_timer.active);
+            }
+        }
+
         for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs); i++)
         {
             dbPoint = (TMWSIM_POINT *)sdnpsim_binInGetEnabledPoint(dnp3_sys->dbHandle, i);
@@ -345,6 +411,15 @@ TEST_SUITE("dnp3_flags")
         for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs); i++)
         {
             dbPoint = (TMWSIM_POINT *)sdnpsim_anlgInGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                CHECK(((FlexPoint *)dbPoint->flexPointHandle)->timeout_timer.active);
+            }
+        }
+
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
                 CHECK(((FlexPoint *)dbPoint->flexPointHandle)->timeout_timer.active);
@@ -401,6 +476,15 @@ TEST_SUITE("dnp3_flags")
             }
         }
 
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                REQUIRE(!((FlexPoint *)dbPoint->flexPointHandle)->timeout_timer.active);
+            }
+        }
+
         for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs); i++)
         {
             dbPoint = (TMWSIM_POINT *)mdnpsim_binaryInputGetPoint(dnp3_sys->dbHandle, i);
@@ -415,6 +499,15 @@ TEST_SUITE("dnp3_flags")
         for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs); i++)
         {
             dbPoint = (TMWSIM_POINT *)mdnpsim_analogInputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                CHECK(!((FlexPoint *)dbPoint->flexPointHandle)->timeout_timer.active);
+            }
+        }
+
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterGetPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
                 CHECK(!((FlexPoint *)dbPoint->flexPointHandle)->timeout_timer.active);
@@ -473,6 +566,21 @@ TEST_SUITE("dnp3_flags")
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 0);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == 0);
 
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+                sys.protocol_dependencies->dnp3.point_status_info->num_counters_online++;
+                sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart--;
+            }
+        }
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == 5);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 0);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == 0);
+
         for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs); i++)
         {
             dbPoint = (TMWSIM_POINT *)sdnpsim_binInGetEnabledPoint(dnp3_sys->dbHandle, i);
@@ -503,6 +611,24 @@ TEST_SUITE("dnp3_flags")
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_online == 5);
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 0);
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == 0);
+            }
+        }
+
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                PointTimeoutStruct *pPointTimeoutStruct = new PointTimeoutStruct();
+                pPointTimeoutStruct->dbPoint = dbPoint;
+                pPointTimeoutStruct->dnp3_sys = dnp3_sys;
+                ((FlexPoint *)dbPoint->flexPointHandle)->timeout_timer.pCallbackParam = pPointTimeoutStruct;
+                setInputPointOnline(dbPoint);
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == 5);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 0);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == 0);
             }
         }
 
@@ -543,6 +669,11 @@ TEST_SUITE("dnp3_flags")
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 5);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == 0);
 
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == 0);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 5);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == 0);
+
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs == 5);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_online == 0);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_restart == 5);
@@ -567,6 +698,27 @@ TEST_SUITE("dnp3_flags")
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == 0);
             }
         }
+
+        count = 0;
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                count++;
+                PointTimeoutStruct *pPointTimeoutStruct = new PointTimeoutStruct();
+                pPointTimeoutStruct->dbPoint = dbPoint;
+                pPointTimeoutStruct->dnp3_sys = dnp3_sys;
+                ((FlexPoint *)dbPoint->flexPointHandle)->timeout_timer.pCallbackParam = pPointTimeoutStruct;
+                setInputPointOnline(dbPoint);
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == count);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == (5-count));
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == 0);
+            }
+        }
+
 
         count = 0;
         for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs); i++)
@@ -617,6 +769,21 @@ TEST_SUITE("dnp3_flags")
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 0);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == 5);
 
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_COMM_LOST;
+                sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost++;
+                sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart--;
+            }
+        }
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == 0);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 0);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == 5);
+
         for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs); i++)
         {
             dbPoint = (TMWSIM_POINT *)sdnpsim_binInGetEnabledPoint(dnp3_sys->dbHandle, i);
@@ -649,6 +816,26 @@ TEST_SUITE("dnp3_flags")
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_online == count);
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 0);
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == (5-count));
+            }
+        }
+
+        count = 0;
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                count++;
+                PointTimeoutStruct *pPointTimeoutStruct = new PointTimeoutStruct();
+                pPointTimeoutStruct->dbPoint = dbPoint;
+                pPointTimeoutStruct->dnp3_sys = dnp3_sys;
+                ((FlexPoint *)dbPoint->flexPointHandle)->timeout_timer.pCallbackParam = pPointTimeoutStruct;
+                setInputPointOnline(dbPoint);
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == count);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 0);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == (5-count));
             }
         }
 
@@ -701,6 +888,21 @@ TEST_SUITE("dnp3_flags")
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 0);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == 5);
 
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_COMM_LOST;
+                sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost++;
+                sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart--;
+            }
+        }
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == 0);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 0);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == 5);
+
         for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs); i++)
         {
             dbPoint = (TMWSIM_POINT *)sdnpsim_binInGetEnabledPoint(dnp3_sys->dbHandle, i);
@@ -729,6 +931,22 @@ TEST_SUITE("dnp3_flags")
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_online == count);
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 0);
                 CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == (5-count));
+            }
+        }
+
+        count = 0;
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                count++;
+                setInputPointOnline(dbPoint);
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == count);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 0);
+                CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == (5-count));
             }
         }
 
@@ -782,6 +1000,26 @@ TEST_SUITE("dnp3_flags")
             }
         }
 
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_COMM_LOST;
+                checkPointCommLost(dbPoint);
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_COMM_LOST);
+                CHECK(((FlexPoint *)dbPoint->flexPointHandle)->lastFlags == DNPDEFS_DBAS_FLAG_COMM_LOST);
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+                checkPointCommLost(dbPoint);
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
+                CHECK(((FlexPoint *)dbPoint->flexPointHandle)->lastFlags == DNPDEFS_DBAS_FLAG_ON_LINE);
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_COMM_LOST;
+                checkPointCommLost(dbPoint);
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_COMM_LOST);
+                CHECK(((FlexPoint *)dbPoint->flexPointHandle)->lastFlags == DNPDEFS_DBAS_FLAG_COMM_LOST);
+            }
+        }
+
         for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs); i++)
         {
             dbPoint = (TMWSIM_POINT *)mdnpsim_binaryInputGetPoint(dnp3_sys->dbHandle, i);
@@ -816,26 +1054,39 @@ TEST_SUITE("dnp3_flags")
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs == 5);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs == 15);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs == 10);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
 
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_online == 0);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_online == 0);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_online == 0);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_online == 0);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == 0);
 
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 5);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_restart == 5);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_restart == 15);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_restart == 10);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 5);
 
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == 0);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_comm_lost == 0);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_comm_lost == 0);
         REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_comm_lost == 0);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == 0);
 
 
         for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs); i++)
         {
             dbPoint = (TMWSIM_POINT *)mdnpsim_analogInputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_COMM_LOST;
+            }
+        }
+
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterGetPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
                 dbPoint->flags = DNPDEFS_DBAS_FLAG_COMM_LOST;
@@ -875,21 +1126,25 @@ TEST_SUITE("dnp3_flags")
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs == 5);
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs == 15);
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs == 10);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters == 5);
 
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_online == 0);
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_online == 0);
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_online == 15);
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_online == 10);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_online == 0);
 
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_restart == 0);
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_restart == 0);
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_restart == 0);
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_restart == 0);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart == 0);
 
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_inputs_comm_lost == 5);
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_binary_inputs_comm_lost == 5);
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_comm_lost == 0);
         CHECK(sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_comm_lost == 0);
+        REQUIRE(sys.protocol_dependencies->dnp3.point_status_info->num_counters_comm_lost == 5);
 
 
         shutdown_tmw(&sys.protocol_dependencies->dnp3);

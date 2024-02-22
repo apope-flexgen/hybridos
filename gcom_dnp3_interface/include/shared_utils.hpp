@@ -37,7 +37,8 @@ enum class Register_Types : uint8_t
     Analog,         // dnp3: Analog Input, any variation
     Binary,         // dnp3: Binary Input, any variation
     AnalogOS,       // dnp3: Analog Output Status, any variation
-    BinaryOS       // dnp3: Binary Output Status, any variation
+    BinaryOS,       // dnp3: Binary Output Status, any variation
+    Counter         // dnp3: Counters, any variation
 };
 
 enum class Conn_Type : uint8_t

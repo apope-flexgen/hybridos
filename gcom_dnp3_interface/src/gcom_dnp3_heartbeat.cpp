@@ -27,7 +27,12 @@ void heartbeatCallback(void *pHeartbeat)
         // so if the update time moved but the value did not the component is connectd but stuck
         // so if the update time did not move we may not be connected
         sys->db_mutex.lock_shared(); 
-        uint64_t raw_val = static_cast<uint64_t>(io_read_point->data.analog.value);
+        uint64_t raw_val = 0;
+        if(io_read_point->type == TMWSIM_TYPE_ANALOG){
+        raw_val = static_cast<uint64_t>(io_read_point->data.analog.value);
+        } else if(io_read_point->type == TMWSIM_TYPE_COUNTER){
+        raw_val = static_cast<uint64_t>(io_read_point->data.counter.value);
+        }
         double tUpdate = get_time_double(io_read_point->timeStamp);
         sys->db_mutex.unlock_shared();
         

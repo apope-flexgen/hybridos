@@ -85,6 +85,36 @@ TEST_SUITE("dnp3_client")
         free(sys.fims_dependencies->data_buf);
         shutdown_tmw(&sys.protocol_dependencies->dnp3);
     }
+    TEST_CASE("parseBody - counters - multi")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        setupParseBodyClientTest(sys);
+        DNP3Dependencies *dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT *dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        char *fims_message;
+        sys.fims_dependencies->data_buf = (char *)malloc(1000);
+
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100;
+                asprintf(&fims_message, "{\"%s\":%d}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
+                sprintf(sys.fims_dependencies->data_buf, "{\"%s\":%d}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                CHECK(!parseBodyClient(sys, meta_data));
+                CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
+                checkRequestCounts(sys, 0, 0, 0, 0);
+                free(fims_message);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+    }
     TEST_CASE("parseBody - analog outputs - multi")
     {
         GcomSystem sys = GcomSystem(Protocol::DNP3);
@@ -285,6 +315,36 @@ TEST_SUITE("dnp3_client")
         for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs); i++)
         {
             dbPoint = (TMWSIM_POINT *)mdnpsim_analogInputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100;
+                asprintf(&fims_message, "{\"%s\":{\"value\":%d}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
+                sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"value\":%d}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                CHECK(!parseBodyClient(sys, meta_data));
+                CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
+                checkRequestCounts(sys, 0, 0, 0, 0);
+                free(fims_message);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+    }
+    TEST_CASE("parseBody - counters - multi with 'value'")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        setupParseBodyClientTest(sys);
+        DNP3Dependencies *dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT *dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        char *fims_message;
+        sys.fims_dependencies->data_buf = (char *)malloc(1000);
+
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterGetPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
                 int value = rand() % 100;
@@ -522,6 +582,39 @@ TEST_SUITE("dnp3_client")
         free(sys.fims_dependencies->data_buf);
         shutdown_tmw(&sys.protocol_dependencies->dnp3);
     }
+    TEST_CASE("parseBody - counters - single")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        setupParseBodyClientTest(sys);
+        DNP3Dependencies *dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT *dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        char *fims_message;
+        char *uri;
+        sys.fims_dependencies->data_buf = (char *)malloc(1000);
+
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100;
+                asprintf(&fims_message, "%d", value);
+                sprintf(sys.fims_dependencies->data_buf, "%d", value);
+                asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(uri); 
+                CHECK(!parseBodyClient(sys, meta_data));
+                CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
+                checkRequestCounts(sys, 0, 0, 0, 0);
+                free(fims_message);
+                free(uri);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+    }
     TEST_CASE("parseBody - analog outputs - single")
     {
         GcomSystem sys = GcomSystem(Protocol::DNP3);
@@ -637,6 +730,39 @@ TEST_SUITE("dnp3_client")
         for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs); i++)
         {
             dbPoint = (TMWSIM_POINT *)mdnpsim_analogInputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100;
+                asprintf(&fims_message, "{\"value\":%d}", value);
+                sprintf(sys.fims_dependencies->data_buf, "{\"value\":%d}", value);
+                asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(uri); 
+                CHECK(!parseBodyClient(sys, meta_data));
+                CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
+                checkRequestCounts(sys, 0, 0, 0, 0);
+                free(fims_message);
+                free(uri);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+    }
+    TEST_CASE("parseBody - counters - single with 'value'")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        setupParseBodyClientTest(sys);
+        DNP3Dependencies *dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT *dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        char *fims_message;
+        char *uri;
+        sys.fims_dependencies->data_buf = (char *)malloc(1000);
+
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterGetPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
                 int value = rand() % 100;

@@ -29,25 +29,25 @@ all: $(PROJECTS)
 
 DNPPeer: dnp utils IoTarg
 ifneq (,$(DNPPeer_config))
-	@echo "==== Building DNPPeer ($(DNPPeer_config)) ===="
+	@/usr/bin/echo "==== Building DNPPeer ($(DNPPeer_config)) ===="
 	@${MAKE} --no-print-directory -C DNPPeer -f Makefile config=$(DNPPeer_config)
 endif
 
 dnp:
 ifneq (,$(dnp_config))
-	@echo "==== Building dnp ($(dnp_config)) ===="
+	@/usr/bin/echo "==== Building dnp ($(dnp_config)) ===="
 	@${MAKE} --no-print-directory -C tmwscl/dnp -f Makefile config=$(dnp_config)
 endif
 
 utils:
 ifneq (,$(utils_config))
-	@echo "==== Building utils ($(utils_config)) ===="
+	@/usr/bin/echo "==== Building utils ($(utils_config)) ===="
 	@${MAKE} --no-print-directory -C tmwscl/utils -f Makefile config=$(utils_config)
 endif
 
 IoTarg:
 ifneq (,$(IoTarg_config))
-	@echo "==== Building IoTarg ($(IoTarg_config)) ===="
+	@/usr/bin/echo "==== Building IoTarg ($(IoTarg_config)) ===="
 	@${MAKE} --no-print-directory -C tmwscl/tmwtarg -f Makefile config=$(IoTarg_config)
 endif
 
@@ -58,18 +58,18 @@ clean:
 	@${MAKE} --no-print-directory -C tmwscl/tmwtarg -f Makefile clean
 
 help:
-	@echo "Usage: make [config=name] [target]"
-	@echo ""
-	@echo "CONFIGURATIONS:"
-	@echo "  linux"
-	@echo "  sample"
-	@echo ""
-	@echo "TARGETS:"
-	@echo "   all (default)"
-	@echo "   clean"
-	@echo "   DNPPeer"
-	@echo "   dnp"
-	@echo "   utils"
-	@echo "   IoTarg"
-	@echo ""
-	@echo "For more information, see http://industriousone.com/premake/quick-start"
+	@/usr/bin/echo "Usage: make [config=name] [target]"
+	@/usr/bin/echo ""
+	@/usr/bin/echo "CONFIGURATIONS:"
+	@/usr/bin/echo "  linux"
+	@/usr/bin/echo "  sample"
+	@/usr/bin/echo ""
+	@/usr/bin/echo "TARGETS:"
+	@/usr/bin/echo "   all (default)"
+	@/usr/bin/echo "   clean"
+	@/usr/bin/echo "   DNPPeer"
+	@/usr/bin/echo "   dnp"
+	@/usr/bin/echo "   utils"
+	@/usr/bin/echo "   IoTarg"
+	@/usr/bin/echo ""
+	@/usr/bin/echo "For more information, see http://industriousone.com/premake/quick-start"

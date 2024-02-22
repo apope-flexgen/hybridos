@@ -60,7 +60,42 @@ TEST_SUITE("dnp3_server")
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
                 CHECK(parseBodyServer(sys, meta_data));
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
-                CHECK(dbPoint->data.analog.value == static_cast<double>(value));
+                CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
+                free(fims_message);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
+    }
+    TEST_CASE("parseBody - counters - multi")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        setupParseBodyServerTest(sys);
+
+        DNP3Dependencies *dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT *dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        char *fims_message;
+        sys.fims_dependencies->data_buf = (char *)malloc(1000);
+
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100;
+                asprintf(&fims_message, "{\"%s\":%d}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
+                sprintf(sys.fims_dependencies->data_buf, "{\"%s\":%d}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                CHECK(parseBodyServer(sys, meta_data));
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
+                CHECK(dbPoint->data.counter.value == static_cast<uint32_t>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
             }
         }
@@ -93,9 +128,9 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":%d}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
-                CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(parseBodyServer(sys, meta_data));
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
-                CHECK(dbPoint->data.analog.value == static_cast<double>(0));
+                CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
             }
         }
@@ -163,9 +198,9 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":%s}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value ? "true" : "false");
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
-                CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(parseBodyServer(sys, meta_data));
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
-                CHECK(dbPoint->data.binary.value == false);
+                CHECK(dbPoint->data.binary.value == value);
                 free(fims_message);
             }
         }
@@ -223,9 +258,9 @@ TEST_SUITE("dnp3_server")
             if (dbPoint)
             {
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
-                CHECK(dbPoint->data.analog.value == static_cast<double>(value));
+                CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
             }
-        }
+        }        
         free(sys.fims_dependencies->data_buf);
         shutdown_tmw(&sys.protocol_dependencies->dnp3);
         if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
@@ -256,7 +291,42 @@ TEST_SUITE("dnp3_server")
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
                 CHECK(parseBodyServer(sys, meta_data));
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
-                CHECK(dbPoint->data.analog.value == static_cast<double>(value));
+                CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
+                free(fims_message);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
+    }
+    TEST_CASE("parseBody - counters - multi with 'value'")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        setupParseBodyServerTest(sys);
+
+        DNP3Dependencies *dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT *dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        char *fims_message;
+        sys.fims_dependencies->data_buf = (char *)malloc(1000);
+
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100;
+                asprintf(&fims_message, "{\"%s\":{\"value\":%d}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
+                sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"value\":%d}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                CHECK(parseBodyServer(sys, meta_data));
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
+                CHECK(dbPoint->data.counter.value == static_cast<uint32_t>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
             }
         }
@@ -303,6 +373,41 @@ TEST_SUITE("dnp3_server")
             delete sys.protocol_dependencies->dnp3.point_status_info;
         }
     }
+    TEST_CASE("parseBody - counters - multi without 'value'")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        setupParseBodyServerTest(sys);
+
+        DNP3Dependencies *dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT *dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        char *fims_message;
+        sys.fims_dependencies->data_buf = (char *)malloc(1000);
+
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100;
+                asprintf(&fims_message, "{\"%s\":{\"blah\":%d}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
+                sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"blah\":%d}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
+                CHECK(dbPoint->data.counter.value == static_cast<uint32_t>(0));
+                free(fims_message);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
+    }
     TEST_CASE("parseBody - analog outputs - multi with 'value'")
     {
         GcomSystem sys = GcomSystem(Protocol::DNP3);
@@ -324,9 +429,9 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"value\":%d}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
-                CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(parseBodyServer(sys, meta_data));
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
-                CHECK(dbPoint->data.analog.value == static_cast<double>(0));
+                CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
             }
         }
@@ -429,9 +534,9 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"value\":%s}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value ? "true" : "false");
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
-                CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(parseBodyServer(sys, meta_data));
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
-                CHECK(dbPoint->data.binary.value == false);
+                CHECK(dbPoint->data.binary.value == value);
                 free(fims_message);
             }
         }
@@ -476,7 +581,6 @@ TEST_SUITE("dnp3_server")
                 free(pointJSON);
             }
         }
-
         combinedJSON += "}"; // Close the combined JSON object
         strcat(sys.fims_dependencies->data_buf, "}");
 
@@ -489,9 +593,10 @@ TEST_SUITE("dnp3_server")
             if (dbPoint)
             {
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
-                CHECK(dbPoint->data.analog.value == static_cast<double>(value));
+                CHECK(dbPoint->data.analog.value == static_cast<double>(value*((FlexPoint *)dbPoint->flexPointHandle)->scale));
             }
         }
+
         free(sys.fims_dependencies->data_buf);
         shutdown_tmw(&sys.protocol_dependencies->dnp3);
         if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
@@ -524,7 +629,7 @@ TEST_SUITE("dnp3_server")
                 sys.fims_dependencies->uri_view = std::string_view(uri);
                 CHECK(parseBodyServer(sys, meta_data));
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
-                CHECK(dbPoint->data.analog.value == static_cast<double>(value));
+                CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
                 free(uri);
             }
@@ -560,9 +665,9 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
-                CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(parseBodyServer(sys, meta_data));
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
-                CHECK(dbPoint->data.analog.value == static_cast<double>(0));
+                CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
                 free(uri);
             }
@@ -636,9 +741,9 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
-                CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(parseBodyServer(sys, meta_data));
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
-                CHECK(dbPoint->data.binary.value == false);
+                CHECK(dbPoint->data.binary.value == value);
                 free(fims_message);
                 free(uri);
             }
@@ -676,7 +781,45 @@ TEST_SUITE("dnp3_server")
                 sys.fims_dependencies->uri_view = std::string_view(uri);
                 CHECK(parseBodyServer(sys, meta_data));
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
-                CHECK(dbPoint->data.analog.value == static_cast<double>(value));
+                CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
+                free(fims_message);
+                free(uri);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
+    }
+    TEST_CASE("parseBody - counters - single with 'value'")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        setupParseBodyServerTest(sys);
+
+        DNP3Dependencies *dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT *dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        char *fims_message;
+        char *uri;
+        sys.fims_dependencies->data_buf = (char *)malloc(1000);
+
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100;
+                asprintf(&fims_message, "{\"value\":%d}", value);
+                sprintf(sys.fims_dependencies->data_buf, "{\"value\":%d}", value);
+                asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(uri);
+                CHECK(parseBodyServer(sys, meta_data));
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
+                CHECK(dbPoint->data.counter.value == static_cast<uint32_t>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
                 free(uri);
             }
@@ -727,6 +870,44 @@ TEST_SUITE("dnp3_server")
             delete sys.protocol_dependencies->dnp3.point_status_info;
         }
     }
+    TEST_CASE("parseBody - counters - single without 'value'")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        setupParseBodyServerTest(sys);
+
+        DNP3Dependencies *dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT *dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        char *fims_message;
+        char *uri;
+        sys.fims_dependencies->data_buf = (char *)malloc(1000);
+
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100;
+                asprintf(&fims_message, "{\"blah\":%d}", value);
+                sprintf(sys.fims_dependencies->data_buf, "{\"blah\":%d}", value);
+                asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(uri);
+                CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
+                CHECK(dbPoint->data.counter.value == static_cast<uint32_t>(0));
+                free(fims_message);
+                free(uri);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
+    }
     TEST_CASE("parseBody - analog outputs - single with 'value'")
     {
         GcomSystem sys = GcomSystem(Protocol::DNP3);
@@ -750,9 +931,9 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
-                CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(parseBodyServer(sys, meta_data));
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
-                CHECK(dbPoint->data.analog.value == static_cast<double>(0));
+                CHECK(dbPoint->data.analog.value == value * ((FlexPoint *)dbPoint->flexPointHandle)->scale);
                 free(fims_message);
                 free(uri);
             }
@@ -864,9 +1045,9 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
-                CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(parseBodyServer(sys, meta_data));
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
-                CHECK(dbPoint->data.binary.value == false);
+                CHECK(dbPoint->data.binary.value == value);
                 free(fims_message);
                 free(uri);
             }
@@ -1010,6 +1191,7 @@ TEST_SUITE("dnp3_server")
             dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetEnabledPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
+                dbPoint->reason = TMWDEFS_CHANGE_REMOTE_OP;
                 dbPoint->data.analog.value = rand() % 100;
                 received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_40_ANA_OUT_STATUSES, dbPoint->pointNumber);
                 CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
@@ -1034,6 +1216,7 @@ TEST_SUITE("dnp3_server")
             dbPoint = (TMWSIM_POINT *)sdnpsim_binOutGetEnabledPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
+                dbPoint->reason = TMWDEFS_CHANGE_REMOTE_OP;
                 dbPoint->data.binary.value = rand() % 2 == 0;
                 received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_10_BIN_OUT_STATUSES, dbPoint->pointNumber);
                 CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
@@ -1047,7 +1230,7 @@ TEST_SUITE("dnp3_server")
             delete sys.protocol_dependencies->dnp3.point_status_info;
         }
     }
-    TEST_CASE("received_command_callback - analog and binary inputs"){
+    TEST_CASE("received_command_callback - analog inputs, binary inputs, and counters"){
         GcomSystem sys = GcomSystem(Protocol::DNP3);
         setupParseBodyServerTest(sys);
         DNP3Dependencies *dnp3_sys = &sys.protocol_dependencies->dnp3;
@@ -1058,8 +1241,21 @@ TEST_SUITE("dnp3_server")
             dbPoint = (TMWSIM_POINT *)sdnpsim_anlgInGetEnabledPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
+                dbPoint->reason = TMWDEFS_CHANGE_REMOTE_OP;
                 dbPoint->data.analog.value = rand() % 100;
                 received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_30_ANA_INPUTS, dbPoint->pointNumber);
+                CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
+                CHECK(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value == 0.0);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->reason = TMWDEFS_CHANGE_REMOTE_OP;
+                dbPoint->data.binary.value = rand() % 100;
+                received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_20_RUNNING_CNTRS, dbPoint->pointNumber);
                 CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
                 CHECK(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value == 0.0);
             }
@@ -1069,6 +1265,7 @@ TEST_SUITE("dnp3_server")
             dbPoint = (TMWSIM_POINT *)sdnpsim_binInGetEnabledPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
+                dbPoint->reason = TMWDEFS_CHANGE_REMOTE_OP;
                 dbPoint->data.binary.value = rand() % 2 == 0;
                 received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_1_BIN_INPUTS, dbPoint->pointNumber);
                 CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
@@ -1094,6 +1291,7 @@ TEST_SUITE("dnp3_server")
             dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetEnabledPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
+                dbPoint->reason = TMWDEFS_CHANGE_REMOTE_OP;
                 dbPoint->data.analog.value = rand() % 100;
                 received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_40_ANA_OUT_STATUSES, dbPoint->pointNumber);
                 CHECK(((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
@@ -1122,6 +1320,7 @@ TEST_SUITE("dnp3_server")
             dbPoint = (TMWSIM_POINT *)sdnpsim_binOutGetEnabledPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
+                dbPoint->reason = TMWDEFS_CHANGE_REMOTE_OP;
                 dbPoint->data.binary.value = rand() % 2 == 0;
                 received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_10_BIN_OUT_STATUSES, dbPoint->pointNumber);
                 CHECK(((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
@@ -1138,7 +1337,7 @@ TEST_SUITE("dnp3_server")
             delete sys.protocol_dependencies->dnp3.point_status_info;
         }
     }
-    TEST_CASE("received_command_callback - analog and binary inputs - interval set"){
+    TEST_CASE("received_command_callback - analog inputs, binary inputs, and counters - interval set"){
         GcomSystem sys = GcomSystem(Protocol::DNP3);
         std::vector<TMWSIM_POINT *> points = setupParseBodyServerTest(sys);
         setIntervalSet(points);
@@ -1152,6 +1351,17 @@ TEST_SUITE("dnp3_server")
             {
                 dbPoint->data.analog.value = rand() % 100;
                 received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_30_ANA_INPUTS, dbPoint->pointNumber);
+                CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
+                CHECK(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value == 0.0);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->data.counter.value = rand() % 100;
+                received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_20_RUNNING_CNTRS, dbPoint->pointNumber);
                 CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
                 CHECK(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value == 0.0);
             }
@@ -1186,6 +1396,7 @@ TEST_SUITE("dnp3_server")
             dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetEnabledPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
+                dbPoint->reason = TMWDEFS_CHANGE_REMOTE_OP;
                 dbPoint->data.analog.value = rand() % 100;
                 received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_40_ANA_OUT_STATUSES, dbPoint->pointNumber);
                 CHECK(((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
@@ -1214,6 +1425,7 @@ TEST_SUITE("dnp3_server")
             dbPoint = (TMWSIM_POINT *)sdnpsim_binOutGetEnabledPoint(dnp3_sys->dbHandle, i);
             if (dbPoint)
             {
+                dbPoint->reason = TMWDEFS_CHANGE_REMOTE_OP;
                 dbPoint->data.binary.value = rand() % 2 == 0;
                 received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_10_BIN_OUT_STATUSES, dbPoint->pointNumber);
                 CHECK(((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
@@ -1230,7 +1442,7 @@ TEST_SUITE("dnp3_server")
             delete sys.protocol_dependencies->dnp3.point_status_info;
         }
     }
-    TEST_CASE("received_command_callback - analog and binary inputs - batch set"){
+    TEST_CASE("received_command_callback - aanalog inputs, binary inputs, and counters - batch set"){
         GcomSystem sys = GcomSystem(Protocol::DNP3);
         std::vector<TMWSIM_POINT *> points = setupParseBodyServerTest(sys);
         setBatchSet(points);
@@ -1244,6 +1456,17 @@ TEST_SUITE("dnp3_server")
             {
                 dbPoint->data.analog.value = rand() % 100;
                 received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_30_ANA_INPUTS, dbPoint->pointNumber);
+                CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
+                CHECK(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value == 0.0);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->data.counter.value = rand() % 100;
+                received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE, DNPDEFS_OBJ_20_RUNNING_CNTRS, dbPoint->pointNumber);
                 CHECK(!((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
                 CHECK(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value == 0.0);
             }
@@ -1271,7 +1494,7 @@ TEST_SUITE("dnp3_server")
         setupParseBodyServerTest(sys);
         DNP3Dependencies *dnp3_sys = &sys.protocol_dependencies->dnp3;
         TMWSIM_POINT *dbPoint = nullptr;
-        char *fims_message;
+        fmt::memory_buffer send_buf;
         
         for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogOutputs); i++)
         {
@@ -1279,10 +1502,10 @@ TEST_SUITE("dnp3_server")
             if (dbPoint)
             {
                 ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value = rand() % 100;
-                asprintf(&fims_message, "%g", ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value/((FlexPoint *)(dbPoint->flexPointHandle))->scale);
+                FORMAT_TO_BUF(send_buf, R"({:.{}g})", ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value/((FlexPoint *)(dbPoint->flexPointHandle))->scale, std::numeric_limits<double>::max_digits10 - 1);
                 fimsSendSetCallback(&((FlexPoint *)(dbPoint->flexPointHandle))->set_work);
-                CHECK(strncmp(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_buf.data(),fims_message, ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_buf.size()) == 0);
-                free(fims_message);
+                CHECK(strncmp(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_buf.data(),send_buf.data(), ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_buf.size()) == 0);
+                send_buf.clear();
             }
         }
 
@@ -1461,7 +1684,8 @@ TEST_SUITE("dnp3_server")
         setIntervalSet(points);
         DNP3Dependencies *dnp3_sys = &sys.protocol_dependencies->dnp3;
         TMWSIM_POINT *dbPoint = nullptr;
-        char *fims_message;
+        fmt::memory_buffer send_buf;
+        send_buf.clear();
         
         for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogOutputs); i++)
         {
@@ -1469,11 +1693,11 @@ TEST_SUITE("dnp3_server")
             if (dbPoint)
             {
                 ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value = rand() % 100;
-                asprintf(&fims_message, "%g", ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value/((FlexPoint *)(dbPoint->flexPointHandle))->scale);
+                FORMAT_TO_BUF(send_buf, R"({:.{}g})", ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value/((FlexPoint *)(dbPoint->flexPointHandle))->scale, std::numeric_limits<double>::max_digits10 - 1);
                 fimsSendIntervalSetCallback(&((FlexPoint *)(dbPoint->flexPointHandle))->set_work);
-                CHECK(strncmp(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_buf.data(),fims_message, ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_buf.size()) == 0);
+                CHECK(strncmp(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_buf.data(),send_buf.data(), ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_buf.size()) == 0);
                 CHECK(((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
-                free(fims_message);
+                send_buf.clear();
             }
         }
         
@@ -1483,11 +1707,16 @@ TEST_SUITE("dnp3_server")
             if (dbPoint)
             {
                 ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value = rand() % 2 == 0;
-                asprintf(&fims_message, "%s", ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value?"true":"false");
+                if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
+                {
+                    FORMAT_TO_BUF(send_buf, R"({})", ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value?"false":"true");
+                } else {
+                    FORMAT_TO_BUF(send_buf, R"({})", ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value?"true":"false");
+                }
                 fimsSendIntervalSetCallback(&((FlexPoint *)(dbPoint->flexPointHandle))->set_work);
-                CHECK(strncmp(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_buf.data(),fims_message, ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_buf.size()) == 0);
+                CHECK(strncmp(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_buf.data(),send_buf.data(), ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_buf.size()) == 0);
                 CHECK(((FlexPoint *)(dbPoint->flexPointHandle))->set_timer.active);
-                free(fims_message);
+                send_buf.clear();
             }
         }
 

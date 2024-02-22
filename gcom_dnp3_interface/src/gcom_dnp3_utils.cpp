@@ -62,7 +62,7 @@ bool spam_limit(GcomSystem *sys, int &max_errors)
 
 // these are the types decoded from the config file
 // must match the typedef sequence
-const char *dreg_types[] = {"AnOPInt16", "AnOPInt32", "AnOPF32", "CROB", "analog", "binary", "analogOS", "binaryOS", 0};
+const char *dreg_types[] = {"AnOPInt16", "AnOPInt32", "AnOPF32", "CROB", "analog", "binary", "analogOS", "binaryOS", "counter", 0};
 /// @brief 
 /// @param fp 
 void deleteFlexPoint(void *fp)
@@ -220,6 +220,22 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_restart++;
             flexPoint->type = Register_Types::CROB;
+        }
+        else if (type == Type_Counter)
+        {
+            // I have no clue why it's called a "binary counter" even though it does uints...
+            while (sdnpsim_binaryCounterGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
+            {
+                dbPoint = (TMWSIM_POINT *)sdnpsim_addBinaryCounter(dbHandle, 0, 0, DNPDEFS_DBAS_FLAG_RESTART, 0);
+                dbPoint->enabled = false; // do this by default until we find the point we want
+            }
+            dbPoint = (TMWSIM_POINT *)sdnpsim_binaryCounterGetPoint(dbHandle, offset);
+            dbPoint->enabled = true;
+            dbPoint->defaultStaticVariation = Group20Var1;
+            dbPoint->defaultEventVariation = Group22Var1;
+            sys.protocol_dependencies->dnp3.point_status_info->num_counters++;
+            sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart++;
+            flexPoint->type = Register_Types::Counter;
         }
         else
         {
@@ -380,6 +396,24 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_restart++;
             flexPoint->type = Register_Types::CROB;
+        }
+        else if (type == Type_Counter)
+        {
+            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterLookupPoint(dbHandle, offset);
+            if (dbPoint == TMWDEFS_NULL)
+            {
+                dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterAddPoint(dbHandle, offset);
+            }
+            if (dbPoint->flexPointHandle != TMWDEFS_NULL)
+            {
+                FPS_ERROR_LOG("Duplicate point offset detected for Counter %d", offset);
+                delete (FlexPoint *)(dbPoint->flexPointHandle);
+            }
+            sys.protocol_dependencies->dnp3.point_status_info->num_counters++;
+            sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart++;
+            flexPoint->type = Register_Types::Counter;
+            dbPoint->defaultStaticVariation = Group20Var1;
+            dbPoint->defaultEventVariation = Group22Var1;
         }
         else
         {
@@ -737,6 +771,22 @@ int static_variation_decode(const char *ivar, int type)
             return Group10Var2;
         else if (strcmp(ivar, "Group2Var3") == 0)
             return Group2Var3;
+        else if (strcmp(ivar, "Group20Var1") == 0)
+            return Group20Var1;
+        else if (strcmp(ivar, "Group20Var2") == 0)
+            return Group20Var2;
+        else if (strcmp(ivar, "Group20Var3") == 0)
+            return Group20Var3;
+        else if (strcmp(ivar, "Group20Var4") == 0)
+            return Group20Var4;
+        else if (strcmp(ivar, "Group20Var5") == 0)
+            return Group20Var5;
+        else if (strcmp(ivar, "Group20Var6") == 0)
+            return Group20Var6;
+        else if (strcmp(ivar, "Group20Var7") == 0)
+            return Group20Var7;
+        else if (strcmp(ivar, "Group20Var8") == 0)
+            return Group20Var8;
         else if (strcmp(ivar, "Group30Var1") == 0)
             return Group30Var1;
         else if (strcmp(ivar, "Group30Var2") == 0)
@@ -778,6 +828,22 @@ int event_variation_decode(const char *ivar, int type)
             return Group11Var1;
         if (strcmp(ivar, "Group11Var2") == 0)
             return Group11Var2;
+        else if (strcmp(ivar, "Group22Var1") == 0)
+            return Group22Var1;
+        else if (strcmp(ivar, "Group22Var2") == 0)
+            return Group22Var2;
+        else if (strcmp(ivar, "Group22Var3") == 0)
+            return Group22Var3;
+        else if (strcmp(ivar, "Group22Var4") == 0)
+            return Group22Var4;
+        else if (strcmp(ivar, "Group22Var5") == 0)
+            return Group22Var5;
+        else if (strcmp(ivar, "Group22Var6") == 0)
+            return Group22Var6;
+        else if (strcmp(ivar, "Group22Var7") == 0)
+            return Group22Var7;
+        else if (strcmp(ivar, "Group22Var8") == 0)
+            return Group22Var8;
         if (strcmp(ivar, "Group32Var0") == 0)
             return Group32Var0;
         else if (strcmp(ivar, "Group32Var1") == 0)

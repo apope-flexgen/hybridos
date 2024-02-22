@@ -81,7 +81,7 @@ ifeq (/bin,$(findstring /bin,$(SHELL)))
 endif
 
 $(TARGET): $(GCH) ${CUSTOMFILES} $(OBJECTS) $(LDDEPS) $(RESOURCES)
-	@echo Linking DNPPeer
+	@/usr/bin/echo Linking DNPPeer
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) mkdir -p $(TARGETDIR)
 else
@@ -91,7 +91,7 @@ endif
 	$(POSTBUILDCMDS)
 
 clean:
-	@echo Cleaning DNPPeer
+	@/usr/bin/echo Cleaning DNPPeer
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(OBJDIR)
@@ -109,7 +109,7 @@ prelink:
 ifneq (,$(PCH))
 $(OBJECTS): $(GCH) $(PCH)
 $(GCH): $(PCH)
-	@echo $(notdir $<)
+	@/usr/bin/echo $(notdir $<)
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) mkdir -p $(OBJDIR)
 else
@@ -119,7 +119,7 @@ endif
 endif
 
 $(OBJDIR)/DNPMultithreadPeer.o: DNPMultithreadPeer.cpp
-	@echo $(notdir $<)
+	@/usr/bin/echo $(notdir $<)
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) mkdir -p $(OBJDIR)
 else
@@ -127,7 +127,7 @@ else
 endif
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/DNPPeer.o: DNPPeer.cpp
-	@echo $(notdir $<)
+	@/usr/bin/echo $(notdir $<)
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) mkdir -p $(OBJDIR)
 else

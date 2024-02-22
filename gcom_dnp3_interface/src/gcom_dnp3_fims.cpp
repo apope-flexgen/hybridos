@@ -365,6 +365,12 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
                     ((FlexPoint *)dbPoint->flexPointHandle)->standby_value = static_cast<double>(dbPoint->data.binary.value);
                     sys.db_mutex.unlock();
                 }
+                else if (dbPoint->type == TMWSIM_TYPE_COUNTER)
+                {
+                    sys.db_mutex.lock();
+                    ((FlexPoint *)dbPoint->flexPointHandle)->standby_value = static_cast<double>(dbPoint->data.counter.value);
+                    sys.db_mutex.unlock();
+                }
             }
         }
 
@@ -398,6 +404,12 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
                 {
                     sys.db_mutex.lock();
                     dbPoint->data.binary.value = static_cast<bool>(((FlexPoint *)dbPoint->flexPointHandle)->standby_value);
+                    sys.db_mutex.unlock();
+                }
+                else if (dbPoint->type == TMWSIM_TYPE_COUNTER)
+                {
+                    sys.db_mutex.lock();
+                    dbPoint->data.counter.value = static_cast<double>(((FlexPoint *)dbPoint->flexPointHandle)->standby_value);
                     sys.db_mutex.unlock();
                 }
             }
@@ -835,8 +847,10 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
             if (dbPoint)
             {
                 double value;
-                if(dbPoint->type == TMWSIM_TYPE_ANALOG){
+                if(((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog){
                     value = dbPoint->data.analog.value;
+                } else if(((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter){
+                    value = dbPoint->data.counter.value;
                 } else {
                     value = static_cast<double>(dbPoint->data.binary.value);
                 }
@@ -855,8 +869,10 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
         {
             send_buf.clear();
             double value;
-            if(dbPoint->type == TMWSIM_TYPE_ANALOG){
+            if(((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog){
                 value = dbPoint->data.analog.value;
+            } else if(((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter){
+                value = dbPoint->data.counter.value;
             } else {
                 value = static_cast<double>(dbPoint->data.binary.value);
             }
