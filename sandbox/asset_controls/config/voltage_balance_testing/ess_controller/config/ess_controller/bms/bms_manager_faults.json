@@ -1,0 +1,1009 @@
+{
+    "/components/##BMS_ID##_info": {
+        "info": {
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 6, "mask": 1  , "inValue": 0  , "uri": "/alarms/##BMS_ID##:InsulationMonitoring", "outValue": "Normal"     },
+                        {"shift": 6, "mask": 1  , "inValue": 1  , "uri": "/alarms/##BMS_ID##:InsulationMonitoring", "outValue": "Alarm"      },
+                        {"shift": 7, "mask": 1  , "inValue": 0  , "uri": "/alarms/##BMS_ID##:IMDCommError"        , "outValue": "Normal"     },
+                        {"shift": 7, "mask": 1  , "inValue": 1  , "uri": "/alarms/##BMS_ID##:IMDCommError"        , "outValue": "Alarm"      }
+                    ]
+                }]
+            }
+        },
+        "alarm_code": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:OverAvgBSCSOC"                        , "outValue": "Normal" },
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:OverAvgBSCSOC"                        , "outValue": "Alarm"  },
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:UnderAvgBSCSOC"                       , "outValue": "Normal" },
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:UnderAvgBSCSOC"                       , "outValue": "Alarm"  },
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:OverMaxRackSOC"                       , "outValue": "Normal" },
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:OverMaxRackSOC"                       , "outValue": "Alarm"  },
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:UnderMinRackSOC"                      , "outValue": "Normal" },
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:UnderMinRackSOC"                      , "outValue": "Alarm"  },
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:OverHumidity"                         , "outValue": "Normal" },
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:OverHumidity"                         , "outValue": "Alarm"  },
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:BSCTemperatureHumiditySensorCommLoss" , "outValue": "Normal" },
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:BSCTemperatureHumiditySensorCommLoss" , "outValue": "Alarm"  },
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:BSCFSSCommLoss"                       , "outValue": "Normal" },
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:BSCFSSCommLoss"                       , "outValue": "Alarm"  },
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:FSSWaterLevelAlarm"                   , "outValue": "Normal" },
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:FSSWaterLevelAlarm"                   , "outValue": "Alarm"  },
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ActiveVentilationSystem"              , "outValue": "Normal" },
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ActiveVentilationSystem"              , "outValue": "Alarm"  },
+
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/status/##BMS_ID##:VentStatus" , "outValue": 0 },
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/status/##BMS_ID##:VentStatus" , "outValue": 1 }
+                    ]
+                }]
+            }
+        },
+        "warning_code": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:OverBSCChargeCurrent"                        , "outValue": "Normal" },
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:OverBSCChargeCurrent"                        , "outValue": "Alarm"  },
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:OverBSCDischargeCurrent"                     , "outValue": "Normal" },
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:OverBSCDischargeCurrent"                     , "outValue": "Alarm"  },
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:OverBSCChargePowerLimit"                     , "outValue": "Normal" },
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:OverBSCChargePowerLimit"                     , "outValue": "Alarm"  },
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:OverBSCDischargePowerLimit"                  , "outValue": "Normal" },
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:OverBSCDischargePowerLimit"                  , "outValue": "Alarm"  },
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:AllRacks"                                    , "outValue": "Normal" },
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:AllRacks"                                    , "outValue": "Alarm"  },
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:OverAverageTemperature"                      , "outValue": "Normal" },
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:OverAverageTemperature"                      , "outValue": "Alarm"  },
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:BSCTemperatureHumiditySensorCommLossWarning" , "outValue": "Normal" },
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:BSCTemperatureHumiditySensorCommLossWarning" , "outValue": "Alarm"  },
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:AbnormalAmbientTemperatureHumidity"          , "outValue": "Normal" },
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:AbnormalAmbientTemperatureHumidity"          , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "fault_code": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        { "shift": 0 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:OverBSCCharge"              , "outValue": "Normal"},
+                        { "shift": 0 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:OverBSCCharge"              , "outValue": "Fault" },
+                        { "shift": 1 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:OverBSCDischarge"           , "outValue": "Normal"},
+                        { "shift": 1 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:OverBSCDischarge"           , "outValue": "Fault" },
+                        { "shift": 2 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:OverBSCChargePowerLimit"    , "outValue": "Normal"},
+                        { "shift": 2 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:OverBSCChargePowerLimit"    , "outValue": "Fault" },
+                        { "shift": 3 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:OverBSCDischargePowerLimit" , "outValue": "Normal"},
+                        { "shift": 3 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:OverBSCDischargePowerLimit" , "outValue": "Fault" },
+                        { "shift": 4 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:OverOfflineRackCount"       , "outValue": "Normal"},
+                        { "shift": 4 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:OverOfflineRackCount"       , "outValue": "Fault" },
+                        { "shift": 5 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:ControllerBSCCommsLoss"     , "outValue": "Normal"},
+                        { "shift": 5 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:ControllerBSCCommsLoss"     , "outValue": "Fault" },
+                        { "shift": 6 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:OverAverageTemperature"     , "outValue": "Normal"},
+                        { "shift": 6 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:OverAverageTemperature"     , "outValue": "Fault" },
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:FSSOperate"                 , "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:FSSOperate"                 , "outValue": "Fault" },
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:MultipleFaultsRackDetection", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:MultipleFaultsRackDetection", "outValue": "Fault" },
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:Insulation"                 , "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:Insulation"                 , "outValue": "Fault" }
+                    ]
+                }]
+            }
+        },
+        "elink_firmware_type_error" : {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:ELinkFirmwareTypeError"                , "outValue": "Normal"          },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:ELinkFirmwareTypeError"                , "outValue": "Fault"           }
+                    ]
+                }]
+            }
+        },
+        "elink_device_status" : {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkPLCStatus"                , "outValue": "Normal" },
+                        {"shift": 0 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkPLCStatus"                , "outValue": "Alarm"  },
+                        {"shift": 1 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkHVACStatus"               , "outValue": "Normal" },
+                        {"shift": 1 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkHVACStatus"               , "outValue": "Alarm"  },
+                        {"shift": 2 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkDCDisconnectSwitchStatus" , "outValue": "Normal" },
+                        {"shift": 2 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkDCDisconnectSwitchStatus" , "outValue": "Alarm"  },
+                        {"shift": 3 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkACMainMCCBStatus"         , "outValue": "Normal" },
+                        {"shift": 3 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkACMainMCCBStatus"         , "outValue": "Alarm"  },
+                        {"shift": 4 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkDoorStatus"               , "outValue": "Normal" },
+                        {"shift": 4 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkDoorStatus"               , "outValue": "Alarm"  },
+
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/status/##BMS_ID##:ELinkDoorStatus"               , "outValue": 0          },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/status/##BMS_ID##:ELinkDoorStatus"               , "outValue": 1          },
+
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkFSSStatus"              , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkFSSStatus"              , "outValue": "Alarm"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkSPDError"               , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkSPDError"               , "outValue": "Alarm"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkFuseStatus"             , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkFuseStatus"             , "outValue": "Alarm"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkUPSOperation"           , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkUPSOperation"           , "outValue": "Alarm"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkUPSError"               , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkUPSError"               , "outValue": "Alarm"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkEmergencySTOP"          , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkEmergencySTOP"          , "outValue": "Alarm"  },
+                        {"shift": 11 ,"mask": 0,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkDoorKeyOperationMode"   , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkDoorKeyOperationMode"   , "outValue": "Alarm"  },
+                        {"shift": 12 ,"mask": 0,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkDoorKeyMaintenanceMode" , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkDoorKeyMaintenanceMode" , "outValue": "Alarm"  },
+                        {"shift": 13 ,"mask": 0,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkDoorKeySetupMode"       , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkDoorKeySetupMode"       , "outValue": "Alarm"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkHVACCommError"          , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkHVACCommError"          , "outValue": "Alarm"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:ELinkBLINKFirmwareCheck"     , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:ELinkBLINKFirmwareCheck"     , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "elink_device_control": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0, "mask": 3, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkDCDisconnectSwitchControlOpen" , "outValue": "Alarm"   },
+                        {"shift": 0, "mask": 3, "inValue": 2, "uri": "/alarms/##BMS_ID##:ELinkDCDisconnectSwitchControlOpen" , "outValue": "Normal" },
+                        {"shift": 2, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkACMainMCCBControl"         , "outValue": "Normal" },
+                        {"shift": 2, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkACMainMCCBControl"         , "outValue": "Alarm"   },
+                        {"shift": 4, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkSMSP1Error"                , "outValue": "Normal" },
+                        {"shift": 4, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkSMSP1Error"                , "outValue": "Alarm"  },
+                        {"shift": 5, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkSMSP2Error"                , "outValue": "Normal" },
+                        {"shift": 5, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkSMSP2Error"                , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "elink_wiu_status": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUWaterPressureSwitch"            , "outValue": "Normal" },
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUWaterPressureSwitch"            , "outValue": "Alarm"  },
+                        {"shift": 1  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUWaterTankLevel1Monitor"         , "outValue": "Normal" },
+                        {"shift": 1  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUWaterTankLevel1Monitor"         , "outValue": "Alarm"  },
+                        {"shift": 2  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUWaterTankLevel2Monitor"         , "outValue": "Normal" },
+                        {"shift": 2  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUWaterTankLevel2Monitor"         , "outValue": "Alarm"  },
+                        {"shift": 3  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUFACPACFail"                     , "outValue": "Normal" },
+                        {"shift": 3  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUFACPACFail"                     , "outValue": "Alarm"  },
+                        {"shift": 4  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUHVACTrouble"                    , "outValue": "Normal" },
+                        {"shift": 4  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUHVACTrouble"                    , "outValue": "Alarm"  },
+                        {"shift": 5  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUWaterReleaseSolenoidValve"      , "outValue": "Normal" },
+                        {"shift": 5  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUWaterReleaseSolenoidValve"      , "outValue": "Alarm"  },
+                        {"shift": 6  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUNitrogenReleaseSolenoidValve"   , "outValue": "Normal" },
+                        {"shift": 6  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUNitrogenReleaseSolenoidValve"   , "outValue": "Alarm"  },
+                        {"shift": 7  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUWaterReleaseSolenoidMonitor"    , "outValue": "Normal" },
+                        {"shift": 7  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUWaterReleaseSolenoidMonitor"    , "outValue": "Alarm"  },
+                        {"shift": 8  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUNitrogenReleaseSolenoidMonitor" , "outValue": "Normal" },
+                        {"shift": 8  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUNitrogenReleaseSolenoidMonitor" , "outValue": "Alarm"  },
+                        {"shift": 9  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUSmokeDetectorONinWIU"           , "outValue": "Normal" },
+                        {"shift": 9  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUSmokeDetectorONinWIU"           , "outValue": "Alarm"  },
+                        {"shift": 10 , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUGeneralAlarmHornStrobe"         , "outValue": "Normal" },
+                        {"shift": 10 , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUGeneralAlarmHornStrobe"         , "outValue": "Alarm"  },
+                        {"shift": 11 , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUCommStatus"                     , "outValue": "Normal" },
+                        {"shift": 11 , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUCommStatus"                     , "outValue": "Alarm"  },
+                        {"shift": 12 , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:WIUSmokeDetectorTroubleinWIU"      , "outValue": "Normal" },
+                        {"shift": 12 , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:WIUSmokeDetectorTroubleinWIU"      , "outValue": "Alarm"  },
+                        {"shift": 13 , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:ManualPullStation"                 , "outValue": "Normal" },
+                        {"shift": 13 , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:ManualPullStation"                 , "outValue": "Alarm"  }
+
+                    ]
+                }]
+            }
+        },
+        "elink_wiu_trouble": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 , "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:WIUGroundFault"           , "outValue": "Normal" },
+                        {"shift": 0 , "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:WIUGroundFault"           , "outValue": "Fault"  },
+                        {"shift": 1 , "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:WIUACFail"                , "outValue": "Normal" },
+                        {"shift": 1 , "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:WIUACFail"                , "outValue": "Fault"  },
+                        {"shift": 2 , "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:WIUBatteryVoltageLowHigh" , "outValue": "Normal" },
+                        {"shift": 2 , "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:WIUBatteryVoltageLowHigh" , "outValue": "Fault"  },
+                        {"shift": 3 , "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:WIULCD80Supervisory"      , "outValue": "Normal" },
+                        {"shift": 3 , "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:WIULCD80Supervisory"      , "outValue": "Fault"  },
+                        {"shift": 4 , "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:WIUEPROMError"            , "outValue": "Normal" },
+                        {"shift": 4 , "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:WIUEPROMError"            , "outValue": "Fault"  },
+                        {"shift": 5 , "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:WIUInternalRamError"      , "outValue": "Normal" },
+                        {"shift": 5 , "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:WIUInternalRamError"      , "outValue": "Fault"  },
+                        {"shift": 6 , "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:WIUExternalRamError"      , "outValue": "Normal" },
+                        {"shift": 6 , "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:WIUExternalRamError"      , "outValue": "Fault"  },
+                        {"shift": 7 , "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:WIUProgramCorrupted"      , "outValue": "Normal" },
+                        {"shift": 7 , "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:WIUProgramCorrupted"      , "outValue": "Fault"  },
+                        {"shift": 8 , "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:WIUGroundFaultLoop1"      , "outValue": "Normal" },
+                        {"shift": 8 , "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:WIUGroundFaultLoop1"      , "outValue": "Fault"  },
+                        {"shift": 9 , "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:WIUNVRAMBattTrouble"      , "outValue": "Normal" },
+                        {"shift": 9 , "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:WIUNVRAMBattTrouble"      , "outValue": "Fault"  },
+                        {"shift": 10, "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:GeneralPowerTrouble"      , "outValue": "Normal" },
+                        {"shift": 10, "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:GeneralPowerTrouble"      , "outValue": "Fault"  },
+                        {"shift": 11, "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:ChargerFail"              , "outValue": "Normal" },
+                        {"shift": 11, "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:ChargerFail"              , "outValue": "Fault"  },
+                        {"shift": 12, "mask": 1, "inValue": 0, "uri":	"/faults/##BMS_ID##:SystemInitialization"     , "outValue": "Normal" },
+                        {"shift": 12, "mask": 1, "inValue": 1, "uri":	"/faults/##BMS_ID##:SystemInitialization"     , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+        "elink_hvac_alarm_code": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:ELinkHVACHighTemperatureAlarm"      , "outValue": "Normal"},
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:ELinkHVACHighTemperatureAlarm"      , "outValue": "Alarm" },
+                        {"shift": 1  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:ELinkHVACHighHumidityAlarm"         , "outValue": "Normal"},
+                        {"shift": 1  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:ELinkHVACHighHumidityAlarm"         , "outValue": "Alarm" },
+                        {"shift": 2  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:ELinkHVACCompressorOvercurrent"     , "outValue": "Normal"},
+                        {"shift": 2  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:ELinkHVACCompressorOvercurrent"     , "outValue": "Alarm" },
+                        {"shift": 3  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:ELinkHVACCondenserFanOvercurrent"   , "outValue": "Normal"},
+                        {"shift": 3  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:ELinkHVACCondenserFanOvercurrent"   , "outValue": "Alarm" },
+                        {"shift": 4  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:ELinkHVACEvaporatorFanOvercurrent"  , "outValue": "Normal"},
+                        {"shift": 4  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:ELinkHVACEvaporatorFanOvercurrent"  , "outValue": "Alarm" },
+                        {"shift": 5  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:ELinkHVACHighPressureAlarm"         , "outValue": "Normal"},
+                        {"shift": 5  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:ELinkHVACHighPressureAlarm"         , "outValue": "Alarm" },
+                        {"shift": 6  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:ELinkHVACLowPressureAlarm"          , "outValue": "Normal"},
+                        {"shift": 6  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:ELinkHVACLowPressureAlarm"          , "outValue": "Alarm" },
+                        {"shift": 7  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:ELinkHVACDoorOpenAlarm"             , "outValue": "Normal"},
+                        {"shift": 7  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:ELinkHVACDoorOpenAlarm"             , "outValue": "Alarm" },
+                        {"shift": 8  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:ELinkHVACHalonAlert"                , "outValue": "Normal"},
+                        {"shift": 8  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:ELinkHVACHalonAlert"                , "outValue": "Alarm" },
+                        {"shift": 9  , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:ELinkHVACDifferentialPressureAlarm" , "outValue": "Normal"},
+                        {"shift": 9  , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:ELinkHVACDifferentialPressureAlarm" , "outValue": "Alarm" },
+                        {"shift": 10 , "mask": 1, "inValue": 0, "uri":	"/alarms/##BMS_ID##:ELinkHVACEmergencyStopAlarm"        , "outValue": "Normal"},
+                        {"shift": 10 , "mask": 1, "inValue": 1, "uri":	"/alarms/##BMS_ID##:ELinkHVACEmergencyStopAlarm"        , "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        },
+        "elink_comm_alarm": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:EPLCBSCCommLoss"   , "outValue": "Normal" },
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:EPLCBSCCommLoss"   , "outValue": "Alarm"  },
+                        {"shift": 1, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC1EPLCCommLoss" , "outValue": "Normal" },
+                        {"shift": 1, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC1EPLCCommLoss" , "outValue": "Alarm"  },
+                        {"shift": 2, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC2EPLCCommLoss" , "outValue": "Normal" },
+                        {"shift": 2, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC2EPLCCommLoss" , "outValue": "Alarm"  },
+                        {"shift": 3, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC3EPLCCommLoss" , "outValue": "Normal" },
+                        {"shift": 3, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC3EPLCCommLoss" , "outValue": "Alarm"  },
+                        {"shift": 4, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:EPLCEPLCCommLoss"  , "outValue": "Normal" },
+                        {"shift": 4, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:EPLCEPLCCommLoss"  , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "elink_acdc_panel_fault": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:ELinkDCDisconnectSwitchStatusFault"  , "outValue": "Normal" },
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:ELinkDCDisconnectSwitchStatusFault"  , "outValue": "Fault"  },
+                        {"shift": 1  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:ElinkDCFuseOpenFault"                , "outValue": "Normal" },
+                        {"shift": 1  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:ElinkDCFuseOpenFault"                , "outValue": "Fault"  },
+                        {"shift": 5  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:ELinkEmergencyStopButtonFault"       , "outValue": "Normal" },
+                        {"shift": 5  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:ELinkEmergencyStopButtonFault"       , "outValue": "Fault"  },
+                        {"shift": 6  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:ELinkDoorOpenInOperationModeFault"   , "outValue": "Normal" },
+                        {"shift": 6  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:ELinkDoorOpenInOperationModeFault"   , "outValue": "Fault"  },
+                        {"shift": 7  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:ELinkDoorOpenInMaintenanceModeFault" , "outValue": "Normal" },
+                        {"shift": 7  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:ELinkDoorOpenInMaintenanceModeFault" , "outValue": "Fault"  },
+                        {"shift": 8  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink1DoorOpenFault"                 , "outValue": "Normal" },
+                        {"shift": 8  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink1DoorOpenFault"                 , "outValue": "Fault"  },
+                        {"shift": 9  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink2DoorOpenFault"                 , "outValue": "Normal" },
+                        {"shift": 9  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink2DoorOpenFault"                 , "outValue": "Fault"  },
+                        {"shift": 10 , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink3DoorOpenFault"                 , "outValue": "Normal" },
+                        {"shift": 10 , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink3DoorOpenFault"                 , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+        "elink_acdc_panel_alarm_1": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkSPDErrorAlarm"                , "outValue": "Normal" },
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkSPDErrorAlarm"                , "outValue": "Alarm"  },
+                        {"shift": 1  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkDoorOpenInSetupModeAlarm"     , "outValue": "Normal" },
+                        {"shift": 1  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkDoorOpenInSetupModeAlarm"     , "outValue": "Alarm"  },
+                        {"shift": 2  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkACMainMCCBOpenAlarm"          , "outValue": "Normal" },
+                        {"shift": 2  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkACMainMCCBOpenAlarm"          , "outValue": "Alarm"  },
+                        {"shift": 3  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkUPSOperationOutageAlarm"      , "outValue": "Normal" },
+                        {"shift": 3  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkUPSOperationOutageAlarm"      , "outValue": "Alarm"  },
+                        {"shift": 4  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkUPSErrorOrInputPowerOffAlarm" , "outValue": "Normal" },
+                        {"shift": 4  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkUPSErrorOrInputPowerOffAlarm" , "outValue": "Alarm"  },
+                        {"shift": 5  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkHVACErrorAlarm"               , "outValue": "Normal" },
+                        {"shift": 5  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkHVACErrorAlarm"               , "outValue": "Alarm"  },
+                        {"shift": 6  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC1HVACCommLoss"                 , "outValue": "Normal" },
+                        {"shift": 6  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC1HVACCommLoss"                 , "outValue": "Alarm"  },
+                        {"shift": 7  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC2HVACCommLoss"                 , "outValue": "Normal" },
+                        {"shift": 7  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC2HVACCommLoss"                 , "outValue": "Alarm"  },
+                        {"shift": 8  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC3HVACCommLoss"                 , "outValue": "Normal" },
+                        {"shift": 8  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC3HVACCommLoss"                 , "outValue": "Alarm"  },
+                        {"shift": 9  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:EPLCHVACCommLoss"                  , "outValue": "Normal" },
+                        {"shift": 9  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:EPLCHVACCommLoss"                  , "outValue": "Alarm"  },
+                        {"shift": 10 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1SMPSStatusAlarm"             , "outValue": "Normal" },
+                        {"shift": 10 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1SMPSStatusAlarm"             , "outValue": "Alarm"  },
+                        {"shift": 11 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2SMPSStatusAlarm"             , "outValue": "Normal" },
+                        {"shift": 11 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2SMPSStatusAlarm"             , "outValue": "Alarm"  },
+                        {"shift": 12 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3SMPSStatusAlarm"             , "outValue": "Normal" },
+                        {"shift": 12 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3SMPSStatusAlarm"             , "outValue": "Alarm"  },
+                        {"shift": 13 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1HVACErrorAlarm"              , "outValue": "Normal" },
+                        {"shift": 13 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1HVACErrorAlarm"              , "outValue": "Alarm"  },
+                        {"shift": 14 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2HVACErrorAlarm"              , "outValue": "Normal" },
+                        {"shift": 14 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2HVACErrorAlarm"              , "outValue": "Alarm"  },
+                        {"shift": 15 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3HVACErrorAlarm"              , "outValue": "Normal" },
+                        {"shift": 15 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3HVACErrorAlarm"              , "outValue": "Alarm"  }
+
+                    ]
+                }]
+            }
+        },
+        "elink_acdc_panel_alarm_2": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkSMPSStatus", "outValue": "Normal"},
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkSMPSStatus", "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        },
+        "elink_environment_warning": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1RHTCommLossWarning", "outValue": "Normal"},
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1RHTCommLossWarning", "outValue": "Alarm" },
+                        {"shift": 1, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2RHTCommLossWarning", "outValue": "Normal"},
+                        {"shift": 1, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2RHTCommLossWarning", "outValue": "Alarm" },
+                        {"shift": 2, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3RHTCommLossWarning", "outValue": "Normal"},
+                        {"shift": 2, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3RHTCommLossWarning", "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        },
+        "elink_environment_alarm_1": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1RHT1CommLossAlarm", "outValue": "Normal"},
+                        {"shift": 0 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1RHT1CommLossAlarm", "outValue": "Alarm" },
+                        {"shift": 1 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1RHT2CommLossAlarm", "outValue": "Normal"},
+                        {"shift": 1 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1RHT2CommLossAlarm", "outValue": "Alarm" },
+                        {"shift": 2 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1RHT3CommLossAlarm", "outValue": "Normal"},
+                        {"shift": 2 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1RHT3CommLossAlarm", "outValue": "Alarm" },
+                        {"shift": 3 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1RHT4CommLossAlarm", "outValue": "Normal"},
+                        {"shift": 3 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1RHT4CommLossAlarm", "outValue": "Alarm" },
+                        {"shift": 4 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2RHT1CommLossAlarm", "outValue": "Normal"},
+                        {"shift": 4 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2RHT1CommLossAlarm", "outValue": "Alarm" },
+                        {"shift": 5 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2RHT2CommLossAlarm", "outValue": "Normal"},
+                        {"shift": 5 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2RHT2CommLossAlarm", "outValue": "Alarm" },
+                        {"shift": 6 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2RHT3CommLossAlarm", "outValue": "Normal"},
+                        {"shift": 6 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2RHT3CommLossAlarm", "outValue": "Alarm" },
+                        {"shift": 7 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2RHT4CommLossAlarm", "outValue": "Normal"},
+                        {"shift": 7 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2RHT4CommLossAlarm", "outValue": "Alarm" },
+                        {"shift": 8 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3RHT1CommLossAlarm", "outValue": "Normal"},
+                        {"shift": 8 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3RHT1CommLossAlarm", "outValue": "Alarm" },
+                        {"shift": 9 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3RHT2CommLossAlarm", "outValue": "Normal"},
+                        {"shift": 9 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3RHT2CommLossAlarm", "outValue": "Alarm" },
+                        {"shift": 10, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3RHT3CommLossAlarm", "outValue": "Normal"},
+                        {"shift": 10, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3RHT3CommLossAlarm", "outValue": "Alarm" },
+                        {"shift": 11, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3RHT4CommLossAlarm", "outValue": "Normal"},
+                        {"shift": 11, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3RHT4CommLossAlarm", "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        },
+        "elink_environment_alarm_2": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1OverHumidityAlarm", "outValue": "Normal"},
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1OverHumidityAlarm", "outValue": "Alarm" },
+                        {"shift": 1, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2OverHumidityAlarm", "outValue": "Normal"},
+                        {"shift": 1, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2OverHumidityAlarm", "outValue": "Alarm" },
+                        {"shift": 2, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3OverHumidityAlarm", "outValue": "Normal"},
+                        {"shift": 2, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3OverHumidityAlarm", "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        },
+        "elink_fss_fault": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink1SmokeDetectFault2"        , "outValue": "Normal"},
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink1SmokeDetectFault2"        , "outValue": "Fault" },
+                        {"shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink2SmokeDetectFault2"        , "outValue": "Normal"},
+                        {"shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink2SmokeDetectFault2"        , "outValue": "Fault" },
+                        {"shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink3SmokeDetectFault2"        , "outValue": "Normal"},
+                        {"shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink3SmokeDetectFault2"        , "outValue": "Fault" },
+                        {"shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink1SmokeDetectFault1"        , "outValue": "Normal"},
+                        {"shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink1SmokeDetectFault1"        , "outValue": "Fault" },
+                        {"shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink2SmokeDetectFault1"        , "outValue": "Normal"},
+                        {"shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink2SmokeDetectFault1"        , "outValue": "Fault" },
+                        {"shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink3SmokeDetectFault1"        , "outValue": "Normal"},
+                        {"shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink3SmokeDetectFault1"        , "outValue": "Fault" },
+                        {"shift": 6, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:ELinkFSSReleaseFault"           , "outValue": "Normal"},
+                        {"shift": 6, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:ELinkFSSReleaseFault"           , "outValue": "Fault" },
+                        {"shift": 7, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:WIUManualPullStationWorkedFault", "outValue": "Normal"},
+                        {"shift": 7, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:WIUManualPullStationWorkedFault", "outValue": "Fault" },
+                        {"shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:WIUSmokeDetectFault"            , "outValue": "Normal"},
+                        {"shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:WIUSmokeDetectFault"            , "outValue": "Fault" }
+                    ]
+                }]
+            }
+        },
+        "elink_fss_alarm_1": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:EPLCWIUCommLoss"              , "outValue": "Normal"},
+                        {"shift": 0 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:EPLCWIUCommLoss"              , "outValue": "Alarm" },
+                        {"shift": 1 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:WIUHVACErrorAlarm"            , "outValue": "Normal"},
+                        {"shift": 1 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:WIUHVACErrorAlarm"            , "outValue": "Alarm" },
+                        {"shift": 2 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:WIUNitrogenReleaseAlarm"      , "outValue": "Normal"},
+                        {"shift": 2 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:WIUNitrogenReleaseAlarm"      , "outValue": "Alarm" },
+                        {"shift": 3 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:WaterLevel1Alarm"             , "outValue": "Normal"},
+                        {"shift": 3 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:WaterLevel1Alarm"             , "outValue": "Alarm" },
+                        {"shift": 4 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:WaterLevel2Alarm"             , "outValue": "Normal"},
+                        {"shift": 4 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:WaterLevel2Alarm"             , "outValue": "Alarm" },
+                        {"shift": 5 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ExtinguishingWaterSupplyAlarm", "outValue": "Normal"},
+                        {"shift": 5 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ExtinguishingWaterSupplyAlarm", "outValue": "Alarm" },
+                        {"shift": 6 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1FSSReleaseAlarm"        , "outValue": "Normal"},
+                        {"shift": 6 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1FSSReleaseAlarm"        , "outValue": "Alarm" },
+                        {"shift": 7 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2FSSReleaseAlarm"        , "outValue": "Normal"},
+                        {"shift": 7 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2FSSReleaseAlarm"        , "outValue": "Alarm" },
+                        {"shift": 8 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3FSSReleaseAlarm"        , "outValue": "Normal"},
+                        {"shift": 8 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3FSSReleaseAlarm"        , "outValue": "Alarm" },
+                        {"shift": 9 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:WIUTroubleDetectAlarm"        , "outValue": "Normal"},
+                        {"shift": 9 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:WIUTroubleDetectAlarm"        , "outValue": "Alarm" },
+                        {"shift": 10, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1H2SensorErrorAlarm"     , "outValue": "Normal"},
+                        {"shift": 10, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1H2SensorErrorAlarm"     , "outValue": "Alarm" },
+                        {"shift": 11, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2H2SensorErrorAlarm"     , "outValue": "Normal"},
+                        {"shift": 11, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2H2SensorErrorAlarm"     , "outValue": "Alarm" },
+                        {"shift": 12, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3H2SensorErrorAlarm"     , "outValue": "Normal"},
+                        {"shift": 12, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3H2SensorErrorAlarm"     , "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        },
+        "elink_fss_alarm_2": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1AVSOnAlarm"               , "outValue": "Normal"},
+                        {"shift": 0 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1AVSOnAlarm"               , "outValue": "Alarm" },
+                        {"shift": 1 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2AVSOnAlarm"               , "outValue": "Normal"},
+                        {"shift": 1 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2AVSOnAlarm"               , "outValue": "Alarm" },
+                        {"shift": 2 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3AVSOnAlarm"               , "outValue": "Normal"},
+                        {"shift": 2 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3AVSOnAlarm"               , "outValue": "Alarm" },
+                        {"shift": 3 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1VentilationFanStatusAlarm", "outValue": "Normal"},
+                        {"shift": 3 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1VentilationFanStatusAlarm", "outValue": "Alarm" },
+                        {"shift": 4 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2VentilationFanStatusAlarm", "outValue": "Normal"},
+                        {"shift": 4 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2VentilationFanStatusAlarm", "outValue": "Alarm" },
+                        {"shift": 5 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3VentilationFanStatusAlarm", "outValue": "Normal"},
+                        {"shift": 5 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3VentilationFanStatusAlarm", "outValue": "Alarm" },
+                        {"shift": 6 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1LouverStatusAlarm"        , "outValue": "Normal"},
+                        {"shift": 6 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1LouverStatusAlarm"        , "outValue": "Alarm" },
+                        {"shift": 7 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2LouverStatusAlarm"        , "outValue": "Normal"},
+                        {"shift": 7 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2LouverStatusAlarm"        , "outValue": "Alarm" },
+                        {"shift": 8 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3LouverStatusAlarm"        , "outValue": "Normal"},
+                        {"shift": 8 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3LouverStatusAlarm"        , "outValue": "Alarm" },
+                        {"shift": 9 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC1H2SensorCommLoss"          , "outValue": "Normal"},
+                        {"shift": 9 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC1H2SensorCommLoss"          , "outValue": "Alarm" },
+                        {"shift": 10, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC2H2SensorCommLoss"          , "outValue": "Normal"},
+                        {"shift": 10, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC2H2SensorCommLoss"          , "outValue": "Alarm" },
+                        {"shift": 11, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC3H2SensorCommLoss"          , "outValue": "Normal"},
+                        {"shift": 11, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC3H2SensorCommLoss"          , "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        },
+        "elink_1_loc_1": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:EPLCBSCCommLossLOC"  , "outValue": "Normal" },
+                        {"shift": 0 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:EPLCBSCCommLossLOC"  , "outValue": "Alarm"  },
+                        {"shift": 1 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:EPLCEPLCCommLossLOC" , "outValue": "Normal" },
+                        {"shift": 1 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:EPLCEPLCCommLossLOC" , "outValue": "Alarm"  },
+                        {"shift": 2 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:EPLCHVACCommLossLOC" , "outValue": "Normal" },
+                        {"shift": 2 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:EPLCHVACCommLossLOC" , "outValue": "Alarm"  },
+                        {"shift": 3 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:EPLCWIUCommLossLOC"  , "outValue": "Normal" },
+                        {"shift": 3 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:EPLCWIUCommLossLOC"  , "outValue": "Alarm"  },
+                        {"shift": 4 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:EPLCIMDCommLossLOC"  , "outValue": "Normal" },
+                        {"shift": 4 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:EPLCIMDCommLossLOC"  , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "elink_1_loc_2": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC1EPLCCommLossLOC"       , "outValue": "Normal" },
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC1EPLCCommLossLOC"       , "outValue": "Alarm"  },
+                        {"shift": 1  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC2EPLCCommLossLOC"       , "outValue": "Normal" },
+                        {"shift": 1  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC2EPLCCommLossLOC"       , "outValue": "Alarm"  },
+                        {"shift": 2  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC3EPLCCommLossLOC"       , "outValue": "Normal" },
+                        {"shift": 2  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC3EPLCCommLossLOC"       , "outValue": "Alarm"  },
+                        {"shift": 3  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC1HVACCommLossLOC"       , "outValue": "Normal" },
+                        {"shift": 3  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC1HVACCommLossLOC"       , "outValue": "Alarm"  },
+                        {"shift": 4  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC2HVACCommLossLOC"       , "outValue": "Normal" },
+                        {"shift": 4  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC2HVACCommLossLOC"       , "outValue": "Alarm"  },
+                        {"shift": 5  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC3HVACCommLossLOC"       , "outValue": "Normal" },
+                        {"shift": 5  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC3HVACCommLossLOC"       , "outValue": "Alarm"  },
+                        {"shift": 6  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC1H2SensorCommLossLOC"   , "outValue": "Normal" },
+                        {"shift": 6  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC1H2SensorCommLossLOC"   , "outValue": "Alarm"  },
+                        {"shift": 7  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC2H2SensorCommLossLOC"   , "outValue": "Normal" },
+                        {"shift": 7  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC2H2SensorCommLossLOC"   , "outValue": "Alarm"  },
+                        {"shift": 8  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC3H2SensorCommLossLOC"   , "outValue": "Normal" },
+                        {"shift": 8  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC3H2SensorCommLossLOC"   , "outValue": "Alarm"  },
+                        {"shift": 9  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC1RHTCommLossWarning" , "outValue": "Normal" },
+                        {"shift": 9  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC1RHTCommLossWarning" , "outValue": "Alarm"  },
+                        {"shift": 10 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC2RHTCommLossWarning" , "outValue": "Normal" },
+                        {"shift": 10 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC2RHTCommLossWarning" , "outValue": "Alarm"  },
+                        {"shift": 11 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC3RHTCommLossWarning" , "outValue": "Normal" },
+                        {"shift": 11 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC3RHTCommLossWarning" , "outValue": "Alarm"  },
+                        {"shift": 12 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC1RHTCommLoss"        , "outValue": "Normal" },
+                        {"shift": 12 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC1RHTCommLoss"        , "outValue": "Alarm"  },
+                        {"shift": 13 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC2RHTCommLoss"        , "outValue": "Normal" },
+                        {"shift": 13 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC2RHTCommLoss"        , "outValue": "Alarm"  },
+                        {"shift": 14 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BPLC3RHTCommLoss"        , "outValue": "Normal" },
+                        {"shift": 14 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BPLC3RHTCommLoss"        , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "elink_1_diagnosis_1": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:ELinkDCDisconnectSwitchStatusFaultDiag"  , "outValue": "Normal" },
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:ELinkDCDisconnectSwitchStatusFaultDiag"  , "outValue": "Fault"  },
+                        {"shift": 1  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:ELinkDCFuseOpenFaultDiag"                , "outValue": "Normal" },
+                        {"shift": 1  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:ELinkDCFuseOpenFaultDiag"                , "outValue": "Fault"  },
+                        {"shift": 2  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:ELinkEmergencySTOPButtonDiag"            , "outValue": "Normal" },
+                        {"shift": 2  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:ELinkEmergencySTOPButtonDiag"            , "outValue": "Fault"  },
+                        {"shift": 3  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:ELinkDoorOpenInOperationModeFaultDiag"   , "outValue": "Normal" },
+                        {"shift": 3  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:ELinkDoorOpenInOperationModeFaultDiag"   , "outValue": "Fault"  },
+                        {"shift": 4  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:ELinkDoorOpenInMaintenanceModeFaultDiag" , "outValue": "Normal" },
+                        {"shift": 4  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:ELinkDoorOpenInMaintenanceModeFaultDiag" , "outValue": "Fault"  },
+                        {"shift": 5  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkSPDErrorDiag"                       , "outValue": "Normal" },
+                        {"shift": 5  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkSPDErrorDiag"                       , "outValue": "Alarm"  },
+                        {"shift": 6  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkDoorOpenInSetupModeAlarmDiag"       , "outValue": "Normal" },
+                        {"shift": 6  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkDoorOpenInSetupModeAlarmDiag"       , "outValue": "Alarm"  },
+                        {"shift": 7  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkACMainMCCBOpenAlarmDiag"            , "outValue": "Normal" },
+                        {"shift": 7  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkACMainMCCBOpenAlarmDiag"            , "outValue": "Alarm"  },
+                        {"shift": 8  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkUPSOperationOutageAlarmDiag"        , "outValue": "Normal" },
+                        {"shift": 8  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkUPSOperationOutageAlarmDiag"        , "outValue": "Alarm"  },
+                        {"shift": 9  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkUPSErrorOrInputPowerOffAlarmDiag"   , "outValue": "Normal" },
+                        {"shift": 9  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkUPSErrorOrInputPowerOffAlarmDiag"   , "outValue": "Alarm"  },
+                        {"shift": 10 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkHVACErrorAlarmDiag"                 , "outValue": "Normal" },
+                        {"shift": 10 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkHVACErrorAlarmDiag"                 , "outValue": "Alarm"  },
+                        {"shift": 11 , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:ELinkFSSReleaseFaultDiag"                , "outValue": "Normal" },
+                        {"shift": 11 , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:ELinkFSSReleaseFaultDiag"                , "outValue": "Fault"  },
+                        {"shift": 12 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ELinkSMPSStatusDiag"                     , "outValue": "Normal" },
+                        {"shift": 12 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ELinkSMPSStatusDiag"                     , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "elink_1_diagnosis_2": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:WIUManualPullStationWorkedFaultDiag" , "outValue": "Normal" },
+                        {"shift": 0 , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:WIUManualPullStationWorkedFaultDiag" , "outValue": "Fault"  },
+                        {"shift": 1 , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:WIUSmokeDetectFaultDiag"             , "outValue": "Normal" },
+                        {"shift": 1 , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:WIUSmokeDetectFaultDiag"             , "outValue": "Fault"  },
+                        {"shift": 2 , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:WIUHVACErrorDiag"                    , "outValue": "Normal" },
+                        {"shift": 2 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:WIUHVACErrorDiag"                    , "outValue": "Alarm"  },
+                        {"shift": 3 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:WIUNitrogenReleaseDiag"              , "outValue": "Normal" },
+                        {"shift": 3 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:WIUNitrogenReleaseDiag"              , "outValue": "Alarm"  },
+                        {"shift": 4 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:WaterLevel1AlarmDiag"                , "outValue": "Normal" },
+                        {"shift": 4 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:WaterLevel1AlarmDiag"                , "outValue": "Alarm"  },
+                        {"shift": 5 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:WaterLevel2AlarmDiag"                , "outValue": "Normal" },
+                        {"shift": 5 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:WaterLevel2AlarmDiag"                , "outValue": "Alarm"  },
+                        {"shift": 6 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:ExtinguishingWaterSupplyAlarmDiag"   , "outValue": "Normal" },
+                        {"shift": 6 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:ExtinguishingWaterSupplyAlarmDiag"   , "outValue": "Alarm"  },
+                        {"shift": 7 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:WIUTroubleDetectAlarmDiag"           , "outValue": "Normal" },
+                        {"shift": 7 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:WIUTroubleDetectAlarmDiag"           , "outValue": "Alarm"  },
+                        {"shift": 8 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:IMDAlarmDiag"                        , "outValue": "Normal" },
+                        {"shift": 8 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:IMDAlarmDiag"                        , "outValue": "Alarm"  },
+                        {"shift": 9 , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:IMDFault"                            , "outValue": "Normal" },
+                        {"shift": 9 , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:IMDFault"                            , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+        "elink_1_blink_1_diagnosis": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink1DoorOpenFaultDiag"              , "outValue": "Normal" },
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink1DoorOpenFaultDiag"              , "outValue": "Fault"  },
+                        {"shift": 1  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1SMPSStatusAlarmDiag"            , "outValue": "Normal" },
+                        {"shift": 1  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1SMPSStatusAlarmDiag"            , "outValue": "Alarm"  },
+                        {"shift": 2  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1HVACErrorAlarmDiag"             , "outValue": "Normal" },
+                        {"shift": 2  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1HVACErrorAlarmDiag"             , "outValue": "Alarm"  },
+                        {"shift": 3  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1OverHumidityAlarmDiag"          , "outValue": "Normal" },
+                        {"shift": 3  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1OverHumidityAlarmDiag"          , "outValue": "Alarm"  },
+                        {"shift": 4  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink1SmokeDetectFault2Diag"          , "outValue": "Normal" },
+                        {"shift": 4  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink1SmokeDetectFault2Diag"          , "outValue": "Fault"  },
+                        {"shift": 5  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink1SmokeDetectFault1Diag"          , "outValue": "Normal" },
+                        {"shift": 5  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink1SmokeDetectFault1Diag"          , "outValue": "Fault"  },
+                        {"shift": 6  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1FSSReleaseAlarmDiag"            , "outValue": "Normal" },
+                        {"shift": 6  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1FSSReleaseAlarmDiag"            , "outValue": "Alarm"  },
+                        {"shift": 7  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1H2SensorErrorAlarmDiag"         , "outValue": "Normal" },
+                        {"shift": 7  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1H2SensorErrorAlarmDiag"         , "outValue": "Alarm"  },
+                        {"shift": 8  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1AVSOnAlarmDiag"                 , "outValue": "Normal" },
+                        {"shift": 8  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1AVSOnAlarmDiag"                 , "outValue": "Alarm"  },
+                        {"shift": 9  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1VentilationFanStatusAlarmDiag"  , "outValue": "Normal" },
+                        {"shift": 9  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1VentilationFanStatusAlarmDiag"  , "outValue": "Alarm"  },
+                        {"shift": 10 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1LouverStatusAlarmDiag"          , "outValue": "Normal" },
+                        {"shift": 10 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1LouverStatusAlarmDiag"          , "outValue": "Alarm"  },
+                        {"shift": 11 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink1AbnormalTemperatureAndHumidity" , "outValue": "Normal" },
+                        {"shift": 11 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink1AbnormalTemperatureAndHumidity" , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "elink_1_blink_2_diagnosis": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink2DoorOpenFaultDiag"              , "outValue": "Normal" },
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink2DoorOpenFaultDiag"              , "outValue": "Fault"  },
+                        {"shift": 1  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2SMPSStatusAlarmDiag"            , "outValue": "Normal" },
+                        {"shift": 1  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2SMPSStatusAlarmDiag"            , "outValue": "Alarm"  },
+                        {"shift": 2  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2HVACErrorAlarmDiag"             , "outValue": "Normal" },
+                        {"shift": 2  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2HVACErrorAlarmDiag"             , "outValue": "Alarm"  },
+                        {"shift": 3  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2OverHumidityAlarmDiag"          , "outValue": "Normal" },
+                        {"shift": 3  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2OverHumidityAlarmDiag"          , "outValue": "Alarm"  },
+                        {"shift": 4  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink2SmokeDetectFault2Diag"          , "outValue": "Normal" },
+                        {"shift": 4  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink2SmokeDetectFault2Diag"          , "outValue": "Fault"  },
+                        {"shift": 5  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink2SmokeDetectFault1Diag"          , "outValue": "Normal" },
+                        {"shift": 5  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink2SmokeDetectFault1Diag"          , "outValue": "Fault"  },
+                        {"shift": 6  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2FSSReleaseAlarmDiag"            , "outValue": "Normal" },
+                        {"shift": 6  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2FSSReleaseAlarmDiag"            , "outValue": "Alarm"  },
+                        {"shift": 7  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2H2SensorErrorAlarmDiag"         , "outValue": "Normal" },
+                        {"shift": 7  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2H2SensorErrorAlarmDiag"         , "outValue": "Alarm"  },
+                        {"shift": 8  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2AVSOnAlarmDiag"                 , "outValue": "Normal" },
+                        {"shift": 8  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2AVSOnAlarmDiag"                 , "outValue": "Alarm"  },
+                        {"shift": 9  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2VentilationFanStatusAlarmDiag"  , "outValue": "Normal" },
+                        {"shift": 9  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2VentilationFanStatusAlarmDiag"  , "outValue": "Alarm"  },
+                        {"shift": 10 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2LouverStatusAlarmDiag"          , "outValue": "Normal" },
+                        {"shift": 10 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2LouverStatusAlarmDiag"          , "outValue": "Alarm"  },
+                        {"shift": 11 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink2AbnormalTemperatureAndHumidity" , "outValue": "Normal" },
+                        {"shift": 11 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink2AbnormalTemperatureAndHumidity" , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "elink_1_blink_3_diagnosis": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink3DoorOpenFaultDiag"              , "outValue": "Normal" },
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink3DoorOpenFaultDiag"              , "outValue": "Fault"  },
+                        {"shift": 1  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3SMPSStatusAlarmDiag"            , "outValue": "Normal" },
+                        {"shift": 1  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3SMPSStatusAlarmDiag"            , "outValue": "Alarm"  },
+                        {"shift": 2  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3HVACErrorAlarmDiag"             , "outValue": "Normal" },
+                        {"shift": 2  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3HVACErrorAlarmDiag"             , "outValue": "Alarm"  },
+                        {"shift": 3  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3OverHumidityAlarmDiag"          , "outValue": "Normal" },
+                        {"shift": 3  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3OverHumidityAlarmDiag"          , "outValue": "Alarm"  },
+                        {"shift": 4  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink3SmokeDetectFault2Diag"          , "outValue": "Normal" },
+                        {"shift": 4  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink3SmokeDetectFault2Diag"          , "outValue": "Fault"  },
+                        {"shift": 5  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:BLink3SmokeDetectFault1Diag"          , "outValue": "Normal" },
+                        {"shift": 5  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:BLink3SmokeDetectFault1Diag"          , "outValue": "Fault"  },
+                        {"shift": 6  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3FSSReleaseAlarmDiag"            , "outValue": "Normal" },
+                        {"shift": 6  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3FSSReleaseAlarmDiag"            , "outValue": "Alarm"  },
+                        {"shift": 7  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3H2SensorErrorAlarmDiag"         , "outValue": "Normal" },
+                        {"shift": 7  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3H2SensorErrorAlarmDiag"         , "outValue": "Alarm"  },
+                        {"shift": 8  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3AVSOnAlarmDiag"                 , "outValue": "Normal" },
+                        {"shift": 8  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3AVSOnAlarmDiag"                 , "outValue": "Alarm"  },
+                        {"shift": 9  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3VentilationFanStatusAlarmDiag"  , "outValue": "Normal" },
+                        {"shift": 9  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3VentilationFanStatusAlarmDiag"  , "outValue": "Alarm"  },
+                        {"shift": 10 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3LouverStatusAlarmDiag"          , "outValue": "Normal" },
+                        {"shift": 10 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3LouverStatusAlarmDiag"          , "outValue": "Alarm"  },
+                        {"shift": 11 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:BLink3AbnormalTemperatureAndHumidity" , "outValue": "Normal" },
+                        {"shift": 11 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:BLink3AbnormalTemperatureAndHumidity" , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/alarms/##BMS_ID##": {
+        "AbnormalAmbientTemperatureHumidity"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "AcceptManualExitReq"                         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "AcceptManualReq"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ActiveVentilationSystem"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "AllRacks"                                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1AVSOnAlarm"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1AVSOnAlarmDiag"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1AbnormalTemperatureAndHumidity"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1FSSReleaseAlarm"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1FSSReleaseAlarmDiag"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1H2SensorErrorAlarm"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1H2SensorErrorAlarmDiag"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1HVACErrorAlarm"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1HVACErrorAlarmDiag"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1LouverStatusAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1LouverStatusAlarmDiag"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1OverHumidityAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1OverHumidityAlarmDiag"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1RHT1CommLossAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1RHT2CommLossAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1RHT3CommLossAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1RHT4CommLossAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1RHTCommLossWarning"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1SMPSStatusAlarm"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1SMPSStatusAlarmDiag"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1VentilationFanStatusAlarm"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1VentilationFanStatusAlarmDiag"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2AVSOnAlarm"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2AVSOnAlarmDiag"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2AbnormalTemperatureAndHumidity"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2FSSReleaseAlarm"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2FSSReleaseAlarmDiag"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2H2SensorErrorAlarm"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2H2SensorErrorAlarmDiag"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2HVACErrorAlarm"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2HVACErrorAlarmDiag"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2LouverStatusAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2LouverStatusAlarmDiag"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2OverHumidityAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2OverHumidityAlarmDiag"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2RHT1CommLossAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2RHT2CommLossAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2RHT3CommLossAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2RHT4CommLossAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2RHTCommLossWarning"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2SMPSStatusAlarm"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2SMPSStatusAlarmDiag"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2VentilationFanStatusAlarm"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2VentilationFanStatusAlarmDiag"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3AVSOnAlarm"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3AVSOnAlarmDiag"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3AbnormalTemperatureAndHumidity"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3FSSReleaseAlarm"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3FSSReleaseAlarmDiag"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3H2SensorErrorAlarm"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3H2SensorErrorAlarmDiag"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3HVACErrorAlarm"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3HVACErrorAlarmDiag"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3LouverStatusAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3LouverStatusAlarmDiag"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3OverHumidityAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3OverHumidityAlarmDiag"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3RHT1CommLossAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3RHT2CommLossAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3RHT3CommLossAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3RHT4CommLossAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3RHTCommLossWarning"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3SMPSStatusAlarm"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3SMPSStatusAlarmDiag"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3VentilationFanStatusAlarm"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3VentilationFanStatusAlarmDiag"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC1EPLCCommLoss"                           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC1EPLCCommLossLOC"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC1H2SensorCommLoss"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC1H2SensorCommLossLOC"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC1HVACCommLoss"                           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC1HVACCommLossLOC"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC1RHTCommLoss"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC1RHTCommLossWarning"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC2EPLCCommLoss"                           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC2EPLCCommLossLOC"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC2H2SensorCommLoss"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC2H2SensorCommLossLOC"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC2HVACCommLoss"                           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC2HVACCommLossLOC"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC2RHTCommLoss"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC2RHTCommLossWarning"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC3EPLCCommLoss"                           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC3EPLCCommLossLOC"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC3H2SensorCommLoss"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC3H2SensorCommLossLOC"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC3HVACCommLoss"                           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC3HVACCommLossLOC"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC3RHTCommLoss"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BPLC3RHTCommLossWarning"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BSCFSSCommLoss"                              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BSCTemperatureHumiditySensorCommLoss"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BSCTemperatureHumiditySensorCommLossWarning" : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkACMainMCCBControl"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkACMainMCCBOpenAlarm"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkACMainMCCBOpenAlarmDiag"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkACMainMCCBStatus"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkBLINKFirmwareCheck"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDCDisconnectSwitchControlOpen"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDCDisconnectSwitchStatus"               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDoorKeyOperationMode"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDoorKeyMaintenanceMode"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDoorKeySetupMode"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDoorOpenInSetupModeAlarm"               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDoorOpenInSetupModeAlarmDiag"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDoorStatus"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkEmergencySTOP"                          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkEmergencySTOPButtonDiag"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkFSSStatus"                              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkFuseStatus"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACCommError"                          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACCompressorOvercurrent"              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACCondenserFanOvercurrent"            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACDifferentialPressureAlarm"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACDoorOpenAlarm"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACEmergencyStopAlarm"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACErrorAlarm"                         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACErrorAlarmDiag"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACEvaporatorFanOvercurrent"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACHalonAlert"                         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACHighHumidityAlarm"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACHighPressureAlarm"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACHighTemperatureAlarm"               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACLowPressureAlarm"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkHVACStatus"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkPLCStatus"                              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkSMPSStatus"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkSMPSStatusDiag"                         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkSMSP1Error"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkSMSP2Error"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkSPDError"                               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkSPDErrorAlarm"                          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkSPDErrorDiag"                           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkUPSError"                               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkUPSErrorOrInputPowerOffAlarm"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkUPSErrorOrInputPowerOffAlarmDiag"       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkUPSOperation"                           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkUPSOperationOutageAlarm"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkUPSOperationOutageAlarmDiag"            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "EPLCBSCCommLoss"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "EPLCBSCCommLossLOC"                          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "EPLCEPLCCommLoss"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "EPLCEPLCCommLossLOC"                         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "EPLCHVACCommLoss"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "EPLCHVACCommLossLOC"                         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "EPLCIMDCommLossLOC"                          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "EPLCWIUCommLoss"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "EPLCWIUCommLossLOC"                          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ExtinguishingWaterSupplyAlarm"               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ExtinguishingWaterSupplyAlarmDiag"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "FSSWaterLevelAlarm"                          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "IMDAlarm"                                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "IMDAlarmDiag"                                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "IMDCommError"                                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "InsulationMonitoring"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverAverageTemperature"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverAvgBSCSOC"                               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverBSCChargeCurrent"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverBSCChargePowerLimit"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverBSCDischargeCurrent"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverBSCDischargePowerLimit"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverHumidity"                                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverMaxRackSOC"                              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "UnderAvgBSCSOC"                              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "UnderMinRackSOC"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUCommStatus"                               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUFACPACFail"                               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUGeneralAlarmHornStrobe"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUHVACErrorAlarm"                           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUHVACErrorDiag"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUHVACTrouble"                              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUNitrogenReleaseAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUNitrogenReleaseDiag"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUNitrogenReleaseSolenoidMonitor"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUNitrogenReleaseSolenoidValve"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUSmokeDetectorONinWIU"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUSmokeDetectorTroubleinWIU"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUTroubleDetectAlarm"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUWaterPressureSwitch"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUWaterReleaseSolenoidMonitor"              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUWaterReleaseSolenoidValve"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUWaterTankLevel1Monitor"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUWaterTankLevel2Monitor"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WaterLevel1Alarm"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WaterLevel1AlarmDiag"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WaterLevel2Alarm"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WaterLevel2AlarmDiag"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}}
+    },
+
+    "/faults/##BMS_ID##": {
+        "BLink1DoorOpenFault"                     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1DoorOpenFaultDiag"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1SmokeDetectFault1"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1SmokeDetectFault1Diag"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1SmokeDetectFault2"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink1SmokeDetectFault2Diag"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2DoorOpenFault"                     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2DoorOpenFaultDiag"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2SmokeDetectFault1"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2SmokeDetectFault1Diag"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2SmokeDetectFault2"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink2SmokeDetectFault2Diag"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3DoorOpenFault"                     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3DoorOpenFaultDiag"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3SmokeDetectFault1"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3SmokeDetectFault1Diag"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3SmokeDetectFault2"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "BLink3SmokeDetectFault2Diag"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ChargerFail"                             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ControllerBSCCommsLoss"                  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDCDisconnectSwitchStatusFault"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDCDisconnectSwitchStatusFaultDiag"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDCFuseOpenFault"                    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDCFuseOpenFaultDiag"                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDoorOpenInMaintenanceModeFault"     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDoorOpenInMaintenanceModeFaultDiag" : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDoorOpenInOperationModeFault"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkDoorOpenInOperationModeFaultDiag"   : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkEmergencyStopButtonFault"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkFirmwareTypeError"                    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkFSSReleaseFault"                    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "ELinkFSSReleaseFaultDiag"                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "FSSOperate"                              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "GeneralPowerTrouble"                     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "IMDFault"                                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "Insulation"                              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "MultipleFaultsRackDetection"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverAverageTemperature"                  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverBSCCharge"                           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverBSCChargePowerLimit"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverBSCDischarge"                        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverBSCDischargePowerLimit"              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "OverOfflineRackCount"                    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "SystemInitialization"                    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUACFail"                               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUBatteryVoltageLowHigh"                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUEPROMError"                           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUExternalRamError"                     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUGroundFault"                          : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUGroundFaultLoop1"                     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUInternalRamError"                     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIULCD80Supervisory"                     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUManualPullStationWorkedFault"         : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUManualPullStationWorkedFaultDiag"     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUNVRAMBattTrouble"                     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUProgramCorrupted"                     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUSmokeDetectFault"                     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "WIUSmokeDetectFaultDiag"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}}
+    }
+}

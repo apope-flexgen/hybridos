@@ -1,0 +1,491 @@
+{
+    "/components/pcs_prog_params": {
+        "pac_reference": 0,
+        "pac_reference_1": 0,
+        "pac_reference_2": 0,
+        "q_reference": 0,
+
+        "start_gradient_p": 0,
+        "upward_gradient_p": 0,
+        "downward_gradient_p": 0,
+        "stop_gradient_p": 0,
+
+        "start_gradient_q": 0,
+        "upward_gradient_q": 0,
+        "downward_gradient_q": 0,
+        "stop_gradient_q": 0,
+
+        "current_time_seconds": {
+            "value": -1,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "fims": "set", "uri": "/components/pcs_prog_params:ppc_heartbeat" }
+                    ]
+                }]
+            }
+        },
+
+        "comms_state": {
+            "value": -1,
+            "actions": {
+                "onSet":[{
+                    "remap": [
+                        {"inValue": 0,  "uri": "/status/pcs:CommsOK", "outValue": true},
+                        {"inValue": 1,  "uri": "/status/pcs:CommsOK", "outValue": true},
+                        {"inValue": 2,  "uri": "/status/pcs:CommsOK", "outValue": false}
+                    ]
+                }]
+            }
+        }
+
+
+    },
+
+
+
+    "/components/pcs_visual_params": {
+        "max_p_limit": 0,
+        "max_q_limit": 0,
+        "max_s_limit": 0,
+        "mv_pt100_(1)": 0,
+        "mv_pt100_(2)": 0,
+        "mv_pt100_(3)": 0,
+
+        "total_p_discharge_available": -1,
+        "total_p_charge_available": -1,
+        "total_q_available": -1,
+        "total_s_available": -1,
+
+        "busbar_1_p_discharge_available": -1,
+        "busbar_1_p_charge_available": -1,
+        "busbar_1_q_available": -1,
+
+        "busbar_2_p_discharge_available": -1,
+        "busbar_2_p_charge_available": -1,
+        "busbar_2_q_available": -1,
+
+
+        "current_status": {
+            "value": -1,
+            "ifChanged": false,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"inValue": 0 , "uri": "/status/pcs:InverterWorkflow", "outValue": "Power Up"},
+                        {"inValue": 0 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 0 , "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 0 , "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 1 , "uri": "/status/pcs:InverterWorkflow", "outValue": "Init"},
+                        {"inValue": 1 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 1 , "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 1 , "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 2 , "uri": "/status/pcs:InverterWorkflow", "outValue": "Off"},
+                        {"inValue": 2 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 2 , "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 2 , "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 3 , "uri": "/status/pcs:InverterWorkflow", "outValue": "Standby DC"},
+                        {"inValue": 3 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 3 , "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 3 , "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 4 , "uri": "/status/pcs:InverterWorkflow", "outValue": "Precharge DC"},
+                        {"inValue": 4 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 4 , "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 4 , "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 5 , "uri": "/status/pcs:InverterWorkflow", "outValue": "Softcharge DC"},
+                        {"inValue": 5 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 5 , "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 5 , "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 6 , "uri": "/status/pcs:InverterWorkflow", "outValue": "DC Ready"},
+                        {"inValue": 6 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 6 , "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 6 , "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 7 , "uri": "/status/pcs:InverterWorkflow", "outValue": "Standby AC"},
+                        {"inValue": 7 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 7 , "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 7 , "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 8 , "uri": "/status/pcs:InverterWorkflow", "outValue": "Black Start"},
+                        {"inValue": 8 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 8 , "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 8 , "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 9 , "uri": "/status/pcs:InverterWorkflow", "outValue": "Ready"},
+                        {"inValue": 9 , "uri": "/status/pcs:SystemState", "outValue": 2},
+                        {"inValue": 9 , "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 9 , "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+
+                        {"inValue": 10, "uri": "/status/pcs:InverterWorkflow", "outValue": "Wait"},
+                        {"inValue": 10 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 10 , "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 10 , "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 11, "uri": "/status/pcs:InverterWorkflow", "outValue": "Pre ON"},
+                        {"inValue": 11 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 11, "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 11, "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+
+                        {"inValue": 12, "uri": "/status/pcs:InverterWorkflow", "outValue": "ON"},
+                        {"inValue": 12, "uri": "/status/pcs:SystemState", "outValue": 3},
+                        {"inValue": 12 , "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": true},
+                        {"inValue": 12 , "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": true},
+
+
+
+                        {"inValue": 13, "uri": "/status/pcs:InverterWorkflow", "outValue": "Stop"},
+                        {"inValue": 13 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 13, "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 13, "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 14, "uri": "/status/pcs:InverterWorkflow", "outValue": "Ready AC"},
+                        {"inValue": 14 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 14, "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 14, "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 15, "uri": "/status/pcs:InverterWorkflow", "outValue": "AC Diag"},
+                        {"inValue": 15 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 15, "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 15, "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        {"inValue": 16, "uri": "/status/pcs:InverterWorkflow", "outValue": "Discharge"},
+                        {"inValue": 16 , "uri": "/status/pcs:SystemState", "outValue": 1},
+                        {"inValue": 16, "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 16, "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false},
+
+
+                        
+                        {"inValue": 17, "uri": "/status/pcs:InverterWorkflow", "outValue": "Fault"},
+                        {"inValue": 17, "uri": "/status/pcs:SystemState", "outValue": 4},
+                        {"inValue": 17, "uri": "/status/pcs:ModulesOnline@MinFaultThreshold", "outValue": false},
+                        {"inValue": 17, "uri": "/status/pcs:ModulesOnline@EnableMinValCheck", "outValue": false}
+
+
+                    ]
+                }]
+            }
+        },
+
+
+        
+        "fault_1_to_16"   : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults1To16"   }]}]}},
+        "fault_17_to_32"  : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults17To32"  }]}]}},
+        "fault_33_to_48"  : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults33To48"  }]}]}},
+        "fault_49_to_64"  : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults49To64"  }]}]}},
+        "fault_65_to_80"  : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults65To80"  }]}]}},
+        "fault_81_to_96"  : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults81To96"  }]}]}},
+        "fault_97_to_112" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults97To112" }]}]}},
+        "fault_113_to_128": { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults113To128"}]}]}},
+        "fault_129_to_144": { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults129To144"}]}]}},
+        "fault_145_to_160": { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults145To160"}]}]}},
+        "fault_161_to_176": { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults161To176"}]}]}},
+        "fault_177_to_192": { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults177To192"}]}]}},
+        "fault_193_to_208": { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults193To208"}]}]}},
+        "fault_209_to_224": { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults209To224"}]}]}},
+        "fault_225_to_240": { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults225To240"}]}]}},
+        "fault_241_to_256": { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Faults241To256"}]}]}},
+
+        "warning_1_to_16"    : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms1To16"   }]}]}},
+        "warning_17_to_32"   : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms17To32"  }]}]}},
+        "warning_33_to_48"   : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms33To48"  }]}]}},
+        "warning_49_to_64"   : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms49To64"  }]}]}},
+        "warning_65_to_80"   : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms65To80"  }]}]}},
+        "warning_81_to_96"   : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms81To96"  }]}]}},
+        "warning_97_to_112"  : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms97To112" }]}]}},
+        "warning_113_to_128" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms113To128"}]}]}},
+        "warning_129_to_144" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms129To144"}]}]}},
+        "warning_145_to_160" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms145To160"}]}]}},
+        "warning_161_to_176" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms161To176"}]}]}},
+        "warning_177_to_192" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms177To192"}]}]}},
+        "warning_193_to_208" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms193To208"}]}]}},
+        "warning_209_to_224" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms209To224"}]}]}},
+        "warning_225_to_240" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms225To240"}]}]}},
+        "warning_241_to_256" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms241To256"}]}]}},
+        "warning_257_to_272" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms257To272"}]}]}},
+        "warning_273_to_288" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms273To288"}]}]}},
+        "warning_289_to_304" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms289To304"}]}]}},
+        "warning_305_to_320" : { "value":0, "actions": {"onSet":[{"remap": [{"uri": "/status/pcs:Alarms305To320"}]}]}}
+        
+    },
+
+
+
+
+
+    "/schedule/wake_monitor/pcs":{
+        "/status/pcs:ModulesOnline" : {"func": "CheckMonitorVar"},
+        "/status/pcs:PCSDCCurrent"                             : {"amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:PCSDCPower"                               : {"amap": "pcs", "func": "CalculateVar"},
+        
+        "/status/pcs:MaxIGBTTemperature"                       : {"amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:MVTMaxTemperature"                        : {"amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:ActivePowerSetpointFeedback"              : {"amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:ReactivePowerSetpointFeedback"            : {"amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:ActivePowerRampRateSetpointFeedback"      : {"amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:ReactivePowerRampRateSetpointFeedback"    : {"amap": "pcs", "func": "CalculateVar"},
+
+        "/status/pcs:PCSMaxChargePower_1"    : {"amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:PCSMaxChargePower_2"    : {"amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:PCSMaxDischargePower_1" : {"amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:PCSMaxDischargePower_2" : {"amap": "pcs", "func": "CalculateVar"},
+
+        "/limits/pcs:RatedActivePower"   : {"func": "CalculateVar"},
+        "/limits/pcs:RatedReactivePower" : {"func": "CalculateVar"},
+        "/limits/pcs:RatedApparentPower" : {"func": "CalculateVar"}
+        
+    },
+
+
+    "/limits/pcs": {
+        "RatedActivePower": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/pcs_visual_params:max_p_limit",
+            "variable2": "/config/pcs:RatedActivePower",
+            "expression": "{1} * {2} / 100"
+        },
+        "RatedReactivePower": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/pcs_visual_params:max_q_limit",
+            "variable2": "/config/pcs:RatedReactivePower",
+            "expression": "{1} * {2} / 100"
+        },
+        "RatedApparentPower": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/pcs_visual_params:max_s_limit",
+            "variable2": "/config/pcs:RatedApparentPower",
+            "expression": "{1} * {2} / 100"
+        }
+    },
+
+
+    "/status/pcs": {
+        "GridMode": 1,
+        "CommsOK": {
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true , "ifChanged": false, "uri": "/status/pcs:CommsOKStatus", "outValue": "Online" },
+                        {"inValue": false, "ifChanged": false, "uri": "/status/pcs:CommsOKStatus", "outValue": "Offline"}
+                    ]
+                }]
+            }
+        },
+        "ModulesAvailable": {
+            "value": 4
+        },
+        "ModulesOnline": {
+            "EnableFaultCheck" : false,
+            "EnableMinValCheck": false,
+            "MinAlarmThreshold": 3,
+            "MinFaultThreshold": 0,
+            "MinResetValue"    : 4,
+            "MinAlarmTimeout"  : 10,
+            "MinFaultTimeout"  : 20,
+            "MinRecoverTimeout": 1
+        },
+        "MaxIGBTTemperature": {
+            "value": -1,
+            "numVars": 4,
+            "variable1": "/status/pcs_1_module_1:MaxIGBTTemperature",
+            "variable2": "/status/pcs_1_module_2:MaxIGBTTemperature",
+            "variable3": "/status/pcs_1_module_3:MaxIGBTTemperature",
+            "variable4": "/status/pcs_1_module_4:MaxIGBTTemperature",
+            "operation": "max"
+        },
+        "MVTMaxTemperature": {
+            "value": -1,
+            "numVars": 3,
+            "variable1": "/components/pcs_visual_params:mv_pt100_(1)",
+            "variable2": "/components/pcs_visual_params:mv_pt100_(2)",
+            "variable3": "/components/pcs_visual_params:mv_pt100_(3)",
+            "operation": "max"
+        },
+        "ActivePower": {
+            "EnableFaultCheck"  : true,
+            "EnableMaxValCheck" : true,
+
+            "MaxAlarmThreshold" : 4100,
+            "MaxFaultThreshold" : 4201,
+
+            "MaxResetValue"     : 4000,
+            "MaxAlarmTimeout"   : 1,
+            "MaxFaultTimeout"   : 1.5,
+            "MaxRecoverTimeout" : 1.4
+        },
+        "ReactivePower": {
+            "EnableFaultCheck"  : true,
+            "EnableMaxValCheck" : true,
+
+            "MaxAlarmThreshold" : 4100,
+            "MaxFaultThreshold" : 4201,
+
+            "MaxResetValue"     : 4000,
+            "MaxAlarmTimeout"   : 1,
+            "MaxFaultTimeout"   : 1.5,
+            "MaxRecoverTimeout" : 1.4
+        },
+        "ActivePowerSetpointFeedback": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 3,
+            "variable1":  "/components/pcs_prog_params:pac_reference_1"   ,
+            "variable2":  "/components/pcs_prog_params:pac_reference_2"   ,
+            "variable3":  "/config/pcs:RatedActivePower"                  ,
+            "expression": "( {1} + {2} ) / 100 * ({3} / 2)"
+        },
+        "ReactivePowerSetpointFeedback": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/pcs_prog_params:q_reference"     ,
+            "variable2": "/config/pcs:RatedActivePower"                ,
+            "expression": "{1} / 100 * {2}"
+        },
+        "ActivePowerRampRateSetpointFeedback": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 5,
+            "variable1": "/components/pcs_prog_params:start_gradient_p",
+            "variable2": "/components/pcs_prog_params:upward_gradient_p" ,
+            "variable3": "/components/pcs_prog_params:downward_gradient_p" ,
+            "variable4": "/components/pcs_prog_params:stop_gradient_p" ,
+            "variable5": "/config/pcs:RatedActivePower"                ,
+            "expression": "({1} + {2} + {3} + {4}) / 4 * {5} / 100"
+        },
+        "ReactivePowerRampRateSetpointFeedback": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 5,
+            "variable1": "/components/pcs_prog_params:start_gradient_q" ,
+            "variable2": "/components/pcs_prog_params:upward_gradient_q"  ,
+            "variable3": "/components/pcs_prog_params:downward_gradient_q"  ,
+            "variable4": "/components/pcs_prog_params:stop_gradient_q"  ,
+            "variable5": "/config/pcs:RatedReactivePower"               ,
+            "expression": "({1} + {2} + {3} + {4}) / 4 * {5} / 100"
+        },
+
+
+        "PCSDCVoltage_1": -1,
+        "PCSDCCurrent_1": -1,
+        "PCSDCPower_1": -1,
+        "PCSDCVoltage_2": -1,
+        "PCSDCCurrent_2": -1,
+        "PCSDCPower_2": -1,
+
+        "PCSDCCurrent": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/status/pcs:PCSDCCurrent_1",
+            "variable2": "/status/pcs:PCSDCCurrent_2",
+            "expression": "{1} + {2}"
+        },
+        "PCSDCPower": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/status/pcs:PCSDCPower_1",
+            "variable2": "/status/pcs:PCSDCPower_2",
+            "expression": "{1} + {2}"
+        },
+        "PCSMaxChargePower_1": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1":  "/components/pcs_visual_params:busbar_1_p_charge_available"   ,
+            "variable2":  "/config/pcs:RatedActivePower"                ,
+            "expression": "({1} / 100) * ({2} / 2)"
+        },
+        "PCSMaxChargePower_2": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1":  "/components/pcs_visual_params:busbar_2_p_charge_available"   ,
+            "variable2":  "/config/pcs:RatedActivePower"                ,
+            "expression": "({1} / 100) * ({2} / 2)"
+        },
+        "PCSMaxDischargePower_1": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1":  "/components/pcs_visual_params:busbar_1_p_discharge_available"   ,
+            "variable2":  "/config/pcs:RatedActivePower"                ,
+            "expression": "({1} / 100) * ({2} / 2)"
+        },
+        "PCSMaxDischargePower_2": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1":  "/components/pcs_visual_params:busbar_2_p_discharge_available"   ,
+            "variable2":  "/config/pcs:RatedActivePower"                ,
+            "expression": "({1} / 100) * ({2} / 2)"
+        }
+    },
+
+    "/vlinks/pcs": {
+        "heartbeat_read"                             :{ "value": "/components/pcs_prog_params:ppc_heartbeat_reg"                              , "vlink": "/status/pcs:HeartbeatRead"                         },
+        "modules_online"                             :{ "value": "/components/pcs_visual_params:num_running_modules"                          , "vlink": "/status/pcs:ModulesOnline"                         },
+        "l1_l2_voltage"                              :{ "value": "/components/pcs_visual_params:grid_voltage_rs_lv"                           , "vlink": "/status/pcs:L1L2Voltage"                           },
+        "l2_l3_voltage"                              :{ "value": "/components/pcs_visual_params:grid_voltage_st_lv"                           , "vlink": "/status/pcs:L2L3Voltage"                           },
+        "l3_l1_voltage"                              :{ "value": "/components/pcs_visual_params:grid_voltage_tr_lv"                           , "vlink": "/status/pcs:L3L1Voltage"                           },
+        "l1_l2_voltage_medium"                       :{ "value": "/components/pcs_visual_params:grid_voltage_rs_mv"                           , "vlink": "/assets/pcs/summary:l1_l2_voltage_medium"          },
+        "l2_l3_voltage_medium"                       :{ "value": "/components/pcs_visual_params:grid_voltage_st_mv"                           , "vlink": "/assets/pcs/summary:l2_l3_voltage_medium"          },
+        "l3_l1_voltage_medium"                       :{ "value": "/components/pcs_visual_params:grid_voltage_tr_mv"                           , "vlink": "/assets/pcs/summary:l3_l1_voltage_medium"          },
+        "mod_1_l1_l2_ac_voltage"                     :{ "value": "/components/pcs_visual_params:mod_1_ac_vrs"                                 , "vlink": "/assets/pcs_1/module_1:l1_l2_ac_voltage"           },
+        "mod_1_l2_l3_ac_voltage"                     :{ "value": "/components/pcs_visual_params:mod_1_ac_vst"                                 , "vlink": "/assets/pcs_1/module_1:l2_l3_ac_voltage"           },
+        "mod_1_l3_l1_ac_voltage"                     :{ "value": "/components/pcs_visual_params:mod_1_ac_vtr"                                 , "vlink": "/assets/pcs_1/module_1:l3_l1_ac_voltage"           },
+        "mod_2_l1_l2_ac_voltage"                     :{ "value": "/components/pcs_visual_params:mod_2_ac_vrs"                                 , "vlink": "/assets/pcs_1/module_2:l1_l2_ac_voltage"           },
+        "mod_2_l2_l3_ac_voltage"                     :{ "value": "/components/pcs_visual_params:mod_2_ac_vst"                                 , "vlink": "/assets/pcs_1/module_2:l2_l3_ac_voltage"           },
+        "mod_2_l3_l1_ac_voltage"                     :{ "value": "/components/pcs_visual_params:mod_2_ac_vtr"                                 , "vlink": "/assets/pcs_1/module_2:l3_l1_ac_voltage"           },
+        "mod_3_l1_l2_ac_voltage"                     :{ "value": "/components/pcs_visual_params:mod_3_ac_vrs"                                 , "vlink": "/assets/pcs_1/module_3:l1_l2_ac_voltage"           },
+        "mod_3_l2_l3_ac_voltage"                     :{ "value": "/components/pcs_visual_params:mod_3_ac_vst"                                 , "vlink": "/assets/pcs_1/module_3:l2_l3_ac_voltage"           },
+        "mod_3_l3_l1_ac_voltage"                     :{ "value": "/components/pcs_visual_params:mod_3_ac_vtr"                                 , "vlink": "/assets/pcs_1/module_3:l3_l1_ac_voltage"           },
+        "mod_4_l1_l2_ac_voltage"                     :{ "value": "/components/pcs_visual_params:mod_4_ac_vrs"                                 , "vlink": "/assets/pcs_1/module_4:l1_l2_ac_voltage"           },
+        "mod_4_l2_l3_ac_voltage"                     :{ "value": "/components/pcs_visual_params:mod_4_ac_vst"                                 , "vlink": "/assets/pcs_1/module_4:l2_l3_ac_voltage"           },
+        "mod_4_l3_l1_ac_voltage"                     :{ "value": "/components/pcs_visual_params:mod_4_ac_vtr"                                 , "vlink": "/assets/pcs_1/module_4:l3_l1_ac_voltage"           },
+        "l1_current"                                 :{ "value": "/components/pcs_visual_params:grid_current_i1_lv"                           , "vlink": "/status/pcs:L1Current"                             },
+        "l2_current"                                 :{ "value": "/components/pcs_visual_params:grid_current_i2_lv"                           , "vlink": "/status/pcs:L2Current"                             },
+        "l3_current"                                 :{ "value": "/components/pcs_visual_params:grid_current_i3_lv"                           , "vlink": "/status/pcs:L3Current"                             },
+        "power_factor"                               :{ "value": "/components/pcs_visual_params:cos_phi_lv"                                   , "vlink": "/status/pcs:PowerFactor"                           },
+        "frequency"                                  :{ "value": "/components/pcs_visual_params:grid_freq"                                    , "vlink": "/status/pcs:Frequency"                             },
+        "active_power"                               :{ "value": "/components/pcs_visual_params:p_mv"                                         , "vlink": "/status/pcs:ActivePower"                           },
+        "reactive_power"                             :{ "value": "/components/pcs_visual_params:q_mv"                                         , "vlink": "/status/pcs:ReactivePower"                         },
+        "apparent_power"                             :{ "value": "/components/pcs_visual_params:s_mv"                                         , "vlink": "/status/pcs:ApparentPower"                         },
+
+        "pcs_dc_voltage_1"                             :{ "value": "/components/pcs_visual_params:dc_voltage_extern_1"                          , "vlink": "/status/pcs:PCSDCVoltage_1"                          },
+        "pcs_dc_current_1"                             :{ "value": "/components/pcs_visual_params:i_dc_1"                                       , "vlink": "/status/pcs:PCSDCCurrent_1"                          },
+        "pcs_dc_power_1"                               :{ "value": "/components/pcs_visual_params:input_power_1"                                , "vlink": "/status/pcs:PCSDCPower_1"                            },
+        "pcs_dc_voltage_2"                             :{ "value": "/components/pcs_visual_params:dc_voltage_extern_2"                          , "vlink": "/status/pcs:PCSDCVoltage_2"                          },
+        "pcs_dc_current_2"                             :{ "value": "/components/pcs_visual_params:i_dc_2"                                       , "vlink": "/status/pcs:PCSDCCurrent_2"                          },
+        "pcs_dc_power_2"                               :{ "value": "/components/pcs_visual_params:input_power_2"                                , "vlink": "/status/pcs:PCSDCPower_2"                            }
+    }
+}

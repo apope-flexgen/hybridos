@@ -1,0 +1,47 @@
+{
+    "/config/##BMS_ID##_##RACK_ID##": {
+        "RatedCapacity": 357.5
+    },
+
+    "/vlinks/##BMS_ID##_##RACK_ID##": {
+        "ui_in_service" : { "value": "/assets/##BMS_ID##/##RACK_ID##:in_service"     , "vlink": "/status/##BMS_ID##_##RACK_ID##:InService"          },
+        "ui_status"     : { "value": "/assets/##BMS_ID##/##RACK_ID##:status" , "vlink": "/status/##BMS_ID##_##RACK_ID##:Status" }
+    },
+
+    "/schedule/wake_monitor/##BMS_ID##_##RACK_ID##":{
+        "/status/##BMS_ID##_##RACK_ID##:DCPower"                      : {"amap": "##BMS_ID##_##RACK_ID##", "func": "CalculateVar"},
+        "/status/##BMS_ID##_##RACK_ID##:ChargeableEnergy"             : {"amap": "##BMS_ID##_##RACK_ID##", "func": "CalculateVar"},
+        "/status/##BMS_ID##_##RACK_ID##:DischargeableEnergy"          : {"amap": "##BMS_ID##_##RACK_ID##", "func": "CalculateVar"}
+    },
+
+    "/status/##BMS_ID##_##RACK_ID##": {
+        "Status": "N/A",
+        "DCPower": {
+            "numVars": 2,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:DCVoltage",
+            "variable2": "/status/##BMS_ID##_##RACK_ID##:DCCurrent",
+            "scale": 1000,
+            "operation": "*"
+        },
+        "ChargeableEnergy": {
+            "value": 0,
+            "numVars": 4,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:SOC",
+            "variable2": "/status/##BMS_ID##_##RACK_ID##:SOH",
+            "variable3": "/config/##BMS_ID##_##RACK_ID##:RatedCapacity",
+            "variable4": "/status/##BMS_ID##_##RACK_ID##:InService",
+            "useExpr": true,
+            "expression": "if ({4}, ((1 - {1} / 100) * {2} / 100 * {3}), 0)"
+        },
+        "DischargeableEnergy": {
+            "value": 0,
+            "numVars": 4,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:SOC",
+            "variable2": "/status/##BMS_ID##_##RACK_ID##:SOH",
+            "variable3": "/config/##BMS_ID##_##RACK_ID##:RatedCapacity",
+            "variable4": "/status/##BMS_ID##_##RACK_ID##:InService",
+            "useExpr": true,
+            "expression": "if ({4}, ({1} / 100 * {2} / 100 * {3}), 0)"
+        }
+    }
+}

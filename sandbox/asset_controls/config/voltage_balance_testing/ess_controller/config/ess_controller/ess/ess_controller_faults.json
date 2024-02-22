@@ -1,0 +1,31 @@
+{
+    "/status/pcs": {
+        "FaultShutdown": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/status/pcs:TriggerFaultShutdown"   , "outValue": true    }
+                    ]
+                }]
+            }
+        },
+        "TriggerFaultShutdown": {
+            "value": false,
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ActivePowerSetpoint"   , "outValue": 0    },
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ReactivePowerSetpoint" , "outValue": 0    },
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:SelectStopMode", "outValue": 0}
+                    ],
+                    "func": [
+                        {"func": "LogInfo"},
+                        {"func": "CalculateVar",  "inAv": "/controls/pcs:SelectStopMode"}
+                    ]
+                }]
+            }
+        }
+    }
+}

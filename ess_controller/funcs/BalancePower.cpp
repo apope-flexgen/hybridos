@@ -250,6 +250,18 @@ int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
         bmsBEnergy = bmsBEnergyVar->getdVal();
     }
 
+    double maxPDeltakW;
+    assetVar* maxPDeltakWVar = ESSUtils::getAvFromParam(vmap, amap, av, "maxPDeltakW");
+    if (!maxPDeltakWVar)
+    {
+        if(debug)FPS_PRINT_WARN("Side B battery energy variable [{}] in av [{}] does not exist", cstr{av->getcParam("maxPDeltakW")}, av->getfName());
+        maxPDeltakW = 9999999; //Large value, 'calibrates off' the max delta check. 
+    }
+    else
+    {
+        maxPDeltakW = maxPDeltakWVar->getdVal();
+    }
+
     double pCmd                = pCmdVar->getdVal()/2; //half command to each side as default.
     double qCmd                = qCmdVar->getdVal()/2;
     double threshold           = av->getdParam("threshold");
@@ -320,24 +332,41 @@ int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
         if (debug)FPS_PRINT_INFO("RATIO UPDATED. New ratio: [{}]   Last ratio: [{}]", ratio, lastRatio);  
     }
 
-    double totalEnergy = bmsAEnergy + bmsBEnergy;
-    double pSplitA = (bmsAEnergy / totalEnergy) * pCmd * 2; //We made pcmd be half of the total command earlier as a default value, so undo that here. 
-    double pSplitB = (bmsBEnergy / totalEnergy) * pCmd * 2;
+
+    double totalEnergy;
+    double pSplitA = pCmd; //default to even split
+    double pSplitB = pCmd;
+
     if(bmsAEnergy < 0.0) bmsAEnergy = 0.0;
     if(bmsBEnergy < 0.0) bmsBEnergy = 0.0;
-    if((bmsAEnergy == 0.0) || (bmsBEnergy == 0.0)) //not configured, or incorrect reading. 
+    if((bmsAEnergy != 0.0) && (bmsBEnergy != 0.0)) 
     {
-        if(debug)FPS_PRINT_INFO("Battery energies not found or incorrectly read. Side A energy [{}], Side B energy [{}]", bmsAEnergy, bmsBEnergy);
-        pSplitA = pCmd; //even split
-        pSplitB = pCmd;
+        totalEnergy = bmsAEnergy + bmsBEnergy; //even split
+        pSplitA = (bmsAEnergy / totalEnergy) * pCmd * 2; //We made pcmd be half of the total command earlier as a default value, so undo that here. 
+        pSplitB = (bmsBEnergy / totalEnergy) * pCmd * 2;
     }
+    else 
+    { //not configured, or incorrect reading. 
+        if(debug)FPS_PRINT_INFO("Battery energies not found or incorrectly read. Side A energy [{}], Side B energy [{}]", bmsAEnergy, bmsBEnergy);
+    }
+    
+    
     if(debug)FPS_PRINT_INFO("pSplitA: [{}]   pSplitB:[{}]", pSplitA, pSplitB); 
     pOutputA = pSplitA + std::abs(pCmd) * ratio;
     pOutputB = pSplitB - std::abs(pCmd) * ratio;
     qOutputA = qCmd + std::abs(qCmd) * ratio;
     qOutputB = qCmd - std::abs(qCmd) * ratio;
 
-    if(debug)FPS_PRINT_INFO("pOutputA:  [{}]  pOutputB: [{}]", pOutputA, pOutputB); 
+    // double pDel = pOutputA - pOutputB;
+    // if(debug)FPS_PRINT_INFO("Power delta: [{}] and maxPDelta: [{}]", pDel, maxPDeltakW);
+    // if (std::abs(pDel) > maxPDeltakW) 
+    // {
+    //     double AmtOverPowerDel = std::abs(pDel - maxPDeltakW);
+    //     pOutputA = pOutputA - (AmtOverPowerDel / 2);
+    //     pOutputB = pOutputB + (AmtOverPowerDel / 2);
+    // }
+
+    if(debug)FPS_PRINT_INFO(" Before limiting, pOutputA:  [{}]  pOutputB: [{}]", pOutputA, pOutputB); 
     //Check for violations of power limits and adjust. 
     //If we have to choose between violating power limits and violating voltage balance limits then we conservatively allow
     //voltage to unbalance instead of violating PCS power limits. 
@@ -376,6 +405,46 @@ int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
                 pOutputB = maxChrgPwrB;
             }
         }
+    }
+
+    // Limit output power by maximum power delta, considering power limits. 
+    double pDel = pOutputA - pOutputB;
+    if(debug)FPS_PRINT_INFO("Power delta: [{}] and maxPDelta: [{}]", pDel, maxPDeltakW);
+    if (std::abs(pDel) > maxPDeltakW) 
+    {
+        // double AmtOverPowerDel = (pOutputA >=0 || pDel >=0 ? 1 : -1) * (std::abs(pDel) - maxPDeltakW); //adjust amount over power del by sign for charge or discharge. 
+         //adjust amount over power del by sign of pDel, as information about charge/discharge and which bus is higher is encoded in that sign. . 
+        double AmtOverPowerDel = (pDel >=0 ? 1 : -1) * (std::abs(pDel) - maxPDeltakW); //this ternary sets the sign of the |pDel - maxPDelatakW|
+        double pOutputATry = pOutputA - (AmtOverPowerDel / 2);
+        double pOutputBTry = pOutputB + (AmtOverPowerDel / 2);
+        if(debug)FPS_PRINT_INFO("pOutputATry: [{}], pOUtputBTry: [{}], AmtOverPowerDel: [{}]", pOutputATry, pOutputBTry, AmtOverPowerDel);
+
+        if (pOutputATry > maxDschrgPwrA) 
+        {
+            double AdjOverLim = std::abs(pOutputATry - maxDschrgPwrA);
+            pOutputBTry = pOutputBTry - AdjOverLim;
+            pOutputATry = maxDschrgPwrA;
+        }
+        else if (pOutputBTry > maxDschrgPwrB)
+        {
+            double AdjOverLim = std::abs((pOutputBTry - maxDschrgPwrB));
+            pOutputATry = pOutputATry - AdjOverLim;
+            pOutputBTry = maxDschrgPwrB;
+        }
+        else if (pOutputATry < maxChrgPwrA)
+        {
+            double AdjOverLim = std::abs((pOutputATry - maxChrgPwrA));
+            pOutputBTry = pOutputBTry + AdjOverLim;
+            pOutputATry = maxChrgPwrA;
+        }
+        else if (pOutputBTry < maxChrgPwrB)
+        {
+            double AdjOverLim = std::abs((pOutputBTry - maxChrgPwrB));
+            pOutputATry = pOutputATry + AdjOverLim;
+            pOutputBTry = maxChrgPwrB;
+        }
+        pOutputA = pOutputATry;
+        pOutputB = pOutputBTry;
     }
 
     vm->setVal(vmap, pOutputAVar->comp.c_str(), pOutputAVar->name.c_str(), pOutputA);

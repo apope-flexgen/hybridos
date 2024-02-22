@@ -1,0 +1,124 @@
+{
+    "/config/##BMS_ID##": {
+        "CurrentCheckStopThreshold": 35
+    },
+
+    "/assets/bms/##BMS_ID##": {
+        "accept_manual_req": {
+            "value": false,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [ {"ifChanged": false, "func": "LogInfo", "amap": "##BMS_ID##"} ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/##BMS_ID##:AcceptManualReq@triggerCmd", "outValue": true}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+        "accept_manual_exit_req": {
+            "value": false,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [ {"ifChanged": false, "func": "LogInfo", "amap": "##BMS_ID##"} ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/##BMS_ID##:AcceptManualExitReq@triggerCmd", "outValue": true}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        }
+    },
+
+    "/vlinks/##BMS_ID##": {
+        "ui_status"                      : { "value": "/assets/bms/##BMS_ID##:status"                      , "vlink": "/status/##BMS_ID##:Status"                    },
+        "ui_manual_mode_request"         : { "value": "/assets/bms/##BMS_ID##:manual_mode_request"         , "vlink": "/status/##BMS_ID##:ManualModeRequest"         },
+        "ui_average_ambient_temperature" : { "value": "/assets/bms/##BMS_ID##:average_ambient_temperature" , "vlink": "/status/##BMS_ID##:AverageAmbientTemperature" },
+        "ui_elink_comm_version"          : { "value": "/assets/bms/##BMS_ID##:elink_comm_version"          , "vlink": "/status/##BMS_ID##:ElinkCommVersion"          },
+        "ui_bsc_sw_version"              : { "value": "/assets/bms/##BMS_ID##:bsc_sw_version"              , "vlink": "/status/##BMS_ID##:BscSwVersion"              },
+        "ui_lastest_bank_bms_sw_version" : { "value": "/assets/bms/##BMS_ID##:lastest_bank_bms_sw_version" , "vlink": "/status/##BMS_ID##:LastestBankBmsSwVersion"   },
+        "ui_lastest_bank_bms_hw_version" : { "value": "/assets/bms/##BMS_ID##:lastest_bank_bms_hw_version" , "vlink": "/status/##BMS_ID##:LastestBankBmsHwVersion"   }
+    },
+
+    "/schedule/wake_monitor/##BMS_ID##":{
+        "/status/##BMS_ID##:DCPower"                             : {"amap": "##BMS_ID##", "func": "CalculateVar"},
+        "/status/##BMS_ID##:DCClosed"                            : {"amap": "##BMS_ID##", "func": "CalculateVar"},
+        "/status/##BMS_ID##:ChargeableEnergy"                    : {"amap": "##BMS_ID##", "func": "CalculateVar"},
+        "/status/##BMS_ID##:DischargeableEnergy"                 : {"amap": "##BMS_ID##", "func": "CalculateVar"},
+        "/status/##BMS_ID##:TotalEnergy"                         : {"amap": "##BMS_ID##", "func": "CalculateVar"},
+        "/status/##BMS_ID##:AvgCellTemp"                         : {"amap": "##BMS_ID##", "func": "CalculateVar"},
+        "/status/##BMS_ID##:AvgCellVoltage"                      : {"amap": "##BMS_ID##", "func": "CalculateVar"},
+        "/status/##BMS_ID##:EMSStatus"                           : {"amap": "##BMS_ID##", "func": "CalculateVar"}
+    },
+
+    "/status/##BMS_ID##": {
+        "Status"           : "N/A",
+        "ManualModeRequest": "N/A",
+        "DCPower": {
+            "numVars": 2,
+            "variable1": "/status/##BMS_ID##:DCVoltage",
+            "variable2": "/status/##BMS_ID##:DCCurrent",
+            "scale": 1000,
+            "operation": "*"
+        },
+        "DCClosed": {
+            "numVars": 1,
+            "variable1": "##BMS_ID##:DCClosed",
+            "operation": "max"
+        },
+        "ChargeableEnergy": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "##BMS_ID##:ChargeableEnergy",
+            "operation": "+"
+        },
+        "DischargeableEnergy": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "##BMS_ID##:DischargeableEnergy",
+            "operation": "+"
+        },
+        "TotalEnergy": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/status/##BMS_ID##:ChargeableEnergy",
+            "variable2": "/status/##BMS_ID##:DischargeableEnergy",
+            "useExpr": true,
+            "expression": "{1} + {2}"
+        },
+        "AvgCellTemp": {
+            "numVars": 1,
+            "variable1": "##BMS_ID##:AvgCellTemp",
+            "operation": "avg"
+        },
+        "AvgCellVoltage": {
+            "numVars": 1,
+            "variable1": "##BMS_ID##:AvgCellVoltage",
+            "operation": "avg"
+        },
+        "EMSStatus": {
+            "note1": "Controller status to be reported to the LG BSC via the controller_status modbus register.",
+            "note2": "0: None, 1: Controller Idle, 2: Controller Running (Charging / Discharging)",
+            "value": 0,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "useExpr": true,
+            "expression": "if (({1} == Running), 2, 1)",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"fims": "set", "uri": "/components/##BMS_ID##_info:ems_status_cmd"}
+                    ]
+                }]
+            }
+        }
+    }
+}

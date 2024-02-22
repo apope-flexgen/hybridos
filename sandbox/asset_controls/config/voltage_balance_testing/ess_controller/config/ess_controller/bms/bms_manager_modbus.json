@@ -1,0 +1,76 @@
+{
+    "/components/##BMS_ID##_info": {
+        "status": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "remap": [
+                        {"inValue": 0, "uri": "/status/##BMS_ID##:Status", "outValue": "None"                      },
+                        {"inValue": 1, "uri": "/status/##BMS_ID##:Status", "outValue": "Not Connected (With BMS)"  },
+                        {"inValue": 2, "uri": "/status/##BMS_ID##:Status", "outValue": "Initializing"              },
+                        {"inValue": 3, "uri": "/status/##BMS_ID##:Status", "outValue": "Normal"                    },
+                        {"inValue": 4, "uri": "/status/##BMS_ID##:Status", "outValue": "NPS (Normal Power Saving)" },
+                        {"inValue": 5, "uri": "/status/##BMS_ID##:Status", "outValue": "Manual"                    },
+                        {"inValue": 6, "uri": "/status/##BMS_ID##:Status", "outValue": "Emergency"                 },
+                        {"inValue": 7, "uri": "/status/##BMS_ID##:Status", "outValue": "UPS"                       },
+
+                        {              "uri": "/status/##BMS_ID##:Online", "outValue": false},
+                        {"inValue": 3, "uri": "/status/##BMS_ID##:Online", "outValue": true }
+                    ]
+                }]
+            }
+        },
+        "manual_mode": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        { "shift": 0,"mask": 3,"inValue": 0,"uri": "/status/##BMS_ID##:ManualModeRequest" , "outValue": "None"  },
+                        { "shift": 0,"mask": 3,"inValue": 1,"uri": "/status/##BMS_ID##:ManualModeRequest" , "outValue": "Enter" },
+                        { "shift": 0,"mask": 3,"inValue": 2,"uri": "/status/##BMS_ID##:ManualModeRequest" , "outValue": "Exit"  }
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_hvac_status": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/status/##BMS_ID##:##BANK_ID_TITLE##HVAC1Status" , "outValue": 0 },
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/status/##BMS_ID##:##BANK_ID_TITLE##HVAC1Status" , "outValue": 1 },
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/status/##BMS_ID##:##BANK_ID_TITLE##HVAC2Status" , "outValue": 0 },
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/status/##BMS_ID##:##BANK_ID_TITLE##HVAC2Status" , "outValue": 1 },
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/status/##BMS_ID##:##BANK_ID_TITLE##HVAC3Status" , "outValue": 0 },
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/status/##BMS_ID##:##BANK_ID_TITLE##HVAC3Status" , "outValue": 1 },
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/status/##BMS_ID##:##BANK_ID_TITLE##HVAC4Status" , "outValue": 0 },
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/status/##BMS_ID##:##BANK_ID_TITLE##HVAC4Status" , "outValue": 1 }
+                    ]
+                }]
+            }
+        }
+    },
+
+    
+    "/vlinks/##BMS_ID##": {
+        "component_connected"      : { "value": "/components/##BMS_ID##_info:heartbeat"                , "vlink": "/status/##BMS_ID##:HeartbeatRead"       },
+        "soc"                      : { "value": "/components/##BMS_ID##_info:soc"                      , "vlink": "/status/##BMS_ID##:SOC"                 },
+        "soh"                      : { "value": "/components/##BMS_ID##_info:soh"                      , "vlink": "/status/##BMS_ID##:SOH"                 },
+        "dc_charge_power_limit"    : { "value": "/components/##BMS_ID##_info:dc_charge_power_limit"    , "vlink": "/limits/##BMS_ID##:ChargePowerLimit"    },
+        "dc_discharge_power_limit" : { "value": "/components/##BMS_ID##_info:dc_discharge_power_limit" , "vlink": "/limits/##BMS_ID##:DischargePowerLimit" },
+        "dc_current"               : { "value": "/components/##BMS_ID##_info:dc_current"               , "vlink": "/status/##BMS_ID##:DCCurrent"           },
+        "dc_voltage"               : { "value": "/components/##BMS_ID##_info:dc_voltage"               , "vlink": "/status/##BMS_ID##:DCVoltage"           },
+        "max_module_temperature"   : { "value": "/components/##BMS_ID##_info:max_module_temperature"   , "vlink": "/status/##BMS_ID##:MaxCellTemp"         },
+        "min_module_temperature"   : { "value": "/components/##BMS_ID##_info:min_module_temperature"   , "vlink": "/status/##BMS_ID##:MinCellTemp"         },
+        "max_cell_voltage"         : { "value": "/components/##BMS_ID##_info:max_cell_voltage"         , "vlink": "/status/##BMS_ID##:MaxCellVoltage"      },
+        "min_cell_voltage"         : { "value": "/components/##BMS_ID##_info:min_cell_voltage"         , "vlink": "/status/##BMS_ID##:MinCellVoltage"      },
+        "num_online_racks"         : { "value": "/components/##BMS_ID##_info:num_online_racks"         , "vlink": "/status/##BMS_ID##:RacksInService"      },
+        "num_total_racks"          : { "value": "/components/##BMS_ID##_info:num_total_racks"          , "vlink": "/status/##BMS_ID##:RacksTotal"          },
+
+        "average_ambient_temperature"        : { "value": "/components/##BMS_ID##_info:average_ambient_temperature"        , "vlink": "/status/##BMS_ID##:AverageAmbientTemperature"      },
+        "elink_comm_version"                 : { "value": "/components/##BMS_ID##_info:elink_comm_version"                 , "vlink": "/status/##BMS_ID##:ElinkCommVersion"               },
+        "bsc_sw_version"                     : { "value": "/components/##BMS_ID##_info:bsc_sw_version"                     , "vlink": "/status/##BMS_ID##:BscSwVersion"                   },
+        "lastest_bank_bms_sw_version"        : { "value": "/components/##BMS_ID##_info:lastest_bank_bms_sw_version"        , "vlink": "/status/##BMS_ID##:LastestBankBmsSwVersion"        },
+        "lastest_bank_bms_hw_version"        : { "value": "/components/##BMS_ID##_info:lastest_bank_bms_hw_version"        , "vlink": "/status/##BMS_ID##:LastestBankBmsHwVersion"        }
+    }
+}

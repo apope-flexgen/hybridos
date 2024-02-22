@@ -1,0 +1,72 @@
+{
+    "/components/##BMS_ID##_info": {
+        "##RACK_ID##_status": {
+            "value":0,
+            "actions": { 
+                "onSet": [{
+                    "remap": [
+                        {"inValue": 0   , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "HWInit"                  },
+                        {"inValue": 1   , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "Standby"                 },
+                        {"inValue": 99  , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "PPS Before Precharge"    },
+                        {"inValue": 100 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "ID Set"                  },
+                        {"inValue": 101 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "Run Standby"             },
+                        {"inValue": 102 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "RBMS Wake"               },
+                        {"inValue": 103 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "MBMS Wake"               },
+                        {"inValue": 104 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "Rack Init Check"         },
+                        {"inValue": 105 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "Rack Precharge"          },
+                        {"inValue": 110 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "Normal"                  },
+                        {"inValue": 111 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "Capacity Check"          },
+                        {"inValue": 120 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "Normal Power Saving"     },
+                        {"inValue": 121 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "Protective Power Saving" },
+                        {"inValue": 130 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "Manual"                  },
+                        {"inValue": 132 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "Emergency"               },
+                        {"inValue": 255 , "uri": "/status/##BMS_ID##_##RACK_ID##:Status", "outValue": "Reset (Shutdown)"        }
+                    ]
+                }]
+            }
+        },
+        "##RACK_ID##_info_1": {
+            "value":0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 7, "mask": 1, "inValue": 0, "uri": "/status/##BMS_ID##_##RACK_ID##:InService" , "outValue": false },
+                        {"shift": 7, "mask": 1, "inValue": 1, "uri": "/status/##BMS_ID##_##RACK_ID##:InService" , "outValue": true  }
+                    ]
+                }]
+            }
+        },
+        "##RACK_ID##_info_2": {
+            "value":0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 14 , "mask": 3 , "inValue": 0 , "uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##FuseFeedback" , "outValue": "Opened" },
+                        {"shift": 14 , "mask": 3 , "inValue": 1 , "uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##FuseFeedback" , "outValue": "Normal" },
+                        {"shift": 14 , "mask": 3 , "inValue": 3 , "uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##FuseFeedback" , "outValue": "Normal" },
+
+                        {"shift": 10 , "mask": 15   ,                  "uri": "/status/##BMS_ID##_##RACK_ID##:DCClosed", "outValue": 1 },
+                        {"shift": 10 , "mask": 15   , "inValue": 5   , "uri": "/status/##BMS_ID##_##RACK_ID##:DCClosed", "outValue": 2 },
+                        {"shift": 10 , "mask": 15   ,                  "uri": "/status/##BMS_ID##:##RACK_ID_TITLE##DCClosed", "outValue": 0 },
+                        {"shift": 10 , "mask": 15   , "inValue": 5   , "uri": "/status/##BMS_ID##:##RACK_ID_TITLE##DCClosed", "outValue": 1 }
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/vlinks/##BMS_ID##_##RACK_ID##": {
+        "dc_charge_power_limit"    : {"value": "/components/##BMS_ID##_info:##RACK_ID##_dc_charge_power_limit"    , "vlink":"/limits/##BMS_ID##_##RACK_ID##:ChargePowerLimit"    },
+        "dc_discharge_power_limit" : {"value": "/components/##BMS_ID##_info:##RACK_ID##_dc_discharge_power_limit" , "vlink":"/limits/##BMS_ID##_##RACK_ID##:DischargePowerLimit" },
+        "soc"                      : {"value": "/components/##BMS_ID##_info:##RACK_ID##_soc"                      , "vlink":"/status/##BMS_ID##_##RACK_ID##:SOC"                },
+        "soh"                      : {"value": "/components/##BMS_ID##_info:##RACK_ID##_soh"                      , "vlink":"/status/##BMS_ID##_##RACK_ID##:SOH"                },
+        "dc_current"               : {"value": "/components/##BMS_ID##_info:##RACK_ID##_dc_current"               , "vlink":"/status/##BMS_ID##_##RACK_ID##:DCCurrent"          },
+        "sum_cell_voltages"        : {"value": "/components/##BMS_ID##_info:##RACK_ID##_sum_cell_voltages"        , "vlink":"/status/##BMS_ID##_##RACK_ID##:DCVoltage"          },
+        "max_module_temperature"   : {"value": "/components/##BMS_ID##_info:##RACK_ID##_max_module_temperature"   , "vlink":"/status/##BMS_ID##_##RACK_ID##:MaxCellTemp"        },
+        "avg_module_temperature"   : {"value": "/components/##BMS_ID##_info:##RACK_ID##_avg_module_temperature"   , "vlink":"/status/##BMS_ID##_##RACK_ID##:AvgCellTemp"        },
+        "min_module_temperature"   : {"value": "/components/##BMS_ID##_info:##RACK_ID##_min_module_temperature"   , "vlink":"/status/##BMS_ID##_##RACK_ID##:MinCellTemp"        },
+        "max_cell_voltage"         : {"value": "/components/##BMS_ID##_info:##RACK_ID##_max_cell_voltage"         , "vlink":"/status/##BMS_ID##_##RACK_ID##:MaxCellVoltage"     },
+        "avg_cell_voltage"         : {"value": "/components/##BMS_ID##_info:##RACK_ID##_avg_cell_voltage"         , "vlink":"/status/##BMS_ID##_##RACK_ID##:AvgCellVoltage"     },
+        "min_cell_voltage"         : {"value": "/components/##BMS_ID##_info:##RACK_ID##_min_cell_voltage"         , "vlink":"/status/##BMS_ID##_##RACK_ID##:MinCellVoltage"     }
+    }
+}

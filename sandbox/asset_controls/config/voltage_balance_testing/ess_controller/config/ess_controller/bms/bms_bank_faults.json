@@ -1,0 +1,992 @@
+{
+    "/components/##BMS_ID##_info": {
+        "##BANK_ID##_alarm_code": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##OverSOCAlarm" , "outValue": "Normal"},
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##OverSOCAlarm" , "outValue": "Alarm" },
+                        {"shift": 1, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##UnderSOCAlarm", "outValue": "Normal"},
+                        {"shift": 1, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##UnderSOCAlarm", "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_warning_code": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##OverBankChargeCurrentWarning"      , "outValue": "Normal"},
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##OverBankChargeCurrentWarning"      , "outValue": "Alarm" },
+                        {"shift": 1, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##OverBankDischargeCurrentWarning"   , "outValue": "Normal"},
+                        {"shift": 1, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##OverBankDischargeCurrentWarning"   , "outValue": "Alarm" },
+                        {"shift": 2, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##OverBankChargePowerLimitWarning"   , "outValue": "Normal"},
+                        {"shift": 2, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##OverBankChargePowerLimitWarning"   , "outValue": "Alarm" },
+                        {"shift": 3, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##OverBankDischargePowerLimitWarning", "outValue": "Normal"},
+                        {"shift": 3, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##OverBankDischargePowerLimitWarning", "outValue": "Alarm" },
+                        {"shift": 4, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AllRacksWarning"                   , "outValue": "Normal"},
+                        {"shift": 4, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AllRacksWarning"                   , "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_fault_code": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##OverBankChargeCurrentFault"      , "outValue": "Normal"},
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##OverBankChargeCurrentFault"      , "outValue": "Fault" },
+                        {"shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##OverBankDischargeCurrentFault"   , "outValue": "Normal"},
+                        {"shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##OverBankDischargeCurrentFault"   , "outValue": "Fault" },
+                        {"shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##OverBankChargePowerLimitFault"   , "outValue": "Normal"},
+                        {"shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##OverBankChargePowerLimitFault"   , "outValue": "Fault" },
+                        {"shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##OverBankDischargePowerLimitFault", "outValue": "Normal"},
+                        {"shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##OverBankDischargePowerLimitFault", "outValue": "Fault" },
+                        {"shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##CurrentImbalanceFault"           , "outValue": "Normal"},
+                        {"shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##CurrentImbalanceFault"           , "outValue": "Fault" }
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_other_fault_code": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##BSCCommError" , "outValue": "Normal"},
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##BSCCommError" , "outValue": "Fault" },
+                        {"shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##RBMSCommError", "outValue": "Normal"},
+                        {"shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##RBMSCommError", "outValue": "Fault" }
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_diagnosis_action_set": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##UPSMode", "outValue": "Normal" },
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##UPSMode", "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_plc_status": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCStatus"             , "outValue": "Normal" },
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCStatus"             , "outValue": "Alarm"  },
+                        {"shift": 1  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCCommStatusHVAC1"    , "outValue": "Normal" },
+                        {"shift": 1  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCCommStatusHVAC1"    , "outValue": "Alarm"  },
+                        {"shift": 2  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCCommStatusHVAC2"    , "outValue": "Normal" },
+                        {"shift": 2  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCCommStatusHVAC2"    , "outValue": "Alarm"  },
+                        {"shift": 3  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCCommStatusHVAC3"    , "outValue": "Normal" },
+                        {"shift": 3  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCCommStatusHVAC3"    , "outValue": "Alarm"  },
+                        {"shift": 4  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCCommStatusHVAC4"    , "outValue": "Normal" },
+                        {"shift": 4  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCCommStatusHVAC4"    , "outValue": "Alarm"  },
+                        {"shift": 9  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCCommStatusH2Sensor" , "outValue": "Normal" },
+                        {"shift": 9  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCCommStatusH2Sensor" , "outValue": "Alarm"  },
+                        {"shift": 11 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCOverHumidityAlarm"  , "outValue": "Normal" },
+                        {"shift": 11 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCOverHumidityAlarm"  , "outValue": "Alarm"  },
+                        {"shift": 15 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCBLinkType.5CP"          , "outValue": "Normal" },
+                        {"shift": 15 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PLCBLinkType.5CP"          , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_device_status": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##ELinkDCDSStatusIndicator" , "outValue": "Alarm"  },
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##ELinkDCDSStatusIndicator" , "outValue": "Normal" },
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri": "/alarms/site:##BMS_ID##_##BANK_ID##_elink_dc_ds[0]"           , "outValue": false    },
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri": "/alarms/site:##BMS_ID##_##BANK_ID##_elink_dc_ds[0]"           , "outValue": true     },
+                        {"shift": 1  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##VentilationPLCControl"    , "outValue": "Normal" },
+                        {"shift": 1  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##VentilationPLCControl"    , "outValue": "Alarm"  },
+                        {"shift": 2  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##DamperPLCControl"         , "outValue": "Normal" },
+                        {"shift": 2  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##DamperPLCControl"         , "outValue": "Alarm"  },
+                        {"shift": 3  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##DoorStatus"               , "outValue": "Normal" },
+                        {"shift": 3  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##DoorStatus"               , "outValue": "Alarm"  },
+                        {"shift": 3  , "mask": 1, "inValue": 0, "uri": "/status/##BMS_ID##:##BANK_ID_TITLE##DoorStatus"               , "outValue": 0        },
+                        {"shift": 3  , "mask": 1, "inValue": 1, "uri": "/status/##BMS_ID##:##BANK_ID_TITLE##DoorStatus"               , "outValue": 1        },
+                        {"shift": 4  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##VentilationStatus"        , "outValue": "Normal" },
+                        {"shift": 4  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##VentilationStatus"        , "outValue": "Alarm"  },
+                        {"shift": 4  , "mask": 1, "inValue": 0, "uri": "/status/##BMS_ID##:##BANK_ID_TITLE##VentStatus"               , "outValue": 0        },
+                        {"shift": 4  , "mask": 1, "inValue": 1, "uri": "/status/##BMS_ID##:##BANK_ID_TITLE##VentStatus"               , "outValue": 1        },
+                        {"shift": 5  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##DamperInStatus"           , "outValue": "Normal" },
+                        {"shift": 5  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##DamperInStatus"           , "outValue": "Alarm"  },
+                        {"shift": 6  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##DamperOutStatus"          , "outValue": "Normal" },
+                        {"shift": 6  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##DamperOutStatus"          , "outValue": "Alarm"  },
+                        {"shift": 7  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##SMPS1Fault"               , "outValue": "Normal" },
+                        {"shift": 7  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##SMPS1Fault"               , "outValue": "Fault"  },
+                        {"shift": 8  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##SMPS2Fault"               , "outValue": "Normal" },
+                        {"shift": 8  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##SMPS2Fault"               , "outValue": "Fault"  },
+                        {"shift": 9  , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##SMPS3Fault"               , "outValue": "Normal" },
+                        {"shift": 9  , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##SMPS3Fault"               , "outValue": "Fault"  },
+                        {"shift": 10 , "mask": 1, "inValue": 0, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##SMPS4Fault"               , "outValue": "Normal" },
+                        {"shift": 10 , "mask": 1, "inValue": 1, "uri": "/faults/##BMS_ID##:##BANK_ID_TITLE##SMPS4Fault"               , "outValue": "Fault"  }
+
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_ai_error": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiError"                          , "outValue": "Normal" },
+                        {"shift": 0  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiError"                          , "outValue": "Alarm"  },
+                        {"shift": 1  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor1Error"                   , "outValue": "Normal" },
+                        {"shift": 1  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor1Error"                   , "outValue": "Alarm"  },
+                        {"shift": 2  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor2Error"                   , "outValue": "Normal" },
+                        {"shift": 2  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor2Error"                   , "outValue": "Alarm"  },
+                        {"shift": 3  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor3Error"                   , "outValue": "Normal" },
+                        {"shift": 3  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor3Error"                   , "outValue": "Alarm"  },
+                        {"shift": 4  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor4Error"                   , "outValue": "Normal" },
+                        {"shift": 4  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor4Error"                   , "outValue": "Alarm"  },
+                        {"shift": 5  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor1DisconnectionDectection" , "outValue": "Normal" },
+                        {"shift": 5  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor1DisconnectionDectection" , "outValue": "Alarm"  },
+                        {"shift": 6  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor2DisconnectionDectection" , "outValue": "Normal" },
+                        {"shift": 6  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor2DisconnectionDectection" , "outValue": "Alarm"  },
+                        {"shift": 7  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor3DisconnectionDectection" , "outValue": "Normal" },
+                        {"shift": 7  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor3DisconnectionDectection" , "outValue": "Alarm"  },
+                        {"shift": 8  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor4DisconnectionDectection" , "outValue": "Normal" },
+                        {"shift": 8  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor4DisconnectionDectection" , "outValue": "Alarm"  },
+                        {"shift": 9  , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor1THError"                 , "outValue": "Normal" },
+                        {"shift": 9  , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor1THError"                 , "outValue": "Alarm"  },
+                        {"shift": 10 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor2THError"                 , "outValue": "Normal" },
+                        {"shift": 10 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor2THError"                 , "outValue": "Alarm"  },
+                        {"shift": 11 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor3THError"                 , "outValue": "Normal" },
+                        {"shift": 11 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor3THError"                 , "outValue": "Alarm"  },
+                        {"shift": 12 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor4THError"                 , "outValue": "Normal" },
+                        {"shift": 12 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##AiSensor4THError"                 , "outValue": "Alarm"  }
+
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_gas_sensor_error_code" : {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "remap": [
+                        {"inValue": 0     , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "Normal"                        },
+                        {"inValue": 32769 , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "DP0XSensorElement|USV Error"   },
+                        {"inValue": 32770 , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "DP0XAdcError"                  },
+                        {"inValue": 32772 , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "DP0XVoltage|PowerFailure"      },
+                        {"inValue": 32776 , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "DP0XCpuError"                  },
+                        {"inValue": 32784 , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "DP0XEeError"                   },
+                        {"inValue": 32800 , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "DP0XIOError"                   },
+                        {"inValue": 32832 , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "DP0XOvertemp."                 },
+                        {"inValue": 33280 , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "DP0XOverrange"                 },
+                        {"inValue": 33024 , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "DP0XUnderrange"                },
+                        {"inValue": 36864 , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "SB0X|EP060X|WarningSign Error" },
+                        {"inValue": 45056 , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "DP0XError"                     },
+                        {"inValue": 128   , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "Maintenance"                   },
+                        {"inValue": 40960 , "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##BlinkGasSensor", "outValue": "HornError"                     },
+
+
+                        {"inValue": 32769 , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[0]" , "outValue": true },
+                        {"inValue": 0     , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[0]" , "outValue": false },
+
+                        {"inValue": 32770 , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[1]" , "outValue": true },
+                        {"inValue": 0     , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[1]" , "outValue": false },
+
+                        {"inValue": 32772 , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[2]" , "outValue": true },
+                        {"inValue": 0     , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[2]" , "outValue": false },
+
+                        {"inValue": 32776 , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[3]" , "outValue": true },
+                        {"inValue": 0     , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[3]" , "outValue": false },
+
+                        {"inValue": 32784 , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[4]" , "outValue": true },
+                        {"inValue": 0     , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[4]" , "outValue": false },
+
+                        {"inValue": 32800 , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[5]" , "outValue": true },
+                        {"inValue": 0     , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[5]" , "outValue": false },
+
+                        {"inValue": 32832 , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[6]" , "outValue": true },
+                        {"inValue": 0     , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[6]" , "outValue": false },
+
+                        {"inValue": 33280 , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[7]" , "outValue": true },
+                        {"inValue": 0     , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[7]" , "outValue": false },
+
+                        {"inValue": 33024 , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[8]" , "outValue": true },
+                        {"inValue": 0     , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[8]" , "outValue": false },
+
+                        {"inValue": 36864 , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[9]" , "outValue": true },
+                        {"inValue": 0     , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[9]" , "outValue": false },
+
+                        {"inValue": 45056 , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[10]", "outValue": true },
+                        {"inValue": 0     , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[10]", "outValue": false },
+
+                        {"inValue": 128   , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[11]", "outValue": true },
+                        {"inValue": 0       , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[11]", "outValue": false },
+
+                        {"inValue": 40960 , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[12]", "outValue": true },
+                        {"inValue": 0     , "uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor[12]", "outValue": false } 
+
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_hvac_error": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1Error", "outValue": "Normal"},
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1Error", "outValue": "Alarm"},
+                        {"shift": 1, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2Error", "outValue": "Normal"},
+                        {"shift": 1, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2Error", "outValue": "Alarm"},
+                        {"shift": 2, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3Error", "outValue": "Normal"},
+                        {"shift": 2, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3Error", "outValue": "Alarm"},
+                        {"shift": 3, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4Error", "outValue": "Normal"},
+                        {"shift": 3, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4Error", "outValue": "Alarm"}
+
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_hvac_1_alarm_code": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "remap": [
+                        {"inValue": 0 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "Normal"                     },
+                        {"inValue": 1 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "HighTempAlarm"              },
+                        {"inValue": 2 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "LowTempAlarm"               },
+                        {"inValue": 3 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "HighHumidityAlarm"          },
+                        {"inValue": 4 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "LowHumidityAlarm"           },
+                        {"inValue": 5 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "CoilFreezeProtection"       },
+                        {"inValue": 6 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "HighExhaustTempAlarm"       },
+                        {"inValue": 7 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "EvaporatorTempSensorFailure"},
+                        {"inValue": 8 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "OutdoorTempSensorFailure"   },
+                        {"inValue": 9 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "CondenserTempSensorFailure" },
+                        {"inValue": 10,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "IndoorTempSensorFailure"    },
+                        {"inValue": 11,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "ExhaustTempSensorFailure"   },
+                        {"inValue": 12,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "HumiditySensorFailure"      },
+                        {"inValue": 13,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "InternalFanFailureAlarm"    },
+                        {"inValue": 14,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "ExternalFanFailureAlarm"    },
+                        {"inValue": 15,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "CompressorFailureAlarm"     },
+                        {"inValue": 16,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "HeaterFailureAlarm"         },
+                        {"inValue": 17,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "EmergencyFanFailureAlarm"   },
+                        {"inValue": 18,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "HpAlarm"                    },
+                        {"inValue": 19,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "LpAlarm"                    },
+                        {"inValue": 20,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "WaterAlarm"                 },
+                        {"inValue": 21,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "FireAlarm"                  },
+                        {"inValue": 22,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "GatingAlarm"                },
+                        {"inValue": 23,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "HpLock"                     },
+                        {"inValue": 24,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "LpLock"                     },
+                        {"inValue": 25,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "HighExhaustTempLock"        },
+                        {"inValue": 26,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "AcOverVoltageAlarm"         },
+                        {"inValue": 27,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "AcUnderVoltageAlarm"        },
+                        {"inValue": 28,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "AcPowerSupplyFailure"       },
+                        {"inValue": 29,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "LosePhaseAlarm"             },
+                        {"inValue": 30,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "FreqFault"                  },
+                        {"inValue": 31,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "AntiPhaseAlarm"             },
+                        {"inValue": 32,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "DcOverVoltageAlarm"         },
+                        {"inValue": 33,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC1", "outValue": "DcUnderVoltageAlarm"        },
+
+
+
+                        {"inValue": 1 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[0]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[0]", "outValue": false},
+                        
+                        {"inValue": 2 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[1]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[1]", "outValue": false},
+                        
+                        {"inValue": 3 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[2]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[2]", "outValue": false},
+                        
+                        {"inValue": 4 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[3]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[3]", "outValue": false},
+                        
+                        {"inValue": 5 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[4]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[4]", "outValue": false},
+                        
+                        {"inValue": 6 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[5]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[5]", "outValue": false},
+                        
+                        {"inValue": 7 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[6]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[6]", "outValue": false},
+                        
+                        {"inValue": 8 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[7]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[7]", "outValue": false},
+                        
+                        {"inValue": 9 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[8]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[8]", "outValue": false},
+                        
+                        {"inValue": 10,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[9]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[9]", "outValue": false},
+                        
+                        {"inValue": 11,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[10]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[10]", "outValue": false},
+                        
+                        {"inValue": 12,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[11]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[11]", "outValue": false},
+                        
+                        {"inValue": 13,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[12]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[12]", "outValue": false},
+                        
+                        {"inValue": 14,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[13]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[13]", "outValue": false},
+                        
+                        {"inValue": 15,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[14]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[14]", "outValue": false},
+                        
+                        {"inValue": 16,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[15]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_1[15]", "outValue": false},
+                        
+
+                        {"inValue": 17,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[0]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[0]",  "outValue": false},
+                        
+                        {"inValue": 18,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[1]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[1]",  "outValue": false},
+                        
+                        {"inValue": 19,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[2]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[2]",  "outValue": false},
+                        
+                        {"inValue": 20,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[3]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[3]",  "outValue": false},
+                        
+                        {"inValue": 21,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[4]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[4]",  "outValue": false},
+                        
+                        {"inValue": 22,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[5]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[5]",  "outValue": false},
+                        
+                        {"inValue": 23,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[6]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[6]",  "outValue": false},
+                        
+                        {"inValue": 24,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[7]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[7]",  "outValue": false},
+                        
+                        {"inValue": 25,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[8]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[8]",  "outValue": false},
+                        
+                        {"inValue": 26,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[9]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[9]",  "outValue": false},
+                        
+                        {"inValue": 27,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[10]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[10]", "outValue": false},
+                        
+                        {"inValue": 28,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[11]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[11]", "outValue": false},
+                        
+                        {"inValue": 29,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[12]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[12]", "outValue": false},
+                        
+                        {"inValue": 30,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[13]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[13]", "outValue": false},
+                        
+                        {"inValue": 31,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[14]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[14]", "outValue": false},
+                        
+                        {"inValue": 32,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[15]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_2[15]", "outValue": false},
+                        
+
+                        {"inValue": 33,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_3[0]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC1_3[0]", "outValue": false}
+                        
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_hvac_2_alarm_code": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "remap": [
+                        {"inValue": 0 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "Normal"                     },
+                        {"inValue": 1 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "HighTempAlarm"              },
+                        {"inValue": 2 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "LowTempAlarm"               },
+                        {"inValue": 3 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "HighHumidityAlarm"          },
+                        {"inValue": 4 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "LowHumidityAlarm"           },
+                        {"inValue": 5 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "CoilFreezeProtection"       },
+                        {"inValue": 6 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "HighExhaustTempAlarm"       },
+                        {"inValue": 7 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "EvaporatorTempSensorFailure"},
+                        {"inValue": 8 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "OutdoorTempSensorFailure"   },
+                        {"inValue": 9 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "CondenserTempSensorFailure" },
+                        {"inValue": 10,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "IndoorTempSensorFailure"    },
+                        {"inValue": 11,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "ExhaustTempSensorFailure"   },
+                        {"inValue": 12,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "HumiditySensorFailure"      },
+                        {"inValue": 13,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "InternalFanFailureAlarm"    },
+                        {"inValue": 14,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "ExternalFanFailureAlarm"    },
+                        {"inValue": 15,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "CompressorFailureAlarm"     },
+                        {"inValue": 16,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "HeaterFailureAlarm"         },
+                        {"inValue": 17,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "EmergencyFanFailureAlarm"   },
+                        {"inValue": 18,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "HpAlarm"                    },
+                        {"inValue": 19,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "LpAlarm"                    },
+                        {"inValue": 20,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "WaterAlarm"                 },
+                        {"inValue": 21,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "FireAlarm"                  },
+                        {"inValue": 22,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "GatingAlarm"                },
+                        {"inValue": 23,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "HpLock"                     },
+                        {"inValue": 24,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "LpLock"                     },
+                        {"inValue": 25,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "HighExhaustTempLock"        },
+                        {"inValue": 26,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "AcOverVoltageAlarm"         },
+                        {"inValue": 27,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "AcUnderVoltageAlarm"        },
+                        {"inValue": 28,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "AcPowerSupplyFailure"       },
+                        {"inValue": 29,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "LosePhaseAlarm"             },
+                        {"inValue": 30,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "FreqFault"                  },
+                        {"inValue": 31,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "AntiPhaseAlarm"             },
+                        {"inValue": 32,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "DcOverVoltageAlarm"         },
+                        {"inValue": 33,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC2", "outValue": "DcUnderVoltageAlarm"        },
+
+
+
+                        {"inValue": 1 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[0]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[0]", "outValue": false},
+                        
+                        {"inValue": 2 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[1]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[1]", "outValue": false},
+                        
+                        {"inValue": 3 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[2]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[2]", "outValue": false},
+                        
+                        {"inValue": 4 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[3]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[3]", "outValue": false},
+                        
+                        {"inValue": 5 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[4]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[4]", "outValue": false},
+                        
+                        {"inValue": 6 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[5]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[5]", "outValue": false},
+                        
+                        {"inValue": 7 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[6]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[6]", "outValue": false},
+                        
+                        {"inValue": 8 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[7]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[7]", "outValue": false},
+                        
+                        {"inValue": 9 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[8]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[8]", "outValue": false},
+                        
+                        {"inValue": 10,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[9]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[9]", "outValue": false},
+                        
+                        {"inValue": 11,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[10]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[10]", "outValue": false},
+                        
+                        {"inValue": 12,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[11]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[11]", "outValue": false},
+                        
+                        {"inValue": 13,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[12]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[12]", "outValue": false},
+                        
+                        {"inValue": 14,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[13]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[13]", "outValue": false},
+                        
+                        {"inValue": 15,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[14]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[14]", "outValue": false},
+                        
+                        {"inValue": 16,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[15]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_1[15]", "outValue": false},
+                        
+
+                        {"inValue": 17,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[0]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[0]",  "outValue": false},
+                        
+                        {"inValue": 18,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[1]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[1]",  "outValue": false},
+                        
+                        {"inValue": 19,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[2]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[2]",  "outValue": false},
+                        
+                        {"inValue": 20,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[3]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[3]",  "outValue": false},
+                        
+                        {"inValue": 21,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[4]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[4]",  "outValue": false},
+                        
+                        {"inValue": 22,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[5]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[5]",  "outValue": false},
+                        
+                        {"inValue": 23,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[6]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[6]",  "outValue": false},
+                        
+                        {"inValue": 24,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[7]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[7]",  "outValue": false},
+                        
+                        {"inValue": 25,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[8]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[8]",  "outValue": false},
+                        
+                        {"inValue": 26,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[9]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[9]",  "outValue": false},
+                        
+                        {"inValue": 27,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[10]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[10]", "outValue": false},
+                        
+                        {"inValue": 28,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[11]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[11]", "outValue": false},
+                        
+                        {"inValue": 29,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[12]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[12]", "outValue": false},
+                        
+                        {"inValue": 30,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[13]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[13]", "outValue": false},
+                        
+                        {"inValue": 31,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[14]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[14]", "outValue": false},
+                        
+                        {"inValue": 32,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[15]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_2[15]", "outValue": false},
+                        
+
+                        {"inValue": 33,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_3[0]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC2_3[0]", "outValue": false}
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_hvac_3_alarm_code": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "remap": [
+                        {"inValue": 0 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "Normal"                     },
+                        {"inValue": 1 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "HighTempAlarm"              },
+                        {"inValue": 2 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "LowTempAlarm"               },
+                        {"inValue": 3 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "HighHumidityAlarm"          },
+                        {"inValue": 4 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "LowHumidityAlarm"           },
+                        {"inValue": 5 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "CoilFreezeProtection"       },
+                        {"inValue": 6 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "HighExhaustTempAlarm"       },
+                        {"inValue": 7 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "EvaporatorTempSensorFailure"},
+                        {"inValue": 8 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "OutdoorTempSensorFailure"   },
+                        {"inValue": 9 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "CondenserTempSensorFailure" },
+                        {"inValue": 10,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "IndoorTempSensorFailure"    },
+                        {"inValue": 11,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "ExhaustTempSensorFailure"   },
+                        {"inValue": 12,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "HumiditySensorFailure"      },
+                        {"inValue": 13,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "InternalFanFailureAlarm"    },
+                        {"inValue": 14,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "ExternalFanFailureAlarm"    },
+                        {"inValue": 15,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "CompressorFailureAlarm"     },
+                        {"inValue": 16,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "HeaterFailureAlarm"         },
+                        {"inValue": 17,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "EmergencyFanFailureAlarm"   },
+                        {"inValue": 18,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "HpAlarm"                    },
+                        {"inValue": 19,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "LpAlarm"                    },
+                        {"inValue": 20,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "WaterAlarm"                 },
+                        {"inValue": 21,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "FireAlarm"                  },
+                        {"inValue": 22,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "GatingAlarm"                },
+                        {"inValue": 23,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "HpLock"                     },
+                        {"inValue": 24,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "LpLock"                     },
+                        {"inValue": 25,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "HighExhaustTempLock"        },
+                        {"inValue": 26,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "AcOverVoltageAlarm"         },
+                        {"inValue": 27,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "AcUnderVoltageAlarm"        },
+                        {"inValue": 28,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "AcPowerSupplyFailure"       },
+                        {"inValue": 29,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "LosePhaseAlarm"             },
+                        {"inValue": 30,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "FreqFault"                  },
+                        {"inValue": 31,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "AntiPhaseAlarm"             },
+                        {"inValue": 32,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "DcOverVoltageAlarm"         },
+                        {"inValue": 33,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC3", "outValue": "DcUnderVoltageAlarm"        },
+
+
+
+                        {"inValue": 1 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[0]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[0]", "outValue": false},
+                        
+                        {"inValue": 2 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[1]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[1]", "outValue": false},
+                        
+                        {"inValue": 3 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[2]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[2]", "outValue": false},
+                        
+                        {"inValue": 4 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[3]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[3]", "outValue": false},
+                        
+                        {"inValue": 5 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[4]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[4]", "outValue": false},
+                        
+                        {"inValue": 6 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[5]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[5]", "outValue": false},
+                        
+                        {"inValue": 7 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[6]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[6]", "outValue": false},
+                        
+                        {"inValue": 8 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[7]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[7]", "outValue": false},
+                        
+                        {"inValue": 9 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[8]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[8]", "outValue": false},
+                        
+                        {"inValue": 10,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[9]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[9]", "outValue": false},
+                        
+                        {"inValue": 11,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[10]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[10]", "outValue": false},
+                        
+                        {"inValue": 12,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[11]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[11]", "outValue": false},
+                        
+                        {"inValue": 13,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[12]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[12]", "outValue": false},
+                        
+                        {"inValue": 14,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[13]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[13]", "outValue": false},
+                        
+                        {"inValue": 15,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[14]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[14]", "outValue": false},
+                        
+                        {"inValue": 16,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[15]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_1[15]", "outValue": false},
+                        
+
+                        {"inValue": 17,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[0]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[0]",  "outValue": false},
+                        
+                        {"inValue": 18,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[1]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[1]",  "outValue": false},
+                        
+                        {"inValue": 19,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[2]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[2]",  "outValue": false},
+                        
+                        {"inValue": 20,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[3]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[3]",  "outValue": false},
+                        
+                        {"inValue": 21,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[4]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[4]",  "outValue": false},
+                        
+                        {"inValue": 22,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[5]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[5]",  "outValue": false},
+                        
+                        {"inValue": 23,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[6]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[6]",  "outValue": false},
+                        
+                        {"inValue": 24,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[7]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[7]",  "outValue": false},
+                        
+                        {"inValue": 25,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[8]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[8]",  "outValue": false},
+                        
+                        {"inValue": 26,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[9]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[9]",  "outValue": false},
+                        
+                        {"inValue": 27,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[10]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[10]", "outValue": false},
+                        
+                        {"inValue": 28,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[11]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[11]", "outValue": false},
+                        
+                        {"inValue": 29,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[12]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[12]", "outValue": false},
+                        
+                        {"inValue": 30,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[13]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[13]", "outValue": false},
+                        
+                        {"inValue": 31,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[14]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[14]", "outValue": false},
+                        
+                        {"inValue": 32,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[15]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_2[15]", "outValue": false},
+                        
+
+                        {"inValue": 33,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_3[0]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC3_3[0]", "outValue": false}
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_hvac_4_alarm_code": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "remap": [
+                        {"inValue": 0 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "Normal"                     },
+                        {"inValue": 1 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "HighTempAlarm"              },
+                        {"inValue": 2 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "LowTempAlarm"               },
+                        {"inValue": 3 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "HighHumidityAlarm"          },
+                        {"inValue": 4 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "LowHumidityAlarm"           },
+                        {"inValue": 5 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "CoilFreezeProtection"       },
+                        {"inValue": 6 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "HighExhaustTempAlarm"       },
+                        {"inValue": 7 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "EvaporatorTempSensorFailure"},
+                        {"inValue": 8 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "OutdoorTempSensorFailure"   },
+                        {"inValue": 9 ,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "CondenserTempSensorFailure" },
+                        {"inValue": 10,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "IndoorTempSensorFailure"    },
+                        {"inValue": 11,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "ExhaustTempSensorFailure"   },
+                        {"inValue": 12,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "HumiditySensorFailure"      },
+                        {"inValue": 13,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "InternalFanFailureAlarm"    },
+                        {"inValue": 14,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "ExternalFanFailureAlarm"    },
+                        {"inValue": 15,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "CompressorFailureAlarm"     },
+                        {"inValue": 16,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "HeaterFailureAlarm"         },
+                        {"inValue": 17,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "EmergencyFanFailureAlarm"   },
+                        {"inValue": 18,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "HpAlarm"                    },
+                        {"inValue": 19,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "LpAlarm"                    },
+                        {"inValue": 20,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "WaterAlarm"                 },
+                        {"inValue": 21,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "FireAlarm"                  },
+                        {"inValue": 22,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "GatingAlarm"                },
+                        {"inValue": 23,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "HpLock"                     },
+                        {"inValue": 24,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "LpLock"                     },
+                        {"inValue": 25,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "HighExhaustTempLock"        },
+                        {"inValue": 26,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "AcOverVoltageAlarm"         },
+                        {"inValue": 27,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "AcUnderVoltageAlarm"        },
+                        {"inValue": 28,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "AcPowerSupplyFailure"       },
+                        {"inValue": 29,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "LosePhaseAlarm"             },
+                        {"inValue": 30,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "FreqFault"                  },
+                        {"inValue": 31,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "AntiPhaseAlarm"             },
+                        {"inValue": 32,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "DcOverVoltageAlarm"         },
+                        {"inValue": 33,	"uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVAC4", "outValue": "DcUnderVoltageAlarm"        },
+
+
+
+                        {"inValue": 1 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[0]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[0]", "outValue": false},
+                        
+                        {"inValue": 2 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[1]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[1]", "outValue": false},
+                        
+                        {"inValue": 3 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[2]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[2]", "outValue": false},
+                        
+                        {"inValue": 4 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[3]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[3]", "outValue": false},
+                        
+                        {"inValue": 5 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[4]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[4]", "outValue": false},
+                        
+                        {"inValue": 6 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[5]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[5]", "outValue": false},
+                        
+                        {"inValue": 7 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[6]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[6]", "outValue": false},
+                        
+                        {"inValue": 8 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[7]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[7]", "outValue": false},
+                        
+                        {"inValue": 9 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[8]", "outValue": true},
+                        {"inValue": 0 ,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[8]", "outValue": false},
+                        
+                        {"inValue": 10,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[9]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[9]", "outValue": false},
+                        
+                        {"inValue": 11,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[10]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[10]", "outValue": false},
+                        
+                        {"inValue": 12,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[11]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[11]", "outValue": false},
+                        
+                        {"inValue": 13,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[12]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[12]", "outValue": false},
+                        
+                        {"inValue": 14,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[13]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[13]", "outValue": false},
+                        
+                        {"inValue": 15,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[14]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[14]", "outValue": false},
+                        
+                        {"inValue": 16,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[15]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_1[15]", "outValue": false},
+                        
+
+                        {"inValue": 17,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[0]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[0]",  "outValue": false},
+                        
+                        {"inValue": 18,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[1]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[1]",  "outValue": false},
+                        
+                        {"inValue": 19,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[2]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[2]",  "outValue": false},
+                        
+                        {"inValue": 20,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[3]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[3]",  "outValue": false},
+                        
+                        {"inValue": 21,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[4]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[4]",  "outValue": false},
+                        
+                        {"inValue": 22,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[5]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[5]",  "outValue": false},
+                        
+                        {"inValue": 23,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[6]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[6]",  "outValue": false},
+                        
+                        {"inValue": 24,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[7]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[7]",  "outValue": false},
+                        
+                        {"inValue": 25,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[8]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[8]",  "outValue": false},
+                        
+                        {"inValue": 26,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[9]",  "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[9]",  "outValue": false},
+                        
+                        {"inValue": 27,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[10]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[10]", "outValue": false},
+                        
+                        {"inValue": 28,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[11]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[11]", "outValue": false},
+                        
+                        {"inValue": 29,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[12]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[12]", "outValue": false},
+                        
+                        {"inValue": 30,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[13]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[13]", "outValue": false},
+                        
+                        {"inValue": 31,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[14]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[14]", "outValue": false},
+                        
+                        {"inValue": 32,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[15]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_2[15]", "outValue": false},
+                        
+
+                        {"inValue": 33,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_3[0]", "outValue": true},
+                        {"inValue": 0,	"uri": "/faults/site:##BMS_ID##_##BANK_ID_TITLE##HVAC4_3[0]", "outValue": false}
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_wiu_status": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HydrogenGasDetectorOn"        , "outValue": "Normal"},
+                        {"shift": 0 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HydrogenGasDetectorOn"        , "outValue": "Alarm" },
+                        {"shift": 1 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke1DetectorOn"             , "outValue": "Normal"},
+                        {"shift": 1 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke1DetectorOn"             , "outValue": "Alarm" },
+                        {"shift": 2 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke2DetectorOn"             , "outValue": "Normal"},
+                        {"shift": 2 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke2DetectorOn"             , "outValue": "Alarm" },
+                        {"shift": 3 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke3DetectorOn"             , "outValue": "Normal"},
+                        {"shift": 3 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke3DetectorOn"             , "outValue": "Alarm" },
+                        {"shift": 4 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke4DetectorOn"             , "outValue": "Normal"},
+                        {"shift": 4 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke4DetectorOn"             , "outValue": "Alarm" },
+                        {"shift": 5 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##FanActivationDamperOpen"      , "outValue": "Normal"},
+                        {"shift": 5 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##FanActivationDamperOpen"      , "outValue": "Alarm" },
+                        {"shift": 6 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVACShutDown"                 , "outValue": "Normal"},
+                        {"shift": 6 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HVACShutDown"                 , "outValue": "Alarm" },
+                        {"shift": 7 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Novec1230ReleaseSolenoidValve", "outValue": "Normal"},
+                        {"shift": 7 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Novec1230ReleaseSolenoidValve", "outValue": "Alarm" },
+                        {"shift": 8 , "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Novec1230SolenoidMonitor"     , "outValue": "Normal"},
+                        {"shift": 8 , "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Novec1230SolenoidMonitor"     , "outValue": "Alarm" },
+                        {"shift": 10, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PreDischargeAlarmHornStrobe"  , "outValue": "Normal"},
+                        {"shift": 10, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##PreDischargeAlarmHornStrobe"  , "outValue": "Alarm" },
+                        {"shift": 12, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Novec1230PressureSwitch"      , "outValue": "Normal"},
+                        {"shift": 12, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Novec1230PressureSwitch"      , "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        },
+        "##BANK_ID##_wiu_sensor": {
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HydrogenGasDetectorTrouble", "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##HydrogenGasDetectorTrouble", "outValue": "Alarm" },
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke1DetectorTrouble"     , "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke1DetectorTrouble"     , "outValue": "Alarm" },
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke2DetectorTrouble"     , "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke2DetectorTrouble"     , "outValue": "Alarm" },
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke3DetectorTrouble"     , "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke3DetectorTrouble"     , "outValue": "Alarm" },
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke4DetectorTrouble"     , "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/alarms/##BMS_ID##:##BANK_ID_TITLE##Smoke4DetectorTrouble"     , "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        }
+    },
+    "/alarms/site": {
+        "##BMS_ID##_##BANK_ID##_elink_dc_ds" : 0
+    },
+    "/faults/site": {
+        "##BMS_ID##_##BANK_ID_TITLE##BlinkGasSensor" : 0,
+        "##BMS_ID##_##BANK_ID_TITLE##HVAC1_1" : 0,
+        "##BMS_ID##_##BANK_ID_TITLE##HVAC1_2" : 0,
+        "##BMS_ID##_##BANK_ID_TITLE##HVAC1_3" : 0,
+        "##BMS_ID##_##BANK_ID_TITLE##HVAC2_1" : 0,
+        "##BMS_ID##_##BANK_ID_TITLE##HVAC2_2" : 0,
+        "##BMS_ID##_##BANK_ID_TITLE##HVAC2_3" : 0,
+        "##BMS_ID##_##BANK_ID_TITLE##HVAC3_1" : 0,
+        "##BMS_ID##_##BANK_ID_TITLE##HVAC3_2" : 0,
+        "##BMS_ID##_##BANK_ID_TITLE##HVAC3_3" : 0,
+        "##BMS_ID##_##BANK_ID_TITLE##HVAC4_1" : 0,
+        "##BMS_ID##_##BANK_ID_TITLE##HVAC4_2" : 0,
+        "##BMS_ID##_##BANK_ID_TITLE##HVAC4_3" : 0
+    },
+    "/alarms/##BMS_ID##": {
+        "##BANK_ID_TITLE##AiError"                           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##UPSMode"                           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AiSensor1DisconnectionDectection"  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AiSensor1Error"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AiSensor1THError"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AiSensor2DisconnectionDectection"  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AiSensor2Error"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AiSensor2THError"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AiSensor3DisconnectionDectection"  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AiSensor3Error"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AiSensor3THError"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AiSensor4DisconnectionDectection"  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AiSensor4Error"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AiSensor4THError"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##AllRacksWarning"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##BlinkGasSensor"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##DamperInStatus"                    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##DamperOutStatus"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##DamperPLCControl"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##DoorStatus"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##ELinkDCDSStatusIndicator"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##FanActivationDamperOpen"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##HVAC1"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##HVAC1Error"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##HVAC2"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##HVAC2Error"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##HVAC3"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##HVAC3Error"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##HVAC4"                             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##HVAC4Error"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##HVACShutDown"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##HydrogenGasDetectorOn"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##HydrogenGasDetectorTrouble"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##ManualPullStation"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##Novec1230PressureSwitch"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##Novec1230ReleaseSolenoidValve"     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##Novec1230SolenoidMonitor"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##OverBankChargeCurrentWarning"      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##OverBankChargePowerLimitWarning"   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##OverBankDischargeCurrentWarning"   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##OverBankDischargePowerLimitWarning": {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##OverSOCAlarm"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##PLCBLinkType"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##PLCCommStatusH2Sensor"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##PLCCommStatusHVAC1"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##PLCCommStatusHVAC2"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##PLCCommStatusHVAC3"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##PLCCommStatusHVAC4"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##PLCOverHumidityAlarm"              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##PLCStatus"                         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##PreDischargeAlarmHornStrobe"       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##Smoke1DetectorOn"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##Smoke1DetectorTrouble"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##Smoke2DetectorOn"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##Smoke2DetectorTrouble"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##Smoke3DetectorOn"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##Smoke3DetectorTrouble"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##Smoke4DetectorOn"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##Smoke4DetectorTrouble"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##Status"                            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##UnderSOCAlarm"                     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##VentilationPLCControl"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##VentilationStatus"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}}
+    },
+
+    "/faults/##BMS_ID##": {
+        "##BANK_ID_TITLE##BSCCommError"                    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##CurrentImbalanceFault"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##OverBankChargeCurrentFault"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##OverBankChargePowerLimitFault"   : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##OverBankDischargeCurrentFault"   : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##OverBankDischargePowerLimitFault": {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##RBMSCommError"                   : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##SMPS1Fault"                      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##SMPS2Fault"                      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##SMPS3Fault"                      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##BANK_ID_TITLE##SMPS4Fault"                      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}}
+    }
+}

@@ -1,0 +1,69 @@
+{
+    "/vlinks/pcs_visual_params": {
+        "##PCS_ID##_##MODULE_ID##_l2_current"           : { "value": "/components/pcs_visual_params:##MOD_ID##_current_s"        , "vlink": "/status/##PCS_ID##_##MODULE_ID##:L2Current"          },
+        "##PCS_ID##_##MODULE_ID##_l3_current"           : { "value": "/components/pcs_visual_params:##MOD_ID##_current_t"        , "vlink": "/status/##PCS_ID##_##MODULE_ID##:L3Current"          },
+        "##PCS_ID##_##MODULE_ID##_active_power"         : { "value": "/components/pcs_visual_params:##MOD_ID##_p"                , "vlink": "/status/##PCS_ID##_##MODULE_ID##:ActivePower"        },
+        "##PCS_ID##_##MODULE_ID##_reactive_power"       : { "value": "/components/pcs_visual_params:##MOD_ID##_q"                , "vlink": "/status/##PCS_ID##_##MODULE_ID##:ReactivePower"      },
+        "##PCS_ID##_##MODULE_ID##_pcs_dc_voltage"       : { "value": "/components/pcs_visual_params:##MOD_ID##_dc_voltage"       , "vlink": "/status/##PCS_ID##_##MODULE_ID##:PCSDCVoltage"       },
+        "##PCS_ID##_##MODULE_ID##_pcs_dc_current"       : { "value": "/components/pcs_visual_params:##MOD_ID##_dc_current"       , "vlink": "/status/##PCS_ID##_##MODULE_ID##:PCSDCCurrent"       },
+        "##PCS_ID##_##MODULE_ID##_max_igbt_temperature" : { "value": "/components/pcs_visual_params:##MOD_ID##_max_temperature"  , "vlink": "/status/##PCS_ID##_##MODULE_ID##:MaxIGBTTemperature" }
+    },
+
+    "/schedule/wake_monitor/##PCS_ID##_##MODULE_ID##":{
+        "/status/##PCS_ID##_##MODULE_ID##:ApparentPower"  : {"amap": "##PCS_ID##_##MODULE_ID##", "func": "CalculateVar"},
+        "/status/##PCS_ID##_##MODULE_ID##:PCSDCPower"     : {"amap": "##PCS_ID##_##MODULE_ID##", "func": "CalculateVar"}
+    },
+
+    "/components/pcs_visual_params": {
+        "##MODULE_ID##_current_r": {
+            "value": -1,
+            "actions": {
+                "onSet":[{
+                    "remap": [
+                        {"uri": "/status/##PCS_ID##_##MODULE_ID##:L1Current"}
+                    ]
+                }]
+            }
+        },
+        "##MODULE_ID##_status": {
+            "value": -1,
+            "actions": {
+                "onSet":[{
+                    "remap": [
+                        {"inValue": 0,  "uri": "/status/##PCS_ID##_##MODULE_ID##:Status", "outValue": "Invalid"},
+                        {"inValue": 1,  "uri": "/status/##PCS_ID##_##MODULE_ID##:Status", "outValue": "Stop"},
+                        {"inValue": 2,  "uri": "/status/##PCS_ID##_##MODULE_ID##:Status", "outValue": "Softcharge" },
+                        {"inValue": 3,  "uri": "/status/##PCS_ID##_##MODULE_ID##:Status", "outValue": "Ready" },
+                        {"inValue": 5,  "uri": "/status/##PCS_ID##_##MODULE_ID##:Status", "outValue": "Pre Run" },
+                        {"inValue": 6,  "uri": "/status/##PCS_ID##_##MODULE_ID##:Status", "outValue": "Run" },
+                        {"inValue": 7,  "uri": "/status/##PCS_ID##_##MODULE_ID##:Status", "outValue": "Discharge" },
+                        {"inValue": 10, "uri": "/status/##PCS_ID##_##MODULE_ID##:Status", "outValue": "Wait Over-Current" },
+                        {"inValue": 11, "uri": "/status/##PCS_ID##_##MODULE_ID##:Status", "outValue": "Wait Under-Voltage" },
+                        {"inValue": 12, "uri": "/status/##PCS_ID##_##MODULE_ID##:Status", "outValue": "Over-Current Wait DSP" },
+                        {"inValue": 22, "uri": "/status/##PCS_ID##_##MODULE_ID##:Status", "outValue": "IDLE" }
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/status/##PCS_ID##_##MODULE_ID##": {
+        "ApparentPower": {
+            "value": -1,
+            "numVars": 2,
+            "variable1": "/components/pcs_visual_params/##MODULE_ID##_p",
+            "variable2": "/components/pcs_visual_params/##MODULE_ID##_q",
+            "useExpr": true,
+            "expression": "sqrt({1} ** 2 + {2} ** 2)"
+        },
+        "PCSDCPower": {
+            "value": -1,
+            "numVars": 2,
+            "variable1": "/components/pcs_visual_params/##MODULE_ID##_dc_voltage",
+            "variable2": "/components/pcs_visual_params/##MODULE_ID##_dc_current",
+            "useExpr": true,
+            "expression": "{1} * {2}"
+        }
+
+    }
+}

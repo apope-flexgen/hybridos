@@ -1,0 +1,12 @@
+{
+    "/config/ess": {
+        "logging_enabled": false
+    },
+
+    "/vlinks/ess": {
+        "ui_ess_pcs_max_charge_power"    : { "value": "/assets/ess/summary:pcs_max_charge_power"    , "vlink": "/config/pcs:MaxChargePower"      },
+        "ui_ess_pcs_max_discharge_power" : { "value": "/assets/ess/summary:pcs_max_discharge_power" , "vlink": "/config/pcs:MaxDischargePower"   },
+        "ui_ess_bms_max_charge_power"    : { "value": "/assets/ess/summary:bms_max_charge_power"    , "vlink": "/limits/bms:ChargePowerLimit"    },
+        "ui_ess_bms_max_discharge_power" : { "value": "/assets/ess/summary:bms_max_discharge_power" , "vlink": "/limits/bms:DischargePowerLimit" }
+    }
+}

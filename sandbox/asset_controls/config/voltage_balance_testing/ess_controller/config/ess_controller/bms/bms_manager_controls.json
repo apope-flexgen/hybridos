@@ -1,0 +1,124 @@
+{
+    "/schedule/wake_monitor/##BMS_ID##":{
+        "/status/##BMS_ID##:AcceptManualReqEnable"     : { "amap": "##BMS_ID##", "func": "CalculateVar" },
+        "/status/##BMS_ID##:AcceptManualExitReqEnable" : { "amap": "##BMS_ID##", "func": "CalculateVar" },
+        
+        "/controls/##BMS_ID##:AcceptManualReq"           : { "amap": "##BMS_ID##", "func": "HandleCmd" },
+        "/controls/##BMS_ID##:VerifyAcceptManualReq"     : { "amap": "##BMS_ID##", "func": "HandleCmd" },
+        "/controls/##BMS_ID##:AcceptManualExitReq"       : { "amap": "##BMS_ID##", "func": "HandleCmd" },
+        "/controls/##BMS_ID##:VerifyAcceptManualExitReq" : { "amap": "##BMS_ID##", "func": "HandleCmd" }
+    },
+
+    "/controls/##BMS_ID##": {
+        "OpenContactors": {
+            "value": 1,
+            "cmdVar": "/components/##BMS_ID##_info:contactor_control_cmd"
+        },
+        "CloseContactors": {
+            "value": 2,
+            "cmdVar": "/components/##BMS_ID##_info:contactor_control_cmd"
+        },
+        "ClearFaults": {
+            "value": 1,
+            "cmdVar": "/components/##BMS_ID##_info:reset_cmd"
+        },
+        "AcceptManualReq": {
+            "note": "Accept a request from LG JXB to enter manual mode",
+            "value": 1,
+            "enableAlert": true,
+            "sendCmdTimeout": 5,
+            "cmdVar": "/components/##BMS_ID##_info:manual_mode_cmd"
+        },
+        "VerifyAcceptManualReq": {
+            "note": "Verify that the BMS system state is now in manual mode.",
+            "value": 0,
+            "enableAlert": false,
+            "sendCmdTimeout": 5,
+            "numVars": 1,
+            "variable1": "/alarms/##BMS_ID##:Status",
+            "useExpr": true,
+            "expression": "{1} == Manual"
+        },
+        "AcceptManualExitReq": {
+            "note": "Accept a request from LG JXB to exit manual mode",
+            "value": 2,
+            "enableAlert": true,
+            "sendCmdTimeout": 5,
+            "cmdVar": "/components/##BMS_ID##_info:manual_mode"
+        },
+        "VerifyAcceptManualExitReq": {
+            "value": 0,
+            "note": "Verify that the BMS system state is back in Normal mode.",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 2,
+            "numVars": 1,
+            "variable1": "/status/##BMS_ID##:Status",
+            "useExpr": true,
+            "expression": "{1} == Normal"
+        }
+    },
+
+    "/status/##BMS_ID##": {
+        "AcceptManualReqEnable": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 3,
+            "variable1": "/assets/bms/##BMS_ID##:maint_mode",
+            "variable2": "/status/##BMS_ID##:ManualModeRequest",
+            "variable3": "/status/##BMS_ID##:Status",
+            "expression": "{1} and {2} == Enter and {3} != Manual",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":0, "uri":"/assets/bms/##BMS_ID##:accept_manual_req@enabled", "outValue": false},
+                        {"inValue":1, "uri":"/assets/bms/##BMS_ID##:accept_manual_req@enabled", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "AcceptManualExitReqEnable": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 3,
+            "variable1": "/assets/bms/##BMS_ID##:maint_mode",
+            "variable2": "/status/##BMS_ID##:ManualModeRequest",
+            "variable3": "/status/##BMS_ID##:Status",
+            "expression": "{1} and {2} == Exit and {3} == Manual",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":0, "uri":"/assets/bms/##BMS_ID##:accept_manual_exit_req@enabled", "outValue": false},
+                        {"inValue":1, "uri":"/assets/bms/##BMS_ID##:accept_manual_exit_req@enabled", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "AcceptManualReqSuccess": {
+            "value": false,
+            "note": "If the accept manual mode request command has been successfully sent, check that the bsc reports the correct mode.",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true , "ifChanged": false, "uri": "/controls/##BMS_ID##:VerifyAcceptManualReq@triggerCmd" , "outValue": true                                   },
+                        {"inValue": true , "ifChanged": false, "uri": "/alarms/##BMS_ID##:AcceptManualReq"                    , "outValue": "Normal"                               },
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/##BMS_ID##:AcceptManualReq"                    , "outValue": "Failed to accept Manual Mode request."}
+                    ]
+                }]
+            }
+        },
+        "AcceptManualExitReqSuccess": {
+            "value": false,
+            "note": "If the accept manual mode request command has been successfully sent, check that the bsc reports the correct mode.",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true , "ifChanged": false, "uri": "/controls/##BMS_ID##:VerifyAcceptManualExitReq@triggerCmd" , "outValue": true                                        },
+                        {"inValue": true , "ifChanged": false, "uri": "/alarms/##BMS_ID##:AcceptManualExitReq"                    , "outValue": "Normal"                                    },
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/##BMS_ID##:AcceptManualExitReq"                    , "outValue": "Failed to accept Manual Mode exit request."}
+                    ]
+                }]
+            }
+        }
+    }
+}

@@ -1,0 +1,75 @@
+{
+    "/config/load": {
+        "bms_init_0": {
+            "value": false,
+            "file": "bms_init_0",
+            "aname": "bms",
+            "new_options": [
+                {
+                    "tmpls": [
+                        "std_v_bms_manager",
+                        "std_v_bms_manager_controls",
+                        "std_v_bms_manager_faults",
+                        "v_bms_manager",
+                        "v_bms_manager_controls",
+                        "v_bms_manager_faults"
+                    ],
+                    "pname": "ess",
+                    "amname": "bms",
+                    "from": 1,
+                    "to": 1
+                },
+                {
+                    "tmpls": [
+                        "std_bms_manager",
+                        "std_bms_manager_controls",
+                        "std_bms_manager_faults",
+                        "bms_manager",
+                        "bms_manager_controls",
+                        "bms_manager_faults"
+                    ],
+                    "pname": "bms",
+                    "amname": "##BMS_ID##",
+                    "from": 1,
+                    "to": 1,
+                    "reps": [
+                        { "replace": "##BMS_ID##", "with": "bms_{:01d}" },
+                        { "replace": "##PCS_ID##", "with": "pcs_{:01d}" },
+                        { "replace": "##ESS_ID##", "with": "ess_{:01d}" }
+                    ]
+                },
+                {
+                    "tmpls": [
+                        "bms_bank_faults",
+                        "bms_manager_modbus"
+                    ],
+                    "pname": "bms",
+                    "amname": "##BMS_ID##",
+                    "from": 1,
+                    "to": 2,
+                    "reps": [
+                        { "replace": "##BANK_ID##"       , "with": "bank_{:01d}"  },
+                        { "replace": "##BANK_ID_TITLE##" , "with": "Bank{:01d}"   }
+                    ]
+                },
+                {
+                    "tmpls": [
+                        "std_bms_rack",
+                        "bms_rack",
+                        "bms_rack_faults",
+                        "bms_rack_modbus"
+                    ],
+                    "pname": "##BMS_ID##",
+                    "ainame": "##BMS_ID##_##RACK_ID##",
+                    "from": 1,
+                    "to": 24,
+                    "reps": [
+                        { "replace": "##BMS_ID##"        , "with": "bms_{:01d}"  },
+                        { "replace": "##RACK_ID##"       , "with": "rack_{:01d}" },
+                        { "replace": "##RACK_ID_TITLE##" , "with": "Rack{:01d}"  }
+                    ]
+                }
+            ]
+        }
+    }
+}

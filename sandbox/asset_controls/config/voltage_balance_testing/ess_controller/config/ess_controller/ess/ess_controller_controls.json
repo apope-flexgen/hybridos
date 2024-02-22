@@ -1,0 +1,65 @@
+{
+    "/controls/ess": {
+        "StartStop": {
+            "value": 0,
+            "enable": "/config/ess:site_control_enable",
+            "actions": {
+                "onSet":[{
+                    "func": [{"func": "LogInfo"}],
+                    "remap":[
+                        {"inValue": 1 , "ifChanged": false, "uri": "/controls/ess:Stop"                  , "outValue": true },
+                        {"inValue": 1 , "ifChanged": false, "uri": "/controls/pcs:ActivePowerSetpoint"   , "outValue": 0    },
+                        {"inValue": 1 , "ifChanged": false, "uri": "/controls/pcs:ReactivePowerSetpoint" , "outValue": 0    },
+                        {"inValue": 3 , "ifChanged": false, "uri": "/controls/ess:Start"                 , "outValue": true }
+                    ]
+                }]
+            }
+        },
+        "Start": {
+            "value": false,
+            "enable": "/config/ess:site_control_enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"ifChanged": false, "uri": "/controls/pcs:SelectStartMode", "outValue": 0}
+                    ],
+                    "func": [
+                        {"func": "LogInfo"},
+                        {"func": "CalculateVar",  "inAv": "/controls/pcs:SelectStartMode"}
+                    ]
+                }]
+            }
+        },
+        "Stop": {
+            "value": false,
+            "enable": "/config/ess:site_control_enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"ifChanged": false, "uri": "/controls/pcs:SelectStopMode", "outValue": 0}
+                    ],
+                    "func": [
+                        {"func": "LogInfo"},
+                        {"func": "CalculateVar",  "inAv": "/controls/pcs:SelectStopMode"}
+                    ]
+                }]
+            }
+        },
+        "ClearFaults": {
+            "value": 0,
+            "enable": "/config/ess:enable",
+            "actions": {
+                "onSet":[{
+                    "func": [{"func": "LogInfo"}],
+                    "remap":[
+                        {"inValue": 1 , "ifChanged": false, "uri": "/status/ess:FaultShutdown"            , "outValue": false   },
+                        {"inValue": 1 , "ifChanged": false, "uri": "/faults/ess:clear_faults"             , "outValue": "Clear" },
+                        {"inValue": 1 , "ifChanged": false, "uri": "/alarms/ess:clear_alarms"             , "outValue": "Clear" },
+                        {"inValue": 1 , "ifChanged": false, "uri": "/controls/bms:ClearFaults"            , "outValue": true    },
+                        {"inValue": 1 , "ifChanged": false, "uri": "/controls/pcs:ClearFaults@triggerCmd" , "outValue": true    }
+                    ]
+                }]
+            }
+        }
+    }
+}

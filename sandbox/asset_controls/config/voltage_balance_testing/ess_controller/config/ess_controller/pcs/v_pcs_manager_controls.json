@@ -1,0 +1,540 @@
+{
+    "/schedule/wake_monitor/pcs":{
+        "/controls/pcs:BeginStartSequence"       : {"func": "HandleCmd"},
+        "/controls/pcs:VerifyBeginStartSequence" : {"func": "HandleCmd"},
+        "/controls/pcs:StartFromStop"            : {"func": "HandleCmd"},
+        "/controls/pcs:VerifyStartFromStop"      : {"func": "HandleCmd"},
+        "/controls/pcs:StartFromStandby"         : {"func": "HandleCmd"},
+        "/controls/pcs:VerifyStartFromStandby"   : {"func": "HandleCmd"},
+
+        "/controls/pcs:BeginStopSequence"        : {"func": "HandleCmd"},
+        "/controls/pcs:VerifyBeginStopSequence"  : {"func": "HandleCmd"},
+        "/controls/pcs:StopFromOn"               : {"func": "HandleCmd"},
+        "/controls/pcs:VerifyStopFromOn"         : {"func": "HandleCmd"},
+        "/controls/pcs:StopFromStandby"          : {"func": "HandleCmd"},
+        "/controls/pcs:VerifyStopFromStandby"    : {"func": "HandleCmd"},
+
+        "/controls/pcs:GlobalActivePowerRampRatePct"   : {"func": "CalculateVar"},
+        "/controls/pcs:GlobalReactivePowerRampRatePct" : {"func": "CalculateVar"},
+
+        "/controls/pcs:ActivePowerCmdPass_1"    : {"func": "CalculateVar"},
+        "/controls/pcs:ActivePowerCmdPass_2"    : {"func": "CalculateVar"},
+        "/controls/pcs:ReactivePowerCmdSumPass" : {"func": "CalculateVar"},
+
+        "/status/pcs:StartEnable"                 : {"func": "CalculateVar"},
+        "/status/pcs:StandbyEnable"               : {"func": "CalculateVar"},
+        "/status/pcs:StopEnable"                  : {"func": "CalculateVar"}
+    },
+
+    "/controls/pcs": {
+        "Standby": {},
+        "VerifyStandby": {},
+
+
+        "SelectStartMode": {
+            "value": 0,
+            "note": "If the PCS is stopped, then start using selector status (1). If the PCS is ready, then start using the start register",
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "useExpr": true,
+            "expression": "if (({1} == Stop), 1, if (({1} == Standby), 2, 0))",
+            "actions": {
+                "onSet": [{
+                    "func": [{"func": "LogInfo"}],
+                    "remap": [
+                        {"ifChanged": false, "inValue": 1, "uri": "/controls/pcs:BeginStartSequence@triggerCmd"    , "outValue": true},
+                        {"ifChanged": false, "inValue": 2, "uri": "/controls/pcs:StartFromStandby@triggerCmd"      , "outValue": true}
+                    ]
+                }]
+            }
+        },
+
+        "BeginStartSequence": {
+            "value": 0,
+            "cmdVar": "/components/pcs_prog_params:stop",
+            "enableAlert": true,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "variable2": "/status/bms:DCClosedStatus",
+            "expression": "{1} == Stop and {2} == Closed"
+        },
+        "VerifyBeginStartSequence": {
+            "value": 0,
+            "enableAlert": true,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "useExpr": true,
+            "expression": "{1} == Stop"
+        },
+        "StartFromStop": {
+            "value": 1,
+            "cmdVar": "/components/pcs_prog_params:general_selector",
+            "enableAlert": true,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "variable2": "/status/bms:DCClosedStatus",
+            "expression": "{1} == Stop and {2} == Closed"
+        },
+        "VerifyStartFromStop": {
+            "value": 0,
+            "enableAlert": true,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "useExpr": true,
+            "expression": "{1} == Standby"
+        },
+        "StartFromStandby": {
+            "value": 1,
+            "cmdVar": "/components/pcs_prog_params:start",
+            "enableAlert": true,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "variable2": "/status/bms:DCClosedStatus",
+            "expression": "{1} == Standby and {2} == Closed"
+        },
+        "VerifyStartFromStandby": {
+            "value": 0,
+            "enableAlert": true,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "useExpr": true,
+            "expression": "{1} == Run"
+        },
+
+
+
+
+
+        "SelectStopMode": {
+            "value": 0,
+            "note": "If the PCS is running, then stop using stop status (1). If the PCS is ready, then stop using the general selector register",
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "useExpr": true,
+            "expression": "if (({1} == Run), 1, if (({1} == Standby), 2, if (({1} == Fault), 3, 0)))",
+            "actions": {
+                "onSet": [{
+                    "func": [{"func": "LogInfo"}],
+                    "remap": [
+                        {"ifChanged": false, "inValue": 1, "uri": "/controls/pcs:BeginStopSequence@triggerCmd"    , "outValue": true},
+                        {"ifChanged": false, "inValue": 2, "uri": "/controls/pcs:StopFromStandby@triggerCmd", "outValue": true},
+                        {"ifChanged": false, "inValue": 3, "uri": "/controls/pcs:StopFromFault@triggerCmd", "outValue": true}
+                    ]
+                }]
+            }
+        },
+
+        "BeginStopSequence": {
+            "value": 0,
+            "cmdVar": "/components/pcs_prog_params:start",
+            "enableAlert": true,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "expression": "{1} == Run"
+        },
+        "VerifyBeginStopSequence": {
+            "value": 0,
+            "enableAlert": true,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "useExpr": true,
+            "expression": "{1} == Run"
+        },
+        "StopFromOn": {
+            "value": 0,
+            "cmdVar": "/components/pcs_prog_params:general_selector",
+            "enableAlert": true,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "expression": "{1} == Run"
+        },
+        "VerifyStopFromOn": {
+            "value": 0,
+            "enableAlert": true,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "useExpr": true,
+            "expression": "{1} == Stop"
+        },
+        "StopFromStandby": {
+            "value": 0,
+            "cmdVar": "/components/pcs_prog_params:general_selector",
+            "enableAlert": true,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "expression": "{1} == Stop or {1} == Standby"
+        },
+        "VerifyStopFromStandby": {
+            "value": 0,
+            "enableAlert": true,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "useExpr": true,
+            "expression": "{1} == Stop"
+        },
+
+
+
+
+        "StopFromFault": {
+            "value": 0,
+            "cmdVar": "/components/pcs_prog_params:general_selector",
+            "enableAlert": true,
+            "sendCmdTimeout": 5,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemStateStatus",
+            "expression": "{1} == Stop or {1} == Fault or {1} == Standby or {1} == Run"
+        },
+        "VerifyStopFromFault": {
+            "value": 0,
+            "enableAlert": true,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/components/pcs_prog_params:general_selector",
+            "useExpr": true,
+            "expression": "{1} == 0"
+        },
+
+
+
+
+        "ClearFaults": {
+            "value": 1,
+            "cmdVar": "/components/pcs_prog_params:reset"
+        },
+
+        "ActivePowerCmdAdjusted_1": 0,
+        "ActivePowerCmdAdjusted_2": 0,
+        "ReactivePowerCmdAdjusted_1": 0,
+        "ReactivePowerCmdAdjusted_2": 0,
+
+        "ActivePowerCmd": {
+            "cmdVar": "/controls/pcs:ActivePowerCmdStaged"
+        },
+        "ActivePowerCmdStaged": {
+            "value": 0
+        },
+        "ReactivePowerCmd": {
+            "cmdVar": "/controls/pcs:ReactivePowerCmdStaged"
+        },
+        "ReactivePowerCmdStaged": {
+            "value": 0
+        },
+
+        "ActivePowerCmdPass_1": {
+            "note": "Passes the converted ActivePowerCmdAdjusted_1 to the register",
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/controls/pcs:ActivePowerCmdAdjusted_1",
+            "variable2": "/config/pcs:RatedActivePower",
+            "useExpr": true,
+            "expression": "{1} / ({2} / 2) * 100",
+            "actions": {
+                "onSet": [
+                    {"remap": [
+                        {"fims": "set", "uri": "/components/pcs_prog_params:pac_reference_1"}
+                    ]}
+                ]
+            }
+        },
+        "ActivePowerCmdPass_2": {
+            "note": "Passes the converted ActivePowerCmdAdjusted_2 to the register",
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/controls/pcs:ActivePowerCmdAdjusted_2",
+            "variable2": "/config/pcs:RatedActivePower",
+            "useExpr": true,
+            "expression": "{1} / ({2} / 2) * 100",
+            "actions": {
+                "onSet": [
+                    {"remap": [
+                        {"fims": "set", "uri": "/components/pcs_prog_params:pac_reference_2"}
+                    ]}
+                ]
+            }
+        },
+        "ReactivePowerCmdSumPass": {
+            "note": "Passes the converted ReactivePowerCmdAdjusteds to the register",
+            "value": 0,
+            "numVars": 3,
+            "variable1": "/controls/pcs:ReactivePowerCmdAdjusted_1",
+            "variable2": "/controls/pcs:ReactivePowerCmdAdjusted_2",
+            "variable3": "/config/pcs:RatedReactivePower",
+            "useExpr": true,
+            "expression": "( {1} + {2} ) / {3} * 100",
+            "actions": {
+                "onSet": [
+                    {"remap": [
+                        {"fims": "set", "uri": "/components/pcs_prog_params:q_reference"}
+                    ]}
+                ]
+            }
+        },
+
+
+        "ActivePowerRampRate": {
+            "value": 0,
+            "cmdVar": "/controls/pcs:GlobalActivePowerRampRate"
+        },
+        "GlobalActivePowerRampRate": 0,
+        "GlobalActivePowerRampRatePct": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/controls/pcs:GlobalActivePowerRampRate",
+            "variable2": "/config/pcs:RatedActivePower",
+            "useExpr": true,
+            "expression": "{1} / {2} * 100",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"fims": "set", "ifChanged": false, "uri": "/components/pcs_prog_params:start_gradient_p" },
+                        {"fims": "set", "ifChanged": false, "uri": "/components/pcs_prog_params:upward_gradient_p"  },
+                        {"fims": "set", "ifChanged": false, "uri": "/components/pcs_prog_params:downward_gradient_p"  },
+                        {"fims": "set", "ifChanged": false, "uri": "/components/pcs_prog_params:stop_gradient_p"  }
+                    ]
+                }]
+            }
+        },
+        "ReactivePowerRampRate": {
+            "value": 0,
+            "cmdVar": "/controls/pcs:GlobalReactivePowerRampRate"
+        },
+        "GlobalReactivePowerRampRate": 0,
+        "GlobalReactivePowerRampRatePct": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/controls/pcs:GlobalReactivePowerRampRate",
+            "variable2": "/config/pcs:RatedReactivePower",
+            "expression": "{1} / {2} * 100",
+            "useExpr": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"fims": "set", "ifChanged": false, "uri": "/components/pcs_prog_params:start_gradient_q" },
+                        {"fims": "set", "ifChanged": false, "uri": "/components/pcs_prog_params:upward_gradient_q"  },
+                        {"fims": "set", "ifChanged": false, "uri": "/components/pcs_prog_params:downward_gradient_q"  },
+                        {"fims": "set", "ifChanged": false, "uri": "/components/pcs_prog_params:stop_gradient_q"  }
+                    ]
+                }]
+            }
+        }
+    },
+
+
+
+    "/status/pcs": {
+        "StandbyEnable": {
+        },
+
+
+        "StartEnable": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 4,
+            "variable1": "/status/bms:DCClosedStatus",
+            "variable2": "/assets/pcs/summary:maint_mode",
+            "variable3": "/status/pcs:SystemStateStatus",
+            "variable4": "/status/pcs:IsFaulted",
+            "expression": "({1} == Closed and {2} and {3} == Stop) and not {4}",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":0, "uri":"/assets/pcs/summary:start@enabled", "outValue":false},
+                        {"inValue":1, "uri":"/assets/pcs/summary:start@enabled", "outValue":true }
+                    ]
+                }]
+            }
+        },
+
+        "StopEnable": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 3,
+            "variable1": "/assets/pcs/summary:maint_mode",
+            "variable2": "/status/pcs:SystemStateStatus",
+            "variable3": "/status/pcs:GridModeStatus",
+            "expression": "({1} and {2} == Run) or {3} != FollowPQ",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":0, "uri":"/assets/pcs/summary:stop@enabled", "outValue":false},
+                        {"inValue":1, "uri":"/assets/pcs/summary:stop@enabled", "outValue":true}
+                    ]
+                }]
+            }
+        },
+
+        "BeginStartSequenceSuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyBeginStartSequence@triggerCmd" , "outValue": true                                                                                                       },
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:StartPrecheck"                   , "outValue": "Command preconditions were not met, the command was not sent. Details can be found in the ESS Events log."}
+                    ]
+                }]
+            }
+        },
+        "VerifyBeginStartSequenceSuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:StartFromStop@triggerCmd" , "outValue": true},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/controls/pcs:Stop@triggerCmd"           , "outValue": true                                                                       },
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:StartVerify"                 , "outValue": "Command was sent but the expected result was not observed before timeout."}
+                    ]
+                }]
+            }
+        },
+
+        "StartFromStopSuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyStartFromStop@triggerCmd" , "outValue": true                                                                                                       },
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:StartPrecheck"                   , "outValue": "Command preconditions were not met, the command was not sent. Details can be found in the ESS Events log."}
+                    ]
+                }]
+            }
+        },
+        "VerifyStartFromStopSuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:StartFromStandby@triggerCmd" , "outValue": true},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/controls/pcs:Stop@triggerCmd"           , "outValue": true                                                                       },
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:StartVerify"                 , "outValue": "Command was sent but the expected result was not observed before timeout."}
+                    ]
+                }]
+            }
+        },
+
+        "StartFromStandbySuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {"remap": [
+                        {"inValue": true, "uri": "/controls/pcs:VerifyStartFromStandby@triggerCmd" , "outValue": true},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:StartPrecheck"               , "outValue": "Command preconditions were not met, the command was not sent. Details can be found in the ESS Events log."}
+                    ]}
+                ]
+            }
+        },
+        "VerifyStartFromStandbySuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/controls/pcs:Stop@triggerCmd"           , "outValue": true                                                                       },
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:StartVerify"                 , "outValue": "Command was sent but the expected result was not observed before timeout."}
+                    ]
+                }]
+            }
+        },
+
+
+
+
+
+
+
+
+
+        "BeginStopSequenceSuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyBeginStopSequence@triggerCmd" , "outValue": true                                                                                                       },
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:StopPrecheck"                   , "outValue": "Command preconditions were not met, the command was not sent. Details can be found in the ESS Events log."}
+                    ]
+                }]
+            }
+        },
+        "VerifyBeginStopSequenceSuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:StopFromOn@triggerCmd" , "outValue": true},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:StopVerify"                 , "outValue": "Command was sent but the expected result was not observed before timeout."}
+                    ]
+                }]
+            }
+        },
+
+        "StopFromOnSuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyStopFromOn@triggerCmd" , "outValue": true                                                                                                       },
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:StopPrecheck"                   , "outValue": "Command preconditions were not met, the command was not sent. Details can be found in the ESS Events log."}
+                    ]
+                }]
+            }
+        },
+        "VerifyStopFromOnSuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:StopFromStandby@triggerCmd" , "outValue": true},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:StopVerify"                 , "outValue": "Command was sent but the expected result was not observed before timeout."}
+                    ]
+                }]
+            }
+        },
+
+
+        "StopFromStandbySuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {"remap": [
+                        {"inValue": true, "uri": "/controls/pcs:VerifyStopFromStandby@triggerCmd" , "outValue": true},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:StopPrecheck"               , "outValue": "Command preconditions were not met, the command was not sent. Details can be found in the ESS Events log."}
+                    ]}
+                ]
+            }
+        },
+        "VerifyStopFromStandbySuccess": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:StopPrecheck"                 , "outValue": "Command was sent but the expected result was not observed before timeout."}
+                    ]
+                }]
+            }
+        }
+    }
+}

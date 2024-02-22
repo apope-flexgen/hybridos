@@ -1,0 +1,68 @@
+{  
+    "/config/load": {
+        "pcs_init": {
+            "file":"pcs_init",
+            "new_options":[
+                {
+                    "tmpls": [
+                        "std_v_pcs_manager"         ,
+                        "std_v_pcs_manager_controls",
+                        "std_v_pcs_manager_faults"  ,
+                        "v_pcs_manager"             ,
+                        "v_pcs_manager_controls"    ,
+                        "v_pcs_manager_faults"      ,
+                        "v_pcs_manager_modbus"
+                    ],
+                    "pname":"ess",
+                    "amname":"pcs",
+                    "from":1,
+                    "to":1,
+                    "reps":[
+                        {"replace":"##PCS_ID##" , "with":"pcs_{:01d}"},
+                        {"replace":"##BMS_ID##" , "with":"bms_{:01d}"},
+                        {"replace":"##ESS_ID##" , "with":"ess_{:01d}"}
+                    ]
+                },
+                {
+                    "tmpls": [
+                        "std_pcs_manager"          ,
+                        "std_pcs_manager_controls" ,
+                        "std_pcs_manager_faults"   ,
+                        "pcs_manager"              ,
+                        "pcs_manager_controls"     ,
+                        "pcs_manager_faults"       ,
+                        "pcs_manager_modbus"
+                    ],
+                    "pname":"pcs",
+                    "amname":"##PCS_ID##",
+                    "from":1,
+                    "to":1,
+                    "reps":[
+                        {"replace":"##PCS_ID##" , "with":"pcs_{:01d}"},
+                        {"replace":"##BMS_ID##" , "with":"bms_{:01d}"},
+                        {"replace":"##ESS_ID##" , "with":"ess_{:01d}"}
+                    ]
+                },
+                {
+                    "tmpls":[
+                        "std_pcs_module"   ,
+                        "std_pcs_module_faults",
+                        "pcs_module"       ,
+                        "pcs_module_faults",
+                        "pcs_module_modbus"
+                    ],
+                    "pname":"##PCS_ID##",
+                    "amname":"##PCS_ID##_##MODULE_ID##",
+                    "from":1,
+                    "to":4,
+                    "reps": [
+                        { "replace": "##PCS_ID##"          , "with": "pcs_{:01d}"  },
+                        { "replace": "##MOD_ID##"          , "with": "mod_{:01d}"  },
+                        { "replace": "##MODULE_ID##"       , "with": "module_{:01d}" },
+                        { "replace": "##MODULE_ID_TITLE##" , "with": "Module{:01d}"  }
+                    ]
+                }
+            ]
+        }
+    }
+}

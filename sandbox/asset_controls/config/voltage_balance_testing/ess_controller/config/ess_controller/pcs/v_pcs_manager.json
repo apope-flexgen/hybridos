@@ -1,0 +1,216 @@
+{
+    "/config/pcs": {
+        "RatedActivePower"       : 4200,
+        "RatedReactivePower"     : 4200,
+        "RatedApparentPower"     : 4200,
+        "RatedPowerFactor"       : 1  ,
+        "MaxActivePowerSetpoint" : 4200,
+        "RampRateMargin"         : 10,
+        "PowerMargin"            : 50,
+
+        "MaxChargePower"         : {
+            "value": 4200,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1":  "/status/pcs:PCSMaxChargePower_1"   ,
+            "variable2":  "/status/pcs:PCSMaxChargePower_2"   ,
+            "expression": "( {1} + {2} )"
+        },
+        "MaxDischargePower"      : {
+            "value":  4200,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1":  "/status/pcs:PCSMaxDischargePower_1"   ,
+            "variable2":  "/status/pcs:PCSMaxDischargePower_2"   ,
+            "expression": "( {1} + {2} )"
+        }
+    },
+
+    "/schedule/wake_monitor/pcs":{
+        "/status/pcs:Bus1ChargeLimit"    : {"amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:Bus2ChargeLimit"    : {"amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:Bus1DischargeLimit" : {"amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:Bus2DischargeLimit" : {"amap": "pcs", "func": "CalculateVar"},
+        "/config/pcs:MaxChargePower"     : {"amap": "pcs", "func": "CalculateVar"},
+        "/config/pcs:MaxDischargePower"  : {"amap": "pcs", "func": "CalculateVar"}
+    },
+
+    "/status/pcs": {
+        "HeartbeatRead": {
+            "value": 0,
+            "EnableStateCheck": true,
+            "EnableCommsCheck": true,
+            "AlarmTimeout": 10,
+            "FaultTimeout": 15,
+            "RecoverTimeout": 0.1
+        },
+        "Bus1ChargeLimit": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1":  "/status/pcs:PCSMaxChargePower_1"   ,
+            "variable2":  "/limits/bms_1:ChargePowerLimit"    ,
+            "expression": "max({1}, {2})"
+        },
+        "Bus1ChargeLimitTest": -2100.0,
+        "Bus2ChargeLimitTest": -1430.0,
+        "Bus1DischargeLimitTest": 2100.0,
+        "Bus2DischargeLimitTest": 1430.0,
+        "Bus1EnergyTest": 8064,
+        "Bus2EnergyTest": 5376,
+        "PCSDCVoltage_1Test": 1222.0,
+        "PCSDCVoltage_2Test": 1222.0,
+        "maxPowerDelta": 630.0,
+        "Bus2ChargeLimit": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1":  "/status/pcs:PCSMaxChargePower_2"   ,
+            "variable2":  "/limits/bms_2:ChargePowerLimit"    ,
+            "expression": "max({1}, {2})"
+        },
+        "Bus1DischargeLimit": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1":  "/status/pcs:PCSMaxDischargePower_1"   ,
+            "variable2":  "/limits/bms_1:DischargePowerLimit"    ,
+            "expression": "min({1}, {2})"
+        },
+        "Bus2DischargeLimit": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1":  "/status/pcs:PCSMaxDischargePower_2"   ,
+            "variable2":  "/limits/bms_2:DischargePowerLimit"    ,
+            "expression": "min({1}, {2})"
+        }
+    },
+
+    "/limits/pcs": {
+        "RatedPowerFactor": 0.5
+    },
+
+    "/system/commands": {
+        "runPCSOpts": {
+            "value": false,
+            "enabled": false,
+            "targav": "/system/commands:run",
+            "options": [
+                {"uri":"/sched/pcs:pubAssets_pcs",     "aname":"pcs", "value":0, "every":1},
+                {"uri":"/sched/pcs:runMonitor_pcs",    "aname":"pcs", "value":0, "every":0.1},
+                {"uri":"/sched/pcs:runPowerBalancing", "aname":"pcs", "value":0, "every":1}
+            ],
+            "actions": {
+                "onSet":[{"func":[{"func":"SchedItemOpts"}]}]
+            }
+        }
+    },
+    "/sched/pcs": {
+        "runPowerBalancing": {
+            "value": 1,
+            "note": "Perform power balancing based on voltage",
+            "enable": "/config/pcs:enable",
+            "enabled": true,
+            "debug": true,
+            "reset": false,
+            "threshold": 100,
+            "scaleFactor": 0.7,
+            "deadband": 5,
+            "timeoutMs": 10000,
+            "dcCurrentThreshold": 1,
+            "tLast": 0,
+            "dcCurrentVar": "/status/pcs:PCSDCCurrent",
+
+            "pCmdVar": "/controls/pcs:ActivePowerCmdStaged",
+            "qCmdVar": "/controls/pcs:ReactivePowerCmdStaged",
+
+            "pOutputAVar": "/controls/pcs:ActivePowerCmdAdjusted_1",
+            "pOutputBVar": "/controls/pcs:ActivePowerCmdAdjusted_2",
+            "qOutputAVar": "/controls/pcs:ReactivePowerCmdAdjusted_1",
+            "qOutputBVar": "/controls/pcs:ReactivePowerCmdAdjusted_2",
+
+            "bmsInputDcA": "/status/pcs:PCSDCVoltage_1Test",
+            "bmsInputDcB": "/status/pcs:PCSDCVoltage_2Test",
+
+            "pcsMaxChrgPwrA": "/status/pcs:Bus1ChargeLimitTest",
+            "pcsMaxChrgPwrB": "/status/pcs:Bus2ChargeLimitTest",
+            "pcsMaxDschgPwrA": "/status/pcs:Bus1DischargeLimitTest",
+            "pcsMaxDschgPwrB": "/status/pcs:Bus2DischargeLimitTest",
+
+            "bmsAEnergy": "/status/pcs:Bus1EnergyTest",
+            "bmsBEnergy": "/status/pcs:Bus2EnergyTest",
+
+            "maxPDeltakW": "/status/pcs:maxPowerDelta",
+
+            "actions":{
+                "onSet":[{
+                    "func":[
+                        {"amap": "pcs", "func":"BalancePower"}
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/assets/pcs/summary": {
+        "start": {
+            "value": false,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:SelectStartMode",    "outValue": 0}
+                    ],
+                    "func": [
+                        {"func": "LogInfo"},
+                        {"func": "CalculateVar", "inAv": "/controls/pcs:SelectStartMode"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+        "stop": {
+            "value": false,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:SelectStopMode",    "outValue": 0}
+                    ],
+                    "func": [
+                        {"func": "LogInfo"},
+                        {"func": "CalculateVar", "inAv": "/controls/pcs:SelectStopMode"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        }
+    },
+
+    "/vlinks/pcs": {
+        "ui_inverter_workflow" : { "value": "/assets/pcs/summary:inverter_workflow" , "vlink": "/status/pcs:InverterWorkflow" },
+        "ui_pcs_dc_voltage_1"  : { "value": "/assets/pcs/summary:PCSDCVoltage_1"    , "vlink": "/status/pcs:PCSDCVoltage_1"   },
+        "ui_pcs_dc_current_1"  : { "value": "/assets/pcs/summary:PCSDCCurrent_1"    , "vlink": "/status/pcs:PCSDCCurrent_1"   },
+        "ui_pcs_dc_power_1"    : { "value": "/assets/pcs/summary:PCSDCPower_1"      , "vlink": "/status/pcs:PCSDCPower_1"     },
+        "ui_pcs_dc_voltage_2"  : { "value": "/assets/pcs/summary:PCSDCVoltage_2"    , "vlink": "/status/pcs:PCSDCVoltage_2"   },
+        "ui_pcs_dc_current_2"  : { "value": "/assets/pcs/summary:PCSDCCurrent_2"    , "vlink": "/status/pcs:PCSDCCurrent_2"   },
+        "ui_pcs_dc_power_2"    : { "value": "/assets/pcs/summary:PCSDCPower_2"      , "vlink": "/status/pcs:PCSDCPower_2"     },
+
+        "ui_pcs_bus_1_charge_limit"    : { "value": "/assets/pcs/summary:Bus1ChargeLimit"   , "vlink": "/status/pcs:Bus1ChargeLimit"    },
+        "ui_pcs_bus_2_charge_limit"    : { "value": "/assets/pcs/summary:Bus1DischargeLimit" , "vlink": "/status/pcs:Bus1DischargeLimit" },
+        "ui_pcs_bus_1_discharge_limit" : { "value": "/assets/pcs/summary:Bus2ChargeLimit" , "vlink": "/status/pcs:Bus2ChargeLimit"    },
+        "ui_pcs_bus_2_discharge_limit" : { "value": "/assets/pcs/summary:Bus2DischargeLimit"   , "vlink": "/status/pcs:Bus2DischargeLimit" },
+
+        "ui_pcs_dc_current_sum" : { "value": "/assets/pcs/summary:PCSTotalCurrent" , "vlink": "/status/pcs:PCSDCCurrent" },
+        "ui_pcs_dc_power_sum"   : { "value": "/assets/pcs/summary:PCSTotalPower"   , "vlink": "/status/pcs:PCSDCPower"   },
+
+        "ui_pcs_heartbeat"   : { "value": "/assets/pcs/summary:PCSHeartbeat"   , "vlink": "/status/pcs:HeartbeatRead"   }
+    }
+}

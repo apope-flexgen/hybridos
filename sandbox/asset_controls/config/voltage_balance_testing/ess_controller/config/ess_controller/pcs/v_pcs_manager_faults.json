@@ -1,0 +1,1193 @@
+{
+    "/status/pcs": {
+
+        "Faults1To16":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:Watchdog"         , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:Watchdog"         , "outValue": "Fault"  },
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:HWVbus"           , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:HWVbus"           , "outValue": "Fault"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:SoftCharge"       , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:SoftCharge"       , "outValue": "Fault"  },
+                        {"shift": 3  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:Discharge"        , "outValue": "Normal" },
+                        {"shift": 3  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:Discharge"        , "outValue": "Fault"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:HighVac"          , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:HighVac"          , "outValue": "Fault"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:LowVac"           , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:LowVac"           , "outValue": "Fault"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:HighFrequency"    , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:HighFrequency"    , "outValue": "Fault"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:LowFrequency"     , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:LowFrequency"     , "outValue": "Fault"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:CommsSCIFPGADSP"  , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:CommsSCIFPGADSP"  , "outValue": "Fault"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ActiveAntiIsland" , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ActiveAntiIsland" , "outValue": "Fault"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:NoModules"        , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:NoModules"        , "outValue": "Fault"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DriveSelectDSP"   , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DriveSelectDSP"   , "outValue": "Fault"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:Synchronization"  , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:Synchronization"  , "outValue": "Fault"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DCMiswired"       , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DCMiswired"       , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults17To32":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:UnbalancedVac"         , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:UnbalancedVac"         , "outValue": "Fault"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:LowVdc"                , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:LowVdc"                , "outValue": "Fault"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModulesStartFault"     , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModulesStartFault"     , "outValue": "Fault"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:PassiveAntiIsland"     , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:PassiveAntiIsland"     , "outValue": "Fault"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:SelfDiagnosisFault"    , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:SelfDiagnosisFault"    , "outValue": "Fault"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ErrorModSelfDiagnosis" , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ErrorModSelfDiagnosis" , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults33To48":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:UnableReconnect"         , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:UnableReconnect"         , "outValue": "Fault"  },
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:HomDiffLV"               , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:HomDiffLV"               , "outValue": "Fault"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:MTPremag"                , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:MTPremag"                , "outValue": "Fault"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:CurrentOffLV"            , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:CurrentOffLV"            , "outValue": "Fault"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:InternalOverTemperature" , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:InternalOverTemperature" , "outValue": "Fault"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:GFDIFuse"                , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:GFDIFuse"                , "outValue": "Fault"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:EmergencyStop"           , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:EmergencyStop"           , "outValue": "Fault"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DriveSelectMCU"          , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DriveSelectMCU"          , "outValue": "Fault"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:GeneralIsolation"        , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:GeneralIsolation"        , "outValue": "Fault"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DataFault"               , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DataFault"               , "outValue": "Fault"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:WatchdogUp"              , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:WatchdogUp"              , "outValue": "Fault"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:InternalComms"           , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:InternalComms"           , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults49To64":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:IMDSelfdiagnosisError" , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:IMDSelfdiagnosisError" , "outValue": "Fault"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:PPCComms"              , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:PPCComms"              , "outValue": "Fault"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DUOvercurrent"         , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DUOvercurrent"         , "outValue": "Fault"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ExternalFaultOVGR"     , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ExternalFaultOVGR"     , "outValue": "Fault"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:RemoteEmergencyStop"   , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:RemoteEmergencyStop"   , "outValue": "Fault"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ControlSWMismatch"     , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ControlSWMismatch"     , "outValue": "Fault"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModuleSWMismatch"      , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModuleSWMismatch"      , "outValue": "Fault"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModuleHWMismatch"      , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModuleHWMismatch"      , "outValue": "Fault"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:SmokeDetector"         , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:SmokeDetector"         , "outValue": "Fault"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DUComms"               , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DUComms"               , "outValue": "Fault"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:IMDEarthConnection"    , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:IMDEarthConnection"    , "outValue": "Fault"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:InvalidMAC"            , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:InvalidMAC"            , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults65To80":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:OvercurrentAC"         , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:OvercurrentAC"         , "outValue": "Fault"  },
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModuleVDCUnbalance"    , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModuleVDCUnbalance"    , "outValue": "Fault"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:OvercurrentDC"         , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:OvercurrentDC"         , "outValue": "Fault"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:OvervoltageDCPositive" , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:OvervoltageDCPositive" , "outValue": "Fault"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:OvervoltageDCNegative" , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:OvervoltageDCNegative" , "outValue": "Fault"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationR1High"    , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationR1High"    , "outValue": "Fault"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationR2High"    , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationR2High"    , "outValue": "Fault"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationR2Low"     , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationR2Low"     , "outValue": "Fault"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationR3Low"     , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationR3Low"     , "outValue": "Fault"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationS1High"    , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationS1High"    , "outValue": "Fault"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationS2High"    , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationS2High"    , "outValue": "Fault"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationS2Low"     , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationS2Low"     , "outValue": "Fault"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationS3Low"     , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationS3Low"     , "outValue": "Fault"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationT1High"    , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationT1High"    , "outValue": "Fault"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationT2High"    , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationT2High"    , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults81To96":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationT2Low"    , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationT2Low"    , "outValue": "Fault"  },
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationT3Low"    , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationT3Low"    , "outValue": "Fault"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:MultipleDesaturation" , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:MultipleDesaturation" , "outValue": "Fault"  },
+                        {"shift": 3  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:Communications"       , "outValue": "Normal" },
+                        {"shift": 3  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:Communications"       , "outValue": "Fault"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:TimeoutSoftCharge"    , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:TimeoutSoftCharge"    , "outValue": "Fault"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:FeedbackBreaker"      , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:FeedbackBreaker"      , "outValue": "Fault"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:SoftChargeTarget"     , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:SoftChargeTarget"     , "outValue": "Fault"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:P-IGBTS-HF"           , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:P-IGBTS-HF"           , "outValue": "Fault"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModDischargeFault"    , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModDischargeFault"    , "outValue": "Fault"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModSoftCharge"           , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModSoftCharge"           , "outValue": "Fault"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:SourcePCB"            , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:SourcePCB"            , "outValue": "Fault"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:TaPCBModule"          , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:TaPCBModule"          , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults97To112":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:IdcDerivation"     , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:IdcDerivation"     , "outValue": "Fault"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModIacDerivation"  , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModIacDerivation"  , "outValue": "Fault"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModMeasureDc"      , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModMeasureDc"      , "outValue": "Fault"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:UnbalancedCurrent" , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:UnbalancedCurrent" , "outValue": "Fault"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:IGBTsTemperature"  , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:IGBTsTemperature"  , "outValue": "Fault"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:PCBTemperature"    , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:PCBTemperature"    , "outValue": "Fault"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModVdcUnbalanced"  , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModVdcUnbalanced"  , "outValue": "Fault"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:IacNotReached"     , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:IacNotReached"     , "outValue": "Fault"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModHighVdc"        , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModHighVdc"        , "outValue": "Fault"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModLowVdc"         , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModLowVdc"         , "outValue": "Fault"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:OCACEmergency"     , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:OCACEmergency"     , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults113To128":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:CRC"                , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:CRC"                , "outValue": "Fault"  },
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:MeasureIr"          , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:MeasureIr"          , "outValue": "Fault"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:MeasureIs"          , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:MeasureIs"          , "outValue": "Fault"  },
+                        {"shift": 3  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:MeasureIt"          , "outValue": "Normal" },
+                        {"shift": 3  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:MeasureIt"          , "outValue": "Fault"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:MeasureIdc"         , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:MeasureIdc"         , "outValue": "Fault"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModuleDisabled"     , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModuleDisabled"     , "outValue": "Fault"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationR1Low"  , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationR1Low"  , "outValue": "Fault"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationR3High" , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationR3High" , "outValue": "Fault"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationS1Low"  , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationS1Low"  , "outValue": "Fault"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationS3High" , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationS3High" , "outValue": "Fault"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationT1Low"  , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationT1Low"  , "outValue": "Fault"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DesaturationT3High" , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DesaturationT3High" , "outValue": "Fault"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DiffIacModRun"      , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DiffIacModRun"      , "outValue": "Fault"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:TODeviationIGBTs"   , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:TODeviationIGBTs"   , "outValue": "Fault"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DeltaTOIGBTs"       , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DeltaTOIGBTs"       , "outValue": "Fault"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:SpringLoaded"       , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:SpringLoaded"       , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults129To144":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ModuleIsolation"    , "outValue": "Normal" },
+                        {"shift": 0 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ModuleIsolation"    , "outValue": "Fault"  },
+                        {"shift": 1 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:SoftChargeFeedback" , "outValue": "Normal" },
+                        {"shift": 1 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:SoftChargeFeedback" , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults145To160":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:MVCellWrongState"     , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:MVCellWrongState"     , "outValue": "Fault"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DGPT2TempFailure"     , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DGPT2TempFailure"     , "outValue": "Fault"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DGPT2PressureFailure" , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DGPT2PressureFailure" , "outValue": "Fault"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DGPT2OilGasLevel"     , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DGPT2OilGasLevel"     , "outValue": "Fault"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:DUInverseCurrent"     , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:DUInverseCurrent"     , "outValue": "Fault"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:FeedbackACBreaker"    , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:FeedbackACBreaker"    , "outValue": "Fault"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:LowPressureSF6"       , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:LowPressureSF6"       , "outValue": "Fault"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:OverTemperatureDU"    , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:OverTemperatureDU"    , "outValue": "Fault"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ACDisconnect"         , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ACDisconnect"         , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults161To176":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:LOTOAC"             , "outValue": "Normal" },
+                        {"shift": 0 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:LOTOAC"             , "outValue": "Fault"  },
+                        {"shift": 1 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:LOTODC"             , "outValue": "Normal" },
+                        {"shift": 1 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:LOTODC"             , "outValue": "Fault"  },
+                        {"shift": 2 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:WDMVCell"           , "outValue": "Normal" },
+                        {"shift": 2 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:WDMVCell"           , "outValue": "Fault"  },
+                        {"shift": 3 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ExcessiveManeuvers" , "outValue": "Normal" },
+                        {"shift": 3 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ExcessiveManeuvers" , "outValue": "Fault"  },
+                        {"shift": 4 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ImproperModulation" , "outValue": "Normal" },
+                        {"shift": 4 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ImproperModulation" , "outValue": "Fault"  },
+                        {"shift": 8 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:LCLFeedback"        , "outValue": "Normal" },
+                        {"shift": 8 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:LCLFeedback"        , "outValue": "Fault"  },
+                        {"shift": 9 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ThermalLFeedback"   , "outValue": "Normal" },
+                        {"shift": 9 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ThermalLFeedback"   , "outValue": "Fault"  } ]
+                }]
+            }
+        },
+
+        "Faults177To192":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:THDV"       , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:THDV"       , "outValue": "Fault"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:THDI"       , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:THDI"       , "outValue": "Fault"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:CombinedFV" , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:CombinedFV" , "outValue": "Fault"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ECONMODE"   , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ECONMODE"   , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults193To208":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:HWOvervoltage"          , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:HWOvervoltage"          , "outValue": "Fault"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:HWUndervoltage"         , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:HWUndervoltage"         , "outValue": "Fault"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:OvervoltageLimDC"       , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:OvervoltageLimDC"       , "outValue": "Fault"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:AuxTransformerOvertemp" , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:AuxTransformerOvertemp" , "outValue": "Fault"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:MVOvertemperature"      , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:MVOvertemperature"      , "outValue": "Fault"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:FanImpulsionMT"         , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:FanImpulsionMT"         , "outValue": "Fault"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:FanDUZone"              , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:FanDUZone"              , "outValue": "Fault"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:FanZoneFilterLC"        , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:FanZoneFilterLC"        , "outValue": "Fault"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:FanZoneModules"         , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:FanZoneModules"         , "outValue": "Fault"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:MVCriOvertemperature"   , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:MVCriOvertemperature"   , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults209To224":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:uCFPGAComms"             , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:uCFPGAComms"             , "outValue": "Fault"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:InternIsolation"         , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:InternIsolation"         , "outValue": "Fault"  },
+                        {"shift": 3  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ExternIsolation"         , "outValue": "Normal" },
+                        {"shift": 3  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ExternIsolation"         , "outValue": "Fault"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:NegativeDUCurrent"       , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:NegativeDUCurrent"       , "outValue": "Fault"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:IMDComms"                , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:IMDComms"                , "outValue": "Fault"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:TimeoutGFDI"             , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:TimeoutGFDI"             , "outValue": "Fault"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:TimeoutIMIMeas"          , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:TimeoutIMIMeas"          , "outValue": "Fault"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:CriticalTempLCFilter"    , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:CriticalTempLCFilter"    , "outValue": "Fault"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:OverVoltageLimAC"        , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:OverVoltageLimAC"        , "outValue": "Fault"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:PT100InducNotConnected"  , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:PT100InducNotConnected"  , "outValue": "Fault"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:PT100TrafNotConnected"   , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:PT100TrafNotConnected"   , "outValue": "Fault"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:NTCAdmTempNotConnected"  , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:NTCAdmTempNotConnected"  , "outValue": "Fault"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:NTCLCFilterNotConnected" , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:NTCLCFilterNotConnected" , "outValue": "Fault"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:IndOverTemperature"      , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:IndOverTemperature"      , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults225To240":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:IndCriOverTemperature" , "outValue": "Normal" },
+                        {"shift": 0 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:IndCriOverTemperature" , "outValue": "Fault"  },
+                        {"shift": 1 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:IMIHardware"           , "outValue": "Normal" },
+                        {"shift": 1 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:IMIHardware"           , "outValue": "Fault"  },
+                        {"shift": 2 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:FaultUnknown"          , "outValue": "Normal" },
+                        {"shift": 2 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:FaultUnknown"          , "outValue": "Fault"  },
+                        {"shift": 3 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:FanSetpoint"           , "outValue": "Normal" },
+                        {"shift": 3 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:FanSetpoint"           , "outValue": "Fault"  },
+                        {"shift": 4 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:TimeoutIMIChannel"     , "outValue": "Normal" },
+                        {"shift": 4 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:TimeoutIMIChannel"     , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Faults241To256":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:RFIOverCurPersistent" , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:RFIOverCurPersistent" , "outValue": "Fault"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ImbalanceV"           , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ImbalanceV"           , "outValue": "Fault"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:VDCNotReached"        , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:VDCNotReached"        , "outValue": "Fault"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/faults/pcs:BATOpenDetection"     , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/faults/pcs:BATOpenDetection"     , "outValue": "Fault"  }
+                    ]
+                }]
+            }
+        },
+
+        "Alarms1To16":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:InputHighVoltage"       , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:InputHighVoltage"       , "outValue": "Alarm"  },
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:LowVoltageInput"        , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:LowVoltageInput"        , "outValue": "Alarm"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:HighFrequency"          , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:HighFrequency"          , "outValue": "Alarm"  },
+                        {"shift": 3  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:LowFrequency"           , "outValue": "Normal" },
+                        {"shift": 3  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:LowFrequency"           , "outValue": "Alarm"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:NoStartConditions"      , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:NoStartConditions"      , "outValue": "Alarm"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DUCommunications"       , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DUCommunications"       , "outValue": "Alarm"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:PLimit"                 , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:PLimit"                 , "outValue": "Alarm"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:QLimit"                 , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:QLimit"                 , "outValue": "Alarm"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:IsLimit"                , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:IsLimit"                , "outValue": "Alarm"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:IdcLimit"               , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:IdcLimit"               , "outValue": "Alarm"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DeratingVdc"            , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DeratingVdc"            , "outValue": "Alarm"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DeratingThermalIGBT"    , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DeratingThermalIGBT"    , "outValue": "Alarm"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DeratingThermalADM"     , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DeratingThermalADM"     , "outValue": "Alarm"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:LowP"                   , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:LowP"                   , "outValue": "Alarm"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:LowVdc"                 , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:LowVdc"                 , "outValue": "Alarm"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DeltaThermPCBAdmission" , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DeltaThermPCBAdmission" , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms17To32":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DeltaThermIGBTTeoric"  , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DeltaThermIGBTTeoric"  , "outValue": "Alarm"  },
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:TrackerOutputLowVac"   , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:TrackerOutputLowVac"   , "outValue": "Alarm"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:LVRT"                  , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:LVRT"                  , "outValue": "Alarm"  },
+                        {"shift": 3  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:HVRT"                  , "outValue": "Normal" },
+                        {"shift": 3  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:HVRT"                  , "outValue": "Alarm"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:CurvePf"               , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:CurvePf"               , "outValue": "Alarm"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:CurveQV"               , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:CurveQV"               , "outValue": "Alarm"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:CurvePV"               , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:CurvePV"               , "outValue": "Alarm"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DUCloseNight"          , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DUCloseNight"          , "outValue": "Alarm"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:CloseACWithoutPremag"  , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:CloseACWithoutPremag"  , "outValue": "Alarm"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:OvervoltageAC"         , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:OvervoltageAC"         , "outValue": "Alarm"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:OvervoltageLimitAC"    , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:OvervoltageLimitAC"    , "outValue": "Alarm"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DentingFreqTempIGBT"   , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DentingFreqTempIGBT"   , "outValue": "Alarm"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DGPT2TemperatureAlarm" , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DGPT2TemperatureAlarm" , "outValue": "Alarm"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:OvertemperatureDU"     , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:OvertemperatureDU"     , "outValue": "Alarm"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:MVAutocalibration"     , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:MVAutocalibration"     , "outValue": "Alarm"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:MVPremagnetization"    , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:MVPremagnetization"    , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms33To48":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ECONMode"          , "outValue": "Normal" },
+                        {"shift": 0 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ECONMode"          , "outValue": "Alarm"  },
+                        {"shift": 1 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:NightConditions"   , "outValue": "Normal" },
+                        {"shift": 1 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:NightConditions"   , "outValue": "Alarm"  },
+                        {"shift": 2 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:AutonightNightDay" , "outValue": "Normal" },
+                        {"shift": 2 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:AutonightNightDay" , "outValue": "Alarm"  },
+                        {"shift": 3 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:AutonightDayNight" , "outValue": "Normal" },
+                        {"shift": 3 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:AutonightDayNight" , "outValue": "Alarm"  },
+                        {"shift": 4 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:NightMode"         , "outValue": "Normal" },
+                        {"shift": 4 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:NightMode"         , "outValue": "Alarm"  },
+                        {"shift": 5 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:OpeningDU"         , "outValue": "Normal" },
+                        {"shift": 5 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:OpeningDU"         , "outValue": "Alarm"  },
+                        {"shift": 6 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DUOpen"            , "outValue": "Normal" },
+                        {"shift": 6 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DUOpen"            , "outValue": "Alarm"  },
+                        {"shift": 7 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:OpeningAC"         , "outValue": "Normal" },
+                        {"shift": 7 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:OpeningAC"         , "outValue": "Alarm"  },
+                        {"shift": 8 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ACOpen"            , "outValue": "Normal" },
+                        {"shift": 8 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ACOpen"            , "outValue": "Alarm"  },
+                        {"shift": 9 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ACDisconnect"      , "outValue": "Normal" },
+                        {"shift": 9 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ACDisconnect"      , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms49To64":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ActBalancingTriggering" , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ActBalancingTriggering" , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms65To80":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:OvercurrentAC"      , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:OvercurrentAC"      , "outValue": "Alarm"  },
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ModBusDCUnbalanced" , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ModBusDCUnbalanced" , "outValue": "Alarm"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:OvercurrentDC"      , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:OvercurrentDC"      , "outValue": "Alarm"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:OvervoltageDCP"     , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:OvervoltageDCP"     , "outValue": "Alarm"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:OvervoltageDCN"     , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:OvervoltageDCN"     , "outValue": "Alarm"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationR1H"    , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationR1H"    , "outValue": "Alarm"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationR2H"    , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationR2H"    , "outValue": "Alarm"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationR2L"    , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationR2L"    , "outValue": "Alarm"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationR3L"    , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationR3L"    , "outValue": "Alarm"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationS1H"    , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationS1H"    , "outValue": "Alarm"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationS2H"    , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationS2H"    , "outValue": "Alarm"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationS2L"    , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationS2L"    , "outValue": "Alarm"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationS3L"    , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationS3L"    , "outValue": "Alarm"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationT1H"    , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationT1H"    , "outValue": "Alarm"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationT2H"    , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationT2H"    , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms81To96":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationT2L"      , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationT2L"      , "outValue": "Alarm"  },
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationT3L"      , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationT3L"      , "outValue": "Alarm"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:MultipleDesaturation" , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:MultipleDesaturation" , "outValue": "Alarm"  },
+                        {"shift": 3  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:Communications"       , "outValue": "Normal" },
+                        {"shift": 3  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:Communications"       , "outValue": "Alarm"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:TimeOutSoftCharge"    , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:TimeOutSoftCharge"    , "outValue": "Alarm"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:FeedbackBreaker"      , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:FeedbackBreaker"      , "outValue": "Alarm"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:SoftchargeTarget"     , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:SoftchargeTarget"     , "outValue": "Alarm"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:TaIGBTSHW"            , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:TaIGBTSHW"            , "outValue": "Alarm"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ThermalL"             , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ThermalL"             , "outValue": "Alarm"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ThermalInductanceLCL" , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ThermalInductanceLCL" , "outValue": "Alarm"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DCSCModule"           , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DCSCModule"           , "outValue": "Alarm"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:Source15V"            , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:Source15V"            , "outValue": "Alarm"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:TaPCBModule"          , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:TaPCBModule"          , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms97To112":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:IdcDerivation"       , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:IdcDerivation"       , "outValue": "Alarm"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DifferentialIacStop" , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DifferentialIacStop" , "outValue": "Alarm"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ModMeasureDC"        , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ModMeasureDC"        , "outValue": "Alarm"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:UnbalancedCurrent"   , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:UnbalancedCurrent"   , "outValue": "Alarm"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:IGBTsTemperature"    , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:IGBTsTemperature"    , "outValue": "Alarm"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:PCBTemperature"      , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:PCBTemperature"      , "outValue": "Alarm"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:UnbalMaxVbus"        , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:UnbalMaxVbus"        , "outValue": "Alarm"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:IacNotReached"       , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:IacNotReached"       , "outValue": "Alarm"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:OvercurrentIdc"      , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:OvercurrentIdc"      , "outValue": "Alarm"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:VdcModuleLow"        , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:VdcModuleLow"        , "outValue": "Alarm"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:FanModule"           , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:FanModule"           , "outValue": "Alarm"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:EmergencyOCAC"       , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:EmergencyOCAC"       , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms113To128":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ChecksumComms"     , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ChecksumComms"     , "outValue": "Alarm"  },
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:SensedCurrentR"    , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:SensedCurrentR"    , "outValue": "Alarm"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:SensedCurrentS"    , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:SensedCurrentS"    , "outValue": "Alarm"  },
+                        {"shift": 3  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:SensedCurrentT"    , "outValue": "Normal" },
+                        {"shift": 3  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:SensedCurrentT"    , "outValue": "Alarm"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:SensedCurrentDC"   , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:SensedCurrentDC"   , "outValue": "Alarm"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DisableModSC"      , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DisableModSC"      , "outValue": "Alarm"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationR1L"   , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationR1L"   , "outValue": "Alarm"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationR3H"   , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationR3H"   , "outValue": "Alarm"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationS1L"   , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationS1L"   , "outValue": "Alarm"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationS3H"   , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationS3H"   , "outValue": "Alarm"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationT1L"   , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationT1L"   , "outValue": "Alarm"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesaturationT3H"   , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesaturationT3H"   , "outValue": "Alarm"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DiffIacModRun"     , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DiffIacModRun"     , "outValue": "Alarm"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DesvTaIGBTs"       , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DesvTaIGBTs"       , "outValue": "Alarm"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ModIGBTDeltaTaEst" , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ModIGBTDeltaTaEst" , "outValue": "Alarm"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:SpringLoaded"      , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:SpringLoaded"      , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms129To144":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                "enum": [
+                    {"shift": 0 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:IsolationModule"    , "outValue": "Normal" },
+                    {"shift": 0 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:IsolationModule"    , "outValue": "Alarm"  },
+                    {"shift": 1 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:SoftchargeFeedback" , "outValue": "Normal" },
+                    {"shift": 1 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:SoftchargeFeedback" , "outValue": "Alarm"  }
+                ]
+                }]
+            }
+        },
+        "Alarms145To160":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:NoSD"                   , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:NoSD"                   , "outValue": "Alarm"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:LockableModule"         , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:LockableModule"         , "outValue": "Alarm"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:PPCComms"               , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:PPCComms"               , "outValue": "Alarm"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:IsolationWatchdog"      , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:IsolationWatchdog"      , "outValue": "Alarm"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:LowResistorIsolation"   , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:LowResistorIsolation"   , "outValue": "Alarm"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:HighResistorIsolation"  , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:HighResistorIsolation"  , "outValue": "Alarm"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:CommsIsolationWatchdog" , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:CommsIsolationWatchdog" , "outValue": "Alarm"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:GeneralIsolation"       , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:GeneralIsolation"       , "outValue": "Alarm"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:InternIsolation"        , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:InternIsolation"        , "outValue": "Alarm"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ExternIsolation"        , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ExternIsolation"        , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms161To176":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:FanImpulsionMT"       , "outValue": "Normal" },
+                        {"shift": 0  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:FanImpulsionMT"       , "outValue": "Alarm"  },
+                        {"shift": 1  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:FanDUZone"            , "outValue": "Normal" },
+                        {"shift": 1  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:FanDUZone"            , "outValue": "Alarm"  },
+                        {"shift": 2  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:FanZoneFilterLC"      , "outValue": "Normal" },
+                        {"shift": 2  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:FanZoneFilterLC"      , "outValue": "Alarm"  },
+                        {"shift": 3  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:FanZoneModules"       , "outValue": "Normal" },
+                        {"shift": 3  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:FanZoneModules"       , "outValue": "Alarm"  },
+                        {"shift": 4  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:FanMotorStatus"       , "outValue": "Normal" },
+                        {"shift": 4  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:FanMotorStatus"       , "outValue": "Alarm"  },
+                        {"shift": 5  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:TempSensorRead"       , "outValue": "Normal" },
+                        {"shift": 5  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:TempSensorRead"       , "outValue": "Alarm"  },
+                        {"shift": 6  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:AntiPIDON"            , "outValue": "Normal" },
+                        {"shift": 6  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:AntiPIDON"            , "outValue": "Alarm"  },
+                        {"shift": 7  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:SourceDCDCON"         , "outValue": "Normal" },
+                        {"shift": 7  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:SourceDCDCON"         , "outValue": "Alarm"  },
+                        {"shift": 8  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:UnbalancedIDU"        , "outValue": "Normal" },
+                        {"shift": 8  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:UnbalancedIDU"        , "outValue": "Alarm"  },
+                        {"shift": 9  ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:OvervoltageDC"        , "outValue": "Normal" },
+                        {"shift": 9  ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:OvervoltageDC"        , "outValue": "Alarm"  },
+                        {"shift": 10 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:NoRTC"                , "outValue": "Normal" },
+                        {"shift": 10 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:NoRTC"                , "outValue": "Alarm"  },
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:LCFilterTemperature"  , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:LCFilterTemperature"  , "outValue": "Alarm"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:IMIDisabledChannels"  , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:IMIDisabledChannels"  , "outValue": "Alarm"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:FanTypeNotCorrectDU"  , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:FanTypeNotCorrectDU"  , "outValue": "Alarm"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:FanTypeNotCorrectMT"  , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:FanTypeNotCorrectMT"  , "outValue": "Alarm"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:FanTypeNotCorrectMOD" , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:FanTypeNotCorrectMOD" , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms177To192":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:FanTypeNotCorrectLC" , "outValue": "Normal" },
+                        {"shift": 0 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:FanTypeNotCorrectLC" , "outValue": "Alarm"  },
+                        {"shift": 2 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:FTPOpen"             , "outValue": "Normal" },
+                        {"shift": 2 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:FTPOpen"             , "outValue": "Alarm"  },
+                        {"shift": 3 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:SDCorrupted"         , "outValue": "Normal" },
+                        {"shift": 3 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:SDCorrupted"         , "outValue": "Alarm"  },
+                        {"shift": 6 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:InternalComms"       , "outValue": "Normal" },
+                        {"shift": 6 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:InternalComms"       , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms241To256":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 11 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:RFIOverCurPersistent" , "outValue": "Normal" },
+                        {"shift": 11 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:RFIOverCurPersistent" , "outValue": "Alarm"  },
+                        {"shift": 12 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ImbalanceV"           , "outValue": "Normal" },
+                        {"shift": 12 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ImbalanceV"           , "outValue": "Alarm"  },
+                        {"shift": 13 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:VDCNotReached"        , "outValue": "Normal" },
+                        {"shift": 13 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:VDCNotReached"        , "outValue": "Alarm"  },
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:BATOpenDetection"     , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:BATOpenDetection"     , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms289To304":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 14 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:RFIOvercurrent" , "outValue": "Normal" },
+                        {"shift": 14 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:RFIOvercurrent" , "outValue": "Alarm"  },
+                        {"shift": 15 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ImbalanceP" , "outValue": "Normal" },
+                        {"shift": 15 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ImbalanceP" , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        },
+        "Alarms305To320":{
+            "value":0,
+            "actions": {
+                "onSet":[{
+                    "enum": [
+                        {"shift": 0 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:LimitVDCBESS"  , "outValue": "Normal" },
+                        {"shift": 0 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:LimitVDCBESS"  , "outValue": "Alarm"  },
+                        {"shift": 1 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:CCLLimit"      , "outValue": "Normal" },
+                        {"shift": 1 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:CCLLimit"      , "outValue": "Alarm"  },
+                        {"shift": 2 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:DCLLimit"      , "outValue": "Normal" },
+                        {"shift": 2 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:DCLLimit"      , "outValue": "Alarm"  },
+                        {"shift": 3 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:HWLimit"       , "outValue": "Normal" },
+                        {"shift": 3 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:HWLimit"       , "outValue": "Alarm"  },
+                        {"shift": 4 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:BusbarDisable" , "outValue": "Normal" },
+                        {"shift": 4 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:BusbarDisable" , "outValue": "Alarm"  },
+                        {"shift": 5 ,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ModuleDisable" , "outValue": "Normal" },
+                        {"shift": 5 ,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ModuleDisable" , "outValue": "Alarm"  }
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/alarms/pcs": {
+        "InputHighVoltage"       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LowVoltageInput"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "HighFrequency"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LowFrequency"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "NoStartConditions"      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DUCommunications"       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "PLimit"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "QLimit"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IsLimit"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IdcLimit"               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DeratingVdc"            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DeratingThermalIGBT"    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DeratingThermalADM"     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LowP"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LowVdc"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DeltaThermPCBAdmission" : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DeltaThermIGBTTeoric"   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "TrackerOutputLowVac"    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LVRT"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "HVRT"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "CurvePf"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "CurveQV"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "CurvePV"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DUCloseNight"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "CloseACWithoutPremag"   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvervoltageAC"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvervoltageLimitAC"     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DentingFreqTempIGBT"    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DGPT2TemperatureAlarm"  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvertemperatureDU"      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "MVAutocalibration"      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "MVPremagnetization"     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ECONMode"               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "NightConditions"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "AutonightNightDay"      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "AutonightDayNight"      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "NightMode"              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OpeningDU"              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DUOpen"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OpeningAC"              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ACOpen"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ACDisconnect"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ActBalancingTriggering" : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvercurrentAC"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModBusDCUnbalanced"     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvercurrentDC"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvervoltageDCP"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvervoltageDCN"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationR1H"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationR2H"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationR2L"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationR3L"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationS1H"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationS2H"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationS2L"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationS3L"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationT1H"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationT2H"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationT2L"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationT3L"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "MultipleDesaturation"   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "Communications"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "TimeOutSoftCharge"      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FeedbackBreaker"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SoftchargeTarget"       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "TaIGBTSHW"              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ThermalL"               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ThermalInductanceLCL"   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DCSCModule"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "Source15V"              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "TaPCBModule"            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IdcDerivation"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DifferentialIacStop"    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModMeasureDC"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "UnbalancedCurrent"      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IGBTsTemperature"       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "PCBTemperature"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "UnbalMaxVbus"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IacNotReached"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvercurrentIdc"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "VdcModuleLow"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanModule"              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "EmergencyOCAC"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ChecksumComms"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SensedCurrentR"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SensedCurrentS"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SensedCurrentT"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SensedCurrentDC"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DisableModSC"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationR1L"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationR3H"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationS1L"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationS3H"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationT1L"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationT3H"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DiffIacModRun"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesvTaIGBTs"            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModIGBTDeltaTaEst"      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SpringLoaded"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IsolationModule"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SoftchargeFeedback"     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "NoSD"                   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LockableModule"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "PPCComms"               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IsolationWatchdog"      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LowResistorIsolation"   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "HighResistorIsolation"  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "CommsIsolationWatchdog" : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "GeneralIsolation"       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "InternIsolation"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ExternIsolation"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanImpulsionMT"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanDUZone"              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanZoneFilterLC"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanZoneModules"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanMotorStatus"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "TempSensorRead"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "AntiPIDON"              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SourceDCDCON"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "UnbalancedIDU"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvervoltageDC"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "NoRTC"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LCFilterTemperature"    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IMIDisabledChannels"    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanTypeNotCorrectDU"    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanTypeNotCorrectMT"    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanTypeNotCorrectMOD"   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanTypeNotCorrectLC"    : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FTPOpen"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SDCorrupted"            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "InternalComms"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "RFIOverCurPersistent"   : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ImbalanceV"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "VDCNotReached"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "BATOpenDetection"       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "RFIOvercurrent"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ImbalanceP"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LimitVDCBESS"           : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "CCLLimit"               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DCLLimit"               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "HWLimit"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "BusbarDisable"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModuleDisable"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}}
+    },
+
+    "/faults/pcs": {
+        "Watchdog"                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "HWVbus"                  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SoftCharge"              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "Discharge"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "HighVac"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LowVac"                  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "HighFrequency"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LowFrequency"            : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "CommsSCIFPGADSP"         : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ActiveAntiIsland"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "NoModules"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DriveSelectDSP"          : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "Synchronization"         : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DCMiswired"              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "UnbalancedVac"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LowVdc"                  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModulesStartFault"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "PassiveAntiIsland"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SelfDiagnosisFault"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ErrorModSelfDiagnosis"   : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "UnableReconnect"         : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "HomDiffLV"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "MTPremag"                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "CurrentOffLV"            : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "InternalOverTemperature" : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "GFDIFuse"                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "EmergencyStop"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DriveSelectMCU"         : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "GeneralIsolation"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DataFault"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "WatchdogUp"              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "InternalComms"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IMDSelfdiagnosisError"   : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "PPCComms"                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DUOvercurrent"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ExternalFaultOVGR"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "RemoteEmergencyStop"     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ControlSWMismatch"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModuleSWMismatch"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModuleHWMismatch"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SmokeDetector"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DUComms"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IMDEarthConnection"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "InvalidMAC"              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvercurrentAC"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModuleVDCUnbalance"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvercurrentDC"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvervoltageDCPositive"   : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvervoltageDCNegative"   : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationR1High"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationR2High"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationR2Low"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationR3Low"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationS1High"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationS2High"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationS2Low"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationS3Low"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationT1High"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationT2High"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationT2Low"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationT3Low"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "MultipleDesaturation"    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "Communications"          : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "TimeoutSoftCharge"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FeedbackBreaker"         : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SoftChargeTarget"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "P-IGBTS-HF"              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModDischargeFault"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModSoftCharge"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SourcePCB"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "TaPCBModule"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IdcDerivation"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModIacDerivation"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModMeasureDc"            : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "UnbalancedCurrent"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IGBTsTemperature"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "PCBTemperature"          : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModVdcUnbalanced"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IacNotReached"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModHighVdc"              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModLowVdc"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OCACEmergency"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "CRC"                     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "MeasureIr"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "MeasureIs"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "MeasureIt"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "MeasureIdc"              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModuleDisabled"          : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationR1Low"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationR3High"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationS1Low"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationS3High"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationT1Low"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DesaturationT3High"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DiffIacModRun"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "TODeviationIGBTs"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DeltaTOIGBTs"            : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SpringLoaded"            : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ModuleIsolation"         : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "SoftChargeFeedback"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "MVCellWrongState"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DGPT2TempFailure"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DGPT2PressureFailure"    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DGPT2OilGasLevel"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "DUInverseCurrent"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FeedbackACBreaker"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LowPressureSF6"          : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OverTemperatureDU"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ACDisconnect"            : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LOTOAC"                  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LOTODC"                  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "WDMVCell"                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ExcessiveManeuvers"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ImproperModulation"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "LCLFeedback"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ThermalLFeedback"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "THDV"                    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "THDI"                    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "CombinedFV"              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ECONMODE"                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "HWOvervoltage"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "HWUndervoltage"          : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OvervoltageLimDC"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "AuxTransformerOvertemp"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "MVOvertemperature"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanImpulsionMT"          : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanDUZone"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanZoneFilterLC"         : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanZoneModules"          : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "MVCriOvertemperature"    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "uCFPGAComms"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "InternIsolation"         : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ExternIsolation"         : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "NegativeDUCurrent"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IMDComms"                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "TimeoutGFDI"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "TimeoutIMIMeas"          : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "CriticalTempLCFilter"    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "OverVoltageLimAC"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "PT100InducNotConnected"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "PT100TrafNotConnected"   : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "NTCAdmTempNotConnected"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "NTCLCFilterNotConnected" : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IndOverTemperature"      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IndCriOverTemperature"   : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "IMIHardware"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FaultUnknown"            : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "FanSetpoint"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "TimeoutIMIChannel"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "RFIOverCurPersistent"    : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "ImbalanceV"              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "VDCNotReached"           : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}},
+        "BATOpenDetection"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]}}
+    }
+}

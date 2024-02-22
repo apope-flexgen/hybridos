@@ -1,0 +1,107 @@
+{
+    "/system/commands": {
+        "addSchedVars_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            { "uri": "/system/commands:runESSOpts@enabled"    },
+                            { "uri": "/system/commands:runESSOpts"            },
+                            { "uri": "/system/commands:runBMSOpts@enabled"    },
+                            { "uri": "/system/commands:runBMSOpts"            },
+                            { "uri": "/system/commands:runPCSOpts@enabled"    },
+                            { "uri": "/system/commands:runPCSOpts"            },
+                            { "uri": "/system/commands:runRackOpts@enabled"   },
+                            { "uri": "/system/commands:runRackOpts"           },
+                            { "uri": "/system/commands:runModuleOpts@enabled" },
+                            { "uri": "/system/commands:runModuleOpts"         }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "Sets /system/commands:run<asset>Opts to add schedule variables to scheduler",
+            "value": true
+        },
+        "enableVars_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            { "uri": "/config/ess:enable" },
+                            { "uri": "/config/bms:enable" },
+                            { "uri": "/config/pcs:enable" }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note1": "Sets /config/<asset>:enable",
+            "note2": "Enable actions, if any, and other operations for variables that have the enable parameter",
+            "value": true
+        },
+        "link": {
+            "actions": {
+                "onSet": [ { "func": [ { "func": "RunAllLinks" } ] } ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "Command variable used to link all variables defined in /links",
+            "value": true
+        },
+        "run": {
+            "actions": {
+                "onSet": [ { "func": [ { "func": "RunSched" } ] } ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note": "Command variable used to start scheduled tasks",
+            "value": true
+        },
+        "stop": {
+            "actions": {
+                "onSet": [ { "func": [ { "func": "StopSched" } ] } ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note": "Command variable used to stop scheduled tasks",
+            "value": true
+        },
+        "vlink": {
+            "actions": {
+                "onSet": [ { "func": [ { "func": "RunAllVLinks" } ] } ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "Command variable used to link all variables defined in /vlinks",
+            "value": true
+        }
+    },
+    "/system/sequences": {
+        "triggerSysCmds_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {"uri": "/system/commands:enableVars_ess@enabled"  },
+                            {"uri": "/system/commands:enableVars_ess"          },
+                            {"uri": "/system/commands:link@enabled"            },
+                            {"uri": "/system/commands:link"                    },
+                            {"uri": "/system/commands:vlink@enabled"           },
+                            {"uri": "/system/commands:vlink"                   },
+                            {"uri": "/system/commands:addSchedVars_ess@enabled"},
+                            {"uri": "/system/commands:addSchedVars_ess"        }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note1": "Trigger some variables defined in /system/commands",
+            "note2": "Specifically, enableVars_ess, link, vlink, and addSchedVars_ess are triggered",
+            "value": true
+        }
+    }
+}

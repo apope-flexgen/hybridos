@@ -1,0 +1,193 @@
+{
+    "/components/##BMS_ID##_info": {
+        "##RACK_ID##_alarm_code": {
+            "value":0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverSoc"                , "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverSoc"                , "outValue": "Alarm" },
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##UnderSoc"               , "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##UnderSoc"               , "outValue": "Alarm" },
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##BpuFan"                 , "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##BpuFan"                 , "outValue": "Alarm" },
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##FrequentBalancing"      , "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##FrequentBalancing"      , "outValue": "Alarm" },
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##UnderSOH"               , "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##UnderSOH"               , "outValue": "Alarm" },
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##CycleWarrantyExpiration", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##CycleWarrantyExpiration", "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        },
+        "##RACK_ID##_warning_code": {
+            "value":0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverChargeCurrent"             , "outValue": "Normal"},
+                        { "shift": 0 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverChargeCurrent"             , "outValue": "Alarm" },
+                        { "shift": 1 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverDischargeCurrent"          , "outValue": "Normal"},
+                        { "shift": 1 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverDischargeCurrent"          , "outValue": "Alarm" },
+                        { "shift": 2 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverChargePowerLimit"          , "outValue": "Normal"},
+                        { "shift": 2 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverChargePowerLimit"          , "outValue": "Alarm" },
+                        { "shift": 3 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverDischargePowerLimit"       , "outValue": "Normal"},
+                        { "shift": 3 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverDischargePowerLimit"       , "outValue": "Alarm" },
+                        { "shift": 4 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltage"               , "outValue": "Normal"},
+                        { "shift": 4 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltage"               , "outValue": "Alarm" },
+                        { "shift": 5 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##UnderCellVoltage"              , "outValue": "Normal"},
+                        { "shift": 5 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##UnderCellVoltage"              , "outValue": "Alarm" },
+                        { "shift": 6 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltageDeviationModule", "outValue": "Normal"},
+                        { "shift": 6 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltageDeviationModule", "outValue": "Alarm" },
+                        { "shift": 7 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverModuleTemperature"         , "outValue": "Normal"},
+                        { "shift": 7 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverModuleTemperature"         , "outValue": "Alarm" },
+                        { "shift": 8 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##UnderModuleTemperature"        , "outValue": "Normal"},
+                        { "shift": 8 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##UnderModuleTemperature"        , "outValue": "Alarm" },
+                        { "shift": 9 ,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverModuleTemperatureDeviation", "outValue": "Normal"},
+                        { "shift": 9 ,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverModuleTemperatureDeviation", "outValue": "Alarm" },
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverModuleTemperatureLong"     , "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverModuleTemperatureLong"     , "outValue": "Alarm" },
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltageDeviationRack"  , "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltageDeviationRack"  , "outValue": "Alarm" }
+                    ]
+                }]
+            }
+        },
+        "##RACK_ID##_fault_code": {
+            "value":0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverChargeCurrent"             , "outValue": "Normal"},
+                        { "shift": 0 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverChargeCurrent"             , "outValue": "Fault" },
+                        { "shift": 1 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverDischargeCurrent"          , "outValue": "Normal"},
+                        { "shift": 1 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverDischargeCurrent"          , "outValue": "Fault" },
+                        { "shift": 2 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverChargePowerLimit"          , "outValue": "Normal"},
+                        { "shift": 2 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverChargePowerLimit"          , "outValue": "Fault" },
+                        { "shift": 3 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverDischargePowerLimit"       , "outValue": "Normal"},
+                        { "shift": 3 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverDischargePowerLimit"       , "outValue": "Fault" },
+                        { "shift": 4 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltage"               , "outValue": "Normal"},
+                        { "shift": 4 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltage"               , "outValue": "Fault" },
+                        { "shift": 5 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##UnderCellVoltage"              , "outValue": "Normal"},
+                        { "shift": 5 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##UnderCellVoltage"              , "outValue": "Fault" },
+                        { "shift": 6 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltageDeviationModule", "outValue": "Normal"},
+                        { "shift": 6 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltageDeviationModule", "outValue": "Fault" },
+                        { "shift": 7 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverModuleTemperature"         , "outValue": "Normal"},
+                        { "shift": 7 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverModuleTemperature"         , "outValue": "Fault" },
+                        { "shift": 8 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##UnderModuleTemperature"        , "outValue": "Normal"},
+                        { "shift": 8 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##UnderModuleTemperature"        , "outValue": "Fault" },
+                        { "shift": 9 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverModuleTemperatureDeviation", "outValue": "Normal"},
+                        { "shift": 9 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverModuleTemperatureDeviation", "outValue": "Fault" },
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverModuleTemperatureLong"     , "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverModuleTemperatureLong"     , "outValue": "Fault" },
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##CurrentImbalance"              , "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##CurrentImbalance,"             , "outValue": "Fault" },
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltageDeviationRack"  , "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltageDeviationRack"  , "outValue": "Fault" },
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##SuddenVoltageDrop"             , "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##SuddenVoltageDrop"             , "outValue": "Fault" },
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##UnderSOH"                      , "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##UnderSOH"                      , "outValue": "Fault" },
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##CycleWarrantyExpiration"       , "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##CycleWarrantyExpiration"       , "outValue": "Fault" }
+                    ]
+                }]
+            }
+        },
+        "##RACK_ID##_other_fault_code": {
+            "value":0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##CommErrorBBMS"          , "outValue": "Normal"},
+                        { "shift": 0 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##CommErrorBBMS"          , "outValue": "Fault" },
+                        { "shift": 1 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##CommErrorMBMS"          , "outValue": "Normal"},
+                        { "shift": 1 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##CommErrorMBMS"          , "outValue": "Fault" },
+                        { "shift": 2 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##CurrentSensing"         , "outValue": "Normal"},
+                        { "shift": 2 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##CurrentSensing"         , "outValue": "Fault" },
+                        { "shift": 3 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##TemperatureSensing"     , "outValue": "Normal"},
+                        { "shift": 3 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##TemperatureSensing"     , "outValue": "Fault" },
+                        { "shift": 4 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##RackUnbalancing"        , "outValue": "Normal"},
+                        { "shift": 4 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##RackUnbalancing"        , "outValue": "Fault" },
+                        { "shift": 6 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##MainContactor"          , "outValue": "Normal"},
+                        { "shift": 6 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##MainContactor"          , "outValue": "Fault" },
+                        { "shift": 7 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##ModuleFanFeedback"      , "outValue": "Normal"},
+                        { "shift": 7 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##ModuleFanFeedback"      , "outValue": "Fault" },
+                        { "shift": 9 ,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##MBMSOBDError"           , "outValue": "Normal"},
+                        { "shift": 9 ,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##MBMSOBDError"           , "outValue": "Fault" },
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##RackConnection"         , "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##RackConnection"         , "outValue": "Fault" },
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##ContactorOpen"          , "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##ContactorOpen"          , "outValue": "Fault" },
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltage2ndFault", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/faults/##BMS_ID##:##RACK_ID_TITLE##OverCellVoltage2ndFault", "outValue": "Fault" }
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/alarms/##BMS_ID##": {
+        "##RACK_ID_TITLE##BPUFanFeedback"                : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##BPUFanOn"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##BpuFan"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##CellBalancing"                 : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##CycleWarrantyExpiration"       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##FPUFanOn"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##FrequentBalancing"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##FuseFeedback"                  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##ModuleFan1Feedback"            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##ModuleFan1OnStatus"            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##ModuleFan2Feedback"            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##ModuleFan2OnStatus"            : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverCellVoltage"               : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverCellVoltageDeviationModule": {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverCellVoltageDeviationRack"  : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverChargeCurrent"             : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverChargePowerLimit"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverDischargeCurrent"          : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverDischargePowerLimit"       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverModuleTemperature"         : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverModuleTemperatureDeviation": {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverModuleTemperatureLong"     : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverSoc"                       : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##PrechargeContactorStatus"      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##Status"                        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##UnderCellVoltage"              : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##UnderModuleTemperature"        : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##UnderSOH"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##UnderSoc"                      : {"type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}}
+    },
+
+    "/faults/##BMS_ID##": {
+        "##RACK_ID_TITLE##CommErrorBBMS"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##CommErrorMBMS"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##ContactorOpen"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##CurrentImbalance"              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##CurrentImbalance,"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##CurrentSensing"                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##CycleWarrantyExpiration"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##MBMSOBDError"                  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##MainContactor"                 : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##ModuleFanFeedback"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverCellVoltage"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverCellVoltage2ndFault"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverCellVoltageDeviationModule": {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverCellVoltageDeviationRack"  : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverChargeCurrent"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverChargePowerLimit"          : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverDischargeCurrent"          : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverDischargePowerLimit"       : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverModuleTemperature"         : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverModuleTemperatureDeviation": {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##OverModuleTemperatureLong"     : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##RackConnection"                : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##RackUnbalancing"               : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##SuddenVoltageDrop"             : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##TemperatureSensing"            : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##UnderCellVoltage"              : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##UnderModuleTemperature"        : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "##RACK_ID_TITLE##UnderSOH"                      : {"type": "fault", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}}
+    }
+}
