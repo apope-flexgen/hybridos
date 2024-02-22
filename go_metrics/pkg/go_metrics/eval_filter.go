@@ -246,7 +246,7 @@ func evaluateFilterBasicLit(val *ast.Node) (Union, error) {
 		case token.STRING:
 			return Union{
 				tag: STRING,
-				s:   node.Value,
+				s:   strings.ReplaceAll(node.Value, "\"", ""),
 			}, nil
 		default:
 			return Union{}, fmt.Errorf("error evaluating ast.BasicLit %v", node.Value)
