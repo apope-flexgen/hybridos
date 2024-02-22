@@ -1852,7 +1852,7 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
                         state_str = "false";
                     //Bug 02_01_2024 use myhb->heartbeat_read_point
                     string_stream << ",\"modbus_heartbeat\":" << component->heartbeat->heartbeat_read_point->raw_val << "";
-                    string_stream << ",\"component_connected\":\"" << state_str << "\"";
+                    string_stream << ",\"component_connected\":" << state_str << "";
                     void hbSendWrite(cfg::heartbeat_struct *myhb);
                     hbSendWrite(component->heartbeat);
 
@@ -1873,7 +1873,7 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
                         state_str = "true";
                     else
                         state_str = "false";
-                    string_stream << "\"component_connected\":\"" << state_str << "\"";
+                    string_stream << "\"component_connected\":" << state_str << "";
 
                 }
 
@@ -1894,7 +1894,7 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
                 //         state_str = "true";
                 //     else
                 //         state_str = "false";
-                //     string_stream << "\"component_connected\":\"" << state_str << "\"";
+                //     string_stream << "\"component_connected\":" << state_str << "";
                 // }
             }
             if(send_time)
