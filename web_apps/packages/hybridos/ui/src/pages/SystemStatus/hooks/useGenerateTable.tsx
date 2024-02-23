@@ -16,6 +16,9 @@ import {
 
 const useGenerateSystemStatusTable = () => {
   const [results, setResults] = useState<SystemStatusRow[]>([]);
+  const [currentSortByRow, setCurrentSortyByRow] = useState<keyof SystemStatusObject>();
+  const [currentReverseOrder, setCurrentReverseOrder] = useState<boolean>(false);
+
   const axiosInstance = useAxiosWebUIInstance();
   const notifCtx = useContext<NotifContextType | null>(NotifContext);
 
@@ -151,14 +154,21 @@ const useGenerateSystemStatusTable = () => {
     const sortedArray = systemStatusData;
 
     if (sortByRow) {
-      const rowIndex = sortByRow;
-      sortedArray.sort(
-        (objectA, objectB) => {
-          if (!reverseOrder) return `${objectA[rowIndex]}`.localeCompare(`${objectB[rowIndex]}`, 'en', { numeric: true });
-          return `${objectB[rowIndex]}`.localeCompare(`${objectA[rowIndex]}`, 'en', { numeric: true });
-        },
-      );
+      setCurrentSortyByRow(sortByRow);
     }
+    if (reverseOrder !== undefined) {
+      setCurrentReverseOrder(reverseOrder);
+    }
+
+    const rowIndex = sortByRow || currentSortByRow || 'serviceName';
+    const reverseOrderToUse = reverseOrder !== undefined ? reverseOrder : currentReverseOrder;
+
+    sortedArray.sort(
+      (objectA, objectB) => {
+        if (!reverseOrderToUse) return `${objectA[rowIndex]}`.localeCompare(`${objectB[rowIndex]}`, 'en', { numeric: true });
+        return `${objectB[rowIndex]}`.localeCompare(`${objectA[rowIndex]}`, 'en', { numeric: true });
+      },
+    );
 
     const returnData: SystemStatusRow[] = sortedArray.map((serviceData) => ({
       id: serviceData.serviceName || '',

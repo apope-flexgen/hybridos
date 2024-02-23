@@ -1,36 +1,6 @@
-import {
-  Box, Column, IconButton, Typography,
-} from '@flexgen/storybook';
-import { useState } from 'react';
-import { sortedTableHeaderSx } from './SystemStatus.styles';
+import { Column } from '@flexgen/storybook';
+import SortRow from './SortRow/SortRow';
 import { SystemStatusObject, SystemStatusRow } from './SystemStatus.types';
-
-export const SortRow = (
-  label: string,
-  column: keyof SystemStatusObject,
-  systemStatusData: SystemStatusObject[],
-  generateRowsData: (
-    systemStatusData: SystemStatusObject[],
-    sortByRow?: keyof SystemStatusObject,
-    reverse?: boolean,
-  ) => SystemStatusRow[],
-) => {
-  const [reverseOrder, setReverseOrder] = useState<boolean>(false);
-  const handleSort = () => {
-    generateRowsData(systemStatusData, column, reverseOrder);
-    setReverseOrder(!reverseOrder);
-  };
-  return (
-    <Box sx={sortedTableHeaderSx}>
-      <Typography text={label} variant="tableHeader" />
-      <IconButton
-        icon={reverseOrder ? 'ArrowDown' : 'ArrowUp'}
-        onClick={handleSort}
-        size="small"
-      />
-    </Box>
-  );
-};
 
 export const systemStatusColumns = (
   systemStatusData: SystemStatusObject[],
@@ -43,13 +13,41 @@ export const systemStatusColumns = (
   {
     id: 'dependencies', label: '', width: 50, align: 'right',
   },
-  { id: 'service_name', label: 'Service Name', content: SortRow('Service Name', 'serviceName', systemStatusData, generateRowsData) },
-  { id: 'service_status', label: 'Service Status', content: SortRow('Service Status', 'serviceStatus', systemStatusData, generateRowsData) },
-  { id: 'connection_status', label: 'Connection Status', content: SortRow('Connection Status', 'connectionStatus', systemStatusData, generateRowsData) },
-  { id: 'cpu_usage', label: 'CPU Usage', content: SortRow('CPU Usage', 'cpuUsage', systemStatusData, generateRowsData) },
-  { id: 'memory_usage', label: 'Memory Usage', content: SortRow('Memory Usage', 'memoryUsage', systemStatusData, generateRowsData) },
-  { id: 'uptime', label: 'Time Since Last Restart', content: SortRow('Time Since Last Restart', 'uptime', systemStatusData, generateRowsData) },
-  { id: 'last_restart', label: 'Last Restart', content: SortRow('Last Restart', 'lastRestart', systemStatusData, generateRowsData) },
+  {
+    id: 'service_name',
+    label: 'Service Name',
+    content: <SortRow label="Service Name" column="serviceName" systemStatusData={systemStatusData} generateRowsData={generateRowsData} />,
+  },
+  {
+    id: 'service_status',
+    label: 'Service Status',
+    content: <SortRow label="Service Status" column="serviceStatus" systemStatusData={systemStatusData} generateRowsData={generateRowsData} />,
+  },
+  {
+    id: 'connection_status',
+    label: 'Connection Status',
+    content: <SortRow label="Connection Status" column="connectionStatus" systemStatusData={systemStatusData} generateRowsData={generateRowsData} />,
+  },
+  {
+    id: 'cpu_usage',
+    label: 'CPU Usage',
+    content: <SortRow label="CPU Usage" column="cpuUsage" systemStatusData={systemStatusData} generateRowsData={generateRowsData} />,
+  },
+  {
+    id: 'memory_usage',
+    label: 'Memory Usage',
+    content: <SortRow label="Memory Usage" column="memoryUsage" systemStatusData={systemStatusData} generateRowsData={generateRowsData} />,
+  },
+  {
+    id: 'uptime',
+    label: 'Time Since Last Restart',
+    content: <SortRow label="Time Since Last Restart" column="uptime" systemStatusData={systemStatusData} generateRowsData={generateRowsData} />,
+  },
+  {
+    id: 'last_restart',
+    label: 'Last Restart',
+    content: <SortRow label="Last Restart" column="lastRestart" systemStatusData={systemStatusData} generateRowsData={generateRowsData} />,
+  },
   { id: 'actions', label: 'Actions' },
 ];
 

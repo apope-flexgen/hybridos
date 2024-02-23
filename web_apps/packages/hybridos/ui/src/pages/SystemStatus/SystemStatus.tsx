@@ -1,7 +1,7 @@
 import {
   Box, ThemeType, PageLoadingIndicator,
 } from '@flexgen/storybook';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import QueryService from 'src/services/QueryService';
 import { useTheme } from 'styled-components';
@@ -21,7 +21,7 @@ const SystemStatus: React.FunctionComponent = () => {
   const mainBoxSx = mainContentBoxSx(theme);
   const axiosInstance = useAxiosWebUIInstance();
 
-  const handleSystemStatusData = (newDataFromSocket: SystemStatusObject) => {
+  const handleSystemStatusData = useCallback((newDataFromSocket: SystemStatusObject) => {
     if (!newDataFromSocket) return;
     setSystemStatusData((prevState) => {
       const tempArray = prevState;
@@ -35,7 +35,7 @@ const SystemStatus: React.FunctionComponent = () => {
       // else, just append new service to the end of the data
       return [...prevState, newDataFromSocket];
     });
-  };
+  }, []);
 
   useEffect(() => {
     QueryService.getSystemStatus(handleSystemStatusData);
