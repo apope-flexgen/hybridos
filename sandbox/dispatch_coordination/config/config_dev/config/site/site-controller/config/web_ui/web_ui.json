@@ -14,6 +14,7 @@
     "site_name": "Durham",
     "solar": false,
     "system_status": true,
+    "site_status_bar": true,
     "timezone": "America/Chicago",
     "tracker": false,
     "units": {

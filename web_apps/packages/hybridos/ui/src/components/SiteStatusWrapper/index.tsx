@@ -1,17 +1,12 @@
-import { Box, SiteStatusBar, ThemeType } from '@flexgen/storybook';
+import { SiteStatusBar } from '@flexgen/storybook';
 import { DataProps } from '@flexgen/storybook/dist/components/PlatformSpecific/HosControl/SiteStatusBar/Status';
 import { useState, useEffect, useCallback } from 'react';
-import { generateSiteStatusSx } from 'src/components/SiteStatusWrapper/siteStatus.styles';
 import QueryService from 'src/services/QueryService';
-import { useTheme } from 'styled-components';
 
 // FIXME: where should this live?
 export type SiteStateEnum = 'Init' | 'Ready' | 'Startup' | 'Running' | 'Shutdown' | 'Error';
 
 const SiteStatusWrapper = () => {
-  const theme = useTheme() as ThemeType;
-  const siteStatusSx = generateSiteStatusSx(theme);
-
   const [activeFaults, setActiveFaults] = useState(0);
   const [activeAlarms, setActiveAlarms] = useState(0);
   const [siteState, setSiteState] = useState<SiteStateEnum | undefined>(undefined);
@@ -53,15 +48,13 @@ const SiteStatusWrapper = () => {
   }, [handleNewMessage]);
 
   return (
-    <Box sx={siteStatusSx}>
-      <SiteStatusBar
-        activeAlarms={activeAlarms}
-        activeFaults={activeFaults}
-        data={data}
-        siteName={siteStatusLabel || ''}
-        siteStatus={siteState || ''}
-      />
-    </Box>
+    <SiteStatusBar
+      activeAlarms={activeAlarms}
+      activeFaults={activeFaults}
+      data={data}
+      siteName={siteStatusLabel || ''}
+      siteStatus={siteState || ''}
+    />
   );
 };
 

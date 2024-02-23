@@ -264,7 +264,7 @@ importers:
       '@babel/plugin-proposal-nullish-coalescing-operator': ^7.18.6
       '@babel/plugin-proposal-optional-chaining': ^7.18.9
       '@cypress/webpack-dev-server': ^3.2.2
-      '@flexgen/storybook': ^0.2.224
+      '@flexgen/storybook': ^0.2.229
       '@mui/lab': ^5.0.0-alpha.117
       '@mui/material': ^5.11.13
       '@mui/system': ^5.11.13
@@ -319,7 +319,7 @@ importers:
     dependencies:
       '@babel/plugin-proposal-nullish-coalescing-operator': 7.18.6
       '@babel/plugin-proposal-optional-chaining': 7.21.0
-      '@flexgen/storybook': 0.2.224_4xtjz2lzknrfvf6xatpvzjkoji
+      '@flexgen/storybook': 0.2.229_4xtjz2lzknrfvf6xatpvzjkoji
       '@mui/lab': 5.0.0-alpha.126_3s4dnupztyagn6qsu5ojimuy6y
       '@mui/material': 5.12.0_puuzjadfv64tjpjwi3qllwuniy
       '@mui/system': 5.12.0_aoxwbmlfj6hwnimj5m3kry62qm
@@ -3550,8 +3550,8 @@ packages:
     resolution: {integrity: sha512-K7tGdKszZob1sLUSnqYAplf11pjVmTrKcSTiwz2m6seLNJSbCEv+JBgNplXG2Io/9U7ufYYZ3Rv0Gt/cX7m5vA==, tarball: '@flexgen/fims/-/@flexgen/fims-1.4.0.tgz'}
     dev: false
 
-  /@flexgen/storybook/0.2.224_4xtjz2lzknrfvf6xatpvzjkoji:
-    resolution: {integrity: sha512-CwQ8bnFzLNKEljlBfXlKAkJ01bo4sbLfILSHejfP42tntp9H2ansv9YwYZ+kGEal1AZcmXiZhonG3csaeHHacg==, tarball: '@flexgen/storybook/-/@flexgen/storybook-0.2.224.tgz'}
+  /@flexgen/storybook/0.2.229_4xtjz2lzknrfvf6xatpvzjkoji:
+    resolution: {integrity: sha512-nLT4BmxTEvLlBiu/SEwMu/qEfShRZ2W5pxCOS4zQta6fI1m/B/yEffOR7G+XwRCsKzA0gtDf85nM05z15buF5Q==, tarball: '@flexgen/storybook/-/@flexgen/storybook-0.2.229.tgz'}
     dependencies:
       '@emotion/react': 11.10.6_aoxwbmlfj6hwnimj5m3kry62qm
       '@emotion/styled': 11.10.6_khgiysqzv5tamvgmw5bnwiu5gi
@@ -21258,6 +21258,7 @@ packages:
 
   /workbox-google-analytics/6.5.4:
     resolution: {integrity: sha512-8AU1WuaXsD49249Wq0B2zn4a/vvFfHkpcFfqAFHNHwln3jK9QUYmzdkKXGIZl9wyKNP+RRX30vcgcyWMcZ9VAg==}
+    deprecated: It is not compatible with newer versions of GA starting with v4, as long as you are using GAv3 it should be ok, but the package is not longer being maintained
     dependencies:
       workbox-background-sync: 6.5.4
       workbox-core: 6.5.4
