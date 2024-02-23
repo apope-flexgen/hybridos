@@ -85,7 +85,7 @@ def validate_pubs_silent(timeout: int, uri: Union[str, None] = None) -> Union[li
             if reply.contains_action_pub():
                 assert False
 
-def validate_action_pubs(uri: Union[str, None] = None, expected_info: Union[List[listen_reply_validator], None] = None, start: Union[str, None] = None, abort_on_step: Union[str, None] = None, set_SoC_on_step: Union[tuple, None] = None, ignore_step:Union[str, None] = None, action_name: Union[str, None] = None) -> Union[listen_reply, None]:
+def validate_action_pubs(uri: Union[str, None] = None, expected_info: Union[List[listen_reply_validator], None] = None, start: Union[str, None] = None, abort_on_step: Union[str, None] = None, set_SoC_on_step: Union[tuple, None] = None, ignore_step:Union[str, None] = None, action_name: Union[str, None] = None, exit_maint_mode_step: Union[str, None] = None) -> Union[listen_reply, None]:
     """ Listen to pubs and ensure they behave as expected. 
     Parameter definitions:
         uri: if provided listen to a specific uri
@@ -143,6 +143,10 @@ def validate_action_pubs(uri: Union[str, None] = None, expected_info: Union[List
                                 fims_set("/assets/ess/ess_1/actions/Calibration1/stop", True)
                             if set_SoC_on_step is not None and reply.body['actions'][action_name]['step_name'] == set_SoC_on_step[0]: 
                                 fims_set("/components/ess_psm/bms_soc", set_SoC_on_step[1])
+                            if exit_maint_mode_step is not None and reply.body['actions'][action_name]['step_name'] == exit_maint_mode_step: 
+                                fims_set("/assets/ess/ess_1/maint_mode", False)
+                                proc.kill()
+                                proc.wait()
 
                             info_index = info_index + 1
 
@@ -535,7 +539,6 @@ def test_failed_automated_action(test):
 # This test will put an ESS in maint_mode and then 
 # call an automated action that contains a test alarm
 # ensure the alarm shows up
-
 test6 = []
 test6.append(listen_reply_validator(path_name="ESS Calibration 4", step_name="Pub Alarm", status="In Progress"))
 
@@ -594,3 +597,82 @@ test6.append(listen_reply_validator(path_name="ESS Calibration 4", step_name="Pu
 def test_alarm_automated_action(test):
     return test
 
+# This test will put an ESS in maint_mode and then 
+# call an automated action 
+# However we will then exit maint_mode while the action is running. 
+# This should reset the action and clear it's state.
+# We will then re-enter maint and run the action and make sure it
+# starts at the first step. (aka was actually reset)
+test7 = []
+test7.append(listen_reply_validator(path_name="ESS Calibration", step_name="Start ESS", status="In Progress"))
+test7.append(listen_reply_validator(path_name="ESS Calibration", step_name="Setup limits", status="In Progress"))
+test7.append(listen_reply_validator(path_name="ESS Calibration", step_name="Enable limits", status="In Progress"))
+test7.append(listen_reply_validator(path_name="ESS Calibration", step_name="Set Maint Active Power", status="In Progress"))
+# issue exit maint_mode
+
+@ fixture
+@ parametrize("test", [
+    # place all assets in maint_mode
+    Setup(
+        "Test maint mode interactions",
+        {
+            **Steps.config_dev_place_assets_in_maint(),
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/maint_mode", True),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_1/maint_mode", True),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/gen_1/maint_mode", True),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_2/maint_mode", True),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_2/maint_mode", True),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/status", "Running"),
+        ]
+    ),
+    Steps(
+        {
+        },
+        [
+        ],
+        pre_lambda=[
+            # starts the action in function so we can start listening before the first pub
+            lambda: validate_action_pubs(uri="/assets/ess/ess_1", expected_info=test7, ignore_step="Charge to 80%", start="/assets/ess/ess_1/actions/Calibration1/start",
+                                         action_name="Calibration1", exit_maint_mode_step="Set Maint Active Power"),
+        ]    
+    ),
+    # re-enter maint after exiting in above lambda
+    Steps(
+        {
+            "/assets/ess/ess_1/maint_mode": True,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/maint_mode", True),
+        ]    
+    ),
+    Steps(
+        {
+        },
+        [
+        ],
+        pre_lambda=[
+            # starts the action in function so we can start listening before the first pub
+            lambda: validate_action_pubs(uri="/assets/ess/ess_1", expected_info=test1, ignore_step="Charge to 80%", start="/assets/ess/ess_1/actions/Calibration1/start", 
+                                         set_SoC_on_step=("Setup limits", 75), action_name="Calibration1"),
+        ]    
+    ),
+    # Turn off maint_mode
+    Teardown(
+        {
+            "/assets/ess/ess_1/maint_active_power_setpoint": 0,
+            "/assets/ess/ess_1/clear_faults": True,
+            **Steps.config_dev_remove_assets_from_maint(),
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/maint_mode", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_1/maint_mode", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/gen_1/maint_mode", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_2/maint_mode", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_2/maint_mode", False),
+        ]
+    )
+])
+def test_maint_mode_early_exit(test):
+    return test

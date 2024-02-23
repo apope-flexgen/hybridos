@@ -1789,11 +1789,21 @@ void Asset::process_asset_actions() {
         }
 
         // after identifying action process it.
-        if (quick_action_access != nullptr) {
+        if (quick_action_access != nullptr && this->in_maint_mode()) {
             quick_action_access->process(action_status);
             return;
-        } 
-        FPS_WARNING_LOG("Attempting to process actions but quick_action_access ptr is nullptr. Something very bad has occurred.");
+        }         
+
+        if (quick_action_access == nullptr) {
+            FPS_WARNING_LOG("Attempting to process actions but quick_action_access ptr is nullptr. Something very bad has occurred.");
+        }
+
+        if (!this->in_maint_mode()) {
+            FPS_WARNING_LOG("Asset removed from maintenance mode while an automated maintenance action is undergoing. Clearing that action. Action Name: %s",
+                    quick_action_access->sequence_name);
+            quick_action_access->clear_action(action_status);
+            action_status.current_sequence_name.clear();
+        }
     }
 }
 

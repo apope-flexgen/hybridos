@@ -26,7 +26,7 @@ from pytests.cases.standalone_fr import test_pfr_untracked_load, test_pfr_offset
 from pytests.cases.maint_mode import test_min_charge_discharge, test_maint_soc_limits, test_maint_cell_volt_limits, test_maint_rack_volt_limits
 from pytests.cases.ess_calibration import test_ess_cali
 from pytests.cases.enable_flags import test_enable_flags
-from pytests.cases.automated_actions import test_completed_automated_action, test_aborted_automated_action, test_silent_automated_action, test_path_switch_automated_action, test_failed_automated_action, test_alarm_automated_action
+from pytests.cases.automated_actions import test_completed_automated_action, test_aborted_automated_action, test_silent_automated_action, test_path_switch_automated_action, test_failed_automated_action, test_alarm_automated_action, test_maint_mode_early_exit
 
 # Test runner AKA main() for each individual test
 @ parametrize("current_test", [
@@ -97,7 +97,8 @@ from pytests.cases.automated_actions import test_completed_automated_action, tes
     test_silent_automated_action,
     test_path_switch_automated_action,
     test_failed_automated_action,
-    test_alarm_automated_action
+    test_alarm_automated_action,
+    test_maint_mode_early_exit
     #
     # config_dev_slow_slews
     # TODO find a way to make these tests run automatically under different configs rather than just commenting out :(
