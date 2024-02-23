@@ -5,6 +5,59 @@
     "data": [
         {
             "info": {
+              "baseURI": "",
+              "batteryView": true,
+              "batteryViewSourceURI": "/assets",
+              "batteryViewURI": "/soc",
+              "isTemplate": true,
+              "items": [
+                {
+                  "name": "ESS 1",
+                  "uri": "/ess/ess_1"
+                },
+                {
+                  "name": "ESS 2",
+                  "uri": "/ess/ess_2"
+                }
+              ],
+              "name": "ESS Blocks",
+              "sourceURIs": [
+                "/assets"
+              ]
+            },
+            "status": [
+              {
+                "name": "Active Power",
+                "scalar": "1000",
+                "sourceURI": "/assets",
+                "units": "MW",
+                "uri": "/active_power"
+              },
+              {
+                "name": "Reactive Power",
+                "scalar": "1000",
+                "sourceURI": "/assets",
+                "units": "MVAR",
+                "uri": "/reactive_power"
+              },
+              {
+                "name": "Apparent Power",
+                "scalar": "1000",
+                "sourceURI": "/assets",
+                "units": "MVA",
+                "uri": "/apparent_power"
+              },
+              {
+                "name": "SOC",
+                "scalar": "1",
+                "sourceURI": "/assets",
+                "units": "%",
+                "uri": "/soc"
+              }
+            ]
+        },
+        {
+            "info": {
                 "baseURI": "/summary",
                 "batteryView": false,
                 "batteryViewSourceURI": null,

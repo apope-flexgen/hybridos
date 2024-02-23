@@ -3,25 +3,18 @@
 import { Box, CardContainer, CardRow, DataTable, Progress, Typography } from '@flexgen/storybook';
 import { useState, useEffect, useCallback } from 'react';
 import {
-  ColumnData,
   TableDashboardDataTableDTO,
-  RowData,
-  BatteryViewData,
+  DataTablesState,
 } from 'shared/types/dtos/dataTables.dto';
-
 import QueryService from 'src/services/QueryService';
 import { batteryViewBoxSx, tableBoxSx } from './tableDashboard.styles';
-
-type DataTablesState = {
-  [dataTableName: string]: {
-    columns: ColumnData[];
-    rows: RowData[];
-    batteryViewData: BatteryViewData[];
-  };
-};
+import useGenerateDashboardTable from 'src/pages/ConfigurablePages/Dashboard/TableDashboard/hooks/useGenerateTable';
+import { tableColumns } from 'src/pages/ConfigurablePages/Dashboard/TableDashboard/TableDashboard.helpers';
 
 const TableDashboard = () => {
   const [dataTables, setDataTables] = useState<DataTablesState>({});
+
+  const { generateRowsData, results } = useGenerateDashboardTable();
 
   const handleDataFromSocket = useCallback((newDataFromSocket: TableDashboardDataTableDTO) => {
     setDataTables((prevDataTables) => {
@@ -34,36 +27,25 @@ const TableDashboard = () => {
             dataTableInfo.batteryViewData === undefined
               ? prevDataTables[name]?.batteryViewData
               : (() => {
-                  let oldBatteryViewData = prevDataTables[name]?.batteryViewData ?? [];
-                  dataTableInfo.batteryViewData?.forEach((newBatteryDataPoint) => {
-                    oldBatteryViewData = oldBatteryViewData.filter(
-                      (oldBatteryDataPoint) =>
-                        oldBatteryDataPoint.label !== newBatteryDataPoint.label,
-                    );
-                    oldBatteryViewData.push(newBatteryDataPoint);
-                  });
-                  return oldBatteryViewData;
-                })();
+                let oldBatteryViewData = prevDataTables[name]?.batteryViewData ?? [];
+                dataTableInfo.batteryViewData?.forEach((newBatteryDataPoint) => {
+                  oldBatteryViewData = oldBatteryViewData.filter(
+                    (oldBatteryDataPoint) =>
+                      oldBatteryDataPoint.label !== newBatteryDataPoint.label,
+                  );
+                  oldBatteryViewData.push(newBatteryDataPoint);
+                });
+                return oldBatteryViewData;
+              })();
           batteryViewData.sort((a, b) =>
             a.label.localeCompare(b.label, undefined, { numeric: true }),
           );
 
-          const rows = (() => {
-            let oldRows = prevDataTables[name]?.rows ?? [];
-            dataTableInfo.rows?.forEach((newRow) => {
-              columns.forEach((column) => {
-                newRow[column.id] = String(newRow?.[column.id] ?? '-');
-              });
-              oldRows = oldRows.filter((oldRow) => oldRow.id !== newRow.id);
-              oldRows.push(newRow);
-            });
-            return oldRows;
-          })();
-          rows.sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+          generateRowsData(name, columns, dataTableInfo.rows ?? []);
+
           acc[name] = {
             columns: columns,
-            rows,
-            batteryViewData,
+            batteryViewData
           };
           return acc;
         },
@@ -81,9 +63,11 @@ const TableDashboard = () => {
       QueryService.cleanupSocket();
     };
   }, []);
-  
-  const renderedDataTables = Object.entries(dataTables).map(([dataTableName, dataTableInfo]) => (
-    <Box key={dataTableName} sx={{ width: '100%' }}>
+
+  const renderedDataTables = Object.entries(dataTables).map(([dataTableName, dataTableInfo]) => {
+    const renderedColumns = tableColumns(dataTableName, dataTableInfo.columns, results[dataTableName], generateRowsData);
+
+    return (<Box key={dataTableName} sx={{ width: '100%' }}>
       <CardContainer direction='column' styleOverrides={{ paddingTop: '12px', width: '100%' }}>
         <CardRow>
           <Typography text={dataTableName} variant='headingS' />
@@ -105,20 +89,20 @@ const TableDashboard = () => {
         </Box>
         <Box sx={{ width: '100%' }}>
           <DataTable
-            columns={dataTableInfo.columns}
+            columns={renderedColumns}
             dense
             pagination
             rowsPerPage={[20, 10, 5]}
-            rowsData={dataTableInfo.rows}
+            rowsData={results[dataTableName] || []}
           />
         </Box>
       </CardContainer>
-    </Box>
-  ));
+    </Box>)
+  });
 
   return (
     <Box sx={tableBoxSx}>
-    {renderedDataTables}
+      {renderedDataTables}
     </Box>
   );
 };

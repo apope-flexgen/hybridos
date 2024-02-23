@@ -18,3 +18,9 @@ export const batteryViewBoxSx = {
   gap: '12px',
   padding: '24px',
 };
+
+export const sortedTableHeaderSx = {
+  display: 'flex',
+  gap: '2px',
+  alignItems: 'center',
+};

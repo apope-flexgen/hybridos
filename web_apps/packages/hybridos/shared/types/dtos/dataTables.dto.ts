@@ -11,6 +11,13 @@ export type DataTableDTO = {
   batteryViewData?: BatteryViewData[];
 };
 
+export type DataTablesState = {
+  [dataTableName: string]: {
+    columns: ColumnData[];
+    batteryViewData: BatteryViewData[];
+  };
+};
+
 export type ColumnData = {
   id: string;
   label: string;
