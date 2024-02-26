@@ -19,6 +19,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/pkg/sftp"
 )
 
 // Request for a specific file to be transferred
@@ -141,9 +142,15 @@ func (serv *server) handleTransferRequest(cl *client, request transferRequest) (
 		log.Debugf("S3 uploading %s to %s from %s.", request.fileName, serv.name, cl.name)
 		return uploadS3(serv.s3Uploader, request.fileName, request.srcDirPath, serv.config.Bucket, serv.config.Dir, time.Second*time.Duration(serv.config.Timeout))
 	} else if serv.config.IP != "" {
-		// remote servers require SCP
-		log.Debugf("SCPing %s to %s from %s.", request.fileName, serv.name, cl.name)
-		return scp(serv.sshPipes[cl.name], request.srcDirPath, serv.config.Dir, request.fileName)
+		if serv.config.UseSFTP {
+			// remote server transfer with SFTP
+			log.Debugf("SFTPing %s to %s from %s.", request.fileName, serv.name, cl.name)
+			return uploadSFTP(serv.sftpClients[cl.name], request.srcDirPath, serv.config.Dir, request.fileName)
+		} else {
+			// remote server transfer with SCP
+			log.Debugf("SCPing %s to %s from %s.", request.fileName, serv.name, cl.name)
+			return scp(serv.sshPipes[cl.name], request.srcDirPath, serv.config.Dir, request.fileName)
+		}
 	} else if serv.config.Sorted {
 		// local servers can optionally have their files sorted by day
 		log.Debugf("Sorted local copy %s to %s from %s.", request.fileName, serv.name, cl.name)
@@ -383,4 +390,43 @@ func uploadS3(uploader *s3manager.Uploader, filename, srcDir, bucket, destDir st
 
 	log.Tracef("result of S3: %s", res.Location)
 	return err, true
+}
+
+// Sends the given file to the given destination using SFTP protocol.
+func uploadSFTP(sftpCl *sftp.Client, srcDirPath string, destDirPath string, fileName string) (err error, retryable bool) {
+	if sftpCl == nil {
+		return fmt.Errorf("sftp client is nil"), true
+	}
+
+	// open source file
+	srcFile, err := os.Open(path.Join(srcDirPath, fileName))
+	if err != nil {
+		// the only case where the copy cannot be retried is if the source file has a problem,
+		// otherwise success depends on the connection
+		return fmt.Errorf("failed to open source file: %w", err), false
+	}
+	defer srcFile.Close()
+
+	// create destination file
+	destFilePath := filepath.Join(destDirPath, fileName)
+	destFile, err := sftpCl.OpenFile(destFilePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC) // use OpenFile() because Create() is not supported by all servers
+	if err != nil {
+		return fmt.Errorf("failed to open remote file: %w", err), true
+	}
+	// defer close on remote file and handle potential close error
+	defer func() {
+		closeErr := destFile.Close()
+		// wrap the outer function's returned error with the failure to close
+		if closeErr != nil {
+			err = fmt.Errorf("failed to close remote file with error: %v, after tried to close remote file due to error: %w", closeErr, err)
+		}
+	}()
+
+	// copy source file contents to remote file
+	_, err = io.Copy(destFile, srcFile)
+	if err != nil {
+		return fmt.Errorf("failed to copy source file to remote file: %w", err), true
+	}
+
+	return nil, true
 }

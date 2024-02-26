@@ -13,21 +13,31 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/knownhosts"
 )
 
 // A server is a destination to which files must be transferred.
-// It can be a remote server that requires an SCP to transfer the
-// file, or a local server that only requires a simple copy.
+// It can be a remote server or a local server.
+// The server struct contains any structs that might be needed to connect to the destination.
 type server struct {
 	name   string
 	config ServerConfig
+
 	// SSH components
+	// maps client names to SSH client configs used if connecting over SSH
 	sshConfigs map[string]*ssh.ClientConfig
+	// maps client names to SSH clients used if connecting over SSH
 	sshClients map[string]*ssh.Client
-	sshPipes   map[string]*sshPipe
-	// S3 components
+
+	// maps client names to SSH pipes needed when using SCP
+	sshPipes map[string]*sshPipe
+
+	// maps client names to SFTP clients which can be used on top of SSH components if SFTP is enabled
+	sftpClients map[string]*sftp.Client
+
+	// S3 uploader used if uploading to an S3 bucket
 	s3Uploader *s3manager.Uploader
 }
 
@@ -42,6 +52,9 @@ type ServerConfig struct {
 	// S3 components
 	Bucket string
 	Region string
+
+	// Set true to enable SFTP usage
+	UseSFTP bool `json:"use_sftp"`
 }
 
 type sshPipe struct {
@@ -80,8 +93,16 @@ func createServer(name string, cfg ServerConfig) (*server, error) {
 	// if not local or S3, assume SSH >>>
 	// only allocate memory for SSH connection if server is remote
 	newServer.sshConfigs = make(map[string]*ssh.ClientConfig)
-	newServer.sshPipes = make(map[string]*sshPipe)
 	newServer.sshClients = make(map[string]*ssh.Client)
+
+	if cfg.UseSFTP {
+		// if SFTP is used we also need to allocate memory for sftp clients
+		newServer.sftpClients = make(map[string]*sftp.Client)
+	} else {
+		// otherwise SSH pipes are needed
+		newServer.sshPipes = make(map[string]*sshPipe)
+	}
+
 	return newServer, nil
 }
 
@@ -139,11 +160,21 @@ func (serv *server) initConnection(cl *client) error {
 		return fmt.Errorf("could not create SSH tunnel from %s to %s: %w", cl.name, serv.name, err)
 	}
 
-	pipes, err := serv.createPipes(cl)
-	if err != nil {
-		return fmt.Errorf("could not create SSH pipe from %s to %s: %w", cl.name, serv.name, err)
+	if serv.config.UseSFTP {
+		// if using SFTP, we need to create an SFTP client on top of the SSH client
+		sftpCl, err := serv.createSFTP(cl)
+		if err != nil {
+			return fmt.Errorf("could not create SFTP client from %s to %s: %w", cl.name, serv.name, err)
+		}
+		serv.sftpClients[cl.name] = sftpCl
+	} else {
+		// otherwise, direct access to SSH pipes is needed
+		pipes, err := serv.createPipes(cl)
+		if err != nil {
+			return fmt.Errorf("could not create SSH pipe from %s to %s: %w", cl.name, serv.name, err)
+		}
+		serv.sshPipes[cl.name] = &pipes
 	}
-	serv.sshPipes[cl.name] = &pipes
 
 	return nil
 }
@@ -197,6 +228,29 @@ func (serv *server) createPipes(cl *client) (sshPipe, error) {
 	}, session.Shell()
 }
 
+// Closes any preexisting SFTP client and then creates a new SFTP client using the SSH client.
+func (serv *server) createSFTP(cl *client) (*sftp.Client, error) {
+	if serv.sshClients[cl.name] == nil {
+		err := serv.createSSH(cl)
+		if err != nil {
+			return nil, fmt.Errorf("SSH client was non-existent and failed to create one: %w", err)
+		}
+	}
+
+	if oldClient := serv.sftpClients[cl.name]; oldClient != nil {
+		err := oldClient.Close()
+		if err != nil {
+			log.Debugf("Error closing SFTP client for server %s from client %s: %v.", serv.name, cl.name, err)
+		}
+	}
+	sftpCl, err := sftp.NewClient(serv.sshClients[cl.name])
+	serv.sftpClients[cl.name] = sftpCl
+	if err != nil {
+		return nil, fmt.Errorf("SFTP client creation failed: %w", err)
+	}
+	return sftpCl, nil
+}
+
 // Asynchronously repeatedly tries to reestablish the connection until the connection is back up.
 // Returns a channel which is closed when the connection is back up.
 func (serv *server) asyncReestablishConnection(cl *client) (connectionReestablished <-chan struct{}) {
@@ -240,13 +294,23 @@ func (serv *server) reestablishConnection(cl *client) (reestablished bool) {
 			}
 		}
 
-		// create fresh SSH pipes
-		pipes, err := serv.createPipes(cl)
-		if err != nil {
-			log.Errorf("Error creating SSH pipe/session: %v.", err)
-			return false
+		if serv.config.UseSFTP {
+			// if using SFTP, we need to recreate the SFTP client on top of the SSH client
+			sftpCl, err := serv.createSFTP(cl)
+			if err != nil {
+				log.Errorf("Could not create SFTP client from %s to %s: %v", cl.name, serv.name, err)
+				return false
+			}
+			serv.sftpClients[cl.name] = sftpCl
+		} else {
+			// create fresh SSH pipes otherwise
+			pipes, err := serv.createPipes(cl)
+			if err != nil {
+				log.Errorf("Error creating SSH pipe/session: %v.", err)
+				return false
+			}
+			serv.sshPipes[cl.name] = &pipes
 		}
-		serv.sshPipes[cl.name] = &pipes
 	} else { // if server is local, check existence of server directory
 		err := ensureDirectoryExists(serv.config.Dir)
 		if err != nil {

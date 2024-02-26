@@ -1,5 +1,5 @@
 {
     "ToConsole": true,
     "ToFile": true,
-    "severityThreshold": 2
+    "severityThreshold": 1
 }

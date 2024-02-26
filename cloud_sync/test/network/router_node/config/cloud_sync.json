@@ -13,7 +13,8 @@
             "port": "22",
             "user": "root",
             "directory" : "/home/archives",
-            "timeout" : 2
+            "timeout" : 2,
+            "use_sftp": true
         },
         "local_consumer": {
             "directory" : "/home/local_consumer"

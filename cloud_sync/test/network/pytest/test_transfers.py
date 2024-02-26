@@ -101,6 +101,7 @@ def test_normal_client_local_transfers():
     '''Test that in normal conditions, client transfers files locally'''
     old_archive_count = get_archive_count(Container.CLIENT)
     time.sleep(ARCHIVE_PERIOD_SEC)
+    time.sleep(TRANSFER_DELAY_SEC)
     new_archive_count = get_archive_count(Container.CLIENT)
     assert(new_archive_count >= old_archive_count + ARCHIVES_PER_PERIOD)
 
@@ -109,6 +110,7 @@ def test_normal_router_transfers():
     '''Test that in normal conditions, router gets transfers'''
     old_archive_count = get_archive_count(Container.ROUTER)
     time.sleep(ARCHIVE_PERIOD_SEC)
+    time.sleep(TRANSFER_DELAY_SEC)
     new_archive_count = get_archive_count(Container.ROUTER)
     assert(new_archive_count >= old_archive_count + ARCHIVES_PER_PERIOD)
 
@@ -118,6 +120,7 @@ def test_disconnected_client_local_transfers():
     disconnect_via_latency(Container.ROUTER)
     old_archive_count = get_archive_count(Container.CLIENT)
     time.sleep(ARCHIVE_PERIOD_SEC)
+    time.sleep(TRANSFER_DELAY_SEC)
     new_archive_count = get_archive_count(Container.CLIENT)
     reset_latency(Container.ROUTER)
     assert(new_archive_count >= old_archive_count + ARCHIVES_PER_PERIOD)
@@ -130,6 +133,7 @@ def test_disconnected_startup_client_local_transfers():
     subprocess.run('../test_scripts/run_client_cloud_sync.sh')
     old_archive_count = get_archive_count(Container.CLIENT)
     time.sleep(ARCHIVE_PERIOD_SEC)
+    time.sleep(TRANSFER_DELAY_SEC)
     new_archive_count = get_archive_count(Container.CLIENT)
     reset_latency(Container.ROUTER)
     assert(new_archive_count >= old_archive_count + ARCHIVES_PER_PERIOD)
@@ -140,6 +144,7 @@ def test_disconnected_no_router_transfers():
     disconnect_via_latency(Container.CLIENT)
     old_archive_count = get_archive_count(Container.ROUTER)
     time.sleep(ARCHIVE_PERIOD_SEC)
+    time.sleep(TRANSFER_DELAY_SEC)
     new_archive_count = get_archive_count(Container.ROUTER)
     reset_latency(Container.CLIENT)
     assert(new_archive_count == old_archive_count)
@@ -153,6 +158,7 @@ def test_reconnect_router_immediate_transfers():
     reset_latency(Container.CLIENT)
     time.sleep(RECONNECT_ATTEMPT_PERIOD_SEC)
     time.sleep(CONNECTION_START_DELAY_SEC)
+    time.sleep(TRANSFER_DELAY_SEC)
     new_archive_count = get_archive_count(Container.ROUTER)
     assert(new_archive_count > old_archive_count)
 
@@ -166,5 +172,6 @@ def test_reconnected_startup_router_immediate_transfers():
     reset_latency(Container.CLIENT)
     subprocess.run('../test_scripts/run_client_cloud_sync.sh')
     time.sleep(CONNECTION_START_DELAY_SEC)
+    time.sleep(TRANSFER_DELAY_SEC)
     new_archive_count = get_archive_count(Container.ROUTER)
     assert(new_archive_count > old_archive_count)
