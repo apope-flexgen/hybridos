@@ -2,6 +2,7 @@
     "allowActions": true,
     "briefingFrequencyMS": 5000,
     "c2cMsgFrequencyMS": 50,
+    "connectionHangtimeAllowance": 3000,
     "controllerName": "controller 1",
     "enableRedundantFailover": false,
     "heartbeatFrequencyMS": 1000,
@@ -16,6 +17,53 @@
         "eno10"
     ],
     "processList": [
+        {
+            "name": "dbi",
+            "uri": "/dbi",
+            "allowActions": true
+        },
+        {
+            "name": "mongod",
+            "allowActions": true
+        },
+        {
+            "name": "fims",
+            "allowActions": false
+        },
+        {
+            "name": "metrics@metrics.json",
+            "uri": "/metrics",
+            "allowActions": true
+        },
+        {
+            "name": "events",
+            "uri": "/events",
+            "allowActions": true
+        },
+        {
+            "name": "cops",
+            "uri": "/cops",
+            "allowActions": false
+        },
+        {
+            "name": "influxd",
+            "allowActions": false
+        },
+        {
+            "name": "ftd",
+            "uri": "/ftd",
+            "allowActions": true
+        },
+        {
+            "name": "dts",
+            "uri": "/dts",
+            "allowActions": true
+        },
+        {
+            "name": "cloud_sync",
+            "uri": "/cloud_sync",
+            "allowActions": true
+        },
         {
             "allowActions": true,
             "configRestart": true,
@@ -45,7 +93,66 @@
                 "/cops/scheduler/configuration",
                 "/cops/scheduler/last_schedule_modification",
                 "/cops/scheduler/timezones"
-            ]
+            ],
+            "killOnHang": true,
+            "allowActions": true,
+            "requiredForHealthyStatus": true,
+            "hangTimeAllowanceMS": 3000,
+            "configRestart": true
+        },
+        { 
+            "name": "modbus_client@ess_twins_client.json",
+            "uri": "/components/ess_twins",
+            "allowActions": true,
+            "connectionStatus": true
+        }, 
+        {
+            "name": "modbus_client@ess_real_client.json",
+            "uri": "/components/ess_real_ls",
+            "allowActions": true,
+            "connectionStatus": true
+        },
+        {
+            "name": "modbus_client@bess_aux_client.json",
+            "uri": "/components/bess_aux",
+            "allowActions": true,
+            "connectionStatus": true
+        },
+        {
+            "name": "modbus_client@control_cabinet_client.json",
+            "uri": "/components/control_cabinet",
+            "allowActions": true,
+            "connectionStatus": true
+        },
+        {
+            "name": "modbus_client@shared_poi_client.json",
+            "uri": "/components/shared_poi",
+            "allowActions": true,
+            "connectionStatus": true
+        },
+        {
+            "name": "modbus_client@split_feeder_client.json",
+            "uri": "/components/split_feeder",
+            "allowActions": true,
+            "connectionStatus": true
+        },
+        {
+            "name": "modbus_client@pv_1_client.json",
+            "uri": "/components/pv_1",
+            "allowActions": true,
+            "connectionStatus": true
+        },
+        {
+            "name": "modbus_client@easygen_3500xt_client.json",
+            "uri": "/components/easygen_3500xt",
+            "allowActions": true,
+            "connectionStatus": true
+        },
+        {
+            "name": "modbus_client@pv_2_client.json",
+            "uri": "/components/pv_2",
+            "allowActions": true,
+            "connectionStatus": true
         }
     ],
     "statsPubFrequencySeconds": 1,

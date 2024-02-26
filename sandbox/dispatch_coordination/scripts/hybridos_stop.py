@@ -54,6 +54,33 @@ def pkill(keyword: str, sudo=False):
     else:
         run(['pkill', keyword, '-e'])
 
+def dkill(keyword: str):
+    '''
+    Kills systemd services using systemctl.
+    '''
+    run(['sudo', 'systemctl', 'stop', keyword])
+    run(['sudo', 'systemctl', 'disable', keyword])
+
+# Kill all systemctl services
+def stop_systemd_hybridos():
+    print('##### STOP SYSTEMD SERVICES #####')
+    dkill('cops')
+    dkill('washer')
+    dkill('dts')
+    dkill('ftd')
+    dkill('cloud_sync')
+
+    # should kill all running modbus clients
+    dkill('modbus_client') # pkill manages to kill all client services regardless of instance name
+    dkill('metrics@metrics.json')
+    dkill('events')
+    dkill('dbi')
+    dkill('scheduler')
+    dkill('site_controller')
+    dkill('influxd')
+    dkill('modbus_server')
+    dkill('fims')
+    dkill('mongod')
 
 def stop_hybridos():
     print('##### HYBRIDOS STOP #####')
@@ -100,4 +127,5 @@ def stop_hybridos():
 
 
 if __name__ == "__main__":
+    stop_systemd_hybridos()
     stop_hybridos()

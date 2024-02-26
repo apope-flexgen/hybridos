@@ -164,9 +164,16 @@ func (process *processInfo) updateDependencies() error {
 
 // Update our process control booleans each time its status updates.
 func (process *processInfo) updateEnableControls(status string) {
+	// Disable all actions for UI to read if not allowed.
+	if !process.allowActions {
+		process.enableControls.startEnabled = false
+		process.enableControls.stopEnabled = false
+		process.enableControls.restartEnabled = false
+		return
+	}
 
 	// If active, set start enable to false.
-	if strings.Contains(status, "running") {
+	if strings.Contains(status, "running") || strings.Contains(status, "activating") {
 		process.enableControls.startEnabled = false
 		process.enableControls.stopEnabled = true
 		process.enableControls.restartEnabled = true

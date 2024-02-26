@@ -16,6 +16,7 @@ from argparse import ArgumentParser, RawTextHelpFormatter
 from vsaap import launch_sites
 
 from hybridos_stop import stop_hybridos
+from hybridos_stop import stop_systemd_hybridos
 
 
 pid = os.getpid()
@@ -35,6 +36,10 @@ check_memory = False
 disable_comms = False
 service_to_debug = None
 # List of FPS-owned services
+hybridos_services = ["fims", "dbi", "metrics", "events", "scheduler", 
+                    "site_controller", "modbus_interface", "overwatch", 
+                    "ftd", "cloud_sync", "dts", "cops", "web_ui", "fleet_manager", "dnp3_interface", "echo" ]
+
 fps_services = ["site_controller", "cops", "scheduler", "ftd", "cloud_sync", "dts"]
 site_to_machine_to_config_dir = dict()
 '''
@@ -56,6 +61,8 @@ def parse_args():
     args.add_argument("--ref", type=str, required=False, default=None, help="Specify the name of a reference design config use-case to run")
     args.add_argument("--sandbox", type=str, required=False, default=None, help="Specify the name of a sandbox config use-case to run")
     args.add_argument("--init", action="store_true", help="Clear runtime configurations")
+    args.add_argument("--update", action="store_true", help="Update systemctl service files")
+    args.add_argument("--systemd", action="store_true", help="Execute enviroment using systemctl instead of MCP.")
     args.add_argument("--powercloud", action="store_true", help="Launch powercloud processes")
     args.add_argument("--memcheck", action="store_true", help="Check site controller for memory leaks")
     args.add_argument("--disable_comms", action="store_true", help="Disable modbus/dnp3 components for testing")
@@ -75,6 +82,10 @@ def parse_args():
     # Extract arguments into variables. This allows us to use arguments that may not be defined without getting an AttributeError
     global reset_setpoints
     reset_setpoints = getattr(parsed_args, "init", False)
+    global update_services
+    update_services = getattr(parsed_args, "update", False)
+    global systemd
+    systemd = getattr(parsed_args, "systemd", False)
     global launch_powercloud
     launch_powercloud = getattr(parsed_args, "powercloud", False)
     global check_memory
@@ -90,7 +101,7 @@ def parse_args():
     global config_usecase_dir
     ref_arg = getattr(parsed_args, "ref", None)
     sandbox_arg = getattr(parsed_args, "sandbox", None)
-    if ref_arg == None and sandbox_arg == None:
+    if ref_arg == None and sandbox_arg == None and update_services == None:
         error_exit("You must specify a config use-case to use.")
     elif ref_arg != None and sandbox_arg == None:
         config_usecase_dir = os.path.join(os.path.expanduser("~/git/hybridos/config/"), ref_arg, "config/")
@@ -269,7 +280,10 @@ def start_fps_service(name: str, config_src, root=False, file_document_renames: 
             print(f"Memory checking not available for {name}")
         else:
             mcp_config = memcheck_config
-    if root:
+    if systemd:
+        # Run via systemd 
+        Popen(["sudo", "systemctl", "start", name])
+    elif root:
         # Run with root privileges
         Popen(["sudo", executable, mcp_config])
     else:
@@ -281,17 +295,36 @@ def start_influx():
     if (launch_powercloud == True):
         print("starting influx")
         redirDevnull = open(os.devnull, 'w')
-        Popen(['sudo', 'influxd'], stderr=redirDevnull)
+        if systemd:
+            Popen(["sudo", "systemctl", "start", "influxd"],  stderr=redirDevnull)
+        else:
+            Popen(['sudo', 'influxd'], stderr=redirDevnull)
 
 
 def start_mongo():
     print("starting mongo")
-    Popen(['sudo', 'mongod', '--config', '/etc/mongod.conf'])
+    # stop mongod if it was enabled at startup
+    Popen(["sudo", "systemctl", "stop", "mongod"])
+    # reset mongod every time, avoid failed states on VM restarts
+    cmd = "sudo chown mongod:mongod /home/mongodb/* -R"
+    run(cmd, shell=True)  # running a shell command.
+    # Run mongod one time to initialize socket files
+    Popen(["sudo", "systemctl", "start", "mongod"])
+    time.sleep(sleeptime)
+    Popen(["sudo", "systemctl", "stop", "mongod"])
+    time.sleep(sleeptime)
+    if systemd:
+        Popen(["sudo", "systemctl", "restart", "mongod"])
+    else:
+        Popen(['sudo', 'mongod', '--config', '/etc/mongod.conf'])
 
 
 def start_fims():
     print("starting fims")
-    Popen([bin_dir + '/fims_server'])
+    if systemd:
+        Popen(["sudo", "systemctl", "start", "fims"])
+    else:
+        Popen([bin_dir + '/fims_server'])
     time.sleep(sleeptime)
 
 
@@ -299,19 +332,28 @@ def start_fims():
 def start_metrics():
     if os.path.isdir(machine_config_dir_symlink + "/metrics"):
         print("starting metrics")
-        Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_metrics.json'])
+        if systemd:
+            Popen(["sudo", "systemctl", "start", "metrics@metrics.json"])
+        else:
+            Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_metrics.json'])
 
 
 def start_events():
     if os.path.isdir(machine_config_dir_symlink + "/events"):
         print("starting events")
-        Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_events.json'])
+        if systemd:
+            Popen(["sudo", "systemctl", "start", "events"])
+        else:
+            Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_events.json'])
 
 
 def start_dbi():
     if os.path.isdir(machine_config_dir_symlink + "/dbi"):
         print("starting dbi")
-        Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_dbi.json'])
+        if systemd:
+            Popen(["sudo", "systemctl", "start", "dbi"])
+        else:
+            Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_dbi.json'])
         time.sleep(sleeptime)
 
 
@@ -395,7 +437,14 @@ def start_modbus_clients():
     if disable_comms:
         print("Modbus clients disabled for testing.")
     elif os.path.isdir(machine_config_dir_symlink + "/modbus_client"):
-        Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_modbus_client.json'])
+        if systemd:
+             # Launch modbus with systemd with dedicated instance names
+            clients = os.listdir(machine_config_dir_symlink + "/modbus_client")
+            for client in clients:
+                cmd = "sudo systemctl start modbus_client@" + client
+                run(cmd, shell=True)  # running a shell command.
+        else:
+            Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_modbus_client.json'])
         time.sleep(sleeptime)
     else:
         print("No Modbus client configuration file found.")
@@ -410,7 +459,14 @@ def start_modbus_server():
     if disable_comms:
         print("Modbus server disabled for testing.")
     elif os.path.isdir(machine_config_dir_symlink + "/modbus_server"):
-        Popen(['sudo', bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_modbus_server.json'])
+        if systemd:
+             # Launch modbus servers with systemd with dedicated instance name
+            servers = os.listdir(machine_config_dir_symlink + "/modbus_server")
+            for server in servers:
+                cmd = "sudo systemctl start modbus_server@" + server
+                run(cmd, shell=True)  # running a shell command.
+        else:
+            Popen(['sudo', bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_modbus_server.json'])
     else:
         print("No Modbus server configuration file found.")
 
@@ -481,6 +537,42 @@ def start_web_ui():
         print("starting web_server")
         Popen(['sudo', bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_web_server.json'])
 
+# Pull all current service files from hybridos/<product>/<product>.service
+# and place these files at /usr/lib/systemd/system
+def update_service_files():
+    # Always reset mongod permissions 
+    Popen(["sudo", "systemctl", "stop", "mongod"])
+    cmd = "sudo chown mongod:mongod /home/mongodb/* -R"
+    run(cmd, shell=True)  # running a shell command.
+    time.sleep(sleeptime)
+
+    # Update service files if necessary
+    if update_services:
+        print("Updating .service files...")
+        hybridos_dir = "/home/hybridos/git/hybridos"
+        target_dir = "/usr/lib/systemd/system"
+
+        # Iterate through hybridos and generate folder of files to copy
+        for root, dirs, files in os.walk(hybridos_dir):
+            for dir in dirs: 
+                # Check if our directory is a listed hybridos service
+                if dir in hybridos_services:
+                    folder = os.path.join(root, dir) 
+                    files = os.listdir(folder)
+                    if files:
+                        service_files = [file for file in files if file.endswith('.service')]
+
+                        # If .service files are found copy it
+                        if service_files:
+                            file_to_copy = os.path.join(folder, service_files[0])
+                            cmd = "sudo cp " + file_to_copy + " " + target_dir
+                            run(cmd, shell=True)  # running a shell command.
+                            print(f"File '{service_files[0]}' updated.")
+
+        # Reload systemctl daemon with updated files
+        cmd = "sudo systemctl daemon-reload"
+        run(cmd, shell=True)  # running a shell command.
+        time.sleep(sleeptime)
 
 def run_hybridos():
     read_product()
@@ -528,7 +620,9 @@ if __name__ == "__main__":
         error_exit("Error: not logged into Docker!")
 
     parse_args()
+    update_service_files()
     scan_config_directory()
     stop_hybridos()
+    stop_systemd_hybridos()
     check_environment()
     run_hybridos()
