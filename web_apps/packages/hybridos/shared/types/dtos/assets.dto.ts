@@ -3,14 +3,6 @@ export class Alarm {
   faultFields?: []
 }
 
-export class AllControl {
-  inputType: string
-  name: string
-  scalar: string
-  units: string
-  uri: string
-}
-
 export class Control {
   inputType: string
   name: string
@@ -28,7 +20,7 @@ export class Info {
   extension?: string
   range?: string[]
   faultFields?: string[]
-  hasAllControls?: boolean
+  hasBatchControls?: boolean
   hasMaintenanceActions?: boolean
   hasSummary?: boolean
   icon?: string
@@ -62,7 +54,7 @@ export class SummaryControl {
 
 export class Asset {
   alarms: Alarm
-  allControls?: AllControl[]
+  batchControls?: Control[]
   controls: Control[]
   info: Info
   statuses: Status[]

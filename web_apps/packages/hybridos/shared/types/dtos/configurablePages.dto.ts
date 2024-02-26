@@ -1,6 +1,6 @@
 export type ConfigurablePageDTO = {
   hasStatic: boolean;
-  hasAllControls?: boolean;
+  hasBatchControls?: boolean;
   hasMaintenanceActions?: boolean;
   displayGroups: {
     [displayGroupID: string]: DisplayGroupDTO;
@@ -19,6 +19,9 @@ export type DisplayGroupDTO = {
   control?: {
     [componentID: string]: ControlComponentDTO;
   };
+  batchControl?: { 
+    [componentID: string]: ControlComponentDTO;
+  }
   maintenanceActions?: {
     [componentID: string]: MaintenanceActionComponentDTO;
   }

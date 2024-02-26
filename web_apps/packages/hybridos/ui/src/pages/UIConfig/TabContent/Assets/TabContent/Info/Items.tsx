@@ -241,9 +241,9 @@ const Items = () => {
         <Checkbox
           color="primary"
           label={HAS_ALL_CONTROLS}
-          id="hasAllControls"
+          id="hasBatchControls"
           onChange={handleCheckboxChange}
-          value={!!selectedAsset?.info.hasAllControls}
+          value={!!selectedAsset?.info.hasBatchControls}
         />
       </Row>
       <Divider orientation="horizontal" variant="fullWidth" />

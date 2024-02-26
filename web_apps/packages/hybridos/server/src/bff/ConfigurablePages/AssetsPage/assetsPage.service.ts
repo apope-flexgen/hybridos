@@ -314,7 +314,7 @@ export class AssetsPageService {
       observer.next(initialSendData);
     });
 
-    const hasAllControls = dbiMetadata?.[0].info.hasAllControls;
+    const hasBatchControls = dbiMetadata?.[0].info.hasBatchControls;
     const hasMaintenanceActions = dbiMetadata?.[0].info.hasMaintenanceActions;
     let uriSpecificObservables = URIs.map((uri) => {
       return this.getUriSpecificObservable(
@@ -324,13 +324,13 @@ export class AssetsPageService {
         dbiMetadata,
         isClothedValues[uri],
         false,
-        hasAllControls,
+        hasBatchControls,
         hasMaintenanceActions,
       );
     });
 
     dbiMetadata?.forEach((metadata, index) => {
-      const hasAllControls = metadata.info.hasAllControls;
+      const hasBatchControls = metadata.info.hasBatchControls;
       if (metadata.info.hasSummary) {
         uriSpecificObservables.push(
           this.getUriSpecificObservable(
@@ -340,7 +340,7 @@ export class AssetsPageService {
             dbiMetadata,
             false,
             true,
-            hasAllControls,
+            hasBatchControls,
             hasMaintenanceActions
           )
         )
@@ -440,9 +440,10 @@ export class AssetsPageService {
     dbiMetadata: metadataFromDBI[],
   ): Promise<ConfigurablePageDTO> => {
     const hasMaintenanceActions = dbiMetadata?.[0].info.hasMaintenanceActions ? true : false;
+    const hasBatchControls = dbiMetadata?.[0].info.hasBatchControls ? true : false
     const returnWithMetadata: ConfigurablePageDTO = {
       hasStatic: true,
-      hasAllControls: dbiMetadata?.[0].info.hasAllControls ? true : false,
+      hasBatchControls: hasBatchControls,
       hasMaintenanceActions: hasMaintenanceActions,
       displayGroups: {},
     };
@@ -466,6 +467,7 @@ export class AssetsPageService {
             enableAssetPageControls,
             this.siteConfiguration,
             maintenanceActionsMetadata?.[uri],
+            hasBatchControls,
           );
 
       const displayName = summaryData[uri]['name'] ?? uri;
@@ -515,7 +517,7 @@ export class AssetsPageService {
     dbiMetadata: metadataFromDBI[],
     isClothed: boolean,
     isSummary: boolean = false,
-    hasAllControls: boolean = false,
+    hasBatchControls: boolean = false,
     hasMaintenanceActions: boolean = false,
   ): Observable<ConfigurablePageDTO> => {
     const fimsSubscribe = this.fimsService.subscribe(uri);
@@ -555,7 +557,7 @@ export class AssetsPageService {
             );
         return {
           hasStatic: false,
-          hasAllControls: hasAllControls,
+          hasBatchControls: hasBatchControls,
           hasMaintenanceActions: hasMaintenanceActions,
           displayGroups: {
             [uri]: {

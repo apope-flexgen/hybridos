@@ -3167,8 +3167,8 @@
 							}
 						]
 					},
-					"allControls": {
-						"description": "Array of all controls associated with this asset",
+					"batchControls": {
+						"description": "Array of batch controls associated with this asset",
 						"type": "array",
 						"items": {
 							"$ref": "#/components/schemas/Control"
@@ -3209,7 +3209,7 @@
 				},
 				"required": [
 					"alarms",
-					"allControls",
+					"batchControls",
 					"controls",
 					"info",
 					"statuses",

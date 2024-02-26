@@ -27,14 +27,14 @@ export interface metadataFromDBI {
     alarmFields: any[];
     faultFields: any[];
   };
-  allControls: controlDataFromNakedBody[];
   controls: controlDataFromNakedBody[];
+  batchControls?: controlDataFromNakedBody[];
   info: {
     [key: string]: any;
     assetKey: string;
     tabKey?: string | number,
     hasSummary: boolean;
-    hasAllControls?: boolean;
+    hasBatchControls?: boolean;
     hasMaintenanceActions?: boolean;
     baseURI: string;
     sourceURI: string;

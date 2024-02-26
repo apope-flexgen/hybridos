@@ -483,7 +483,7 @@ describe ('AssetsDTO', () => {
         it('validate normal', async () => {
             const testObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 info: {},
                 statuses: [],
@@ -496,7 +496,7 @@ describe ('AssetsDTO', () => {
         it('validate invalid key', async () => {
             const testObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 info: {},
                 statuses: [],
@@ -506,7 +506,7 @@ describe ('AssetsDTO', () => {
             };
             const resultObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 info: {},
                 statuses: [],
@@ -523,7 +523,7 @@ describe ('AssetsDTO', () => {
                     expect(err.getResponse().message)
                         .toEqual([
                             "alarms must be an object",
-                            "allControls must be an array",
+                            "batchControls must be an array",
                             "controls must be an array",
                             "info must be an object",
                             "statuses must be an array",
@@ -536,7 +536,7 @@ describe ('AssetsDTO', () => {
         it('validate alarms type', async () => {
             const testObj = {
                 alarms: 0,
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 info: {},
                 statuses: [],
@@ -552,7 +552,7 @@ describe ('AssetsDTO', () => {
 
         it('validate alarms empty', async () => {
             const testObj = {
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 info: {},
                 statuses: [],
@@ -566,10 +566,10 @@ describe ('AssetsDTO', () => {
                 });
         });
 
-        it('validate allControls type', async () => {
+        it('validate batchControls type', async () => {
             const testObj = {
                 alarms: {},
-                allControls: 0,
+                batchControls: 0,
                 controls: [],
                 info: {},
                 statuses: [],
@@ -579,11 +579,11 @@ describe ('AssetsDTO', () => {
             await target.transform(testObj, metadata)
                 .catch(err => {
                     expect(err.getResponse().message)
-                        .toEqual(["allControls must be an array"])
+                        .toEqual(["batchControls must be an array"])
                 });
         });
 
-        it('validate allControls empty', async () => {
+        it('validate batchControls empty', async () => {
             const testObj = {
                 alarms: {},
                 controls: [],
@@ -595,14 +595,14 @@ describe ('AssetsDTO', () => {
             await target.transform(testObj, metadata)
                 .catch(err => {
                     expect(err.getResponse().message)
-                        .toEqual(["allControls must be an array"])
+                        .toEqual(["batchControls must be an array"])
                 });
         });
 
         it('validate controls type', async () => {
             const testObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 controls: 0,
                 info: {},
                 statuses: [],
@@ -619,7 +619,7 @@ describe ('AssetsDTO', () => {
         it('validate controls empty', async () => {
             const testObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 info: {},
                 statuses: [],
                 summary: [],
@@ -635,7 +635,7 @@ describe ('AssetsDTO', () => {
         it('validate info type', async () => {
             const testObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 info: 0,
                 statuses: [],
@@ -652,7 +652,7 @@ describe ('AssetsDTO', () => {
         it('validate info empty', async () => {
             const testObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 statuses: [],
                 summary: [],
@@ -668,7 +668,7 @@ describe ('AssetsDTO', () => {
         it('validate statuses type', async () => {
             const testObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 info: {},
                 statuses: 0,
@@ -685,7 +685,7 @@ describe ('AssetsDTO', () => {
         it('validate statuses empty', async () => {
             const testObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 info: {},
                 summary: [],
@@ -701,7 +701,7 @@ describe ('AssetsDTO', () => {
         it('validate summary type', async () => {
             const testObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 info: {},
                 statuses: [],
@@ -718,7 +718,7 @@ describe ('AssetsDTO', () => {
         it('validate summary empty', async () => {
             const testObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 info: {},
                 statuses: [],
@@ -734,7 +734,7 @@ describe ('AssetsDTO', () => {
         it('validate summaryControls type', async () => {
             const testObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 info: {},
                 statuses: [],
@@ -751,7 +751,7 @@ describe ('AssetsDTO', () => {
         it('validate summaryControls empty', async () => {
             const testObj = {
                 alarms: {},
-                allControls: [],
+                batchControls: [],
                 controls: [],
                 info: {},
                 statuses: [],

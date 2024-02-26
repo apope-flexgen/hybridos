@@ -11,7 +11,7 @@ import {
 } from '@flexgen/storybook';
 import { SelectChangeEvent } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
-import { AllControl, Asset } from 'shared/types/dtos/assets.dto';
+import { Control, Asset } from 'shared/types/dtos/assets.dto';
 import { useAssetsContext } from 'src/pages/UIConfig/TabContent/Assets';
 import {
   ColumnTitles,
@@ -19,17 +19,17 @@ import {
 } from 'src/pages/UIConfig/TabContent/Assets/TabContent/styles';
 import { AddItemButtonSX, DeleteButtonContainer } from 'src/pages/UIConfig/TabContent/styles';
 import {
-  ADD_ALL_CONTROLS,
-  ALL_CONTROLS,
-  DELETE_ALL_CONTROLS,
+  ADD_BATCH_CONTROLS,
+  BATCH_CONTROLS,
+  DELETE_BATCH_CONTROLS,
   items,
-  newAllControl,
+  newBatchControl,
 } from './helpers/constants';
 
-const AllControls = () => {
+const BatchControls = () => {
   const { selectedAsset, setSelectedAsset } = useAssetsContext();
   const [expanded, setExpanded] = useState(
-    selectedAsset?.allControls && selectedAsset?.allControls.length ? [0] : [],
+    selectedAsset?.batchControls && selectedAsset?.batchControls.length ? [0] : [],
   );
 
   const handleAdd = () => {
@@ -37,10 +37,10 @@ const AllControls = () => {
       (prevSelectedAsset) =>
         ({
           ...prevSelectedAsset,
-          allControls: [...(prevSelectedAsset?.allControls || []), newAllControl],
+          batchControls: [...(prevSelectedAsset?.batchControls || []), newBatchControl],
         } as Asset),
     );
-    setExpanded((prevExpanded) => [...prevExpanded, selectedAsset?.allControls?.length || 0]);
+    setExpanded((prevExpanded) => [...prevExpanded, selectedAsset?.batchControls?.length || 0]);
   };
 
   const handleExpand = (index: number, exp: boolean) => {
@@ -60,56 +60,54 @@ const AllControls = () => {
       target: { id, value, name },
     } = event;
     setSelectedAsset((prevSelectedAsset) => {
-      if (prevSelectedAsset?.allControls === undefined) return prevSelectedAsset;
+      if (prevSelectedAsset?.batchControls === undefined) return prevSelectedAsset;
 
-      const allControls = prevSelectedAsset?.allControls.map((allControl, i) => {
+      const batchControls = prevSelectedAsset?.batchControls.map((batchControl, i) => {
         if (i === index) {
           return {
-            ...allControl,
+            ...batchControl,
             [id || name]: value,
           };
         }
-        return allControl;
+        return batchControl;
       });
 
       return {
         ...prevSelectedAsset,
-        allControls,
+        batchControls,
       } as Asset;
     });
   };
 
   const handleDelete = (index: number) => {
     setSelectedAsset((prevSelectedAsset) => {
-      if (prevSelectedAsset?.allControls === undefined) return prevSelectedAsset;
-      const allControls = prevSelectedAsset?.allControls.filter((_, i) => i !== index);
+      if (prevSelectedAsset?.batchControls === undefined) return prevSelectedAsset;
+      const batchControls = prevSelectedAsset?.batchControls.filter((_, i) => i !== index);
       return {
         ...prevSelectedAsset,
-        allControls,
+        batchControls,
       } as Asset;
     });
     setExpanded((prevExpanded) => prevExpanded.filter((i) => i !== index));
   };
   const handleSelectChange = (e: SelectChangeEvent<string>, index: number) => {
-    const {
-      target: { value },
-    } = e;
+    const value = e.target.value
 
     setSelectedAsset((prevSelectedAsset) => {
-      if (prevSelectedAsset?.allControls === undefined) return prevSelectedAsset;
+      if (prevSelectedAsset?.batchControls === undefined) return prevSelectedAsset;
 
-      const allControls = prevSelectedAsset?.allControls.map((allControl, i) => {
+      const batchControls = prevSelectedAsset?.batchControls.map((batchControl, i) => {
         if (i === index) {
           return {
-            ...allControl,
+            ...batchControl,
             inputType: value,
           };
         }
-        return allControl;
+        return batchControl;
       });
       return {
         ...prevSelectedAsset,
-        allControls,
+        batchControls,
       } as Asset;
     });
   };
@@ -118,31 +116,34 @@ const AllControls = () => {
     <>
       <CardRow alignItems='center'>
         <ColumnTitles>
-          <Label color='primary' size='medium' value={ALL_CONTROLS} />
+          <Label color='primary' size='medium' value={BATCH_CONTROLS} />
         </ColumnTitles>
       </CardRow>
       <Divider orientation='horizontal' variant='fullWidth' />
-      {selectedAsset?.allControls &&
-        selectedAsset?.allControls.map((allControl, index) => (
+      {selectedAsset?.batchControls &&
+        selectedAsset?.batchControls.map((batchControl, index) => {
+          return (
           <Accordion
             expanded={expanded.includes(index)}
             expandIcon={!expanded.includes(index) ? 'Edit' : undefined}
-            heading={allControl.name || ''}
+            heading={batchControl.name || ''}
             // TODO: fix lint
             // eslint-disable-next-line react/no-array-index-key
             key={index}
             onChange={(exp) => handleExpand(index, exp)}
           >
             <TextFieldsContainer>
-              {items.map(({ key, label, helperText, select, options, type }) =>
-                select ? (
+              {items.map(({ key, label, helperText, select, options, type }) => {
+                console.log(`${key}: ${batchControl[key]}`)
+                 if (select) return (
                   <Select
                     label={label}
-                    menuItems={options.map((option) => option.text)}
+                    menuItems={options}
                     onChange={(e) => handleSelectChange(e, index)}
-                    value={allControl[key as keyof AllControl]}
+                    value={batchControl[key as keyof Control]}
                   />
-                ) : (
+                );
+                else return (
                   <TextField
                     disableLabelAnimation
                     helperText={helperText}
@@ -150,24 +151,25 @@ const AllControls = () => {
                     key={key}
                     label={label}
                     onChange={(e) => handleTextFieldChange(e, index)}
-                    value={allControl[key as keyof AllControl]}
+                    value={batchControl[key as keyof Control]}
                     type={type as 'number' | undefined}
                   />
-                ),
+                )
+              }
               )}
             </TextFieldsContainer>
             <DeleteButtonContainer>
               <MuiButton
                 color='error'
-                label={DELETE_ALL_CONTROLS}
+                label={DELETE_BATCH_CONTROLS}
                 onClick={() => handleDelete(index)}
                 variant='outlined'
               />
             </DeleteButtonContainer>
           </Accordion>
-        ))}
+        )})}
       <MuiButton
-        label={ADD_ALL_CONTROLS}
+        label={ADD_BATCH_CONTROLS}
         onClick={handleAdd}
         size='small'
         startIcon='Add'
@@ -178,4 +180,4 @@ const AllControls = () => {
   );
 };
 
-export default AllControls;
+export default BatchControls;

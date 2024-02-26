@@ -8,7 +8,7 @@ export default (): metadataFromDBI => {
             alarmFields: [],
             faultFields: [],
         },
-        allControls: [
+        batchControls: [
             {
                 inputType: 'switch',
                 name: 'Maintenance Mode',
@@ -102,7 +102,7 @@ export default (): metadataFromDBI => {
             baseURI: '/ess',
             extension: '/ess_',
             faultFields: ['faults', 'bms_fault', 'emmu_fault', 'ess_faults'],
-            hasAllControls: true,
+            hasBatchControls: true,
             hasMaintenanceActions: false,
             hasSummary: false,
             itemName: 'BESS Inverter Block',

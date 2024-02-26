@@ -14,5 +14,5 @@ export const RANGE = 'Range';
 export const FAULT_FIELDS = 'Fault Fields';
 export const HAS_SUMMARY = 'Has Summary';
 export const ENABLE_SUMMARY = 'Enable Summary';
-export const HAS_ALL_CONTROLS = 'Has All Controls';
+export const HAS_ALL_CONTROLS = 'Has Batch Controls';
 export const HAS_MAINTENANCE_ACTIONS = 'Has Maintenance Actions';

@@ -6,13 +6,27 @@
                 "alarmFields": [],
                 "faultFields": []
             },
-            "allControls": [
+            "batchControls": [
                 {
                     "inputType": "switch",
                     "name": "Maintenance Mode",
                     "scalar": "",
                     "units": "",
                     "uri": "/maint_mode"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Start",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/start"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Stop",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/stop"
                 }
             ],
             "controls": [
@@ -113,7 +127,7 @@
                     "watchdog_fault",
                     "actions_faults"
                 ],
-                "hasAllControls": true,
+                "hasBatchControls": true,
                 "hasMaintenanceActions": true,
                 "hasSummary": false,
                 "itemName": "BESS Inverter Block",
@@ -341,7 +355,6 @@
                 "alarmFields": [],
                 "faultFields": []
             },
-            "allControls": [],
             "controls": [
                 {
                     "inputType": "switch",
@@ -397,7 +410,7 @@
                     "faults",
                     "watchdog_fault"
                 ],
-                "hasAllControls": false,
+                "hasBatchControls": false,
                 "hasSummary": false,
                 "itemName": "",
                 "name": "Generator",
@@ -498,15 +511,6 @@
                 "alarmFields": [],
                 "faultFields": []
             },
-            "allControls": [
-                {
-                    "inputType": "switch",
-                    "name": "Maintenance Mode",
-                    "scalar": "",
-                    "units": "",
-                    "uri": "/maint_mode"
-                }
-            ],
             "controls": [
                 {
                     "inputType": "switch",
@@ -576,7 +580,7 @@
                     "faults",
                     "watchdog_fault"
                 ],
-                "hasAllControls": true,
+                "hasBatchControls": true,
                 "hasSummary": false,
                 "itemName": "",
                 "name": "Solar Inverter",
@@ -719,7 +723,6 @@
                 "alarmFields": [],
                 "faultFields": []
             },
-            "allControls": [],
             "controls": [
                 {
                     "inputType": "switch",
@@ -753,7 +756,6 @@
                 "faultFields": [
                     "faults"
                 ],
-                "hasAllControls": false,
                 "hasSummary": false,
                 "itemName": "POI Feeder",
                 "name": "",
@@ -884,7 +886,6 @@
                 "alarmFields": [],
                 "faultFields": []
             },
-            "allControls": [],
             "controls": [],
             "info": {
                 "alarmFields": [
@@ -897,7 +898,6 @@
                 "faultFields": [
                     "faults"
                 ],
-                "hasAllControls": false,
                 "hasSummary": false,
                 "itemName": "BESS Aux Feeder",
                 "name": "",
@@ -944,7 +944,6 @@
                 "alarmFields": [],
                 "faultFields": []
             },
-            "allControls": [],
             "controls": [],
             "info": {
                 "alarmFields": [
@@ -957,7 +956,6 @@
                 "faultFields": [
                     "faults"
                 ],
-                "hasAllControls": false,
                 "hasSummary": false,
                 "itemName": "Control Cabinet Feeder",
                 "name": "",

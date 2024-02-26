@@ -49,12 +49,12 @@ export class Asset {
     @IsObject()
     alarms: Alarm
     @ApiProperty({
-        description: AssetsDescriptions.allControls,
+        description: AssetsDescriptions.batchControls,
         type: Control,
         isArray: true,
     })
     @IsArray()
-    allControls: Control[]
+    batchControls: Control[]
     @ApiProperty({
         description: AssetsDescriptions.controls,
         type: Control,

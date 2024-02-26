@@ -26,7 +26,7 @@ export const ASSETS_POST: Assets = {
             "alarmFields": [],
             "faultFields": []
         },
-        "allControls": [],
+        "batchControls": [],
         "controls": [],
         "statuses": [
             {"name": "Active Power"         ,"uri": "/active_power"         , "units": "kW"   , "scalar": ""},
@@ -90,7 +90,7 @@ export const ASSETS_POST_DUPLICATE: Assets = {
                 "alarmFields": [],
                 "faultFields": []
             },
-            "allControls": [],
+            "batchControls": [],
             "controls": [],
             "statuses": [],
             "summaryControls": [],
@@ -114,7 +114,7 @@ export const ASSETS_POST_DUPLICATE: Assets = {
                 "alarmFields": [],
                 "faultFields": []
             },
-            "allControls": [],
+            "batchControls": [],
             "controls": [],
             "statuses": [],
             "summaryControls": [],

@@ -3,37 +3,37 @@ import { Asset } from 'shared/types/dtos/assets.dto';
 
 export const tabOptions = [
   {
-    label: 'INFO',
+    label: 'Info',
     value: 'info',
   },
   {
-    label: 'STATUSES',
+    label: 'Statuses',
     value: 'statuses',
   },
   {
-    label: 'CONTROLS',
+    label: 'Controls',
     value: 'controls',
   },
   {
-    label: 'SUMMARY',
+    label: 'Summary',
     value: 'summary',
   },
   {
-    label: 'SUMMARY CONTROLS',
+    label: 'Summary Controls',
     value: 'summaryControls',
   },
   {
-    label: 'ALL CONTROLS',
-    value: 'allControls',
+    label: 'Batch Controls',
+    value: 'batchControls',
   },
 ];
 
-export const CREATE_NEW_ASSET = 'CREATE NEW ASSET';
-export const ADD_NEW_ASSET = 'ADD NEW ASSET';
+export const CREATE_NEW_ASSET = 'Create New Asset';
+export const ADD_NEW_ASSET = 'Add New Asset';
 export const SETTING = 'Setting';
 export const VALUE = 'Value';
 export const NO_ASSETS_TO_DISPLAY = 'No Assets to display yet.';
-export const DELETE_ASSET = 'DELETE ASSET';
+export const DELETE_ASSET = 'Delete Asset';
 
 export const newAsset: Asset = {
   info: {
@@ -43,7 +43,7 @@ export const newAsset: Asset = {
     alarmFields: [],
     faultFields: [],
   },
-  allControls: [],
+  batchControls: [],
   controls: [],
   statuses: [],
   summary: [],

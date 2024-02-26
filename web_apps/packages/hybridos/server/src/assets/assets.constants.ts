@@ -7,7 +7,7 @@ export const AssetsDescriptions = {
     statuses: 'Array of statuses associated with this asset',
     info: 'Array of info objects associated with this asset',
     controls: 'Array of controls associated with this asset',
-    allControls: 'Array of all controls associated with this asset',
+    batchControls: 'Array of batch controls associated with this asset',
     alarms: 'Array of information about alarms and faults associated with this asset',
     alarmFields: 'Array of alarm fields associated with this asset',
     faultFields: 'Array of fault fields associated with this asset',

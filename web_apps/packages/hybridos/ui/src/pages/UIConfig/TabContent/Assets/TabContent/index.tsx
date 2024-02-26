@@ -1,4 +1,4 @@
-import AllControls from './AllControls';
+import BatchControls from './BatchControls';
 import Controls from './Controls';
 import Info from './Info';
 import NoAssets from './NoAssets';
@@ -18,7 +18,7 @@ const TabContent = ({ selectedTab }: TabContentProps) => {
       {selectedTab === 'controls' && <Controls />}
       {selectedTab === 'summary' && <Summary />}
       {selectedTab === 'summaryControls' && <SummaryControl />}
-      {selectedTab === 'allControls' && <AllControls />}
+      {selectedTab === 'batchControls' && <BatchControls />}
     </Container>
   );
 };

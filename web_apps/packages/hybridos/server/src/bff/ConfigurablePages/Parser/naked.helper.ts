@@ -30,6 +30,7 @@ export const parseNakedData = (
   enableAssetPageControls: boolean,
   siteConfiguration: SiteConfiguration,
   maintenanceActionsStaticData?: any,
+  hasBatchControls?: boolean,
 ): DisplayGroupDTO => {
   const displayGroupDTO: DisplayGroupDTO = {
     status: parseNakedBodyStatus(rawData, metaData, includeStatic),
@@ -40,7 +41,17 @@ export const parseNakedData = (
       includeStatic,
       enableAssetPageControls,
       siteConfiguration,
+      false
     ),
+    batchControl: hasBatchControls ? parseNakedBodyControl(
+      rawData,
+      setLockMode,
+      metaData,
+      includeStatic,
+      enableAssetPageControls,
+      siteConfiguration,
+      true,
+    ): {},
     fault: parseNakedBodyFault(rawData, metaData),
     alarm: parseNakedBodyAlarm(rawData, metaData),
     maintenanceActions: parseMaintenanceActionData(includeStatic, maintenanceActionsStaticData),
@@ -118,15 +129,17 @@ const parseNakedBodyControl = (
   includeStatic: boolean,
   enableAssetPageControls: boolean,
   siteConfiguration: SiteConfiguration,
+  isBatchControl: boolean,
 ): { [componentID: string]: ControlComponentDTO } => {
   const aggregatedDTOs: { [componentID: string]: ControlComponentDTO } = {};
+  const controlsFromMetadata = isBatchControl && metaData.batchControls?.length > 0 ? metaData.batchControls :  metaData.controls;
 
   const lockModeStatus: controlObjectForNakedBody = rawData[
     'lock_mode'
   ] as controlObjectForNakedBody;
   setLockMode(!!lockModeStatus?.value);
 
-  metaData.controls.forEach((control: controlDataFromNakedBody) => {
+  controlsFromMetadata.forEach((control: controlDataFromNakedBody) => {
     const componentID = control.uri.slice(1);
 
     if (rawData[componentID] === undefined || rawData[componentID] === null) {

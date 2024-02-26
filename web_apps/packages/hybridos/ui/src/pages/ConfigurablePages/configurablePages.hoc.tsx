@@ -73,9 +73,13 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
     const handleNewMessage = useCallback((newInformationFromSocket: any) => {
       const data = newInformationFromSocket as ConfigurablePageDTO;
 
+      // TODO: console log will be removed after this PR (520) is merged
+      // only being used to QA batch controls
+      if (data.hasStatic) console.log(data);
+
       updateStateFromNewData(data.displayGroups);
 
-      setAllControlsState(data.hasAllControls || false);
+      setAllControlsState(data.hasBatchControls || false);
       setMaintenanceActionsState(data.hasMaintenanceActions || false);
 
       if (!data.hasStatic) return;
