@@ -1,15 +1,12 @@
 package main
 
 import (
-	"bytes"
-	"encoding/gob"
 	"errors"
 	"fmt"
 	"math"
 	"os"
 	"path"
 	"path/filepath"
-	"strings"
 	"sync"
 	"time"
 
@@ -21,6 +18,10 @@ var errDbKeyNotFound error = errors.New("404")
 
 // Wrapper around a third-party database instance to be used for managing the list of servers
 // to which a client's files has failed to be sent.
+// Exposed methods allow for reading and writing to the DB as though it uses filenames as keys and
+// maps of server names to true-if-sent as values.
+// Internally, keys are a combination of filename and server name like ["filename"]servername with true-if-sent as values.
+// The keys are formatted this way so that all keys under a given filename can be found with a prefix scan.
 type databaseManager struct {
 	db      *bitcask.Bitcask
 	rwMutex sync.RWMutex // Ensures safe concurrent access (Bitcask Merge() appears to have a synchronization bug)
@@ -88,76 +89,97 @@ func (manager *databaseManager) merge() error {
 	return manager.db.Merge()
 }
 
-// Searches the key-value store for a key matching the given file name.
-// If not found, returns errDbKeyNotFound. Otherwise, returns the value
-// as a map.
+// Searches the key-value store for keys matching the given file name.
+// If none are found, returns errDbKeyNotFound. Otherwise, returns the values
+// as a map of server names to whether or not the file was sent.
 func (manager *databaseManager) Get(fileName string) (map[string]bool, error) {
 	manager.rwMutex.RLock()
 	defer manager.rwMutex.RUnlock()
 
-	valBytes, err := manager.db.Get([]byte(fileName))
-	if err != nil {
-		if errors.Is(err, bitcask.ErrKeyNotFound) {
-			return nil, errDbKeyNotFound
+	// scan for all keys under the given filename
+	valMap := map[string]bool{}
+	keyPrefix := []byte(fmt.Sprintf("[%q]", fileName))
+	keysFound := false
+	err := manager.db.Scan(keyPrefix, func(key []byte) error {
+		keysFound = true
+		val, err := manager.db.Get(key)
+		if err != nil {
+			return fmt.Errorf("failed to get value from DB: %w", err)
 		}
-		return nil, fmt.Errorf("failed to get key's value from DB: %w", err)
-	}
-	valMap, err := bytesToMap(valBytes)
+		valMap[string(key[len(keyPrefix):])] = (val[0] != 0)
+		return nil
+	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to convert value from bytes to map: %w", err)
+		return nil, fmt.Errorf("failed to scan DB: %w", err)
+	}
+	if !keysFound {
+		return nil, errDbKeyNotFound
 	}
 	return valMap, nil
 }
 
-// Converts the given map to bytes then sets the value of the given key
-// matching the given file name to the bytified map in the key-value store.
+// Sets the value of the given filename for all given servers to the given values.
+// If a server is not given in the map, then any preexisting key for that server under that filename is removed.
 func (manager *databaseManager) Set(fileName string, valMap map[string]bool) error {
 	manager.rwMutex.Lock()
 	defer manager.rwMutex.Unlock()
 
-	valBytes, err := mapToBytes(valMap)
-	if err != nil {
-		return fmt.Errorf("failed to convert map to bytes: %w", err)
+	keyPrefixString := fmt.Sprintf("[%q]", fileName)
+	keyPrefixBytes := []byte(keyPrefixString)
+	// put values for given servers under the given filename
+	for serverName, val := range valMap {
+		valBytes := []byte{0}
+		if val {
+			valBytes = []byte{1}
+		}
+		err := manager.db.Put([]byte(keyPrefixString+serverName), valBytes)
+		if err != nil {
+			return fmt.Errorf("failed to put key-value into DB: %w", err)
+		}
 	}
-
-	err = manager.db.Put([]byte(fileName), valBytes)
+	// scan for keys associated with this filename and whose servers were excluded from the set
+	keysToDelete := [][]byte{}
+	err := manager.db.Scan(keyPrefixBytes, func(key []byte) error {
+		if _, included := valMap[string(key[len(keyPrefixBytes):])]; !included {
+			keysToDelete = append(keysToDelete, key)
+		}
+		return nil
+	})
 	if err != nil {
-		return fmt.Errorf("failed to put key-value into DB: %w", err)
+		return fmt.Errorf("failed to scan DB: %w", err)
 	}
-	return nil
-}
-
-// Removes the given key from the key-value store.
-func (manager *databaseManager) Remove(key string) error {
-	manager.rwMutex.Lock()
-	defer manager.rwMutex.Unlock()
-
-	err := manager.db.Delete([]byte(key))
-	if err != nil {
-		if strings.Contains(err.Error(), "key not found") {
-			return errDbKeyNotFound
+	// remove the keys found in the scan
+	for _, key := range keysToDelete {
+		err := manager.db.Delete(key)
+		if err != nil {
+			return fmt.Errorf("failed to delete key: %w", err)
 		}
 	}
 	return nil
 }
 
-// Converts a bytified map back to a normal map.
-func bytesToMap(by []byte) (map[string]bool, error) {
-	decodedMap := map[string]bool{}
-	bytesBuff := bytes.NewBuffer(by)
-	err := gob.NewDecoder(bytesBuff).Decode(&decodedMap)
-	if err != nil {
-		return nil, err
-	}
-	return decodedMap, nil
-}
+// Removes the keys for the given filename from the key-value store.
+func (manager *databaseManager) Remove(fileName string) error {
+	manager.rwMutex.Lock()
+	defer manager.rwMutex.Unlock()
 
-// Converts a map to a byte representation for storing in a key-value pair.
-func mapToBytes(mp map[string]bool) ([]byte, error) {
-	buf := bytes.Buffer{}
-	err := gob.NewEncoder(&buf).Encode(mp)
+	// scan for all keys that match the given filename
+	keyPrefixString := fmt.Sprintf("[%q]", fileName)
+	keyPrefixBytes := []byte(keyPrefixString)
+	keysToDelete := [][]byte{}
+	err := manager.db.Scan(keyPrefixBytes, func(key []byte) error {
+		keysToDelete = append(keysToDelete, key)
+		return nil
+	})
 	if err != nil {
-		return nil, err
+		return fmt.Errorf("failed to scan DB: %w", err)
 	}
-	return buf.Bytes(), nil
+	// delete all the keys which were found in the scan
+	for _, key := range keysToDelete {
+		err := manager.db.Delete(key)
+		if err != nil {
+			return fmt.Errorf("failed to delete key: %w", err)
+		}
+	}
+	return nil
 }

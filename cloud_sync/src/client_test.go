@@ -9,35 +9,38 @@ import (
 )
 
 const testClientName = "test_client"
-const testServerName = "test_server"
+const testServerName1 = "test_server_1"
+const testServerName2 = "test_server_2"
+const testServerName3 = "test_server_3"
 const testWaitTimeout = 100 * time.Millisecond // found through trial and error to ensure tests pass consistently
 
 // Create and return a new test client.
-func createTestClient(testDirPath string) (*client, error) {
+func createTestClient(testDirPath string, serverNames []string) (*client, error) {
 	// initialize test client
 	config = Config{
 		Clients: map[string]ClientConfig{
 			testClientName: {
 				Dir:     filepath.Join(testDirPath, testClientName, "archives"),
-				Servers: []string{testServerName},
+				Servers: serverNames,
 				Ext:     ".tar.gz",
 			},
-		},
-		Servers: map[string]ServerConfig{
-			testServerName: {},
 		},
 		DbDir:             filepath.Join(testDirPath, ".cloud_sync", "db"),
 		SleepLimitSeconds: 0,
 		BufSz:             100000,
 	}
-	servers[testServerName] = &server{name: testServerName}
+	config.Servers = make(map[string]ServerConfig)
+	for _, serverName := range serverNames {
+		config.Servers[serverName] = ServerConfig{}
+		servers[serverName] = &server{name: serverName}
+	}
 	return createClient(testClientName, config.Clients[testClientName])
 }
 
 // Test that send routine uses the correct channels when a transfer has a retryable failure.
 func TestSendChannelsRetryableFailure(t *testing.T) {
 	// initialize test client
-	cl, err := createTestClient(t.TempDir())
+	cl, err := createTestClient(t.TempDir(), []string{testServerName1})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -54,7 +57,7 @@ func TestSendChannelsRetryableFailure(t *testing.T) {
 		cl.newFilesQ, testFile.Name(),
 		"sending file name to send routine")
 	req := assertChannelReceive_transferRequest(t,
-		cl.sendRequestQsToServers[testServerName],
+		cl.sendRequestQsToServers[testServerName1],
 		"waiting for transfer request from send routine")
 	assertChannelSend_transferResponse(t,
 		req.responseChannel, transferResponse{err: errors.New("Test error"), retryable: true},
@@ -64,14 +67,14 @@ func TestSendChannelsRetryableFailure(t *testing.T) {
 		"waiting for file clear request")
 	// in this case, the file should be sent to retry
 	assertChannelReceive_string(t,
-		cl.retryQ[testServerName],
+		cl.retryQ[testServerName1],
 		"waiting for retry request")
 }
 
 // Test that send routine uses the correct channels when a transfer has a non-retryable failure.
 func TestSendChannelsNonretryableFailure(t *testing.T) {
 	// initialize test client
-	cl, err := createTestClient(t.TempDir())
+	cl, err := createTestClient(t.TempDir(), []string{testServerName1})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -88,7 +91,7 @@ func TestSendChannelsNonretryableFailure(t *testing.T) {
 		cl.newFilesQ, testFile.Name(),
 		"sending file name to send routine")
 	req := assertChannelReceive_transferRequest(t,
-		cl.sendRequestQsToServers[testServerName],
+		cl.sendRequestQsToServers[testServerName1],
 		"waiting for transfer request from send routine")
 	assertChannelSend_transferResponse(t,
 		req.responseChannel, transferResponse{err: errors.New("Test error"), retryable: false},
@@ -98,14 +101,14 @@ func TestSendChannelsNonretryableFailure(t *testing.T) {
 		"waiting for file clear request")
 	// in this case, the file should not be sent to retry
 	assertTimeoutChannelReceive_string(t,
-		cl.retryQ[testServerName],
+		cl.retryQ[testServerName1],
 		"checking that there isn't a retry request")
 }
 
 // Test that send routine uses the correct channels when a transfer succeeds.
 func TestSendChannelsSuccess(t *testing.T) {
 	// initialize test client
-	cl, err := createTestClient(t.TempDir())
+	cl, err := createTestClient(t.TempDir(), []string{testServerName1})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -122,7 +125,7 @@ func TestSendChannelsSuccess(t *testing.T) {
 		cl.newFilesQ, testFile.Name(),
 		"sending file name to send routine")
 	req := assertChannelReceive_transferRequest(t,
-		cl.sendRequestQsToServers[testServerName],
+		cl.sendRequestQsToServers[testServerName1],
 		"waiting for transfer request from send routine")
 	assertChannelSend_transferResponse(t,
 		req.responseChannel, transferResponse{err: nil},
@@ -132,21 +135,21 @@ func TestSendChannelsSuccess(t *testing.T) {
 		"waiting for file clear request")
 	// in this case, the file should not be sent to retry
 	assertTimeoutChannelReceive_string(t,
-		cl.retryQ[testServerName],
+		cl.retryQ[testServerName1],
 		"checking that there isn't a retry request")
 }
 
 // Test that retry routine uses the correct channels when a transfer has a retryable failure.
 func TestRetryChannelsRetryableFailure(t *testing.T) {
 	// initialize test client
-	cl, err := createTestClient(t.TempDir())
+	cl, err := createTestClient(t.TempDir(), []string{testServerName1})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// start retry routine
-	go cl.retry(servers[testServerName])
-	defer close(cl.retryQ[testServerName])
+	go cl.retry(servers[testServerName1])
+	defer close(cl.retryQ[testServerName1])
 
 	// simulate retryable file transfer retry failure
 	testFile, err := os.Create(filepath.Join(cl.config.Dir, "error", "testFile.tar.gz"))
@@ -154,10 +157,10 @@ func TestRetryChannelsRetryableFailure(t *testing.T) {
 		t.Fatal(err)
 	}
 	assertChannelSend_string(t,
-		cl.retryQ[testServerName], testFile.Name(),
+		cl.retryQ[testServerName1], testFile.Name(),
 		"sending file name to retry routine")
 	req := assertChannelReceive_transferRequest(t,
-		cl.retryRequestQsToServers[testServerName],
+		cl.retryRequestQsToServers[testServerName1],
 		"waiting for transfer request from retry routine")
 	assertChannelSend_transferResponse(t,
 		req.responseChannel, transferResponse{err: errors.New("Test error"), retryable: true},
@@ -167,7 +170,7 @@ func TestRetryChannelsRetryableFailure(t *testing.T) {
 		cl.clearQ,
 		"checking that there isn't a file clear request")
 	req = assertChannelReceive_transferRequest(t,
-		cl.retryRequestQsToServers[testServerName],
+		cl.retryRequestQsToServers[testServerName1],
 		"waiting for 2nd transfer request from retry routine")
 	assertChannelSend_transferResponse(t,
 		req.responseChannel, transferResponse{err: nil},
@@ -177,14 +180,14 @@ func TestRetryChannelsRetryableFailure(t *testing.T) {
 // Test that retry routine uses the correct channels when a transfer has a non-retryable failure.
 func TestRetryChannelsNonretryableFailure(t *testing.T) {
 	// initialize test client
-	cl, err := createTestClient(t.TempDir())
+	cl, err := createTestClient(t.TempDir(), []string{testServerName1})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// start retry routine
-	go cl.retry(servers[testServerName])
-	defer close(cl.retryQ[testServerName])
+	go cl.retry(servers[testServerName1])
+	defer close(cl.retryQ[testServerName1])
 
 	// simulate non-retryable file transfer retry failure
 	testFile, err := os.Create(filepath.Join(cl.config.Dir, "error", "testFile.tar.gz"))
@@ -192,10 +195,10 @@ func TestRetryChannelsNonretryableFailure(t *testing.T) {
 		t.Fatal(err)
 	}
 	assertChannelSend_string(t,
-		cl.retryQ[testServerName], testFile.Name(),
+		cl.retryQ[testServerName1], testFile.Name(),
 		"sending file name to retry routine")
 	req := assertChannelReceive_transferRequest(t,
-		cl.retryRequestQsToServers[testServerName],
+		cl.retryRequestQsToServers[testServerName1],
 		"waiting for transfer request from retry routine")
 	assertChannelSend_transferResponse(t,
 		req.responseChannel, transferResponse{err: errors.New("Test error"), retryable: false},
@@ -206,21 +209,21 @@ func TestRetryChannelsNonretryableFailure(t *testing.T) {
 		cl.clearQ,
 		"checking that there isn't a clear request")
 	assertTimeoutChannelReceive_transferRequest(t,
-		cl.retryRequestQsToServers[testServerName],
+		cl.retryRequestQsToServers[testServerName1],
 		"checking that there isn't a 2nd transfer request from retry routine")
 }
 
 // Test that retry routine uses the correct channels when a transfer is successful.
 func TestRetryChannelsSuccess(t *testing.T) {
 	// initialize test client
-	cl, err := createTestClient(t.TempDir())
+	cl, err := createTestClient(t.TempDir(), []string{testServerName1})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// start retry routine
-	go cl.retry(servers[testServerName])
-	defer close(cl.retryQ[testServerName])
+	go cl.retry(servers[testServerName1])
+	defer close(cl.retryQ[testServerName1])
 
 	// simulate successful file transfer retry
 	testFile, err := os.Create(filepath.Join(cl.config.Dir, "error", "testFile.tar.gz"))
@@ -228,10 +231,10 @@ func TestRetryChannelsSuccess(t *testing.T) {
 		t.Fatal(err)
 	}
 	assertChannelSend_string(t,
-		cl.retryQ[testServerName], testFile.Name(),
+		cl.retryQ[testServerName1], testFile.Name(),
 		"sending file name to retry routine")
 	req := assertChannelReceive_transferRequest(t,
-		cl.retryRequestQsToServers[testServerName],
+		cl.retryRequestQsToServers[testServerName1],
 		"waiting for transfer request from retry routine")
 	assertChannelSend_transferResponse(t,
 		req.responseChannel, transferResponse{err: nil},
@@ -241,7 +244,7 @@ func TestRetryChannelsSuccess(t *testing.T) {
 		cl.clearQ,
 		"waiting for file clear request")
 	assertTimeoutChannelReceive_transferRequest(t,
-		cl.retryRequestQsToServers[testServerName],
+		cl.retryRequestQsToServers[testServerName1],
 		"checking that there isn't a 2nd transfer request from retry routine")
 }
 
