@@ -104,6 +104,7 @@ export const getControlOuterBoxSx = (theme: ThemeType) => ({
   top: 0,
   right: 0,
   padding: '15px',
+  paddingBottom: '52px',
 });
 
 export const getControlInnerBoxSx = (theme: ThemeType) => ({
@@ -153,4 +154,10 @@ export const statusPointsDisplaySubheaderBoxSx = { marginBottom: '12px', width: 
 
 export const maintenanceActionsBoxSx = {
   display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', padding: '24px 16px 24px 16px',
+};
+
+export const batchActionsOuterBoxSx = { display: 'flex', flexDirection: 'column', gap: '12px' };
+export const batchActionsTextBoxSx = { display: 'flex', flexDirection: 'column', gap: '4px' };
+export const assetControlOuterBoxSx = {
+  margin: '5px', display: 'flex', flexDirection: 'column', gap: '8px',
 };

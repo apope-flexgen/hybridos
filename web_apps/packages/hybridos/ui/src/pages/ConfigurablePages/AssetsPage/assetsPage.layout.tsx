@@ -21,9 +21,9 @@ export type AssetsPageLayoutProps = {
   assetState: ConfigurablePageStateStructure;
   alertState?: AlertState[string];
   componentFunctions?: DisplayGroupFunctions;
-  allControlsState?: any;
+  batchControlsState?: any;
   maintenanceActionsState?: boolean;
-  currentUser?: any;
+  assetKey?: string;
 };
 
 const Window = ({ children }: { children: React.ReactNode }) => (
@@ -65,8 +65,8 @@ const AssetsPageLayout = (props: AssetsPageLayoutProps) => {
     assetState,
     alertState,
     componentFunctions,
-    allControlsState,
-    currentUser,
+    batchControlsState,
+    assetKey,
     maintModeStatus,
     maintenanceActionsState,
   } = props;
@@ -103,8 +103,8 @@ const AssetsPageLayout = (props: AssetsPageLayoutProps) => {
         <AssetControl
           componentFunctions={componentFunctions}
           assetState={assetState}
-          allControlsState={allControlsState}
-          currentUser={currentUser}
+          batchControlsState={batchControlsState}
+          assetKey={assetKey}
         />
       )}
       maxWidth="50%"

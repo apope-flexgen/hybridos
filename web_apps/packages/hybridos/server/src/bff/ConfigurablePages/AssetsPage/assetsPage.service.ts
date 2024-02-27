@@ -41,7 +41,6 @@ export class AssetsPageService {
     enableAssetPageControls: boolean,
   ): Promise<Observable<ConfigurablePageDTO>> {
     const individualMetadataArray = await this.getIndividualMetadata(assetKey);
-
     const defaultUri = DEFAULT_URIS[assetKey];
 
     if (individualMetadataArray === null && defaultUri === undefined) {
@@ -104,7 +103,7 @@ export class AssetsPageService {
       const isClothed = !NAKED_URIS.some(nakedURI => uri.startsWith(nakedURI));
       isClothedValues = {...isClothedValues, [uri]: isClothed};
     });
-
+    
     const initialSendData = await this.getInitialSendData(
       initialRawData,
       URIs,
@@ -112,6 +111,7 @@ export class AssetsPageService {
       queryURIsArray,
       enableAssetPageControls,
       individualMetadataArray,
+      assetKey
     );
 
     return this.getMergedStream(
@@ -122,6 +122,7 @@ export class AssetsPageService {
       enableAssetPageControls,
       individualMetadataArray,
       isClothedValues,
+      assetKey
     );
   }
 
@@ -159,6 +160,7 @@ export class AssetsPageService {
           uri: '/maint_actions_ctl',
         };
 
+
         // if this asset is configured to include a control for maintenance mode
         // put the maintenance actions right after the maintenance mode control so they appear together
         const indexOfMaintMode = metadata.controls.findIndex((control) => control.name.toLowerCase() === "maintenance mode");
@@ -166,6 +168,17 @@ export class AssetsPageService {
           metadata.controls.splice(indexOfMaintMode + 1, 0, maintenanceActionControl)
         } else { 
           metadata.controls.push(maintenanceActionControl)
+        }
+
+        // if user has included a batch controls array in the config and has matintenance actions
+        // include maintenance action control on batch control array
+        if (metadata.info.hasBatchControls && metadata.batchControls) {
+          const indexOfMaintMode = metadata.batchControls.findIndex((control) => control.name.toLowerCase() === "maintenance mode");
+          if (indexOfMaintMode !== -1) {
+            metadata.batchControls.splice(indexOfMaintMode + 1, 0, maintenanceActionControl)
+          } else { 
+            metadata.batchControls.push(maintenanceActionControl)
+          }
         }
       }
   
@@ -309,6 +322,7 @@ export class AssetsPageService {
     enableAssetPageControls: boolean,
     dbiMetadata: metadataFromDBI[],
     isClothedValues: { [uri: string]: boolean },
+    assetKey: string
   ): Observable<ConfigurablePageDTO> => {
     const base = new Observable<ConfigurablePageDTO>((observer) => {
       observer.next(initialSendData);
@@ -316,6 +330,7 @@ export class AssetsPageService {
 
     const hasBatchControls = dbiMetadata?.[0].info.hasBatchControls;
     const hasMaintenanceActions = dbiMetadata?.[0].info.hasMaintenanceActions;
+
     let uriSpecificObservables = URIs.map((uri) => {
       return this.getUriSpecificObservable(
         uri,
@@ -326,6 +341,7 @@ export class AssetsPageService {
         false,
         hasBatchControls,
         hasMaintenanceActions,
+        assetKey
       );
     });
 
@@ -341,7 +357,8 @@ export class AssetsPageService {
             false,
             true,
             hasBatchControls,
-            hasMaintenanceActions
+            hasMaintenanceActions,
+            assetKey
           )
         )
       }
@@ -438,12 +455,15 @@ export class AssetsPageService {
     baseURIsArray: string[],
     enableAssetPageControls: boolean,
     dbiMetadata: metadataFromDBI[],
+    assetKey: string,
   ): Promise<ConfigurablePageDTO> => {
     const hasMaintenanceActions = dbiMetadata?.[0].info.hasMaintenanceActions ? true : false;
     const hasBatchControls = dbiMetadata?.[0].info.hasBatchControls ? true : false
+
     const returnWithMetadata: ConfigurablePageDTO = {
       hasStatic: true,
       hasBatchControls: hasBatchControls,
+      assetKey: assetKey,
       hasMaintenanceActions: hasMaintenanceActions,
       displayGroups: {},
     };
@@ -519,6 +539,7 @@ export class AssetsPageService {
     isSummary: boolean = false,
     hasBatchControls: boolean = false,
     hasMaintenanceActions: boolean = false,
+    assetKey: string,
   ): Observable<ConfigurablePageDTO> => {
     const fimsSubscribe = this.fimsService.subscribe(uri);
 
@@ -529,6 +550,7 @@ export class AssetsPageService {
         // send action data to frontend
         // otherwise, send empty object
         const maintenanceActions = hasMaintenanceActions ? event.body.actions || {} : {};
+
 
         const parsedData = isSummary
           ? parseSummaryData(
@@ -558,6 +580,7 @@ export class AssetsPageService {
         return {
           hasStatic: false,
           hasBatchControls: hasBatchControls,
+          assetKey: assetKey,
           hasMaintenanceActions: hasMaintenanceActions,
           displayGroups: {
             [uri]: {

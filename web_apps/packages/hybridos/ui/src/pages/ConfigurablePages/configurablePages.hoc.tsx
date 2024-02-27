@@ -4,6 +4,7 @@
 import { PageLoadingIndicator } from '@flexgen/storybook';
 import { useCallback, useEffect, useState } from 'react';
 import { ConfigurablePageDTO } from 'shared/types/dtos/configurablePages.dto';
+import BatchSelectProvider from 'src/pages/ConfigurablePages/contexts/BatchSelectContext';
 import { PageProps } from 'src/pages/PageTypes';
 import QueryService from 'src/services/QueryService';
 import { getUpdatedComponentFunctions, getUpdatedStates } from './configurablePages.helpers';
@@ -15,12 +16,12 @@ import {
 } from './configurablePages.types';
 
 export interface ConfigurablePagesProps extends PageProps {
-  componentState: ConfigurablePageStateStructure;
+  componentState: { [key: string]: ConfigurablePageStateStructure };
   alertState: AlertState;
   componentFunctions: {
     [displayGroupID: string]: DisplayGroupFunctions;
   };
-  allControlsState?: any;
+  batchControlsState?: any;
   maintModeState?: MaintModeState;
   maintenanceActionsState?: any;
 }
@@ -29,8 +30,8 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
   WrappedComponent: (props: T) => JSX.Element,
   pageName: string,
 ) => (props: Omit<T, keyof ConfigurablePagesProps>) => {
-    const [componentState, setComponentState] = useState<ConfigurablePageStateStructure>({});
-    const [allControlsState, setAllControlsState] = useState<boolean>(false);
+    const [componentState, setComponentState] = useState<{ [key: string]: ConfigurablePageStateStructure }>({});
+    const [batchControlsState, setBatchControlsState] = useState<boolean>(false);
     const [maintenanceActionsState, setMaintenanceActionsState] = useState<boolean>(false);
     const [alertState, setAlertState] = useState<AlertState>({});
     const [maintModeState, setMaintModeState] = useState<MaintModeState>({});
@@ -40,9 +41,9 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
       [displayGroupID: string]: DisplayGroupFunctions;
     }>({});
 
-    const updateStateFromNewData = (data: ConfigurablePageDTO['displayGroups']) => {
+    const updateStateFromNewData = (data: ConfigurablePageDTO['displayGroups'], assetKey: string) => {
       const [
-        updatedComponentState,
+        ,
         updatedAlertState,
         updatedMaintModeState,
       ] = getUpdatedStates(data);
@@ -52,10 +53,13 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
         ...updatedMaintModeState,
       }));
 
-      setComponentState((prevComponentState) => ({
-        ...prevComponentState,
-        ...updatedComponentState,
-      }));
+      setComponentState((prevComponentState) => {
+        const [updatedComponentState] = getUpdatedStates(data, prevComponentState[assetKey]);
+        return ({
+          ...prevComponentState,
+          [assetKey]: { ...prevComponentState[assetKey], ...updatedComponentState },
+        });
+      });
 
       setAlertState((prevAlertState) => ({
         ...prevAlertState,
@@ -64,22 +68,15 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
     };
 
     const updateComponentFunctionsFromNewData = (data: ConfigurablePageDTO['displayGroups']) => {
-      const updatedComponentFunctions = getUpdatedComponentFunctions(data);
-
-      setComponentFunctions(updatedComponentFunctions);
+      setComponentFunctions(getUpdatedComponentFunctions(data));
       setIsLoading(false);
     };
 
     const handleNewMessage = useCallback((newInformationFromSocket: any) => {
       const data = newInformationFromSocket as ConfigurablePageDTO;
+      updateStateFromNewData(data.displayGroups, data.assetKey || '');
 
-      // TODO: console log will be removed after this PR (520) is merged
-      // only being used to QA batch controls
-      if (data.hasStatic) console.log(data);
-
-      updateStateFromNewData(data.displayGroups);
-
-      setAllControlsState(data.hasBatchControls || false);
+      setBatchControlsState(data.hasBatchControls || false);
       setMaintenanceActionsState(data.hasMaintenanceActions || false);
 
       if (!data.hasStatic) return;
@@ -102,18 +99,18 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
     }, [handleNewMessage, props]);
 
     return (
-      <>
+      <BatchSelectProvider>
         <PageLoadingIndicator isLoading={isLoading} type="primary" />
         <WrappedComponent
           {...(props as T)}
-          allControlsState={allControlsState}
+          batchControlsState={batchControlsState}
           maintModeState={maintModeState}
           maintenanceActionsState={maintenanceActionsState}
           componentState={componentState}
           alertState={alertState}
           componentFunctions={componentFunctions}
         />
-      </>
+      </BatchSelectProvider>
     );
   };
 

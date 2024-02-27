@@ -12,10 +12,10 @@ const AssetsPage = (props: AssetsPageProps) => {
     componentState,
     alertState,
     componentFunctions,
-    allControlsState,
+    batchControlsState,
     maintenanceActionsState,
     maintModeState,
-    currentUser,
+    assetKey,
   } = props;
 
   useEffect(() => {
@@ -84,15 +84,15 @@ const AssetsPage = (props: AssetsPageProps) => {
 
   return (
     <AssetsPageLayout
-      allControlsState={allControlsState}
+      batchControlsState={batchControlsState}
       maintenanceActionsState={maintenanceActionsState}
       componentFunctions={componentFunctions[tabValue]}
       handleTabChange={handleTabChange}
       tabComponents={tabComponents}
       tabValue={tabValue}
-      assetState={componentState}
+      assetState={componentState[assetKey]}
       alertState={alertState[tabValue]}
-      currentUser={currentUser}
+      assetKey={assetKey}
       maintModeStatus={maintModeState?.[tabValue]}
     />
   );

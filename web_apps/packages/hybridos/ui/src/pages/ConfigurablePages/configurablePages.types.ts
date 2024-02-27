@@ -39,10 +39,16 @@ export type ConfigurableComponentFunction = (
   assetState: ConfigurablePageStateStructure
 ) => JSX.Element;
 
+export type ConfigurableBatchControlComponentFunction = (
+  assetState: ConfigurablePageStateStructure,
+  controlRecipients: string[],
+) => JSX.Element;
+
 export type DisplayGroupFunctions = {
   displayName: string
   tabKey: string | number
   statusFunctions: ConfigurableComponentFunction[]
   controlFunctions: ConfigurableComponentFunction[]
+  batchControlFunctions?: ConfigurableBatchControlComponentFunction[]
   maintenanceActionsFunctions: ConfigurableComponentFunction[]
 };

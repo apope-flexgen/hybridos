@@ -1,57 +1,69 @@
 /* eslint-disable */
 // TODO: fix lint
-import { ThemeType, Typography } from '@flexgen/storybook';
+import { Tab, Tabs, ThemeType } from '@flexgen/storybook';
 import { Box } from '@mui/material';
-import AllControlsContainer from './AllControls';
 import {
   ConfigurablePageStateStructure,
   DisplayGroupFunctions,
 } from 'src/pages/ConfigurablePages/configurablePages.types';
 import { useTheme } from 'styled-components';
-import { getControlOuterBoxSx, getControlInnerBoxSx } from './assetsPage.styles';
+import { getControlOuterBoxSx } from './assetsPage.styles';
+import { AssetTab, AssetTabs } from 'src/pages/ConfigurablePages/AssetsPage/assetsPage.types';
+import { useContext, useState } from 'react';
+import IndiviudalAssetControl from './IndividualAssetControls';
+import BatchAssetControl from './BatchAssetControls';
+import { BatchSelectContext, BatchSelectContextType } from 'src/pages/ConfigurablePages/contexts/BatchSelectContext';
 
 type AssetControlProps = {
   componentFunctions?: DisplayGroupFunctions;
   assetState: ConfigurablePageStateStructure;
-  allControlsState?: boolean;
-  currentUser?: any;
+  batchControlsState?: boolean;
+  assetKey?: string;
 };
 
 const AssetControl = ({
   componentFunctions,
   assetState,
-  allControlsState,
-  currentUser,
+  batchControlsState,
+  assetKey,
 }: AssetControlProps) => {
   const theme = useTheme() as ThemeType;
+  const [selectedTab, setSelectedTab] = useState<AssetTab>('asset');
+
+  const { selectedAssets } = useContext(BatchSelectContext) as BatchSelectContextType;
+
+  const handleTabChange = (newValue: any) => {
+    setSelectedTab(newValue)
+  }
 
   const controlChildrenMapped =
     componentFunctions !== undefined
       ? componentFunctions.controlFunctions.map((child) => <>{child(assetState)}</>)
       : [];
+
+  const batchControlChildrenMapped =
+      (componentFunctions !== undefined
+      && componentFunctions.batchControlFunctions !== undefined)
+        ? componentFunctions.batchControlFunctions.map((child) => <>{child(assetState, selectedAssets)}</>)
+        : [];
   
   return (
-    <Box sx={getControlOuterBoxSx(theme)}>
-      <Box sx={{ margin: '5px' }}>
-        {allControlsState && (
-          <AllControlsContainer currentUser={currentUser} uris={Object.keys(assetState)} />
+    <>
+    {batchControlsState && (
+        <Box sx={{ paddingTop: '8px', backgroundColor: theme.fgd.text.reversed }}>
+          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)}>
+              <Tab label="Asset" value={AssetTabs.asset} />
+              <Tab label="Batch" value={AssetTabs.batch} />
+          </Tabs>
+        </Box>
         )}
-        <Typography
-          variant='bodyLBold'
-          text={
-            controlChildrenMapped.length > 0
-              ? componentFunctions?.displayName
-                ? `${componentFunctions.displayName} Controls`
-                : 'Asset Controls'
-              : 'No Controls Configured'
-          }
-          color='secondary'
-        />
-      </Box>
-      {controlChildrenMapped.length > 0 && (
-        <Box sx={getControlInnerBoxSx(theme)}>{controlChildrenMapped}</Box>
-      )}
+    <Box sx={getControlOuterBoxSx(theme)}>
+        {(!batchControlsState || selectedTab === AssetTabs.asset) ? 
+            <IndiviudalAssetControl controlChildrenMapped={controlChildrenMapped} componentFunctions={componentFunctions} />
+            : <BatchAssetControl assetKey={assetKey} uris={assetState ? Object.keys(assetState) : []} batchControlChildrenMapped={batchControlChildrenMapped} />
+        }
     </Box>
+    </>
   );
 };
 

@@ -2,6 +2,7 @@ export type ConfigurablePageDTO = {
   hasStatic: boolean;
   hasBatchControls?: boolean;
   hasMaintenanceActions?: boolean;
+  assetKey?: string,
   displayGroups: {
     [displayGroupID: string]: DisplayGroupDTO;
   };

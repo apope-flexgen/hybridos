@@ -44,7 +44,7 @@ const CardDashboard = (props: CardDashboardProps) => {
                       paddingBottom="0.25rem" // TODO: remove this once styleOverrides are fixed by upcoming PR
                       styleOverrides={{ height: '100%', paddingBottom: '0.25rem' }}
                     >
-                      {fn(componentState)}
+                      {fn(componentState.dashboard)}
                     </CardRow>
                   </Grid>
                 ))}

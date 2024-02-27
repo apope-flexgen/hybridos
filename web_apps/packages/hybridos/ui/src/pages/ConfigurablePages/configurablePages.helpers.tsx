@@ -79,7 +79,8 @@ const getControlStateForDisplayGroup: (
 
 export const getUpdatedStates: (
   data: ConfigurablePageDTO['displayGroups'],
-) => [ConfigurablePageStateStructure, AlertState, MaintModeState] = (data) => {
+  prevComponentState?: ConfigurablePageStateStructure
+) => [ConfigurablePageStateStructure, AlertState, MaintModeState] = (data, prevComponentState) => {
   const updatedComponentState: ConfigurablePageStateStructure = {};
   const updatedAlertState: AlertState = {};
   const updatedMaintModeState: MaintModeState = {};
@@ -88,7 +89,9 @@ export const getUpdatedStates: (
     updatedComponentState[displayGroupID] = {
       status: getStatusStateForDisplayGroup(displayGroup.status, displayGroup.batteryViewStatus),
       control: getControlStateForDisplayGroup(displayGroup.control),
-      maintenanceActions: getMaintenanceActionStateForDisplayGroup(displayGroup.maintenanceActions)
+      maintenanceActions: Object.keys(displayGroup.maintenanceActions || {}).length !== 0
+        ? getMaintenanceActionStateForDisplayGroup(displayGroup.maintenanceActions)
+        : prevComponentState?.[displayGroupID]?.maintenanceActions || [],
     };
 
     updatedAlertState[displayGroupID] = {
@@ -227,20 +230,29 @@ const getMaintenanceActionComponentFunctions: (
       );
 
       return maintenanceActionFunctions;
-    }, [])
+    }, []);
 };
 
 const generateControlComponentFunction: (
   displayGroupID: string,
   componentID: string,
   staticData: ControlComponentDTO['static'],
-) => ConfigurableComponentFunction = (displayGroupID, componentID, staticData) => {
+  batchControl?: boolean,
+) => ConfigurableComponentFunction = (displayGroupID, componentID, staticData, batchControl) => {
   if (staticData === undefined) return () => <></>;
 
   // FIXME: may want to do this on the backend, or just better on the frontend
   const controlTypeString = staticData.controlType in ControlTypeMap ? staticData.controlType : 'TextField';
 
   let ReactComponent = ControlTypeMap[controlTypeString];
+
+  // switches in batch control components will be displayed as two buttons
+  // one for setting URI to true (turning on), one for setting URI to false (turning off)
+  if (batchControl && (staticData.controlType === 'switch' || staticData.controlType === 'maint_mode_slider')) {
+    if (staticData.controlType === 'maint_mode_slider') ReactComponent = 'TrueFalseMaintModeButtonSet';
+    else ReactComponent = 'TrueFalseButtonSet';
+  }
+
   const label = staticData.label.toLowerCase();
   if (label.includes('start site')) ReactComponent = 'ConfirmCancelButton';
 
@@ -257,6 +269,8 @@ const generateControlComponentFunction: (
     displayGroupID,
     componentID,
     `${displayGroupID}/${componentID}`,
+    false,
+    batchControl,
   );
 };
 
@@ -271,7 +285,27 @@ const getControlComponentFunctions: (
       const { static: staticData } = component;
       if (staticData === undefined) return controlFunctions;
       controlFunctions.push(
-        generateControlComponentFunction(displayGroupID, componentID, staticData),
+        generateControlComponentFunction(displayGroupID, componentID, staticData, false),
+      );
+      return controlFunctions;
+    },
+    [],
+  );
+};
+
+const getBatchControlComponentFunctions: (
+  batchControl: ConfigurablePageDTO['displayGroups'][string]['batchControl'],
+  displayGroupID: string,
+) => ConfigurableComponentFunction[] = (batchControl, displayGroupID) => {
+  if (batchControl === undefined) return [];
+
+  return Object.entries(batchControl).reduce(
+    (controlFunctions: ConfigurableComponentFunction[], [componentID, component]) => {
+      const { static: staticData } = component;
+
+      if (staticData === undefined) return controlFunctions;
+      controlFunctions.push(
+        generateControlComponentFunction(displayGroupID, componentID, staticData, true),
       );
       return controlFunctions;
     },
@@ -293,7 +327,8 @@ export const getUpdatedComponentFunctions: (data: ConfigurablePageDTO['displayGr
         displayGroup.batteryViewStatus,
       ),
       controlFunctions: getControlComponentFunctions(displayGroup.control, displayGroupID),
-      maintenanceActionsFunctions: getMaintenanceActionComponentFunctions(displayGroup.maintenanceActions, displayGroupID)
+      batchControlFunctions: getBatchControlComponentFunctions(displayGroup.batchControl, displayGroupID),
+      maintenanceActionsFunctions: getMaintenanceActionComponentFunctions(displayGroup.maintenanceActions, displayGroupID),
     };
   });
 

@@ -26,7 +26,11 @@ export type MaintenanceActionComponentStateInfo = {
   status: string
 };
 
-export type MemoizedComponentObject = { prevState: any; element: JSX.Element };
+export type MemoizedComponentObject = {
+  prevState: any;
+  prevControlRecipients?: string[];
+  element: JSX.Element
+};
 
 export type PossibleConfirmValues = ValueType;
 
@@ -35,4 +39,5 @@ export interface ControlHandlerObject {
   onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void
   onCheck?: (value: PossibleConfirmValues) => void
   onX?: (value: PossibleConfirmValues) => void
+  onClickHandlers?: { [key: string]: (event?: React.MouseEvent<HTMLButtonElement>) => void }
 }

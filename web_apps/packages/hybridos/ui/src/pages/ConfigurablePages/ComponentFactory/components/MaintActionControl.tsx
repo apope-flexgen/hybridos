@@ -7,7 +7,7 @@ import ConfirmCancelButton from './ConfirmCancelButton';
 export interface MaintActionControlProps {
   options: string[];
   disabled: boolean;
-  controlURI: string;
+  controlURI: string | string[];
 }
 
 const MaintActionControl: React.FC<MaintActionControlProps> = ({
@@ -16,19 +16,32 @@ const MaintActionControl: React.FC<MaintActionControlProps> = ({
   controlURI,
 }: MaintActionControlProps) => {
   const [selectedAction, setSelectedAction] = useState<string>('');
-
   const handleOnClick = () => {
-    const uriWithoutControl = controlURI.substring(0, controlURI.lastIndexOf('/'));
-    const startActionURI = `${uriWithoutControl}/actions/${selectedAction}/start`;
+    if (typeof controlURI === 'string') {
+      const uriWithoutControl = controlURI.substring(0, controlURI.lastIndexOf('/'));
+      const startActionURI = `${uriWithoutControl}/actions/${selectedAction}/start`;
 
-    const realTimeService = RealTimeService.Instance;
-    realTimeService.send('fimsNoReply', {
-      method: 'set',
-      uri: startActionURI,
-      replyto: 'web_ui',
-      body: true,
-      username: 'web_ui',
-    });
+      const realTimeService = RealTimeService.Instance;
+      realTimeService.send('fimsNoReply', {
+        method: 'set',
+        uri: startActionURI,
+        replyto: 'web_ui',
+        body: true,
+        username: 'web_ui',
+      });
+    } else {
+      controlURI.forEach((uri) => {
+        const startActionURI = `${uri}/actions/${selectedAction}/start`;
+        const realTimeService = RealTimeService.Instance;
+        realTimeService.send('fimsNoReply', {
+          method: 'set',
+          uri: startActionURI,
+          replyto: 'web_ui',
+          body: true,
+          username: 'web_ui',
+        });
+      });
+    }
 
     setSelectedAction('');
   };
@@ -40,7 +53,7 @@ const MaintActionControl: React.FC<MaintActionControlProps> = ({
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
       <Select
-        menuItems={options}
+        menuItems={options || []}
         label="Select Maintenance Action"
         fullWidth
         disabled={disabled}

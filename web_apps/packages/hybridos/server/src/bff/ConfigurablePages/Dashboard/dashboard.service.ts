@@ -97,6 +97,7 @@ export class DashboardService {
 
     return {
       hasStatic: true,
+      assetKey: 'dashboard',
       displayGroups,
     };
   };
@@ -153,6 +154,7 @@ export class DashboardService {
       map((event) => {
         const transformed: ConfigurablePageDTO = {
           hasStatic: false,
+          assetKey: 'dashboard',
           displayGroups: {
             [uri]: {
               displayName,

@@ -42,6 +42,7 @@ import {
 import ConfirmCancelButton from './components/ConfirmCancelButton';
 import MaintActionControl from './components/MaintActionControl';
 import MaintActionProgress from './components/MaintActionProgress';
+import TrueFalseButtonSet from './components/TrueFalseButtonSet';
 
 // FIXME: storybook should probably have consistent types
 export interface IComponentHash {
@@ -91,6 +92,8 @@ const storybookComponents: IComponentHash = {
   ConfirmCancelButton,
   MaintActionControl,
   MaintActionProgress,
+  TrueFalseButtonSet,
+  TrueFalseMaintModeButtonSet: TrueFalseButtonSet,
 };
 
 export default storybookComponents;
@@ -108,6 +111,7 @@ const controlsSets = {
   ],
   onClick: ['IconButton', 'MuiButton', 'ConfirmCancelButton', 'MaintActionControl'],
   withConfirm: ['TextField', 'Switch', 'MaintModeSlider', 'Select', 'NumericInput'],
+  onClickHandlers: ['TrueFalseButtonSet', 'TrueFalseMaintModeButtonSet'],
 };
 
 export { controlsSets };
