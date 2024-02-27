@@ -1,0 +1,2 @@
+# Archive Cocoon
+Archive Cocoon is a iterative service that tracks a folder for new and existing archives. It iteratively decodes every archive using fims_codec and converts the data to a Parquet file.

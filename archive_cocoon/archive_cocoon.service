@@ -1,0 +1,11 @@
+[Unit]
+Description=Archive Cocoon (archive format converter)
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/archive_cocoon -c=/usr/local/etc/config/archive_cocoon/archive_cocoon.json
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

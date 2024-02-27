@@ -1,0 +1,9 @@
+{
+	"input_path": "/home/hybridos/archive_cocoon_pytest/input",
+	"output_path": "/home/hybridos/archive_cocoon_pytest/output",
+	"failed_convert_path": "/home/hybridos/archive_cocoon_pytest/failed_convert",
+	"forward": "/home/hybridos/archive_cocoon_pytest/forward",
+	"ext": ".tar.gz",
+	"client_name": "client",
+	"site_name": "site"
+}

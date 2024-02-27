@@ -1,0 +1,4 @@
+pandas==1.1.5
+pyarrow==6.0.1
+pytest==7.0.1
+pytest_cases==3.6.13

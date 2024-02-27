@@ -1,0 +1,1 @@
+The pytests are expected to be executed while the process is running with the test config. Use the `run.sh` script to run the process with the test config, then execute the pytests with `pytest -vv`.
