@@ -507,9 +507,9 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
         myCfg.connection.connection_timeout = 2.0;
     }
     ok &= getItemFromMap(jsonMapOfConfig, "connection.transfer_timeout", myCfg.connection.transfer_timeout, 0.2, true, true, false);
-    if (ok && (myCfg.connection.transfer_timeout < 0.05 || myCfg.connection.transfer_timeout > 1.00))
+    if (ok && (myCfg.connection.transfer_timeout < 0.05 || myCfg.connection.transfer_timeout > 5.00))
     {
-        FPS_INFO_LOG("Transfer timeout must be between 0.05 and 1.0 seconds. Configured value is [%f] seconds. Using default of 0.5s.", myCfg.connection.transfer_timeout);
+        FPS_INFO_LOG("Transfer timeout must be between 0.05 and 5.0 seconds. Configured value is [%f] seconds. Using default of 0.5s.", myCfg.connection.transfer_timeout);
         myCfg.connection.transfer_timeout = 0.5;
     }
     // // transfer_timeout
