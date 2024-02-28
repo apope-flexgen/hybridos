@@ -225,7 +225,6 @@ int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
         if(debug)FPS_PRINT_WARN("Side B PCS maximum discharge power variable [{}] in av [{}] does not exist", cstr{av->getcParam("pcsMaxDschgPwrB")}, av->getfName());
         error = true;
     }
-
     double bmsAEnergy;
     assetVar* bmsAEnergyVar = ESSUtils::getAvFromParam(vmap, amap, av, "bmsAEnergy");
     if (!bmsAEnergyVar)
@@ -237,10 +236,9 @@ int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
     {
         bmsAEnergy = bmsAEnergyVar->getdVal();
     }
-
     double bmsBEnergy;
     assetVar* bmsBEnergyVar = ESSUtils::getAvFromParam(vmap, amap, av, "bmsBEnergy");
-    if (!bmsAEnergyVar)
+    if (!bmsBEnergyVar)
     {
         if(debug)FPS_PRINT_WARN("Side B battery energy variable [{}] in av [{}] does not exist", cstr{av->getcParam("bmsBEnergy")}, av->getfName());
         bmsBEnergy = 0.0;
@@ -249,7 +247,6 @@ int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
     {
         bmsBEnergy = bmsBEnergyVar->getdVal();
     }
-
     double maxPDeltakW;
     assetVar* maxPDeltakWVar = ESSUtils::getAvFromParam(vmap, amap, av, "maxPDeltakW");
     if (!maxPDeltakWVar)
@@ -261,7 +258,6 @@ int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
     {
         maxPDeltakW = maxPDeltakWVar->getdVal();
     }
-
     double pCmd                = pCmdVar->getdVal()/2; //half command to each side as default.
     double qCmd                = qCmdVar->getdVal()/2;
     double threshold           = av->getdParam("threshold");
@@ -341,7 +337,7 @@ int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
     if(bmsBEnergy < 0.0) bmsBEnergy = 0.0;
     if((bmsAEnergy != 0.0) && (bmsBEnergy != 0.0)) 
     {
-        totalEnergy = bmsAEnergy + bmsBEnergy; //even split
+        totalEnergy = bmsAEnergy + bmsBEnergy; 
         pSplitA = (bmsAEnergy / totalEnergy) * pCmd * 2; //We made pcmd be half of the total command earlier as a default value, so undo that here. 
         pSplitB = (bmsBEnergy / totalEnergy) * pCmd * 2;
     }
