@@ -138,12 +138,15 @@ void unlock_subscriptions()
 unsigned int strtohash(const char* in_str)
 {
     unsigned int total = 0;
-    for(int i = 0; in_str[i] != 0; i++)
+    if (in_str)
     {
-        char c = in_str[i];
-        total += (i+1) * (int)((c >= 'a' && c <= 'z') ? (c - 'a' + 40) :
-                               (c >= 'A' && c <= 'Z') ? (c - 'A' + 14) :
-                               (c >= '-' && c <= '9') ? (c - '-' + 1 ) : 0);
+        for(int i = 0; in_str[i] != 0; i++)
+        {
+            char c = in_str[i];
+            total += (i+1) * (int)((c >= 'a' && c <= 'z') ? (c - 'a' + 40) :
+                                (c >= 'A' && c <= 'Z') ? (c - 'A' + 14) :
+                                (c >= '-' && c <= '9') ? (c - '-' + 1 ) : 0);
+        }
     }
     return total;
 }
