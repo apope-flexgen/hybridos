@@ -197,7 +197,6 @@ extern "C++"
     int SendDb(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
     int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
 
-    // int runDataMaps(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar* aV);
 }
 
 
@@ -654,6 +653,8 @@ int loadAssetManagers(varsmap &vmap, asset_manager* ess_man, std::vector<char*>*
 extern "C++" {
     
     int SetupEssSched(scheduler*sched, asset_manager* am);
+    int SetupDatamapSched(scheduler* sched, asset_manager* am);
+    void dataMapThreadCleanup();
 
 }
 
@@ -1072,7 +1073,7 @@ int main_test_new_ess(int argc, char *argv[])
     vm.setFunc(vmap,  essName, "SendDb",             (void*)&SendDb);
     vm.setFunc(vmap,  essName, "HandleCpuStats",     (void*)&HandleCpuStats);
     vm.setFunc(vmap,  essName, "runAllLocks",        (void*)&runAllLocks);
-
+    SetupDatamapSched(&sched, ess_man);
 
     if(!useArgs)        // run "ess_controller" to get into this block (crashes bc of filepath rn)
     {
@@ -1305,9 +1306,11 @@ int main_test_new_ess(int argc, char *argv[])
         sThread.join();
     FPS_PRINT_INFO("threads done cleaning up ...");
 
+    dataMapThreadCleanup();
+    
     vm.clearVmap(vmap);
     vmap.clear();
-    
+
     //delete ess_man->p_fims;
     ess_man->p_fims = nullptr;
     //vecm[name] = (new std::vector<T>);

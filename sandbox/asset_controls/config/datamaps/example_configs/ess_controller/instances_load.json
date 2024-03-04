@@ -1,0 +1,47 @@
+{
+    "/control/##HLC_ID##": {
+        "Out1": {
+            "value": 0,
+            "note": "This maps the output of the HLC to the Common_IN field of the LLC",
+            "enable": "/config/ess:enable",
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/control/##LLC_ID_1##:Common_IN"
+                            },
+                            {
+                                "uri": "/control/##LLC_ID_2##:Common_IN"
+                            },
+                            {
+                                "uri": "/control/##LLC_ID_3##:Common_IN"
+                            },
+                            {
+                                "uri": "/control/##LLC_ID_4##:Common_IN"
+                            },
+                            {
+                                "uri": "/control/##LLC_ID_5##:Common_IN"
+                            },
+                            {
+                                "uri": "/control/##LLC_ID_6##:Common_IN"
+                            },
+                            {
+                                "uri": "/control/##LLC_ID_7##:Common_IN"
+                            },
+                            {
+                                "uri": "/control/##LLC_ID_8##:Common_IN"
+                            },
+                            {
+                                "uri": "/control/##LLC_ID_9##:Common_IN"
+                            },
+                            {
+                                "uri": "/control/##LLC_ID_10##:Common_IN"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -6,9 +6,9 @@
 //
 // Code generated for Simulink model 'Reference'.
 //
-// Model version                  : 1.14
+// Model version                  : 1.23
 // Simulink Coder version         : 9.8 (R2022b) 13-May-2022
-// C/C++ source code generated on : Wed Aug 23 10:41:45 2023
+// C/C++ source code generated on : Thu Sep 14 13:20:26 2023
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Intel->x86-64 (Windows64)
@@ -24,7 +24,7 @@
 #include "func3.h"
 
 // Model step function
-void Datamaps_test::step()
+void Reference_class::step()
 {
   // ModelReference: '<Root>/Model' incorporates:
   //   Delay: '<Root>/Delay'
@@ -70,28 +70,28 @@ void Datamaps_test::step()
 }
 
 // Model initialize function
-void Datamaps_test::initialize()
+void Reference_class::initialize()
 {
   // (no initialization code required)
 }
 
 // set method for External inputs (root inport signals)
-void Datamaps_test::setExternalInputs(const Datamaps_test::
+void Reference_class::setExternalInputs(const Reference_class::
   ExtUPointer_Reference_T &ExtUPointer_U)
 {
   *ExtUPointer_ref_U = ExtUPointer_U;
 }
 
 // get method for External outputs (root outport signals)
-const Datamaps_test::ExtYPointer_Reference_T &Datamaps_test::getExternalOutputs()
-  const
+const Reference_class::ExtYPointer_Reference_T &Reference_class::
+  getExternalOutputs() const
 {
   return *ExtYPointer_ref_Y;
 }
 
 // Constructor
-Datamaps_test::Datamaps_test(ExtUPointer_Reference_T *Reference_ExtUPointer_g,
-  ExtYPointer_Reference_T *Reference_ExtYPointer_i):
+Reference_class::Reference_class(ExtUPointer_Reference_T
+  *Reference_ExtUPointer_g,ExtYPointer_Reference_T *Reference_ExtYPointer_i):
   ExtUPointer_ref_U(),
   ExtYPointer_ref_Y(),
   Reference_DW()
@@ -101,7 +101,7 @@ Datamaps_test::Datamaps_test(ExtUPointer_Reference_T *Reference_ExtUPointer_g,
 }
 
 // Destructor
-Datamaps_test::~Datamaps_test()
+Reference_class::~Reference_class()
 {
   // Currently there is no destructor body generated.
 }

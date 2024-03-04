@@ -1,0 +1,25 @@
+{
+    "/config/ess": {
+        "enable": true
+    },
+    "/system/commands": {
+        "run": {
+            "value": "test",
+            "ifChanged": false,
+            "enable": "/config/ess:enable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "RunSched"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "runOpts_Datamaps": true
+    }
+}

@@ -1,0 +1,86 @@
+{
+    "/config/ess": {
+        "enable": false,
+        "FaultDestination": "/faults/ess",
+        "AlarmDestination": "/alarms/ess"
+    },
+    "/system/commands": {
+        "stop": {
+            "value": "stop_cmd",
+            "ifChanged": false,
+            "enable": "/config/ess:enable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "StopSched"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "runOpts_Datamaps": {
+            "value": false,
+            "targav": "/system/commands:run",
+            "enable": "/config/ess:enable",
+            "note1": "Sets variables to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "options": [
+                {
+                    "note": "this is where the uri and every for your av goes. see examples below",
+                    "every": 1.5,
+                    "uri": "/some/uri:DCA_AV",
+                    "value": 15
+                },
+                {
+                    "every": 5,
+                    "uri": "/x/uri:av2",
+                    "value": 15
+                },
+                {
+                    "every": 1,
+                    "uri": "/test/uri:simpleAV",
+                    "value": 15
+                }
+            ]
+        }
+    },
+    "/thread/info": {
+        "TEMPLATE": {
+            "value": 0,
+            "NOTE": "these values are the same values that the system defaults to if there is no templateAV",
+            "overrunLimit": 50,
+            "decrementOverrun": 1,
+            "incrementOverrun": 5,
+            "setupTimeLimit": 120,
+            "heartbeatTimeout": 10,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "ThreadSetup"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

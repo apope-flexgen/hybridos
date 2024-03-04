@@ -37,6 +37,11 @@ class schedItem {
     char* targ;       // target for runt
     int fast;
     char* uri; // comp:name
+    bool thread;
+    double thread_runTime;
+    int thread_retSig;
+    bool update;
+    bool updone;
 
 };
 

@@ -6,15 +6,13 @@
 //
 // Code generated for Simulink model 'func3'.
 //
-// Model version                  : 1.8
+// Model version                  : 1.18
 // Simulink Coder version         : 9.8 (R2022b) 13-May-2022
-// C/C++ source code generated on : Tue Aug 22 16:19:33 2023
+// C/C++ source code generated on : Thu Sep 14 13:20:19 2023
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Intel->x86-64 (Windows64)
-// Code generation objectives:
-//    1. Execution efficiency
-//    2. RAM efficiency
+// Code generation objectives: Unspecified
 // Validation result: Not run
 //
 #include "func3.h"

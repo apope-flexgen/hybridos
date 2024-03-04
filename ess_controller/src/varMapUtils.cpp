@@ -3775,10 +3775,10 @@ void VarMapUtils::processMsgSetPub(varsmap& vmap, const char* method, const char
         {
             av = setValfromCj(vmap, my.Uri, cjname->string, cjname, uiObject);
 
-            // Rescue an orphan.
-            if (am && av)
+            // Rescue an orphan. Do not rescue if av already has an am
+            if (av && am && !av->am)
                 av->am = am;
-            if (ai && av)
+            if (av && ai && !av->ai)
                 av->ai = ai;
             
 
@@ -3857,10 +3857,10 @@ void VarMapUtils::processMsgSetPub(varsmap& vmap, const char* method, const char
 
             if (av)
             {
-               // Rescue an orphan.
-                if (am && av)
+                // Rescue an orphan. Do not rescue if av already has an am
+                if (am && !av->am)
                     av->am = am;
-                if (ai && av)
+                if (ai && !av->ai)
                     av->ai = ai;
              
 
@@ -6646,11 +6646,13 @@ long int get_tsc_us()
     return ltime_ns/1000;
 }
 
-
+std::mutex timeDoubleMutex;
 double VarMapUtils::get_time_dbl()
 {
     if(base_time == 0.0)
     {
+        std::lock_guard<std::mutex> lock(timeDoubleMutex);
+        if(base_time != 0.0) return (double)get_tsc_us() / 1000000.0 - base_time;
         tsc_ghz = tn.init();
         std::this_thread::sleep_for(std::chrono::seconds(1));
         tsc_ghz = tn.calibrate();
@@ -6690,7 +6692,13 @@ double VarMapUtils::get_time_dbl()
     }
 
     //return  (double)get_time_us() / 1000000.0 - base_time;
-    return  (double)get_tsc_us() / 1000000.0 - base_time;
+    double rval;
+    {
+        std::lock_guard<std::mutex> lock(timeDoubleMutex);
+        rval = (double)get_tsc_us() / 1000000.0 - base_time;
+    }
+     
+    return rval;
 }
 
 double VarMapUtils::get_time_ref()

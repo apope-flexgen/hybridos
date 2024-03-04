@@ -2186,7 +2186,10 @@ int RunSched(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset
         );
         return 0;
     }
-    av->am = am;
+
+    // if our target av does not have an am, set it to our current am (this prevents vmap crashes)
+    if (!av->am) av->am = am;
+
     if(0)FPS_ERROR_FMT("{} >> running with av [{}] uri [{}]\n"
         , __func__
         , av->getfName()

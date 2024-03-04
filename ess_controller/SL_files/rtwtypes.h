@@ -6,9 +6,9 @@
 //
 // Code generated for Simulink model 'func1'.
 //
-// Model version                  : 1.9
+// Model version                  : 1.20
 // Simulink Coder version         : 9.8 (R2022b) 13-May-2022
-// C/C++ source code generated on : Tue Aug 22 13:16:12 2023
+// C/C++ source code generated on : Thu Sep 14 13:20:07 2023
 //
 #ifndef RTWTYPES_H
 #define RTWTYPES_H

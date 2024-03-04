@@ -1,0 +1,94 @@
+{
+    "/config/load": {
+        "DC_Augmentation": {
+            "value": false,
+            "file": "init",
+            "aname": "ess",
+            "final": "final",
+            "new_options": [
+                {
+                    "tmpl": "instances_load",
+                    "pname": "ess",
+                    "amname": "ess",
+                    "from": 0,
+                    "to": 1,
+                    "reps": [
+                        {
+                            "replace": "##HLC_ID##",
+                            "with": "HighLevelController_{:01d}",
+                            "add": 1
+                        },
+                        {
+                            "replace": "##LLC_ID_1##",
+                            "with": "LowLevelController_{:01d}",
+                            "mult": 10,
+                            "add": 1
+                        },
+                        {
+                            "replace": "##LLC_ID_2##",
+                            "with": "LowLevelController_{:01d}",
+                            "mult": 10,
+                            "add": 2
+                        },
+                        {
+                            "replace": "##LLC_ID_3##",
+                            "with": "LowLevelController_{:01d}",
+                            "mult": 10,
+                            "add": 3
+                        },
+                        {
+                            "replace": "##LLC_ID_4##",
+                            "with": "LowLevelController_{:01d}",
+                            "mult": 10,
+                            "add": 4
+                        },
+                        {
+                            "replace": "##LLC_ID_5##",
+                            "with": "LowLevelController_{:01d}",
+                            "mult": 10,
+                            "add": 5
+                        },
+                        {
+                            "replace": "##LLC_ID_6##",
+                            "with": "LowLevelController_{:01d}",
+                            "mult": 10,
+                            "add": 6
+                        },
+                        {
+                            "replace": "##LLC_ID_7##",
+                            "with": "LowLevelController_{:01d}",
+                            "mult": 10,
+                            "add": 7
+                        },
+                        {
+                            "replace": "##LLC_ID_8##",
+                            "with": "LowLevelController_{:01d}",
+                            "mult": 10,
+                            "add": 8
+                        },
+                        {
+                            "replace": "##LLC_ID_9##",
+                            "with": "LowLevelController_{:01d}",
+                            "mult": 10,
+                            "add": 9
+                        },
+                        {
+                            "replace": "##LLC_ID_10##",
+                            "with": "LowLevelController_{:01d}",
+                            "mult": 10,
+                            "add": 10
+                        }
+                    ]
+                },
+                {
+                    "file": "load",
+                    "aname": "ess"
+                },
+                {
+                    "file": "av",
+                    "aname": "my_am"
+                }
+            ]
+        }
+    }
+}

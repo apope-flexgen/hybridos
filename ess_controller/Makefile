@@ -68,6 +68,7 @@ TSRC_DIR = $(PROJECT_ROOT)test
 FUNC_DIR = $(PROJECT_ROOT)funcs
 SRC_DIR = $(PROJECT_ROOT)src
 INC_DIR = $(PROJECT_ROOT)include
+SL_FUNC_DIR = $(PROJECT_ROOT)SL_files
 
 LIBS = -L$(OBJ_DIR)
 #LIBS += -L$(PROJECT_ROOT)lib64
@@ -125,6 +126,18 @@ FUNC_OBJECTS += UpdateToDbi.o
 FUNC_OBJECTS += CheckValueChanged.o
 FUNC_OBJECTS += BalancePower.o
 
+#datamap simulink source code files. uncomment for testing
+# FUNC_OBJECTS += Reference.o
+# FUNC_OBJECTS += Reference_Interface.o
+# FUNC_OBJECTS += func1.o
+# FUNC_OBJECTS += func2.o
+# FUNC_OBJECTS += func3.o
+# FUNC_OBJECTS += DC_Augmentation.o
+# FUNC_OBJECTS += DC_Augmentation_Interface.o
+# FUNC_OBJECTS += HighLevelController.o
+# FUNC_OBJECTS += HighLevelController_Interface.o
+# FUNC_OBJECTS += LowLevelController.o
+# FUNC_OBJECTS += LowLevelController_Interface.o
 #$(FUNC_LIST)
 
 
@@ -139,7 +152,9 @@ ESS_OBJECTS += i2cbusses.o
 ESS_OBJECTS += vmActions.o
 ESS_OBJECTS += vmConfig.o
 ESS_OBJECTS += dbi_funcs.o
-ESS_OBJECTS += AssetSetupUtility.o
+ESS_OBJECTS += dataMapCore.o
+ESS_OBJECTS += dataMapThread.o
+ESS_OBJECTS += dataMapUtils.o
 
 
 #ESS_OBJECTS += version.o git_build.o git_commit.o git_tag.o
@@ -192,8 +207,14 @@ $(OBJ_DIR)vmConfig.o:  $(SRC_DIR)/vmConfig.cpp
 $(OBJ_DIR)dbi_funcs.o:  $(SRC_DIR)/dbi_funcs.cpp
 	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
-# $(OBJ_DIR)dataMap.o:  $(SRC_DIR)/dataMap.cpp
-# 	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+$(OBJ_DIR)dataMapCore.o:  $(SRC_DIR)/dataMapCore.cpp
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)dataMapThread.o:  $(SRC_DIR)/dataMapThread.cpp
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)dataMapUtils.o:  $(SRC_DIR)/dataMapUtils.cpp
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
 $(BUILD_DIR)gpio_controller:	$(OBJ_DIR)gpio_controller.o $(OBJ_DIR)i2cbusses.o
 	$(CXX) -o $@ $^ $(INCLUDES) -lessfunc -less $(LIBS)
@@ -320,6 +341,40 @@ $(OBJ_DIR)%.so:	$(OBJ_DIR)%.o
 
 $(FUN_DIR)%.so:	$(FUN_DIR)%.o
 	$(CXX)  $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) $(LIBS)
+
+
+$(FUN_DIR)Reference.o:	$(SL_FUNC_DIR)/Reference.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+
+$(FUN_DIR)Reference_Interface.o:	$(SL_FUNC_DIR)/Reference_Interface.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+
+$(FUN_DIR)func1.o:	$(SL_FUNC_DIR)/func1.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+
+$(FUN_DIR)func2.o:	$(SL_FUNC_DIR)/func2.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+
+$(FUN_DIR)func3.o:	$(SL_FUNC_DIR)/func3.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+
+$(FUN_DIR)DC_Augmentation.o:	$(SL_FUNC_DIR)/DC_Augmentation.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+
+$(FUN_DIR)DC_Augmentation_Interface.o:	$(SL_FUNC_DIR)/DC_Augmentation_Interface.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+
+$(FUN_DIR)HighLevelController.o:	$(SL_FUNC_DIR)/HighLevelController.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+
+$(FUN_DIR)HighLevelController_Interface.o:	$(SL_FUNC_DIR)/HighLevelController_Interface.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+
+$(FUN_DIR)LowLevelController.o:	$(SL_FUNC_DIR)/LowLevelController.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+
+$(FUN_DIR)LowLevelController_Interface.o:	$(SL_FUNC_DIR)/LowLevelController_Interface.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
 
 .PHONY: build
 build:

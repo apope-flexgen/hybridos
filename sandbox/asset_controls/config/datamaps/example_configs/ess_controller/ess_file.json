@@ -1,0 +1,8 @@
+{
+    "/sysconfig/default":
+    {
+        "Subs":":/assets:/status/site:/alarms/site:/faults/site:/controls/site:/components:",
+        "Config":"init",
+        "EssName": "ess"
+    }
+}

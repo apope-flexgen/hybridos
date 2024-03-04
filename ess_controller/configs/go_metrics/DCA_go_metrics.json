@@ -1,0 +1,81 @@
+{
+    "echo": [
+		{
+			"uri": "/ess/status/bms_1",
+			"publishRate": 100,
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"BMS_1_SOC": "soc_value",
+						"BMS_1_Volts": "vdc_value",
+						"BMS_1_Current": "idc_value",
+						"BMS_1_Capacity": "cap",
+						"BMS_1_ChargePwrLim": "pcharge",
+						"BMS_1_DischargePwrLim": "pdischarge",
+						"BMS_1_ChargeCurrentLim": "not_here",
+						"BMS_1_DischargeCurrentLim": "get_rid_of_me_maybe",
+						"BMS_1_DCDisconnectStt": "dccontactor",
+						"BMS_1_PNom": "pmax"
+					}
+				}
+			]
+		},
+		{
+			"uri": "/ess/status/bms_2",
+			"publishRate": 100,
+			"inputs": [
+				{
+					"uri": "/components/bms_2",
+					"registers": {
+						"BMS_2_SOC": "soc_value",
+						"BMS_2_Volts": "vdc_value",
+						"BMS_2_Current": "idc_value",
+						"BMS_2_Capacity": "cap",
+						"BMS_2_ChargePwrLim": "pcharge",
+						"BMS_2_DischargePwrLim": "pdischarge",
+						"BMS_2_ChargeCurrentLim": "xx",
+						"BMS_2_DischargeCurrentLim": "xx",
+						"BMS_2_DCDisconnectStt": "dccontactor",
+						"BMS_2_PNom": "pmax"
+					}
+				}
+			]
+		},
+        {
+            "uri": "/ess/status/dcdc_1",
+            "publishRate": 100,
+            "inputs": [
+                {
+                    "uri": "/components/dcdc_1",
+                    "registers": {
+                        "DCDC_1_V1": "vdc1",
+                        "DCDC_1_V2": "vdc2",
+                        "DCDC_1_Current": "idc2",
+                        "DCDC_1_Power": "pdc2",
+                        "DCDC_1_Status": "on",
+                        "DCDC_1_Plim": "plim",
+                        "DCDC_1_PNom": "plim"
+                    }
+                }
+            ]
+        },
+        {
+            "uri": "/ess/status/pcs_1",
+            "publishRate": 100,
+            "inputs": [
+                {
+                    "uri": "/components/pcs_1",
+                    "registers": {
+                        "PCS_1_DcVlt": "pdc",
+                        "PCS_1_DcCurrent": "idc",
+                        "PCS_1_ActivePower": "p",
+                        "PCS_1_Status": "on",
+                        "PCS_1_Plim": "plim",
+                        "PCS_1_Qlim": "qlim"
+                    }
+                }
+            ]
+        }
+    ]
+}

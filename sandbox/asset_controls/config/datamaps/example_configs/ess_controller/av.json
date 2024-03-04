@@ -1,0 +1,70 @@
+{
+    "/some/uri": {
+        "DCA_AV": {
+            "value": 0,
+            "enable": "/config/ess:enable",
+            "threadName": "DCA_thread",
+            "datamapName": "DCA_datamap",
+            "func1": "DC_Augmentation",
+            "func1_instances": 3,
+            "note": "The terminal output for this function is \"|X \" where X is the instance number",
+            "overrunLimit": 24,
+            "decrementOverrun": 2,
+            "incrementOverrun": 8,
+            "setupTimeLimit": 10,
+            "heartbeatTimeout": 20,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "RunThread"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/x/uri": {
+        "av2": {
+            "value": 0,
+            "enable": "/config/ess:enable",
+            "func1": "HighLevelController",
+            "func1_instances": 2,
+            "func2": "LowLevelController",
+            "func2_instances": 20,
+            "setupTimeLimit": 60,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "RunThread"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/test/uri": {
+        "simpleAV": {
+            "value": 0,
+            "enable": "/config/ess:enable",
+            "func1": "Reference",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "RunThread"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -6,9 +6,9 @@
 //
 // Code generated for Simulink model 'Reference'.
 //
-// Model version                  : 1.14
+// Model version                  : 1.23
 // Simulink Coder version         : 9.8 (R2022b) 13-May-2022
-// C/C++ source code generated on : Wed Aug 23 10:41:45 2023
+// C/C++ source code generated on : Thu Sep 14 13:20:26 2023
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Intel->x86-64 (Windows64)
@@ -25,7 +25,7 @@
 #include "func3.h"
 
 // Class declaration for model Reference
-class Datamaps_test final
+class Reference_class final
 {
   // public data and function members
  public:
@@ -49,20 +49,20 @@ class Datamaps_test final
   };
 
   // Copy Constructor
-  Datamaps_test(Datamaps_test const&) = delete;
+  Reference_class(Reference_class const&) = delete;
 
   // Assignment Operator
-  Datamaps_test& operator= (Datamaps_test const&) & = delete;
+  Reference_class& operator= (Reference_class const&) & = delete;
 
   // Move Constructor
-  Datamaps_test(Datamaps_test &&) = delete;
+  Reference_class(Reference_class &&) = delete;
 
   // Move Assignment Operator
-  Datamaps_test& operator= (Datamaps_test &&) = delete;
+  Reference_class& operator= (Reference_class &&) = delete;
 
   // Constructor
-  Datamaps_test(ExtUPointer_Reference_T *Reference_ExtUPointer_g,
-                ExtYPointer_Reference_T *Reference_ExtYPointer_i);
+  Reference_class(ExtUPointer_Reference_T *Reference_ExtUPointer_g,
+                  ExtYPointer_Reference_T *Reference_ExtYPointer_i);
 
   // External inputs (root inport signals)
   ExtUPointer_Reference_T *ExtUPointer_ref_U;
@@ -83,7 +83,7 @@ class Datamaps_test final
   void step();
 
   // Destructor
-  ~Datamaps_test();
+  ~Reference_class();
 
   // private data and function members
  private:

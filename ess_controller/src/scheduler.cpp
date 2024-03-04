@@ -146,6 +146,10 @@ schedItem::schedItem()
     am = nullptr;      // used in fast mode
     runt = false;        // infast mode just send time to targaVp
     targ = nullptr;
+    thread = false;
+    update = false;
+    updone = false;
+
 }
 
 schedItem::~schedItem()
@@ -466,6 +470,11 @@ int scheduler::addSchedReq(schlist &sreqs, schedItem* si)
         return -1;
 
     }
+    if (si->thread)
+    {
+        av->setParam("runTime", si->thread_runTime);
+    }
+
     if(!av->gotParam("runTime"))
     {
         FPS_PRINT_ERROR(R"(assetVar [{}] does not have a "runTime" param use scheduler::setupSchedItem)"
@@ -568,6 +577,11 @@ double scheduler::getSchedDelay(varsmap &vmap, schlist& rreqs)
                     {
                         if(as->fcnptr && as->targaVp)
                         {
+                            if (as->thread)
+                            {
+                                as->targaVp->setParam("runTime",as->thread_runTime);
+                                as->targaVp->setParam("retSig",as->thread_retSig);
+                            }
                             myAvfun_t amFunc = reinterpret_cast<myAvfun_t> (as->fcnptr);
                             if(as->am)
                             {
@@ -593,7 +607,7 @@ double scheduler::getSchedDelay(varsmap &vmap, schlist& rreqs)
                         {
                             // this is the main schedule point
                             // we have to set the start time here to help with race detection
-                            if(1|| debug)FPS_PRINT_INFO("Running  Time set for Av [{}] at [{:2.3f}]"
+                            if(0|| debug)FPS_PRINT_INFO("Running  Time set for Av [{}] at [{:2.3f}]"
                                         , av->getfName()
                                         , tNow);
                             vm->setVal(vmap, av->comp.c_str(), av->name.c_str(), tNow);
@@ -602,8 +616,7 @@ double scheduler::getSchedDelay(varsmap &vmap, schlist& rreqs)
     // TODO For discussion after MVP refine / define the use of schedAv (actAv) and targAv
     // TODO For discussion after MVP move the action iterators into av->extras so we can use them to return to for sequences. (for varMapUtils really)
     
-                        bool update =  false;
-                        bool got_update = false;
+                        bool no_update = false;     // this flag is the default action the scheduler takes if no update param exists
                         char* fcn = as->func;
                         char* aname = as->aname;
                         //assetVar* targav = av;
@@ -626,12 +639,34 @@ double scheduler::getSchedDelay(varsmap &vmap, schlist& rreqs)
                             }
                         }
                         
+                        // logic has been added to allow a schedItem that runs multiple times to run faster after the first iteration
                         if(av->gotParam("update"))
                         {
-                            got_update = true;
-                            update = av->getbParam("update");
-                            bool updone = false;
-                            av->setParam("update", updone);
+                            if (av->getbParam("update"))
+                            {
+                                // the flags for this logic have been moved from the av to the schedItem to account for the case where one av runs multiple schedItems
+                                if (as->updone == false)
+                                {
+                                    // updone defaults to false, if its false here this is our first run
+                                    as->update = true;
+                                    as->updone = true;
+                                }
+                                else if (as->updone == true)
+                                {
+                                    // updone latches to true, so we know this is our second+ run and we have the fcnptr and targaVp that we need to run fast
+                                    as->update = false;
+                                }
+                            }
+                            else
+                            {
+                                // if the "update" param is false, default to running the "slow" way, using the "no_update" flag
+                                no_update = true;
+                            }
+                        }
+                        else
+                        {
+                            // if we dont have an update param, default to running the "slow" way, using the "no_update" flag
+                            no_update = true;
                         }
 
                         if(av->gotParam("debug"))
@@ -680,7 +715,7 @@ double scheduler::getSchedDelay(varsmap &vmap, schlist& rreqs)
                             else
                             {
                                 FPS_PRINT_ERROR("Cannot run  fcn [{}] no targ [{}] update [{}]"
-                                    , fcn, as->targ, update);
+                                    , fcn, as->targ, as->update);
                                 fcn = nullptr;
                             }
                         }
@@ -690,7 +725,7 @@ double scheduler::getSchedDelay(varsmap &vmap, schlist& rreqs)
                         // targav->am
                         // as->targaVp
                         // targav->ai
-                        if(aname && as->targaVp && as->fcnptr && got_update && !update)
+                        if(aname && as->targaVp && as->fcnptr && !as->update)
                         {
                             myAvfun_t amFunc = reinterpret_cast<myAvfun_t> (as->fcnptr);
                             if (as->targaVp->am)
@@ -706,7 +741,7 @@ double scheduler::getSchedDelay(varsmap &vmap, schlist& rreqs)
 
                         }
 
-                        else if(fcn && aname && got_update && update)
+                        else if(fcn && aname && (as->update || no_update))
                         {
                             void *res1 = vm->getFunc(vmap, aname, fcn);
                             if(!res1)
@@ -738,8 +773,8 @@ double scheduler::getSchedDelay(varsmap &vmap, schlist& rreqs)
 
                                     if (targav->am == nullptr) targav->am = am;
                                     if (am->vm == nullptr) am->vm = vm;
-                                    if(0)FPS_PRINT_INFO("Running aname [{}] fcn [{}]"
-                                            , aname, fcn);
+                                    if(0)FPS_PRINT_INFO("Running aname [{}] fcn [{}] as->update [{}] no_update [{}]"
+                                            , aname, fcn, as->update, no_update);
 
                                     amFunc(vmap, am->amap, aname, am->p_fims, targav);
 
