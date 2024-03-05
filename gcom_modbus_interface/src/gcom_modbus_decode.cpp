@@ -143,10 +143,10 @@ void gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstrea
             }
             #endif
 
-            bool bval = (io_work->buf8[index] > 0);
+            bool bval = (io_work->buf8[index] != 0);
             if (io_point->is_forced && !io_work->unforced)
             {
-                bval = (forced_val > 0);
+                bval = (forced_val != 0);
             }
 
             if (io_work->full)

@@ -14,16 +14,17 @@
         "device protocol version": "6.0 WIP",
         "device id string": "sel_2440",
         "ip_address1": "192.168.112.20",
-        "ip_address": "172.17.0.2",
+        "ip_address": "172.17.0.3",
         "stats_pub_uri": "/modbus_client/stats",
         "port": 502,
+        "max_register_group_size":124,
         "device_id":19,
 	"max_num_connections":1
     },
     "components": [
         {
 	    "component_id":"components",
-            "id": "comp_sel_2440",
+            "id": "sel_2440",
             "frequency": 1000,
             "offset_time": 200,
             "registers": [
@@ -31,7 +32,7 @@
                     "type": "Input",
                     "map": [ 
                         { "id": "test_id",        "offset": 255,  "name": "test_id"   ,"size":1    , "signed":true },
-                                                { "id": "enum_256_1",        "offset": 256,  "name": "enum_256_1"   ,"size":1    , "enum":true,  
+                        { "id": "enum_256_1",     "offset": 256,  "name": "enum_256_1"   ,"size":1    , "enum":true,  "scale":1, "shift":1,
                                                      "bit_strings": [
                                                                     "some_string", 
                                                                     "another_string", 
@@ -41,7 +42,7 @@
                         },
                         { "id": "enum_257_2",        "offset": 257,  "name": "enum_257_2"   ,"size":2    , "enum":true,  
                                                      "bit_strings": [
-                                                                    "some_string", 
+                                                                    "some_string_257", 
                                                                     "another_string", 
                                                                     null,
                                                                     "yet_another_string", 
@@ -50,7 +51,7 @@
                         },
                         { "id": "enum_259_4",        "offset": 270,  "name": "enum_259_4"   ,"size":4    , "enum":true,  
                                                      "bit_strings": [
-                                                                    "some_string", 
+                                                                    "some_string_278", 
                                                                     "another_string", 
                                                                     null,
                                                                     "yet_another_string", 
@@ -58,36 +59,47 @@
                                                                     ]
                         },
                         { "id": "bsinput_0_4",        "offset": 294,  "name": "bs_input_0_4"   ,"size":4    , "word_order":1234 },
-                        { "id": "bsinput_1_4",        "offset": 298,  "name": "bs_input_1_4"   ,"size":4 },
-                        { "id": "ibits_1000_1",        "offset": 1000,  "name": "ibits_1000_1"   ,"size":1    },  
+                        { "id": "bsinput_1_4",        "offset": 298,  "name": "bs_input_1_4"   ,"size":4 }
+                    ]
+                },
+                {
+                        "type": "Input",
+                        "map": [ 
+                            { "id": "ibits_1000_1",        "offset": 1000,  "name": "ibits_1000_1"   ,"size":1    }
+                    ]
+                },
+                {
+                    "type": "Input",
+                    "map": [ 
+
                         { "id": "ibits_2000_1",        "offset": 2000,  "name": "ibits_2000_1"   ,"size":1    , "individual_bits":true,  
                                                                     "bit_strings": [
-                                                                                   "some_string", 
-                                                                                   "another_string", 
+                                                                                   "ib_1_some_string_2000", 
+                                                                                   "ib_1_another_string", 
                                                                                    null,
-                                                                                   "yet_another_string", 
-                                                                                   "etc."
+                                                                                   "ib_1_yet_another_string", 
+                                                                                   "ib_1_etc."
                                                                                    ]
                         },
                         { "id": "ibits_2001_2",        "offset": 2001,  "name": "ibits_2001_2"   ,"size":2    , "individual_bits":true,  
                                                                     "bit_strings": [
-                                                                                   "some_string", 
-                                                                                   "another_string", 
-                                                                                   "yet_another_string", 
-                                                                                   "etc."
+                                                                                   "ib_2_some_string_2001", 
+                                                                                   "ib_2_another_string", 
+                                                                                   "ib_2_yet_another_string", 
+                                                                                   "ib_2_etc."
                                                                                    ]
                         },
                         { "id": "ibits_2003_4",        "offset": 2003,  "name": "ibits_2003_4"   ,"size":4    , "individual_bits":true,  
                                                                     "bit_strings": [
-                                                                                   "some_string", 
-                                                                                   "another_string", 
-                                                                                   "yet_another_string", 
-                                                                                   "etc."
+                                                                                   "ib_4_some_string_2003", 
+                                                                                   "ib_4_another_string", 
+                                                                                   "ib_4_yet_another_string", 
+                                                                                   "ib_4_etc."
                                                                                    ]
                         },
                         { "id": "bf_2007_1",        "offset": 2007,  "name": "bf_2007_1"   ,"size":1    , "bit_field":true,  
                                                                     "bit_strings": [
-                                                                                   "some_string", 
+                                                                                   "some_string_2007", 
                                                                                    "another_string", 
                                                                                    null,
                                                                                    "yet_another_string", 
@@ -97,7 +109,7 @@
                         },
                         { "id": "bf_2008_2",        "offset": 2008,  "name": "bf_2008_2"   ,"size":2    , "bit_field":true,  
                                                                     "bit_strings": [
-                                                                                   "some_string", 
+                                                                                   "some_string_2008", 
                                                                                    "another_string", 
                                                                                    null,
                                                                                    "yet_another_string", 
@@ -106,7 +118,7 @@
                         },
                         { "id": "bf_2010_4",        "offset": 2010,  "name": "bf_2010_4"   ,"size":4    , "bit_field":true,  
                                                                     "bit_strings": [
-                                                                                   "some_string", 
+                                                                                   "some_string_2010", 
                                                                                    "another_string", 
                                                                                    null,
                                                                                    "yet_another_string", 
@@ -122,21 +134,21 @@
                                                                                         "number_of_bits":4,
                                                                                         "bit_strings" :[
                                                                                             "undefined",
-                                                                                            "Enum 1",
-                                                                                            "Enum 2",
-                                                                                            "Enum 3",
-                                                                                            "Enum 4",
-                                                                                            "Enum 5",
-                                                                                            "Enum 6",
-                                                                                            "Enum 7",
-                                                                                            "Enum 8",
-                                                                                            "Enum 9",
-                                                                                            "Enum 10",
                                                                                             "Enum 11",
                                                                                             "Enum 12",
                                                                                             "Enum 13",
                                                                                             "Enum 14",
-                                                                                            "Enum 15"
+                                                                                            "Enum 15",
+                                                                                            "Enum 16",
+                                                                                            "Enum 17",
+                                                                                            "Enum 18",
+                                                                                            "Enum 19",
+                                                                                            "Enum 110",
+                                                                                            "Enum 111",
+                                                                                            "Enum 112",
+                                                                                            "Enum 113",
+                                                                                            "Enum 114",
+                                                                                            "Enum 115"
                                                                                         ]
                                                                                     },
                                                                                     { 
@@ -147,21 +159,21 @@
                                                                                         "starting_bit_pos":4,
                                                                                         "bit_strings" :[
                                                                                             "undefined",
-                                                                                            "Enum 1",
-                                                                                            "Enum 2",
-                                                                                            "Enum 3",
-                                                                                            "Enum 4",
-                                                                                            "Enum 5",
-                                                                                            "Enum 6",
-                                                                                            "Enum 7",
-                                                                                            "Enum 8",
-                                                                                            "Enum 9",
-                                                                                            "Enum 10",
-                                                                                            "Enum 11",
-                                                                                            "Enum 12",
-                                                                                            "Enum 13",
-                                                                                            "Enum 14",
-                                                                                            "Enum 15"
+                                                                                            "Enum 21",
+                                                                                            "Enum 22",
+                                                                                            "Enum 23",
+                                                                                            "Enum 24",
+                                                                                            "Enum 25",
+                                                                                            "Enum 26",
+                                                                                            "Enum 27",
+                                                                                            "Enum 28",
+                                                                                            "Enum 29",
+                                                                                            "Enum 210",
+                                                                                            "Enum 211",
+                                                                                            "Enum 212",
+                                                                                            "Enum 213",
+                                                                                            "Enum 214",
+                                                                                            "Enum 215"
                                                                                         ]
                                                                                     }
 

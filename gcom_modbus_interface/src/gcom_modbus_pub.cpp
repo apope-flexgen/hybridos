@@ -79,6 +79,8 @@ std::mutex cb_output_mutex;
 
 int GetNumThreads(struct cfg *myCfg);
 bool testThread();
+bool killThread();
+
 
 
 void pubCallback(std::shared_ptr<TimeObject>t, void *p)
@@ -254,8 +256,33 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
     {
         //its not a bug but we need to know
         //if(1)std::cout << " too many pending pubs  aborting poll; name: "<<t->name<<"  num_threads :" << num_threads << std::endl;
-        FPS_INFO_LOG("Server stall  too many pending pubs [%d],  aborting poll name: %s num_threads : %d", mypub->pending, t->name.c_str(), num_threads);
+        // testThread checks to see if the connection is still true it will force a disconnect if the link is dead
         testThread();
+        // we need to have a time out here to allow recovery from the stall 
+        // if mypub->pend_timeout == 0 then set it to tnow + 5 seconds perhaps
+        // set the pending count to 3 to allow another attempt
+        if (mypub->pend_timeout == 0.0 ) {
+            FPS_INFO_LOG("Server stall  too many pending pubs [%d],  aborting poll name: %s for 5 seconds, num_threads : %d"
+                             , mypub->pending, t->name.c_str(), num_threads);
+            mypub->pend_timeout = tNow + 5.0;
+
+            if (mypub->kill_timeout == 0.0 ) {
+                mypub->kill_timeout = tNow + 10.0;
+            }
+        }
+        if ((mypub->pend_timeout> 0) &&  (mypub->pend_timeout< tNow)) {
+            mypub->pend_timeout = 0.0;
+            // allow another pub attempt
+            mypub->pending--;
+        }
+        if ((mypub->kill_timeout> 0) &&  (mypub->kill_timeout < tNow)) {
+            mypub->kill_timeout = 0.0;
+            FPS_INFO_LOG("Server stall  poll name  [%s],  killing thread connection "
+                             , t->name.c_str());
+            // force a reconnection
+            killThread();
+            mypub->pending = 0;
+        }
 
     }
     else
@@ -279,6 +306,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
         // we need to see how many pending pubs we have
         if (mypub->pending > 3)
         {
+            // this throws away pending work.
             stashWork(io_work);
         }
         else

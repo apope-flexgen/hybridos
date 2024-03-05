@@ -727,11 +727,16 @@ void handle_point_error(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread,
                         , std::shared_ptr<struct cfg::io_point_struct> io_point, const char *func_name, int err)
 {
     io_point->errno_code = err;
-
-   if (io_point->errno_code == ECONNRESET) 
+    // do not disable thread id 1
+    if (io_point->errno_code == ECONNRESET) 
     {
         io_thread->connect_reset++;
-        if(io_thread->connect_reset> 5)
+        if(0)FPS_INFO_LOG(
+                    "thread_id %d %s enabled connect reset now %d,for [%s] offset %d  err code %d [%s]"
+                    , io_thread->tid, func_name, io_thread->connect_reset, io_point->id.c_str()
+                    , io_point->offset, io_point->errno_code,  modbus_strerror(io_point->errno_code));
+
+        if((io_thread->tid > 1) && (io_thread->connect_reset> 10))
         {
             if(io_thread->is_enabled)
             {
@@ -1541,15 +1546,23 @@ void ioThreadFunc(ThreadControl &control, struct cfg &myCfg, std::shared_ptr<IO_
             {
                 if (io_threadChan.receive(signal, delay))
                 {
-
+                    // from testThread
                     if (signal == 2)
                     {
+                       if(0)printf(" >>>>>>>>>>>>>>>>%s testThread signal received \n",__func__);
                         if (check_socket_alive(io_thread, /*timeout_sec*/ 0 , /* timeout_usec*/ 20) > 0)
                         {
-                            //printf(" >>>>>>>>>>>>>>>>%s shutting socket down \n",__func__);
+                            if(0)printf(" >>>>>>>>>>>>>>>>%s testThread shutting socket down \n",__func__);
                             CloseModbusForThread(io_thread, true);
                             DisConnect(myCfg, threadControl, io_thread);
                         }
+                    }
+                    // from killThread
+                    if (signal == 3)
+                    {
+                        if(0)printf(" >>>>>>>>>>>>>>>>%s killThread shutting socket down \n",__func__);
+                        CloseModbusForThread(io_thread, true);
+                        DisConnect(myCfg, threadControl, io_thread);
                     }
                     if (signal == 0)
                         run = false;
@@ -1613,7 +1626,8 @@ void ioThreadFunc(ThreadControl &control, struct cfg &myCfg, std::shared_ptr<IO_
         }
 
     }
-    std::cout << " thread_id " << io_thread->tid << "   loop done; enabled :"<< io_thread->is_enabled << std::endl;
+    FPS_INFO_LOG("thread_id [%d]: Loop Completed; enabled [%s].", io_thread->tid, (char*)io_thread->is_enabled?"true":"false");
+//    std::cout << " thread_id " << io_thread->tid << "   loop done; enabled :"<< io_thread->is_enabled << std::endl;
 
     // TODO move to cfg.log_lock;
     if (!io_thread->is_local)
@@ -1794,8 +1808,14 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
             {
                 mypub = io_work->pub_struct;
                 if(0)std::cout << " mypub completed name: " << io_work->work_name << " pending value :" << mypub->pending << std::endl;
-                if(mypub->pending > 0)
-                    mypub->pending--;
+                // if we get one we can reset
+                if(mypub->pending > 1)
+                {
+                    if(0)std::cout << " mypub completed name: " << io_work->work_name << " pending value :" << mypub->pending << std::endl;
+                    mypub->pend_timeout = 0.0;
+                    mypub->kill_timeout = 0.0;
+                    mypub->pending = 0;
+                }
             }
 
             if (io_work->data_error)
@@ -2532,6 +2552,12 @@ bool testThread()
     return true;
 }
 
+bool killThread()
+{
+    io_threadChan.send(3);
+    return true;
+}
+
 // bool pollWork (std::shared_ptr<IO_Work> io_work) {
 // bool setWork (std::shared_ptr<IO_Work> io_work) {
 bool pollWork(std::shared_ptr<IO_Work> io_work)
@@ -2961,9 +2987,11 @@ double FastReconnectForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_t
     char message[1024];
     snprintf(message, 1024, "Modbus Client [%s] Thread  id %d successfully connected to [%s] on port [%d]"
         , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+
     FPS_INFO_LOG("%s", message);
     emit_event(&myCfg.fims_gateway, "Modbus Client", message, 1);
     io_thread->connect_fails = 0;
+    io_thread->connect_reset = 0; //get_time_double() - tNow;
     return (io_thread->connect_time);
 }
 

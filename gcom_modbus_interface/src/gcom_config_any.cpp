@@ -501,16 +501,16 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
     ok &= getItemFromMap(jsonMapOfConfig, "connection.debug", myCfg.connection.debug, false, true, true, false);
     // connection_timeout
     ok &= getItemFromMap(jsonMapOfConfig, "connection.connection_timeout", myCfg.connection.connection_timeout, 2.0, true, true, false);
-    if (ok && (myCfg.connection.connection_timeout < 2 || myCfg.connection.connection_timeout > 10))
+    if (ok && (myCfg.connection.connection_timeout < 2 || myCfg.connection.connection_timeout > 30))
     {
-        FPS_INFO_LOG("Connection timeout must be between 2 and 10 seconds. Configured value is [%f] seconds. Using default of 2s.", myCfg.connection.connection_timeout);
-        myCfg.connection.connection_timeout = 2.0;
+        FPS_INFO_LOG("Connection timeout must be between 2 and 30 seconds. Configured value is [%f] seconds. Using default of 30s.", myCfg.connection.connection_timeout);
+        myCfg.connection.connection_timeout = 30.0;
     }
     ok &= getItemFromMap(jsonMapOfConfig, "connection.transfer_timeout", myCfg.connection.transfer_timeout, 0.2, true, true, false);
-    if (ok && (myCfg.connection.transfer_timeout < 0.05 || myCfg.connection.transfer_timeout > 5.00))
+    if (ok && (myCfg.connection.transfer_timeout < 0.05 || myCfg.connection.transfer_timeout > 30.00))
     {
-        FPS_INFO_LOG("Transfer timeout must be between 0.05 and 5.0 seconds. Configured value is [%f] seconds. Using default of 0.5s.", myCfg.connection.transfer_timeout);
-        myCfg.connection.transfer_timeout = 0.5;
+        FPS_INFO_LOG("Transfer timeout must be between 0.05 and 30.0 seconds. Configured value is [%f] seconds. Using default of 30s.", myCfg.connection.transfer_timeout);
+        myCfg.connection.transfer_timeout = 30.00;
     }
     // // transfer_timeout
     // ok &= getItemFromMap(jsonMapOfConfig, "connection.transfer_timeout", myCfg.connection.transfer_timeout, 500, true, true, false);
@@ -968,7 +968,15 @@ bool extract_io_point( std::map<std::string, std::any>&json_io_point, std::share
     io_point->bit_mask = (io_point->number_of_bits * io_point->number_of_bits) - 1;
     getItemFromMap(json_io_point, "scale", io_point->scale, parent_io_point->scale, new_point, new_point, debug);
     getItemFromMap(json_io_point, "normal_set", io_point->normal_set, parent_io_point->normal_set, new_point, new_point, debug);
-    getItemFromMap(json_io_point, "signed", io_point->is_signed, parent_io_point->is_signed, new_point, new_point, debug);
+
+    if(io_point->shift == 0)
+    {
+        getItemFromMap(json_io_point, "signed", io_point->is_signed, parent_io_point->is_signed, new_point, new_point, debug);
+    }
+    else
+    {
+        io_point->is_signed = true;
+    }
     std::string format_str;
     getItemFromMap(json_io_point, "format", format_str, std::string(""), new_point, new_point, false);
 
@@ -1058,6 +1066,16 @@ bool extract_io_point( std::map<std::string, std::any>&json_io_point, std::share
     getItemFromMap(json_io_point, "random_enum", io_point->is_random_enum, parent_io_point->is_random_enum, new_point, new_point, debug);
     getItemFromMap(json_io_point, "individual_bits", io_point->is_individual_bits, parent_io_point->is_individual_bits, new_point, new_point, debug);
     getItemFromMap(json_io_point, "bit_field", io_point->is_bit_field, io_point->is_bit_field, new_point, new_point, debug);
+    if (io_point->is_enum ||io_point->is_random_enum|| io_point->is_individual_bits || io_point->is_bit_field)
+    {
+        if(io_point->shift > 0.0) {
+            io_point->shift = 0.0;
+        }
+        io_point->is_signed = false;
+        double scale = 0.0;
+        io_point->scale = scale;
+
+    }
     double dval = 0.0;
     io_point->debounce = dval;
     io_point->deadband = dval;
@@ -1405,22 +1423,22 @@ uint8_t get_any_to_bool(std::shared_ptr<cfg::io_point_struct> io_point, std::any
     }
     else if (val.type() == typeid(int64_t))
     {
-        if (std::any_cast<int64_t>(val) > 0)
+        if (std::any_cast<int64_t>(val) != 0)
             bool_intval = 1;
     }
     else if (val.type() == typeid(int32_t))
     {
-        if (std::any_cast<int32_t>(val) > 0)
+        if (std::any_cast<int32_t>(val) != 0)
             bool_intval = 1;
     }
     else if (val.type() == typeid(uint32_t))
     {
-        if (std::any_cast<uint32_t>(val) > 0)
+        if (std::any_cast<uint32_t>(val) != 0)
             bool_intval = 1;
     }
     else if (val.type() == typeid(uint64_t))
     {
-        if (std::any_cast<uint64_t>(val) > 0)
+        if (std::any_cast<uint64_t>(val) != 0)
             bool_intval = 1;
     }
     else if (val.type() == typeid(std::string))
@@ -1430,7 +1448,7 @@ uint8_t get_any_to_bool(std::shared_ptr<cfg::io_point_struct> io_point, std::any
     }
     else if (val.type() == typeid(double))
     {
-        if (std::any_cast<double>(val) > 0)
+        if (std::any_cast<double>(val) != 0.0)
             bool_intval = 1;
     }
     if (io_point->scale == -1)

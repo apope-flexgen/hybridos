@@ -527,6 +527,9 @@ server_data* create_register_map(cJSON* registers, datalog* data)
             cJSON* scale_value = cJSON_GetObjectItem(current_variable_JSON,"scale");
             data[i].register_map[j].scale = cJSON_IsNumber(scale_value) ? (scale_value->valuedouble) : 0.0;
 
+            cJSON* shift_value = cJSON_GetObjectItem(current_variable_JSON,"shift");
+            data[i].register_map[j].shift = cJSON_IsNumber(shift_value) ? (shift_value->valueint) : 0;
+
             cJSON* is_float = cJSON_GetObjectItem(current_variable_JSON, "float");
             data[i].register_map[j].floating_pt = cJSON_IsTrue(is_float);
             data[i].register_map[j].sign |= data[i].register_map[j].floating_pt; // a float is signed by definition
@@ -661,13 +664,13 @@ uint32_t json_to_uint32(maps* settings, cJSON* obj)
     // direct float: transmitted directly bit-for-bit
     else if(settings->floating_pt)
     {
-        float scaled_val = val->valuedouble * (settings->scale == 0.0 ? 1.0 : settings->scale);
+        float scaled_val = (val->valuedouble - settings->shift) * (settings->scale == 0.0 ? 1.0 : settings->scale);
         memcpy(&encoded_val, &scaled_val, sizeof(encoded_val));
     }
     // indirect float: scaled and truncated to int, then transmitted as int to be descaled on client side
     else if(settings->scale != 0.0)
     {
-        float scaled_val = val->valuedouble * settings->scale;
+        float scaled_val = (val->valuedouble - settings->shift) * settings->scale;
         int casted_val = static_cast<int> (scaled_val);
         memcpy(&encoded_val, &casted_val, sizeof(encoded_val));
     }
@@ -881,6 +884,8 @@ bool process_modbus_message(int bytes_read, int header_length, datalog* data, sy
 
                             if(reg->scale != 0.0)
                                 temp_reg /= reg->scale;
+                            if(reg->shift != 0)
+                                temp_reg += reg->shift;
                             cJSON_AddNumberToObject(send_body, "value", temp_reg);
                         }
                         char* body_msg = cJSON_PrintUnformatted(send_body);
@@ -992,6 +997,8 @@ bool process_modbus_message(int bytes_read, int header_length, datalog* data, sy
                 //Only want to scale if scale value is present and not == 0.0
                 if (reg->scale != 0.0)
                     temp_reg /= reg->scale;
+                if(reg->shift != 0)
+                    temp_reg += reg->shift;
 
                 cJSON* send_body = cJSON_CreateObject();
                 if(send_body != NULL)

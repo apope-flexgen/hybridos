@@ -416,6 +416,8 @@ struct cfg
         double syncPct     = 0.0; // if polls take too long to retrieve data, what is our threshold (as a percent of pub frequency) for pushing back the next poll?
         bool use_sync = false; // do we push back polls if they're excessively late?
         int pending = 0;
+        double pend_timeout = 0.0;
+        double kill_timeout = 0.0;
         int pub_threads = 0;
     };
 
