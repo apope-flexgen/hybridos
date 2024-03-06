@@ -13,7 +13,6 @@ import (
 	"github.com/flexgen-power/hybridos/ftd/pkg/ftd"
 	build "github.com/flexgen-power/hybridos/go_flexgen/buildinfo"
 	"github.com/flexgen-power/hybridos/go_flexgen/cfgfetch"
-	"github.com/flexgen-power/hybridos/go_flexgen/fileops"
 	"github.com/flexgen-power/hybridos/go_flexgen/flexservice"
 	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 	"golang.org/x/sync/errgroup"
@@ -22,7 +21,7 @@ import (
 var pipeline ftd.Pipeline
 
 func main() {
-	err := configure()
+	cfg, err := configure()
 	if err != nil {
 		log.Fatalf("Error configuring FTD: %s.", err.Error())
 	}
@@ -34,7 +33,7 @@ func main() {
 	defer shutdown()
 	group, groupContext := errgroup.WithContext(mainContext)
 
-	err = pipeline.Run(group, groupContext)
+	err = pipeline.Run(cfg, group, groupContext)
 	if err != nil {
 		log.Fatalf("Pipeline closed with error: %v", err)
 	} else {
@@ -43,7 +42,7 @@ func main() {
 }
 
 // Perform all configuration for FTD.
-func configure() error {
+func configure() (ftd.Config, error) {
 	cfgSource := parseFlags()
 	// init logger config
 	err := log.InitConfig("ftd").Init("ftd")
@@ -53,25 +52,17 @@ func configure() error {
 	}
 	err = configureFlexService()
 	if err != nil {
-		return fmt.Errorf("failed to configure FlexService: %w", err)
+		return ftd.Config{}, fmt.Errorf("failed to configure FlexService: %w", err)
 	}
 
 	// Configure based on provided sources
 	log.Infof("Config source specified: %s", cfgSource)
-	err = retrieveAndReadConfiguration(cfgSource)
+	cfg, err := retrieveAndReadConfiguration(cfgSource)
 	if err != nil {
-		return fmt.Errorf("failed to retrieve or read configuration: %w", err)
+		return ftd.Config{}, fmt.Errorf("failed to retrieve or read configuration: %w", err)
 	}
 
-	// check if output directory exist. If not try creating one
-	if !fileops.Exists(ftd.GlobalConfig.ArchivePath) {
-		log.Infof("%s doesnt exist. Creating directory", ftd.GlobalConfig.ArchivePath)
-		err := os.MkdirAll(ftd.GlobalConfig.ArchivePath, 0755)
-		if err != nil {
-			return fmt.Errorf("failed to make directory for output archives: %w", err)
-		}
-	}
-	return nil
+	return cfg, nil
 }
 
 // Parses command-line flags such as module configuration source and logger configuration source.
@@ -101,17 +92,19 @@ func configureFlexService() error {
 		ApiDesc: "displays all URIs received from fims server",
 		ApiCallback: flexservice.Callback(func(args []interface{}) (string, error) {
 			var retVal string = ""
-			for uriStr, obj := range pipeline.Collator.FimsMsgs {
-				responseLine := ""
-				responseLine += "-\t" + uriStr
-				if obj.Config == nil {
-					retVal += responseLine + "\n"
-					continue
-				}
-				if obj.Config.Group != "" {
-					retVal += responseLine + "\t" + obj.Config.Group + "\n"
-				} else {
-					retVal += responseLine + "\n"
+			for i := 0; i < len(pipeline.Collators); i++ {
+				for uriStr, obj := range pipeline.Collators[i].FimsMsgs {
+					responseLine := ""
+					responseLine += "-\t" + uriStr
+					if obj.Config == nil {
+						retVal += responseLine + "\n"
+						continue
+					}
+					if obj.Config.Group != "" {
+						retVal += responseLine + "\t" + obj.Config.Group + "\n"
+					} else {
+						retVal += responseLine + "\n"
+					}
 				}
 			}
 			return retVal, nil
@@ -140,17 +133,17 @@ func configureFlexService() error {
 }
 
 // Retrieves and reads in FTD configuration data.
-func retrieveAndReadConfiguration(cfgSource string) error {
+func retrieveAndReadConfiguration(cfgSource string) (ftd.Config, error) {
 	// retrieve configuration from dbi or from file
 	configBody, err := cfgfetch.Retrieve("ftd", cfgSource)
 	if err != nil {
-		return fmt.Errorf("failed to retrieve configuration data: %w", err)
+		return ftd.Config{}, fmt.Errorf("failed to retrieve configuration data: %w", err)
 	}
 
 	// translate configuration data to internal data structures
-	err = ftd.HandleConfiguration(configBody)
+	cfg, err := ftd.ExtractRootConfiguration(configBody)
 	if err != nil {
-		return fmt.Errorf("failed to parse configuration data: %w", err)
+		return ftd.Config{}, fmt.Errorf("failed to parse configuration data: %w", err)
 	}
-	return nil
+	return cfg, nil
 }

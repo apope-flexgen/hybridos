@@ -22,7 +22,7 @@ type FimsMsgBufferManager struct {
 
 // Instantiate a new BufferManager where the Out channel has a buffer
 // matching the number of consumers that are expected to read from it.
-func NewFimsMsgBufferManager(numConsumers int, inputChannel <-chan *fims.FimsMsg) FimsMsgBufferManager {
+func NewFimsMsgBufferManager(numConsumers int, inputChannel <-chan *fims.FimsMsg) *FimsMsgBufferManager {
 	ch := FimsMsgBufferManager{
 		in:    inputChannel,
 		Out:   make(chan *fims.FimsMsg, numConsumers),
@@ -31,7 +31,7 @@ func NewFimsMsgBufferManager(numConsumers int, inputChannel <-chan *fims.FimsMsg
 
 	ch.open()
 
-	return ch
+	return &ch
 }
 
 // Opens up the buffer for use by starting a routine that manages the buffer.

@@ -13,6 +13,8 @@ import (
 )
 
 type MsgCollator struct {
+	laneCfg     LaneConfig
+	laneName    string
 	flushTicker *time.Ticker // Ticker dictating when encoded data gets flushed to Out
 	in          <-chan *fims.FimsMsg
 	Out         chan []*fims_codec.Encoder
@@ -31,9 +33,11 @@ type ftdData struct {
 // Input channel: given as function argument.
 //
 // Output channel: chan []*fims_codec.Encoder.
-func NewCollator(archivePeriodSeconds int, inputChannel <-chan *fims.FimsMsg) *MsgCollator {
+func NewCollator(cfg LaneConfig, lane string, inputChannel <-chan *fims.FimsMsg) *MsgCollator {
 	return &MsgCollator{
-		flushTicker: time.NewTicker(time.Duration(archivePeriodSeconds) * time.Second),
+		laneCfg:     cfg,
+		laneName:    lane,
+		flushTicker: time.NewTicker(time.Duration(cfg.ArchivePeriod) * time.Second),
 		in:          inputChannel,
 		Out:         make(chan []*fims_codec.Encoder),
 		FimsMsgs:    make(map[string]ftdData),
@@ -42,7 +46,6 @@ func NewCollator(archivePeriodSeconds int, inputChannel <-chan *fims.FimsMsg) *M
 }
 
 func (collator *MsgCollator) Start(group *errgroup.Group, groupContext context.Context) (StartUpError error) {
-	// Only allow one collateWorker for now, because otherwise we would need to correctly direct messages to each responsible worker
 	group.Go(func() error { return collator.collateUntil(groupContext.Done()) })
 	return nil
 }
@@ -66,13 +69,13 @@ func (collator *MsgCollator) collateUntil(done <-chan struct{}) error {
 		}
 	}
 termination:
-	log.Infof("Collator entered termination block. Creating batches from remaining messages.")
+	log.Infof("Collator %s entered termination block. Creating batches from remaining messages.", collator.laneName)
 	// graceful termination by collating and flushing all remaining messages
 	for msg := range collator.in {
 		collator.collate(msg)
 	}
 	collator.flush()
-	log.Infof("Collator terminating. All remaining messages were batched.")
+	log.Infof("Collator %s terminating. All remaining messages were batched.", collator.laneName)
 	return nil
 }
 
@@ -89,6 +92,22 @@ func (collator *MsgCollator) collate(msg *fims.FimsMsg) {
 	if !ok {
 		log.Errorf("Message with URI %s is a %T, but map[string]interface{} is required", msg.Uri, msg.Body)
 		return
+	}
+
+	// if configured to only process certain fields, replace message with a new message that has only those fields
+	if len(uriFtdData.Config.Fields) > 0 {
+		newBody := map[string]interface{}{}
+		for _, field := range uriFtdData.Config.Fields {
+			val, ok := bodyMap[field]
+			if ok {
+				newBody[field] = val
+			}
+		}
+		if len(newBody) == 0 {
+			// do nothing in the case where the entire message has been filtered out
+			return
+		}
+		bodyMap = newBody
 	}
 
 	// get the codec either from group or the URI
@@ -118,7 +137,7 @@ func (collator *MsgCollator) getFtdData(uri string) (data *ftdData, validUri boo
 	log.Debugf("Received a message on a new URI %s", uri)
 
 	// get config for this uri
-	uriCfg, exists := findUriConfig(uri, GlobalConfig.Uris)
+	uriCfg, exists := findUriConfig(uri, collator.laneCfg.Uris)
 	if !exists { // ignore URIs that FTD is not configured for
 		return nil, false
 	}
@@ -130,13 +149,13 @@ func (collator *MsgCollator) getFtdData(uri string) (data *ftdData, validUri boo
 		_, exist := collator.groups[uriCfg.Group]
 		if !exist {
 			log.Infof("Creating codec for group %s", uriCfg.Group)
-			groupEncoder := createEncoderFromConfig(uri, uriCfg)
+			groupEncoder := createEncoderFromConfig(uri, collator.laneCfg.DbName, collator.laneName, uriCfg)
 			collator.groups[uriCfg.Group] = groupEncoder
 		}
 		encoder = nil
 	} else {
 		// Create an individual codec
-		encoder = createEncoderFromConfig(uri, uriCfg)
+		encoder = createEncoderFromConfig(uri, collator.laneCfg.DbName, collator.laneName, uriCfg)
 	}
 
 	f_data = ftdData{
@@ -211,8 +230,8 @@ func findUriConfig(unknownUri string, configUris []UriConfig) (uriCfg *UriConfig
 	return nil, false
 }
 
-// Creates a new encoder using the given URI and configuration.
-func createEncoderFromConfig(uri string, uriCfg *UriConfig) *fims_codec.Encoder {
+// Creates a new encoder using the given URI, database name, lane name, and configuration.
+func createEncoderFromConfig(uri string, database string, laneName string, uriCfg *UriConfig) *fims_codec.Encoder {
 	// name encoder after the uri, or after the group if a group is defined
 	var encoderName string
 	if len(uriCfg.Group) > 0 {
@@ -224,8 +243,9 @@ func createEncoderFromConfig(uri string, uriCfg *UriConfig) *fims_codec.Encoder 
 	newEncoder := fims_codec.NewEncoder(encoderName)
 	newEncoder.AdditionalData = map[string]string{
 		"destination": uriCfg.DestinationDb,
-		"database":    GlobalConfig.DbName,
+		"database":    database,
 		"measurement": uriCfg.Measurement,
+		"lane":        laneName,
 	}
 	return newEncoder
 }

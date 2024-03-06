@@ -8,3 +8,6 @@ git_*
 .gitconfig
 go/
 .cache/
+
+# pytest cache files
+*.pyc

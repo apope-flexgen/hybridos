@@ -1,0 +1,28 @@
+{
+    "1": {
+        "db_name": "test_cold",
+        "period" : 1,
+        "num_archive_workers": 1,
+        "archive": "/home/hybridos/ftd_pytest/cold",
+        "uris": [
+            {
+                "uri": "/test",
+                "destination": "influx",
+                "measurement": "test"
+            }
+        ]
+    },
+    "2": {
+        "db_name": "test_warm",
+        "period" : 1,
+        "num_archive_workers": 1,
+        "archive": "/home/hybridos/ftd_pytest/warm",
+        "uris": [
+            {
+                "uri": "/test",
+                "destination": "influx",
+                "measurement": "test"
+            }
+        ]
+    }
+}

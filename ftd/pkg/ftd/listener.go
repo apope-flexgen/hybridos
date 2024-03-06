@@ -14,6 +14,7 @@ import (
 // then puts only messages that are meant for encoding and transfer to the
 // PowerCloud server on the out channel for further processing.
 type FimsListener struct {
+	uriCfgs        []UriConfig
 	fimsConnection *fims.Fims
 	fimsIn         chan fims.FimsMsg
 	Out            chan *fims.FimsMsg
@@ -23,10 +24,11 @@ type FimsListener struct {
 const copsSummaryUri = "/cops/summary"
 
 // Creates a FIMS listener with a newly-allocated output channel and input channel awaiting fims data.
-func NewFimsListener() *FimsListener {
+func NewFimsListener(cfgs []UriConfig) *FimsListener {
 	return &FimsListener{
-		fimsIn: make(chan fims.FimsMsg),
-		Out:    make(chan *fims.FimsMsg),
+		uriCfgs: cfgs,
+		fimsIn:  make(chan fims.FimsMsg),
+		Out:     make(chan *fims.FimsMsg),
 	}
 }
 
@@ -39,13 +41,12 @@ func (l *FimsListener) Start(group *errgroup.Group, groupContext context.Context
 		return fmt.Errorf("unable to connect to FIMS server: %w", err)
 	}
 	// subscribe to URIs
-	uris := buildUriList(GlobalConfig.Uris)
+	uris := buildUriList(l.uriCfgs)
 	log.Infof("Subscribing to uris: %#v", uris)
 	err = l.fimsConnection.Subscribe(uris...)
 	if err != nil {
 		return fmt.Errorf("unable to subscribe to FIMS: %w", err)
 	}
-	log.Infof("archive created every %d seconds", GlobalConfig.ArchivePeriod)
 
 	// start receiving messages
 	go func() {

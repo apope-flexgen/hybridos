@@ -1,6 +1,11 @@
 package ftd
 
-import "testing"
+import (
+	"fims"
+	"testing"
+
+	"github.com/flexgen-power/hybridos/fims_codec"
+)
 
 // Test finding the correct config associated with the given uri.
 func TestFindUriConfig(t *testing.T) {
@@ -58,5 +63,213 @@ func TestFindUriConfig(t *testing.T) {
 	}
 	for _, testCase := range shouldExistTestCases {
 		testShouldExist(testCase.testUri, testCase.expectedCfg)
+	}
+}
+
+// Test that all fields are encoded when configured to encode all fields
+func TestAllFieldsEncoded(t *testing.T) {
+	collator := MsgCollator{
+		laneCfg: LaneConfig{
+			DbName: "test",
+			Uris: []UriConfig{
+				{
+					BaseUri:       "/test",
+					Sources:       []string{},
+					Fields:        []string{},
+					Group:         "",
+					DestinationDb: "influx",
+					Measurement:   "test",
+				},
+			},
+		},
+		laneName: "1",
+		FimsMsgs: make(map[string]ftdData),
+		groups:   make(map[string]*fims_codec.Encoder),
+	}
+
+	testMsgBody := map[string]interface{}{
+		"p":     100,
+		"value": 31,
+		"name":  "test_string",
+		"OPEN":  true,
+	}
+	testMsg := fims.FimsMsg{
+		Method: "pub",
+		Uri:    "/test",
+		Body:   testMsgBody,
+	}
+	collator.collate(&testMsg)
+
+	data, ok := collator.FimsMsgs["/test"]
+	if !ok {
+		t.Fatalf("Did not find any encoder messages associated with expected uri.")
+	}
+	encodedKeys := data.encoder.GetKeys()
+	checkEncoderKeysAreExpected(t, encodedKeys, []string{"p", "value", "name", "OPEN"})
+}
+
+// Test that fields are filtered as expected when configured to encode specific fields
+func TestFieldsFiltered(t *testing.T) {
+	collator := MsgCollator{
+		laneCfg: LaneConfig{
+			DbName: "test",
+			Uris: []UriConfig{
+				{
+					BaseUri:       "/test",
+					Sources:       []string{},
+					Fields:        []string{"p"},
+					Group:         "",
+					DestinationDb: "influx",
+					Measurement:   "test",
+				},
+			},
+		},
+		laneName: "1",
+		FimsMsgs: make(map[string]ftdData),
+		groups:   make(map[string]*fims_codec.Encoder),
+	}
+
+	testMsgBody := map[string]interface{}{
+		"p":     100,
+		"value": 31,
+		"name":  "test_string",
+		"OPEN":  true,
+	}
+	testMsg := fims.FimsMsg{
+		Method: "pub",
+		Uri:    "/test",
+		Body:   testMsgBody,
+	}
+	collator.collate(&testMsg)
+
+	data, ok := collator.FimsMsgs["/test"]
+	if !ok {
+		t.Fatalf("Did not find any encoder associated with expected uri.")
+	}
+	encodedKeys := data.encoder.GetKeys()
+	checkEncoderKeysAreExpected(t, encodedKeys, []string{"p"})
+}
+
+// Test that filtering fields still leaves the ftd_group key when using grouping
+func TestFieldsFilteredGrouping(t *testing.T) {
+	collator := MsgCollator{
+		laneCfg: LaneConfig{
+			DbName: "test",
+			Uris: []UriConfig{
+				{
+					BaseUri:       "/test",
+					Sources:       []string{},
+					Fields:        []string{"p"},
+					Group:         "test_group",
+					DestinationDb: "influx",
+					Measurement:   "test",
+				},
+			},
+		},
+		laneName: "1",
+		FimsMsgs: make(map[string]ftdData),
+		groups:   make(map[string]*fims_codec.Encoder),
+	}
+
+	testMsgBody := map[string]interface{}{
+		"p":     100,
+		"value": 31,
+		"name":  "test_string",
+		"OPEN":  true,
+	}
+	testMsg := fims.FimsMsg{
+		Method: "pub",
+		Uri:    "/test",
+		Body:   testMsgBody,
+	}
+	collator.collate(&testMsg)
+
+	encoder, ok := collator.groups["test_group"]
+	if !ok {
+		t.Fatalf("Did not find any encoder associated with expected uri.")
+	}
+	encodedKeys := encoder.GetKeys()
+	checkEncoderKeysAreExpected(t, encodedKeys, []string{"p", "ftd_group"})
+}
+
+// Test that nothing is encoded in the case where all fields are filtered out
+func TestAllFieldsFilteredOut(t *testing.T) {
+	collator := MsgCollator{
+		laneCfg: LaneConfig{
+			DbName: "test",
+			Uris: []UriConfig{
+				{
+					BaseUri:       "/test",
+					Sources:       []string{},
+					Fields:        []string{"unused"},
+					Group:         "",
+					DestinationDb: "influx",
+					Measurement:   "test",
+				},
+			},
+		},
+		laneName: "1",
+		FimsMsgs: make(map[string]ftdData),
+		groups:   make(map[string]*fims_codec.Encoder),
+	}
+
+	testMsgBody := map[string]interface{}{
+		"p":     100,
+		"value": 31,
+		"name":  "test_string",
+		"OPEN":  true,
+	}
+	testMsg := fims.FimsMsg{
+		Method: "pub",
+		Uri:    "/test",
+		Body:   testMsgBody,
+	}
+	collator.collate(&testMsg)
+
+	data, ok := collator.FimsMsgs["/test"]
+	if !ok {
+		// we will stil create an encoder, it just won't have any messages yet
+		t.Fatalf("Did not find any encoder associated with expected uri.")
+	}
+	if data.encoder.GetNumMessages() != 0 {
+		t.Fatalf("Encoder has a non-zero number of messages.")
+	}
+}
+
+// Helper function checking if the encoded keys from an encoder match an expected list of keys
+func checkEncoderKeysAreExpected(t *testing.T, keys []string, expectedKeys []string) {
+	t.Helper()
+
+	// check that lengths match
+	if len(keys) != len(expectedKeys) {
+		t.Errorf("Keys list does not match length of expected keys list")
+	}
+
+	// check each expected key is in the keys list
+	for _, expectedKey := range expectedKeys {
+		found := false
+		for _, key := range keys {
+			if key == expectedKey {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("Did not find expected key %s in keys list", expectedKey)
+		}
+	}
+
+	// check each key in the keys list is in the expected keys list
+	for _, key := range keys {
+		found := false
+		for _, expectedKey := range expectedKeys {
+			if key == expectedKey {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("Did not find key %s in expected keys list", key)
+		}
 	}
 }

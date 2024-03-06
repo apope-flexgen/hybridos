@@ -139,6 +139,17 @@ func (encoder *Encoder) GetNumMessages() uint16 {
 	return encoder.numMessages
 }
 
+// Returns the keys which are currently encoded
+func (encoder *Encoder) GetKeys() []string {
+	keys := []string{}
+	for _, keyMeta := range encoder.KeyMetadatas {
+		if keyMeta != nil {
+			keys = append(keys, keyMeta.key)
+		}
+	}
+	return keys
+}
+
 // Creates a single .tar.gz archive file from the data held by the encoder.
 // Includes one metadata file and one encoded data file.
 // Returns file path of created .tar.gz archive along with how many bytes

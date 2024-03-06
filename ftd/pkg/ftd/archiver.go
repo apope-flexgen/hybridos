@@ -2,27 +2,44 @@ package ftd
 
 import (
 	"context"
+	"fmt"
+	"os"
 
 	"github.com/flexgen-power/hybridos/fims_codec"
+	"github.com/flexgen-power/hybridos/go_flexgen/fileops"
 	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 	"golang.org/x/sync/errgroup"
 )
 
 // Takes a batch of encoders and archives each encoder into a .tar.gz file.
 type MsgArchiver struct {
-	in <-chan []*fims_codec.Encoder
+	laneCfg  LaneConfig
+	laneName string
+	in       <-chan []*fims_codec.Encoder
 }
 
 // Allocates memory for a new msgArchiver.
-func NewMsgArchiver(inputChannel <-chan []*fims_codec.Encoder) *MsgArchiver {
+func NewMsgArchiver(cfg LaneConfig, lane string, inputChannel <-chan []*fims_codec.Encoder) *MsgArchiver {
 	return &MsgArchiver{
-		in: inputChannel,
+		laneCfg:  cfg,
+		laneName: lane,
+		in:       inputChannel,
 	}
 }
 
 // Launch a worker pool of archivers to archive encoder batches as they are passed from the collator.
 func (archiver *MsgArchiver) Start(group *errgroup.Group, groupContext context.Context) (StartUpError error) {
-	for i := 0; i < GlobalConfig.NumArchiveWorkers; i++ {
+	// check if output directory exists. If not, try creating one
+	if !fileops.Exists(archiver.laneCfg.ArchivePath) {
+		log.Infof("%s doesnt exist. Creating directory", archiver.laneCfg.ArchivePath)
+		err := os.MkdirAll(archiver.laneCfg.ArchivePath, 0755)
+		if err != nil {
+			return fmt.Errorf("failed to make directory for output archives: %w", err)
+		}
+	}
+	log.Infof("archive created every %d seconds", archiver.laneCfg.ArchivePeriod)
+
+	for i := 0; i < archiver.laneCfg.NumArchiveWorkers; i++ {
 		group.Go(func() error { return archiver.archiveUntil(groupContext.Done()) })
 	}
 	return nil
@@ -41,24 +58,24 @@ func (archiver *MsgArchiver) archiveUntil(done <-chan struct{}) error {
 			}
 			// archive all data in the batch
 			for _, encoder := range encoderBatch {
-				writeArchiveData(encoder)
+				archiver.writeArchiveData(encoder)
 			}
 		}
 	}
 termination:
 	// archive all remaining batches
-	log.Infof("Archiver entered termination block. Archiving all remaining batches.")
+	log.Infof("Archiver %s entered termination block. Archiving all remaining batches.", archiver.laneName)
 	for encoderBatch := range archiver.in {
 		for _, encoder := range encoderBatch {
-			writeArchiveData(encoder)
+			archiver.writeArchiveData(encoder)
 		}
 	}
-	log.Infof("Archiver terminating. All remaining batches were archived.")
+	log.Infof("Archiver %s terminating. All remaining batches were archived.", archiver.laneName)
 	return nil
 }
 
 // Archives a single encoder into a .tar.gz file.
-func writeArchiveData(encoder *fims_codec.Encoder) {
+func (archiver *MsgArchiver) writeArchiveData(encoder *fims_codec.Encoder) {
 	// update site state to be primary/secondary which gets passed through metadata.txt in .tar.gz file
 	if ControllerStateIsPrimary() {
 		encoder.AdditionalData["site_state"] = "primary"
@@ -72,8 +89,8 @@ func writeArchiveData(encoder *fims_codec.Encoder) {
 		log.Errorf("Measurement does not exist in Additional Data for encoder %s.", encoder.Uri)
 	}
 
-	archivePrefix := GlobalConfig.DbName + "_" + encoderMeasurement
-	_, _, err := encoder.CreateArchive(GlobalConfig.ArchivePath, archivePrefix)
+	archivePrefix := archiver.laneName + "_" + archiver.laneCfg.DbName + "_" + encoderMeasurement
+	_, _, err := encoder.CreateArchive(archiver.laneCfg.ArchivePath, archivePrefix)
 	if err != nil {
 		log.Errorf("archive creation failed for URI %s with error: %s", encoder.Uri, err.Error())
 	}
