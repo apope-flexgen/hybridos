@@ -677,7 +677,8 @@ uint32_t json_to_uint32(maps* settings, cJSON* obj)
     // source value is either a signed or unsigned integer
     else
     {
-        memcpy(&encoded_val, &(val->valueint), sizeof(encoded_val));
+        int shifted_val = val->valueint - static_cast<int>(settings->shift);
+        memcpy(&encoded_val, &(shifted_val), sizeof(encoded_val));
     }
     return encoded_val;
 }
