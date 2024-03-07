@@ -17,15 +17,21 @@ export type DisplayGroupDTO = {
   status?: {
     [componentID: string]: StatusComponentDTO;
   };
+  alarmStatus?: {
+    [componentID: string]: StatusComponentDTO;
+  };
+  faultStatus?: {
+    [componentID: string]: StatusComponentDTO;
+  };
   control?: {
     [componentID: string]: ControlComponentDTO;
   };
   batchControl?: { 
     [componentID: string]: ControlComponentDTO;
-  }
+  };
   maintenanceActions?: {
     [componentID: string]: MaintenanceActionComponentDTO;
-  }
+  };
   fault?: string[];
   alarm?: string[];
 };

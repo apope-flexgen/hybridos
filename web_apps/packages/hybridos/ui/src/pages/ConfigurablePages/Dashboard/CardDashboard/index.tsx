@@ -34,8 +34,11 @@ const CardDashboard = (props: CardDashboardProps) => {
               heading={componentFunctions.displayName}
               icon={getDashboardIcon(componentFunctions.displayName)}
             />
-            <Box marginTop="10px" sx={{ alignItems: 'flex-end' }}>
+            <Box sx={{ alignItems: 'flex-end' }}>
               <Grid container columnSpacing={0} rowSpacing={0} gridAutoRows="1fr">
+                <Grid xs={12}>
+                  {componentFunctions.alarmFaultStatusFunction(componentState.dashboard)}
+                </Grid>
                 {componentFunctions.statusFunctions.map((fn, i) => (
                   <Grid xs={getDataPointColumns(numDataPoints)}>
                     <CardRow

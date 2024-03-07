@@ -2,7 +2,7 @@ import {
   Box, IconButton, Typography,
 } from '@flexgen/storybook';
 import { useState } from 'react';
-import { ColumnData, RowData } from 'shared/types/dtos/dataTables.dto';
+import { AlarmFaultDataIndexable, ColumnData, RowData } from 'shared/types/dtos/dataTables.dto';
 import { sortedTableHeaderSx } from 'src/pages/ConfigurablePages/Dashboard/TableDashboard/tableDashboard.styles';
 
 interface Props {
@@ -14,21 +14,33 @@ interface Props {
   generateRowsData: (
     tableName: string,
     columns: ColumnData[],
-    rows: RowData[],
+    newRows: RowData[],
     columnToSortBy?: keyof RowData,
-    reverseOrder?: boolean
-  ) => void
+    reverseOrder?: boolean,
+    alarmStatus?: AlarmFaultDataIndexable,
+    faultStatus?: AlarmFaultDataIndexable,
+  ) => void,
+  alarmStatus?: AlarmFaultDataIndexable,
+  faultStatus?: AlarmFaultDataIndexable
 }
 
 export const SortableColumn = (
   {
-    label, columnID, columnData, rowData, tableName, generateRowsData,
+    label, columnID, columnData, rowData, tableName, generateRowsData, alarmStatus, faultStatus,
   }: Props,
 ) => {
   const [reverseOrder, setReverseOrder] = useState<boolean>(false);
 
   const handleSort = () => {
-    generateRowsData(tableName, columnData, rowData, columnID, !reverseOrder);
+    generateRowsData(
+      tableName,
+      columnData,
+      rowData,
+      columnID,
+      !reverseOrder,
+      alarmStatus,
+      faultStatus,
+    );
     setReverseOrder(!reverseOrder);
   };
 

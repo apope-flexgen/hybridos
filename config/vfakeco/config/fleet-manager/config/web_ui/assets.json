@@ -8,12 +8,16 @@
       "allControls": [],
       "controls": [],
       "info": {
-        "alarmFields": [],
+        "alarmFields": [
+          "alarm_status_flag"
+        ],
+        "faultFields": [
+          "fault_status_flag"
+        ],
         "assetKey": "sites_tab",
         "tabKey": "lima",
         "baseURI": "",
         "extension": "/lima",
-        "faultFields": [],
         "hasAllControls": false,
         "hasSummary": false,
         "itemName": "Lima",
@@ -906,12 +910,16 @@
       "allControls": [],
       "controls": [],
       "info": {
-        "alarmFields": [],
+        "alarmFields": [
+          "alarm_status_flag"
+        ],
+        "faultFields": [
+          "fault_status_flag"
+        ],
         "assetKey": "sites_tab",
         "tabKey": "sudden_valley",
         "baseURI": "",
         "extension": "/sudden_valley",
-        "faultFields": [],
         "hasAllControls": false,
         "hasSummary": false,
         "itemName": "Sudden Valley",

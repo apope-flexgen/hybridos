@@ -2,6 +2,12 @@
     "data": [
       {
         "info": {
+          "alarmFields": [
+            "alarm_status_flag"
+          ],
+          "faultFields": [
+            "fault_status_flag"
+          ],
           "baseURI": "",
           "batteryView": false,
           "batteryViewSourceURI": null,
@@ -118,12 +124,6 @@
             "sourceURI": "/sites",
             "units": "MW",
             "uri": "/ess_dischargeable_power"
-          },
-          {
-            "name": "Site Fault",
-            "scalar": null,
-            "sourceURI": "/sites",
-            "uri": "/fault_status_flag"
           }
         ]
       }

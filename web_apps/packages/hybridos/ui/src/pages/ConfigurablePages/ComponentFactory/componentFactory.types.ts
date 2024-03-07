@@ -26,6 +26,11 @@ export type MaintenanceActionComponentStateInfo = {
   status: string
 };
 
+export type AlarmFaultStatusComponentStateInfo = {
+  alarmStatus: boolean,
+  faultStatus: boolean
+};
+
 export type MemoizedComponentObject = {
   prevState: any;
   prevControlRecipients?: string[];

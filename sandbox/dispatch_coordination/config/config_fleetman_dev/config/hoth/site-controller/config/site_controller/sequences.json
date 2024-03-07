@@ -33,7 +33,12 @@
                 {
                     "active_faults": [
                         {
-                            "name": "/bypass"
+                            "name": "/assets/get_any_ess_faults"
+                        }
+                    ],
+                    "active_alarms": [
+                        {
+                            "name": "/assets/get_any_ess_alarms"
                         }
                     ],
                     "path_name": "Ready",
@@ -61,7 +66,12 @@
                 {
                     "active_faults": [
                         {
-                            "name": "/bypass"
+                            "name": "/assets/get_any_ess_faults"
+                        }
+                    ],
+                    "active_alarms": [
+                        {
+                            "name": "/assets/get_any_ess_alarms"
                         }
                     ],
                     "path_name": "Running - Grid-Tied",
@@ -88,7 +98,12 @@
                 {
                     "active_faults": [
                         {
-                            "name": "/bypass"
+                            "name": "/assets/get_any_ess_faults"
+                        }
+                    ],
+                    "active_alarms": [
+                        {
+                            "name": "/assets/get_any_ess_alarms"
                         }
                     ],
                     "path_name": "RunMode2",

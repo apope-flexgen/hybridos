@@ -48,6 +48,7 @@ export type DisplayGroupFunctions = {
   displayName: string
   tabKey: string | number
   statusFunctions: ConfigurableComponentFunction[]
+  alarmFaultStatusFunction: ConfigurableComponentFunction
   controlFunctions: ConfigurableComponentFunction[]
   batchControlFunctions?: ConfigurableBatchControlComponentFunction[]
   maintenanceActionsFunctions: ConfigurableComponentFunction[]

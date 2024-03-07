@@ -243,16 +243,23 @@ const parseNakedBodyAlarm = (rawData: nakedBodyFromFims, metaData: metadataFromD
   const fieldsToCheck = metaData.info['alarmFields'];
 
   fieldsToCheck.forEach((field: string) => {
-    if (!rawData[field] || rawData[field] === '0' || !isIndividualClothedBody(rawData[field]))
+    if (rawData[field] === undefined || rawData[field] === '0')
       return;
 
-    const alarmInfo = rawData[field] as individualClothedBody;
-    if ('options' in alarmInfo) {
-      alarmInfo.options.forEach((option) => {
-        stateData.push(option.name);
-      });
-    } else if ('value' in alarmInfo && Number(alarmInfo.value) > 0) {
-      stateData.push(alarmInfo.name);
+    if (isIndividualClothedBody(rawData[field])) {
+      const alarmInfo = rawData[field] as individualClothedBody;
+      if ('options' in alarmInfo) {
+        alarmInfo.options.forEach((option) => {
+          stateData.push(option.name);
+        });
+      } else if ('value' in alarmInfo && Number(alarmInfo.value) > 0) {
+        stateData.push(alarmInfo.name);
+      }
+    } else if (typeof rawData[field] === 'boolean') {
+      const alarmPresent = rawData[field] as boolean;
+      if (alarmPresent) {
+        stateData.push('Alarm present');
+      }
     }
   });
 
@@ -265,16 +272,23 @@ const parseNakedBodyFault = (rawData: nakedBodyFromFims, metaData: metadataFromD
   const fieldsToCheck = metaData.info['faultFields'];
 
   fieldsToCheck.forEach((field: string) => {
-    if (!rawData[field] || rawData[field] === '0' || !isIndividualClothedBody(rawData[field]))
+    if (rawData[field] === undefined || rawData[field] === '0')
       return;
 
-    const faultInfo = rawData[field] as individualClothedBody;
-    if ('options' in faultInfo) {
-      faultInfo.options.forEach((option) => {
-        stateData.push(option.name);
-      });
-    } else if ('value' in faultInfo && Number(faultInfo.value) > 0) {
-      stateData.push(faultInfo.name);
+    if (isIndividualClothedBody(rawData[field])) {
+      const faultInfo = rawData[field] as individualClothedBody;
+      if ('options' in faultInfo) {
+        faultInfo.options.forEach((option) => {
+          stateData.push(option.name);
+        });
+      } else if ('value' in faultInfo && Number(faultInfo.value) > 0) {
+        stateData.push(faultInfo.name);
+      }
+    } else if (typeof rawData[field] === 'boolean') {
+      const faultPresent = rawData[field] as boolean;
+      if (faultPresent) {
+        stateData.push('Fault present');
+      }
     }
   });
 

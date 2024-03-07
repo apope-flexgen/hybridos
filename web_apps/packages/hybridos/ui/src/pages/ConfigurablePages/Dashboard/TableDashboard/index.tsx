@@ -4,7 +4,7 @@ import { Box, CardContainer, CardRow, DataTable, Progress, Typography } from '@f
 import { useState, useEffect, useCallback } from 'react';
 import {
   TableDashboardDataTableDTO,
-  DataTablesState,
+  DataTablesState
 } from 'shared/types/dtos/dataTables.dto';
 import QueryService from 'src/services/QueryService';
 import { batteryViewBoxSx, tableBoxSx } from './tableDashboard.styles';
@@ -41,11 +41,39 @@ const TableDashboard = () => {
             a.label.localeCompare(b.label, undefined, { numeric: true }),
           );
 
-          generateRowsData(name, columns, dataTableInfo.rows ?? []);
+          const alarmStatus =
+            dataTableInfo.alarmStatus === undefined
+              ? prevDataTables[name]?.faultStatus
+              : (() => {
+                let updatedAlarmStatus = prevDataTables[name]?.alarmStatus ?? {};
+                Object.entries(dataTableInfo.alarmStatus).forEach(([id, newStatuses]) => {
+                  if (dataTableInfo.alarmStatus?.[id] !== undefined) {
+                    updatedAlarmStatus[id] = newStatuses;
+                  }
+                });
+                return updatedAlarmStatus;
+              })();
+
+          const faultStatus =
+            dataTableInfo.faultStatus === undefined
+              ? prevDataTables[name]?.faultStatus
+              : (() => {
+                let updatedFaultStatus = prevDataTables[name]?.faultStatus ?? {};
+                Object.entries(dataTableInfo.faultStatus).forEach(([id, newStatuses]) => {
+                  if (dataTableInfo.faultStatus?.[id] !== undefined) {
+                    updatedFaultStatus[id] = newStatuses;
+                  }
+                });
+                return updatedFaultStatus;
+              })();
+
+          generateRowsData(name, columns, dataTableInfo.rows ?? [], undefined, undefined, alarmStatus, faultStatus);
 
           acc[name] = {
             columns: columns,
-            batteryViewData
+            batteryViewData,
+            alarmStatus,
+            faultStatus
           };
           return acc;
         },
@@ -65,7 +93,7 @@ const TableDashboard = () => {
   }, []);
 
   const renderedDataTables = Object.entries(dataTables).map(([dataTableName, dataTableInfo]) => {
-    const renderedColumns = tableColumns(dataTableName, dataTableInfo.columns, results[dataTableName], generateRowsData);
+    const renderedColumns = tableColumns(dataTableName, dataTableInfo.columns, results[dataTableName], generateRowsData, dataTableInfo.alarmStatus, dataTableInfo.faultStatus);
 
     return (<Box key={dataTableName} sx={{ width: '100%' }}>
       <CardContainer direction='column' styleOverrides={{ paddingTop: '12px', width: '100%' }}>

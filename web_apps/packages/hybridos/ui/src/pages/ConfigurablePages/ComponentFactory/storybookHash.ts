@@ -39,6 +39,7 @@ import {
   NumericInput,
   Progress,
 } from '@flexgen/storybook';
+import AlarmFaultContainer from './components/AlarmFaultContainer';
 import ConfirmCancelButton from './components/ConfirmCancelButton';
 import MaintActionControl from './components/MaintActionControl';
 import MaintActionProgress from './components/MaintActionProgress';
@@ -50,6 +51,7 @@ export interface IComponentHash {
 }
 
 const storybookComponents: IComponentHash = {
+  AlarmFaultContainer,
   AppBar,
   AutoCompleteSearch,
   Badge,

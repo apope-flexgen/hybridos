@@ -89,6 +89,8 @@ export class DashboardService {
               ? this.getStatusDTOs([batteryViewStatus])
               : undefined,
           status: this.getStatusDTOs(status),
+          alarmStatus: info.alarmFields ? this.getStatusDTOs(info.alarmFields) : undefined,
+          faultStatus: info.faultFields ? this.getStatusDTOs(info.faultFields) : undefined
         };
       });
 
@@ -102,25 +104,35 @@ export class DashboardService {
     };
   };
 
-  private getStatusDTOs = (statuses: SingleStatus[]): DisplayGroupDTO['status'] => {
-    return statuses.reduce((acc, status) => {
-      const { name, units, uri } = status;
+  private getStatusDTOs = (statuses: SingleStatus[] | string[]): DisplayGroupDTO['status'] => {
+    const statusDTOs: DisplayGroupDTO['status'] = {};
 
-      const uriWithOpeningSlashRemoved = uri.replace(/^\//, '');
+    statuses?.forEach((status) => {
+      if (typeof status === 'string') {
+        statusDTOs[status] = {
+          static: {},
+          state: {
+            value: false
+          }
+        }
+      } else {
+        const { name, units, uri } = status;
+        const uriWithOpeningSlashRemoved = uri.replace(/^\//, '');
 
-      acc[uriWithOpeningSlashRemoved] = {
-        static: {
-          label: name,
-          unit: units,
-          variant: 'dynamic',
-        },
-        state: {
-          value: '-',
-        },
-      };
+        statusDTOs[uriWithOpeningSlashRemoved] = {
+          static: {
+            label: name,
+            unit: units,
+            variant: 'dynamic',
+          },
+          state: {
+            value: '-',
+          },
+        };
+      }
+    });
 
-      return acc;
-    }, {} as DisplayGroupDTO['status']);
+    return statusDTOs;
   };
 
   private getMergedStream = (data: ConfigurablePageDTO): Observable<ConfigurablePageDTO> => {
@@ -135,6 +147,8 @@ export class DashboardService {
         uri,
         data.displayGroups[uri].displayName,
         data.displayGroups[uri].batteryViewStatus || undefined,
+        data.displayGroups[uri].alarmStatus || undefined,
+        data.displayGroups[uri].faultStatus || undefined,
       ),
     );
 
@@ -147,7 +161,9 @@ export class DashboardService {
     uri: string,
     displayName: string,
     batteryViewStatuses: DisplayGroupDTO['batteryViewStatus'],
-  ): Observable<ConfigurablePageDTO> => {
+    alarmStatus: DisplayGroupDTO['alarmStatus'],
+    faultStatus: DisplayGroupDTO['faultStatus']
+  ): Observable<ConfigurablePageDTO> => { 
     const fimsSubscribe = this.fimsService.subscribe(uri);
 
     return fimsSubscribe.pipe(
@@ -160,6 +176,8 @@ export class DashboardService {
               displayName,
               status: {},
               batteryViewStatus: {},
+              alarmStatus: {},
+              faultStatus: {}
             },
           },
         };
@@ -172,7 +190,7 @@ export class DashboardService {
               ? rawValue.value
               : (rawValue as number | string | boolean);
 
-          const { value: trueValue } =
+          const { value: realValue } =
             typeof value === 'number'
               ? (() => {
                   const scalar = this.scalarStore[uri + '/' + key] || 1;
@@ -184,13 +202,30 @@ export class DashboardService {
           if (batteryViewStatuses !== undefined && key in batteryViewStatuses) {
             transformed.displayGroups[uri].batteryViewStatus[key] = {
               state: {
-                value: trueValue,
+                value: realValue,
               },
             };
           }
+
+          if (alarmStatus !== undefined && key in alarmStatus) {
+            transformed.displayGroups[uri].alarmStatus[key] = {
+              state: {
+                value: realValue,
+              },
+            };
+          }
+
+          if (faultStatus !== undefined && key in faultStatus) {
+            transformed.displayGroups[uri].faultStatus[key] = {
+              state: {
+                value: realValue,
+              },
+            };
+          }
+
           transformed.displayGroups[uri].status[key] = {
             state: {
-              value: trueValue,
+              value: realValue,
             },
           };
         });

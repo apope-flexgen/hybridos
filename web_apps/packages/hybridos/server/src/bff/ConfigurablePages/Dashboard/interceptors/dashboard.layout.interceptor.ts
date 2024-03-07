@@ -40,6 +40,8 @@ export class DashboardLayoutInterceptor implements NestInterceptor {
           columns: data.hasStatic ? { id: { id: 'id', label: '' } } : null,
           rows: {},
           batteryViewData: {},
+          alarmStatus: {},
+          faultStatus: {}
         };
       }
 
@@ -54,8 +56,46 @@ export class DashboardLayoutInterceptor implements NestInterceptor {
         });
       }
 
+      if (groupData.alarmStatus !== undefined) {
+        Object.entries(groupData.alarmStatus).forEach(([statusID, statusInfo]) => {
+          if ('state' in statusInfo) {
+            toReturn[tableName].alarmStatus[rowName] = {
+              ...toReturn[tableName].alarmStatus[rowName],
+              [statusID]: statusInfo.state.value
+            };
+          }
+        });
+      }
+
+      if (groupData.faultStatus !== undefined) {
+        Object.entries(groupData.faultStatus).forEach(([statusID, statusInfo]) => {
+          if ('state' in statusInfo) {
+            toReturn[tableName].faultStatus[rowName] = {
+              ...toReturn[tableName].faultStatus[rowName],
+              [statusID]: statusInfo.state.value
+            };
+          }
+        });
+      }
+
       Object.entries(groupData.status).forEach(([statusID, statusInfo]) => {
         if ('static' in statusInfo) {
+          if (groupData.alarmStatus !== undefined) {
+            toReturn[tableName].columns['alarm_status'] = {
+              id: 'alarm_status',
+              label: 'Alarm Status',
+              minWidth: 125,
+            };
+          }
+
+          if (groupData.faultStatus !== undefined) {
+            toReturn[tableName].columns['fault_status'] = {
+              id: 'fault_status',
+              label: 'Fault Status',
+              minWidth: 125,
+            };
+          }
+
           if (!(statusID in toReturn[tableName].columns)) {
             toReturn[tableName].columns[statusID] = {
               id: statusID,
@@ -66,6 +106,7 @@ export class DashboardLayoutInterceptor implements NestInterceptor {
             };
           }
         }
+        
         if ('state' in statusInfo) {
           if (!(rowName in toReturn[tableName].rows)) {
             toReturn[tableName].rows[rowName] = { id: rowName };
@@ -85,6 +126,8 @@ export class DashboardLayoutInterceptor implements NestInterceptor {
         columns: tableData.columns !== null ? Object.values(tableData.columns) : undefined,
         rows: Object.values(tableData.rows),
         batteryViewData: Object.values(tableData.batteryViewData),
+        alarmStatus: tableData.alarmStatus,
+        faultStatus: tableData.faultStatus
       };
     });
     return toReturn;

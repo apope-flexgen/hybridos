@@ -8,12 +8,16 @@
         "allControls": [],
         "controls": [],
         "info": {
-          "alarmFields": [],
+          "alarmFields": [
+            "alarm_status_flag"
+          ],
+          "faultFields": [
+            "fault_status_flag"
+          ],
           "assetKey": "sites_tab",
           "tabKey": "hoth",
           "baseURI": "",
           "extension": "/hoth",
-          "faultFields": [],
           "hasAllControls": false,
           "hasSummary": false,
           "itemName": "Hoth",
@@ -864,12 +868,16 @@
         "allControls": [],
         "controls": [],
         "info": {
-          "alarmFields": [],
+          "alarmFields": [
+            "alarm_status_flag"
+          ],
+          "faultFields": [
+            "fault_status_flag"
+          ],
           "assetKey": "sites_tab",
           "tabKey": "gargantua",
           "baseURI": "",
           "extension": "/gargantua",
-          "faultFields": [],
           "hasAllControls": false,
           "hasSummary": false,
           "itemName": "Gargantua",

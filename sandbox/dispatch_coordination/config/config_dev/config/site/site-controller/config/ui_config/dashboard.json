@@ -5,6 +5,12 @@
     "data": [
         {
             "info": {
+              "alarmFields": [
+                  "is_alarmed"
+              ],
+              "faultFields": [
+                  "is_faulted"
+              ],
               "baseURI": "",
               "batteryView": true,
               "batteryViewSourceURI": "/assets",

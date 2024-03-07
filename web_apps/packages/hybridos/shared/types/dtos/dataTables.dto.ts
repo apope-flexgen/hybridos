@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { ValueType } from './configurablePages.dto'
 
 export type TableDashboardDataTableDTO = {
@@ -9,12 +10,16 @@ export type DataTableDTO = {
   columns?: ColumnData[];
   rows?: RowData[];
   batteryViewData?: BatteryViewData[];
+  alarmStatus?: AlarmFaultDataIndexable;
+  faultStatus?: AlarmFaultDataIndexable;
 };
 
 export type DataTablesState = {
   [dataTableName: string]: {
     columns: ColumnData[];
     batteryViewData: BatteryViewData[];
+    alarmStatus?: AlarmFaultDataIndexable;
+    faultStatus?: AlarmFaultDataIndexable;
   };
 };
 
@@ -31,7 +36,11 @@ export type BatteryViewData = {
 
 export type RowData = {
   id: string;
-  [columnID: string]: ValueType;
+  [columnID: string]: ValueType | React.ReactElement;
+};
+
+export type AlarmFaultData = {
+  [field: string]: ValueType;
 };
 
 export type TableDashboardDataTableIndexable = {
@@ -43,6 +52,8 @@ export type DataTableIndexable = {
   columns?: ColumnDataIndexable;
   rows: RowDataIndexable;
   batteryViewData?: BatteryViewDataIndexable;
+  alarmStatus?: AlarmFaultDataIndexable;
+  faultStatus?: AlarmFaultDataIndexable;
 };
 
 export type RowDataIndexable = {
@@ -55,4 +66,8 @@ export type ColumnDataIndexable = {
 
 export type BatteryViewDataIndexable = {
   [id: string]: BatteryViewData;
+};
+
+export type AlarmFaultDataIndexable = {
+  [id: string]: AlarmFaultData;
 };

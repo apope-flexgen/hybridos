@@ -23,10 +23,15 @@ import {
 const getStatusStateForDisplayGroup: (
   status: ConfigurablePageDTO['displayGroups'][string]['status'],
   batteryViewStatus: ConfigurablePageDTO['displayGroups'][string]['batteryViewStatus'],
-) => DisplayGroupStateStructure['status'] = (status, batteryViewStatus) => {
-  if (status === undefined) return {};
-  // eslint-disable-next-line max-len
-  const combinedStatuses = batteryViewStatus === undefined ? status : { ...status, ...batteryViewStatus };
+  alarmStatus: ConfigurablePageDTO['displayGroups'][string]['alarmStatus'],
+  faultStatus: ConfigurablePageDTO['displayGroups'][string]['faultStatus'],
+) => DisplayGroupStateStructure['status'] = (status, batteryViewStatus, alarmStatus, faultStatus) => {
+  const combinedStatuses = {
+    ...(status || {}),
+    ...(batteryViewStatus || {}),
+    ...(alarmStatus || {}),
+    ...(faultStatus || {}),
+  };
 
   return Object.entries(combinedStatuses).reduce(
     (statusState: DisplayGroupStateStructure['status'], [componentID, component]) => {
@@ -87,7 +92,7 @@ export const getUpdatedStates: (
 
   Object.entries(data).forEach(([displayGroupID, displayGroup]) => {
     updatedComponentState[displayGroupID] = {
-      status: getStatusStateForDisplayGroup(displayGroup.status, displayGroup.batteryViewStatus),
+      status: getStatusStateForDisplayGroup(displayGroup.status, displayGroup.batteryViewStatus, displayGroup.alarmStatus, displayGroup.faultStatus),
       control: getControlStateForDisplayGroup(displayGroup.control),
       maintenanceActions: Object.keys(displayGroup.maintenanceActions || {}).length !== 0
         ? getMaintenanceActionStateForDisplayGroup(displayGroup.maintenanceActions)
@@ -149,11 +154,32 @@ const generateBatteryViewReactComponentFunction: (
   );
 };
 
-const getStatusComponentFunctions: (
-  status: ConfigurablePageDTO['displayGroups'][string]['status'],
+const generateAlarmFaultComponentFunction: (
   displayGroupID: string,
+  alarmStatus: string[],
+  faultStatus: string[]
+) => ConfigurableComponentFunction = (displayGroupID, alarmStatus, faultStatus) => generateReactComponentFunction(
+  {
+    component: 'AlarmFaultContainer',
+    props: {
+      showAlarm: false,
+      showFault: false,
+    },
+  },
+  displayGroupID,
+  'AlarmFaultStatus',
+  '',
+  false,
+  false,
+  alarmStatus,
+  faultStatus,
+);
+
+const getStatusComponentFunctions: (
+  displayGroupID: string,
+  status: ConfigurablePageDTO['displayGroups'][string]['status'],
   batteryViewStatus: ConfigurablePageDTO['displayGroups'][string]['batteryViewStatus'],
-) => ConfigurableComponentFunction[] = (status, displayGroupID, batteryViewStatus) => {
+) => ConfigurableComponentFunction[] = (displayGroupID, status, batteryViewStatus) => {
   if (status === undefined) return [];
 
   let batteryViewComponents: ConfigurableComponentFunction[] = [];
@@ -185,6 +211,17 @@ const getStatusComponentFunctions: (
       return statusFunctions;
     }, [])
     .concat(batteryViewComponents);
+};
+
+const getAlarmFaultStatusComponentFunction: (
+  alarmStatus: ConfigurablePageDTO['displayGroups'][string]['alarmStatus'],
+  faultStatus: ConfigurablePageDTO['displayGroups'][string]['faultStatus'],
+  displayGroupID: string,
+) => ConfigurableComponentFunction = (alarmStatus, faultStatus, displayGroupID) => {
+  const alarmIDs = alarmStatus ? Object.keys(alarmStatus) : [];
+  const faultIDs = faultStatus ? Object.keys(faultStatus) : [];
+
+  return generateAlarmFaultComponentFunction(displayGroupID, alarmIDs, faultIDs);
 };
 
 const generateProgressStepperComponent: (
@@ -317,15 +354,17 @@ export const getUpdatedComponentFunctions: (data: ConfigurablePageDTO['displayGr
   [displayGroupID: string]: DisplayGroupFunctions;
 } = (data) => {
   const updatedComponentFunctions: { [displayGroupID: string]: DisplayGroupFunctions } = {};
+
   Object.entries(data).forEach(([displayGroupID, displayGroup]) => {
     updatedComponentFunctions[displayGroupID] = {
       displayName: displayGroup.displayName || displayGroupID,
       tabKey: displayGroup.tabKey || Math.random(),
       statusFunctions: getStatusComponentFunctions(
-        displayGroup.status,
         displayGroupID,
+        displayGroup.status,
         displayGroup.batteryViewStatus,
       ),
+      alarmFaultStatusFunction: getAlarmFaultStatusComponentFunction(displayGroup.alarmStatus, displayGroup.faultStatus, displayGroupID),
       controlFunctions: getControlComponentFunctions(displayGroup.control, displayGroupID),
       batchControlFunctions: getBatchControlComponentFunctions(displayGroup.batchControl, displayGroupID),
       maintenanceActionsFunctions: getMaintenanceActionComponentFunctions(displayGroup.maintenanceActions, displayGroupID),

@@ -15,6 +15,7 @@ import {
   ControlComponentStateInfo,
   MemoizedComponentObject,
   MaintenanceActionComponentStateInfo,
+  AlarmFaultStatusComponentStateInfo,
 } from './componentFactory.types';
 import { useAppContext } from 'src/App/App';
 import { Roles } from 'shared/types/api/Users/Users.types';
@@ -203,14 +204,21 @@ const getSpecificStateInfo = (
   componentID: string,
   control: boolean,
   maintenanceAction?: boolean,
+  alarmIDs?: string[],
+  faultIDs?: string[]
 ): any => {
   if (assetState && displayGroupID in assetState) {
     if (control) {
       return assetState[displayGroupID].control[componentID];
     } if (maintenanceAction) {
       return assetState[displayGroupID].maintenanceActions[componentID];
+    } if (componentID === 'AlarmFaultStatus') {
+      return {
+        alarmStatus: alarmIDs?.some(id => assetState[displayGroupID].status[id] === 'true'),
+        faultStatus: faultIDs?.some(id => assetState[displayGroupID].status[id] === 'true')
+      }
     }
-  
+
     return assetState[displayGroupID].status[componentID];
   }
 };
@@ -237,7 +245,7 @@ const memoIsValid = (
 const organizeProps = (
   props: any,
   component: string,
-  stateInfo: StatusComponentStateInfo | ControlComponentStateInfo | MaintenanceActionComponentStateInfo |undefined,
+  stateInfo: StatusComponentStateInfo | ControlComponentStateInfo | MaintenanceActionComponentStateInfo | AlarmFaultStatusComponentStateInfo | undefined,
   batchControl?: boolean,
   controlRecipients?: string[],
 ): any => {
@@ -263,8 +271,13 @@ const organizeProps = (
 
   
   if (component === 'MaintActionControl') {
-    if (typeof stateInfo === 'object' && stateInfo.extraProps?.options) props.options = stateInfo.extraProps.options 
+    if (typeof stateInfo === 'object' && 'extraProps' in stateInfo && stateInfo.extraProps?.options) props.options = stateInfo.extraProps.options 
     if (batchControl) props.controlURI = controlRecipients
+  }
+
+  if (component === 'AlarmFaultContainer' && typeof stateInfo === 'object' && 'alarmStatus' in stateInfo && 'faultStatus' in stateInfo) {
+    props.showAlarm = stateInfo.alarmStatus
+    props.showFault = stateInfo.faultStatus
   }
   
   if (component === 'TextField') {
@@ -354,7 +367,9 @@ export const generateReactComponentFunction: (
   uri?: string,
   maintenanceAction?: boolean,
   batchControl?: boolean,
-) => ConfigurableComponentFunction = (componentMetadata, displayGroupID, componentID, uri, maintenanceAction, batchControl) => {
+  alarmIDs?: string[],
+  faultIDs?: string[],
+) => ConfigurableComponentFunction = (componentMetadata, displayGroupID, componentID, uri, maintenanceAction, batchControl, alarmIDs, faultIDs) => {
   const { component, props } = componentMetadata;
   const Component = storybookComponents[component];
 
@@ -377,7 +392,7 @@ export const generateReactComponentFunction: (
   }
 
   return (assetState: ConfigurablePageStateStructure, controlRecipients?: string[]): JSX.Element => {
-    const stateInfo = getSpecificStateInfo(assetState, displayGroupID, componentID, !!uri, maintenanceAction);
+    const stateInfo = getSpecificStateInfo(assetState, displayGroupID, componentID, !!uri, maintenanceAction, alarmIDs, faultIDs);
     
     if (memoized !== undefined && memoIsValid(memoized, stateInfo, controlRecipients)) {
       return memoized.element;

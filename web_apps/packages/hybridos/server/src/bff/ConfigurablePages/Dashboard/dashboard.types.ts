@@ -20,10 +20,12 @@ export type SingleItemInfo = {
 };
 
 export type SingleCardInfo = {
+  alarmFields: string[];
   baseURI: string;
   batteryView: boolean;
   batteryViewSourceURI: string | null;
   batteryViewURI: string;
+  faultFields: string[];
   isTemplate: boolean;
   items: SingleItemInfo[];
   name: string;

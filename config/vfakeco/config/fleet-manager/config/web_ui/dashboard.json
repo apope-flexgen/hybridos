@@ -6,6 +6,12 @@
     
     {
       "info": {
+        "alarmFields": [
+          "alarm_status_flag"
+        ],
+        "faultFields": [
+          "fault_status_flag"
+        ],
         "baseURI": "",
         "batteryView": false,
         "batteryViewSourceURI": null,
@@ -137,6 +143,12 @@
     },
     {
       "info": {
+        "alarmFields": [
+          "alarm_status_flag"
+        ],
+        "faultFields": [
+          "fault_status_flag"
+        ],
         "baseURI": "",
         "batteryView": false,
         "batteryViewSourceURI": null,
@@ -277,6 +289,12 @@
     },
     {
       "info": {
+        "alarmFields": [
+          "alarm_status_flag"
+        ],
+        "faultFields": [
+          "fault_status_flag"
+        ],
         "baseURI": "",
         "batteryView": false,
         "batteryViewSourceURI": null,

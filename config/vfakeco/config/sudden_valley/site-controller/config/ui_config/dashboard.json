@@ -269,6 +269,12 @@
         },
         {
             "info": {
+                "alarmFields": [
+                    "is_alarmed"
+                ],
+                "faultFields": [
+                    "is_faulted"
+                ],
                 "baseURI": "/ess",
                 "batteryView": true,
                 "batteryViewSourceURI": "/assets",
