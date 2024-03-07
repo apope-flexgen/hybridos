@@ -8,6 +8,7 @@
         }
     },
     "scada": {
+	"append_can_edit": true,
         "max_num_events": 20,
         "num_bools": 1,
         "num_floats": 1,

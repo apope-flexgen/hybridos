@@ -3,6 +3,7 @@ from fims import send_set, send_get, send_post, send_del
 from fixtures import set_up
 from sample_events import event_0, event_1, event_2
 from sample_cfgs import fleet_scheduler_cfg
+from time import sleep
 
 # schedule map
 
@@ -269,3 +270,61 @@ def test_delete_event_repeat_specific_exception():
 def test_delete_event_repeat_all_exceptions():
     assert [] == send_del(f'/scheduler/events/durham/{event_1["id"]}/repeat/exceptions')
     assert [] == send_get(f'/scheduler/events/durham/{event_1["id"]}/repeat/exceptions')
+
+
+def test_update_current_event():
+    """ creates an event at current time + 1 min 
+    waits for the event to begin. Then tries to update
+    fields that should be updateable """
+
+    assert [] == send_del('/scheduler/events/durham')
+    from datetime import datetime, timezone, timedelta
+
+    def create_event_starting_in_one_minute():
+        """ YOU SHOULD PROBABLY SYNC YOUR CLOCK """
+        # get current time
+        # Get the current time in UTC
+        current_time_utc = datetime.now(timezone.utc)
+        # Convert the current time to Eastern Standard Time (EST) by adding a timedelta of -5 hours
+        current_time_est = current_time_utc + timedelta(hours=-5)
+        # Format the time in ISO 8601 format with timezone information
+        current_time_est_isoformat = current_time_est.strftime('%Y-%m-%dT%H:%M:%S-05:00')
+        event = {
+            'start_time': current_time_est_isoformat,
+            'duration': 90,
+            'mode': 'target_soc',
+            'variables': {
+                'soc_target': 50
+                },
+            'repeat': {
+                'cycle': 'day',
+                'day_mask': 127,
+                'end_count': 1,
+                'end_time': '2000-01-01T00:00:00Z',
+                'exceptions': [],
+                'frequency': 1
+                }
+            }
+        return event
+
+    event = create_event_starting_in_one_minute()
+    result = send_set('/scheduler/events', {'durham': [event]})
+    assert result['durham'][0]['variables'] == event['variables']
+    assert result['durham'][0]['duration'] == event['duration']
+    sleep(90)
+    event_get = send_get('/scheduler/events/durham')
+    event_id = str(event_get[0]['id'])
+    set_string = '/scheduler/events/durham/' + event_id + '/variables/soc_target'
+    _ = send_set(set_string, 100)
+    event_get = send_get('/scheduler/events/durham/' + event_id)
+    assert event_get['variables']['soc_target'] == 100
+    _ = send_set('/scheduler/events/durham/' + event_id + '/variables/soc_target', 10)
+    event_get = send_get('/scheduler/events/durham/' + event_id)
+    assert event_get['variables']['soc_target'] == 10
+
+    _ = send_set('/scheduler/events/durham/' + event_id + '/duration', 100)
+    event_get = send_get('/scheduler/events/durham/' + event_id)
+    assert event_get['duration'] == 100
+    _ = send_set('/scheduler/events/durham/' + event_id + '/duration', 10)
+    event_get = send_get('/scheduler/events/durham/' + event_id)
+    assert event_get['duration'] == 10

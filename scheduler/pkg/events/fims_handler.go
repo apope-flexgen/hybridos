@@ -23,10 +23,11 @@ func (e *Event) HandleSet(uriFrags []string, body []byte, timezone *time.Locatio
 		}
 		newSettings.Id = e.Id
 
+                // Updating an active event causes a schedule inaccuracy
+                // TODO: When updating an active event instead end the current event and start another event with the changes.
+	        // example: changing an hour-long charge event to discharge halfway through makes it look like there was an 
+                // hour-long discharge, not 30min charge followed by 30min discharge
 		if isActiveEvent {
-			if areEqualExceptMaybeDuration, reasonNotEqual := newSettings.onlyDurationCanBeDifferent(e); !areEqualExceptMaybeDuration {
-				return nil, fmt.Errorf("SET is to active event, where only duration can be changed, but non-duration change found: %s", reasonNotEqual)
-			}
 			proposedNewEndTime := newSettings.StartTime.Add(newSettings.TimeDuration())
 			if flextime.TimeIsBeforeCurrentMinute(proposedNewEndTime) {
 				return nil, fmt.Errorf("new duration value %d of active event would cause event end time to become %v which is before current time", newSettings.Duration, proposedNewEndTime)
@@ -40,12 +41,6 @@ func (e *Event) HandleSet(uriFrags []string, body []byte, timezone *time.Locatio
 
 		*e = newSettings
 		return e, nil
-	}
-
-	// cannot edit non-duration fields of active event because it would make new schedule inaccurate.
-	// example: changing an hour-long charge event to discharge halfway through makes it look like there was an hour-long discharge, not 30min charge followed by 30min discharge
-	if isActiveEvent && uriFrags[4] != "duration" {
-		return nil, errors.New("cannot edit any field except for duration for active event")
 	}
 
 	switch uriFrags[4] {

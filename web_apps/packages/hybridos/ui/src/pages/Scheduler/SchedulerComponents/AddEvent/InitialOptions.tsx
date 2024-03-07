@@ -61,7 +61,7 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
         <Box sx={{ width: '100%' }}>
           <Select
             fullWidth
-            disabled={disableAllFields || pastEvent || activeEvent}
+            disabled={disableAllFields || pastEvent}
             label={name}
             key={name}
             menuItems={['true', 'false']}
@@ -74,7 +74,7 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
     if (type === 'Int' || type === 'Float') {
       return (
         <NumericInput
-          disabled={disableAllFields || pastEvent || activeEvent}
+          disabled={disableAllFields || pastEvent}
           endTextAdornment={unit}
           fullWidth
           key={name}
@@ -89,7 +89,7 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
       <TextField
         TextAdornment={unit}
         adornment='end'
-        disabled={disableAllFields || pastEvent || activeEvent}
+        disabled={disableAllFields || pastEvent}
         fullWidth
         key={name}
         label={name}

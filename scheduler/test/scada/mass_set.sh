@@ -11,7 +11,4 @@ event_set () {
 
 #           Year  Month  Day  Mode  Site  Float_1  Duration  Hour
 event_index=0
-event_set   2023  5      9    1     0     100      15        22
-
-event_index=1
-event_set   2023  5      10   1     0     100      15        22
+event_set   2024  2      21    1     0     90      96        19
