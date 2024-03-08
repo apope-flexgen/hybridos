@@ -66,7 +66,7 @@ Asset::Asset() {
     // Status variables
     numAssetComponents = 0;
 
-    status_type = invalid;
+    default_status_type = random_enum;
     local_mode_status_type = invalid;
     local_mode_configured = false;
 
@@ -517,32 +517,32 @@ Config_Validation_Result Asset::configure(Type_Configurator* configurator) {
     // add any actions if they exist
     // have to cast here to set up the actions
     for (auto& action : configurator->actions) {
-        if(strcmp(get_asset_type(), ESS_TYPE_ID) == 0) {
+        if (strcmp(get_asset_type(), ESS_TYPE_ID) == 0) {
             action.sequence_type = Sequence_Type::Asset_ESS;
             action.asset_ess = dynamic_cast<Asset_ESS*>(this);
-            for (auto & path : action.paths) {
-                path.asset_ess = dynamic_cast<Asset_ESS*>(this); // pass the asset* to every path so it can call sequence functions
+            for (auto& path : action.paths) {
+                path.asset_ess = dynamic_cast<Asset_ESS*>(this);  // pass the asset* to every path so it can call sequence functions
             }
         } else if (strcmp(get_asset_type(), FEEDERS_TYPE_ID) == 0) {
             action.sequence_type = Sequence_Type::Asset_Feeder;
             action.asset_feeder = dynamic_cast<Asset_Feeder*>(this);
-            for (auto & path : action.paths) {
-                path.asset_feeder = dynamic_cast<Asset_Feeder*>(this); // pass the asset* to every path so it can call sequence functions
+            for (auto& path : action.paths) {
+                path.asset_feeder = dynamic_cast<Asset_Feeder*>(this);  // pass the asset* to every path so it can call sequence functions
             }
         } else if (strcmp(get_asset_type(), GENERATORS_TYPE_ID) == 0) {
             action.sequence_type = Sequence_Type::Asset_Generator;
             action.asset_generator = dynamic_cast<Asset_Generator*>(this);
-            for (auto & path : action.paths) {
-                path.asset_generator = dynamic_cast<Asset_Generator*>(this); // pass the asset* to every path so it can call sequence functions
+            for (auto& path : action.paths) {
+                path.asset_generator = dynamic_cast<Asset_Generator*>(this);  // pass the asset* to every path so it can call sequence functions
             }
         } else if (strcmp(get_asset_type(), SOLAR_TYPE_ID) == 0) {
             action.sequence_type = Sequence_Type::Asset_Solar;
             action.asset_solar = dynamic_cast<Asset_Solar*>(this);
-            for (auto & path : action.paths) {
-                path.asset_solar = dynamic_cast<Asset_Solar*>(this); // pass the asset* to every path so it can call sequence functions
+            for (auto& path : action.paths) {
+                path.asset_solar = dynamic_cast<Asset_Solar*>(this);  // pass the asset* to every path so it can call sequence functions
             }
         }
-        // seperate them into their two groups. 
+        // seperate them into their two groups.
         // idea is to keep the shutdown sequences away from the actual actions
         action.is_shutdown_sequence ? this->shutdown_actions.push_back(action) : this->actions.push_back(action);
     }
@@ -604,14 +604,14 @@ Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Config
     }
 
     cJSON* item = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "status_type");
-    status_type = (item != NULL && strcmp(item->valuestring, "random_enum") == 0) ? random_enum : bit_field;
+    default_status_type = (item != NULL && strcmp(item->valuestring, "random_enum") == 0) ? random_enum : bit_field;
 
     // Set local mode status type to use existing status type, unless it has been manually configured
     cJSON* parsed_local_status_type = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "local_mode_status_type");
     if ((parsed_local_status_type != NULL) && (parsed_local_status_type->valuestring != NULL))
         local_mode_status_type = strcmp(parsed_local_status_type->valuestring, "random_enum") == 0 ? random_enum : bit_field;
     else {
-        local_mode_status_type = status_type;
+        local_mode_status_type = default_status_type;
         if (asset_type_value != FEEDERS)
             validation_result.INFO_details.push_back(Result_Details(fmt::format("Asset {}: reusing status_type {} for local_mode_status_type", name, local_mode_status_type ? "random_enum" : "bit_field")));
     }
@@ -1034,10 +1034,8 @@ Config_Validation_Result Asset::configure_watchdog_vars() {
 
     // Manually configure additional watchdog fault fields
     watchdog_fault.set_ui_type("fault");
-    watchdog_fault.set_value_type(Int);
-    watchdog_fault.num_options = 1;
-    watchdog_fault.options_name.insert(watchdog_fault.options_name.begin(), "Watchdog Component Disconnected");
-    watchdog_fault.options_value.insert(watchdog_fault.options_value.begin(), 0);
+    watchdog_fault.set_value_type(valueType::Bit_Field);
+    watchdog_fault.options_map[0] = std::pair<std::string, Value_Object>("Watchdog Component Disconnected", uint64_t(0));
     latched_faults[watchdog_fault.get_variable_id()] = 0;
     return validation_result;
 }
@@ -1060,16 +1058,13 @@ Config_Validation_Result Asset::configure_actions_fims_objects() {
     actions_faults.is_primary = is_primary;
     actions_faults.set_ui_type("fault");
     actions_faults.set_variable_id("actions_faults");
-    actions_faults.set_value_type(Int);
-    actions_faults.num_options = 2;
+    actions_faults.set_value_type(valueType::Bit_Field);
 
     // test fault
-    actions_faults.options_name.push_back("Test fault issued from actions.json");
-    actions_faults.options_value.push_back(0);
+    actions_faults.options_map[0] = std::pair<std::string, Value_Object>("Test fault issued from actions.json", uint64_t(0));
 
     // exit_timer_fault
-    actions_faults.options_name.push_back("exit_timer_fault issued from actions.json");
-    actions_faults.options_value.push_back(1);
+    actions_faults.options_map[1] = std::pair<std::string, Value_Object>("exit_timer_fault issued from actions.json", uint64_t(1));
 
     // init to zero
     actions_faults.value.value_bit_field = 0;
@@ -1078,10 +1073,8 @@ Config_Validation_Result Asset::configure_actions_fims_objects() {
     actions_alarms.is_primary = is_primary;
     actions_alarms.set_ui_type("alarm");
     actions_alarms.set_variable_id("actions_alarms");
-    actions_alarms.set_value_type(Int);
-    actions_alarms.num_options = 1;
-    actions_alarms.options_name.push_back("test_alarm");
-    actions_alarms.options_value.push_back(0);
+    actions_alarms.set_value_type(valueType::Bit_Field);
+    actions_alarms.options_map[0] = std::pair<std::string, Value_Object>("test_alarm", uint64_t(0));
 
     // init to zero
     actions_alarms.value.value_bit_field = 0;
@@ -1119,10 +1112,8 @@ Config_Validation_Result Asset::configure_component_local_mode_vars(Type_Configu
 
     // Manually configure additional local mode alarm fields
     local_mode_alarm.set_ui_type("alarm");
-    local_mode_alarm.set_value_type(Int);
-    local_mode_alarm.num_options = 1;
-    local_mode_alarm.options_name.insert(local_mode_alarm.options_name.begin(), "Component is in local mode");
-    local_mode_alarm.options_value.insert(local_mode_alarm.options_value.begin(), 0);
+    local_mode_alarm.set_value_type(valueType::Bit_Field);
+    local_mode_alarm.options_map[0] = std::pair<std::string, Value_Object>("Component is in local mode", uint64_t(0));
     saved_alarms[local_mode_alarm.get_variable_id()] = 0;
     return validation_result;
 }
@@ -1255,7 +1246,8 @@ bool Asset::handle_get(fims_message* pmsg) {
     }
 
     // A request for asset actions information has been made
-    if (strncmp(pmsg->pfrags[3],"actions", strlen("actions")) == 0) {
+    // TODO: provide gets on an individual action
+    if (strncmp(pmsg->pfrags[3], "actions", strlen("actions")) == 0) {
         FPS_DEBUG_LOG("A get was sent on the actions endpoint of an asset.");
         if (pmsg->nfrags == 4) {
             if (!list_action_info(send_FIMS_buf)) {
@@ -1273,8 +1265,8 @@ bool Asset::handle_get(fims_message* pmsg) {
         }
         return send_buffer_to(pmsg->replyto, send_FIMS_buf);
     }
-    
-    if (strncmp(pmsg->pfrags[3],"shutdown_actions", strlen("shutdown_actions")) == 0) {
+
+    if (strncmp(pmsg->pfrags[3], "shutdown_actions", strlen("shutdown_actions")) == 0) {
         FPS_DEBUG_LOG("A get was sent on the shutdown_actions endpoint of an asset.");
         if (pmsg->nfrags == 4) {
             if (!list_action_info(send_FIMS_buf, true)) {
@@ -1369,15 +1361,15 @@ bool Asset::add_asset_data_to_buffer(fmt::memory_buffer& buf) {
 }
 
 /**
- * @brief List the reduced action info for each action. 
- * Intended to be used for pubs. 
+ * @brief List the reduced action info for each action.
+ * Intended to be used for pubs.
  *
  * @param action (fmt::memory_buffer&) The buffer to write to.
  * @return (bool) success
  */
 bool Asset::list_reduced_action_info(fmt::memory_buffer& buf) {
     bufJSON_AddId(buf, "actions");
-    bufJSON_StartObject(buf); // actions : {
+    bufJSON_StartObject(buf);  // actions : {
     for (auto& action : actions) {
         bufJSON_AddId(buf, action.sequence_name.c_str());
         bufJSON_StartObject(buf);
@@ -1386,7 +1378,7 @@ bool Asset::list_reduced_action_info(fmt::memory_buffer& buf) {
             bufJSON_AddString(buf, "step_name", "Completed");
         } else {
             bufJSON_AddString(buf, "step_name", action.paths[action.current_path_index].steps[action.current_step_index].get_name().c_str());
-        }       
+        }
         bufJSON_AddNumber(buf, "path_index", action.current_path_index);
         bufJSON_AddNumber(buf, "step_index", action.current_step_index);
         bufJSON_AddNumber(buf, "time_left_in_step_ms", action.collect_seconds_remaining_in_current_step());
@@ -1395,13 +1387,13 @@ bool Asset::list_reduced_action_info(fmt::memory_buffer& buf) {
         bufJSON_EndObject(buf);
     }
     bufJSON_RemoveTrailingComma(buf);
-    bufJSON_EndObjectNoComma(buf); // end actions:
+    bufJSON_EndObjectNoComma(buf);  // end actions:
     return true;
 }
 
 /**
- * @brief This will add the entirety of the json info for automated actions. 
- * Intended to be used as a get response over fims. 
+ * @brief This will add the entirety of the json info for automated actions.
+ * Intended to be used as a get response over fims.
  * @param buf (fmt::memory_buffer&) The buffer to add to.
  * @param action_name the action we want to return
  * @return success (bool)
@@ -1430,8 +1422,8 @@ bool Asset::list_specific_action(fmt::memory_buffer& buf, std::string action_nam
 }
 
 /**
- * @brief This will add the entirety of the json info for automated actions. 
- * Intended to be used as a get response over fims. 
+ * @brief This will add the entirety of the json info for automated actions.
+ * Intended to be used as a get response over fims.
  * @param buf (fmt::memory_buffer&) The buffer to add to.
  * @return success (bool)
  */
@@ -1538,25 +1530,25 @@ bool Asset::handle_actions_set(fims_message& msg) {
     // get the desired action
     std::string desired_action = split_uri[5];
 
-    for (Action& action: actions) {
+    for (Action& action : actions) {
         if (action.sequence_name == action_id) {
-            action_status.should_pub = true; // anytime an api call is made just pub up the info
+            action_status.should_pub = true;  // anytime an api call is made just pub up the info
             if (desired_action == "start") {
                 if (!action_status.current_sequence_name.empty()) {
                     FPS_WARNING_LOG("This asset is already in use. Current automated action is: %s", action_status.current_sequence_name);
-                    //emit_event();
+                    // emit_event();
                     return true;
-                } 
+                }
 
                 if (in_maint_mode()) {
                     action.enter_automation(action_status, action_id);
                 } else {
                     FPS_WARNING_LOG("Action requested (%s), but no action taken because asset is not in maintenance mode.", msg.uri);
                 }
- 
-                //emit_event();
+
+                // emit_event();
             } else if (desired_action == "clear") {
-                switch (action.status){
+                switch (action.status) {
                     case ACTION_STATUS_STATE::IN_PROGRESS:
                         FPS_WARNING_LOG("Action requested (%s), but no action taken because asset is in progress. Actions can only clear when in a static state.", msg.uri);
                         break;
@@ -1566,8 +1558,8 @@ bool Asset::handle_actions_set(fims_message& msg) {
                 }
             } else if (desired_action == "stop") {
                 if (action_status.current_sequence_name == action_id && action.status == ACTION_STATUS_STATE::IN_PROGRESS) {
-                    action.exit_automation(action_status, ACTION_STATUS_STATE::ABORTED); 
-                    //emit_event();
+                    action.exit_automation(action_status, ACTION_STATUS_STATE::ABORTED);
+                    // emit_event();
                 }
             } else {
                 FPS_WARNING_LOG("Unsupported action requested (%s) no action taken.", msg.uri);
@@ -1578,7 +1570,7 @@ bool Asset::handle_actions_set(fims_message& msg) {
 
     // error state couldn't find the action
     std::string error_ids;
-    for (const auto& action: actions) {
+    for (const auto& action : actions) {
         error_ids.append(action.sequence_name);
     }
     FPS_ERROR_LOG("Could not find the action id.");
@@ -1709,7 +1701,7 @@ bool Asset::process_watchdog_status() {
         clearFaultsControlEnable = true;
         watchdog_fault.value.value_bit_field = 1;
         latched_fault_it->second = 1;
-        snprintf(event_msg, MEDIUM_MSG_LEN, "Fault received: %s, asset: %s", watchdog_fault.options_name[0].c_str(), name.c_str());
+        snprintf(event_msg, MEDIUM_MSG_LEN, "Fault received: %s, asset: %s", watchdog_fault.options_map[0].first.c_str(), name.c_str());
         emit_event("Assets", event_msg, FAULT_ALERT);
     }
 
@@ -1739,7 +1731,8 @@ void Asset::process_local_mode_status() {
     if (local_mode_status_type == random_enum)
         local_mode_status.value.value_bool = uint64_t(local_mode_signal.value.value_int) == local_mode_status_mask;
     else if (local_mode_status_type == bit_field)
-        // Check that the bit in the position given by the signal is valid
+        // Local mode signal is simply an integer so it will not have been bit shifted yet. Perform the shift here
+        // Theoretically, multiple values can be set, so check if any of them are true
         // e.g. valid local mode states: 4, 5; mask (binary): 110000 (start counting from 0)
         // for status value 4, verify: 110000 & 010000
         local_mode_status.value.value_bool = (local_mode_status_mask & (uint64_t(1) << local_mode_signal.value.value_int));
@@ -1755,7 +1748,7 @@ void Asset::process_local_mode_status() {
         // Only use saved alarms to track new changes in the local/remote value
     } else if (alarm_it->second == 0 && local_mode_status.value.value_bool) {
         alarm_it->second = 1;
-        snprintf(event_msg, MEDIUM_MSG_LEN, "alarm received: %s, asset: %s", local_mode_alarm.options_name[0].c_str(), name.c_str());
+        snprintf(event_msg, MEDIUM_MSG_LEN, "alarm received: %s, asset: %s", local_mode_alarm.options_map[0].first.c_str(), name.c_str());
         emit_event("Assets", event_msg, ALARM_ALERT);
     } else if (alarm_it->second == 1 && !local_mode_status.value.value_bool) {
         alarm_it->second = 0;
@@ -1763,8 +1756,8 @@ void Asset::process_local_mode_status() {
 }
 
 /**
- * @brief If there is a current sequence active, 
- * this function this function finds the appropriate action if 
+ * @brief If there is a current sequence active,
+ * this function this function finds the appropriate action if
  * needed. Then processes the action.
  */
 void Asset::process_asset_actions() {
@@ -1792,15 +1785,14 @@ void Asset::process_asset_actions() {
         if (quick_action_access != nullptr && this->in_maint_mode()) {
             quick_action_access->process(action_status);
             return;
-        }         
+        }
 
         if (quick_action_access == nullptr) {
             FPS_WARNING_LOG("Attempting to process actions but quick_action_access ptr is nullptr. Something very bad has occurred.");
         }
 
         if (!this->in_maint_mode()) {
-            FPS_WARNING_LOG("Asset removed from maintenance mode while an automated maintenance action is undergoing. Clearing that action. Action Name: %s",
-                    quick_action_access->sequence_name);
+            FPS_WARNING_LOG("Asset removed from maintenance mode while an automated maintenance action is undergoing. Clearing that action. Action Name: %s", quick_action_access->sequence_name);
             quick_action_access->clear_action(action_status);
             action_status.current_sequence_name.clear();
         }
@@ -1848,7 +1840,7 @@ void Asset::process_asset(void) {
                     for (int i = 0; new_faults != 0; i++) {
                         // The current bit to check
                         if ((new_faults & 1) == 1) {
-                            snprintf(faultMsg, MEDIUM_MSG_LEN, "Asset %s received fault: %s", name.c_str(), fault_register->options_name[i].c_str());
+                            snprintf(faultMsg, MEDIUM_MSG_LEN, "Asset %s received fault: %s", name.c_str(), fault_register->options_map[i].first.c_str());
                             emit_event("Assets", faultMsg, FAULT_ALERT);
                         }
                         new_faults >>= 1;
@@ -1887,7 +1879,7 @@ void Asset::process_asset(void) {
                     // Translate fault bit to fault message
                     for (int i = 0; new_alarms != 0; i++) {
                         if ((new_alarms & 1) == 1) {
-                            snprintf(alarmMsg, MEDIUM_MSG_LEN, "Asset %s received alarm: %s", name.c_str(), alarm_register->options_name[i].c_str());
+                            snprintf(alarmMsg, MEDIUM_MSG_LEN, "Asset %s received alarm: %s", name.c_str(), alarm_register->options_map[i].first.c_str());
                             emit_event("Assets", alarmMsg, ALARM_ALERT);
                         }
                         new_alarms >>= 1;
@@ -1900,7 +1892,9 @@ void Asset::process_asset(void) {
         saved_alarm->second = alarm_register->value.value_bit_field;
     }
 
-    if (status_type != random_enum && status_type != bit_field)
+    // Process the status of the "status"/"breaker_status" register
+    Fims_Object status = get_status_register();
+    if (status.get_status_type() != random_enum && status.get_status_type() != bit_field)
         FPS_ERROR_LOG("Asset::process_asset - invalid status type received\n");
     else {
         // emit event if status has changed
@@ -1918,13 +1912,15 @@ void Asset::process_asset(void) {
     isAvail = (get_num_active_faults() == 0) && !inMaintenance && !local_mode_status.value.value_bool && process_watchdog_status();
 
     // Process running status
-    if (status_type == random_enum)
+    if (status.get_status_type() == random_enum) {
         isRunning = internal_status == running_status_mask;
-    else if (status_type == bit_field)
-        // Check that the bit in the position given by the status value is valid
+    } else if (status.get_status_type() == bit_field) {
+        // The internal status parsed from the component publish will already be bit shifted
+        // Theoretically, multiple values can be set, so check if any of them are true
         // e.g. valid running states: 4, 5; mask (binary): 110000 (start counting from 0)
         // for status value 4, verify: 110000 & 010000
-        isRunning = (running_status_mask & (uint64_t(1) << internal_status));
+        isRunning = static_cast<bool>(running_status_mask & internal_status);
+    }
 
     // Process potential power values
     process_potential_active_power();
@@ -1983,10 +1979,6 @@ int Asset::get_num_comps(void) const {
 
 const std::string Asset::get_comp_name(int i) const {
     return compNames[i];
-}
-
-uint64_t Asset::get_status(void) const {
-    return internal_status;
 }
 
 /**
@@ -2390,6 +2382,25 @@ Config_Validation_Result Asset::parse_variable(cJSON* var_json, std::string comp
         component_variable->set_unit("");
     }
 
+    // Parse optional status_type override
+    cJSON* status_type_override = cJSON_GetObjectItem(var_json, "status_type");
+    if (status_type_override != NULL && status_type_override->valuestring != NULL) {  // The variable unit is not required
+        if (strcmp(status_type_override->valuestring, "random_enum") == 0) {
+            // Override set for random_enum
+            component_variable->set_status_type(statusType::random_enum);
+        } else if (strcmp(status_type_override->valuestring, "bit_field") == 0) {
+            // Override set for bit_field
+            component_variable->set_status_type(statusType::bit_field);
+        } else {
+            // Invalid override
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid default_status_type override {} provided for variable {}", comp_id, status_type_override->valuestring, variable_string)));
+        }
+    } else {
+        // Not overridden. Default to the asset's status type
+        component_variable->set_status_type(default_status_type);
+    }
+
     // Both uri build functions create a C-style string, so use the string constructor function to convert it to a string object
     // build_uri prepends "/components/"
     std::string components_uri(build_uri(comp_id, register_id->valuestring));
@@ -2525,7 +2536,7 @@ Config_Validation_Result fimsCtl::configure_actions_UI(cJSON* JSON) {
         return validation_result;
     }
 
-    // allow user to configure the name, but provide default if they don't. 
+    // allow user to configure the name, but provide default if they don't.
     cJSON* control_name_json;
     if ((control_name_json = cJSON_GetObjectItem(JSON, "name")) == NULL || (control_name_json->valuestring == NULL)) {
         validation_result.WARNING_details.push_back(Result_Details(fmt::format("{}: no 'name' field given in UI control configuration object. Providing default name.", obj_name)));
@@ -2825,7 +2836,7 @@ bool fimsCtl::makeJSONObject(fmt::memory_buffer& buf, const char* const var, boo
 
 /**
  * @brief builds the actions control portion of the UI
- * TODO:(JUD) make name human legible or a different value altogether. 
+ * TODO:(JUD) make name human legible or a different value altogether.
  *
  * @param buf (fmt::memory_buffer&) buf to add to
  * @param actions (std::vector<Action>) this assests actions
@@ -2836,20 +2847,20 @@ bool fimsCtl::makeJSONObjectWithActionOptions(fmt::memory_buffer& buf, std::vect
         return true;
     }
 
-    bufJSON_AddId(buf, "maint_actions_ctl"); // maint_actions_ctl 
-    bufJSON_StartObject(buf);// {
+    bufJSON_AddId(buf, "maint_actions_ctl");  // maint_actions_ctl
+    bufJSON_StartObject(buf);                 // {
     bufJSON_AddBool(buf, "enabled", enabled);
     bufJSON_AddId(buf, "options");
     bufJSON_StartArray(buf);  // UiItemOption [
     for (const Action& action : actions) {
-        bufJSON_StartObject(buf); // {
+        bufJSON_StartObject(buf);  // {
         bufJSON_AddString(buf, "name", action.sequence_name.c_str());
         bufJSON_AddString(buf, "return_value", action.sequence_name.c_str());
-        bufJSON_EndObject(buf); // }
+        bufJSON_EndObject(buf);  // }
     }
     bufJSON_RemoveTrailingComma(buf);
-    bufJSON_EndArray(buf);  // ] UiItemOption ]
-    bufJSON_EndObject(buf); // end actions_ctl }
+    bufJSON_EndArray(buf);   // ] UiItemOption ]
+    bufJSON_EndObject(buf);  // end actions_ctl }
     return true;
 }
 

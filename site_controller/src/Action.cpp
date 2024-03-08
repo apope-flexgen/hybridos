@@ -48,7 +48,7 @@ Action::Action() {
     is_shutdown_sequence = false;
 }
 
-/** 
+/**
  * @brief Parse and configure paths/steps for this action.
  * @param object (cJSON*) the actual actions.json entry.
  * @return bool (success)

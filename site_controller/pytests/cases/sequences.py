@@ -100,7 +100,7 @@ def generate_watchdog_config():
         # Restart with the overwritten configs
         pre_lambda=[
             lambda: Site_Controller_Instance.get_instance().mig.upload(generate_watchdog_config()),
-            lambda: Site_Controller_Instance.get_instance().restart_site_controller()
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller(False)
         ]
     ),
     Steps(

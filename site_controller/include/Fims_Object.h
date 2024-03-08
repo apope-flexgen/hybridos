@@ -10,7 +10,7 @@
 
 /* C Standard Library Dependencies */
 /* C++ Standard Library Dependencies */
-#include <vector>
+#include <unordered_map>
 #include <string>
 /* External Dependencies */
 /* System Internal Dependencies */
@@ -43,6 +43,7 @@ public:
     Fims_Object& operator=(Fims_Object other);
     void build_JSON_Object(fmt::memory_buffer& buf, bool control2status, bool clothed, const char* const search_id = NULL);
     void add_to_JSON_buffer(fmt::memory_buffer& buf, const char* const search_id = NULL, bool clothed = true);
+    void add_options_item_to_buf(fmt::memory_buffer& buf, uint64_t position);
     void add_status_of_control_to_JSON_buffer(fmt::memory_buffer& buf, const char* const var = NULL, bool clothed = true);
     const char* get_status_string() const;
     void set_component_uri(const char* uri);
@@ -54,6 +55,7 @@ public:
     void set_ui_type(const char* _ui_type);
     void set_value_type(valueType value_type);
     void set_type(const char* _type);
+    void set_status_type(statusType _status_type);
     bool set_fims_float(const char* uri_endpoint, float body_float);
     bool set_fims_int(const char* uri_endpoint, int body_int);
     bool set_fims_bool(const char* uri_endpoint, bool body_bool);
@@ -67,18 +69,19 @@ public:
     const char* get_unit() const;
     const char* get_ui_type() const;
     const char* get_type() const;
+    statusType get_status_type() const;
     int get_scaler() const;
     bool send_to_component(bool use_write_uri = false, bool round_float = false);
     void update_present_register(uint input_source_index);
     void parse_json_config(cJSON* JSON_object, const Fims_Object& default_vals);
     bool configure(const std::string& var_id, bool* p_flag, Input_Source_List* input_sources, cJSON* JSON_config, const Fims_Object& default_vals, std::vector<Fims_Object*>& multi_input_command_vars);
 
-    std::vector<std::string> options_name;
-    std::vector<Value_Object> options_value;
+    // Map used to store one or more string/value pairs held by the fims register
+    // This is typically used for alarms/faults/statuses and site feature selections
+    std::unordered_map<uint64_t, std::pair<std::string, Value_Object>> options_map;
     int default_status_value;
     std::string default_status_name;
     int scaler;
-    int num_options;
     bool ui_enabled;
     std::string write_uri;  // When called, write this object's value to this custom Fims URI
     bool* is_primary;       // pointer to flag indicating if this Site Controller is primary controller (else it is secondary/shadow controller)
@@ -110,12 +113,10 @@ public:
     // Swap function for swapping one Fims_Object with another
     friend void swap(Fims_Object& first, Fims_Object& second) {
         using std::swap;
-        swap(first.options_name, second.options_name);
-        swap(first.options_value, second.options_value);
+        swap(first.options_map, second.options_map);
         swap(first.default_status_value, second.default_status_value);
         swap(first.default_status_name, second.default_status_name);
         swap(first.scaler, second.scaler);
-        swap(first.num_options, second.num_options);
         swap(first.ui_enabled, second.ui_enabled);
         swap(first.write_uri, second.write_uri);
         swap(first.is_primary, second.is_primary);
@@ -131,6 +132,7 @@ public:
         swap(first.unit, second.unit);
         swap(first.ui_type, second.ui_type);
         swap(first.type, second.type);
+        swap(first.status_type, second.status_type);
     }
 
 private:
@@ -139,8 +141,9 @@ private:
     std::string component_uri;  // uri used by Asset Manager to send set commands to components
     std::string name;
     std::string unit;
-    std::string ui_type;  // enum, number, string, faults, alarms, none
-    std::string type;     // int, float, bool, string
+    std::string ui_type;     // enum, number, string, faults, alarms, none
+    std::string type;        // int, float, bool, string
+    statusType status_type;  // (optional) override of the asset level status type. Can be "enum" or "bitfield"
 
     fmt::memory_buffer send_FIMS_buf;  // Reusable and resizable string buffer used to send FIMS messages
 

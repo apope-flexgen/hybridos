@@ -37,7 +37,7 @@ Type_Configurator::Type_Configurator(Type_Manager* pMan, std::map<std::string, s
 }
 
 /**
- * @brief Since it's config and performance literally doesn't matter. For readability perform all 
+ * @brief Since it's config and performance literally doesn't matter. For readability perform all
  * config validation ahead of use.
  *
  * @param actionsJSON (cJSON*) the json object to verify.
@@ -82,7 +82,7 @@ void check_for_action_misconfig(cJSON* actionsJSON, Config_Validation_Result& va
  * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
 Config_Validation_Result Type_Configurator::create_actions() {
-    actions.clear(); // clear the actions array to ensure empty
+    actions.clear();  // clear the actions array to ensure empty
     // do config validation early
     Config_Validation_Result actions_result = Config_Validation_Result(true);
     check_for_action_misconfig(actions_root, actions_result);

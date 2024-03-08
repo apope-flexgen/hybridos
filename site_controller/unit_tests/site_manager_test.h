@@ -915,7 +915,7 @@ TEST_F(site_manager_test, automatic_voltage_mode) {
 
 // watt-var test - curve 1 (8 points)
 TEST_F(site_manager_test, watt_var_mode_curve_1) {
-    float points_array[] = { -500, 200, 0, 200, 1000, -500, 1500, 500 };
+    watt_var.watt_var_points.options_map = { { 0, { "a", -500 } }, { 1, { "b", 200 } }, { 2, { "c", 0 } }, { 3, { "d", 200 } }, { 4, { "e", 1000 } }, { 5, { "f", -500 } }, { 6, { "g", 1500 } }, { 7, { "h", 500 } } };
     // struct that has variables to configure for each test case
     struct test_struct {
         float actual_kW;
@@ -933,21 +933,12 @@ TEST_F(site_manager_test, watt_var_mode_curve_1) {
     for (auto test : tests) {
         test_logger t_log("watt_var_mode curve 1", test_id++, tests.size());
 
-        int array_size = sizeof(points_array) / 4;
-        std::vector<Value_Object> options_value(array_size);
-
-        for (int j = 0; j < array_size; j++) {
-            options_value[j].set(points_array[j]);
-        }
-
-        watt_var.watt_var_points.options_value = options_value;
-        watt_var.watt_var_points.num_options = array_size;
         watt_var.init_curve();
 
-        for (int j = 0; j < array_size; j += 2) {
+        for (size_t j = 0; j < watt_var.watt_var_points.options_map.size(); j += 2) {
             // test set_curve_points plots correctly
-            t_log.float_results.push_back({ options_value[j].value_float, watt_var.watt_var_curve[j / 2].first, "curve point " + std::to_string(j / 2) + " watt component" });
-            t_log.float_results.push_back({ options_value[j + 1].value_float, watt_var.watt_var_curve[j / 2].second, "curve point " + std::to_string(j / 2) + " var component" });
+            t_log.float_results.push_back({ watt_var.watt_var_points.options_map[j].second.value_float, watt_var.watt_var_curve[j / 2].first, "curve point " + std::to_string(j / 2) + " watt component" });
+            t_log.float_results.push_back({ watt_var.watt_var_points.options_map[j + 1].second.value_float, watt_var.watt_var_curve[j / 2].second, "curve point " + std::to_string(j / 2) + " var component" });
         }
 
         // test watt_var_mode provides correct site kVAR demand output
@@ -960,7 +951,7 @@ TEST_F(site_manager_test, watt_var_mode_curve_1) {
 
 // watt-var test - curve 2 (6 points)
 TEST_F(site_manager_test, watt_var_mode_curve_2) {
-    float points_array[] = { -500, 500, 0, 200, 1000, 500 };
+    watt_var.watt_var_points.options_map = { { 0, { "a", -500 } }, { 1, { "b", 500 } }, { 2, { "c", 0 } }, { 3, { "d", 200 } }, { 4, { "e", 1000 } }, { 5, { "f", 500 } } };
     // struct that has variables to configure for each test case
     struct test_struct {
         float actual_kW;
@@ -978,20 +969,11 @@ TEST_F(site_manager_test, watt_var_mode_curve_2) {
     for (auto test : tests) {
         test_logger t_log("watt_var_mode curve 2", test_id++, tests.size());
 
-        int array_size = sizeof(points_array) / 4;
-        std::vector<Value_Object> options_value(array_size);
-
-        for (int j = 0; j < array_size; j++) {
-            options_value[j].set(points_array[j]);
-        }
-
-        watt_var.watt_var_points.options_value = options_value;
-        watt_var.watt_var_points.num_options = array_size;
         watt_var.init_curve();
-        for (int j = 0; j < array_size; j += 2) {
+        for (size_t j = 0; j < watt_var.watt_var_points.options_map.size(); j += 2) {
             // test set_curve_points plots correctly
-            t_log.float_results.push_back({ options_value[j].value_float, watt_var.watt_var_curve[j / 2].first, "curve point " + std::to_string(j / 2) + " watt component" });
-            t_log.float_results.push_back({ options_value[j + 1].value_float, watt_var.watt_var_curve[j / 2].second, "curve point " + std::to_string(j / 2) + " var component" });
+            t_log.float_results.push_back({ watt_var.watt_var_points.options_map[j].second.value_float, watt_var.watt_var_curve[j / 2].first, "curve point " + std::to_string(j / 2) + " watt component" });
+            t_log.float_results.push_back({ watt_var.watt_var_points.options_map[j + 1].second.value_float, watt_var.watt_var_curve[j / 2].second, "curve point " + std::to_string(j / 2) + " var component" });
         }
 
         // test watt_var_mode provides correct site kVAR demand output
@@ -1005,7 +987,7 @@ TEST_F(site_manager_test, watt_var_mode_curve_2) {
 // watt-watt test
 TEST_F(site_manager_test, watt_watt_mode) {
     int const num_tests = 3;  // total number of test cases
-    float points_array[] = { -500, 200, 0, 200, 1000, -500, 1500, 500 };
+    watt_watt.watt_watt_points.options_map = { { 0, { "a", -500 } }, { 1, { "b", 200 } }, { 2, { "c", 0 } }, { 3, { "d", 200 } }, { 4, { "e", 1000 } }, { 5, { "f", -500 } }, { 6, { "g", 1500 } }, { 7, { "h", 500 } } };
     // struct that has variables to configure for each test case
     struct tests {
         float actual_kW;
@@ -1026,23 +1008,14 @@ TEST_F(site_manager_test, watt_watt_mode) {
         // Capture any prints within site controller that might be present in debug mode
         capture_stdout();
 
-        int array_size = sizeof(points_array) / 4;
-        std::vector<Value_Object> options_value(array_size);
-
-        for (int j = 0; j < array_size; j++) {
-            options_value[j].set(points_array[j]);
-        }
-
-        watt_watt.watt_watt_points.options_value = options_value;
-        watt_watt.watt_watt_points.num_options = array_size;
         watt_watt.init_curve();
         errorLog << "watt_watt_mode() test " << i + 1 << " of " << num_tests << std::endl;
-        for (int j = 0; j < array_size; j += 2) {
+        for (size_t j = 0; j < watt_var.watt_var_points.options_map.size(); j += 2) {
             // failure conditions
-            failure = watt_watt.watt_watt_curve[j / 2].first != options_value[j].value_float || watt_watt.watt_watt_curve[j / 2].second != options_value[j + 1].value_float;
+            failure = watt_watt.watt_watt_curve[j / 2].first != watt_var.watt_var_points.options_map[j].second.value_float || watt_watt.watt_watt_curve[j / 2].second != watt_watt.watt_watt_points.options_map[j + 1].second.value_float;
             // test set_curve_points plots correctly
-            EXPECT_EQ(watt_watt.watt_watt_curve[j / 2].first, options_value[j].value_float);
-            EXPECT_EQ(watt_watt.watt_watt_curve[j / 2].second, options_value[j + 1].value_float);
+            EXPECT_EQ(watt_watt.watt_watt_curve[j / 2].first, watt_var.watt_var_points.options_map[j].second.value_float);
+            EXPECT_EQ(watt_watt.watt_watt_curve[j / 2].second, watt_var.watt_var_points.options_map[j + 1].second.value_float);
         }
 
         // test watt_watt_mode provides correct site kW demand output
@@ -1097,16 +1070,15 @@ TEST_F(site_manager_test, set_curve_points) {
         capture_stdout();
 
         int array_size = 2 * array[i].points.size();
-        std::vector<Value_Object> options_value(array_size);
         Fims_Object fims_object;
         std::vector<std::pair<float, float>> output_curve;
 
         for (int j = 0; j < array_size; j += 2) {
-            options_value[j].set(array[i].points[j / 2].first);
-            options_value[j + 1].set(array[i].points[j / 2].second);
+            fims_object.options_map[j];
+            fims_object.options_map[j].second.set(array[i].points[j / 2].first);
+            fims_object.options_map[j + 1];
+            fims_object.options_map[j + 1].second.set(array[i].points[j / 2].second);
         }
-        fims_object.options_value = options_value;
-        fims_object.num_options = array_size;
 
         errorLog << "set_curve_points() test " << i + 1 << " of " << num_tests << std::endl;
         set_curve_points(&fims_object, output_curve);

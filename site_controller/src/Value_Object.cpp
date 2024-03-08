@@ -34,6 +34,16 @@ Value_Object::Value_Object(int value) {
     set(value);
 }
 
+Value_Object::Value_Object(uint64_t value) {
+    type = Invalid;
+    value_int = 0;
+    value_float = 0.0;
+    value_bool = false;
+    value_bit_field = 0;
+    value_mask = 0;
+    set(value);
+}
+
 void Value_Object::set(bool value) {
     type = Bool;
     value_bool = value;

@@ -335,7 +335,7 @@ void Path::handle_site_check_alerts(alert_type type_of_alert) {
                         if (type_of_alert == FAULT_ALERT ? !site->get_active_faults(1) : !site->get_active_alarms(1)) {
                             FPS_ERROR_LOG("get_num_assets_controllable %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
                             snprintf(event_message, MEDIUM_MSG_LEN, "%s: insufficient number of assets controllable across all types. Expected at least %d but detected %d", alert_names_upper[type_of_alert], expected_num_controllable + 1,
-                                    actual_num_controllable);
+                                     actual_num_controllable);
                             emit_event("Site", event_message, type_of_alert);
                             (type_of_alert == FAULT_ALERT) ? site->set_faults(1) : site->set_alarms(1);
                         }
@@ -352,7 +352,6 @@ void Path::handle_site_check_alerts(alert_type type_of_alert) {
                             }
                             FPS_ERROR_LOG("Asset %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
                             snprintf(event_message, MEDIUM_MSG_LEN, "%s: %s alert(s) detected on %s register", alert_names_upper[type_of_alert], name_fragments[2].c_str(), name_fragments[3].c_str());
-                            emit_event("Site", event_message, type_of_alert);
                             (type_of_alert == FAULT_ALERT) ? site->set_faults(1) : site->set_alarms(1);
                         }
                     }
@@ -524,8 +523,7 @@ void Path::handle_ess_check_alerts(alert_type type_of_alert) {
                 snprintf(event_message, MEDIUM_MSG_LEN, "Test fault detected");
                 asset_ess->actions_faults.value.value_bit_field |= 0x1;
             }
-        }
-        else if (type_of_alert == ALARM_ALERT && frag == "test_alarm") {
+        } else if (type_of_alert == ALARM_ALERT && frag == "test_alarm") {
             num_active_alerts++;
             alarm = "test_alarm";
             if ((asset_ess->actions_alarms.value.value_bit_field & static_cast<uint64_t>(0x1)) == 0) {
@@ -537,23 +535,19 @@ void Path::handle_ess_check_alerts(alert_type type_of_alert) {
             if (asset_ess->get_num_active_faults() > 0) {
                 num_active_alerts++;
             }
-        }
-        else if (frag == "is_alarmed") {
+        } else if (frag == "is_alarmed") {
             if (asset_ess->get_num_active_alarms() > 0) {
                 num_active_alerts++;
             }
-        }
-        else if (frag == "is_not_running") {
+        } else if (frag == "is_not_running") {
             if (!asset_ess->is_running()) {
                 num_active_alerts++;
             }
-        }
-        else if (frag == "is_not_available") {
+        } else if (frag == "is_not_available") {
             if (!asset_ess->is_available()) {
                 num_active_alerts++;
             }
-        }
-        else if (frag == "is_not_controllable") {
+        } else if (frag == "is_not_controllable") {
             if (!asset_ess->is_controllable()) {
                 num_active_alerts++;
             }
@@ -579,7 +573,7 @@ bool Path::check_alerts(alert_type type_of_alert, Sequence_Type sequence_type) {
         return false;
     }
 
-    switch(sequence_type) {
+    switch (sequence_type) {
         case Sequence_Type::Site:
             handle_site_check_alerts(type_of_alert);
             return (type_of_alert == FAULT_ALERT) ? site->get_faults() : site->get_alarms();
@@ -588,16 +582,16 @@ bool Path::check_alerts(alert_type type_of_alert, Sequence_Type sequence_type) {
             return (type_of_alert == FAULT_ALERT) ? asset_ess->get_num_active_faults() != 0 : asset_ess->get_num_active_alarms() != 0;
         case Sequence_Type::Asset_Solar:
             FPS_ERROR_LOG("Gathering Solar instance faults and alarms not yet supported.");
-            return false; // todo update this
+            return false;  // todo update this
         case Sequence_Type::Asset_Generator:
             FPS_ERROR_LOG("Gathering Gen instance faults and alarms not yet supported.");
-            return false; // todo update this
+            return false;  // todo update this
         case Sequence_Type::Asset_Feeder:
             FPS_ERROR_LOG("Gathering Feeder instance faults and alarms not yet supported.");
-            return false; // todo update this
+            return false;  // todo update this
         default:
             FPS_ERROR_LOG("Error case reached.");
-            return false; // todo update this
+            return false;  // todo update this
     }
 }
 
@@ -771,18 +765,14 @@ bool Path::configure_path(cJSON* object, bool must_have_return_id) {
 
 /**
  * @brief Returns the sum of the remaining steps in an action. Will omit steps that have already
- * been run. There is not at present a smart way to report on steps without a debounce_timer_ms. 
+ * been run. There is not at present a smart way to report on steps without a debounce_timer_ms.
  * But one could be implemented.
  * @param action (const Step&) The Step to report on.
  * @return The number of seconds as an int.
  */
-int  Path::collect_seconds_in_path() {
+int Path::collect_seconds_in_path() {
     // vector of exit_steps (should contain the debounce_timer_ms)
     auto start_iterator = steps.begin();
 
-    return std::accumulate(start_iterator, steps.end(), 0,
-        [](int currentSum, Step& step) {
-            return currentSum + step.collect_seconds_in_step(); 
-        }
-    );
+    return std::accumulate(start_iterator, steps.end(), 0, [](int currentSum, Step& step) { return currentSum + step.collect_seconds_in_step(); });
 }

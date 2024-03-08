@@ -55,8 +55,8 @@ public:
     std::vector<std::pair<std::string, uint64_t>> alarms;
     int num_active_alarms;
 
-    // constructors 
-    Path();  
+    // constructors
+    Path();
     Path(Site_Manager* siteref);
 
     // funcs

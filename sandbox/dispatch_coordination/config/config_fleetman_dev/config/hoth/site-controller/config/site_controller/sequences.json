@@ -40,7 +40,7 @@
                         {
                             "name": "/assets/get_any_ess_alarms"
                         }
-                    ],
+                      ],
                     "path_name": "Ready",
                     "return_id": "Ready",
                     "steps": [

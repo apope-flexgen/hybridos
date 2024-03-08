@@ -21,7 +21,6 @@ extern fims* p_fims;
 Fims_Object::Fims_Object() {
     scaler = 1;
     ui_enabled = true;
-    num_options = 0;
     multiple_inputs = false;
     // Default status values published externally. These values are not used internally and can be set to anything
     default_status_name = "";
@@ -32,12 +31,10 @@ Fims_Object::Fims_Object() {
 
 // Copy constructor. Excludes the fims memory buffer
 Fims_Object::Fims_Object(const Fims_Object& other) {
-    options_name = other.options_name;
-    options_value = other.options_value;
+    options_map = other.options_map;
     default_status_value = other.default_status_value;
     default_status_name = other.default_status_name;
     scaler = other.scaler;
-    num_options = other.num_options;
     ui_enabled = other.ui_enabled;
     write_uri = other.write_uri;
     is_primary = other.is_primary;
@@ -53,6 +50,7 @@ Fims_Object::Fims_Object(const Fims_Object& other) {
     unit = other.unit;
     ui_type = other.ui_type;
     type = other.type;
+    status_type = other.status_type;
 }
 
 Fims_Object& Fims_Object::operator=(Fims_Object other) {
@@ -95,6 +93,10 @@ void Fims_Object::set_value_type(valueType value_type) {
 
 void Fims_Object::set_type(const char* _type) {
     type = _type;
+}
+
+void Fims_Object::set_status_type(statusType _status_type) {
+    status_type = _status_type;
 }
 
 /**
@@ -224,9 +226,7 @@ bool Fims_Object::set_fims_masked_int(const char* uri_endpoint, int body_int, ui
 // This function is used to clear alarms and faults represented in Fims_Objects
 void Fims_Object::clear_fims_bit_field(void) {
     value.value_bit_field = 0;
-    num_options = 0;
-    options_name.clear();
-    options_value.clear();
+    options_map.clear();
 }
 
 const char* Fims_Object::get_component_uri() const {
@@ -267,6 +267,10 @@ const char* Fims_Object::get_type() const {
     if (type.empty())
         return NULL;
     return type.c_str();
+}
+
+statusType Fims_Object::get_status_type() const {
+    return status_type;
 }
 
 int Fims_Object::get_scaler() const {
@@ -340,9 +344,35 @@ const char* Fims_Object::get_status_string() const {
         return value.value_bool ? "Closed" : "Open";
     } else if (type.compare("Status") == 0) {
         // Status with valid options array
-        if (!options_name.empty() && !options_name[value.value_bit_field].empty()) {
-            // Add the string representing the Bit_Field value
-            return options_name[value.value_bit_field].c_str();
+        if (!options_map.empty()) {
+            switch (status_type) {
+                case statusType::bit_field: {
+                    // Only the highest bit will be used.
+                    for (uint64_t bit_value = 1, pos = 0; pos < MAX_STATUS_BITS; bit_value <<= 1, pos++) {
+                        // Ensure valid name and value (use value type to ensure options_value initialization)
+                        if (static_cast<bool>(value.value_bit_field & bit_value)) {
+                            auto status_itr = options_map.find(pos);
+                            if (status_itr != options_map.end() && !status_itr->second.first.empty()) {
+                                // Add the string representing the Bit_Field value
+                                return status_itr->second.first.c_str();
+                            }
+                        }
+                    }
+                    break;
+                }
+                case statusType::random_enum: {
+                    auto status_itr = options_map.find(value.value_bit_field);
+                    if (status_itr != options_map.end() && !status_itr->second.first.empty()) {
+                        // Add the string representing the Bit_Field value
+                        return status_itr->second.first.c_str();
+                    }
+                    break;
+                }
+                default: {
+                    FPS_ERROR_LOG("%s: invalid status_type %d configured", name, status_type);
+                    break;
+                }
+            }
         }
         // Status with empty options array (error state, possible missing publish from components)
         else {
@@ -351,6 +381,30 @@ const char* Fims_Object::get_status_string() const {
         }
     }
     return "";
+}
+
+/**
+ * Add the item at the given index to the buffer provided
+ */
+void Fims_Object::add_options_item_to_buf(fmt::memory_buffer& buf, uint64_t position) {
+    // Only add the item if it exists and has been properly configured
+    auto options_itr = options_map.find(position);
+    if (options_itr != options_map.end() && !options_itr->second.first.empty() && options_itr->second.second.type != Invalid) {
+        bufJSON_StartObject(buf);  // JSON_options {
+        bufJSON_AddString(buf, "name", options_itr->second.first.c_str());
+        if (options_itr->second.second.type == valueType::Float) {
+            bufJSON_AddNumber(buf, "return_value", options_itr->second.second.value_float);
+        } else if (options_itr->second.second.type == valueType::Int) {
+            bufJSON_AddNumber(buf, "return_value", options_itr->second.second.value_int);
+        } else if (options_itr->second.second.type == valueType::Bool) {
+            bufJSON_AddBool(buf, "return_value", options_itr->second.second.value_bool);
+        } else if (options_itr->second.second.type == valueType::String) {
+            bufJSON_AddString(buf, "return_value", options_itr->second.second.value_string.c_str());
+        } else if (options_itr->second.second.type == valueType::Bit_Field) {
+            bufJSON_AddNumber(buf, "return_value", options_itr->second.second.value_bit_field);
+        }
+        bufJSON_EndObject(buf);  // } JSON_options
+    }
 }
 
 /**
@@ -409,15 +463,16 @@ void Fims_Object::build_JSON_Object(fmt::memory_buffer& buf, bool control2status
     }
 
     // The following conditional adds the key/value object, used for both naked and clothed
-    if (value.type == Float) {
+    // Only type, not value.type should be Status
+    if (type == "Status") {
+        bufJSON_AddString(buf, item_name.c_str(), get_status_string());
+    } else if (value.type == Float) {
         // Floats rounded correctly in the UI
         bufJSON_AddNumber(buf, item_name.c_str(), value.value_float);
     } else if (value.type == Int) {
-        // UI expects value > 0 if alarms/faults are present
-        // In the case that alarms/faults are masked, num_options will still be nonzero
+        // TODO: eventually convert all alarms/faults to using bit_field
         if (ui_type.compare("alarm") == 0 || ui_type.compare("fault") == 0) {
             // Alarms/Faults have a configured type of Int but use their Bit_Field value
-            // TODO: safe to change all configuration to simply Bit_Field?
             bufJSON_AddNumber(buf, item_name.c_str(), value.value_bit_field);
         } else {
             bufJSON_AddNumber(buf, item_name.c_str(), value.value_int);
@@ -431,16 +486,20 @@ void Fims_Object::build_JSON_Object(fmt::memory_buffer& buf, bool control2status
     } else if (value.type == String) {
         bufJSON_AddString(buf, item_name.c_str(), value.value_string.c_str());
     } else if (value.type == Bit_Field) {
-        // Type Bit_Field should currently be unused, as alarms/faults use Int and Status has it's own type now
-        // TODO: leave for future support
-        if (!options_name.empty() && !options_name[value.value_bit_field].empty()) {
-            // Add the string representing the Bit_Field value, will only work for a single value
-            bufJSON_AddString(buf, item_name.c_str(), options_name[value.value_bit_field].c_str());
+        // UI expects value > 0 if alarms/faults are present
+        // In the case that alarms/faults are masked, the size of the map will still be nonzero
+        if (ui_type.compare("alarm") == 0 || ui_type.compare("fault") == 0) {
+            // Alarms/Faults have a configured type of Int but use their Bit_Field value
+            bufJSON_AddNumber(buf, item_name.c_str(), value.value_bit_field);
+        } else {
+            // TODO: Preserving legacy behavior but this use case doesn't really make sense
+            // It's the same thing as the Status registers but only supports random_enum behavior
+            auto options_itr = options_map.find(value.value_bit_field);
+            if (options_itr != options_map.end() && !options_itr->second.first.empty()) {
+                // Add the string representing the Bit_Field value, will only work for a single value
+                bufJSON_AddString(buf, item_name.c_str(), options_itr->second.first.c_str());
+            }
         }
-    }
-    // Only type, not value.type should be Status
-    else if (type.compare("Status") == 0) {
-        bufJSON_AddString(buf, item_name.c_str(), get_status_string());
     }
 
     // If not clothed, do not need to add auxiliary data
@@ -468,42 +527,16 @@ void Fims_Object::build_JSON_Object(fmt::memory_buffer& buf, bool control2status
         // Check each bit individually
         for (uint64_t bit_value = 1, pos = 0; pos < MAX_STATUS_BITS; bit_value <<= 1, pos++) {
             // Ensure valid name and value (use value type to ensure options_value initialization)
-            if (value.value_bit_field & bit_value && !options_name[pos].empty() && options_value[pos].type != Invalid) {
-                bufJSON_StartObject(buf);  // JSON_options {
-                bufJSON_AddString(buf, "name", options_name[pos].c_str());
-                if (options_value[pos].type == Float)
-                    bufJSON_AddNumber(buf, "return_value", options_value[pos].value_float);
-                else if (options_value[pos].type == Int)
-                    bufJSON_AddNumber(buf, "return_value", options_value[pos].value_int);
-                else if (options_value[pos].type == Bool)
-                    bufJSON_AddBool(buf, "return_value", options_value[pos].value_bool);
-                else if (options_value[pos].type == String)
-                    bufJSON_AddString(buf, "return_value", options_value[pos].value_string.c_str());
-                else if (options_value[pos].type == Bit_Field)
-                    bufJSON_AddNumber(buf, "return_value", options_value[pos].value_bit_field);
-                bufJSON_EndObject(buf);  // } JSON_options
+            if (static_cast<bool>(value.value_bit_field & bit_value)) {
+                add_options_item_to_buf(buf, pos);
             }
         }
     } else {
-        for (size_t i = 0; i < options_name.size(); i++) {
-            if (!options_name[i].empty() && options_value[i].type != Invalid) {
-                bufJSON_StartObject(buf);  // JSON_options {
-                bufJSON_AddString(buf, "name", options_name[i].c_str());
-                if (options_value[i].type == Float)
-                    bufJSON_AddNumber(buf, "return_value", options_value[i].value_float);
-                else if (options_value[i].type == Int)
-                    bufJSON_AddNumber(buf, "return_value", options_value[i].value_int);
-                else if (options_value[i].type == Bool)
-                    bufJSON_AddBool(buf, "return_value", options_value[i].value_bool);
-                else if (options_value[i].type == String)
-                    bufJSON_AddString(buf, "return_value", options_value[i].value_string.c_str());
-                else if (options_value[i].type == Bit_Field)
-                    bufJSON_AddNumber(buf, "return_value", options_value[i].value_bit_field);
-                bufJSON_EndObject(buf);  // } JSON_options
-            }
+        for (size_t i = 0; i < options_map.size(); i++) {
+            add_options_item_to_buf(buf, i);
         }
     }
-    // Status cannot have empty options array, publish the default string value pair instead
+    // Status cannot have empty options array, publish the default string value pair at a minimum
     if (type.compare("Status") == 0) {
         // Create the options object
         bufJSON_StartObject(buf);  // JSON_options {
@@ -540,7 +573,7 @@ void Fims_Object::add_to_JSON_buffer(fmt::memory_buffer& buf, const char* const 
     // add present value to object
     if (search_id == NULL || var_matches) {
         // if alarm or fault and has options treat as clothed.
-        if ((ui_type.compare("fault") == 0 || ui_type.compare("alarm") == 0) && num_options > 0)
+        if ((ui_type.compare("fault") == 0 || ui_type.compare("alarm") == 0) && options_map.size() > 0)
             build_JSON_Object(buf, false, true);  // Needs to be treated as clothed to include options
         else
             build_JSON_Object(buf, false, clothed, search_id);
@@ -740,37 +773,41 @@ void Fims_Object::parse_json_config(cJSON* JSON_variable, const Fims_Object& def
         }
     }
 
+    // variables.json does not use the internal status type, so it is not a configurable option
+
     // parse the options array
     cJSON* JSON_options = cJSON_GetObjectItem(JSON_variable, "options");
-    num_options = (JSON_options != NULL && JSON_options->type == cJSON_Array) ? cJSON_GetArraySize(JSON_options) : 0;
-    if (num_options > 0) {
-        cJSON* array_object = NULL;
-        cJSON_ArrayForEach(array_object, JSON_options) {
-            if (array_object == NULL) {
-                throw std::runtime_error(variable_id + ": object in options array is NULL");
-            }
-            cJSON* JSON_option_name = cJSON_GetObjectItem(array_object, "name");
-            options_name.push_back((JSON_option_name != NULL && JSON_option_name->valuestring != NULL) ? JSON_option_name->valuestring : NULL);
-
-            cJSON* JSON_option_value = cJSON_GetObjectItem(array_object, "value");
-            if (JSON_option_value != NULL) {
-                Value_Object val = Value_Object();
-                if (JSON_option_value->type == cJSON_Number && value.type == Float)
-                    val.set((float)JSON_option_value->valuedouble);
-                else if (JSON_option_value->type == cJSON_Number)
-                    val.set(JSON_option_value->valueint);
-                else if (JSON_option_value->type == cJSON_True || JSON_option_value->type == cJSON_False)
-                    val.set(JSON_option_value->type == cJSON_True);
-                else if (JSON_option_value->type == cJSON_String)
-                    val.set(JSON_option_value->valuestring);
-                else {
-                    throw std::runtime_error(variable_id + ": options value is of invalid type");
-                }
-                options_value.push_back(val);
-            } else {
-                throw std::runtime_error(variable_id + ": option object in options array did not have value");
-            }
+    int options_size = (JSON_options != NULL && JSON_options->type == cJSON_Array) ? cJSON_GetArraySize(JSON_options) : 0;
+    for (int i = 0; i < options_size; i++) {
+        cJSON* array_object = cJSON_GetArrayItem(JSON_options, i);
+        if (array_object == NULL) {
+            throw std::runtime_error(variable_id + ": object in options array is NULL");
         }
+        cJSON* JSON_option_name = cJSON_GetObjectItem(array_object, "name");
+        std::pair<std::string, Value_Object> options_item;
+        // TODO: don't allow NULL options array entries, and convert to using Config_Validation over throwing errors in this function
+        if (JSON_option_name != NULL && JSON_option_name->valuestring != NULL)
+            options_item.first = JSON_option_name->valuestring;
+        else
+            options_item.first = "";
+
+        cJSON* JSON_option_value = cJSON_GetObjectItem(array_object, "value");
+        if (JSON_option_value != NULL) {
+            if (JSON_option_value->type == cJSON_Number && value.type == Float)
+                options_item.second.set((float)JSON_option_value->valuedouble);
+            else if (JSON_option_value->type == cJSON_Number)
+                options_item.second.set(JSON_option_value->valueint);
+            else if (JSON_option_value->type == cJSON_True || JSON_option_value->type == cJSON_False)
+                options_item.second.set(JSON_option_value->type == cJSON_True);
+            else if (JSON_option_value->type == cJSON_String)
+                options_item.second.set(JSON_option_value->valuestring);
+            else {
+                throw std::runtime_error(variable_id + ": options value is of invalid type");
+            }
+        } else {
+            throw std::runtime_error(variable_id + ": option object in options array did not have value");
+        }
+        options_map[i] = options_item;
     }
 }
 

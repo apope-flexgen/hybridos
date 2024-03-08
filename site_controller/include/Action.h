@@ -30,7 +30,7 @@ struct Action_Status : Sequences_Status {
 class Action : public Sequence {
 public:
     // ##### CONSTRUCTORS #####
-    Action();                     // default
+    Action();  // default
 
     // ##### PUBLIC METHODS #####
     bool parse(cJSON* object);

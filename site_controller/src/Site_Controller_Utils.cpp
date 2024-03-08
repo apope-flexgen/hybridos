@@ -274,7 +274,12 @@ bool get_tolerance(float tolerance_value, float actual_value, int tolerance_perc
 
 // function to build a curve from given points
 void set_curve_points(Fims_Object* curve_points, std::vector<std::pair<float, float>>& curve_vector) {
-    int num_options = curve_points->num_options;
+    if (curve_points == nullptr) {
+        FPS_ERROR_LOG("List of curve points is NULL.");
+        return;
+    }
+
+    int num_options = curve_points->options_map.size();
     int num_points = num_options / 2;
     bool curve_points_valid = false;
 
@@ -288,7 +293,7 @@ void set_curve_points(Fims_Object* curve_points, std::vector<std::pair<float, fl
         curve_points_valid = true;
 
     for (int i = 0; curve_points_valid && i < num_options; i += 2) {
-        curve_vector.push_back(std::make_pair(curve_points->options_value[i].value_float, curve_points->options_value[i + 1].value_float));
+        curve_vector.push_back(std::make_pair(curve_points->options_map[i].second.value_float, curve_points->options_map[i + 1].second.value_float));
 
         // Check that x-coordinates are monotonically increasing
         if ((i > 0) && (curve_vector[i / 2].first <= curve_vector[(i / 2) - 1].first)) {

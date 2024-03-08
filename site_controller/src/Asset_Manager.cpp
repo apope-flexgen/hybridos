@@ -84,12 +84,6 @@ void Asset_Manager::handle_pubs(char** pfrags, int nfrags, char* body) {
                         int varArraySize = cJSON_GetArraySize(cur);
                         // Received at least one name value pair in our options value array from the component publish
                         if (varArraySize > 0) {
-                            // Initialize the vectors
-                            if (current->options_name.empty())
-                                current->options_name.resize(MAX_STATUS_BITS);
-                            if (current->options_value.empty())
-                                current->options_value.resize(MAX_STATUS_BITS);
-
                             // Status requires unique handling of the status bit strings
                             if (strcmp(current->get_type(), "Status") == 0) {
                                 handle_pub_status_options(cur, current, varArraySize);
@@ -102,12 +96,15 @@ void Asset_Manager::handle_pubs(char** pfrags, int nfrags, char* body) {
                         }
                         // No options array, only the value received from component publish
                         else {
-                            // Alarm set false from components -> empty options array
-                            // No need to handle fault case. Faults are latching and would therefore keep their current bitfield value
-                            if (strcmp(current->get_ui_type(), "alarm") == 0) {
-                                // Alarms nonlatching
+                            // Special case for alarm/status empty options array. Clear the internal map as well
+                            if (strcmp(current->get_ui_type(), "alarm") == 0 || strcmp(current->get_type(), "Status") == 0) {
                                 // Set the value directly, do not change the data type
                                 current->value.value_bit_field = uint64_t(0);
+                                current->options_map.clear();
+                            } else if (strcmp(current->get_ui_type(), "fault") == 0) {
+                                // Set the value directly, do not change the data type
+                                current->value.value_bit_field |= uint64_t(0);
+                                // Faults are latching, do not clear the map
                             } else if (current->get_type() && strcmp(current->get_type(), "Int") == 0) {
                                 current->set_fims_int(current->get_variable_id(), cur->valueint);
                             } else if (current->get_type() && strcmp(current->get_type(), "Float") == 0) {
@@ -134,6 +131,13 @@ void Asset_Manager::handle_pubs(char** pfrags, int nfrags, char* body) {
  * @param varArraySize  Size of the options value array
  */
 void Asset_Manager::handle_pub_status_options(cJSON* cJcomp, Fims_Object* fimsComp, int varArraySize) {
+    if (cJcomp == nullptr || fimsComp == nullptr) {
+        FPS_ERROR_LOG("NULL component or options array received in processing publish.");
+        return;
+    }
+
+    // Value of the register. OR of all values for bit fields. The last value parsed for random enums
+    uint64_t register_value = 0;
     // Iterate through the parsed options value array received from component publish
     for (int i = 0; i < varArraySize; i++) {
         // Get the current item and check its validity
@@ -152,25 +156,36 @@ void Asset_Manager::handle_pub_status_options(cJSON* cJcomp, Fims_Object* fimsCo
             return;
         }
 
-        // Ensure the status value received is valid
-        // As the value represents the position in the bit field and we use type uint64_t to represent it,
-        // the position can be 63 at most representing a value of 2^63
-        if (cJitemValue->valueint < MAX_STATUS_BITS) {
-            if (fimsComp->options_name[cJitemValue->valueint].empty()) {
-                fimsComp->num_options++;
-                fimsComp->options_name[cJitemValue->valueint] = cJitemString->valuestring;
-                Value_Object new_val = Value_Object();
-                new_val.type = Bit_Field;
-                new_val.set((uint64_t)cJitemValue->valueint);
-                fimsComp->options_value[cJitemValue->valueint] = new_val;
-            }
-            // In the case of multiple statuses this will always be set to the last status value which may be incorrect
-            // However, it is assumed that the system can only be in one state at a time
-            // Otherwise we could do the same aggregation as is done with alarms/faults
-            fimsComp->value.set((uint64_t)cJitemValue->valueint);
-        } else
-            FPS_ERROR_LOG("Asset_Manager::process_pub Index into component status string array out of bounds, %d, updateAsset()\n", cJitemValue->valueint);
+        switch (fimsComp->get_status_type()) {
+            case statusType::bit_field:
+                // If bit_field, only values up to 63 are supported, representing internal values up to 2^63
+                if (cJitemValue->valueint >= MAX_STATUS_BITS) {
+                    FPS_ERROR_LOG("%s: bit field value out of range: %d", fimsComp->get_name(), cJitemValue->valueint);
+                    continue;
+                }
+                // Bit shift the value
+                register_value |= uint64_t(1) << cJitemValue->valueint;
+                break;
+            case statusType::random_enum:
+                // Use the enumerated value
+                register_value = cJitemValue->valueint;
+                break;
+            case statusType::invalid:
+                FPS_ERROR_LOG("%s: invalid status type configured", fimsComp->get_name());
+                return;
+        }
+        fimsComp->options_map[cJitemValue->valueint] = std::pair<std::string, Value_Object>(cJitemString->valuestring, uint64_t(cJitemValue->valueint));
     }
+
+    // All value options parsed
+    // And with the register's mask
+    uint64_t masked_value = fimsComp->value.value_mask & register_value;
+    // Both bit_field and random_enum use bitfield internally
+    fimsComp->value.type = valueType::Bit_Field;
+    fimsComp->value.value_bit_field = masked_value;
+
+    // No need for Type_Managers->Asset_instance to process pub
+    // Alarm/Fault/Status values updated in process_asset() step for each Asset
 }
 
 /**
@@ -180,6 +195,11 @@ void Asset_Manager::handle_pub_status_options(cJSON* cJcomp, Fims_Object* fimsCo
  * @param varArraySize  Size of the options value array
  */
 void Asset_Manager::handle_pub_alarm_or_fault_options(cJSON* cJcomp, Fims_Object* fimsComp, int varArraySize) {
+    if (cJcomp == nullptr || fimsComp == nullptr) {
+        FPS_ERROR_LOG("NULL component or options array received in processing publish.");
+        return;
+    }
+
     // OR Aggregate of all values in the object
     uint64_t bit_field_agg = 0;
     for (int i = 0; i < varArraySize; i++) {
@@ -203,21 +223,15 @@ void Asset_Manager::handle_pub_alarm_or_fault_options(cJSON* cJcomp, Fims_Object
             bit_field_agg |= uint64_t(1) << cJitemValue->valueint;
 
             // Add the new options names and values
-            if (fimsComp->options_name[cJitemValue->valueint].empty()) {
-                fimsComp->num_options++;
-                fimsComp->options_name[cJitemValue->valueint] = cJitemString->valuestring;
-                Value_Object new_val = Value_Object();
-                new_val.set((uint64_t)cJitemValue->valueint);
-                fimsComp->options_value[cJitemValue->valueint] = new_val;
-            }
+            fimsComp->options_map[cJitemValue->valueint] = std::pair<std::string, Value_Object>(cJitemString->valuestring, uint64_t(cJitemValue->valueint));
         } else
             FPS_ERROR_LOG("Asset_Manager::process_pub Index into component status string array out of bounds, %d, updateAsset()\n", cJitemValue->valueint);
     }
 
     // All value options parsed
-    // And with the alarm's mask
+    // And with the mask
     uint64_t masked_value = fimsComp->value.value_mask & bit_field_agg;
-    fimsComp->value.type = bit_field;
+    fimsComp->value.type = valueType::Bit_Field;
     if (strcmp(fimsComp->get_ui_type(), "alarm") == 0) {
         // Alarms nonlatching
         fimsComp->value.value_bit_field = masked_value;
@@ -231,12 +245,19 @@ void Asset_Manager::handle_pub_alarm_or_fault_options(cJSON* cJcomp, Fims_Object
 }
 
 /**
+ * TODO: Preserving legacy behavior but this use case doesn't really make sense. It's the same thing as the Status registers
+ *       but only supports random_enum behavior
  * Helper function used by handle_pubs(), handles options in the case a pub that has options but is not a status, alarm, or fault
  * @param cJcomp        The published cJSON data for a component
  * @param fimsComp      A component in the component_var_map that gets its values from the component URI
  * @param varArraySize  Size of the options value array
  */
 void Asset_Manager::handle_pub_other_options(cJSON* cJcomp, Fims_Object* fimsComp, int varArraySize) {
+    if (cJcomp == nullptr || fimsComp == nullptr) {
+        FPS_ERROR_LOG("NULL component or options array received in processing publish.");
+        return;
+    }
+
     // Not status case but we have at least one options name value pair received from components
     // Iterate through the received options value array
     for (int i = 0; i < varArraySize; i++) {
@@ -255,18 +276,17 @@ void Asset_Manager::handle_pub_other_options(cJSON* cJcomp, Fims_Object* fimsCom
             FPS_ERROR_LOG("Asset_Manager::process_pub NULL cJitemValue\n");
             return;
         }
-        fimsComp->num_options = varArraySize;
-        fimsComp->options_name[i] = cJitemString->valuestring;
+        fimsComp->options_map[i] = std::pair<std::string, Value_Object>(cJitemString->valuestring, Value_Object());
 
         if (fimsComp->get_type() && strcmp(fimsComp->get_type(), "Int") == 0) {
-            fimsComp->options_value[i].set(cJitemValue->valueint);
+            fimsComp->options_map[i].second.set(cJitemValue->valueint);
             fimsComp->set_fims_int(fimsComp->get_variable_id(), cJitemValue->valueint);
         } else if (fimsComp->get_type() && strcmp(fimsComp->get_type(), "Float") == 0) {
-            fimsComp->options_value[i].set((float)cJitemValue->valuedouble);
+            fimsComp->options_map[i].second.set((float)cJitemValue->valuedouble);
             fimsComp->set_fims_float(fimsComp->get_variable_id(), cJcomp->valuedouble);
         } else if (fimsComp->get_type() && strcmp(fimsComp->get_type(), "Bool") == 0) {
             bool bool_value = ((cJcomp->type == cJSON_True) || ((cJcomp->type == cJSON_Number) && (cJitemValue->valueint == 1)));
-            fimsComp->options_value[i].set(bool_value);
+            fimsComp->options_map[i].second.set(bool_value);
             fimsComp->set_fims_bool(fimsComp->get_variable_id(), bool_value);
         }
     }
@@ -331,7 +351,7 @@ void Asset_Manager::handle_set(fims_message& msg) {
         if (msg.replyto != NULL) {
             p_fims->Send("set", msg.replyto, NULL, "Invalid URI");
         }
-        return; // early return because of msg failure
+        return;  // early return because of msg failure
     }
 
     // URI starts with /assets/<asset type>. determine which Type Manager should handle the SET
@@ -394,21 +414,21 @@ void Asset_Manager::send_all_asset_data(char* uri) {
 }
 
 /*
- * @brief This function, asset_create, is called from site_controller.cpp during initial 
+ * @brief This function, asset_create, is called from site_controller.cpp during initial
  *      configuration. It is passed a pointer to the cJSON object parsed from assets.json.
- *      The function breaks the large assets object up into its constituent asset type 
- *      cJSON objects: generators, feeders, ess, solar. It passes these cJSON objects to 
+ *      The function breaks the large assets object up into its constituent asset type
+ *      cJSON objects: generators, feeders, ess, solar. It passes these cJSON objects to
  *      the Type Managers which continue the configuration process.
  *
  * @param assetsRoot (assets.json)
  * @param actionsRoot (actions.json)
  * @param primary_controller pointer to the bool indicating whether the system is currently
- *      the primary controller. This pointer will be passed to Site_Manager 
- *      and down to the Asset Instances, and can be modified through the 
- *      fims endpoint /site/operation/primary_controller true/false 
+ *      the primary controller. This pointer will be passed to Site_Manager
+ *      and down to the Asset Instances, and can be modified through the
+ *      fims endpoint /site/operation/primary_controller true/false
  *      Testing will now require this pointer to be set.
  * @return success (bool)
-*/
+ */
 bool Asset_Manager::asset_create(cJSON* assetsRoot, cJSON* actionsRoot, bool* primary_controller) {
     is_primary = primary_controller;
 

@@ -117,7 +117,7 @@ public:
     bool in_standby(void);
     bool is_in_local_mode(void);
 
-    uint64_t get_status(void) const;
+    virtual Fims_Object& get_status_register(void) = 0;
 
     int get_num_comps(void) const;
 
@@ -241,7 +241,7 @@ protected:
     statusType local_mode_status_type;  // local mode status type is not required for the local mode feature to be used
     Fims_Object local_mode_signal;
     Fims_Object local_mode_status;
-    
+
     std::vector<std::string> compNames;
 
     uint32_t numAssetComponents;
@@ -278,7 +278,7 @@ protected:
 
     const char* asset_type_id = "";
     asset_type asset_type_value;
-    statusType status_type;
+    statusType default_status_type;
     demandMode assetControl;
 
     // control

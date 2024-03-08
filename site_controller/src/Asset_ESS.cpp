@@ -1018,6 +1018,13 @@ const char* Asset_ESS::get_status_string() const {
 }
 
 /**
+ * Return the status register
+ */
+Fims_Object& Asset_ESS::get_status_register() {
+    return status;
+}
+
+/**
  * Update the Asset instance level data with values received from publish
  */
 void Asset_ESS::process_asset() {
@@ -1146,13 +1153,14 @@ void Asset_ESS::process_asset() {
     }
 
     // Process unique ESS standby state
-    if (status_type == random_enum)
+    if (status.get_status_type() == random_enum)
         inStandby = internal_status == standby_status_mask;
-    else if (status_type == bit_field)
-        // Check that the bit in the position given by the status value is valid
+    else if (status.get_status_type() == bit_field)
+        // The internal status parsed from the component publish will already be bit shifted
+        // Theoretically, multiple values can be set, so check if any of them are true
         // e.g. valid standby states: 4, 5; mask (binary): 110000 (start counting from 0)
         // for status value 4, verify: 110000 & 010000
-        inStandby = standby_status_mask & (uint64_t(1) << internal_status);
+        inStandby = static_cast<bool>(standby_status_mask & internal_status);
 }
 
 void Asset_ESS::update_asset(void) {

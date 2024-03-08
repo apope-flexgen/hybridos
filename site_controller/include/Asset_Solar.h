@@ -43,6 +43,7 @@ public:
     void process_asset(void);
     void set_raw_status() override;
     const char* get_status_string() const override;
+    Fims_Object& get_status_register() override;
     void update_asset(void);
     void send_to_components(void) override;
     bool handle_set(std::string uri, cJSON& body);

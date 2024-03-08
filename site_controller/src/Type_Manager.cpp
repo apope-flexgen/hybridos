@@ -147,7 +147,7 @@ void Type_Manager::handle_set(fims_message& msg) {
             p_fims->Send("set", msg.replyto, NULL, "Error parsing JSON object.");
         return;
     }
-    defer { cJSON_Delete(cur_body); }; 
+    defer { cJSON_Delete(cur_body); };
 
     // Wrap the JSON body in a key-value pair where the key is the variable ID
     cJSON* new_body = cJSON_CreateObject();

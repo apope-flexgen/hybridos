@@ -52,8 +52,8 @@ class Type_Configurator {
 public:
     // functions
     Type_Configurator(Type_Manager* pMan, std::map<std::string, std::vector<Fims_Object*>>* pCVM, bool* pc);
-    Config_Validation_Result create_assets(); // assets.json
-    Config_Validation_Result create_actions(); // actions.json
+    Config_Validation_Result create_assets();   // assets.json
+    Config_Validation_Result create_actions();  // actions.json
     // variables
     cJSON* asset_type_root;
     cJSON* actions_root;

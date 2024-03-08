@@ -34,7 +34,7 @@ Sequences_Status::Sequences_Status() {
     should_pub = false;
 }
 
-/** 
+/**
  * @brief This default sequence is used for the action class
  * Which calls this implicitly in it's constructor.
  */
@@ -54,8 +54,8 @@ Sequence::Sequence() {
     entry_exit_flag = ENTRY;
 }
 
-/** 
- * @brief The original sequence which is used for managing 
+/**
+ * @brief The original sequence which is used for managing
  * sequences.json at the Site_Manager level.
  */
 Sequence::Sequence(Site_Manager* siteref) {
@@ -312,13 +312,10 @@ void Sequence::call_sequence_entry(Sequences_Status& sequences_status) {
     if (initial_entry_attempt) {
         switch (sequence_type) {
             case Sequence_Type::Site:
-                FPS_INFO_LOG("Site Manager in State: %s, Path: %s, Step: %s", 
-                        state_name[state], paths[current_path_index].path_name, 
-                        paths[current_path_index].steps[current_step_index].step_name);
+                FPS_INFO_LOG("Site Manager in State: %s, Path: %s, Step: %s", state_name[state], paths[current_path_index].path_name, paths[current_path_index].steps[current_step_index].step_name);
             default:
                 break;
         }
-
     }
 
     entry_exit_flag = ENTRY;
@@ -417,7 +414,7 @@ void Sequence::check_path_step_change(Sequences_Status& sequences_status) {
 
 /**
  * @brief Takes the path/step index and returns the debounce_timer_ms of that step.
- * There is not at present a smart way to report on steps without a debounce_timer_ms. 
+ * There is not at present a smart way to report on steps without a debounce_timer_ms.
  * But one could be implemented.
  * @param action (const Action&) The action to index into.
  * @return The number of seconds as an int.
@@ -434,16 +431,14 @@ int Sequence::collect_seconds_remaining_in_current_step() {
     std::vector<Step_Action> step_actions = paths[current_path_index].steps[current_step_index].exit_conditions;
 
     auto start_iterator = step_actions.begin();
-    return std::accumulate(start_iterator, step_actions.end(), 0,
-        [](int currentSum, const Step_Action& step_action) {
-            return currentSum + step_action.debounce_timer_ms; // just a sum of total possible time. Not a live decrease.
-        }
-    );
+    return std::accumulate(start_iterator, step_actions.end(), 0, [](int currentSum, const Step_Action& step_action) {
+        return currentSum + step_action.debounce_timer_ms;  // just a sum of total possible time. Not a live decrease.
+    });
 }
 
 /**
  * @brief Returns the sum of the remaining steps in an action. Will omit steps that have already
- * been run. There is not at present a smart way to report on steps without a debounce_timer_ms. 
+ * been run. There is not at present a smart way to report on steps without a debounce_timer_ms.
  * But one could be implemented.
  * @param action (const Step&) The Step to report on.
  * @return The number of seconds as an int.
@@ -458,21 +453,15 @@ int Sequence::collect_seconds_remaining_in_action() {
 
     // vector of exit_steps (should contain the debounce_timer_ms)
     std::vector<Step> steps = paths[current_path_index].steps;
-    // ignore time before this step 
+    // ignore time before this step
     uint step_index = current_step_index;
     auto start_iterator = steps.begin();
     if (step_index < steps.size()) {
-         start_iterator += step_index;
+        start_iterator += step_index;
     } else if (step_index > steps.size()) {
         FPS_ERROR_LOG("invalid step index returning 0");
         return 0;
     }
 
-    return std::accumulate(start_iterator, steps.end(), 0,
-        [](int currentSum, const Step& step) {
-            return currentSum + step.collect_seconds_in_step(); 
-        }
-    );
+    return std::accumulate(start_iterator, steps.end(), 0, [](int currentSum, const Step& step) { return currentSum + step.collect_seconds_in_step(); });
 }
-
-

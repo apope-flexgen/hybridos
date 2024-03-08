@@ -508,18 +508,26 @@ const char* Asset_Generator::get_status_string() const {
     return status.get_status_string();
 }
 
+/**
+ * Return the status register
+ */
+Fims_Object& Asset_Generator::get_status_register() {
+    return status;
+}
+
 void Asset_Generator::process_asset(void) {
     set_raw_status();
     Asset::process_asset();
 
     // process stopped status (needed for LDSS timing resets)
-    if (status_type == random_enum)
+    if (status.get_status_type() == random_enum)
         isStopped = internal_status == stopped_status_mask;
-    else if (status_type == bit_field)
-        // Check that the bit in the position given by the status value is valid
+    else if (status.get_status_type() == bit_field)
+        // The internal status parsed from the component publish will already be bit shifted
+        // Theoretically, multiple values can be set, so check if any of them are true
         // e.g. valid stopped states: 0, 1, 2; mask (binary): 0111
         // for status value 2, verify: 0111 & 0100
-        isStopped = stopped_status_mask & (uint64_t(1) << internal_status);
+        isStopped = static_cast<bool>(stopped_status_mask & internal_status);
 }
 
 bool Asset_Generator::is_stopped(void) {

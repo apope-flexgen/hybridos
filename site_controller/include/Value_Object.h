@@ -21,6 +21,7 @@ class Value_Object {
 public:
     Value_Object();
     Value_Object(int val);
+    Value_Object(uint64_t val);
 
     /** @cond exclude from doxygen comments. These functions are all over the place and can crowd diagrams.*/
     void set(int value);

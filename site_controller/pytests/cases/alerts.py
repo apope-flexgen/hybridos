@@ -84,7 +84,7 @@ def generate_alerts_config():
     Steps(
         [{}, {
             "/components/ess_psm": {"test_alarms": [{"string": "Something alarming is happening", "value": 1}]},
-            "/components/ess_psm": {"test_alarms": [{"string": "It is alarming", "value": 2}]}
+            # TODO: this is a duplicate uri (key) and overwrites the other pub "/components/ess_psm": {"test_alarms": [{"string": "It is alarming", "value": 2}]}
         }],
         [
             Flex_Assertion(Assertion_Type.obj_eq, "/site/operation",

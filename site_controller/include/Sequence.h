@@ -51,7 +51,7 @@ public:
     };
     Sequence_Type sequence_type;
 
-    // constructors 
+    // constructors
     Sequence();
     Sequence(Site_Manager* siteref);
 

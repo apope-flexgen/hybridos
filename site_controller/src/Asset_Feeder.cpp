@@ -345,6 +345,13 @@ void Asset_Feeder::set_raw_status() {
 }
 
 /**
+ * Return the status register
+ */
+Fims_Object& Asset_Feeder::get_status_register() {
+    return breaker_status;
+}
+
+/**
  * Get the string representation of this asset's status
  */
 const char* Asset_Feeder::get_status_string() const {

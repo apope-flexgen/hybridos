@@ -530,14 +530,6 @@ bool Site_Manager::configure(Asset_Manager* man, fims* fim, cJSON* sequenceRoot,
     if (input_sources.get_num_sources() > 0)
         input_source_status.value.set(input_sources.get_name_of_input(input_sources.get_selected_input_source_index()));
 
-    // alarm options were configured into alarms variable. allocate memory in active_alarms to handle all alarm types
-    active_alarms.options_name.resize(alarms.options_name.size());
-    active_alarms.options_value.resize(alarms.options_value.size());
-
-    // fault options were configured into faults variable. allocate memory in active_faults to handle all fault types
-    active_faults.options_name.resize(faults.options_name.size());
-    active_faults.options_value.resize(faults.options_value.size());
-
     // post-configuration initialization of features
     post_configure_initialize_features();
 
@@ -618,9 +610,6 @@ std::pair<Fims_Object, Config_Validation_Result> Site_Manager::parse_field_defau
     cJSON* write_uri = cJSON_GetObjectItem(JSON_defaults, "write_uri");
     if (write_uri != NULL && write_uri->valuestring != NULL)
         field_defaults.write_uri = write_uri->valuestring;
-
-    // default options not supported
-    field_defaults.num_options = 0;
 
     return std::make_pair(field_defaults, Config_Validation_Result(true));
 }
@@ -1676,10 +1665,10 @@ void Site_Manager::update_power_feature_selections() {
     }
 
     // set features mode string for UI
-    runmode1_kW_mode_status.value.set(available_features_runmode1_kW_mode.options_name[runmode1_kW_mode_cmd.value.value_int]);
-    runmode2_kW_mode_status.value.set(available_features_runmode2_kW_mode.options_name[runmode2_kW_mode_cmd.value.value_int]);
-    runmode1_kVAR_mode_status.value.set(available_features_runmode1_kVAR_mode.options_name[runmode1_kVAR_mode_cmd.value.value_int]);
-    runmode2_kVAR_mode_status.value.set(available_features_runmode2_kVAR_mode.options_name[runmode2_kVAR_mode_cmd.value.value_int]);
+    runmode1_kW_mode_status.value.set(available_features_runmode1_kW_mode.options_map[runmode1_kW_mode_cmd.value.value_int].first);
+    runmode2_kW_mode_status.value.set(available_features_runmode2_kW_mode.options_map[runmode2_kW_mode_cmd.value.value_int].first);
+    runmode1_kVAR_mode_status.value.set(available_features_runmode1_kVAR_mode.options_map[runmode1_kVAR_mode_cmd.value.value_int].first);
+    runmode2_kVAR_mode_status.value.set(available_features_runmode2_kVAR_mode.options_map[runmode2_kVAR_mode_cmd.value.value_int].first);
 }
 
 // Read which runmode1 kW features are available and configure them on the UI.
@@ -1687,10 +1676,10 @@ void Site_Manager::update_power_feature_selections() {
 bool Site_Manager::configure_available_runmode1_kW_features_list(void) {
     // add only the runmode1 kW features covered by the available_features_runmode1_kW_mode mask
     bool initial_gc_kW_feature_found = false;
-    int num_features = (int)runmode1_kW_features_list.size();
-    if (available_features_runmode1_kW_mode.num_options != num_features + 1)  // +1 because of Default
+    size_t num_features = runmode1_kW_features_list.size();
+    if (available_features_runmode1_kW_mode.options_map.size() != num_features + 1)  // +1 because of Default
     {
-        FPS_ERROR_LOG("available_features_runmode1_kW_mode does not have all modes listed. Expected %d, got %d.\n", num_features + 1, available_features_runmode1_kW_mode.num_options);
+        FPS_ERROR_LOG("available_features_runmode1_kW_mode does not have all modes listed. Expected %d, got %d.\n", num_features + 1, available_features_runmode1_kW_mode.options_map.size());
         return false;
     }
     try {
@@ -1699,7 +1688,7 @@ bool Site_Manager::configure_available_runmode1_kW_features_list(void) {
         FPS_ERROR_LOG("Error parsing available_runmode1_kW_features_mask\n");
         return false;
     }
-    for (int i = 0; i <= num_features; ++i)  // <= so Disabled is included
+    for (size_t i = 0; i <= num_features; ++i)  // <= so Disabled is included
     {
         if (available_runmode1_kW_features_mask & ((uint64_t)1) << i) {
             // mark feature as available to customer as long as it is not "Disabled" option
@@ -1707,13 +1696,11 @@ bool Site_Manager::configure_available_runmode1_kW_features_list(void) {
                 runmode1_kW_features_list[i]->available = true;
 
             // if initial runmode1 kW feature is found, mark that it passed the mask
-            if (i == runmode1_kW_mode_cmd.value.value_int)
+            if ((int)i == runmode1_kW_mode_cmd.value.value_int)
                 initial_gc_kW_feature_found = true;
 
             // add feature to list of available runmode1 kW feature commands
-            runmode1_kW_mode_cmd.options_name.push_back(available_features_runmode1_kW_mode.options_name[i]);
-            runmode1_kW_mode_cmd.options_value.push_back(Value_Object(i));
-            runmode1_kW_mode_cmd.num_options++;
+            runmode1_kW_mode_cmd.options_map[i] = std::pair<std::string, Value_Object>(available_features_runmode1_kW_mode.options_map[i].first, i);
 
             // Set charge control available if utilized by any feature
             if (runmode1_kW_features_charge_control_mask & ((uint64_t)1) << i)
@@ -1722,7 +1709,7 @@ bool Site_Manager::configure_available_runmode1_kW_features_list(void) {
     }
 
     // do not show control on UI if only one option
-    if (runmode1_kW_mode_cmd.num_options < 2) {
+    if (runmode1_kW_mode_cmd.options_map.size() < 2) {
         runmode1_kW_mode_cmd.set_ui_type("none");
     }
 
@@ -1743,10 +1730,10 @@ bool Site_Manager::configure_available_runmode1_kW_features_list(void) {
 bool Site_Manager::configure_available_runmode2_kW_features_list(void) {
     // add only the runmode2 kW features covered by the available_features_runmode2_kW_mode mask
     bool initial_runmode2_kW_feature_found = false;
-    int num_features = (int)runmode2_kW_features_list.size();
-    if (available_features_runmode2_kW_mode.num_options != num_features + 1)  // +1 because of Default
+    size_t num_features = runmode2_kW_features_list.size();
+    if (available_features_runmode2_kW_mode.options_map.size() != num_features + 1)  // +1 because of Default
     {
-        FPS_ERROR_LOG("available_features_runmode2_kW_mode does not have all modes listed. Expected %d, got %d.\n", num_features + 1, available_features_runmode2_kW_mode.num_options);
+        FPS_ERROR_LOG("available_features_runmode2_kW_mode does not have all modes listed. Expected %d, got %d.\n", num_features + 1, available_features_runmode2_kW_mode.options_map.size());
         return false;
     }
     try {
@@ -1755,7 +1742,7 @@ bool Site_Manager::configure_available_runmode2_kW_features_list(void) {
         FPS_ERROR_LOG("Error parsing available_runmode2_kW_features_mask\n");
         return false;
     }
-    for (int i = 0; i <= num_features; ++i)  // <= so Disabled is included
+    for (size_t i = 0; i <= num_features; ++i)  // <= so Disabled is included
     {
         if (available_runmode2_kW_features_mask & ((uint64_t)1) << i) {
             // mark feature as available to customer as long as it is not "Disabled" option
@@ -1763,18 +1750,16 @@ bool Site_Manager::configure_available_runmode2_kW_features_list(void) {
                 runmode2_kW_features_list[i]->available = true;
 
             // if initial runmode2 kW feature is found, mark that it passed the mask
-            if (i == runmode2_kW_mode_cmd.value.value_int)
+            if ((int)i == runmode2_kW_mode_cmd.value.value_int)
                 initial_runmode2_kW_feature_found = true;
 
             // add feature to list of available runmode2 kW feature commands
-            runmode2_kW_mode_cmd.options_name.push_back(available_features_runmode2_kW_mode.options_name[i]);
-            runmode2_kW_mode_cmd.options_value.push_back(Value_Object(i));
-            runmode2_kW_mode_cmd.num_options++;
+            runmode2_kW_mode_cmd.options_map[i] = std::pair<std::string, Value_Object>(available_features_runmode2_kW_mode.options_map[i].first, i);
         }
     }
 
     // do not show control on UI if only one option
-    if (runmode2_kW_mode_cmd.num_options < 2) {
+    if (runmode2_kW_mode_cmd.options_map.size() < 2) {
         runmode2_kW_mode_cmd.set_ui_type("none");
     }
 
@@ -1792,10 +1777,10 @@ bool Site_Manager::configure_available_runmode2_kW_features_list(void) {
 bool Site_Manager::configure_available_runmode1_kVAR_features_list(void) {
     // add only the runmode1 kVAR features covered by the available_features_runmode1_kVAR_mode mask
     bool initial_gc_kVAR_feature_found = false;
-    int num_features = (int)runmode1_kVAR_features_list.size();
-    if (available_features_runmode1_kVAR_mode.num_options != num_features + 1)  // +1 because of Default
+    size_t num_features = runmode1_kVAR_features_list.size();
+    if (available_features_runmode1_kVAR_mode.options_map.size() != num_features + 1)  // +1 because of Default
     {
-        FPS_ERROR_LOG("available_features_runmode1_kVAR_mode does not have all modes listed. Expected %d, got %d.\n", num_features + 1, available_features_runmode1_kVAR_mode.num_options);
+        FPS_ERROR_LOG("available_features_runmode1_kVAR_mode does not have all modes listed. Expected %d, got %d.\n", num_features + 1, available_features_runmode1_kVAR_mode.options_map.size());
         return false;
     }
     try {
@@ -1804,7 +1789,7 @@ bool Site_Manager::configure_available_runmode1_kVAR_features_list(void) {
         FPS_ERROR_LOG("Error parsing available_runmode1_kVAR_features_mask\n");
         return false;
     }
-    for (int i = 0; i <= num_features; ++i)  // <= so Disabled is included
+    for (size_t i = 0; i <= num_features; ++i)  // <= so Disabled is included
     {
         if (available_runmode1_kVAR_features_mask & ((uint64_t)1) << i) {
             // mark feature as available to customer as long as it is not "Disabled" option
@@ -1812,18 +1797,16 @@ bool Site_Manager::configure_available_runmode1_kVAR_features_list(void) {
                 runmode1_kVAR_features_list[i]->available = true;
 
             // if initial runmode1 kVAR feature is found, mark that it passed the mask
-            if (i == runmode1_kVAR_mode_cmd.value.value_int)
+            if ((int)i == runmode1_kVAR_mode_cmd.value.value_int)
                 initial_gc_kVAR_feature_found = true;
 
             // add feature to list of available runmode1 kVAR feature commands
-            runmode1_kVAR_mode_cmd.options_name.push_back(available_features_runmode1_kVAR_mode.options_name[i]);
-            runmode1_kVAR_mode_cmd.options_value.push_back(Value_Object(i));
-            runmode1_kVAR_mode_cmd.num_options++;
+            runmode1_kVAR_mode_cmd.options_map[i] = std::pair<std::string, Value_Object>(available_features_runmode1_kVAR_mode.options_map[i].first, i);
         }
     }
 
     // do not show control on UI if only one option
-    if (runmode1_kVAR_mode_cmd.num_options < 2) {
+    if (runmode1_kVAR_mode_cmd.options_map.size() < 2) {
         runmode1_kVAR_mode_cmd.set_ui_type("none");
     }
 
@@ -1840,10 +1823,10 @@ bool Site_Manager::configure_available_runmode1_kVAR_features_list(void) {
 bool Site_Manager::configure_available_runmode2_kVAR_features_list(void) {
     // add only the runmode2 kVAR features covered by the available_features_runmode2_kVAR_mode mask
     bool initial_gc_kVAR_feature_found = false;
-    int num_features = (int)runmode2_kVAR_features_list.size();
-    if (available_features_runmode2_kVAR_mode.num_options != num_features + 1)  // +1 because of Default
+    size_t num_features = runmode2_kVAR_features_list.size();
+    if (available_features_runmode2_kVAR_mode.options_map.size() != num_features + 1)  // +1 because of Default
     {
-        FPS_ERROR_LOG("available_features_runmode2_kVAR_mode does not have all modes listed. Expected %d, got %d.\n", num_features + 1, available_features_runmode2_kVAR_mode.num_options);
+        FPS_ERROR_LOG("available_features_runmode2_kVAR_mode does not have all modes listed. Expected %d, got %d.\n", num_features + 1, available_features_runmode2_kVAR_mode.options_map.size());
         return false;
     }
     try {
@@ -1852,7 +1835,7 @@ bool Site_Manager::configure_available_runmode2_kVAR_features_list(void) {
         FPS_ERROR_LOG("Error parsing available_runmode2_kVAR_features_mask\n");
         return false;
     }
-    for (int i = 0; i <= num_features; ++i)  // <= so Disabled is included
+    for (size_t i = 0; i <= num_features; ++i)  // <= so Disabled is included
     {
         if (available_runmode2_kVAR_features_mask & ((uint64_t)1) << i) {
             // mark feature as available to customer as long as it is not "Disabled" option
@@ -1860,18 +1843,16 @@ bool Site_Manager::configure_available_runmode2_kVAR_features_list(void) {
                 runmode2_kVAR_features_list[i]->available = true;
 
             // if initial runmode2 kVAR feature is found, mark that it passed the mask
-            if (i == runmode2_kVAR_mode_cmd.value.value_int)
+            if ((int)i == runmode2_kVAR_mode_cmd.value.value_int)
                 initial_gc_kVAR_feature_found = true;
 
             // add feature to list of available runmode2 kVAR feature commands
-            runmode2_kVAR_mode_cmd.options_name.push_back(available_features_runmode2_kVAR_mode.options_name[i]);
-            runmode2_kVAR_mode_cmd.options_value.push_back(Value_Object(i));
-            runmode2_kVAR_mode_cmd.num_options++;
+            runmode2_kVAR_mode_cmd.options_map[i] = std::pair<std::string, Value_Object>(available_features_runmode2_kVAR_mode.options_map[i].first, i);
         }
     }
 
     // do not show control on UI if only one option
-    if (runmode2_kVAR_mode_cmd.num_options < 2) {
+    if (runmode2_kVAR_mode_cmd.options_map.size() < 2) {
         runmode2_kVAR_mode_cmd.set_ui_type("none");
     }
 
@@ -1889,9 +1870,9 @@ bool Site_Manager::configure_available_runmode2_kVAR_features_list(void) {
  * @return True if configuration was successful, false if not.
  */
 bool Site_Manager::configure_available_standalone_power_features_list(void) {
-    int num_features = (int)standalone_power_features_list.size();
-    if (available_features_standalone_power.num_options != num_features) {
-        FPS_ERROR_LOG("available_features_standalone_power does not have all modes listed. Expected %d, got %d.\n", num_features, available_features_standalone_power.num_options);
+    size_t num_features = standalone_power_features_list.size();
+    if (available_features_standalone_power.options_map.size() != num_features) {
+        FPS_ERROR_LOG("available_features_standalone_power does not have all modes listed. Expected %d, got %d.\n", num_features, available_features_standalone_power.options_map.size());
         return false;
     }
     // add only the standalone power features covered by the available_features_standalone_power mask
@@ -1901,7 +1882,7 @@ bool Site_Manager::configure_available_standalone_power_features_list(void) {
         FPS_ERROR_LOG("Error parsing available_standalone_power_features_mask\n");
         return false;
     }
-    for (int i = 0; i < (int)standalone_power_features_list.size(); ++i) {
+    for (size_t i = 0; i < standalone_power_features_list.size(); ++i) {
         if (available_standalone_power_features_mask & ((uint64_t)1) << i) {
             // mark feature as available to customer
             standalone_power_features_list[i]->available = true;
@@ -1916,9 +1897,9 @@ bool Site_Manager::configure_available_standalone_power_features_list(void) {
  * @return True if configuration was successful, false if not.
  */
 bool Site_Manager::configure_available_site_operation_features_list(void) {
-    int num_features = (int)site_operation_features_list.size();
-    if (available_features_site_operation.num_options != num_features) {
-        FPS_ERROR_LOG("available_features_site_operation does not have all modes listed. Expected %d, got %d.\n", num_features, available_features_site_operation.num_options);
+    size_t num_features = site_operation_features_list.size();
+    if (available_features_site_operation.options_map.size() != num_features) {
+        FPS_ERROR_LOG("available_features_site_operation does not have all modes listed. Expected %d, got %d.\n", num_features, available_features_site_operation.options_map.size());
         return false;
     }
     // add only the site operation features covered by the available_features_site_operation mask
@@ -1928,7 +1909,7 @@ bool Site_Manager::configure_available_site_operation_features_list(void) {
         FPS_ERROR_LOG("Error parsing available_site_operation_features_mask\n");
         return false;
     }
-    for (int i = 0; i < (int)site_operation_features_list.size(); ++i) {
+    for (size_t i = 0; i < site_operation_features_list.size(); ++i) {
         if (available_site_operation_features_mask & ((uint64_t)1) << i) {
             // mark feature as available to customer
             site_operation_features_list[i]->available = true;
@@ -1991,8 +1972,9 @@ void Site_Manager::set_faults(int fault_number) {
     // Make sure the fault number is in range. The range of available options will be determined by the configuration received for faults
     // TODO: make faults default to filling all 32 possible options values
     std::string fault_message = "internal fault tracking error";
-    if (size_t(fault_number) < faults.options_name.size()) {
-        fault_message = faults.options_name[fault_number];
+    auto fault_it = faults.options_map.find(fault_number);
+    if (fault_it != faults.options_map.end()) {
+        fault_message = fault_it->second.first;
     }
 
     active_fault_array[fault_number] = true;
@@ -2013,8 +1995,9 @@ void Site_Manager::set_alarms(int alarm_number) {
     // Make sure the alarm number is in range. The range of available options will be determined by the configuration received for alarms
     // TODO: make alarms default to filling all 32 possible options values
     std::string alarm_message = "internal alarm tracking error";
-    if (size_t(alarm_number) < alarms.options_name.size()) {
-        alarm_message = alarms.options_name[alarm_number];
+    auto alarm_it = alarms.options_map.find(alarm_number);
+    if (alarm_it != alarms.options_map.end()) {
+        alarm_message = alarm_it->second.first;
     }
 
     active_alarm_array[alarm_number] = true;
@@ -2103,31 +2086,27 @@ void Site_Manager::set_enable_flag(bool value) {
 void Site_Manager::build_active_faults() {
     int count = 0;
     active_faults.value.value_bit_field = 0;
-    for (int i = 0; i < faults.num_options; i++) {
+    for (size_t i = 0; i < faults.options_map.size(); i++) {
         if (active_fault_array[i]) {
-            active_faults.options_name[i] = faults.options_name[i];
-            active_faults.options_value[i].set(faults.options_value[i].value_int);
+            active_faults.options_map[i] = faults.options_map[i];
             active_faults.value.value_bit_field |= uint64_t(1) << i;
             count++;
         }
     }
     active_faults.value.set(count);
-    active_faults.num_options = count;
 }
 
 void Site_Manager::build_active_alarms() {
     int count = 0;
     active_alarms.value.value_bit_field = 0;
-    for (int i = 0; i < alarms.num_options; i++) {
+    for (size_t i = 0; i < alarms.options_map.size(); i++) {
         if (active_alarm_array[i]) {
-            active_alarms.options_name[i] = alarms.options_name[i];
-            active_alarms.options_value[i].set(alarms.options_value[i].value_int);
+            active_alarms.options_map[i] = alarms.options_map[i];
             active_alarms.value.value_bit_field |= uint64_t(1) << i;
             count++;
         }
     }
     active_alarms.value.set(count);
-    active_alarms.num_options = count;
 }
 
 bool Site_Manager::set_state(states state_request) {
@@ -2405,8 +2384,8 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
 }
 
 void Site_Manager::check_state(void) {
-    Sequence current_sequence = sequences[sequences_status.current_state];
-    Path current_path = current_sequence.paths[current_sequence.current_path_index];
+    Sequence& current_sequence = sequences[sequences_status.current_state];
+    Path& current_path = current_sequence.paths[current_sequence.current_path_index];
 
     // if faulted or shutdown cmd, enter shutdown state
     if (sequences_status.current_state != Init && (current_sequence.check_faults() || (disable_flag.value.value_bool))) {

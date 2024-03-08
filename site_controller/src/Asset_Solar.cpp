@@ -452,6 +452,13 @@ const char* Asset_Solar::get_status_string() const {
     return status.get_status_string();
 }
 
+/**
+ * Returns the status register
+ */
+Fims_Object& Asset_Solar::get_status_register() {
+    return status;
+}
+
 void Asset_Solar::process_asset(void) {
     set_raw_status();
     Asset::process_asset();

@@ -157,7 +157,7 @@ bool Step::configure_action(std::vector<Step_Action>& action_list, cJSON* JSON_a
 
 /**
  * @brief Returns the debounce_timer_ms of the provided step.
- * There is not at present a smart way to report on steps without a debounce_timer_ms. 
+ * There is not at present a smart way to report on steps without a debounce_timer_ms.
  * But one could be implemented.
  * @param action (const Step&) The Step to report on.
  * @return The number of seconds as an int.
@@ -167,11 +167,7 @@ int Step::collect_seconds_in_step() const {
     std::vector<Step_Action> step_actions = exit_conditions;
 
     auto start_iterator = step_actions.begin();
-    return std::accumulate(start_iterator, step_actions.end(), 0,
-        [](int currentSum, const Step_Action& step_action) {
-            return currentSum + step_action.debounce_timer_ms; // just a sum of total possible time. Not a live decrease.
-        }
-    );
+    return std::accumulate(start_iterator, step_actions.end(), 0, [](int currentSum, const Step_Action& step_action) {
+        return currentSum + step_action.debounce_timer_ms;  // just a sum of total possible time. Not a live decrease.
+    });
 }
-
-

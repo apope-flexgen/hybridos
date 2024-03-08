@@ -40,8 +40,8 @@ public:
 
     bool configure_step(cJSON* object, int step_index);
     bool configure_action(std::vector<Step_Action>& action_list, cJSON* JSON_action);
-    bool get_path_switch() const ;
-    std::string get_name() const ;
+    bool get_path_switch() const;
+    std::string get_name() const;
     int collect_seconds_in_step() const;
 };
 
