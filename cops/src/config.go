@@ -333,7 +333,9 @@ func configureCOPS(config Config) error {
 	// Initialize dependency list for each process
 	for _, p := range processJurisdiction {
 		if err := p.updateDependencies(); err != nil {
-			return fmt.Errorf("updating %s dependency list: %w", p.name, err)
+			// Avoid returning this error. We do not want
+			// to quit COPS in the event DBUS is not available.
+			log.Warnf("updating %s dependency list: %v", p.name, err)
 		}
 	}
 

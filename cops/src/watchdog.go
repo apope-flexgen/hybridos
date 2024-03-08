@@ -9,6 +9,9 @@ import (
 	log "github.com/flexgen-power/go_flexgen/logger"
 )
 
+// Initialize to true. If systemd does not exist on initial try, it will be set to false.
+var isDbusValid bool = true
+
 // Print a message if there is a fatal error and panic
 func fatalErrorCheck(err error, message string) {
 	if err != nil {
@@ -32,8 +35,10 @@ func patrolProcesses() error {
 		}
 
 		// Update the service status for a given process
-		if err := process.updateStatus(); err != nil {
-			return fmt.Errorf("updating service %v status: %w", process.name, err)
+		if isDbusValid {
+			if err := process.updateStatus(); err != nil {
+				return fmt.Errorf("updating service %v status: %w", process.name, err)
+			}
 		}
 
 		// If connection reporting is enabled, retrieve connection information and report.

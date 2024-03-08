@@ -195,6 +195,13 @@ func (process *processInfo) updateStatus() error {
 	// Open dbus connection.
 	conn, err := dbus.New()
 	if err != nil {
+		// Set an internal global variable, isDbusValid, for when dbus is not available.
+		// Should only be set to false when working inside docker containers.
+		// This error indiciates that systemd is not installed. If not installed, stop attempting
+		// to connect to systemd on further iterations.
+		if strings.Contains(err.Error(), "connect: no such file or directory") {
+			isDbusValid = false
+		}
 		return fmt.Errorf("failed to connect to D-Bus: %w", err)
 	}
 	defer conn.Close()
