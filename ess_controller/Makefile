@@ -123,6 +123,7 @@ FUNC_OBJECTS += DbiFuncs.o
 FUNC_OBJECTS += SlewFuncs.o
 FUNC_OBJECTS += PubFuncs.o
 FUNC_OBJECTS += UpdateToDbi.o
+FUNC_OBJECTS += SaveToDbi.o
 FUNC_OBJECTS += CheckValueChanged.o
 FUNC_OBJECTS += BalancePower.o
 

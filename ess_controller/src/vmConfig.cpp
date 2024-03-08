@@ -1785,6 +1785,12 @@ int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asse
                             } 
                         }
                     }
+
+                    // load saved registers from dbi
+                    auto replyto = fmt::format("/{}/cfg/cjson/saved_registers", aname);
+                    if (vm->p_fims)
+                        vm->p_fims->Send("get", "/dbi/ess_controller/saved_registers", replyto.c_str(),nullptr);
+                    
                 }
                 if(0)FPS_PRINT_INFO(" After load, requested final");
             }
@@ -2081,6 +2087,60 @@ int VarMapUtils::configure_vmapStr(varsmap& vmap, const char* body, asset_manage
 
     return ret;
 }
+
+/**
+ * This function parses the saved registers coming from DBI in the form of:
+ * {
+ *  "controls":
+ *      {
+ *          "pcs":
+ *              {
+ *                  "active_power_gradient": {"value": 5}
+ *              }
+ *      }
+ * }
+ * 
+ * This function iterates through the outer two objects to construct uris in the form of
+ * /controls/pcs, and adds the value of the third level to the map as /controls/pcs/active_power_gradient.
+*/
+void VarMapUtils::readMapfromDbi(varsmap& vmap, const char* fims_message_body) {
+    cJSON* cj_msg_body = cJSON_Parse(fims_message_body);
+    cJSON* cj_level_1;
+    cJSON* cj_level_2;
+
+    // iterate through the message body sent from dbi
+    // pull out the first two levels of keys
+    // use that to reconstruct the first part of the uri
+    if(cj_msg_body && cj_msg_body->type == cJSON_Object) {
+        cj_level_1 = cj_msg_body->child;
+        while(cj_level_1) {
+            if(cj_level_1->type == cJSON_Object) {
+                cj_level_2 = cj_level_1->child;
+                while(cj_level_2) {
+                    if(cj_level_2->type == cJSON_Object) {
+                        cJSON* cj_assetVar = cj_level_2->child;
+                        while (cj_assetVar) {
+                            // Construct the uri by joining the first two levels of keys
+                            std::string asset_uri = "/" + std::string(cj_level_1->string) + "/" + std::string(cj_level_2->string);
+                            // Use the third level as the var
+                            // insert its value into the vmap
+                            setValfromCj(vmap, asset_uri.c_str(), cj_assetVar->string, cj_assetVar, 0);
+                            // move onto the next var
+                            cj_assetVar = cj_assetVar->next;
+                        }
+                    }
+                    cj_level_2 = cj_level_2->next;
+                }
+            }
+            cj_level_1 = cj_level_1->next;
+        }
+    }
+
+    // Don't forget to free the cJSON object after you're done with it to avoid memory leaks
+    cJSON_Delete(cj_msg_body);
+}
+
+
 //
 // the cfiles are just read straight in, they may call up tmpl files.
 // dummy call to kick off loader 
@@ -2339,6 +2399,11 @@ void VarMapUtils::handleCfile(varsmap& vmap
            , "/schedule/ess:run_config"
            , "runConfig", tNow, 0.1, 0.0);
         FPS_PRINT_INFO(" Running Loader "); 
+    }
+
+    if (strncmp(uri,"/cfg/cjson/", strlen("/cfg/cjson/"))==0)
+    {
+        readMapfromDbi(vmap, body);
     }
 
     if(cj)cJSON_Delete(cj);

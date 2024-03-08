@@ -208,7 +208,7 @@ char* assetUri::pullPvar(int idx)
 {
     int ix = setupUriVec();
     if (idx > ix) return nullptr;
-    if (idx == 0) return nullptr;
+    if (idx <= 0) return nullptr; // Phil said this is okay;
 
     std::string res= "";
     while(idx<ix)

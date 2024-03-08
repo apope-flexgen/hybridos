@@ -87,6 +87,7 @@ extern "C++" {
     int SetDbiDoc(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
     int SendTrue(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
     int UpdateToDbi(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
+    int SaveToDbi(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
     int SendTime(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
     int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
 
@@ -165,6 +166,7 @@ int SetupEssSched(scheduler* sched, asset_manager* am)
     am->vm->setFunc(*am->vmap, aname, "RunScript", (void*)&RunScript);
     am->vm->setFunc(*am->vmap, aname, "SetDbiDoc", (void*)&SetDbiDoc);
     am->vm->setFunc(*am->vmap, aname, "UpdateToDbi", (void*)&UpdateToDbi);
+    am->vm->setFunc(*am->vmap, aname, "SaveToDbi", (void*)&SaveToDbi);
     am->vm->setFunc(*am->vmap, aname, "BalancePower", (void*)&BalancePower);
     return 0;
 }

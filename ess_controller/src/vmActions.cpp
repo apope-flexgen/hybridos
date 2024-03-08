@@ -580,6 +580,7 @@ void setFimsfromAf(VarMapUtils*vm, varsmap& vmap, assetBitField* abf
                 , const char* fmode, assFeat*af, bool debug)
 {
     char* uri = nullptr;       if(abf->gotFeat("uri")) uri =abf->getFeat("uri", &uri);
+    char* repto = nullptr;     if(abf->gotFeat("replyto")) repto =abf->getFeat("replyto", &repto);
     char* var = nullptr;       if(abf->gotFeat("var")) var =abf->getFeat("var", &var);
     char* fims_mode = nullptr; if(abf->gotFeat("mode")) var =abf->getFeat("mode", &fims_mode);
     if(!uri)
@@ -590,7 +591,8 @@ void setFimsfromAf(VarMapUtils*vm, varsmap& vmap, assetBitField* abf
         return;
     }
     assetUri my(uri, var);
-    if(!my.Var)
+    bool is_get = strncmp("get",fmode, strlen(fmode)) == 0;
+    if(!my.Var && !is_get)
     {
         FPS_PRINT_ERROR(" error no var for uri [{}] var [{}]"
             , uri
@@ -598,9 +600,19 @@ void setFimsfromAf(VarMapUtils*vm, varsmap& vmap, assetBitField* abf
             );
         return;
     }
+
+    std::string reptoStr;
+    if(repto){
+        reptoStr = std::string(repto);
+        size_t pos = reptoStr.find("{essName}");
+        if (pos != std::string::npos) {
+            reptoStr.replace(pos, std::strlen("{essName}"), vm->getSysName(vmap));
+        }
+    }
+
     std::string sval;
     std::string uval = my.Uri;
-    if(!my.Param)
+    if(!my.Param && !is_get)
     {
         if(fims_mode) // any mode means naked 
         {
@@ -660,7 +672,7 @@ void setFimsfromAf(VarMapUtils*vm, varsmap& vmap, assetBitField* abf
             }
         }
     }
-    else  // set a param via do not disturb
+    else if(my.Param) // set a param via do not disturb
     {
         if(af->type==assFeat::AINT)
         {
@@ -701,7 +713,7 @@ void setFimsfromAf(VarMapUtils*vm, varsmap& vmap, assetBitField* abf
         // we already have the var in the message body
         if(fmode)
         {
-            vm->p_fims->Send(fmode, uval.c_str(), nullptr, sval.c_str());
+            vm->p_fims->Send(fmode, uval.c_str(), reptoStr.c_str(), sval.c_str());
         }
         else
         {

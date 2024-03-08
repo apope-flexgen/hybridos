@@ -1,0 +1,9 @@
+{
+    "/sysconfig/default": 
+    {
+        "Subs":":/assets:/status/site:/alarms/site:/faults/site:/controls/site:/components:",
+        "Config":"ess_init",
+        "EssName": "ess",
+        "note": "Link or copy this file into local /usr/local/etc/config/ess_controller"
+    }
+}

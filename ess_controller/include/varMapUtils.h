@@ -64,6 +64,7 @@ public:
     void setTime(void);
     double getTime(void);
     time_t getTNow(double tNow);
+    void readMapfromDbi(varsmap& vmap, const char* fims_message_body);
 
     varsmap* createVlist();
     cJSON* getVmapCJ(varmap& vm);

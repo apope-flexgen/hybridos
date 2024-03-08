@@ -193,6 +193,7 @@ extern "C++"
     int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*av);
     int SendTrue(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
     int UpdateToDbi(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
+    int SaveToDbi(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
     int SendTime(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
     int SendDb(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
     int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
@@ -386,6 +387,7 @@ void initFuncs(asset_manager* am)
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "RunConfig",          (void*)&runConfig);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "HandleCmd",          (void*)&HandleCmd);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "UpdateToDbi",        (void*)&UpdateToDbi);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "SaveToDbi",          (void*)&SaveToDbi);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "BalancePower",        (void*)&BalancePower);
 
         // Set func for asset instances
@@ -399,6 +401,7 @@ void initFuncs(asset_manager* am)
             am->vm->setFunc(*am->vmap, ami->name.c_str(), "CheckMonitorVar_v2", (void*)&CheckMonitorVar_v2);
             am->vm->setFunc(*am->vmap, ami->name.c_str(), "HandleCmd", (void*)&HandleCmd);
             am->vm->setFunc(*am->vmap, ami->name.c_str(), "UpdateToDbi", (void*)&UpdateToDbi);
+            am->vm->setFunc(*am->vmap, ami->name.c_str(), "SaveToDbi", (void*)&SaveToDbi);
             am->vm->setFunc(*am->vmap, ami->name.c_str(), "BalancePower", (void*)&BalancePower);
         }
     }

@@ -1,0 +1,21 @@
+{
+    "/system/commands": {
+        "load_saved_registers": {
+            "value": 0,
+            "ifChanged": false,
+            "enabled": true,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/config/ess:enable",
+                                "outValue": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

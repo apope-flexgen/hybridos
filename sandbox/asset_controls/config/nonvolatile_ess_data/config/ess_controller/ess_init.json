@@ -1,0 +1,11 @@
+{
+    "/config/load": {
+        "ess_controller": {
+            "value":false,
+            "file":"ess_controller",
+            "aname":"ess",
+            "final": "ess_final",
+            "new_options": []
+        }
+    }
+}

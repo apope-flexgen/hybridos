@@ -1,0 +1,57 @@
+{
+    "/config/ess": {
+        "enable": {
+            "enabled": true,
+            "ifChanged": false,
+            "value": false
+        }
+    },
+    "/controls/pcs": {
+        "active_power_gradient": {
+            "value": 10,
+            "enable": "/config/ess:enable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [{"func": "SaveToDbi"}]
+                    }
+                ]
+            }
+        },
+        "reactive_power_gradient": {
+            "value": 13,
+            "enable": "/config/ess:enable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [{"func": "SaveToDbi"}]
+                    }
+                ]
+            }
+        }
+    },
+    "/status/bms": {
+        "some_var": {
+            "value": 12,
+            "enable": "/config/ess:enable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [{"func": "SaveToDbi"}]
+                    }
+                ]
+            }
+        },
+        "another_var": {
+            "value": 11,
+            "enable": "/config/ess:enable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [{"func": "SaveToDbi"}]
+                    }
+                ]
+            }
+        }
+    }
+}
