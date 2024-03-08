@@ -36,7 +36,7 @@ check_memory = False
 disable_comms = False
 service_to_debug = None
 # List of FPS-owned services
-hybridos_services = ["fims", "dbi", "metrics", "events", "scheduler", 
+hybridos_services = ["fims", "dbi", "metrics", "go_metrics", "events", "scheduler", 
                     "site_controller", "modbus_interface", "overwatch", 
                     "ftd", "cloud_sync", "dts", "cops", "web_ui", "fleet_manager", "dnp3_interface", "echo" ]
 
@@ -328,14 +328,15 @@ def start_fims():
     time.sleep(sleeptime)
 
 
-# LEVEL 2: start metrics, events, dbi, scheduler
-def start_metrics():
-    if os.path.isdir(machine_config_dir_symlink + "/metrics"):
-        print("starting metrics")
+# LEVEL 2: dbi, events, start metrics, go_metrics, scheduler
+def start_dbi():
+    if os.path.isdir(machine_config_dir_symlink + "/dbi"):
+        print("starting dbi")
         if systemd:
-            Popen(["sudo", "systemctl", "start", "metrics@metrics.json"])
+            Popen(["sudo", "systemctl", "start", "dbi"])
         else:
-            Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_metrics.json'])
+            Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_dbi.json'])
+        time.sleep(sleeptime)
 
 
 def start_events():
@@ -347,23 +348,33 @@ def start_events():
             Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_events.json'])
 
 
-def start_dbi():
-    if os.path.isdir(machine_config_dir_symlink + "/dbi"):
-        print("starting dbi")
+def start_metrics():
+    if os.path.isdir(machine_config_dir_symlink + "/metrics"):
+        print("starting metrics")
         if systemd:
-            Popen(["sudo", "systemctl", "start", "dbi"])
+            Popen(["sudo", "systemctl", "start", "metrics@metrics.json"])
         else:
-            Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_dbi.json'])
-        time.sleep(sleeptime)
+            Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_metrics.json'])
+
+
+def start_go_metrics():
+    if os.path.isdir(machine_config_dir_symlink + "/go_metrics"):
+        print("starting go_metrics")
+        # Load config
+        # TODO: when runtime endpoints are added to a separate endpoint, clear them here when the --init flag is provided
+        load_dbi("go_metrics", machine_config_dir_symlink)
+        if systemd:
+            Popen(["sudo", "systemctl", "start", "go_metrics@configuration.json"])
+        else:
+            Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_go_metrics.json'])
 
 
 def start_scheduler():
     start_fps_service("scheduler", machine_config_dir_symlink)
 
 
+
 # LEVEL 3: start core product processes
-
-
 def read_override_version(override_file_path):
     '''Reads the version given in a virtual_site override YAML file'''
     with open(override_file_path, "r") as stream:
@@ -581,8 +592,9 @@ def run_hybridos():
     start_mongo()
     start_fims()
     start_dbi()
-    start_metrics()
     start_events()
+    start_metrics()
+    start_go_metrics()
     start_fleet_manager()
     start_scheduler()
     start_dnp3_clients()

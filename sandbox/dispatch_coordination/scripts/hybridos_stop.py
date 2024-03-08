@@ -73,6 +73,7 @@ def stop_systemd_hybridos():
     # should kill all running modbus clients
     dkill('modbus_client') # pkill manages to kill all client services regardless of instance name
     dkill('metrics@metrics.json')
+    dkill('go_metrics@configuration.json')
     dkill('events')
     dkill('dbi')
     dkill('scheduler')
@@ -108,6 +109,7 @@ def stop_hybridos():
     pkill('site_controller')
 
     pkill('metrics')
+    pkill('go_metrics')
     pkill('events')
     pkill('dbi')
     pkill('scheduler')

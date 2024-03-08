@@ -848,7 +848,7 @@ func UnmarshalConfig(data []byte) {
 							attributesObj.ForEach(func(attributeKey []byte, objIter simdjson.Iter) {
 								// if an error occurs, I believe that key will just show up as null in the message body
 								output.Attributes[string(attributeKey)], _ = objIter.Interface()
-								OutputScope[string(key) + "@" + string(attributeKey)] = []Union{getUnionFromValue(output.Attributes[string(attributeKey)])}
+								OutputScope[string(key)+"@"+string(attributeKey)] = []Union{getUnionFromValue(output.Attributes[string(attributeKey)])}
 							}, nil)
 						}
 						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "attributes"
@@ -1141,6 +1141,24 @@ func UnmarshalConfig(data []byte) {
 							}
 						}
 						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove type
+
+						// Determine whether this is an alert (default false)
+						element, internal_err = metricsIter.FindElement(nil, "alert")
+						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "alert", JType: simdjson.TypeString})
+						if internal_err != nil {
+							// alert field is optional, set false and continue
+							metric.Alert = false
+						} else {
+							// error if alert field was found but does not contain a boolean value
+							alertVal, internal_err := element.Iter.Bool()
+							if internal_err != nil {
+								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								wasError = true
+							} else {
+								metric.Alert = alertVal
+							}
+						}
+						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "alert"
 
 						// get the outputs (at least one is required)
 						element, internal_err = metricsIter.FindElement(nil, "outputs")
@@ -1649,7 +1667,7 @@ func UnmarshalConfig(data []byte) {
 	// get the MDO ready for later
 	Mdo.Meta = make(map[string]interface{}, 3) // to hold: config file, process name, time published
 	Mdo.Meta["name"] = ProcessName
-	Mdo.Meta["config"] = ConfigFileLoc
+	Mdo.Meta["config"] = ConfigSource
 	Mdo.Meta["timestamp"] = time.Now().Format(time.RFC3339)
 	Mdo.Inputs = make(map[string]map[string]interface{}, len(MetricsConfig.Inputs))
 	for key := range MetricsConfig.Inputs {
@@ -1820,10 +1838,10 @@ func handleFiltersTemplates() {
 					}
 
 					// copy over the templated filter with any templates removed
-					switch x:= filter.(type) {
+					switch x := filter.(type) {
 					case string:
-							newStrFilter := strings.ReplaceAll(x, template.Tok, replacement)
-							MetricsConfig.Filters[newFilterName] = newStrFilter
+						newStrFilter := strings.ReplaceAll(x, template.Tok, replacement)
+						MetricsConfig.Filters[newFilterName] = newStrFilter
 					case []interface{}:
 						newFilterArr := make([]interface{}, 0)
 						for filterIndex, subFilter := range x {
@@ -2004,7 +2022,7 @@ func handleEchoTemplates() {
 					for key, value := range echoObject.Echo {
 						newKey := strings.ReplaceAll(key, template.Tok, replacement)
 						var newValue interface{}
-						switch x:= value.(type) {
+						switch x := value.(type) {
 						case string:
 							newValue = strings.ReplaceAll(x, template.Tok, replacement)
 						default:
@@ -2038,7 +2056,7 @@ func handleEchoTemplates() {
 								}
 								newKey := strings.ReplaceAll(key, template.Tok, replacement)
 								var newValue interface{}
-								switch x:= value.(type) {
+								switch x := value.(type) {
 								case string:
 									newValue = strings.ReplaceAll(x, template.Tok, replacement)
 								default:
@@ -2073,7 +2091,7 @@ func handleEchoTemplates() {
 						for _, replacement := range template.List {
 							newKey := strings.ReplaceAll(key, template.Tok, replacement)
 							var newValue interface{}
-							switch x:= value.(type) {
+							switch x := value.(type) {
 							case string:
 								newValue = strings.ReplaceAll(x, template.Tok, replacement)
 							default:
@@ -2508,7 +2526,7 @@ func addUriFrags(completeUri string, uriFragList []string, uriMap map[string]int
 		uriMap2 = addUriFrags(completeUri, uriFragList[1:], uriMap2)
 	}
 	uriMap[uriFrag] = uriMap2
-	if _,ok:= UriElements[completeUri]; !ok {
+	if _, ok := UriElements[completeUri]; !ok {
 		UriElements[completeUri] = uriMap2
 	} else {
 		UriElements[completeUri] = joinMaps(UriElements[completeUri], uriMap2)
@@ -2619,16 +2637,16 @@ func GetSubscribeUris() {
 	UriElements = make(map[string]interface{}, 0)
 	for _, input := range MetricsConfig.Inputs {
 		uriFrags := strings.Split(input.Uri, "/")
-		UriElements = addUriFrags("",uriFrags,UriElements)
+		UriElements = addUriFrags("", uriFrags, UriElements)
 		if len(input.Attributes) > 0 {
 			for _, attributeName := range input.Attributes {
 				uriFrags2 := append(uriFrags, attributeName)
-				UriElements = addUriFrags("",uriFrags2,UriElements)
+				UriElements = addUriFrags("", uriFrags2, UriElements)
 			}
 			for _, attributeName := range input.Attributes {
 				uriFrags := strings.Split(input.Uri, "/")
 				uriFrags[len(uriFrags)-1] = uriFrags[len(uriFrags)-1] + "@" + attributeName
-				UriElements = addUriFrags("",uriFrags,UriElements)
+				UriElements = addUriFrags("", uriFrags, UriElements)
 			}
 		}
 	}
@@ -2641,15 +2659,15 @@ func GetSubscribeUris() {
 				uriFrags := strings.Split(echoInput.Uri, "/")
 				for newVar, oldVar := range echoInput.Registers {
 					uriFrags2 := append(uriFrags, oldVar)
-					UriElements = addUriFrags("",uriFrags2, UriElements)
+					UriElements = addUriFrags("", uriFrags2, UriElements)
 					uriFrags3 := append(publishUriFrags, newVar)
-					UriElements = addUriFrags("",uriFrags3, UriElements)
+					UriElements = addUriFrags("", uriFrags3, UriElements)
 				}
 			}
 		}
 		for register := range echoObject.Echo {
 			uriFrags2 := append(publishUriFrags, register)
-			UriElements = addUriFrags("",uriFrags2, UriElements)
+			UriElements = addUriFrags("", uriFrags2, UriElements)
 		}
 	}
 
@@ -2657,26 +2675,26 @@ func GetSubscribeUris() {
 	// map each parent uri to its children components that we'll need to fetch
 	// from that parent uri
 	for outputName, output := range MetricsConfig.Outputs {
-		if len(output.Uri) > 0{
-		uriFrags := strings.Split(output.Uri, "/")
-		if len(output.Name) > 0 {
-			uriFrags = append(uriFrags, output.Name)
-		} else {
-			uriFrags = append(uriFrags, outputName)
-		}
-		UriElements = addUriFrags("",uriFrags, UriElements)
-		if len(output.Attributes) > 0 {
-			for attributeName := range output.Attributes {
-				uriFrags = append(uriFrags, attributeName)
-				UriElements = addUriFrags("",uriFrags, UriElements)
+		if len(output.Uri) > 0 {
+			uriFrags := strings.Split(output.Uri, "/")
+			if len(output.Name) > 0 {
+				uriFrags = append(uriFrags, output.Name)
+			} else {
+				uriFrags = append(uriFrags, outputName)
+			}
+			UriElements = addUriFrags("", uriFrags, UriElements)
+			if len(output.Attributes) > 0 {
+				for attributeName := range output.Attributes {
+					uriFrags = append(uriFrags, attributeName)
+					UriElements = addUriFrags("", uriFrags, UriElements)
+				}
 			}
 		}
 	}
-	}
 
 	iterMap = make(map[string]*simdjson.Iter, 0)
-    objMap = make(map[string]*simdjson.Object, 0)
-    elemMap = make(map[string]*simdjson.Iter, 0)
+	objMap = make(map[string]*simdjson.Object, 0)
+	elemMap = make(map[string]*simdjson.Iter, 0)
 
 	// //leaving this here in case we need it again (maybe a command-line option or query?)
 	// fmt.Println("Looking for elements:")

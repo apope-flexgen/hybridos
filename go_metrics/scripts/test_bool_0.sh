@@ -15,7 +15,7 @@ timeout=20
 timeused=0
 
 
-basedir=/home/docker/git/go_metrics
+basedir=/home/hybridos/git/hybridos/go_metrics
 
 start ()
 {

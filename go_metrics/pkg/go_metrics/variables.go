@@ -15,15 +15,15 @@ var MetricsConfig MetricsFile     // the metrics config file
 var SubscribeUris []string        // the uris to subscribe to
 var InputScope map[string][]Union // this holds a map[string][]Input for when we want to go and evaluate things...
 var FilterScope map[string][]string
-var OutputScope map[string][]Union          // this holds a map[string][]Input for when we want to go and evaluate things...
-var UriElements map[string]interface{}       // if we decompose a uri, use this to get the elements of that uri that we're interested in -- used for inputs
-var PublishUris map[string][]string         // the uri's to publish to and the vars to publish to each uri
-var PubUriFlags map[string][]string         // the uri's to publish to and the flags contained within that publish uri (either local or global)
-var ConfigErrorsFile string                 // the file location to save the error report after parsing the config document
-var MdoFile string                          // the file location to save the "metrics data object" (MDO)
-var Mdo MDO                                 // the struct that holds all of the data that we need to save to the MDO
-var ProcessName string                      // the process name to publish as and subscribe to
-var ConfigFileLoc string                    // where the config file for the program is located
+var OutputScope map[string][]Union     // this holds a map[string][]Input for when we want to go and evaluate things...
+var UriElements map[string]interface{} // if we decompose a uri, use this to get the elements of that uri that we're interested in -- used for inputs
+var PublishUris map[string][]string    // the uri's to publish to and the vars to publish to each uri
+var PubUriFlags map[string][]string    // the uri's to publish to and the flags contained within that publish uri (either local or global)
+var ConfigErrorsFile string            // the file location to save the error report after parsing the config document
+var MdoFile string                     // the file location to save the "metrics data object" (MDO)
+var Mdo MDO                            // the struct that holds all of the data that we need to save to the MDO
+var ProcessName string                 // the process name to publish as and subscribe to
+var ConfigSource string                // where the config file for the program is located
 
 // mutexes
 var inputScopeMutex sync.RWMutex
