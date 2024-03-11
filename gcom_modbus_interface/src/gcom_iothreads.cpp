@@ -784,10 +784,12 @@ void handle_point_error(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread,
         if (!io_work->data_error)
         {
 
-            FPS_INFO_LOG("thread_id %d %s connected but io failed 2 for [%s] offset %d  err code %d [%s] point off_by_one [%s] work off_by_one [%s]"
-                , io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, io_point->errno_code,  modbus_strerror(io_point->errno_code)
+            FPS_INFO_LOG("thread_id %d %s connected but io failed 2 for [%s] offset %d  err %d code %d [%s] point off_by_one [%s] disconnected [%s] auto disable [%s] point_gap %d"
+                , io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, err, io_point->errno_code,  modbus_strerror(io_point->errno_code)
                                 , io_point->off_by_one?"true":"false"
-                                , io_work->off_by_one?"true":"false"
+                                , io_point->is_disconnected?"true":"false"
+                                , myCfg.auto_disable?"true":"false"
+                                , io_point->gap
                                 );
 
             io_work->data_error = true;
@@ -820,7 +822,7 @@ void handle_point_error(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread,
             {
                 FPS_INFO_LOG ("thread_id %d %s failed for [%s] offset %d with gap [%d] err %d -> [%s]; gap removed  ", 
                     io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, io_point->gap, err, modbus_strerror(io_point->errno_code));
-
+                io_point->gap = 0;
             } 
             else
             {
@@ -831,7 +833,8 @@ void handle_point_error(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread,
                 io_point->reconnect = tNow + 5.0;
 
 
-                FPS_INFO_LOG ("thread_id %d %s failed for [%s] offset %d err %d -> [%s] point disconnected ", 
+                FPS_INFO_LOG 
+                        ("thread_id %d %s failed for [%s] offset %d err %d -> [%s] point disconnected", 
                         io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, err, modbus_strerror(io_point->errno_code));
             }
         }
@@ -839,8 +842,8 @@ void handle_point_error(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread,
     else
     {
         // this will spam so dont send it
-        if(0)FPS_INFO_LOG("thread_id %d %s failed for [%s] offset %d err code %d [%s]", 
-                io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, io_point->errno_code, modbus_strerror(io_point->errno_code));
+        if(0)FPS_INFO_LOG("thread_id %d %s failed for [%s]  offset %d err %d code %d [%s]", 
+                io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, err, io_point->errno_code, modbus_strerror(io_point->errno_code));
     }
 }
 

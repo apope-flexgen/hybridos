@@ -269,6 +269,8 @@ struct cfg
 
         bool is_byte_swap = false;
         bool off_by_one = false;
+        bool multi_write_op_code;
+
 
         bool heartbeat_enabled = false;
         bool watchdog_enabled = false;

@@ -774,7 +774,7 @@ bool extract_components(std::map<std::string, std::any> jsonMapOfConfig, const s
 
             // word_swap is actually the same as byte_swap?
             int word_order = 0;
-            ok &= getItemFromMap(jsonComponentMap, "byte_swap", component->is_byte_swap, false, true, true, debug);
+            //ok &= getItemFromMap(jsonComponentMap, "byte_swap", component->is_byte_swap, false, true, true, debug);
 
             ok &= getItemFromMap(jsonComponentMap, "word_order", component->word_order, word_order, true, true, debug);
 
@@ -875,7 +875,7 @@ bool extract_register_groups(std::vector<std::shared_ptr<cfg::register_group_str
             {
                 std::map<std::string, std::any> jsonRegisterGroupMap = std::any_cast<std::map<std::string, std::any>>(raw_register_group);
                 std::shared_ptr<cfg::register_group_struct> register_group = std::make_shared<cfg::register_group_struct>();
-                register_group->multi_write_op_code = false; // component->multi_write_op_code;
+                register_group->multi_write_op_code = component->multi_write_op_code ; //myCfg.inherited_fields.multi_write_op_code;  // component->multi_write_op_code;
                 register_group->component = component.get();
                 register_group->id = component->id;
                 register_group->component_id = component->component_id;
@@ -887,12 +887,12 @@ bool extract_register_groups(std::vector<std::shared_ptr<cfg::register_group_str
                 ok &= getItemFromMap(jsonRegisterGroupMap, "type", register_group->register_type_str, std::string("type"), true, true, debug);
                 // now we get modbus specific
                 register_group->register_type = myCfg.typeFromStr(register_group->register_type_str);
-                ok &= getItemFromMap(jsonRegisterGroupMap, "starting_offset", register_group->starting_offset, 0, true, true, debug);
-                ok &= getItemFromMap(jsonRegisterGroupMap, "number_of_registers", register_group->number_of_registers, 0, true, true, debug);
-                ok &= getItemFromMap(jsonRegisterGroupMap, "device_id", register_group->device_id, component->device_id, true, true, debug);
-                ok &= getItemFromMap(jsonRegisterGroupMap, "byte_swap", register_group->is_byte_swap, component->is_byte_swap, true, true, debug);
-                ok &= getItemFromMap(jsonRegisterGroupMap, "word_order", register_group->word_order, component->word_order, true, true, debug);
-                ok &= getItemFromMap(jsonRegisterGroupMap, "multi_write_op_code", register_group->multi_write_op_code, false, true, true, debug);
+                ok &= getItemFromMap(jsonRegisterGroupMap, "starting_offset",     register_group->starting_offset,     0,                              true, true, debug);
+                ok &= getItemFromMap(jsonRegisterGroupMap, "number_of_registers", register_group->number_of_registers, 0,                              true, true, debug);
+                ok &= getItemFromMap(jsonRegisterGroupMap, "device_id",           register_group->device_id,           component->device_id,           true, true, debug);
+                ok &= getItemFromMap(jsonRegisterGroupMap, "byte_swap",           register_group->is_byte_swap,        component->is_byte_swap,        true, true, debug);
+                ok &= getItemFromMap(jsonRegisterGroupMap, "word_order",          register_group->word_order,          component->word_order,          true, true, debug);
+                ok &= getItemFromMap(jsonRegisterGroupMap, "multi_write_op_code", register_group->multi_write_op_code, component->multi_write_op_code, true, true, debug);
                 std::string format_str;
                 ok &= getItemFromMap(jsonRegisterGroupMap, "format", format_str, std::string(""), true, true, false);
 
@@ -951,20 +951,20 @@ bool extract_io_point( std::map<std::string, std::any>&json_io_point, std::share
     std::shared_ptr<cfg::io_point_struct> parent_io_point = io_point;
     if (packed_io_point)
         parent_io_point = packed_io_point;
-    getItemFromMap(json_io_point, "id", io_point->id, std::string("Some_id"), new_point, new_point, debug);
-    getItemFromMap(json_io_point, "name", io_point->name, std::string("Some_name"), new_point, new_point, debug);
-    getItemFromMap(json_io_point, "offset", io_point->offset, parent_io_point->offset, new_point, new_point, debug);
-    getItemFromMap(json_io_point, "size", io_point->size, parent_io_point->size, new_point, new_point, debug);
-    getItemFromMap(json_io_point, "multi_write_op_code", io_point->multi_write_op_code, parent_io_point->multi_write_op_code, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "id",                    io_point->id,         std::string("Some_id"), new_point, new_point, debug);
+    getItemFromMap(json_io_point, "name",                  io_point->name,       std::string("Some_name"), new_point, new_point, debug);
+    getItemFromMap(json_io_point, "offset",                io_point->offset,     parent_io_point->offset, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "size",                  io_point->size,       parent_io_point->size, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "multi_write_op_code",   io_point->multi_write_op_code, parent_io_point->multi_write_op_code, new_point, new_point, debug);
     //getItemFromMap(json_io_point, "off_by_one",          io_point->off_by_one, register_group->off_by_one, new_point, new_point, debug);
     io_point->off_by_one = register_group->off_by_one;
 
 
     // set up default
     io_point->number_of_bits = io_point->size * 16;
-    getItemFromMap(json_io_point, "shift", io_point->shift, parent_io_point->shift, new_point, new_point, debug);
-    getItemFromMap(json_io_point, "starting_bit_pos", io_point->starting_bit_pos, parent_io_point->starting_bit_pos, new_point, new_point, debug);
-    getItemFromMap(json_io_point, "number_of_bits", io_point->number_of_bits, parent_io_point->number_of_bits, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "shift",              io_point->shift, parent_io_point->shift, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "starting_bit_pos",   io_point->starting_bit_pos, parent_io_point->starting_bit_pos, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "number_of_bits",     io_point->number_of_bits, parent_io_point->number_of_bits, new_point, new_point, debug);
     io_point->bit_mask = (io_point->number_of_bits * io_point->number_of_bits) - 1;
     getItemFromMap(json_io_point, "scale", io_point->scale, parent_io_point->scale, new_point, new_point, debug);
     getItemFromMap(json_io_point, "normal_set", io_point->normal_set, parent_io_point->normal_set, new_point, new_point, debug);
@@ -1029,9 +1029,9 @@ bool extract_io_point( std::map<std::string, std::any>&json_io_point, std::share
     // Extract io_point details (like id, offset, name, etc.) here...
     // Add to the io_point_map vector...
     io_point->is_float = false;
-    getItemFromMap(json_io_point, "float", io_point->is_float, parent_io_point->is_float, new_point, new_point, debug);
-    getItemFromMap(json_io_point, "word_order", io_point->word_order, parent_io_point->word_order, new_point, new_point, debug);
-    getItemFromMap(json_io_point, "byte_swap", io_point->is_byte_swap, parent_io_point->is_byte_swap, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "float",      io_point->is_float,     parent_io_point->is_float,     new_point, new_point, debug);
+    getItemFromMap(json_io_point, "word_order", io_point->word_order,   parent_io_point->word_order,   new_point, new_point, debug);
+    getItemFromMap(json_io_point, "byte_swap",  io_point->is_byte_swap, parent_io_point->is_byte_swap, new_point, new_point, debug);
 
     // for the benefit of size 4 regs
     // TODO remove word_swap
@@ -1062,8 +1062,8 @@ bool extract_io_point( std::map<std::string, std::any>&json_io_point, std::share
     io_point->is_random_enum = false;
     io_point->is_individual_bits = false;
     io_point->is_bit_field = false;
-    getItemFromMap(json_io_point, "enum", io_point->is_enum, parent_io_point->is_enum, new_point, new_point, debug);
-    getItemFromMap(json_io_point, "random_enum", io_point->is_random_enum, parent_io_point->is_random_enum, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "enum",            io_point->is_enum, parent_io_point->is_enum, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "random_enum",     io_point->is_random_enum, parent_io_point->is_random_enum, new_point, new_point, debug);
     getItemFromMap(json_io_point, "individual_bits", io_point->is_individual_bits, parent_io_point->is_individual_bits, new_point, new_point, debug);
     getItemFromMap(json_io_point, "bit_field", io_point->is_bit_field, io_point->is_bit_field, new_point, new_point, debug);
     if (io_point->is_enum ||io_point->is_random_enum|| io_point->is_individual_bits || io_point->is_bit_field)
@@ -1080,8 +1080,8 @@ bool extract_io_point( std::map<std::string, std::any>&json_io_point, std::share
     io_point->debounce = dval;
     io_point->deadband = dval;
     io_point->use_bool = true;
-    getItemFromMap(json_io_point, "debounce", io_point->debounce, parent_io_point->debounce, new_point, new_point, debug);
-    getItemFromMap(json_io_point, "deadband", io_point->deadband, parent_io_point->deadband, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "debounce",        io_point->debounce, parent_io_point->debounce, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "deadband",        io_point->deadband, parent_io_point->deadband, new_point, new_point, debug);
     if (io_point->debounce > 0.0)
         io_point->use_debounce = true;
     if (io_point->deadband > 0.0)
@@ -1138,16 +1138,16 @@ bool extract_io_point_map(std::shared_ptr<struct cfg::register_group_struct> reg
                 std::map<std::string, std::any> json_io_point = std::any_cast<std::map<std::string, std::any>>(rawIOPoint);
                 // struct cfg::io_point_struct map;
                 std::shared_ptr<cfg::io_point_struct> io_point = std::make_shared<cfg::io_point_struct>();
-                io_point->register_type = register_group->register_type;
-                io_point->register_group = register_group.get();
-                io_point->component = register_group->component;
-                io_point->multi_write_op_code = register_group->multi_write_op_code;
+                io_point->register_type          = register_group->register_type;
+                io_point->register_group         = register_group.get();
+                io_point->component              = register_group->component;
+                io_point->multi_write_op_code    = register_group->multi_write_op_code;
                 io_point->size = 1;
                 double scale = 0.0;
                 io_point->scale = scale;
-                io_point->register_type_str = register_group->register_type_str;
-                io_point->is_byte_swap = register_group->is_byte_swap;
-                io_point->off_by_one = register_group->off_by_one;
+                io_point->register_type_str      = register_group->register_type_str;
+                io_point->is_byte_swap           = register_group->is_byte_swap;
+                io_point->off_by_one             = register_group->off_by_one;
 
 
                 extract_io_point(json_io_point, register_group, io_point, packed_io_point, true, myCfg, debug);

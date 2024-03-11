@@ -1028,7 +1028,7 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                 || (is_unforce_request && !io_point->is_forced) 
                 || (!is_force_request && !is_unforce_request && !is_disable_request && !is_enable_request))
                 {
-                    if (io_point->is_enabled)
+                    if (io_point->is_enabled && !io_point->is_disconnected)
                         io_map_vec_pruned.emplace_back(io_point);
                 }
             }

@@ -602,14 +602,17 @@ void setFimsfromAf(VarMapUtils*vm, varsmap& vmap, assetBitField* abf
     }
 
     std::string reptoStr;
+    const char* repstr = nullptr;
+
     if(repto){
         reptoStr = std::string(repto);
         size_t pos = reptoStr.find("{essName}");
         if (pos != std::string::npos) {
             reptoStr.replace(pos, std::strlen("{essName}"), vm->getSysName(vmap));
         }
+        repstr = reptoStr.c_str();
     }
-
+    
     std::string sval;
     std::string uval = my.Uri;
     if(!my.Param && !is_get)
@@ -713,7 +716,7 @@ void setFimsfromAf(VarMapUtils*vm, varsmap& vmap, assetBitField* abf
         // we already have the var in the message body
         if(fmode)
         {
-            vm->p_fims->Send(fmode, uval.c_str(), reptoStr.c_str(), sval.c_str());
+            vm->p_fims->Send(fmode, uval.c_str(), repstr, sval.c_str());
         }
         else
         {
