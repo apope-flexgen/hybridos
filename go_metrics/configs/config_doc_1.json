@@ -1,39 +1,37 @@
 {
-    "docinfo":{
-            "name":"config_doc_1.json",
-            "author":"Phil Wilshire",
-            "desc":"test the readme",
-            "date":"04_14_2023"
-    },
     "meta": { "publishRate": 1000 },
     "inputs": {
         "v1": { "uri": "/components/feeder_52m1/v1", "type": "float" }
     },
     "outputs": {
-        "v1_times_5": { "uri": "/some/value/output" },
+        "v1_times_5": { "uri": "/some/value/output", "flags":["direct_set","sparse"]},
         "v2_times_5": { "uri": "/some/value/output" },
         "v3_times_5": { "uri": "/some/value/output" },
         "v4_times_5": { "uri": "/some/value/output" }
 		    },
     "metrics": [
         {
-            "value": 0.0, 
+            "id": "sparse_direct_set",
+            "type": "float", 
             "outputs": "v1_times_5",
             "expression": "v1 * 5",
             "alert": true
         },
         {
-            "value": 0.0, 
+            "id": "v1_times_5",
+            "type": "float", 
             "outputs": "v2_times_5",
             "expression": "v1 * 5"
         },
         {
-            "value": 0.0, 
+            "id": "v1_times_5_again",
+            "type": "float", 
             "outputs": "v3_times_5",
             "expression": "v1 * 5"
         },
         {
-            "value": 0.0, 
+            "id": "v1_times_5_AGAIN",
+            "type": "float",  
             "outputs": "v4_times_5",
             "expression": "v1 * 5"
         }
