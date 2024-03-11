@@ -9,7 +9,7 @@ import {
 
 const skippedComponents: string[] = ['lock_mode'];
 
-export const parseClothedData = (
+export const parseDefaultData = (
   rawData: clothedBodyFromFims,
   setLockMode: (state: boolean) => void,
   includeStatic: boolean,

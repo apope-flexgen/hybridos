@@ -22,7 +22,7 @@ import {
 import { SiteConfiguration } from 'src/webuiconfig/webUIConfig.interface';
 
 // TODO: finalize this method
-export const parseNakedData = (
+export const parseConfiguredData = (
   rawData: nakedBodyFromFims,
   setLockMode: (state: boolean) => void,
   metaData: metadataFromDBI,

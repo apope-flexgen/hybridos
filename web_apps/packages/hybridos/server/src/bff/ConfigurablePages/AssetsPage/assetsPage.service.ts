@@ -9,12 +9,12 @@ import {
   nakedBodyFromFims,
   summaryDataFromFims,
 } from '../configurablePages.types';
-import { parseClothedData, parseNakedData, parseSummaryData } from '../Parser';
+import { parseDefaultData, parseConfiguredData, parseSummaryData } from '../Parser';
 import { DBI_SERVICE, DBI_URIs } from 'src/dbi/dbi.interface';
 import { IDBIService } from 'src/dbi/dbi.interface';
 import { SiteConfiguration } from 'src/webuiconfig/webUIConfig.interface';
 import { LockModeService } from './lockMode/lockMode.service';
-import { DEFAULT_URIS, NAKED_URIS } from './assetsPage.constants';
+import { DEFAULT_URIS } from './assetsPage.constants';
 import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
 
 @Injectable()
@@ -98,16 +98,16 @@ export class AssetsPageService {
       return false;
     })
 
-    let isClothedValues = {};
+    let isDefaultValues = {};
     URIs.forEach((uri) => {
-      const isClothed = !NAKED_URIS.some(nakedURI => uri.startsWith(nakedURI));
-      isClothedValues = {...isClothedValues, [uri]: isClothed};
+      const isDefault = assetKey in DEFAULT_URIS;
+      isDefaultValues = {...isDefaultValues, [uri]: isDefault};
     });
     
     const initialSendData = await this.getInitialSendData(
       initialRawData,
       URIs,
-      isClothedValues,
+      isDefaultValues,
       queryURIsArray,
       enableAssetPageControls,
       individualMetadataArray,
@@ -121,7 +121,7 @@ export class AssetsPageService {
       initialRawData,
       enableAssetPageControls,
       individualMetadataArray,
-      isClothedValues,
+      isDefaultValues,
       assetKey
     );
   }
@@ -321,7 +321,7 @@ export class AssetsPageService {
     summaryData: summaryDataFromFims,
     enableAssetPageControls: boolean,
     dbiMetadata: metadataFromDBI[],
-    isClothedValues: { [uri: string]: boolean },
+    isDefaultValues: { [uri: string]: boolean },
     assetKey: string
   ): Observable<ConfigurablePageDTO> => {
     const base = new Observable<ConfigurablePageDTO>((observer) => {
@@ -337,7 +337,7 @@ export class AssetsPageService {
         summaryData[uri]['name'],
         enableAssetPageControls,
         dbiMetadata,
-        isClothedValues[uri],
+        isDefaultValues[uri],
         false,
         hasBatchControls,
         hasMaintenanceActions,
@@ -451,7 +451,7 @@ export class AssetsPageService {
   private getInitialSendData = async (
     summaryData: summaryDataFromFims,
     URIs: string[],
-    isClothedValues: { [uri: string]: boolean },
+    isDefaultValues: { [uri: string]: boolean },
     baseURIsArray: string[],
     enableAssetPageControls: boolean,
     dbiMetadata: metadataFromDBI[],
@@ -471,15 +471,15 @@ export class AssetsPageService {
     const maintenanceActionsMetadata = hasMaintenanceActions ? await this.getInitialMaintenanceActionsData(URIs, baseURIsArray[0]) : undefined;
 
     URIs.forEach((uri, index) => {
-      const parsedData: DisplayGroupDTO = isClothedValues[uri]
-        ? parseClothedData(
+      const parsedData: DisplayGroupDTO = isDefaultValues[uri]
+        ? parseDefaultData(
             summaryData[uri],
             this.setLockMode(uri),
             true,
             enableAssetPageControls,
             this.siteConfiguration,
           )
-        : parseNakedData(
+        : parseConfiguredData(
             summaryData[uri],
             this.setLockMode(uri),
             this.getIndividualAssetMetadata(uri, dbiMetadata),
@@ -535,7 +535,7 @@ export class AssetsPageService {
     name: string,
     enableAssetPageControls: boolean,
     dbiMetadata: metadataFromDBI[],
-    isClothed: boolean,
+    isDefault: boolean,
     isSummary: boolean = false,
     hasBatchControls: boolean = false,
     hasMaintenanceActions: boolean = false,
@@ -560,8 +560,8 @@ export class AssetsPageService {
               enableAssetPageControls,
               this.siteConfiguration,
             )
-          : !isClothed
-            ? parseNakedData(
+          : !isDefault
+            ? parseConfiguredData(
               event.body as nakedBodyFromFims,
               this.setLockMode(uri),
               this.getIndividualAssetMetadata(uri, dbiMetadata),
@@ -570,7 +570,7 @@ export class AssetsPageService {
               this.siteConfiguration,
               maintenanceActions,
             )
-            : parseClothedData(
+            : parseDefaultData(
               event.body as clothedBodyFromFims,
               this.setLockMode(uri),
               false,
@@ -586,7 +586,7 @@ export class AssetsPageService {
             [uri]: {
               ...parsedData,
               displayName: name || uri,
-              tabKey: !isClothed ? (this.getIndividualAssetMetadata(uri, dbiMetadata).info.tabKey || Math.random()) : Math.random()
+              tabKey: !isDefault ? (this.getIndividualAssetMetadata(uri, dbiMetadata).info.tabKey || Math.random()) : Math.random()
             },
           },
         };

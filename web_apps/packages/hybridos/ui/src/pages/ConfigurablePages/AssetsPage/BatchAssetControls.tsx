@@ -65,6 +65,7 @@ const BatchAssetControl = ({
         onChange={handleSelectControlRecipient}
         label="Control Recipients"
         onDelete={handleRemoveControlRecipient}
+        maxMultiSelectLines={3}
       />
       {
     batchControlChildrenMapped?.length > 0 && (
