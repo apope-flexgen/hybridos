@@ -63,13 +63,33 @@ void fimsSendSetCallback(void *pSetWork)
     SetWork *set_work = (SetWork *)pSetWork;
     set_work->send_buf.clear();
     TMWSIM_POINT *dbPoint = set_work->dbPoint;
-    format_point_value(set_work->send_buf, dbPoint, set_work->value);
-    if (!send_set((((FlexPoint *)dbPoint->flexPointHandle)->sys)->fims_dependencies->fims_gateway, std::string_view{set_work->send_uri.data(), set_work->send_uri.size()}, std::string_view{set_work->send_buf.data(), set_work->send_buf.size()}))
-    {
-        if (!spam_limit(((FlexPoint *)dbPoint->flexPointHandle)->sys, ((FlexPoint *)dbPoint->flexPointHandle)->sys->fims_errors))
+    if(((FlexPoint *)dbPoint->flexPointHandle)->is_individual_bits){
+        for(auto bit : ((FlexPoint *)dbPoint->flexPointHandle)->dbBits) {
+            set_work->send_buf.clear();
+            if(bit.first == "Unknown"){
+                continue;
+            }
+            format_individual_bit(set_work->send_buf, dbPoint, set_work->value, 255, nullptr, bit.first);
+            std::string uri = std::string(((FlexPoint *)dbPoint->flexPointHandle)->uri) + "/" + bit.first;
+            if (!send_set((((FlexPoint *)dbPoint->flexPointHandle)->sys)->fims_dependencies->fims_gateway, std::string_view{uri.data(), uri.size()}, std::string_view{set_work->send_buf.data(), set_work->send_buf.size()}))
+            {
+                if (!spam_limit(((FlexPoint *)dbPoint->flexPointHandle)->sys, ((FlexPoint *)dbPoint->flexPointHandle)->sys->fims_errors))
+                {
+                    FPS_ERROR_LOG("could not send fims_set to %s", std::string_view{uri.data(), uri.size()});
+                    FPS_LOG_IT("fims_send_error");
+                }
+            }
+        }
+        
+    } else {
+        format_point(set_work->send_buf, dbPoint, set_work->value, 255, nullptr, false);
+        if (!send_set((((FlexPoint *)dbPoint->flexPointHandle)->sys)->fims_dependencies->fims_gateway, std::string_view{set_work->send_uri.data(), set_work->send_uri.size()}, std::string_view{set_work->send_buf.data(), set_work->send_buf.size()}))
         {
-            FPS_ERROR_LOG("could not send fims_set to %s", std::string_view{set_work->send_uri.data(), set_work->send_uri.size()});
-            FPS_LOG_IT("fims_send_error");
+            if (!spam_limit(((FlexPoint *)dbPoint->flexPointHandle)->sys, ((FlexPoint *)dbPoint->flexPointHandle)->sys->fims_errors))
+            {
+                FPS_ERROR_LOG("could not send fims_set to %s", std::string_view{set_work->send_uri.data(), set_work->send_uri.size()});
+                FPS_LOG_IT("fims_send_error");
+            }
         }
     }
 }
@@ -124,7 +144,7 @@ void received_command_callback(void *pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_
             {
                 // checkOutputOverflow(dbPoint); // I don't think this works...something weird with how the over_range flag is set
                 ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value = dbPoint->data.analog.value;
-                if(((FlexPoint *)dbPoint->flexPointHandle)->sent_operate) {
+                if(((FlexPoint *)dbPoint->flexPointHandle)->sent_operate) { // sent_operate is actually not accurate here...it's more like "received_value_over_fims"
                     dbPoint->data.analog.value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value; // this is the last value received over fims
                 }
                 if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->set_timer))
@@ -160,7 +180,7 @@ void received_command_callback(void *pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_
             {
                 // checkOutputOverflow(dbPoint); // I don't think this works...something weird with how the over_range flag is set
                 ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value = dbPoint->data.binary.value;
-                if(((FlexPoint *)dbPoint->flexPointHandle)->sent_operate) {
+                if(((FlexPoint *)dbPoint->flexPointHandle)->sent_operate) { // sent_operate is actually not accurate here...it's more like "received_value_over_fims"
                     dbPoint->data.binary.value = static_cast<bool>(((FlexPoint *)(dbPoint->flexPointHandle))->operate_value); // this is the last value received over fims
                 }
                 if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->set_timer))
@@ -717,7 +737,7 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
     Jval_buif to_set;
     bool ok = true;
     int uriType = getUriType(sys, sys.fims_dependencies->uri_view);
-    if (uriType == 1) // multi-set
+    if (uriType == 1) // multi-set input uri
     {
         simdjson::ondemand::object set_obj;
         if (const auto err = doc.get(set_obj); err)
@@ -873,7 +893,7 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
 
         return ok;
     }
-    else if (uriType == 2) // single-set
+    else if (uriType == 2) // single-set input uri
     {
         if (sys.debug)
         {
@@ -988,7 +1008,6 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
         sys.db_mutex.unlock();
         return true;
     }
-
     return false;
 }
 

@@ -553,7 +553,7 @@ void queuePubs(GcomSystem *sys)
             PubPoint *point = pair.second;
             auto &dbPoint = point->dbPoint;
             has_one_point = true;
-            format_point_with_key(send_buf, dbPoint, point->value, point->flags, &point->changeTime);
+            format_point(send_buf, dbPoint, point->value, point->flags, &point->changeTime, true);
             FORMAT_TO_BUF(send_buf, R"(,)");
         }
 

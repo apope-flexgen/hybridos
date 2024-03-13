@@ -16,17 +16,17 @@ CLIENT_PORT = 4041
 SERVER_PORT = 4040
 
 # Do you want to generate new tests or use what is in LOCAL_PYTHON_SCRIPT_DIR/test_configs already?
-NEW_TEST_CASES = True
+NEW_TEST_CASES = False
 
 # If you have a local build in the LOCAL_HYBRIDOS_DIR/INTERFACE_DIR/build/release directory,
 # change this to false
-USE_LATEST_RELEASE = True
+USE_LATEST_RELEASE = False
 
 # All you really need is the configs directory.
 # The other directories will be made for you.
-CONFIGS_DIR = "configs"
-TEST_CONFIG_DIR = "test_configs"
-TEST_OUTPUT_DIR = "test_output"
-TEST_LOG_DIR = "logs"
-TEST_CONSOLE_OUTPUT_DIR="console"
+CONFIGS_DIR = "configs/bitfield_and_enum_tests"
+TEST_CONFIG_DIR = "test_configs/bitfield_and_enum_tests"
+TEST_OUTPUT_DIR = "test_output/bitfield_and_enum_tests"
+TEST_LOG_DIR = "logs/bitfield_and_enum_tests"
+TEST_CONSOLE_OUTPUT_DIR="console/bitfield_and_enum_tests"
 DIRS = [CONFIGS_DIR, TEST_CONFIG_DIR, TEST_OUTPUT_DIR, TEST_LOG_DIR, TEST_CONSOLE_OUTPUT_DIR]

@@ -37,15 +37,17 @@ def load_output_files():
         try:
             with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONFIG_DIR}/{client_filename}",
                       "r", encoding="utf-8") as file:
-                client_file = json.loads(file)
-        except:
-            pass
+                text = file.read()
+                client_file = json.loads(text)
+        except Exception as e:
+            print(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONFIG_DIR}/{client_filename}: {e}")
         try:
             with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONFIG_DIR}/{server_filename}",
                       "r", encoding="utf-8") as file:
-                server_file = json.loads(file)
-        except:
-            pass
+                text = file.read()
+                server_file = json.loads(text)
+        except Exception as e:
+            print(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONFIG_DIR}/{server_filename}: {e}")
         OUTPUT_FILE_CONTENT.append((client_file, server_file))
 
 

@@ -182,9 +182,9 @@ def containers_exist() -> bool:
     Check if the containers needed for testing already exist. Assume they have the correct
     dependencies if they DO exist.
     '''
-    result1 = subprocess_run_quiet(["docker", "ps", "--filter", f"name={CLIENT_CONTAINER}"])
+    result1 = subprocess_run_quiet(["docker", "ps", "-a", "--filter", f"name={CLIENT_CONTAINER}"])
     output1 = CLIENT_CONTAINER in result1.stdout
-    result2 = subprocess_run_quiet(["docker", "ps", "--filter", f"name={SERVER_CONTAINER}"])
+    result2 = subprocess_run_quiet(["docker", "ps", "-a", "--filter", f"name={SERVER_CONTAINER}"])
     output2 = SERVER_CONTAINER in result2.stdout
     return output1 and output2
 

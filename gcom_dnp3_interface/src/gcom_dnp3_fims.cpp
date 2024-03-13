@@ -66,7 +66,7 @@ void emit_event(fims *pFims, const char *source, const char *message, int severi
     }
     else
     {
-        std::cout << __func__ << " message " << message << " fims not connected" << std::endl;
+        FPS_INFO_LOG("%s\n", message);
     }
 }
 
@@ -253,8 +253,14 @@ int getUriType(GcomSystem &sys, std::string_view uri)
         const auto multi = it->second->multi;
         if (multi)
             return 1;
-        else
-            return 2;
+        else {
+            const auto bit = it->second->bit;
+            if (bit)
+                return 5;
+            else
+                return 2;
+        }
+            
     }
     it = sys.outputStatusUriMap.find(suri);
     if (it != sys.outputStatusUriMap.end())
@@ -262,10 +268,25 @@ int getUriType(GcomSystem &sys, std::string_view uri)
         const auto multi = it->second->multi;
         if (multi)
             return 3;
-        else
-            return 4;
+        else{
+            const auto bit = it->second->bit;
+            if (bit)
+                return 6;
+            else
+                return 4;
+        }
     }
     return -1;
+}
+
+std::string_view getUriElement(std::string_view uri) {
+    size_t lastSlashPos = uri.find_last_of('/');
+    if (lastSlashPos != std::string_view::npos) {
+        return uri.substr(lastSlashPos + 1, uri.length()); // Extract substring after the last slash
+    } else {
+        // If no slash found, return the entire URI
+        return uri;
+    }
 }
 
 bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
@@ -822,7 +843,7 @@ void replyToFullGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
         if (!spam_limit(&sys, sys.fims_errors))
         {
             FPS_ERROR_LOG("Listener for '%s', could not send replyto fims message. Exiting",
-                            sys.fims_dependencies->name.c_str());
+                          sys.fims_dependencies->name.c_str());
             FPS_LOG_IT("fims_send_error");
         }
     }
@@ -847,14 +868,45 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
             if (dbPoint)
             {
                 double value;
-                if(((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog){
+                if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog)
+                {
                     value = dbPoint->data.analog.value;
-                } else if(((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter){
+                }
+                else if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter)
+                {
                     value = dbPoint->data.counter.value;
-                } else {
+                }
+                else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
+                         ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+                         ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+                         ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32)
+                {
+                    if (((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate)
+                    {
+                        value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value;
+                    }
+                    else
+                    {
+                        value = dbPoint->data.analog.value;
+                    }
+                }
+                else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+                         ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB)
+                {
+                    if (((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate)
+                    {
+                        value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value;
+                    }
+                    else
+                    {
+                        value = static_cast<double>(dbPoint->data.binary.value);
+                    }
+                }
+                else
+                {
                     value = static_cast<double>(dbPoint->data.binary.value);
                 }
-                format_point_with_key(send_buf, dbPoint, value, dbPoint->flags, &dbPoint->timeStamp);
+                format_point(send_buf, dbPoint, value, dbPoint->flags, &dbPoint->timeStamp, true);
                 FORMAT_TO_BUF(send_buf, R"(, )");
                 has_one_point = true;
             }
@@ -862,24 +914,61 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
         send_buf.resize(send_buf.size() - (2 * has_one_point)); // get rid of the last comma and space if we have them
         FORMAT_TO_BUF(send_buf, R"(}})");
     }
-    else if(uriType == 2)
+    else if (uriType == 2 || uriType == 5)
     {
         dbPoint = getDbVar(sys, sys.fims_dependencies->uri_view, {});
         if (dbPoint)
         {
             send_buf.clear();
             double value;
-            if(((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog){
+            if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog)
+            {
                 value = dbPoint->data.analog.value;
-            } else if(((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter){
+            }
+            else if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter)
+            {
                 value = dbPoint->data.counter.value;
-            } else {
+            }
+            else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
+                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32)
+            {
+                if (((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate)
+                {
+                    value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value;
+                }
+                else
+                {
+                    value = dbPoint->data.analog.value;
+                }
+            }
+            else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB)
+            {
+                if (((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate)
+                {
+                    value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value;
+                }
+                else
+                {
+                    value = static_cast<double>(dbPoint->data.binary.value);
+                }
+            }
+            else
+            {
                 value = static_cast<double>(dbPoint->data.binary.value);
             }
-            format_point_value(send_buf, dbPoint, value);
+            if(uriType == 5) {
+                std::string bitstring = std::string(getUriElement(sys.fims_dependencies->uri_view));
+                format_individual_bit(send_buf, dbPoint, value, dbPoint->flags, &dbPoint->timeStamp, bitstring);
+            } else {
+                format_point(send_buf, dbPoint, value, dbPoint->flags, &dbPoint->timeStamp, false);
+            }
             has_one_point = true;
         }
-    }else if (uriType == 3)
+    }
+    else if (uriType == 3)
     {
         send_buf.clear();
         FORMAT_TO_BUF(send_buf, R"({{)");
@@ -888,8 +977,17 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
             dbPoint = dbVar.second;
             if (dbPoint)
             {
-                FORMAT_TO_BUF(send_buf, R"("{}": )", dbVar.first);
-                format_point_with_key(send_buf, dbPoint, ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value, dbPoint->flags, &dbPoint->timeStamp);
+                double value;
+                if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+                {
+                    value = dbPoint->data.analog.value;
+                }
+                else
+                {
+                    value = static_cast<double>(dbPoint->data.binary.value);
+                }
+
+                format_point(send_buf, dbPoint, value, dbPoint->flags, &dbPoint->timeStamp, true);
                 FORMAT_TO_BUF(send_buf, R"(, )");
                 has_one_point = true;
             }
@@ -897,13 +995,29 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
         send_buf.resize(send_buf.size() - (2 * has_one_point)); // get rid of the last comma and space if we have them
         FORMAT_TO_BUF(send_buf, R"(}})");
     }
-    else if(uriType == 4)
+    else if (uriType == 4 || uriType == 6)
     {
         dbPoint = getDbVar(sys, sys.fims_dependencies->uri_view, {});
         if (dbPoint)
         {
+            double value = 0.0;
             send_buf.clear();
-            format_point_value(send_buf, dbPoint, ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value);
+            if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+            {
+                value = dbPoint->data.analog.value;
+            }
+            else
+            {
+                value = static_cast<double>(dbPoint->data.binary.value);
+            }
+
+            if(uriType == 6) {
+                std::string bitstring = std::string(getUriElement(sys.fims_dependencies->uri_view));
+                format_individual_bit(send_buf, dbPoint, value, dbPoint->flags, &dbPoint->timeStamp, bitstring);
+            } else {
+                format_point(send_buf, dbPoint, value, dbPoint->flags, &dbPoint->timeStamp, false);
+            }
+
             has_one_point = true;
         }
     }

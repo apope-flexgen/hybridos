@@ -85,9 +85,16 @@ def compare_messages(test_id, expected_message, actual_message):
                 reject_values=[]
             if isinstance(actual_message['body'],dict) and key in actual_message['body']:
                 value = actual_message['body'][key]
-                if (not isinstance(value, dict)) and abs(value - expected_value) <= tolerance:
+                if (not isinstance(value, dict)) and (not isinstance(value, list)) and abs(value - expected_value) <= tolerance:
                     continue
                 if value in reject_values:
+                    return_value = INCORRECT_VALUE
+                    return_string = f'Test Case {test_id}:\n' + \
+                                    f'Expected: "{key}":{expected_value}\n' + \
+                                    f'Got     : "{key}":{value}\n'
+                elif isinstance(value, list):
+                    if value == expected_value:
+                        continue
                     return_value = INCORRECT_VALUE
                     return_string = f'Test Case {test_id}:\n' + \
                                     f'Expected: "{key}":{expected_value}\n' + \
@@ -141,13 +148,21 @@ def compare_messages(test_id, expected_message, actual_message):
                 tolerance = 0
                 reject_values=[]
             value = actual_message['body']
-            if (not isinstance(value, dict)) and abs(value - expected_value) <= tolerance:
+            if (not isinstance(value, dict)) and (not isinstance(value, list)) and abs(value - expected_value) <= tolerance:
                 pass
             elif value in reject_values:
                 return_value = INCORRECT_VALUE
                 return_string = f'Test Case {test_id}:\n' + \
                                 f'Expected: "{key}":{expected_value}\n' + \
                                 f'Got     : "{key}":{value}\n'
+            elif isinstance(value, list):
+                if value == expected_value:
+                    pass
+                else:
+                    return_value = INCORRECT_VALUE
+                    return_string = f'Test Case {test_id}:\n' + \
+                                    f'Expected: "{key}":{expected_value}\n' + \
+                                    f'Got     : "{key}":{value}\n'
             elif isinstance(value, dict):
                 if 'value' in value:
                     value = value['value']

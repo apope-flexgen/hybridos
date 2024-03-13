@@ -8,7 +8,7 @@
         "id": "hoth",
         "debug": 0,
         "unsol": 1,
-        "ip_address": "172.17.0.3",
+        "ip_address": "172.10.0.3",
         "master_address": 3,
         "station_address": 4,
         "local_uri": "/local_test",
@@ -26,7 +26,8 @@
         "component_watchdog_status_freq": 1000,
         "component_watchdog_warning_timeout": 2000,
         "component_watchdog_fault_timeout": 2000,
-        "component_watchdog_recovery_timeout": 500
+        "component_watchdog_recovery_timeout": 500,
+        "pub_outputs":true
     },
     "registers": [
         {
@@ -37,7 +38,13 @@
                     "offset": 0,
                     "name": "Test OUTPut To Site",
                     "unit": "MW",
-                    "signed": true,
+                    "individual_bits": true,
+                    "bit_strings": [
+                        "first_string",
+                        "second_string",
+                        "third_string",
+                        "fourth_string"
+                    ],
                     "uri": "/testcli/testop"
                 },
                 {
@@ -202,7 +209,14 @@
                     "evariation": "Group32Var1",
                     "clazz": 1,
                     "uri": "/test/analog",
-                    "name": "analog_1"
+                    "name": "analog_1",
+                    "individual_bits": true,
+                    "bit_strings": [
+                        "first_string",
+                        "second_string",
+                        "third_string",
+                        "fourth_string"
+                    ]
                 }
             ]
         }

@@ -228,7 +228,7 @@ int getUris(GcomSystem &sys,int who);
 int getSubs(GcomSystem &sys,const char **subs, int num, int who);
 bool checkUris(GcomSystem &sys,int who);
 int addBits(GcomSystem &sys,TMWSIM_POINT *dbPoint, cJSON *bits);
-int addBit(GcomSystem &sys,TMWSIM_POINT *dbPoint, const char *bit);
+int addEnum(GcomSystem &sys, TMWSIM_POINT *dbPoint, cJSON *bits);
 char *confirmUri(GcomSystem &sys,TMWSIM_POINT *&dbPoint, const char *uri, int who, char *&name, int &flags);
 void showNewUris(GcomSystem &sys);
 void cleanUpDbMaps(GcomSystem &sys);

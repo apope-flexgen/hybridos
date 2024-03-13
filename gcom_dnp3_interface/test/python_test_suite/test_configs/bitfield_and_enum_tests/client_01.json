@@ -1,0 +1,3300 @@
+{
+  "git_commit_hash": null,
+  "git_branch": null,
+  "git_commit_author": null,
+  "AnOPInt32 Client Test 1": {
+    "commands": [
+      "sleep 10\n",
+      "fims_send -m pub -u /components/outputs32 '{\"individual_bits_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 2": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"individual_bits_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 3": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 4": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 5": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": false,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 6": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"individual_bits_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 7": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"bitfield_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 8": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"bitfield_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 9": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 10": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 11": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 12": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"bitfield_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 13": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"enum_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_register": [{"value":4, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 14": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_register": [{"value":3, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 15": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_register": [{"value":2, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 16": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 17": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 18": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"enum_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_register": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 1": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"individual_bits_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 2": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"individual_bits_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 3": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 4": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "first_string": true,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 5": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "first_string": false,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 6": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"individual_bits_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 7": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"bitfield_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 8": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"bitfield_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 9": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 10": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 11": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 12": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"bitfield_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 13": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"enum_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "enum_register": [{"value":4, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 14": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "enum_register": [{"value":3, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 15": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "enum_register": [{"value":2, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 16": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 17": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Client Test 18": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs16 '{\"enum_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs16",
+        "body": {
+          "enum_register": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 1": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"individual_bits_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 2": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"individual_bits_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 3": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 4": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "first_string": true,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 5": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "first_string": false,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 6": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"individual_bits_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 7": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"bitfield_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 8": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"bitfield_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 9": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 10": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 11": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 12": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"bitfield_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 13": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"enum_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "enum_register": [{"value":4, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 14": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "enum_register": [{"value":3, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 15": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "enum_register": [{"value":2, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 16": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 17": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Client Test 18": {
+    "commands": [
+      "fims_send -m pub -u /components/outputsF32 '{\"enum_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputsF32",
+        "body": {
+          "enum_register": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 1": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"individual_bits_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 2": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"individual_bits_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 3": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 4": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "first_string": true,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 5": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "first_string": false,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 6": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"individual_bits_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 7": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"bitfield_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 8": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"bitfield_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 9": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 10": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 11": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 12": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"bitfield_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 13": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"enum_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "enum_register": [{"value":4, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 14": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "enum_register": [{"value":3, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 15": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "enum_register": [{"value":2, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 16": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 17": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Client Test 18": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs '{\"enum_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs",
+        "body": {
+          "enum_register": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 1": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"individual_bits_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 2": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"individual_bits_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 3": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 4": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "first_string": true,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 5": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "first_string": false,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 6": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"individual_bits_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 7": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"bitfield_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 8": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"bitfield_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 9": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 10": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 11": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 12": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"bitfield_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 13": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"enum_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "enum_register": [{"value":4, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 14": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "enum_register": [{"value":3, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 15": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "enum_register": [{"value":2, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 16": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 17": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analog Client Test 18": {
+    "commands": [
+      "fims_send -m pub -u /components/analog '{\"enum_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/analog",
+        "body": {
+          "enum_register": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 1": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"individual_bits_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 2": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"individual_bits_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 3": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 4": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "first_string": true,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 5": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "first_string": false,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 6": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"individual_bits_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 7": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"bitfield_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 8": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"bitfield_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 9": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 10": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 11": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 12": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"bitfield_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 13": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"enum_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "enum_register": [{"value":4, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 14": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "enum_register": [{"value":3, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 15": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "enum_register": [{"value":2, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 16": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 17": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "counter Client Test 18": {
+    "commands": [
+      "fims_send -m pub -u /components/counter '{\"enum_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/counter",
+        "body": {
+          "enum_register": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Client Test 1": {
+    "commands": [
+      "fims_send -m pub -u /components/crob '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/crob",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Client Test 2": {
+    "commands": [
+      "fims_send -m pub -u /components/crob '{\"individual_bits_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/crob",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Client Test 3": {
+    "commands": [
+      "fims_send -m pub -u /components/crob '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/crob",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Client Test 4": {
+    "commands": [
+      "fims_send -m pub -u /components/crob '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/crob",
+        "body": {
+          "first_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Client Test 5": {
+    "commands": [
+      "fims_send -m pub -u /components/crob '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/crob",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Client Test 6": {
+    "commands": [
+      "fims_send -m pub -u /components/crob '{\"bitfield_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/crob",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Client Test 7": {
+    "commands": [
+      "fims_send -m pub -u /components/crob '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/crob",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Client Test 8": {
+    "commands": [
+      "fims_send -m pub -u /components/crob '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/crob",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Client Test 9": {
+    "commands": [
+      "fims_send -m pub -u /components/crob '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/crob",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Client Test 10": {
+    "commands": [
+      "fims_send -m pub -u /components/crob '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/crob",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Client Test 11": {
+    "commands": [
+      "fims_send -m pub -u /components/crob '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/crob",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Client Test 12": {
+    "commands": [
+      "fims_send -m pub -u /components/crob '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/crob",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Client Test 1": {
+    "commands": [
+      "fims_send -m pub -u /components/binaryOS '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binaryOS",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Client Test 2": {
+    "commands": [
+      "fims_send -m pub -u /components/binaryOS '{\"individual_bits_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binaryOS",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Client Test 3": {
+    "commands": [
+      "fims_send -m pub -u /components/binaryOS '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binaryOS",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Client Test 4": {
+    "commands": [
+      "fims_send -m pub -u /components/binaryOS '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binaryOS",
+        "body": {
+          "first_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Client Test 5": {
+    "commands": [
+      "fims_send -m pub -u /components/binaryOS '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binaryOS",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Client Test 6": {
+    "commands": [
+      "fims_send -m pub -u /components/binaryOS '{\"bitfield_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binaryOS",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Client Test 7": {
+    "commands": [
+      "fims_send -m pub -u /components/binaryOS '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binaryOS",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Client Test 8": {
+    "commands": [
+      "fims_send -m pub -u /components/binaryOS '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binaryOS",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Client Test 9": {
+    "commands": [
+      "fims_send -m pub -u /components/binaryOS '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binaryOS",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Client Test 10": {
+    "commands": [
+      "fims_send -m pub -u /components/binaryOS '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binaryOS",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Client Test 11": {
+    "commands": [
+      "fims_send -m pub -u /components/binaryOS '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binaryOS",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Client Test 12": {
+    "commands": [
+      "fims_send -m pub -u /components/binaryOS '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binaryOS",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binary Client Test 1": {
+    "commands": [
+      "fims_send -m pub -u /components/binary '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binary",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binary Client Test 2": {
+    "commands": [
+      "fims_send -m pub -u /components/binary '{\"individual_bits_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binary",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binary Client Test 3": {
+    "commands": [
+      "fims_send -m pub -u /components/binary '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binary",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binary Client Test 4": {
+    "commands": [
+      "fims_send -m pub -u /components/binary '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binary",
+        "body": {
+          "first_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binary Client Test 5": {
+    "commands": [
+      "fims_send -m pub -u /components/binary '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binary",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binary Client Test 6": {
+    "commands": [
+      "fims_send -m pub -u /components/binary '{\"bitfield_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binary",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binary Client Test 7": {
+    "commands": [
+      "fims_send -m pub -u /components/binary '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binary",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binary Client Test 8": {
+    "commands": [
+      "fims_send -m pub -u /components/binary '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binary",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binary Client Test 9": {
+    "commands": [
+      "fims_send -m pub -u /components/binary '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binary",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binary Client Test 10": {
+    "commands": [
+      "fims_send -m pub -u /components/binary '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binary",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binary Client Test 11": {
+    "commands": [
+      "fims_send -m pub -u /components/binary '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binary",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binary Client Test 12": {
+    "commands": [
+      "fims_send -m pub -u /components/binary '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/binary",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 19": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_individual_bits_register\":31}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 20": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_individual_bits_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 21": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_individual_bits_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 22": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 23": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 24": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_individual_bits_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": false,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 25": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_bitfield_register\":31}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "third_string"
+            },
+            {
+              "value": 4,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 26": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_bitfield_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "third_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 27": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_bitfield_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 28": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 29": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 30": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_bitfield_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 31": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_enum_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_enum_register": [{"value":4, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 32": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_enum_register": [{"value":3, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 33": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_enum_register": [{"value":2, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 34": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 35": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 36": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"skip_bits_enum_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_enum_register": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 37": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"enum_with_numbering\":21}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_with_numbering": [{"value":21, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 38": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"enum_with_numbering\":20}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_with_numbering": [{"value":20, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 39": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"enum_with_numbering\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_with_numbering": [{"value":7, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 40": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"enum_with_numbering\":6}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_with_numbering": [{"value":6, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 41": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"enum_with_numbering\":5}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_with_numbering": [{"value":5, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Client Test 42": {
+    "commands": [
+      "fims_send -m pub -u /components/outputs32 '{\"enum_with_numbering\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_with_numbering": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  }
+}

@@ -73,9 +73,9 @@ struct PointGroup
 
 struct char_dcmp
 {
-    bool operator()(const char *a, const char *b) const
+    bool operator()(std::string a, std::string b) const
     {
-        return strcmp(a, b) < 0;
+        return a < b;
     }
 };
 
@@ -99,10 +99,6 @@ typedef struct FlexPoint_t
 {
 public:
     GcomSystem *sys;
-    int min;               // heartbeat minimum value
-    int max;               // heartbeat maximum value
-    int incr;              // heartbeat increment value
-    bool sign;             // is this value signed or unsigned? (only used for integers)
     bool crob_string;      // whether or not the CROB value is represented as a string in fims messages
     bool crob_int;         // whether or not the CROB value is represented as an int in fims messages
     bool crob_bool;        // whether or not the CROB value is represented as true/false (output active/inactive) in fims messages
@@ -136,7 +132,7 @@ public:
     double last_operate_time = 0; // measured in seconds
 
     std::chrono::time_point<std::chrono::system_clock> last_pub; // time of last update
-    TMWTYPES_UCHAR lastFlags;
+    TMWTYPES_UCHAR lastFlags = DNPDEFS_DBAS_FLAG_RESTART;
 
     FimsFormat format; // how do we publish values? Naked, clothed, full
 
@@ -149,7 +145,10 @@ public:
     std::string crob_true = std::string("LATCH_ON");   // WHEN the crob is true, what is the string representation (e.g. "POWER_ON", "LATCH_ON", etc.)
     std::string crob_false = std::string("LATCH_OFF"); // WHEN the crob is false, what is the string representation (e.g. "POWER_OFF", "LATCH_OFF", etc.)
 
-    std::vector<std::pair<const char *, int>> dbBits; // if a point is represented as a bit string, these are the corresponding bits
+    bool is_bitfield = false;
+    bool is_enum = false;
+    bool is_individual_bits = false;
+    std::vector<std::pair<std::string, uint32_t>> dbBits; // if a point is represented as a bit string, these are the corresponding bits
 
     int value_set; // how many times has this value been set?
 
@@ -163,7 +162,6 @@ public:
         timeout = 0.0;
         crob_string = false;
         crob_int = false;
-        sign = false;
         value_set = 0;
         lastFlags = DNPDEFS_DBAS_FLAG_RESTART;
 
@@ -217,9 +215,6 @@ public:
     }
 } FlexPoint;
 
-// this is for the bits
-typedef std::map<const char *, std::pair<TMWSIM_POINT *, int>, char_dcmp> bits_map;
-
 typedef struct varList_t
 {
     varList_t(const char *iuri)
@@ -239,6 +234,7 @@ typedef struct varList_t
 
     std::string uri;
     bool multi;
+    bool bit;
     std::map<std::string, TMWSIM_POINT *> dbmap;
 } varList;
 
@@ -524,17 +520,17 @@ struct GcomSystem
 
     int debug;
 
-    std::map<const char *, std::pair<TMWSIM_POINT *, int>, char_dcmp> bitsMap;
     std::map<std::string, varList *> dburiMap;
     std::map<std::string, varList *> outputStatusUriMap;
+    std::map<std::string, varList *> individualBitsMap;
     std::shared_mutex db_mutex; // for R/W locking of TMWSIM_POINTs
     std::mutex error_mutex;
-    int parse_errors;
-    int point_errors;
-    int fims_errors;
-    int comms_errors;
-    int heartbeat_errors;
-    int watchdog_errors;
+    int parse_errors = 0;
+    int point_errors = 0;
+    int fims_errors = 0;
+    int comms_errors = 0;
+    int heartbeat_errors = 0;
+    int watchdog_errors = 0;
     
     Version git_version_info;
 
@@ -628,14 +624,14 @@ struct GcomSystem
         }
         outputStatusUriMap.clear(); // Clear the map
 
-        for (auto &pair : bitsMap)
+        for (auto &pair : individualBitsMap)
         {
-            if (pair.first != nullptr)
+            if (pair.second != nullptr)
             {
-                delete[] pair.first; // Deallocate memory for the char* key
+                delete pair.second; // Deallocate memory for varList* value
             }
         }
-        bitsMap.clear(); // Clear the map
+        individualBitsMap.clear(); // Clear the map
     };
 };
 

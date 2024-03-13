@@ -1636,6 +1636,7 @@ TEST_SUITE("dnp3_client")
                 auto &pub_work_vector = sys.fims_dependencies->uris_with_data[((FlexPoint *)dbPoint->flexPointHandle)->uri];
                 auto &pub_vals = pub_work_vector[0]->pub_vals;
                 auto &point = pub_vals[((FlexPoint *)(dbPoint->flexPointHandle))->name];
+                ASSERT(point != nullptr);
                 CHECK(point->dbPoint == dbPoint);
                 CHECK(point->value == dbPoint->data.analog.value);
                 CHECK(point->flags == dbPoint->flags);

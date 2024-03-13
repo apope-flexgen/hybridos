@@ -483,7 +483,7 @@ TMWTYPES_BOOL TMWDEFS_GLOBAL tmwtarg_setDateTime(
   ts.tv_nsec = 0;
 
   if( clock_settime(CLOCK_REALTIME, &ts) )
-    perror( "Time set failed.\n" );
+    LINIODIAG_ERRORMSG( "Time set failed.\n" );
 
   return(TMWDEFS_TRUE);
 }
