@@ -431,6 +431,9 @@ struct cfg
     std::map<std::string, std::shared_ptr<struct watchdog_struct>> watchdog_points;
     std::map<std::string, std::shared_ptr<struct pub_struct>> pubs;
 
+    bool debug_connection;
+    bool debug_response;
+
 
     // config_any
     void addPub(const std::string &base, const std::string &component_name, std::shared_ptr<component_struct> component, struct cfg *myCfg);
@@ -541,6 +544,8 @@ struct Uri_req
     static constexpr auto Full_Suffix = "_full";
     static constexpr auto Stats_Suffix = "_stats";
     static constexpr auto Server_Suffix = "_server";
+    static constexpr auto Connection_Suffix = "_debug_connection";
+    static constexpr auto Response_Suffix = "_debug_response";
 
     Uri_req()
     {
@@ -577,6 +582,8 @@ struct Uri_req
                 else if (uri_vec[idx] == Full_Suffix)                      is_full_request          =  true;
                 else if (uri_vec[idx] == Stats_Suffix)                     is_stats_request         =  true;
                 else if (uri_vec[idx] == Server_Suffix)                    is_server_request        =  true;
+                else if (uri_vec[idx] == Connection_Suffix)                is_debug_connection_request =  true;
+                else if (uri_vec[idx] == Response_Suffix)                  is_debug_response_request   =  true;
             }
         }
     };
@@ -597,6 +604,8 @@ struct Uri_req
         is_full_request = false;
         is_stats_request = false;
         is_server_request = false;
+        is_debug_connection_request =  false;
+        is_debug_response_request =  false;
         uri_vec.clear();
     }
 
@@ -634,6 +643,8 @@ struct Uri_req
     bool is_remote_request;
     bool is_full_request;
     bool is_stats_request;
+    bool is_debug_connection_request;
+    bool is_debug_response_request;
     bool is_server_request;
     bool is_request = false;
     int num_uris;

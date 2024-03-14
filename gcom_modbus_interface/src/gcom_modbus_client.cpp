@@ -120,6 +120,24 @@ int main(const int argc, const char *argv[]) noexcept
     bool fileOk = gcom_load_cfg_file(gcom_map, filename, myCfg, debug);
     fileOk |= gcom_load_overrides(myCfg, command_line_overrides_start, argc, argv);
 
+    // move this here to allow the "ip:" override to have an effect.
+    if (!myCfg.connection.is_RTU)
+    {
+        char new_ip[HOST_NAME_MAX + 1];
+        new_ip[HOST_NAME_MAX] = '\0';
+        auto ret = hostname_to_ip(myCfg.connection.ip_address, new_ip, HOST_NAME_MAX);
+        if (ret == 0)
+        {
+            myCfg.connection.ip_address = new_ip;
+        }
+        else
+        {
+            FPS_ERROR_LOG("ip_address \"%s\" isn't valid or can't be found from the local service file", myCfg.connection.ip_address);
+            return 0;
+        }
+    }
+
+
     if (!fileOk)
     {
         FPS_ERROR_LOG("Unable to locate or load config file, Quitting");

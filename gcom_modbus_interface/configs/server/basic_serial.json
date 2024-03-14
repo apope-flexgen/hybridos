@@ -1,0 +1,42 @@
+{
+"system":{
+                  "name":"modbus_server",
+                  "protocol":"Modbus RTU",
+                  "id":"modbus_server",
+                  "serial_device":"/dev/ttyUSB1",
+                  "baud_rate":115200,
+                  "parity":"none",
+                  "data_bits":8,
+                  "stop_bits":1,
+                  "xip_address":"0.0.0.0",
+                  "xport":502,
+                  "device_id":2
+},
+"registers":[
+             {
+             "device_id":2,
+             "holding_registers":[
+                     {"id":"voltage_ab",       "name":"voltage_ab",     "offset":28,   "size":2,   "scale":1,   "signed":true,    "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"voltage_bc",       "name":"voltage_bc",     "offset":30,   "size":2,   "scale":1,   "signed":true,    "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"voltage_ca",       "name":"voltage_ca",     "offset":32,   "size":2,   "scale":1,   "signed":true,    "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"current_a",        "name":"current_a",      "offset":34,   "size":2,   "scale":10,   "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"current_b",        "name":"current_b",      "offset":36,   "size":2,   "scale":10,   "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"current_c",        "name":"current_c",      "offset":38,   "size":2,   "scale":10,   "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"frequency",        "name":"frequency",      "offset":40,   "size":2,   "scale":100,  "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"active_power",     "name":"active_power",   "offset":42,   "size":2,   "scale":10,   "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"reactive_power",   "name":"reactive_power", "offset":44,   "size":2,   "scale":10,   "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"power_factor",     "name":"power_fsctor",  "offset":46,    "size":2,   "scale":100,  "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"apparent_power",   "name":"apparent_power","offset":49,    "size":2,   "scale":10,                    "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"kwh_delivered",    "name":"kwh_delivered", "offset":91,    "size":2,                 "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"kwh_received",     "name":"kwh_received",  "offset":93,    "size":2,   "scale":1,    "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"thd_v_l1",         "name":"thd_v_l1",      "offset":109,   "size":2,   "scale":100,  "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"thd_v_l2",         "name":"thd_v_l2",      "offset":111,   "size":2,   "scale":100,  "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"thd_v_l3",         "name":"thd_v_l3",      "offset":113,   "size":2,   "scale":100,  "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"thd_i_l1",         "name":"thd_i_l1",      "offset":115,   "size":2,   "scale":100,  "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"thd_i_l2",         "name":"thd_i_l2",      "offset":117,   "size":2,   "scale":100,  "signed":true,   "uri":"/components/xpv_ion_8650b"   },
+                     {"id":"thd_i_l3",         "name":"thd_i_l3",      "offset":119,   "size":2,   "scale":100,  "signed":true,   "uri":"/components/xpv_ion_8650b"   }
+                 ]
+            }
+   ]
+
+}

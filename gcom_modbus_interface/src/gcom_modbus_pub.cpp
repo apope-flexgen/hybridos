@@ -83,7 +83,7 @@ bool killThread();
 
 
 
-void pubCallback(std::shared_ptr<TimeObject>t, void *p)
+void pubCallback(std::shared_ptr<TimeObject>tObj, void *p)
 {
     bool debug = false;
     std::lock_guard<std::mutex> lock2(cb_output_mutex);
@@ -97,7 +97,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
 
     // if (1 || mypub->cfg->pub_debug)
     // {
-    //     std::cout << "Callback for :" << t->name
+    //     std::cout << "Callback for :" <<tObj->name
     //                 << " running ;  num_threads: " << num_threads
     //                 << std::endl;
     // }
@@ -108,7 +108,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
     {
         if (mypub->cfg->pub_debug)
         {
-            std::cout << "Callback for :" << t->name
+            std::cout << "Callback for :" <<tObj->name
                       << " Skipped : num_threads: " << num_threads
                       << std::endl;
         }
@@ -117,10 +117,10 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
     }
 
     if (mypub->cfg->pub_debug)
-        std::cout << "Callback for :" << t->name
+        std::cout << "Callback for :" <<tObj->name
                   << " executed at : " << rtime
-                  << " with sync: " << t->sync
-                  << " and run: " << t->run
+                  << " with sync: " <<tObj->sync
+                  << " and run: " <<tObj->run
                   << " and psid: " << mypub->id
                   << " num_threads: " << num_threads
                   << std::endl;
@@ -200,7 +200,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
         }
     }
 
-    // std::cout << "Callback for :" << t->name
+    // std::cout << "Callback for :" <<tObj->name
     //                 << " running ;  num remote points : " << num_remote_points
     //                 << " num local points : " << num_local_points
     //                 << std::endl;
@@ -221,7 +221,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
         io_work->tNow = tNow;
         io_work->work_group = work_group_size;
         io_work->work_id = work_id++;
-        io_work->work_name = t->name;
+        io_work->work_name =tObj->name;
         // io_work->register_groups = register_group;
         io_work->component = compshr;
         io_work->pub_struct = mypub;
@@ -263,7 +263,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
         // set the pending count to 3 to allow another attempt
         if (mypub->pend_timeout == 0.0 ) {
             FPS_INFO_LOG("Server stall  too many pending pubs [%d],  aborting poll name: %s for 5 seconds, num_threads : %d"
-                             , mypub->pending, t->name.c_str(), num_threads);
+                             , mypub->pending,tObj->name.c_str(), num_threads);
             mypub->pend_timeout = tNow + 5.0;
 
             if (mypub->kill_timeout == 0.0 ) {
@@ -278,7 +278,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
         if ((mypub->kill_timeout> 0) &&  (mypub->kill_timeout < tNow)) {
             mypub->kill_timeout = 0.0;
             FPS_INFO_LOG("Server stall  poll name  [%s],  killing thread connection "
-                             , t->name.c_str());
+                             ,tObj->name.c_str());
             // force a reconnection
             killThread();
             mypub->pending = 0;
@@ -288,7 +288,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
     else
     {
         mypub->pending++;
-        if(0)std::cout << " pending pubs  ok running poll; name: "<< t->name << " size :" << work_group_size<< std::endl;
+        if(0)std::cout << " pending pubs  ok running poll; name: "<<tObj->name << " size :" << work_group_size<< std::endl;
     }
 
     for (auto io_work : io_work_vec)
@@ -296,7 +296,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
         io_work->tNow = tNow;
         io_work->work_group = work_group_size;
         io_work->work_id = work_id++;
-        io_work->work_name = t->name;
+        io_work->work_name =tObj->name;  // this sets up the group name
         // io_work->register_groups = register_group;
         io_work->component = compshr;
         io_work->pub_struct = mypub;
@@ -340,7 +340,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
 
     if (!sent_something)
     {
-        syncTimeObjectByName(t->name, mypub->cfg->syncPct);
+        syncTimeObjectByName(tObj->name, mypub->cfg->syncPct);
     }
 }
 

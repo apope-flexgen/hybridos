@@ -242,6 +242,9 @@ bool gcom_load_cfg_file(std::map<std::string, std::any> &jsonMapOfConfig, const 
         FPS_ERROR_LOG("Unable to parse config file [%s]. Quitting.", filename);
         return false;
     }
+    myCfg.debug_connection = false;
+    myCfg.debug_response = false;
+
     // extract connection information into myCfg
     ok = extract_connection(jsonMapOfConfig, "connection", myCfg, false);
     if (!ok)
@@ -266,8 +269,16 @@ bool gcom_load_cfg_file(std::map<std::string, std::any> &jsonMapOfConfig, const 
         }
     }
 #endif
-    FPS_INFO_LOG("Connection IP: [%s]. Port: [%d]", myCfg.connection.ip_address, myCfg.connection.port);
-    // now load up the components we have found
+    if (! myCfg.connection.is_RTU)
+    {
+        FPS_INFO_LOG("TCP Connection IP: [%s]. Port: [%d]", myCfg.connection.ip_address, myCfg.connection.port);
+        // now load up the components we have found
+    }
+    else
+    {
+        FPS_INFO_LOG("RTU Connection serial_device: [%s]", myCfg.connection.device_name);
+        // now load up the components we have found
+    }
     for (auto &component : myCfg.components)
     {
 #ifdef FPS_DEBUG_MODE
@@ -512,20 +523,8 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
         FPS_INFO_LOG("Transfer timeout must be between 0.05 and 30.0 seconds. Configured value is [%f] seconds. Using default of 30s.", myCfg.connection.transfer_timeout);
         myCfg.connection.transfer_timeout = 30.00;
     }
-    // // transfer_timeout
-    // ok &= getItemFromMap(jsonMapOfConfig, "connection.transfer_timeout", myCfg.connection.transfer_timeout, 500, true, true, false);
-    // if (ok && (myCfg.connection.transfer_timeout < 10 || myCfg.connection.transfer_timeout > 2000))
-    // {
-    //     FPS_INFO_LOG("Transfer timeout must be between 10 and 2000 milli seconds. Configured value is [%d] milliseconds. Using default of 500.", myCfg.connection.transfer_timeout);
-    //     myCfg.connection.transfer_timeout = 500;
-    // }
-    // double dval = 0.5;
-    // ok &= getItemFromMap(jsonMapOfConfig, "connection.sync_percent", myCfg.connection.syncPct, dval, true, true, false);
-    // if (ok && (myCfg.connection.syncPct > 0.0) && (myCfg.connection.syncPct < 0.1 || myCfg.connection.syncPct > 0.9))
-    // {
-    //     FPS_INFO_LOG("Sync Percent must be between 0.1 and 0.9. Configured value is [%f] milliseconds. Using default of 0.5.", myCfg.connection.syncPct);
-    //     myCfg.connection.syncPct = 0.5;
-    // }
+    
+    FPS_INFO_LOG("Transfer timeout. Configured value is [%f] seconds. ", myCfg.connection.transfer_timeout);
 
     // max_num_connections
     ok &= getItemFromMap(jsonMapOfConfig, "connection.max_num_connections", myCfg.connection.max_num_connections, 1, true, true, false);
@@ -578,7 +577,7 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
     ok &= getItemFromMap(jsonMapOfConfig, "connection.serial_device", myCfg.connection.device_name, std::string(""), false, false, false);
     if (ok && !myCfg.connection.device_name.empty())
     {
-        error_message = check_str_for_error(myCfg.connection.name);
+        error_message = check_str_for_error(myCfg.connection.device_name,  R"({}\ "%)");
         if (error_message.length() > 0)
         {
             FPS_ERROR_LOG("Connection field \"serial_device\" %s.", error_message);
@@ -587,6 +586,7 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
         }
         else
         {
+            FPS_INFO_LOG("Connection field \"serial_device\" %s.", myCfg.connection.device_name.c_str());
             is_RTU = true;
         }
     }
@@ -799,8 +799,8 @@ bool extract_components(std::map<std::string, std::any> jsonMapOfConfig, const s
             }
             int ival = (int)(myCfg.syncPct * 100.0);
             ok &= getItemFromMap(jsonComponentMap, "sync_percent", ival, ival, true, true, false);
-            if(0)FPS_INFO_LOG("component [%s] freq [%d] Sync Percent ival [%d]."
-                    , component->id.c_str(), component->frequency, ival);
+            if(1)FPS_INFO_LOG("component [%s] freq [%d] Sync Percent ival [%d] cfg pub_sync [%s]."
+                    , component->id.c_str(), component->frequency, ival, (myCfg.pub_sync?"true":"false"));
             //if (ok)
             {
                 if ( (ival > 0) && (ival < 10 || ival > 90))

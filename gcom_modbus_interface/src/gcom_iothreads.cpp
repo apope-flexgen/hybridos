@@ -107,8 +107,18 @@ void  DisConnect(struct cfg &myCfg, ThreadControl &tc, std::shared_ptr<IO_Thread
     {
  
         char message[1024];
-        snprintf(message, 1024, "Modbus Client [%s] Thread id %d Disconnecting from [%s] on port [%d]",
-                myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+        if(io_thread->myCfg->connection.is_RTU)
+        {
+            snprintf(message, 1024, "Modbus Client [%s] Thread id %d disconnecting from [%s]", io_thread->myCfg->connection.name.c_str()
+                                                                                            , io_thread->tid
+                                                                                            , io_thread->myCfg->connection.device_name.c_str());
+        } 
+        else
+        {
+            snprintf(message, 1024, "Modbus Client [%s] Thread id %d disconnecting from [%s] on port [%d]", myCfg.connection.name.c_str()
+            , io_thread->tid, io_thread->ip.c_str()
+            , io_thread->port);
+        }
 
         FPS_INFO_LOG("%s", message);
         emit_event(&myCfg.fims_gateway, "Modbus Client", message, 1);
@@ -125,8 +135,17 @@ void  SetConnect(struct cfg &myCfg, ThreadControl &tc,std::shared_ptr<IO_Thread>
         tc.num_connected_threads++;
         io_thread->connected = true;
         char message[1024];
-        snprintf(message, 1024, "Modbus Client [%s] Thread id %d Connecting to[%s] on port [%d]",
+        if(myCfg.connection.is_RTU)
+        {
+            snprintf(message, 1024, "Modbus Client [%s] Thread id %d connecting to [%s]", myCfg.connection.name.c_str()
+                                                                                            , io_thread->tid
+                                                                                            , myCfg.connection.device_name.c_str());
+        }
+        else
+        {
+             snprintf(message, 1024, "Modbus Client [%s] Thread id %d connecting to[%s] on port [%d]",
                 myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+        }
 
         FPS_INFO_LOG("%s", message);
         emit_event(&myCfg.fims_gateway, "Modbus Client", message, 1);
@@ -175,8 +194,18 @@ void getConnectTimes(std::stringstream &ss, bool include_key)
             if(!io_thread->is_local)
             {
                 ss << ",\"connected\":"                    << (io_thread->connected?"true":"false") << ",";
-                ss << "\"ip_address\": \""                << io_thread->ip.c_str()<< "\",";
-                ss << "\"port\":" << io_thread->port      << ",";
+                if(io_thread->myCfg->connection.is_RTU)
+                {
+                    //snprintf(message, 1024, "Modbus Client [%s] Thread id %d disconnecting from [%s]", io_thread->myCfg->connection.name.c_str()
+                    //                                                                        , io_thread->tid
+                    //                                                                        , io_thread->myCfg->connection.device_name.c_str());
+                    ss << "\"serial_device\": \""                << io_thread->myCfg->connection.device_name.c_str()<< "\",";
+                }
+                else
+                {
+                    ss << "\"ip_address\": \""                << io_thread->ip.c_str()<< "\",";
+                    ss << "\"port\":" << io_thread->port      << ",";
+                }
                 ss << "\"time_to_connect\":\""            << io_thread->connect_time << " ms\",";
                 {
                     std::unique_lock<std::mutex> lock(io_thread->stat_mtx); 
@@ -1273,7 +1302,7 @@ void runThreadWork(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std:
 
     // TODO check this
     // when connected the modbus timeout is set to transfer time
-    // if the modbus transaction times out the modbus is disconnected 
+    // if the modbus transfer times out the modbus is disconnected 
     // we can try a reconnect at the same transfer time but if that fails then we need to use the delayed 
     // connect concept.
     // a network glitch will be either short or longer.
@@ -1590,10 +1619,12 @@ void ioThreadFunc(ThreadControl &control, struct cfg &myCfg, std::shared_ptr<IO_
                             {
                                 //io_thread->transfer_timeout += 0.1;
                                 std::cout << "Done  io_work " << io_work->mynum 
-                                    << " Thread_connected " << io_thread->connected
-                                    << " num_threads " << num_threads
-                                    << " elapsed mS " << (etime - stime) * 1000 
-                                    << " transaction time  mS " << io_thread->transfer_timeout * 1000 
+                                    << " Thread_connected: " << io_thread->connected
+                                    << " num_threads:" << num_threads
+                                    << " num_registers:" << io_work->num_registers
+                                    << " elapsed mS:" << (etime - stime) * 1000 
+                                    << " thread transfer timeout mS: " << io_thread->transfer_timeout * 1000 
+                                    << " cfg transfer timeout mS: " << myCfg.connection.transfer_timeout * 1000 
                                     << std::endl;
                             }
 
@@ -2113,7 +2144,8 @@ void discardGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg, bool ok
 // creates a new pubgroup key if needed
 bool check_pubgroup_key(std::string key, std::shared_ptr<IO_Work> io_work)
 {
-    if ((!io_work->local) && (!io_work->data_error)){
+    //if ((!io_work->local) && (!io_work->data_error)){
+    if ((!io_work->data_error)){
         if (pubGroups.find(key) == pubGroups.end())
         {
             pubGroups[key] = PubGroup(key, io_work, false);
@@ -2131,17 +2163,15 @@ bool check_pubgroup_key(std::string key, std::shared_ptr<IO_Work> io_work)
 void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
 {
 
+    double tNow =  get_time_double();
     std::string key = io_work->work_name; // + std::to_string(io_work->work_id);
-    //std::cout << __func__ << " io_work->work_name " << key <<  std::endl;
 
-    bool debug = myCfg.connection.debug;
+    bool debug = myCfg.debug_response;
 
     if (io_work->wtype == WorkTypes::Set) //  || (io_work->wtype == WorkTypes::SetMulti))
     {
         if (io_work->local)
         {
-            if (debug)
-                std::cout << "it was a local set" << std::endl;
             if ((io_work->register_type == cfg::Register_Types::Holding) || (io_work->register_type == cfg::Register_Types::Input))
             {
                 local_write_registers(myCfg, io_work, debug);
@@ -2154,14 +2184,20 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
     }
     else if (io_work->wtype == WorkTypes::Get) //  || (io_work->wtype == WorkTypes::SetMulti))
     {
-        if(0)std::cout << __func__ << " type get , io_work->work_name : " << key 
+        if(debug)
+            std::cout << __func__ 
+                << "[" << (tNow - 0.0) << "] "
+                << "\t io_work->tNow : " << io_work->tNow 
+                << "\t delay : " << (tNow - io_work->tNow) 
+                << "\ttype get , io_work->work_name : " << key 
+                << " local " << (io_work->local?"true":"false")
                 << " work_group " << io_work->work_group
+                << " work_id " << io_work->work_id
                 << std::endl;
 
         if (io_work->local)
         {
-            // if (debug ||( io_work->offset == 294))
-            std::cout << "it is a local get" << std::endl;
+            // Do the local read registers rather than using the modbus connection
             if ((io_work->register_type == cfg::Register_Types::Holding) || (io_work->register_type == cfg::Register_Types::Input))
             {
                 local_read_registers(myCfg, io_work, debug);
@@ -2183,13 +2219,6 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
         // is it a set ?
         if (io_work->wtype == WorkTypes::Set) //  || (io_work->wtype == WorkTypes::SetMulti))
         {
-
-            // TODO we need the name and value here
-            // std::stringstream string_stream;
-            // gcom_modbus_decode_debug(io_work, string_stream, myCfg, true, false);
-            // reply = "{\"gcom\":\"Modbus Set\",\"status\":\"Success\","+string_stream.str()+"}";
-
-            // std::cout << " set result :" << reply << std::endl; 
 
             if (io_work->errors < 0)
                 reply = "{\"gcom\":\"Modbus Set\",\"status\":\"Failed\"}";
@@ -2262,7 +2291,7 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
     else
     {
         // if we get a new (later) tNow then discard and start again
-        if (myCfg.connection.debug)
+        if (myCfg.debug_connection)
             FPS_DEBUG_LOG("Checking pubgroup %s size %d time %f against incoming %f",  
                             key.c_str(), (int)pubGroups[key].works.size(), pubGroups[key].tNow, io_work->tNow);
         if (io_work->tNow < pubGroups[key].tNow)
@@ -2280,7 +2309,7 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
         // did we get a match if so add to the group
         else if (io_work->tNow == pubGroups[key].tNow)
         {
-            if (myCfg.connection.debug)
+            if (myCfg.debug_connection)
                 FPS_DEBUG_LOG("Adding incoming io_work; current pubgroup id %f is the same as id %f", pubGroups[key].tNow, io_work->tNow);
             pubGroups[key].works.push_back(io_work);
             pubGroups[key].pub_struct = io_work->pub_struct;
@@ -2326,7 +2355,7 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
     {
         // Callback: Process group
         pubGroups[key].done = true;
-        if (myCfg.connection.debug)
+        if (myCfg.debug_connection)
             FPS_DEBUG_LOG("Completing group %s\ttnow: %f\tsyncPct: %f"
                         , key.c_str(), io_work->tNow, pubGroups[key].pub_struct?pubGroups[key].pub_struct->syncPct:0.0);
         processGroupCallback(pubGroups[key], myCfg);
@@ -2334,14 +2363,14 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
             syncTimeObjectByName(key, pubGroups[key].pub_struct->syncPct); 
         if (pubGroups[key].erase_group == true)
         {
-            if (myCfg.connection.debug)
+            if (myCfg.debug_connection)
                 FPS_DEBUG_LOG("Erasing group %s\ttnow: %f", key.c_str(), io_work->tNow);
             pubGroups.erase(key); // Optionally remove the group after processing
         }
     }
     else
     {
-        if (myCfg.connection.debug)
+        if (myCfg.debug_connection)
             FPS_DEBUG_LOG("Still collecting  group  %s\tSize: %d out of %d\ttnow: %f",key.c_str(), (int)pubGroups[key].works.size(), (int)pubGroups[key].work_group, io_work->tNow);
     }
 }
@@ -2912,7 +2941,7 @@ double FastReconnectForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_t
     double tNow = get_time_double();
 
     // make sure the old context is deleted
-    modbus_t *ctx = nullptr; // modbus_new_tcp(io_thread->ip.c_str(), io_thread->port);
+    modbus_t *ctx = nullptr; 
  
     if (( io_thread->tid != 1) && ( !io_thread->is_enabled))
     {
@@ -2922,7 +2951,7 @@ double FastReconnectForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_t
     if (myCfg.connection.is_RTU)
     {
         ctx = modbus_new_rtu(
-            myCfg.connection.serial_device.c_str(),
+            myCfg.connection.device_name.c_str(),
             myCfg.connection.baud_rate,
             myCfg.connection.parity,
             myCfg.connection.data_bits,
@@ -2939,11 +2968,17 @@ double FastReconnectForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_t
         DelayConnect(myCfg, threadControl);
         DisConnect(myCfg, threadControl, io_thread);
         char message[1024];
-        snprintf(message, 1024, "Modbus Client [%s]  Thread id %d failed to create modbus context to [%s] on port [%d]",
-                myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+        if(myCfg.connection.is_RTU)
         {
-            //std::lock_guard<std::mutex> lock(logger_mutex);
-
+            snprintf(message, 1024, "Modbus Client [%s]  Thread id %d failed to create modbus context to [%s]",
+                    myCfg.connection.name.c_str(), io_thread->tid, myCfg.connection.device_name.c_str());
+        }
+        else
+        {
+            snprintf(message, 1024, "Modbus Client [%s]  Thread id %d failed to create modbus context to [%s] on port [%d]",
+                    myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+        }
+        {
             FPS_ERROR_LOG("%s", message);
         }
         emit_event(&myCfg.fims_gateway, "Modbus Client", message, 1);
@@ -2956,7 +2991,7 @@ double FastReconnectForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_t
     uint32_t to_usec = (uint32_t)((io_thread->transfer_timeout-to_sec)*1000000.0);         
      
     auto mberrto = modbus_set_response_timeout(ctx, to_sec, to_usec);
-    std::cout << " Transfer Timeout  " << io_thread->transfer_timeout<< "  to_sec  " << to_sec << " to_usec:" << mberrto << std::endl;
+    std::cout << " Transfer Timeout  " << io_thread->transfer_timeout<< "  to_sec:  " << to_sec << " to_usec:" << mberrto << std::endl;
 
     auto mberr = modbus_connect(ctx);
 
@@ -2972,8 +3007,16 @@ double FastReconnectForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_t
         {
             io_thread->connect_fails++;
             char message[1024];
-            snprintf(message, 1024, "Modbus Client [%s] Thread id %d failed to connect to [%s] on port [%d]. Modbus error [%s]"
-                            , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port, modbus_strerror(err));
+            if(myCfg.connection.is_RTU)
+            {
+                snprintf(message, 1024, "Modbus Client [%s]  Thread id %d failed to create modbus context to [%s]. Modbus error [%s]",
+                    myCfg.connection.name.c_str(), io_thread->tid, myCfg.connection.device_name.c_str(), modbus_strerror(err));
+            }
+            else
+            {
+                snprintf(message, 1024, "Modbus Client [%s] Thread id %d failed to create modbus context to [%s] on port [%d]. Modbus error [%s]"
+                            , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port,    modbus_strerror(err));
+            }
             FPS_ERROR_LOG("%s", message);
             emit_event(&myCfg.fims_gateway, "Modbus Client", message, 1);
         }
@@ -2988,8 +3031,16 @@ double FastReconnectForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_t
     //io_thread->connected = true;
     io_thread->connect_time = get_time_double() - tNow;
     char message[1024];
-    snprintf(message, 1024, "Modbus Client [%s] Thread  id %d successfully connected to [%s] on port [%d]"
-        , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+    if(myCfg.connection.is_RTU)
+    {
+        snprintf(message, 1024, "Modbus Client [%s] Thread  id %d successfully connected to [%s]"
+                , myCfg.connection.name.c_str(), io_thread->tid, myCfg.connection.device_name.c_str());
+    }
+    else 
+    {
+        snprintf(message, 1024, "Modbus Client [%s] Thread  id %d successfully connected to [%s] on port [%d]"
+                , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+    }
 
     FPS_INFO_LOG("%s", message);
     emit_event(&myCfg.fims_gateway, "Modbus Client", message, 1);
@@ -3010,11 +3061,11 @@ double SetupModbusForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thr
         uint32_t to_sec = (uint32_t)io_thread->connection_timeout; // 2-10 seconds timeout
         uint32_t to_usec = (uint32_t)((io_thread->connection_timeout-to_sec)*1000000.0);                            // 0 microsecond
         io_thread->ctx = nullptr;
-        modbus_t *ctx = nullptr; // modbus_new_tcp(io_thread->ip.c_str(), io_thread->port);
+        modbus_t *ctx = nullptr; 
         if (myCfg.connection.is_RTU)
         {
             ctx = modbus_new_rtu(
-                myCfg.connection.serial_device.c_str(),
+                myCfg.connection.device_name.c_str(),
                 myCfg.connection.baud_rate,
                 myCfg.connection.parity,
                 myCfg.connection.data_bits,
@@ -3031,8 +3082,17 @@ double SetupModbusForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thr
             DelayConnect(myCfg, threadControl);
             DisConnect(myCfg, threadControl, io_thread);
             char message[1024];
-            snprintf(message, 1024, "Modbus Client [%s]  Thread id %d failed to create modbus context to [%s] on port [%d]",
-                 myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+            if(myCfg.connection.is_RTU)
+            {
+                snprintf(message, 1024, "Modbus Client [%s] Thread  id %d failed to create modbus context to [%s]"
+                    , myCfg.connection.name.c_str(), io_thread->tid, myCfg.connection.device_name.c_str());
+            }
+            else 
+            {
+                snprintf(message, 1024, "Modbus Client [%s] Thread  id %d failed to create modbus context to [%s] on port [%d]"
+                    , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+            }
+
             {
                 //std::lock_guard<std::mutex> lock(logger_mutex);
 
@@ -3061,8 +3121,16 @@ double SetupModbusForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thr
             {
                 io_thread->connect_fails++;
                 char message[1024];
-                snprintf(message, 1024, "Modbus Client [%s] Thread id %d failed to connect to [%s] on port [%d]. Modbus error [%s]"
+                if (myCfg.connection.is_RTU) {
+                    snprintf(message, 1024, "Modbus Client [%s] Thread id %d failed to connect to [%s]. Modbus error [%s]"
+                                , myCfg.connection.name.c_str(), io_thread->tid, myCfg.connection.device_name.c_str(), modbus_strerror(err));
+
+                }
+                else
+                {
+                    snprintf(message, 1024, "Modbus Client [%s] Thread id %d failed to connect to [%s] on port [%d]. Modbus error [%s]"
                                 , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port, modbus_strerror(err));
+                }
                 FPS_ERROR_LOG("%s", message);
                 emit_event(&myCfg.fims_gateway, "Modbus Client", message, 1);
             }
@@ -3079,8 +3147,17 @@ double SetupModbusForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thr
             io_thread->ctx = nullptr;
             DisConnect(myCfg, threadControl, io_thread);
             char message[1024];
-            snprintf(message, 1024, "Modbus Client [%s] Thread id %d failed to create set response timeout to [%s] on port [%d]"
-                            , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+            if(myCfg.connection.is_RTU)
+            {
+                snprintf(message, 1024, "Modbus Client [%s] Thread  id %d failed to set response timeout to [%s]"
+                    , myCfg.connection.name.c_str(), io_thread->tid, myCfg.connection.device_name.c_str());
+            }
+            else 
+            {
+                snprintf(message, 1024, "Modbus Client [%s] Thread  id %d failed to set response timeout to [%s] on port [%d]"
+                    , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+            }
+
  
             FPS_ERROR_LOG("%s", message);
             emit_event(&myCfg.fims_gateway, "Modbus Client", message, 1);
@@ -3095,8 +3172,16 @@ double SetupModbusForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thr
         //io_thread->connected = true;
         io_thread->connect_time = get_time_double() - tNow;
         char message[1024];
-        snprintf(message, 1024, "Modbus Client [%s] Thread  id %d successfully connected to [%s] on port [%d]"
-            , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+        if(myCfg.connection.is_RTU)
+        {
+            snprintf(message, 1024, "Modbus Client [%s] Thread  id %d successfully connected to [%s]"
+                , myCfg.connection.name.c_str(), io_thread->tid, myCfg.connection.device_name.c_str());
+        }
+        else 
+        {
+            snprintf(message, 1024, "Modbus Client [%s] Thread  id %d successfully connected to [%s] on port [%d]"
+                , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
+        }
         FPS_INFO_LOG("%s", message);
         emit_event(&myCfg.fims_gateway, "Modbus Client", message, 1);
         io_thread->connect_fails = 0;
@@ -3124,7 +3209,15 @@ bool CloseModbusForThread(std::shared_ptr<IO_Thread> io_thread, bool debug)
         modbus_close(ctx);
         modbus_free(ctx);
         char message[1024];
-        snprintf(message, 1024, "Modbus Client [%s] disconnected from [%s] on port [%d]", io_thread->myCfg->connection.name.c_str(), io_thread->ip.c_str(), io_thread->port);
+        if(io_thread->myCfg->connection.is_RTU)
+        {
+            snprintf(message, 1024, "Modbus Client [%s] disconnected from [%s]", io_thread->myCfg->connection.name.c_str(), io_thread->myCfg->connection.device_name.c_str());
+        } 
+        else
+        {
+            snprintf(message, 1024, "Modbus Client [%s] disconnected from [%s] on port [%d]", io_thread->myCfg->connection.name.c_str(), io_thread->ip.c_str(), io_thread->port);
+        }
+
         FPS_INFO_LOG("%s", message);
         emit_event(&io_thread->myCfg->fims_gateway, "Modbus Client", message, 1);
     

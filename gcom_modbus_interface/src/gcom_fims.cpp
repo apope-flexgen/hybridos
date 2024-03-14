@@ -273,6 +273,8 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
     bool is_full_request = io_fims->uri_req.is_full_request;
     bool is_stats_request = io_fims->uri_req.is_stats_request;
     bool is_server_request = io_fims->uri_req.is_server_request;
+    bool is_debug_connection_request = io_fims->uri_req.is_debug_connection_request;
+    bool is_debug_response_request = io_fims->uri_req.is_debug_response_request;
 
     bool needs_body = true;
     if ( 
@@ -307,6 +309,7 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
     double tNow = get_time_double();
     if (io_fims->method_view == "set")
     {
+            
         if (!ipOk && needs_body )
         {
             std::string reply_message  = "{\"gcom\":\"Modbus Set Message\",\"status\":\"Failed to decode\"}";
@@ -334,6 +337,41 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                       << " force ? "<< (is_force_request?"true":"false")
                       << std::endl;
 #endif
+        if ( is_debug_response_request
+                ||  is_debug_connection_request )
+        {
+            bool io_body = false;
+            if (io_fims->anyBody.type() == typeid(bool))
+            {
+                io_body  =std::any_cast<bool>(io_fims->anyBody);
+            }
+        
+            std::string reply_message  = "{\"gcom\":\"Modbus Reset Debug\",\"status\":\"Success\"}";
+            if(io_body)
+                reply_message  = "{\"gcom\":\"Modbus Set Debug\",\"status\":\"Success\"}";
+                        
+            if (replyto != "" && reply_message != "")
+            {
+                if(myCfg.fims_gateway.Connected())
+                {
+                    myCfg.fims_gateway.Send(
+                        fims::str_view{"set", sizeof("set") - 1},
+                        fims::str_view{replyto.data(), replyto.size()},
+                        fims::str_view{nullptr, 0},
+                        fims::str_view{nullptr, 0},
+                        fims::str_view{reply_message.data(), reply_message.size()});
+                }
+            }
+
+
+            if (is_debug_response_request)
+                myCfg.debug_response = io_body;
+            if (is_debug_connection_request)
+                myCfg.debug_connection = io_body;
+            return true;
+
+        }
+
         if (io_fims->uri_req.num_uris > 3)
         {
             //std::cout << "We got a single set method; anyBody " << io_fims->anyBody.type().name() << " ";
@@ -914,7 +952,10 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
             {
 //#ifdef FPS_DEBUG_MODE
                 if (debug)
-                    std::cout << " single var found " << io_point->id << "\n";
+                    std::cout 
+                            << " single var found " << io_point->id 
+                            << " local ? "<< (is_local_request?"true":"false")
+                            << "\n";
 //#endif
                 std::string replyto = "";
                 if (io_fims->meta_data.replyto_len > 0)
@@ -1052,7 +1093,13 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                 idx++;
 #ifdef FPS_DEBUG_MODE
                 if (debug)
-                    std::cout << __func__ << " io->offset  [" << io_work->offset << "] num_registers :" << io_work->num_registers << std::endl;
+                    std::cout << __func__ 
+                            << " io->offset  [" << io_work->offset 
+                            << "] io->work_name  [" << io_work->work_name 
+                            << "] io->work_group (size) [" << io_work->work_group 
+                            << "] num_registers :" << io_work->num_registers 
+                            << " local ? "<< (is_local_request?"true":"false")
+                            << std::endl;
 #endif
                 // pollWork (io);
                 // work_vec.erase(io_work);
@@ -1104,6 +1151,14 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                     }
                 }
 
+                if (debug)
+                {
+                    std::cout << ">>>>" << __func__ 
+                    << " get pollWork " 
+                    << " local ? "<< (is_local_request?"true":"false")
+                    << " iowork local ? "<< (io_work->local?"true":"false")
+                    << std::endl;
+                }
                 pollWork(io_work);
             }
         }

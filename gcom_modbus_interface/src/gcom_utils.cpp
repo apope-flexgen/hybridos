@@ -137,15 +137,18 @@ bool str_ends_with(std::string_view str, std::string_view suffix) noexcept
 void gcom_show_overrides()
 {
     std::cout << "help                   " << "       show override help "                                    << std::endl;
-    std::cout << "auto_disable:false     " << "       turn off the automatic invalid point disable feature "  << std::endl;
+    std::cout << "auto_disable:true      " << "       turn off the automatic invalid point disable feature "  << std::endl;
     std::cout << "allow_multi_sets:false " << "       allow set operations to be grouped together  "          << std::endl;
     std::cout << "force_multi_sets:false " << "       force set operations to be grouped together  "          << std::endl;
     std::cout << "ip:172.17.0.3          " << "       override the config ip_address  "                       << std::endl;
     std::cout << "port:503               " << "       override the config port number  "                      << std::endl;
+    std::cout << "serial_device:/dev/tty0" << "       override the config serial_device  "                    << std::endl;
+    std::cout << "baud_rate:9600         " << "       override the config baud_rate  "                        << std::endl;
     std::cout << "format:naked|clothed   " << "       override the config format  "                           << std::endl;
     std::cout << "debug:true             " << "       turn on debug options  "                                << std::endl;
     std::cout << "debug_decode:true      " << "       turn on decode debug options  "                         << std::endl;
-    std::cout << "debug_connection:true  " << "       turn on connection debug options  "                     << std::endl;
+    std::cout << "debug_connection:false " << "       turn on connection debug options  "                     << std::endl;
+    std::cout << "debug_response:false   " << "       turn on response debug options  "                       << std::endl;
     std::cout << "debug_fims:true        " << "       turn on fims debug options  "                           << std::endl;
     std::cout << "debug_pub:false        " << "       turn on pub  debug options  "                           << std::endl;
     std::cout << "debug_hb:false         " << "       turn on heartbeat debug options  "                      << std::endl;
@@ -225,7 +228,13 @@ bool gcom_load_overrides(struct cfg &myCfg, int next_arg, const int argc, const 
             else if (next_vec[0] == "debug_connection")
             {
                 myCfg.connection.debug = bval;
+                myCfg.debug_connection = bval;
             }
+            else if (next_vec[0] == "debug_response")
+            {
+                myCfg.debug_response = bval;
+            }
+
             else if (next_vec[0] == "debug_pub")
             {
                 myCfg.debug_pub = bval;
@@ -237,6 +246,14 @@ bool gcom_load_overrides(struct cfg &myCfg, int next_arg, const int argc, const 
             else if (next_vec[0] == "port")
             {
                 myCfg.connection.port = atoi(next_vec[1].c_str());
+            }
+            else if (next_vec[0] == "serial_device")
+            {
+                myCfg.connection.device_name = std::string(next_vec[1]);
+            }
+            else if (next_vec[0] == "baud_rate")
+            {
+                myCfg.connection.baud_rate = atoi(next_vec[1].c_str());
             }
             else if (next_vec[0] == "max_num_connections")
             {
@@ -295,6 +312,7 @@ bool gcom_load_overrides(struct cfg &myCfg, int next_arg, const int argc, const 
         }
         next_arg++;
     }
+
     return false;
 }
 
