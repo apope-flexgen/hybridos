@@ -254,7 +254,12 @@ func (p *pcs) UpdateMode(input terminal) (output terminal) {
 		p.targetQcmd = p.Qcmd // Guarentee that Qcmd used is constant at a given timestamp
 
 		if p.Fault {
-			p.AcContactorOpenCmd, p.DcContactorOpenCmd = true, true
+			if p.DcContactor {
+				p.DcContactorOpenCmd = true
+			}
+			if p.AcContactor {
+				p.AcContactorOpenCmd = true
+			}
 		} else if !p.ContactorControl {
 			if !p.On && p.Oncmd {
 				p.AcContactorCloseCmd, p.DcContactorCloseCmd = true, true

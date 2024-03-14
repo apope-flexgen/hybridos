@@ -184,7 +184,7 @@ func processCtrlWordConfig(a interface{}, ctrlwordcfg []ctrlwordcfg, ctrlword in
 }
 
 type measurement struct {
-	Value                float64
+	Value              float64
 	FaultHigh          bool
 	FaultHighThreshold float64
 	AlarmHigh          bool

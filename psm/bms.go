@@ -85,8 +85,8 @@ type bms struct {
 	Reset        bool    // Resets warnings and faults
 	DisableFault bool    // Disable fault behavior
 	// Droop Parameters
-	Dvoltage droop
-	faultskip bool 		// non public parameter. Skip the first fault detection instance in updateMode() to prevent nuisance faults. 
+	Dvoltage  droop
+	faultskip bool // non public parameter. Skip the first fault detection instance in updateMode() to prevent nuisance faults.
 }
 
 func (b *bms) Init() {
@@ -375,7 +375,7 @@ func (b *bms) Init() {
 		log.Println("[", b.ID, "] zero length vector for chargeable or dischargeable power limits. Reverting to default behavior")
 		b.DisableLUTs = true
 	}
-	b.faultskip = true // skip fault detection for the first iteration. 
+	b.faultskip = true // skip fault detection for the first iteration.
 }
 
 // BMS UpdateMode() processes commands either through control words or direct
@@ -402,13 +402,16 @@ func (b *bms) UpdateMode(input terminal) (output terminal) {
 	} else {
 		b.Fault, b.Warning, b.Reset = false, false, false
 	}
-	b.faultskip = false // this variable is only used to skip the fault detection upon first pass through. 
+	b.faultskip = false // this variable is only used to skip the fault detection upon first pass through.
 	// Control DC contactor
 	// ContactorControl allows discrete control over DC and AC contactors
 	// If not set, only Oncmd or Offcmd are needed
 	// A Fault overrides ContactorControl, forcing the contactor to open
 	if b.Fault && !b.DisableFault {
-		b.DcContactorOpenCmd = true
+		b.Oncmd = false
+		if b.DcContactor {
+			b.DcContactorOpenCmd = true
+		}
 	} else /* if !b.ContactorControl */ {
 		if !b.On && b.Oncmd {
 			b.DcContactorCloseCmd = true
@@ -596,7 +599,9 @@ func (b *bms) UpdateState(input terminal, dt float64) (output terminal) {
 		var tempFaultCharge, tempFaultDischarge bool
 		ChargePCT, tempFaultCharge = interpl(b.SocChargeVec, b.PChargeVec, b.Soc.Value)
 		DischargePCT, tempFaultDischarge = interpl(b.SocDischargeVec, b.PDischargeVec, b.Soc.Value)
-		b.Fault = b.Fault || tempFaultCharge || tempFaultDischarge
+		if !b.DisableFault && !b.faultskip {
+			b.Fault = b.Fault || tempFaultCharge || tempFaultDischarge
+		}
 		b.Pcharge = b.Pmax * ChargePCT * -1
 		b.Pdischarge = b.Pmax * DischargePCT
 	} else {

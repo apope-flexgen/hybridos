@@ -53,7 +53,7 @@ func (l *load) UpdateMode(input terminal) (output terminal) {
 	return
 }
 func (l *load) GetLoadLines(input terminal, dt float64) (output terminal) {
-	output.p = l.P //Last step P for droop calculations. 
+	output.p = l.P //Last step P for droop calculations.
 	return output
 }
 func (l *load) DistributeVoltage(input terminal) (output terminal) {

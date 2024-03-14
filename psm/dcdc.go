@@ -1,7 +1,6 @@
 package main
 
 import (
-
 	"log"
 	//"fmt"
 	"math"
@@ -54,8 +53,8 @@ type dcdc struct {
 	Pcmd             float64 // DCDC active power command
 	VDC1cmd          float64 // Child-side DC voltage setpoint
 	VDC2cmd          float64 // Parent-side DC voltage setpoint
-	VDC1max			 float64 // Max voltage on child side
-	VDC2max			 float64 // Max voltage on parent side. 
+	VDC1max          float64 // Max voltage on child side
+	VDC2max          float64 // Max voltage on parent side.
 	GridForming      bool    // Grid forming status
 	GridFormingCmd   bool    // Grid forming command
 	GridFollowingCmd bool    // Grid following command
@@ -88,7 +87,7 @@ func (d *dcdc) Init() {
 	// }
 	//set max voltages to very large number if not configured.
 	if d.VDC1max == 0 {
-		d.VDC1max = 100000  
+		d.VDC1max = 100000
 	}
 	if d.VDC2max == 0 {
 		d.VDC2max = 100000
@@ -98,7 +97,7 @@ func (d *dcdc) Init() {
 	}
 
 	// DC droop settings need to model a "weak grid"
-	if d.VDC1cmd <=0 {
+	if d.VDC1cmd <= 0 {
 		d.DVdc1.XNom = 480
 	} else {
 		d.DVdc1.XNom = d.VDC1cmd
@@ -175,18 +174,18 @@ func (d *dcdc) GetLoadLines(input terminal, dt float64) (output terminal) {
 	d.DvoltageExternal = combined.dVdc
 	d.Vdc1 = getX(d.Pdc1, d.DvoltageExternal.slope, d.DvoltageExternal.offset)
 	// fmt.Println("[DCDC][GetLoadLines] d.DvoltageExternal", d.DvoltageExternal)
-	output.dVdc = d.DVdc2                                     //parent-side droop.
-	//In PV power control mode, we will be simply using asset Pcmd to control PV. This is used in cases where we aren't testing the actual electrical characteristics of 
+	output.dVdc = d.DVdc2 //parent-side droop.
+	//In PV power control mode, we will be simply using asset Pcmd to control PV. This is used in cases where we aren't testing the actual electrical characteristics of
 	//DC- coupled storage, but instead are integrating with another controller that does those lower-level decisions.
-	//in this case, we need the assets to behave as ideally as possible so we don't have to implement the low level logic of the other controller ourselves. 
-	//assume that in power control mode that Vdc2cmd will be zero. 
-	//TODO GB: This likely needs to be adjusted when implementing the voltage control mode, as it may be possible to 'silently' get into a non-running state with this logic. 
+	//in this case, we need the assets to behave as ideally as possible so we don't have to implement the low level logic of the other controller ourselves.
+	//assume that in power control mode that Vdc2cmd will be zero.
+	//TODO GB: This likely needs to be adjusted when implementing the voltage control mode, as it may be possible to 'silently' get into a non-running state with this logic.
 	if d.VDC2cmd == 0 {
 		output.p = d.Pcmd
 	} else {
 		output.p = getX(d.VDC2cmd, d.DVdc2.slope, d.DVdc2.offset) //encode VDC cmd in droop so PCS (parent side) can share node voltage with PV siblings
 	}
-	
+
 	// fmt.Println("[DCDC][GetLoadLines] output terminal (d.Vdc2):", output)
 	//Now handle child side. Need to encode child side DC voltage cmd for use if PV is child of DCDC
 	//Basically DCDC is acting here similar to how PCS DC side handles its children's voltage
@@ -210,13 +209,13 @@ func (d *dcdc) DistributeVoltage(input terminal) (output terminal) {
 	} else {
 		vltLimit = d.VDC2max * 1.1
 	}
-	if input.vdc <= 0 || input.vdc > vltLimit { // Turn off if input voltage is 0 after grid forming phase or if input voltage is 10% higher than max voltage or voltage command. 
+	if input.vdc <= 0 || input.vdc > vltLimit { // Turn off if input voltage is 0 after grid forming phase or if input voltage is 10% higher than max voltage or voltage command.
 		if d.On {
 			log.Println("DCDC", d.ID, "input voltage out of range, turning off. Input voltage:", input.vdc)
 		}
 		d.On, d.Oncmd, d.Offcmd = false, false, false
 		d.Standby, d.StandbyCmd = false, false
-		
+
 	}
 	assetStatus := processBitfieldConfig(d, d.StatusCfg)
 	for i, v := range assetStatus {
