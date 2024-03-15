@@ -520,7 +520,7 @@ static bool listener_thread(const u8 client_idx) noexcept
             NEW_FPS_ERROR_PRINT("Listener for \"{}\", from sender: \"{}\": uri \"{}\" could not be found. Message dropped\n", client_name, process_name_view, uri_view);
             if (!replyto_view.empty())
             {
-                static constexpr auto err_str = "Modbus Client -> uri doesn't exist"sv;
+                static constexpr auto err_str = "\"Modbus Client -> uri doesn't exist\""sv;
                 if (!send_set(fims_gateway, replyto_view, err_str))
                 {
                     NEW_FPS_ERROR_PRINT("Listener for \"{}\", from sender: \"{}\": could not send replyto fims message. Exiting\n", client_name, process_name_view, uri_view);
@@ -557,7 +557,7 @@ static bool listener_thread(const u8 client_idx) noexcept
             bool set_had_errors = false;
             std::string_view success_str;
             defer {
-                static constexpr auto err_str = "Modbus Client -> set had errors"sv;
+                static constexpr auto err_str = "\"Modbus Client -> set had errors\""sv;
                 if (!replyto_view.empty())
                 {
                     bool fims_ok = true;

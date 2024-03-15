@@ -53,7 +53,7 @@ module.exports = {
                 try {
                     body = JSON.parse(body);
                 } catch (err) {
-                    console.log('There was a problem in receiveWithTimeout: ', err);
+                    console.log('There was a problem in receiveWithTimeout parsing JSON: ', err, ' at URI: ', fimsMessage.getUri());
                 }
 
                 const msg = {

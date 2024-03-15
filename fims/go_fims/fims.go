@@ -22,9 +22,9 @@ var _zero uintptr
 // Do the interface allocations only once for common
 // Errno values.
 var (
-	errEAGAIN  error = unix.EAGAIN
-	errEINVAL  error = unix.EINVAL
-	errENOENT  error = unix.ENOENT
+	errEAGAIN error = unix.EAGAIN
+	errEINVAL error = unix.EINVAL
+	errENOENT error = unix.ENOENT
 )
 
 // errnoErr returns common boxed Errno values, to prevent
@@ -182,7 +182,7 @@ func (f *Fims) recv_raw_static(bufs *Receiver_Bufs_Static) (bool, error) {
 		{Base: &bufs.Data_buf[0], Len: uint64(len(bufs.Data_buf))},
 	}
 	bytes_read, err := readv(f.fd, recv_bufs)
-	
+
 	if bytes_read == 0 && err == nil {
 		empty_message_count += 1
 		if empty_message_count > 5 {
@@ -195,7 +195,7 @@ func (f *Fims) recv_raw_static(bufs *Receiver_Bufs_Static) (bool, error) {
 	} else {
 		empty_message_count = 0
 	}
-	
+
 	return bytes_read > 0, err
 }
 
@@ -206,7 +206,7 @@ func (f *Fims) recv_raw_dynamic(bufs *Receiver_Bufs_Dynamic) (bool, error) {
 		{Base: &bufs.Data_buf[0], Len: uint64(len(bufs.Data_buf))},
 	}
 	bytes_read, err := readv(f.fd, recv_bufs)
-	
+
 	if bytes_read == 0 && err == nil {
 		empty_message_count += 1
 		if empty_message_count > 5 {
@@ -630,9 +630,10 @@ func (f *Fims) Receive() (FimsMsg, error) {
 
 		// if there is a message body, attempt to parse it as json
 		if msg_raw.Body != nil {
+
 			err := json.Unmarshal(msg_raw.Body, &msg.Body)
 			if err != nil {
-				return msg, fmt.Errorf("failed to unmarshal data: %w", err)
+				return msg, fmt.Errorf("failed to unmarshal data: %w. URI: %v, Body: %v, Raw Body: %v", err, msg_raw.Uri, string(msg_raw.Body), msg_raw.Body)
 			}
 		}
 	}
@@ -744,7 +745,7 @@ func (f *Fims) ReceiveBufDynamic(recv_bufs *Receiver_Bufs_Dynamic) (FimsMsg, err
 		if msg_raw.Body != nil {
 			err := json.Unmarshal(msg_raw.Body, &msg.Body)
 			if err != nil {
-				return msg, fmt.Errorf("failed to unmarshal data: %w", err)
+				return msg, fmt.Errorf("failed to unmarshal data: %w. URI: %v, Body: %v, Raw Body: %v", err, msg_raw.Uri, string(msg_raw.Body), msg_raw.Body)
 			}
 		}
 	}
