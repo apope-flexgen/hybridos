@@ -1,4 +1,4 @@
-## [Link to JIRA Ticket](replacemewithlinktojiraticket)
+## [Link to Jira Ticket](replacemewithlinktojiraticket)
 
 ## Description
 

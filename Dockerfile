@@ -1,3 +1,7 @@
+# This Dockerfile builds the Docker images for Coordinate, Site Controller, ESS Controller, and PSM.
+# These images are used for testing in virtual environments.
+# Be aware that there are other Dockerfiles in the monorepo for building other images not listed above.
+
 # do not edit this >>>
 ARG imageName
 ARG imageTag
