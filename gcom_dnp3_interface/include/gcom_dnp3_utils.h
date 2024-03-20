@@ -58,9 +58,9 @@ extern "C"
 #define STATE_COMM_LOST 2
 #define STATE_INIT -1
 
-#define CROB_STRING  0
-#define CROB_BOOL    1
-#define CROB_INT     2
+#define CROB_STRING 0
+#define CROB_BOOL 1
+#define CROB_INT 2
 
 #define MAX_FIMS_CONNECT 5
 
@@ -68,7 +68,8 @@ extern "C"
 
 const char *variation_encode(int var);
 
-enum class DNP3FlowControl : uint8_t {
+enum class DNP3FlowControl : uint8_t
+{
     None,
     Hardware,
     Software
@@ -103,57 +104,63 @@ enum Type_of_Var
     NumTypes
 };
 
-
-enum BinaryInputStaticVariations {
+enum BinaryInputStaticVariations
+{
     Group1Var0, // non-existent placeholder
     Group1Var1, // binary input, packed format
-    Group1Var2 // binary input with flags
+    Group1Var2  // binary input with flags
 };
 
-enum BinaryInputEventVariations {
+enum BinaryInputEventVariations
+{
     Group2Var0, // non-existent placeholder
     Group2Var1, // binary input without time
     Group2Var2, // binary input with absolute time
-    Group2Var3 // binary input with relative time
+    Group2Var3  // binary input with relative time
 };
 
-enum BinaryOutputStaticVariations {
+enum BinaryOutputStaticVariations
+{
     Group10Var0, // non-existent placeholder
     Group10Var1, // binary output, packed format
-    Group10Var2 // binary output with flags
+    Group10Var2  // binary output with flags
 };
 
-enum BinaryOutputEventVariations {
+enum BinaryOutputEventVariations
+{
     Group11Var0, // non-existent placeholder
     Group11Var1, // binary input without time
-    Group11Var2 // binary input with time
+    Group11Var2  // binary input with time
 };
 
-enum BinaryOutputCommandVariations {
+enum BinaryOutputCommandVariations
+{
     Group12Var0, // non-existent placeholder
-    CROB, // control relay output blocks (CROBs)
-    PCB, // pattern control blocks (PCBs)
-    PatternMask // no idea what this does
+    CROB,        // control relay output blocks (CROBs)
+    PCB,         // pattern control blocks (PCBs)
+    PatternMask  // no idea what this does
 };
 
-enum AnalogOutputStaticVariations {
+enum AnalogOutputStaticVariations
+{
     Group40Var0, // non-existent placeholder
     Group40Var1, // 32-bit signed integer with flag
     Group40Var2, // 16-bit signed integer with flag
     Group40Var3, // 32-bit floating-point with flag
-    Group40Var4, // 64-bit floating-point with flag    
+    Group40Var4, // 64-bit floating-point with flag
 };
 
-enum AnalogOutputEventVariations {
+enum AnalogOutputEventVariations
+{
     Group42Var0, // non-existent placeholder
     Group42Var1, // 32-bit signed integer without time
-    Group42Var2,// 16-bit signed integer without time
-    Group42Var3,// 32-bit signed integer with time
-    Group42Var4,// 16-bit signed integer with time
-    Group42Var5,// 32-bit float without time
-    Group42Var6,// 64-bit float without time
-    Group42Var7,// 32-bit float with time
-    Group42Var8 // 64-bit float with time  
+    Group42Var2, // 16-bit signed integer without time
+    Group42Var3, // 32-bit signed integer with time
+    Group42Var4, // 16-bit signed integer with time
+    Group42Var5, // 32-bit float without time
+    Group42Var6, // 64-bit float without time
+    Group42Var7, // 32-bit float with time
+    Group42Var8  // 64-bit float with time
 };
 
 enum AnalogInputStaticVariations
@@ -171,13 +178,13 @@ enum AnalogInputEventVariations
 {
     Group32Var0, // non-existent placeholder
     Group32Var1, // 32-bit signed integer without time
-    Group32Var2,// 16-bit signed integer without time
-    Group32Var3,// 32-bit signed integer with time
-    Group32Var4,// 16-bit signed integer with time
-    Group32Var5,// 32-bit float without time
-    Group32Var6,// 64-bit float without time
-    Group32Var7,// 32-bit float with time
-    Group32Var8 // 64-bit float with time
+    Group32Var2, // 16-bit signed integer without time
+    Group32Var3, // 32-bit signed integer with time
+    Group32Var4, // 16-bit signed integer with time
+    Group32Var5, // 32-bit float without time
+    Group32Var6, // 64-bit float without time
+    Group32Var7, // 32-bit float with time
+    Group32Var8  // 64-bit float with time
 };
 
 enum CounterVariations
@@ -234,7 +241,6 @@ void showNewUris(GcomSystem &sys);
 void cleanUpDbMaps(GcomSystem &sys);
 TMWSIM_POINT *getDbVar(GcomSystem &sys, std::string_view uri, std::string_view name);
 TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset, char *uri, char *variation);
-
 
 TMWSIM_POINT *getDbVar(GcomSystem &sys, std::string_view name);
 cJSON *get_config_json(int argc, char *argv[], int num);

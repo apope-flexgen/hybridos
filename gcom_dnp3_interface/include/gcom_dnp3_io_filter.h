@@ -1,6 +1,7 @@
 #pragma once
-extern "C" {
-    #include "tmwscl/utils/tmwsim.h"
+extern "C"
+{
+#include "tmwscl/utils/tmwsim.h"
 }
 
 bool isDirectPub(TMWSIM_POINT *dbPoint);

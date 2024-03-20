@@ -517,7 +517,8 @@ bool openTMWServerSession(GcomSystem &serverSys)
 void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
 {
     GcomSystem *sys = ((FlexPoint *)(dbPoint->flexPointHandle))->sys;
-    if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog){
+    if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
+    {
         if (dbPoint->defaultStaticVariation == Group30Var1 || dbPoint->defaultStaticVariation == Group30Var3)
         {
             if (value > std::numeric_limits<int32_t>::max())
@@ -584,9 +585,11 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 }
             }
         }
-    } else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter){
+    }
+    else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+    {
         if (dbPoint->defaultStaticVariation == Group20Var1 || dbPoint->defaultStaticVariation == Group20Var3 ||
-        dbPoint->defaultStaticVariation == Group20Var5 || dbPoint->defaultStaticVariation == Group20Var7)
+            dbPoint->defaultStaticVariation == Group20Var5 || dbPoint->defaultStaticVariation == Group20Var7)
         {
             if (value > std::numeric_limits<uint32_t>::max())
             {
@@ -606,7 +609,7 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
             }
         }
         else if (dbPoint->defaultStaticVariation == Group20Var2 || dbPoint->defaultStaticVariation == Group20Var4 ||
-        dbPoint->defaultStaticVariation == Group20Var6 || dbPoint->defaultStaticVariation == Group20Var8)
+                 dbPoint->defaultStaticVariation == Group20Var6 || dbPoint->defaultStaticVariation == Group20Var8)
         {
 
             if (value > std::numeric_limits<uint16_t>::max())
@@ -626,7 +629,9 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 }
             }
         }
-    } else {
+    }
+    else
+    {
         if (dbPoint->defaultStaticVariation == Group40Var1)
         {
             if (value > std::numeric_limits<int32_t>::max())
@@ -801,10 +806,10 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
                 continue;
             }
 
-            if (!sys.fims_dependencies->uri_requests.contains_local_uri && 
+            if (!sys.fims_dependencies->uri_requests.contains_local_uri &&
                 (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog ||
-                ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary ||
-                ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter))
+                 ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary ||
+                 ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter))
             {
                 setInputPointOnline(dbPoint);
             }
@@ -824,8 +829,8 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
                 sdnpsim_anlgInWrite(dbPoint, value);
             }
             else if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter &&
-                (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                 ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
+                     (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
             {
                 if (((FlexPoint *)dbPoint->flexPointHandle)->scale != 0)
                 {
@@ -846,14 +851,16 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
                 sdnputil_getDateTime(sys.protocol_dependencies->dnp3.pSession, &dbPoint->timeStamp);
 
                 sdnpsim_binInWrite(dbPoint, static_cast<bool>(value));
-            } else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt16) || 
-                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt32) ||
-                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPF32) ||
-                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnalogOS)) &&
-                        (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
+            }
+            else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt16) ||
+                      (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt32) ||
+                      (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPF32) ||
+                      (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnalogOS)) &&
+                     (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
                       ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
 
-            ){
+            )
+            {
                 TMWTYPES_ANALOG_VALUE analogValue;
                 analogValue.type = TMWTYPES_ANALOG_TYPE_DOUBLE;
                 if (((FlexPoint *)(dbPoint->flexPointHandle))->scale == 0.0)
@@ -869,12 +876,13 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
                 ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
                 sdnpsim_anlgOutWrite(dbPoint, &analogValue);
             }
-            else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::BinaryOS) || 
-                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::CROB)) &&
-                        (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
+            else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::BinaryOS) ||
+                      (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::CROB)) &&
+                     (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
                       ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
 
-            ){
+            )
+            {
                 bool bool_value = static_cast<bool>(value);
                 if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
                 {
@@ -919,10 +927,10 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
             return false;
         }
 
-        if (!sys.fims_dependencies->uri_requests.contains_local_uri && 
-                (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog ||
-                ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary ||
-                ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter))
+        if (!sys.fims_dependencies->uri_requests.contains_local_uri &&
+            (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog ||
+             ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary ||
+             ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter))
         {
             setInputPointOnline(dbPoint);
         }
@@ -942,8 +950,8 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
             sdnpsim_anlgInWrite(dbPoint, value);
         }
         else if ((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter) &&
-            (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-             ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
+                 (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                  ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
         {
             if (((FlexPoint *)dbPoint->flexPointHandle)->scale != 0)
             {
@@ -954,7 +962,7 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
             sdnpsim_binCntrWrite(dbPoint, value);
         }
         else if ((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary) && (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                  ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
+                                                                                               ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
         {
             if (((FlexPoint *)dbPoint->flexPointHandle)->scale < 0)
             {
@@ -963,44 +971,47 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
             sdnputil_getDateTime(sys.protocol_dependencies->dnp3.pSession, &dbPoint->timeStamp);
 
             sdnpsim_binInWrite(dbPoint, static_cast<bool>(value));
-        } else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt16) || 
-                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt32) ||
-                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPF32) ||
-                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnalogOS)) &&
-                        (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
+        }
+        else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt16) ||
+                  (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt32) ||
+                  (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPF32) ||
+                  (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnalogOS)) &&
+                 (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                  ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
 
-            ){
-                TMWTYPES_ANALOG_VALUE analogValue;
-                analogValue.type = TMWTYPES_ANALOG_TYPE_DOUBLE;
-                if (((FlexPoint *)(dbPoint->flexPointHandle))->scale == 0.0)
-                {
-                    analogValue.value.dval = value;
-                }
-                else
-                {
-                    analogValue.value.dval = value * ((FlexPoint *)(dbPoint->flexPointHandle))->scale;
-                }
-                check_limits_server(dbPoint, analogValue.value.dval);
-                ((FlexPoint *)dbPoint->flexPointHandle)->operate_value = analogValue.value.dval;
-                ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
-                sdnpsim_anlgOutWrite(dbPoint, &analogValue);
+        )
+        {
+            TMWTYPES_ANALOG_VALUE analogValue;
+            analogValue.type = TMWTYPES_ANALOG_TYPE_DOUBLE;
+            if (((FlexPoint *)(dbPoint->flexPointHandle))->scale == 0.0)
+            {
+                analogValue.value.dval = value;
             }
-            else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::BinaryOS) || 
-                        (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::CROB)) &&
-                        (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
+            else
+            {
+                analogValue.value.dval = value * ((FlexPoint *)(dbPoint->flexPointHandle))->scale;
+            }
+            check_limits_server(dbPoint, analogValue.value.dval);
+            ((FlexPoint *)dbPoint->flexPointHandle)->operate_value = analogValue.value.dval;
+            ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
+            sdnpsim_anlgOutWrite(dbPoint, &analogValue);
+        }
+        else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::BinaryOS) ||
+                  (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::CROB)) &&
+                 (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                  ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
 
-            ){
-                bool bool_value = static_cast<bool>(value);
-                if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
-                {
-                    bool_value = !bool_value;
-                }
-                ((FlexPoint *)dbPoint->flexPointHandle)->operate_value = static_cast<double>(bool_value);
-                ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
-                sdnpsim_binOutSetValue(dbPoint, bool_value);
+        )
+        {
+            bool bool_value = static_cast<bool>(value);
+            if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
+            {
+                bool_value = !bool_value;
             }
+            ((FlexPoint *)dbPoint->flexPointHandle)->operate_value = static_cast<double>(bool_value);
+            ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
+            sdnpsim_binOutSetValue(dbPoint, bool_value);
+        }
         else if (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
         {
             ((FlexPoint *)dbPoint->flexPointHandle)->standby_value = value;
@@ -1068,10 +1079,9 @@ int main(int argc, char *argv[])
     Logging::Init(file_name, argc, argv);
     serverSys.git_version_info.init();
 
-    FPS_INFO_LOG("build: %s",  serverSys.git_version_info.get_build());
+    FPS_INFO_LOG("build: %s", serverSys.git_version_info.get_build());
     FPS_INFO_LOG("commit: %s", serverSys.git_version_info.get_commit());
-    FPS_INFO_LOG("tag: %s",    serverSys.git_version_info.get_tag());
-
+    FPS_INFO_LOG("tag: %s", serverSys.git_version_info.get_tag());
 
     // assume 1 for right now
     num_configs_server = getConfigs(argc, argv, serverSys, DNP3_OUTSTATION);
@@ -1097,8 +1107,6 @@ int main(int argc, char *argv[])
 
         serverSys.fims_dependencies->parseBody = parseBodyServer;
         init_fims(serverSys);
-
-        
 
         init_vars(serverSys, num_configs_server);
         add_input_callbacks(dnp3_sys); // add analog_input_callbacks to analog input points and binary_input_callbacks to binary input points

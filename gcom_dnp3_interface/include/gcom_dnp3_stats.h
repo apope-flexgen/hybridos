@@ -278,7 +278,8 @@ struct fmt::formatter<ChannelStats>
         };
         fmt::format_to(ctx.out(), R"({{)");
         fmt::format_to(ctx.out(), R"("open_channels": {}, )", stats.open_channels);
-        if(strlen(stats.port)>0){
+        if (strlen(stats.port) > 0)
+        {
             fmt::format_to(ctx.out(), R"("port": {}, )", stats.port);
         }
         fmt::format_to(ctx.out(), R"("connected_ip": {}, )", stats.connectedIPAddresses);

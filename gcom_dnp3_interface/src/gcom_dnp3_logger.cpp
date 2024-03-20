@@ -15,7 +15,7 @@ std::mutex logger_mutex;
 class elapsed_time_formatter : public spdlog::custom_flag_formatter
 {
 public:
-    void format(const spdlog::details::log_msg&, const std::tm&, spdlog::memory_buf_t& dest) override
+    void format(const spdlog::details::log_msg &, const std::tm &, spdlog::memory_buf_t &dest) override
     {
         fmt::format_to(std::back_inserter(dest), "{:<{}}", std::chrono::duration<double>(std::chrono::steady_clock::now() - base_time), padinfo_.width_);
     }
@@ -33,13 +33,13 @@ namespace Logging
     bool to_console = true;
     bool to_file = true;
     std::map<spdlog::level::level_enum, std::string> severity_names =
-    {
-        std::make_pair(spdlog::level::trace, "Trace"),
-        std::make_pair(spdlog::level::debug, "Debug"),
-        std::make_pair(spdlog::level::info, "Info"),
-        std::make_pair(spdlog::level::warn, "Warning"),
-        std::make_pair(spdlog::level::err, "Error"),
-        std::make_pair(spdlog::level::critical, "Critical"),
+        {
+            std::make_pair(spdlog::level::trace, "Trace"),
+            std::make_pair(spdlog::level::debug, "Debug"),
+            std::make_pair(spdlog::level::info, "Info"),
+            std::make_pair(spdlog::level::warn, "Warning"),
+            std::make_pair(spdlog::level::err, "Error"),
+            std::make_pair(spdlog::level::critical, "Critical"),
     };
     std::string log_dir;
     spdlog::level::level_enum severity_threshold = spdlog::level::info;
@@ -55,7 +55,7 @@ namespace Logging
      * Parse command line arguments for config file path
      * @return The config file path found, or an empty string
      */
-    std::string parse_config_path(int argc, char** argv)
+    std::string parse_config_path(int argc, char **argv)
     {
         std::string config_file_path;
         // Check command line arguments for logCfg flag and filepath
@@ -69,13 +69,13 @@ namespace Logging
                 if (file_start < current_arg.length())
                 {
                     fprintf(stderr, "split case\n");
-                    return config_file_path = current_arg.substr(file_start+1, current_arg.length());
+                    return config_file_path = current_arg.substr(file_start + 1, current_arg.length());
                 }
                 // If a flag / filepath pair has been given
                 else if (i < argc - 1)
                 {
                     fprintf(stderr, "pair case\n");
-                    return config_file_path = std::string(argv[i+1]);
+                    return config_file_path = std::string(argv[i + 1]);
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace Logging
     }
 
     // init function creates both a console logger and a file logger
-    void Init(std::string module, int argc, char** argv)
+    void Init(std::string module, int argc, char **argv)
     {
         init = true;
         base_time = std::chrono::steady_clock::now();
@@ -99,8 +99,8 @@ namespace Logging
         if (to_file)
         {
             logger = EventLogger(module.c_str(), 64);
-            logger.set_level(severity_threshold); // log everything
-            logger.flush_on(severity_threshold); // flush after errors
+            logger.set_level(severity_threshold);                                                                   // log everything
+            logger.flush_on(severity_threshold);                                                                    // flush after errors
             logger.setPattern("{\"time\": \"%T.%e\", \"date\": \"%Y-%m-%d\", \"PID\": %P, \"level\": \"%l\", %v}"); // This pattern is NEEDED site_controller is pushing json.
         }
 
@@ -109,7 +109,7 @@ namespace Logging
         {
             console = spdlog::stdout_color_mt(module.c_str());
             console->set_level(severity_threshold); // log everything
-            console->flush_on(severity_threshold); // flush after every log
+            console->flush_on(severity_threshold);  // flush after every log
             auto formatter = std::make_unique<spdlog::pattern_formatter>();
             formatter->add_flag<elapsed_time_formatter>('*').set_pattern("[%Y-%m-%d] [%T.%e] [%-8*] [PID %P] [%n] [%^%-8l%$] %v");
             console->set_formatter(std::move(formatter));
@@ -142,12 +142,12 @@ namespace Logging
         if (!log_config_buffer)
             return {"failed to read from config file, default values used"};
 
-        cJSON* log_config = cJSON_Parse(log_config_buffer.str().c_str());
+        cJSON *log_config = cJSON_Parse(log_config_buffer.str().c_str());
         if (!log_config)
             return {"failed to parse config file, default values used"};
 
         // Parse each optional config item
-        cJSON* item = NULL;
+        cJSON *item = NULL;
         std::vector<std::string> config_issues;
         if (!(item = cJSON_GetObjectItem(log_config, "to_console")))
             config_issues.push_back("missing field: to_console, defaulted to true");
@@ -200,7 +200,7 @@ namespace Logging
         // Only log if severity meets the required threshold
         if (severity < severity_threshold || !init)
             return;
-        
+
         // if(!init){
         //     printf("%s\n",original_msg.c_str());
         //     return;
@@ -214,8 +214,9 @@ namespace Logging
         if (should_update_records)
             should_log = update_records(msg_stripped, redundant_msg);
 
-        if (to_file) {
-            logger.log(severity, pre+msg_stripped+post);
+        if (to_file)
+        {
+            logger.log(severity, pre + msg_stripped + post);
         }
 
         if (!should_log)
@@ -225,20 +226,23 @@ namespace Logging
             console->log(severity, original_msg);
 
         // Reset records if clear time has been exceeded
-        if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - last_records_clear) > clear_rate){
+        if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - last_records_clear) > clear_rate)
+        {
             clear_records();
         }
     }
 
     /**
-     * Triangle Microworks has its own diagnostic callbacks. If we want to log them using our own style, we need 
+     * Triangle Microworks has its own diagnostic callbacks. If we want to log them using our own style, we need
      * a callback function. This will add the TMW diagnostic callbacks to our own log files and will print them to the
      * consol with the same format of the rest of our console messages.
      * @param pAnlzId A structure consisting of TMWDIAG_ID sourceId, TMWCHNL *pChannel, TMWSESN *pSession, TMWSCTR *pSector, and TMWDTIME time
      * @param pString TMWTYPES_CHAR * of the diagnostic message to be added to the logs
      */
-    void log_TMW_message(const TMWDIAG_ANLZ_ID *pAnlzId, const TMWTYPES_CHAR *pString) {
-        if(!init){
+    void log_TMW_message(const TMWDIAG_ANLZ_ID *pAnlzId, const TMWTYPES_CHAR *pString)
+    {
+        if (!init)
+        {
             return;
         }
         bool should_log = true;
@@ -247,7 +251,8 @@ namespace Logging
 
         should_log = update_records(msg, redundant_msg);
 
-        if (to_file && msg.length() > 0) {
+        if (to_file && msg.length() > 0)
+        {
             logger.log(spdlog::level::info, msg);
         }
 
@@ -258,7 +263,8 @@ namespace Logging
             console->log(spdlog::level::info, msg);
 
         // Reset records if clear time has been exceeded
-        if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - last_records_clear) > clear_rate){
+        if (std::chrono::duration_cast<std::chrono::minutes>(std::chrono::steady_clock::now() - last_records_clear) > clear_rate)
+        {
             clear_records();
         }
     }
@@ -269,7 +275,8 @@ namespace Logging
      */
     void log_it(std::string fileName)
     {
-        if(!init){
+        if (!init)
+        {
             return;
         }
         std::string dirAndFile = fmt::format("{}/{}.{}", log_dir, fileName, "log");
@@ -297,7 +304,7 @@ namespace Logging
      * @param redundant_msg String notifying of redundant messages, returned to the caller
      * @return true if the record is new and should be logged.
      */
-    bool update_records(std::string msg, std::string& redundant_msg)
+    bool update_records(std::string msg, std::string &redundant_msg)
     {
         auto existing_record = records.find(msg);
         // Add the record if it does not exist
@@ -338,27 +345,29 @@ namespace Logging
     }
 
     /**
-     * @brief Adding file func line to log in json simulated format. 
-     * 
-     * @param file will be file macro 
+     * @brief Adding file func line to log in json simulated format.
+     *
+     * @param file will be file macro
      * @param func will be func macro
      * @param line will be line macro
-     * @return std::string <- json acceptable build of the fields above. 
+     * @return std::string <- json acceptable build of the fields above.
      */
-    std::string pre_string( const char * file, const char* func, const int line){ 
-        //msg
+    std::string pre_string(const char *file, const char *func, const int line)
+    {
+        // msg
         char msgBuf[500]; // messages must be in this size. Is this too small???
         // char consoleBuf[500];
 
-        //trim file to just the file not the whole path
+        // trim file to just the file not the whole path
         std::string trim(file);
         size_t last = trim.find_last_of('/');
-        if(last != std::string::npos){
-            trim = trim.substr(last+1);
+        if (last != std::string::npos)
+        {
+            trim = trim.substr(last + 1);
         }
 
         // wacky newlines and tabs needed to mimic pretty print of go_flexgen/logger
-        snprintf (msgBuf, 500, "\"File\": \"%s\", \"Func\": \"%s\", \"Line\": %d, \"MSG\": \"", trim.c_str(), func, line); // for printing to file
+        snprintf(msgBuf, 500, "\"File\": \"%s\", \"Func\": \"%s\", \"Line\": %d, \"MSG\": \"", trim.c_str(), func, line); // for printing to file
         // snprintf (consoleBuf, 500, "\n\tCaller: %s:%d\n\tFunc: %s\n\tMessage: ", trim.c_str(), line, func); // for printing to console
 
         return std::string(msgBuf);
@@ -381,16 +390,32 @@ namespace Logging
     {
         switch (severity)
         {
-            case -1:    return spdlog::level::trace;    break;
-            case 0:     return spdlog::level::debug;    break;
-            case 1:     return spdlog::level::info;     break;
-            case 2:     return spdlog::level::warn;     break;
-            case 3:     return spdlog::level::err;      break;
-            case 4:     return spdlog::level::critical; break;
-            // spdlog does not have a level higher than critical,
-            // so map both panic and fatal levels to critical
-            case 5:     return spdlog::level::critical; break;
-            default:    return spdlog::level::info;     break;
+        case -1:
+            return spdlog::level::trace;
+            break;
+        case 0:
+            return spdlog::level::debug;
+            break;
+        case 1:
+            return spdlog::level::info;
+            break;
+        case 2:
+            return spdlog::level::warn;
+            break;
+        case 3:
+            return spdlog::level::err;
+            break;
+        case 4:
+            return spdlog::level::critical;
+            break;
+        // spdlog does not have a level higher than critical,
+        // so map both panic and fatal levels to critical
+        case 5:
+            return spdlog::level::critical;
+            break;
+        default:
+            return spdlog::level::info;
+            break;
         }
     }
 }

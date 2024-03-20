@@ -26,7 +26,8 @@ std::string extract_flag(int argc, char *argv[], int flag_pos)
     {
         return std::string(argv[flag_pos + 1]);
     }
-    else{
+    else
+    {
         return "";
     }
 }

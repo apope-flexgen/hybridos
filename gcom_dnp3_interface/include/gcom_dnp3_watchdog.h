@@ -59,8 +59,10 @@ struct Watchdog
     void disable();
     void enable();
 
-    ~Watchdog(){
-        if(id){
+    ~Watchdog()
+    {
+        if (id)
+        {
             delete id;
         }
     }

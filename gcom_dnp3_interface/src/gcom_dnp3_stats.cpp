@@ -79,31 +79,56 @@ void dnp3stats_chnlEventCallback(void *pCallbackParam, TMWCHNL_STAT_EVENT eventT
     }
     case TMWCHNL_STAT_OPEN:
     {
-        /* pEventData is TCP_IO_CHANNEL */
-        channel_stats.time_to_connect = ((TCP_IO_CHANNEL *)pEventData)->time_connect;
-        sprintf(channel_stats.port, "%d", ((TCP_IO_CHANNEL *)pEventData)->chnlConfig.ipPort);
-        channel_stats.connectedIPAddresses.push_back(((TCP_IO_CHANNEL *)pEventData)->lastIPAddress);
-        timings.connection_time_mutex.lock();
-        timings.time_to_connect = ((TCP_IO_CHANNEL *)pEventData)->time_connect;
-        timings.connection_time_mutex.unlock();
-        channel_stats.open_channels++;
-        if (channel_stats.who == DNP3_MASTER)
+        if (channel_stats.sys->protocol_dependencies->conn_type == Conn_Type::TCP)
         {
-            if (!spam_limit(channel_stats.sys, channel_stats.sys->comms_errors))
+            channel_stats.time_to_connect = ((TCP_IO_CHANNEL *)pEventData)->time_connect;
+            sprintf(channel_stats.port, "%d", ((TCP_IO_CHANNEL *)pEventData)->chnlConfig.ipPort);
+            channel_stats.connectedIPAddresses.push_back(((TCP_IO_CHANNEL *)pEventData)->lastIPAddress);
+            timings.connection_time_mutex.lock();
+            timings.time_to_connect = ((TCP_IO_CHANNEL *)pEventData)->time_connect;
+            timings.connection_time_mutex.unlock();
+            channel_stats.open_channels++;
+            if (channel_stats.who == DNP3_MASTER)
             {
-                FPS_INFO_LOG("Connected to server. Time to connect %d ms.", channel_stats.time_to_connect);
+                if (!spam_limit(channel_stats.sys, channel_stats.sys->comms_errors))
+                {
+                    FPS_INFO_LOG("Connected to server. Time to connect %d ms.", channel_stats.time_to_connect);
+                }
+                std::string message = fmt::format("Connected to Server");
+                emit_event(&clientSysp->fims_dependencies->fims_gateway, clientSysp->fims_dependencies->name.c_str(), message.c_str(), 3);
             }
-            std::string message = fmt::format("Connected to Server");
-            emit_event(&clientSysp->fims_dependencies->fims_gateway, clientSysp->fims_dependencies->name.c_str(), message.c_str(), 3);
+            else
+            {
+                if (!spam_limit(channel_stats.sys, channel_stats.sys->comms_errors))
+                {
+                    FPS_INFO_LOG("Connected to client. Time to connect %d ms.", channel_stats.time_to_connect);
+                }
+                std::string message = fmt::format("Connected to Client");
+                emit_event(&serverSysp->fims_dependencies->fims_gateway, serverSysp->fims_dependencies->name.c_str(), message.c_str(), 3);
+            }
         }
         else
         {
-            if (!spam_limit(channel_stats.sys, channel_stats.sys->comms_errors))
+
+            channel_stats.open_channels++;
+            if (channel_stats.who == DNP3_MASTER)
             {
-                FPS_INFO_LOG("Connected to client. Time to connect %d ms.", channel_stats.time_to_connect);
+                if (!spam_limit(channel_stats.sys, channel_stats.sys->comms_errors))
+                {
+                    FPS_INFO_LOG("Connected to server.");
+                }
+                std::string message = fmt::format("Connected to Server");
+                emit_event(&clientSysp->fims_dependencies->fims_gateway, clientSysp->fims_dependencies->name.c_str(), message.c_str(), 3);
             }
-            std::string message = fmt::format("Connected to Client");
-            emit_event(&serverSysp->fims_dependencies->fims_gateway, serverSysp->fims_dependencies->name.c_str(), message.c_str(), 3);
+            else
+            {
+                if (!spam_limit(channel_stats.sys, channel_stats.sys->comms_errors))
+                {
+                    FPS_INFO_LOG("Connected to client.");
+                }
+                std::string message = fmt::format("Connected to Client");
+                emit_event(&serverSysp->fims_dependencies->fims_gateway, serverSysp->fims_dependencies->name.c_str(), message.c_str(), 3);
+            }
         }
         break;
     }

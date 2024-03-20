@@ -44,6 +44,14 @@
 
 using namespace std;
 
+void toLowercase(char *str)
+{
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        str[i] = std::tolower(str[i]);
+    }
+}
+
 bool spam_limit(GcomSystem *sys, int &max_errors)
 {
     sys->error_mutex.lock();
@@ -61,8 +69,8 @@ bool spam_limit(GcomSystem *sys, int &max_errors)
 // these are the types decoded from the config file
 // must match the typedef sequence
 const char *dreg_types[] = {"AnOPInt16", "AnOPInt32", "AnOPF32", "CROB", "analog", "binary", "analogOS", "binaryOS", "counter", 0};
-/// @brief 
-/// @param fp 
+/// @brief
+/// @param fp
 void deleteFlexPoint(void *fp)
 {
     if (fp != nullptr)
@@ -1426,6 +1434,10 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
             {
                 sys.protocol_dependencies->conn_type = Conn_Type::TCP;
             }
+            if (strcmp(conn_str, "RTU") == 0)
+            {
+                sys.protocol_dependencies->conn_type = Conn_Type::RTU;
+            }
         }
         else
         {
@@ -1435,7 +1447,7 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
     // serial/RTU stuff:
     if (ret)
     {
-        ret = getCJint(cj, "baud", sys.protocol_dependencies->baud, false);
+        ret = getCJint(cj, "baud_rate", sys.protocol_dependencies->baud, false);
         if (!ret)
         {
             FPS_ERROR_LOG("Error: 'baud' must be an integer.");
@@ -1446,23 +1458,53 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
 
     if (ret)
     {
-        ret = getCJint(cj, "dataBits", sys.protocol_dependencies->dataBits, false);
+        ret = getCJint(cj, "data_bits", sys.protocol_dependencies->dataBits, false);
         if (!ret)
         {
-            FPS_ERROR_LOG("Error: 'dataBits' must be an integer.");
+            FPS_ERROR_LOG("Error: 'data_bits' must be an integer.");
             final_ret = false;
             ret = true;
+        }
+        else
+        {
+            if (sys.protocol_dependencies->dataBits == 7)
+            {
+                sys.protocol_dependencies->data_bits = TMWTARG232_DATA_BITS_7;
+            }
+            else if (sys.protocol_dependencies->dataBits == 8)
+            {
+                sys.protocol_dependencies->data_bits = TMWTARG232_DATA_BITS_8;
+            }
+            else
+            {
+                sys.protocol_dependencies->data_bits = TMWTARG232_DATA_BITS_8;
+            }
         }
     }
 
     if (ret)
     {
-        ret = getCJdouble(cj, "stopBits", sys.protocol_dependencies->stopBits, false);
+        ret = getCJdouble(cj, "stop_bits", sys.protocol_dependencies->stopBits, false);
         if (!ret)
         {
-            FPS_ERROR_LOG("Error: 'stopBits' must be a double.");
+            FPS_ERROR_LOG("Error: 'stop_bits' must be a double.");
             final_ret = false;
             ret = true;
+        }
+        else
+        {
+            if (sys.protocol_dependencies->stopBits == 1)
+            {
+                sys.protocol_dependencies->stop_bits = TMWTARG232_STOP_BITS_1;
+            }
+            else if (sys.protocol_dependencies->stopBits == 8)
+            {
+                sys.protocol_dependencies->stop_bits = TMWTARG232_STOP_BITS_2;
+            }
+            else
+            {
+                sys.protocol_dependencies->stop_bits = TMWTARG232_STOP_BITS_1;
+            }
         }
     }
 
@@ -1475,6 +1517,26 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
             final_ret = false;
             ret = true;
         }
+        else
+        {
+            toLowercase(sys.protocol_dependencies->parity);
+            if (strcmp(sys.protocol_dependencies->parity, "none") == 0)
+            {
+                sys.protocol_dependencies->parity_type = TMWTARG232_PARITY_NONE;
+            }
+            else if (strcmp(sys.protocol_dependencies->parity, "odd") == 0)
+            {
+                sys.protocol_dependencies->parity_type = TMWTARG232_PARITY_ODD;
+            }
+            else if (strcmp(sys.protocol_dependencies->parity, "even") == 0)
+            {
+                sys.protocol_dependencies->parity_type = TMWTARG232_PARITY_EVEN;
+            }
+            else
+            {
+                sys.protocol_dependencies->parity_type = TMWTARG232_PARITY_NONE;
+            }
+        }
     }
 
     if (ret)
@@ -1485,6 +1547,27 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
             FPS_ERROR_LOG("Error: 'flowType' must be a string.");
             final_ret = false;
             ret = true;
+        }
+        else
+        {
+            toLowercase(sys.protocol_dependencies->flowType);
+            if (strcmp(sys.protocol_dependencies->flowType, "none") == 0)
+            {
+                sys.protocol_dependencies->port_mode = TMWTARG232_MODE_NONE;
+            }
+            else if (strcmp(sys.protocol_dependencies->flowType, "hardware") == 0)
+            {
+                sys.protocol_dependencies->port_mode = TMWTARG232_MODE_HARDWARE;
+            }
+            else if ((strcmp(sys.protocol_dependencies->flowType, "software") == 0) ||
+                     (strcmp(sys.protocol_dependencies->flowType, "xonxoff") == 0))
+            {
+                sys.protocol_dependencies->port_mode = TMWTARG232_MODE_WINDOWS;
+            }
+            else
+            {
+                sys.protocol_dependencies->port_mode = TMWTARG232_MODE_NONE;
+            }
         }
     }
 
@@ -1501,10 +1584,10 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
 
     if (ret)
     {
-        ret = getCJstr(cj, "deviceName", sys.protocol_dependencies->deviceName, false);
+        ret = getCJstr(cj, "serial_device", sys.protocol_dependencies->deviceName, false);
         if (!ret)
         {
-            FPS_ERROR_LOG("Error: 'deviceName' must be a string.");
+            FPS_ERROR_LOG("Error: 'serial_device' must be a string.");
             final_ret = false;
             ret = true;
         }

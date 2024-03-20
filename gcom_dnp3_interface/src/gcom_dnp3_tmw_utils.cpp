@@ -84,33 +84,61 @@ void setupTMWIOConfig(GcomSystem &sys)
     DNPLINK_CONFIG *linkConfig = &(sys.protocol_dependencies->dnp3.linkConfig);
 
     // all of this will need to change based on config settings...
-    linkConfig->networkType = DNPLINK_NETWORK_TCP_UDP;
-
-    IOConfig->type = TMWTARGIO_TYPE_TCP;
-    strcpy(IOConfig->targTCP.chnlName, sys.id);
-    strcpy(IOConfig->targTCP.ipAddress, sys.protocol_dependencies->ip_address);
-    IOConfig->targTCP.ipAddress[63] = '\0';
-    IOConfig->targTCP.ipPort = sys.protocol_dependencies->port;
-    if (!sys.protocol_dependencies->dnp3.unsolUpdate)
+    if (sys.protocol_dependencies->conn_type == Conn_Type::TCP)
     {
-        IOConfig->targTCP.polledMode = true;
+        linkConfig->networkType = DNPLINK_NETWORK_TCP_UDP;
+
+        IOConfig->type = TMWTARGIO_TYPE_TCP;
+        strcpy(IOConfig->targTCP.chnlName, sys.id);
+        strcpy(IOConfig->targTCP.ipAddress, sys.protocol_dependencies->ip_address);
+        IOConfig->targTCP.ipAddress[63] = '\0';
+        IOConfig->targTCP.ipPort = sys.protocol_dependencies->port;
+        if (!sys.protocol_dependencies->dnp3.unsolUpdate)
+        {
+            IOConfig->targTCP.polledMode = true;
+        }
+        else
+        {
+            IOConfig->targTCP.polledMode = false;
+        }
+        IOConfig->targTCP.disconnectOnNewSyn = TMWDEFS_TRUE;
+        IOConfig->targTCP.initUnsolUDPPort = sys.protocol_dependencies->port;
+
+        if (sys.protocol_dependencies->who == DNP3_MASTER)
+        {
+            IOConfig->targTCP.mode = TMWTARGTCP_MODE_CLIENT;
+            IOConfig->targTCP.role = TMWTARGTCP_ROLE_MASTER;
+        }
+        else
+        {
+            IOConfig->targTCP.mode = TMWTARGTCP_MODE_SERVER;
+            IOConfig->targTCP.role = TMWTARGTCP_ROLE_OUTSTATION;
+        }
     }
     else
-    {
-        IOConfig->targTCP.polledMode = false;
-    }
-    IOConfig->targTCP.disconnectOnNewSyn = TMWDEFS_TRUE;
-    IOConfig->targTCP.initUnsolUDPPort = sys.protocol_dependencies->port;
+    { // RTU
 
-    if (sys.protocol_dependencies->who == DNP3_MASTER)
-    {
-        IOConfig->targTCP.mode = TMWTARGTCP_MODE_CLIENT;
-        IOConfig->targTCP.role = TMWTARGTCP_ROLE_MASTER;
-    }
-    else
-    {
-        IOConfig->targTCP.mode = TMWTARGTCP_MODE_SERVER;
-        IOConfig->targTCP.role = TMWTARGTCP_ROLE_OUTSTATION;
+        IOConfig->type = TMWTARGIO_TYPE_232;
+
+        strcpy(IOConfig->targ232.chnlName, sys.id);
+
+        char baudString[20];
+        sprintf(baudString, "%d", sys.protocol_dependencies->baud);
+        ; // Convert int to string
+        strcpy(IOConfig->targ232.baudRate, baudString);
+        IOConfig->targ232.numDataBits = sys.protocol_dependencies->data_bits;
+        IOConfig->targ232.numStopBits = sys.protocol_dependencies->stop_bits;
+        IOConfig->targ232.parity = sys.protocol_dependencies->parity_type;
+        IOConfig->targ232.portMode = sys.protocol_dependencies->port_mode;
+        if (!sys.protocol_dependencies->dnp3.unsolUpdate)
+        {
+            IOConfig->targ232.polledMode = true;
+        }
+        else
+        {
+            IOConfig->targ232.polledMode = false;
+        }
+        strcpy(IOConfig->targ232.portName, sys.protocol_dependencies->deviceName);
     }
 }
 

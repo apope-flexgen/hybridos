@@ -28,7 +28,7 @@ extern "C"
 #include "gcom_dnp3_watchdog.h"
 #include "gcom_dnp3_flags.h"
 #include "gcom_dnp3_fims.h"
-//#include "tscns.h"
+// #include "tscns.h"
 #include "version.h"
 
 #ifndef DNP3_MASTER
@@ -43,8 +43,8 @@ struct ChannelStats;    // defined in gcom_dnp3_stats.h
 struct SessionStats;    // defined in gcom_dnp3_stats.h
 struct Timings;         // defined in gcom_dnp3_stats.h
 struct PointStatusInfo; // defined in gcom_dnp3_flags.h
-struct Heartbeat;        // defined in gcom_dnp3_heartbeat.h
-struct Watchdog;         // defined in gcom_dnp3_watchdog.h
+struct Heartbeat;       // defined in gcom_dnp3_heartbeat.h
+struct Watchdog;        // defined in gcom_dnp3_watchdog.h
 struct GcomSystem;      // defined below
 
 enum class FimsMethod : uint8_t;
@@ -117,18 +117,18 @@ public:
     bool sent_operate = false;
 
     Register_Types type;
-    std::string name;     // how this point is identified
-    const char *site_uri; // when running in server mode this will be the uri we listen to pubs on -- This may need to be per site (not per point)
-    const char *uri;      // fims uri
+    std::string name;        // how this point is identified
+    const char *site_uri;    // when running in server mode this will be the uri we listen to pubs on -- This may need to be per site (not per point)
+    const char *uri;         // fims uri
     char *output_status_uri; // the fims uri that we publish output status to
 
-    double scale;         // scale based on how we're representing the value on this side of the connection (e.g. x1000, x10, /1000, /10)
-    double offset;        // shift based off of how we're representing the value on this side of the connection
-    double timeout;       // used to detect COMM_LOSS
-    double standby_value = 0; // value is currently in LOCAL_FORCED mode, and we are saving this value for when we clear that flag
-    double operate_value = 0; // the last value sent as an operate command from the client (12 or 41); this is what we will publish by default
-    double resend_tolerance = 0; // do we send another operate command if the output status differs by specific tolerance? (only after value has adjusted)
-    double resend_rate_ms = 0; // how often do we send another operate command if the output status differs by specific tolerance? Measured in milliseconds.
+    double scale;                 // scale based on how we're representing the value on this side of the connection (e.g. x1000, x10, /1000, /10)
+    double offset;                // shift based off of how we're representing the value on this side of the connection
+    double timeout;               // used to detect COMM_LOSS
+    double standby_value = 0;     // value is currently in LOCAL_FORCED mode, and we are saving this value for when we clear that flag
+    double operate_value = 0;     // the last value sent as an operate command from the client (12 or 41); this is what we will publish by default
+    double resend_tolerance = 0;  // do we send another operate command if the output status differs by specific tolerance? (only after value has adjusted)
+    double resend_rate_ms = 0;    // how often do we send another operate command if the output status differs by specific tolerance? Measured in milliseconds.
     double last_operate_time = 0; // measured in seconds
 
     std::chrono::time_point<std::chrono::system_clock> last_pub; // time of last update
@@ -243,9 +243,12 @@ struct PubWork
     std::string pub_uri;
     std::map<std::string, PubPoint *> pub_vals;
 
-    ~PubWork(){
-        for(auto pair : pub_vals){
-            if(pair.second){
+    ~PubWork()
+    {
+        for (auto pair : pub_vals)
+        {
+            if (pair.second)
+            {
                 delete pair.second;
                 pair.second = nullptr;
             }
@@ -293,8 +296,10 @@ struct FimsDependencies
 
     ~FimsDependencies()
     {
-        for (auto pair : uris_with_data) {
-            for (auto pub_work_item : pair.second) {
+        for (auto pair : uris_with_data)
+        {
+            for (auto pub_work_item : pair.second)
+            {
                 if (pub_work_item)
                     delete pub_work_item;
             }
@@ -433,11 +438,14 @@ struct ProtocolDependencies
     int dataBits = 0;
     double stopBits = 0;
     char *parity;
-    u8 data_bits = 0;
-    u8 stop_bits = 0;
+
     char *flowType;
     int asyncOpenDelay = 0;
     char *deviceName;
+    TMWTARG232_DATA_BITS data_bits = TMWTARG232_DATA_BITS_8; // for direct TMW use
+    TMWTARG232_STOP_BITS stop_bits = TMWTARG232_STOP_BITS_1; // for direct TMW use
+    TMWTARG232_PARITY parity_type = TMWTARG232_PARITY_NONE;  // for direct TMW use
+    TMWTARG232_PORT_MODE port_mode = TMWTARG232_MODE_NONE;   // for direct TMW use
 
     int master_address = 1;
     int station_address = 10;
@@ -501,7 +509,7 @@ struct GcomSystem
     Watchdog *watchdog;
     bool start_signal; // to synchronize every single thread upon first startup
     bool keep_running;
-    //TSCNS mono_clock;
+    // TSCNS mono_clock;
     std::future<bool> listener_future;
     std::future<bool> stats_pub_future;
     std::future<bool> watchdog_future;
@@ -525,15 +533,14 @@ struct GcomSystem
     std::map<std::string, varList *> individualBitsMap;
     std::shared_mutex db_mutex; // for R/W locking of TMWSIM_POINTs
     std::mutex error_mutex;
-    int parse_errors = 0;
-    int point_errors = 0;
-    int fims_errors = 0;
-    int comms_errors = 0;
-    int heartbeat_errors = 0;
-    int watchdog_errors = 0;
-    
-    Version git_version_info;
+    int parse_errors;
+    int point_errors;
+    int fims_errors;
+    int comms_errors;
+    int heartbeat_errors;
+    int watchdog_errors;
 
+    Version git_version_info;
 
     GcomSystem()
     {
@@ -657,9 +664,12 @@ struct fmt::formatter<TMWSIM_POINT>
         if (dbPoint.type == TMWSIM_TYPE_ANALOG)
         {
             fmt::format_to(ctx.out(), R"("raw_value": {}, )", dbPoint.data.analog.value);
-            if(flexPoint->scale == 0){
+            if (flexPoint->scale == 0)
+            {
                 fmt::format_to(ctx.out(), R"("scaled_value": {}, )", dbPoint.data.analog.value);
-            } else {
+            }
+            else
+            {
                 fmt::format_to(ctx.out(), R"("scaled_value": {}, )", dbPoint.data.analog.value / flexPoint->scale);
             }
             fmt::format_to(ctx.out(), R"("deadband": {}, )", dbPoint.data.analog.deadband);

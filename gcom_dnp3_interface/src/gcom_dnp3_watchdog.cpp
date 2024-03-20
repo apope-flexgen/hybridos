@@ -16,7 +16,7 @@ extern "C"
 #include "gcom_dnp3_system_structs.h"
 #include "logger/gcom_dnp3_logger.h"
 #include "gcom_dnp3_utils.h"
-/// @brief 
+/// @brief
 void Watchdog::setAlarmState()
 {
     state_normal = false;
@@ -27,13 +27,13 @@ void Watchdog::setAlarmState()
     timeOfAlarm = get_time_double();
 
     std::string message = fmt::format("Watchdog [{}] has entered the [ALARM] state.", id);
-    if(!spam_limit(sys, sys->watchdog_errors))
+    if (!spam_limit(sys, sys->watchdog_errors))
     {
         FPS_WARNING_LOG(message);
     }
     emit_event(&sys->fims_dependencies->fims_gateway, sys->fims_dependencies->name.c_str(), message.c_str(), 3);
 }
-/// @brief 
+/// @brief
 void Watchdog::setFaultState()
 {
     state_normal = false;
@@ -43,7 +43,7 @@ void Watchdog::setFaultState()
     state_str = "FAULT";
     timeOfFault = get_time_double();
     std::string message = fmt::format("Watchdog [{}] has entered the [FAULT] state.", id);
-    if(!spam_limit(sys, sys->watchdog_errors))
+    if (!spam_limit(sys, sys->watchdog_errors))
     {
         FPS_ERROR_LOG(message);
     }
@@ -71,7 +71,7 @@ void Watchdog::setRecoveryState()
     state_str = "RECOVERY";
 
     std::string message = fmt::format("Watchdog [{}] has entered the [RECOVERY] state.", id);
-    if(!spam_limit(sys, sys->watchdog_errors))
+    if (!spam_limit(sys, sys->watchdog_errors))
     {
         FPS_INFO_LOG(message);
     }
@@ -88,14 +88,13 @@ void Watchdog::setNormalState()
     state_str = "NORMAL";
 
     std::string message = fmt::format("Watchdog [{}] has entered the [NORMAL] state.", id);
-    if(!spam_limit(sys, sys->watchdog_errors))
+    if (!spam_limit(sys, sys->watchdog_errors))
     {
         FPS_INFO_LOG(message);
     }
     emit_event(&sys->fims_dependencies->fims_gateway, sys->fims_dependencies->name.c_str(), message.c_str(), 3);
-
 }
-/// @brief 
+/// @brief
 void Watchdog::disable()
 {
     enabled = false;
@@ -117,7 +116,7 @@ void Watchdog::disable()
     value_changed = 0;
     last_value_changed = 0;
 }
-/// @brief 
+/// @brief
 void Watchdog::enable()
 {
     if (state_init)
@@ -130,7 +129,7 @@ void Watchdog::enable()
     }
     enabled = true;
 }
-/// @brief 
+/// @brief
 void Watchdog::touchWatchdog()
 {
     sys->db_mutex.lock_shared();
@@ -145,8 +144,8 @@ void Watchdog::touchWatchdog()
     }
     sys->db_mutex.unlock_shared();
 }
-/// @brief 
-/// @param pWatchdog 
+/// @brief
+/// @param pWatchdog
 void watchdogCallback(void *pWatchdog)
 {
     Watchdog *watchdog = static_cast<Watchdog *>(pWatchdog);
@@ -178,20 +177,21 @@ void watchdogCallback(void *pWatchdog)
         watchdog->setNormalState();
     }
     watchdog->mtx.unlock();
-    tmwtimer_start(&watchdog->watchdog_timer, watchdog->frequency, watchdog->pChannel, watchdogCallback, pWatchdog);  
+    tmwtimer_start(&watchdog->watchdog_timer, watchdog->frequency, watchdog->pChannel, watchdogCallback, pWatchdog);
 }
 
-/// @brief 
-/// @param sys 
-/// @return 
+/// @brief
+/// @param sys
+/// @return
 bool setupWatchdogTimer(GcomSystem &sys)
 {
-    if (sys.watchdog == nullptr){
+    if (sys.watchdog == nullptr)
+    {
         return true;
     }
 
     // frequency is in milliseconds
-    FPS_INFO_LOG("Setting up watchdog for point [%s] every %f seconds", sys.watchdog->id, sys.watchdog->frequency/1000.0);
+    FPS_INFO_LOG("Setting up watchdog for point [%s] every %f seconds", sys.watchdog->id, sys.watchdog->frequency / 1000.0);
     {
         std::unique_lock<std::mutex> lk{sys.main_mutex};
         sys.main_cond.wait(lk, [&]()

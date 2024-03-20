@@ -5,10 +5,11 @@
 #include <chrono>
 #include <fstream>
 #include "gcom_dnp3_system_structs.h"
-extern "C"{
-    #include "tmwscl/utils/tmwsim.h"
-    #include "tmwscl/utils/tmwchnl.h"
-    #include "tmwscl/utils/tmwtimer.h"
+extern "C"
+{
+#include "tmwscl/utils/tmwsim.h"
+#include "tmwscl/utils/tmwchnl.h"
+#include "tmwscl/utils/tmwtimer.h"
 }
 
 struct Heartbeat
@@ -37,7 +38,7 @@ struct Heartbeat
     u64 last_val = 0;
     int count;
     double frequency = 1000; // seconds (divided by 1000 at config read time)
-    int timeout; // in seconds
+    int timeout;             // in seconds
     int offset_time = 0;
     int max_value_int = 4096;
     u64 max_value = 4096;

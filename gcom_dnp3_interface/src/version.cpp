@@ -18,32 +18,33 @@
 // extern char _binary_GIT_TAG_start;
 // extern char _binary_GIT_TAG_end;
 
-Version::Version ()
+Version::Version()
 {
     build = NULL;
     commit = NULL;
     tag = NULL;
 }
 
-
-Version::~Version ()
+Version::~Version()
 {
-//     if (build != NULL) delete[] build;
-//     if (commit != NULL) delete[] commit;
-//     if (tag != NULL) delete[] tag;
+    //     if (build != NULL) delete[] build;
+    //     if (commit != NULL) delete[] commit;
+    //     if (tag != NULL) delete[] tag;
 }
 
-void Version::init(void) {
-    build = (char*)TOSTRING(GITVERSION); 
-    commit = (char*)TOSTRING(GITCOMMIT);
-    tag = (char*)TOSTRING(GITTAG);
+void Version::init(void)
+{
+    build = (char *)TOSTRING(GITVERSION);
+    commit = (char *)TOSTRING(GITCOMMIT);
+    tag = (char *)TOSTRING(GITTAG);
 }
 
-char* Version::extract(char* info, char* start, char* end)
+char *Version::extract(char *info, char *start, char *end)
 {
     int iter = 0;
-    char* p_iter = start;
-    while ( p_iter != end ) {
+    char *p_iter = start;
+    while (p_iter != end)
+    {
         p_iter++;
         iter++;
     }
@@ -52,17 +53,17 @@ char* Version::extract(char* info, char* start, char* end)
     return info;
 }
 
-char* Version::get_build(void)
+char *Version::get_build(void)
 {
     return build;
 }
 
-char* Version::get_commit(void)
+char *Version::get_commit(void)
 {
     return commit;
 }
 
-char* Version::get_tag(void)
+char *Version::get_tag(void)
 {
     return tag;
 }

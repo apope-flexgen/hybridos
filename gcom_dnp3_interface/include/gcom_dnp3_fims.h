@@ -83,7 +83,7 @@ struct UriRequest
     static constexpr auto Stats_Suffix = "_stats";             // get
     static constexpr auto Raw_Request_Suffix = "_raw";         // get
     static constexpr auto Timings_Request_Suffix = "_timings"; // get
-    static constexpr auto Errors_Request_Suffix = "_errors";    // get
+    static constexpr auto Errors_Request_Suffix = "_errors";   // get
     static constexpr auto Config_Suffix = "_config";           // get
 
     UriRequest()

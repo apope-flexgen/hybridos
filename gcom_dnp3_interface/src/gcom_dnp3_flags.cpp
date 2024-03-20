@@ -13,8 +13,8 @@ extern "C"
 #include "gcom_dnp3_system_structs.h"
 #include "gcom_dnp3_utils.h"
 #include "logger/gcom_dnp3_logger.h"
-/// @brief 
-/// @param sys 
+/// @brief
+/// @param sys
 void outputPointsGoOnline(GcomSystem &sys)
 {
     if (sys.protocol_dependencies->who == DNP3_MASTER)
@@ -52,14 +52,13 @@ void outputPointsGoOnline(GcomSystem &sys)
         }
     }
 }
-/// @brief 
-/// @param pPointTimeoutStruct 
+/// @brief
+/// @param pPointTimeoutStruct
 void pointTimeout(void *pPointTimeoutStruct)
 {
     TMWSIM_POINT *dbPoint = ((PointTimeoutStruct *)pPointTimeoutStruct)->dbPoint;
     DNP3Dependencies *dnp3_sys = ((PointTimeoutStruct *)pPointTimeoutStruct)->dnp3_sys;
     GcomSystem *sys = ((FlexPoint *)(dbPoint->flexPointHandle))->sys;
-
 
     ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
     if ((dbPoint->flags & DNPDEFS_DBAS_FLAG_RESTART) == 0)
@@ -84,7 +83,7 @@ void pointTimeout(void *pPointTimeoutStruct)
                 sdnpo032_addEvent(((TMWSESN *)(dbPoint->pSCLHandle)), dbPoint->pointNumber, &analogValue, dbPoint->flags, &timeStamp);
                 ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
             }
-            if(!spam_limit(sys, sys->comms_errors))
+            if (!spam_limit(sys, sys->comms_errors))
             {
                 FPS_ERROR_LOG("Analog input point [%d] status is [COMM_LOST]", dbPoint->pointNumber);
                 FPS_LOG_IT("comm_lost");
@@ -93,7 +92,8 @@ void pointTimeout(void *pPointTimeoutStruct)
             dnp3_sys->point_status_info->num_analog_inputs_online--;
             dnp3_sys->point_status_info->num_analog_inputs_comm_lost++;
             dnp3_sys->point_status_info->point_status_mutex.unlock();
-        }else if (dbPoint->type == TMWSIM_TYPE_COUNTER)
+        }
+        else if (dbPoint->type == TMWSIM_TYPE_COUNTER)
         {
             TMWTYPES_ULONG counterValue;
             ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
@@ -107,7 +107,7 @@ void pointTimeout(void *pPointTimeoutStruct)
                 sdnpo022_addEvent(((TMWSESN *)(dbPoint->pSCLHandle)), dbPoint->pointNumber, counterValue, dbPoint->flags, &timeStamp);
                 ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
             }
-            if(!spam_limit(sys, sys->comms_errors))
+            if (!spam_limit(sys, sys->comms_errors))
             {
                 FPS_ERROR_LOG("Counter [%d] status is [COMM_LOST]", dbPoint->pointNumber);
                 FPS_LOG_IT("comm_lost");
@@ -128,7 +128,7 @@ void pointTimeout(void *pPointTimeoutStruct)
                 ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
             }
             // TODO we may need to reset the count with a _request
-            if(!spam_limit(sys, sys->comms_errors))
+            if (!spam_limit(sys, sys->comms_errors))
             {
                 FPS_ERROR_LOG("Binary input point [%d] status is [COMM_LOST]", dbPoint->pointNumber);
                 FPS_LOG_IT("comm_lost");
@@ -206,7 +206,7 @@ void setInputPointOnline(TMWSIM_POINT *dbPoint)
             dnp3_sys->point_status_info->num_analog_inputs_comm_lost--;
             dnp3_sys->point_status_info->num_analog_inputs_online++;
             dnp3_sys->point_status_info->point_status_mutex.unlock();
-            if(!spam_limit(sys, sys->comms_errors))
+            if (!spam_limit(sys, sys->comms_errors))
             {
                 FPS_INFO_LOG("Analog input point [%d] status is [ONLINE]", dbPoint->pointNumber);
             }
@@ -217,7 +217,7 @@ void setInputPointOnline(TMWSIM_POINT *dbPoint)
             dnp3_sys->point_status_info->num_counters_comm_lost--;
             dnp3_sys->point_status_info->num_counters_online++;
             dnp3_sys->point_status_info->point_status_mutex.unlock();
-            if(!spam_limit(sys, sys->comms_errors))
+            if (!spam_limit(sys, sys->comms_errors))
             {
                 FPS_INFO_LOG("Counter [%d] status is [ONLINE]", dbPoint->pointNumber);
             }
@@ -228,7 +228,7 @@ void setInputPointOnline(TMWSIM_POINT *dbPoint)
             dnp3_sys->point_status_info->num_binary_inputs_comm_lost--;
             dnp3_sys->point_status_info->num_binary_inputs_online++;
             dnp3_sys->point_status_info->point_status_mutex.unlock();
-            if(!spam_limit(sys, sys->comms_errors))
+            if (!spam_limit(sys, sys->comms_errors))
             {
                 FPS_INFO_LOG("Binary input point [%d] status is [ONLINE]", dbPoint->pointNumber);
             }
@@ -242,7 +242,8 @@ void setInputPointOnline(TMWSIM_POINT *dbPoint)
             dnp3_sys->point_status_info->num_analog_inputs_restart--;
             dnp3_sys->point_status_info->num_analog_inputs_online++;
             dnp3_sys->point_status_info->point_status_mutex.unlock();
-        } else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+        }
+        else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
         {
             dnp3_sys->point_status_info->point_status_mutex.lock();
             dnp3_sys->point_status_info->num_counters_restart--;
@@ -277,8 +278,8 @@ void setInputPointOnline(TMWSIM_POINT *dbPoint)
         }
     }
 }
-/// @brief 
-/// @param dbPoint 
+/// @brief
+/// @param dbPoint
 void checkPointCommLost(TMWSIM_POINT *dbPoint)
 {
     GcomSystem *sys = ((FlexPoint *)dbPoint->flexPointHandle)->sys;
@@ -288,7 +289,7 @@ void checkPointCommLost(TMWSIM_POINT *dbPoint)
         {
             if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
             {
-                if(!spam_limit(sys, sys->comms_errors))
+                if (!spam_limit(sys, sys->comms_errors))
                 {
                     FPS_ERROR_LOG("Analog input point [%d] status is [COMM_LOST]", dbPoint->pointNumber);
                     FPS_LOG_IT("comm_lost");
@@ -296,7 +297,7 @@ void checkPointCommLost(TMWSIM_POINT *dbPoint)
             }
             else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
             {
-                if(!spam_limit(sys, sys->comms_errors))
+                if (!spam_limit(sys, sys->comms_errors))
                 {
                     FPS_ERROR_LOG("Counter [%d] status is [COMM_LOST]", dbPoint->pointNumber);
                     FPS_LOG_IT("comm_lost");
@@ -304,7 +305,7 @@ void checkPointCommLost(TMWSIM_POINT *dbPoint)
             }
             else
             {
-                if(!spam_limit(sys, sys->comms_errors))
+                if (!spam_limit(sys, sys->comms_errors))
                 {
                     FPS_ERROR_LOG("Binary input point [%d] status is [COMM_LOST]", dbPoint->pointNumber);
                     FPS_LOG_IT("comm_lost");
@@ -315,21 +316,21 @@ void checkPointCommLost(TMWSIM_POINT *dbPoint)
         {
             if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
             {
-                if(!spam_limit(sys, sys->comms_errors))
+                if (!spam_limit(sys, sys->comms_errors))
                 {
                     FPS_INFO_LOG("Analog input point [%d] status is [ONLINE]", dbPoint->pointNumber);
                 }
             }
             else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
             {
-                if(!spam_limit(sys, sys->comms_errors))
+                if (!spam_limit(sys, sys->comms_errors))
                 {
                     FPS_INFO_LOG("Counter [%d] status is [ONLINE]", dbPoint->pointNumber);
                 }
             }
             else
             {
-                if(!spam_limit(sys, sys->comms_errors))
+                if (!spam_limit(sys, sys->comms_errors))
                 {
                     FPS_INFO_LOG("Binary input point [%d] status is [ONLINE]", dbPoint->pointNumber);
                 }
@@ -339,7 +340,7 @@ void checkPointCommLost(TMWSIM_POINT *dbPoint)
         {
             if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
             {
-                if(!spam_limit(sys, sys->comms_errors))
+                if (!spam_limit(sys, sys->comms_errors))
                 {
                     FPS_ERROR_LOG("Analog input point [%d] status is [OVER_RANGE]", dbPoint->pointNumber);
                     FPS_LOG_IT("overflow");
@@ -347,7 +348,7 @@ void checkPointCommLost(TMWSIM_POINT *dbPoint)
             }
             else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
             {
-                if(!spam_limit(sys, sys->comms_errors))
+                if (!spam_limit(sys, sys->comms_errors))
                 {
                     FPS_ERROR_LOG("Counter [%d] status is [ROLLOVER]", dbPoint->pointNumber);
                     FPS_LOG_IT("overflow");
@@ -358,13 +359,14 @@ void checkPointCommLost(TMWSIM_POINT *dbPoint)
         {
             if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
             {
-                if(!spam_limit(sys, sys->comms_errors))
+                if (!spam_limit(sys, sys->comms_errors))
                 {
                     FPS_INFO_LOG("Analog input point [%d] is back in range.", dbPoint->pointNumber);
                 }
-            } else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+            }
+            else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
             {
-                if(!spam_limit(sys, sys->comms_errors))
+                if (!spam_limit(sys, sys->comms_errors))
                 {
                     FPS_INFO_LOG("Counter [%d] is back in range.", dbPoint->pointNumber);
                 }
@@ -518,8 +520,8 @@ void updatePointStatus(GcomSystem &sys)
     }
 }
 
-/// @brief 
-/// @param dbPoint 
+/// @brief
+/// @param dbPoint
 void checkInputOverflow(TMWSIM_POINT *dbPoint)
 {
     GcomSystem *sys = ((FlexPoint *)dbPoint->flexPointHandle)->sys;
@@ -529,13 +531,15 @@ void checkInputOverflow(TMWSIM_POINT *dbPoint)
         {
             if (dbPoint->type == TMWSIM_TYPE_ANALOG)
             {
-                if(!spam_limit(sys, sys->point_errors))
+                if (!spam_limit(sys, sys->point_errors))
                 {
                     FPS_ERROR_LOG("Analog input point [%d] status is [OVER_RANGE].", dbPoint->pointNumber);
                     FPS_LOG_IT("overflow");
                 }
-            } else if (dbPoint->type == TMWSIM_TYPE_BINARY){
-                if(!spam_limit(sys, sys->point_errors))
+            }
+            else if (dbPoint->type == TMWSIM_TYPE_BINARY)
+            {
+                if (!spam_limit(sys, sys->point_errors))
                 {
                     FPS_ERROR_LOG("Binary input point [%d] status is [CHATTER_FILTER].", dbPoint->pointNumber);
                     FPS_LOG_IT("chatter");
@@ -546,18 +550,21 @@ void checkInputOverflow(TMWSIM_POINT *dbPoint)
         {
             if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
             {
-                if(!spam_limit(sys, sys->point_errors))
+                if (!spam_limit(sys, sys->point_errors))
                 {
                     FPS_INFO_LOG("Analog input point [%d] is back in range.", dbPoint->pointNumber);
                 }
-            } else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+            }
+            else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
             {
-                if(!spam_limit(sys, sys->point_errors))
+                if (!spam_limit(sys, sys->point_errors))
                 {
                     FPS_INFO_LOG("Counter [%d] is back in range.", dbPoint->pointNumber);
                 }
-            } else if (dbPoint->type == TMWSIM_TYPE_BINARY){
-                if(!spam_limit(sys, sys->point_errors))
+            }
+            else if (dbPoint->type == TMWSIM_TYPE_BINARY)
+            {
+                if (!spam_limit(sys, sys->point_errors))
                 {
                     FPS_ERROR_LOG("Binary input point [%d] is no longer chattering.", dbPoint->pointNumber);
                 }
@@ -567,8 +574,8 @@ void checkInputOverflow(TMWSIM_POINT *dbPoint)
 
     ((FlexPoint *)dbPoint->flexPointHandle)->lastFlags = dbPoint->flags;
 }
-/// @brief 
-/// @param dbPoint 
+/// @brief
+/// @param dbPoint
 void checkOutputOverflow(TMWSIM_POINT *dbPoint)
 {
     GcomSystem *sys = ((FlexPoint *)dbPoint->flexPointHandle)->sys;
@@ -578,13 +585,15 @@ void checkOutputOverflow(TMWSIM_POINT *dbPoint)
         {
             if (dbPoint->type == TMWSIM_TYPE_ANALOG)
             {
-                if(!spam_limit(sys, sys->point_errors))
+                if (!spam_limit(sys, sys->point_errors))
                 {
                     FPS_ERROR_LOG("Analog output point [%d] status is [OVER_RANGE].", dbPoint->pointNumber);
                     FPS_LOG_IT("overflow");
                 }
-            } else if (dbPoint->type == TMWSIM_TYPE_BINARY){
-                if(!spam_limit(sys, sys->point_errors))
+            }
+            else if (dbPoint->type == TMWSIM_TYPE_BINARY)
+            {
+                if (!spam_limit(sys, sys->point_errors))
                 {
                     FPS_ERROR_LOG("Binary output point [%d] status is [CHATTER_FILTER].", dbPoint->pointNumber);
                     FPS_LOG_IT("chatter");
@@ -595,12 +604,14 @@ void checkOutputOverflow(TMWSIM_POINT *dbPoint)
         {
             if (dbPoint->type == TMWSIM_TYPE_ANALOG)
             {
-                if(!spam_limit(sys, sys->point_errors))
+                if (!spam_limit(sys, sys->point_errors))
                 {
                     FPS_INFO_LOG("Analog output point [%d] is back in range.", dbPoint->pointNumber);
                 }
-            } else if (dbPoint->type == TMWSIM_TYPE_BINARY){
-                if(!spam_limit(sys, sys->point_errors))
+            }
+            else if (dbPoint->type == TMWSIM_TYPE_BINARY)
+            {
+                if (!spam_limit(sys, sys->point_errors))
                 {
                     FPS_ERROR_LOG("Binary output point [%d] is no longer chattering.", dbPoint->pointNumber);
                 }
