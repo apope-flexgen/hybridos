@@ -16,12 +16,16 @@ const createMockDataSource = (
   dataType: string = '',
   field: string = mockField,
   index: number = 0,
+  unit: string = mockUnit,
+  scalar: number = 1,
 ): SiteStatusDataField => {
   return {
     uri: mockURI,
     field,
     label: mockLabel,
     dataType,
+    unit,
+    scalar,
     index,
   };
 };
@@ -70,7 +74,7 @@ const createMockDataSourceResponse = (value: string, index = 0, unit = ''): Site
   });
 };
 export const mockStringResponse = createMockDataSourceResponse(mockValueString, 0);
-export const mockNumberResponse = createMockDataSourceResponse(mockValueNumberString, 1);
+export const mockNumberResponse = createMockDataSourceResponse(mockValueNumberString, 1, mockUnit);
 export const mockClothedNumberResponse = createMockDataSourceResponse(
   mockValueNumberString,
   1,
@@ -105,10 +109,12 @@ export const mockSiteStateFimsMsg = {
 };
 
 export const mockSiteStateResponse = createMockResponse({
-  activeFaults: mockActiveFaults,
-  activeAlarms: mockActiveAlarms,
-  siteState: mockSiteState,
-  siteStatusLabel: '',
+  baseData: {
+    activeFaults: mockActiveFaults,
+    activeAlarms: mockActiveAlarms,
+    siteState: mockSiteState,
+    siteStatusLabel: '',
+  },
 });
 
 export const mockConfig = {

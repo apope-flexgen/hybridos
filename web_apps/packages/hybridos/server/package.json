@@ -134,7 +134,7 @@
     "rootDir": "src",
     "moduleNameMapper": {
       "src/(.*)": [
-        "/home/hybridos/web_apps/packages/hybridos/server/src/$1"
+        "/home/hybridos/git/hybridos/web_apps/packages/hybridos/server/src/$1"
       ]
     },
     "testRegex": ".*\\.spec\\.ts$",

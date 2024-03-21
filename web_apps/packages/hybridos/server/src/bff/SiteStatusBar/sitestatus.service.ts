@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Observable, filter, map, merge } from 'rxjs';
-import { computeClothedValue } from '../../utils/utils';
+import { computeClothedValue, computeNakedValue } from '../../utils/utils';
 import { FimsService } from '../../fims/fims.service';
 import { FIMS_SERVICE } from '../../fims/interfaces/fims.interface';
 import {
@@ -133,7 +133,13 @@ export class SiteStatusService implements ISiteStatusService {
     fieldData: number | string | boolean,
     dataSource: SiteStatusDataField,
   ): SiteStatusResponse => {
-    return this.buildResponse(dataSource, fieldData);
+    const fieldDataType = typeof fieldData;
+    if (fieldDataType === 'boolean' || fieldDataType === 'string') {
+      return this.buildResponse(dataSource, fieldData);
+    }
+
+    const { value } = computeNakedValue(fieldData as number, dataSource.scalar, dataSource.unit);
+    return this.buildResponse(dataSource, value, dataSource.unit);
   };
 
   processClothedData = (fieldData: object, dataSource: SiteStatusDataField): SiteStatusResponse => {

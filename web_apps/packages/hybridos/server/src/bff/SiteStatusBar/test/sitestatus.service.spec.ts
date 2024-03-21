@@ -31,6 +31,7 @@ import {
   mockSiteStateFimsMsg,
   mockSiteStateResponse,
   mockStringResponse,
+  mockUnit,
   mockValueBoolean,
   mockValueNumber,
   mockValueString,
@@ -410,7 +411,11 @@ describe('SiteStatusService', () => {
 
     describe('number', () => {
       it('should return object with value as string', () => {
-        const response = siteStatusService.buildResponse(mockDataSourceNumber, mockValueNumber);
+        const response = siteStatusService.buildResponse(
+          mockDataSourceNumber,
+          mockValueNumber,
+          mockUnit,
+        );
 
         expect(response).toStrictEqual(mockNumberResponse);
       });

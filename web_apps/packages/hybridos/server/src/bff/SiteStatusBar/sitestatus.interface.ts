@@ -10,6 +10,8 @@ export type SiteStatusDataFieldConfig = {
   field: string;
   dataType: string;
   label: string;
+  unit?: string;
+  scalar?: number;
 };
 
 export type SiteStatusDataField = SiteStatusDataFieldConfig & {
