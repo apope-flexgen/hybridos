@@ -106,8 +106,13 @@ def kill_containers(client_container, server_container) -> None:
     '''
     Kill the client and server containers so that we can close everything out.
     '''
-    client_kill = f"pkill {INTERFACE}_client\n"
-    server_kill = f"pkill {INTERFACE}_server\n"
+    pkill_client_name = f"{INTERFACE}_client"
+    pkill_server_name = f"{INTERFACE}_server"
+    if len(pkill_client_name) > 15: # if the process name is > 15 characters, pkill is weird and doesn't work
+        pkill_client_name = pkill_client_name[:15]
+        pkill_server_name = pkill_server_name[:15]
+    client_kill = f"pkill {pkill_client_name}\n"
+    server_kill = f"pkill {pkill_client_name}\n"
     print(f"Killing {INTERFACE}_client...")
     client_container.join(1, requests.get, f"http://localhost:{CLIENT_PORT}" + \
                           f"/docker/run_command?command={client_kill}")

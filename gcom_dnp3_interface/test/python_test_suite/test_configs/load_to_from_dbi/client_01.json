@@ -1,0 +1,194 @@
+{
+  "git_commit_hash": null,
+  "git_branch": null,
+  "git_commit_author": null,
+  "baseline": {
+    "commands": [
+        "mongod --config /etc/mongod.conf &\n",
+        "sleep 1\n",
+        "dbi &\n",
+        "sleep 1\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/a/a",
+        "body": {
+          "analog_in_0": 0,
+          "analog_in_2": 0,
+          "binary_in_0": false,
+          "counter_0": 0
+        }
+      },
+      {
+        "method": "pub",
+        "uri": "/d/d",
+        "body": {
+          "binary_in_1": false
+        }
+      },
+      {
+        "method": "pub",
+        "uri": "/b/b",
+        "body": {
+          "analog_in_1": 0,
+          "analog_in_3": 0,
+          "analog_in_4": 0,
+          "analog_in_5": 0,
+          "counter_1": 0
+        }
+      },
+      {
+        "method": "pub",
+        "uri": "/e/e",
+        "body": {
+          "counter_2": 0
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/dbi/test_client/saved_registers/a/a",
+        "body": {
+          "analog_in_0": 0,
+          "analog_in_2": 0,
+          "binary_in_0": false,
+          "counter_0": 0
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/dbi/test_client/saved_registers/d/d",
+        "body": {
+          "binary_in_1": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/dbi/test_client/saved_registers/b/b",
+        "body": {
+          "analog_in_1": 0,
+          "analog_in_3": 0,
+          "analog_in_4": 0,
+          "analog_in_5": 0,
+          "counter_1": 0
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/dbi/test_client/saved_registers/e/e",
+        "body": {
+          "counter_2": 0
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "send_values": {
+    "commands": [
+      "pkill gcom_dnp3_serv\n",
+      "sleep 5\n",
+      "gcom_dnp3_server /home/docker/hybridos/gcom_dnp3_interface/test/python_test_suite/configs/load_to_from_dbi/server_01.json &\n",
+      "sleep 5\n",
+      "fims_send -m pub -u /a/a '{\"analog_in_0\": 100,\"analog_in_2\": -100,\"binary_in_0\": true,\"counter_0\": 50}'\n",
+      "fims_send -m pub -u /d/d '{\"binary_in_1\": true}'\n",
+      "fims_send -m pub -u /b/b '{\"analog_in_1\": 2,\"analog_in_3\": -2,\"analog_in_4\": -2,\"analog_in_5\": -2,\"counter_1\": 51}'\n",
+      "fims_send -m pub -u /e/e '{\"counter_2\": 20}'\n",
+      "sleep 5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/a/a",
+        "body": {
+          "analog_in_0": 100,
+          "analog_in_2": -100,
+          "binary_in_0": true,
+          "counter_0": 50
+        }
+      },
+      {
+        "method": "pub",
+        "uri": "/d/d",
+        "body": {
+          "binary_in_1": true
+        }
+      },
+      {
+        "method": "pub",
+        "uri": "/b/b",
+        "body": {
+          "analog_in_1": 2,
+          "analog_in_3": -2,
+          "analog_in_4": -2,
+          "analog_in_5": -2,
+          "counter_1": 51
+        }
+      },
+      {
+        "method": "pub",
+        "uri": "/e/e",
+        "body": {
+          "counter_2": 20
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "kill_server": {
+    "commands": [
+      "pkill gcom_dnp3_serv\n",
+      "sleep 5\n",
+      "gcom_dnp3_server /home/docker/hybridos/gcom_dnp3_interface/test/python_test_suite/configs/load_to_from_dbi/server_01.json &\n",
+      "sleep 5\n"
+    ],
+    "expected": [],
+    "actual": null,
+    "result": null
+  },
+  "hope_values_are_the_same": {
+    "commands": [
+      "sleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "pub",
+        "uri": "/a/a",
+        "body": {
+          "analog_in_0": 100,
+          "analog_in_2": -100,
+          "binary_in_0": true,
+          "counter_0": 50
+        }
+      },
+      {
+        "method": "pub",
+        "uri": "/d/d",
+        "body": {
+          "binary_in_1": true
+        }
+      },
+      {
+        "method": "pub",
+        "uri": "/b/b",
+        "body": {
+          "analog_in_1": 2,
+          "analog_in_3": -2,
+          "analog_in_4": -2,
+          "analog_in_5": -2,
+          "counter_1": 51
+        }
+      },
+      {
+        "method": "pub",
+        "uri": "/e/e",
+        "body": {
+          "counter_2": 20
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  }
+}

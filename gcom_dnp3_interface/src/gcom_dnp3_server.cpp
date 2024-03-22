@@ -1128,6 +1128,10 @@ int main(int argc, char *argv[])
             return 0;
         }
 
+        if(serverSys.dbi_save_frequency_seconds > 0){
+            load_points_from_dbi_server(serverSys);
+        }
+
         serverSys.listener_future = std::async(std::launch::async, listener_thread, std::ref(serverSys));
         if (dnp3_sys->stats_pub_frequency > 0)
         {
@@ -1139,6 +1143,9 @@ int main(int argc, char *argv[])
         serverSys.keep_running = true;
         serverSys.main_cond.notify_all();
         outputPointsGoOnline(serverSys); // set all analog and binary outputs to be ONLINE (so they can receive commands)
+        if(serverSys.dbi_save_frequency_seconds > 0){
+            tmwtimer_start(&serverSys.dbi_save_timer, serverSys.dbi_save_frequency_seconds*1000, serverSys.protocol_dependencies->dnp3.pChannel, write_points_to_dbi_server, &serverSys);
+        }
         FPS_INFO_LOG("DNP3 Server Setup complete: Entering main loop.");
         FPS_LOG_IT("startup");
         defer

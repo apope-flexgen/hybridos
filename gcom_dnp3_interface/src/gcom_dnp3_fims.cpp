@@ -230,6 +230,23 @@ bool parseHeader(GcomSystem &sys, Meta_Data_Info &meta_data, char *data_buf, uin
         return false;
     }
 
+    // the outstation can't do "gets" unless it's in local mode (i.e. sent to local_uri)
+    if (sys.fims_dependencies->method == FimsMethod::Get &&
+        sys.protocol_dependencies->who == DNP3_OUTSTATION &&
+        !sys.fims_dependencies->uri_requests.contains_local_uri)
+    {
+        if (!spam_limit(&sys, sys.fims_errors))
+        {
+
+            FPS_ERROR_LOG("Listener for : %s, from sender: %s method %s is not supported by dnp3_server. Message dropped",
+                          sys.fims_dependencies->name.c_str(),
+                          sys.fims_dependencies->process_name_view,
+                          sys.fims_dependencies->method_view);
+            FPS_LOG_IT("fims_method_error");
+        }
+        return false;
+    }
+
     if (meta_data.data_len > static_cast<uint32_t>(sys.fims_dependencies->data_buf_len))
     {
         // TODO think about this

@@ -1,0 +1,144 @@
+{
+    "git_commit_hash": null,
+    "git_branch": null,
+    "git_commit_author": null,
+    "baseline": {
+      "commands": [
+          "mongod --config /etc/mongod.conf &\n",
+          "sleep 1\n",
+          "dbi &\n",
+          "sleep 1\n"
+      ],
+      "expected": [
+      ],
+      "actual": null,
+      "result": null
+    },
+    "send_values": {
+      "commands": [
+          "pkill gcom_dnp3_clien\n",
+          "sleep 5\n",
+          "gcom_dnp3_client /home/docker/hybridos/gcom_dnp3_interface/test/python_test_suite/configs/load_to_from_dbi/server_01.json &\n",
+          "sleep 5\n",
+          "fims_send -m set -u /some/uri '{\"analog_out_0\": 100}'\n",
+          "fims_send -m set -u /another/uri '{\"analog_out_1\": 23}'\n",
+          "fims_send -m set -u /a/a '{\"analog_out_2\": 2,\"analog_out_4\": 2.3,\"analog_out_6\": 5.11,\"binary_out_1\":true,\"binary_out_2\":true}'\n",
+          "fims_send -m set -u /b/b '{\"analog_out_3\": 2,\"analog_out_5\": 2.3,\"analog_out_7\": 5.11}'\n",
+          "fims_send -m set -u /c/c '{\"binary_out_3\":true}'\n",
+          "fims_send -m set -u /components/test '{\"binary_out_0\":true}'\n",
+          "sleep 5\n"
+      ],
+      "expected": [
+          {
+              "method": "set",
+              "uri": "/some/uri",
+              "body": {
+                  "analog_out_0": 100
+              }
+          },
+          {
+              "method": "set",
+              "uri": "/another/uri",
+              "body": {
+                  "analog_out_1": 23
+              }
+          },
+          {
+              "method": "set",
+              "uri": "/a/a",
+              "body": {
+                  "analog_out_2": 2,
+                  "analog_out_4": 2.3,
+                  "analog_out_6": 5.11,
+                  "binary_out_1": true,
+                  "binary_out_2": true
+              }
+          },
+          {
+              "method": "set",
+              "uri": "/b/b",
+              "body": {
+                  "analog_out_3": 2,
+                  "analog_out_5": 2.3,
+                  "analog_out_7": 5.11
+              }
+          },
+          {
+              "method": "set",
+              "uri": "/c/c",
+              "body": {
+                  "binary_out_3": true
+              }
+          },
+          {
+              "method": "set",
+              "uri": "/components/test",
+              "body": {
+                  "binary_out_0": true
+              }
+          }
+      ],
+      "actual": null,
+      "result": null
+  },
+  "kill_client": {
+      "commands": [
+          "pkill gcom_dnp3_clien\n",
+          "sleep 5\n",
+          "gcom_dnp3_client /home/docker/hybridos/gcom_dnp3_interface/test/python_test_suite/configs/load_to_from_dbi/server_01.json &\n",
+          "sleep 5\n"
+      ],
+      "expected": [
+          {
+              "method": "set",
+              "uri": "/some/uri",
+              "body": {
+                  "analog_out_0": 100
+              }
+          },
+          {
+              "method": "set",
+              "uri": "/another/uri",
+              "body": {
+                  "analog_out_1": 23
+              }
+          },
+          {
+              "method": "set",
+              "uri": "/a/a",
+              "body": {
+                  "analog_out_2": 2,
+                  "analog_out_4": 2.3,
+                  "analog_out_6": 5.11,
+                  "binary_out_1": true,
+                  "binary_out_2": true
+              }
+          },
+          {
+              "method": "set",
+              "uri": "/b/b",
+              "body": {
+                  "analog_out_3": 2,
+                  "analog_out_5": 2.3,
+                  "analog_out_7": 5.11
+              }
+          },
+          {
+              "method": "set",
+              "uri": "/c/c",
+              "body": {
+                  "binary_out_3": true
+              }
+          },
+          {
+              "method": "set",
+              "uri": "/components/test",
+              "body": {
+                  "binary_out_0": true
+              }
+          }
+      ],
+      "actual": null,
+      "result": null
+  }
+}

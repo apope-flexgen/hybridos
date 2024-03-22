@@ -264,5 +264,9 @@ void signal_handler(int sig);
 double get_time_double();
 double get_time_double(TMWDTIME &tmpPtr);
 bool spam_limit(GcomSystem *sys, int &max_errors);
+void load_points_from_dbi_client(GcomSystem &sys);
+void write_points_to_dbi_client(void *pSys);
+void load_points_from_dbi_server(GcomSystem &sys);
+void write_points_to_dbi_server(void *pSys);
 
 #endif

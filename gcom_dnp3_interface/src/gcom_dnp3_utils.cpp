@@ -41,6 +41,7 @@
 #include "gcom_dnp3_heartbeat.h"
 #include "gcom_dnp3_flags.h"
 #include "shared_utils.hpp"
+#include "gcom_dnp3_point_utils.h"
 
 using namespace std;
 
@@ -1821,6 +1822,18 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
         }
     }
 
+    if (ret)
+    {
+        ret = getCJdouble(cj, "dbi_save_frequency_seconds", sys.dbi_save_frequency_seconds, false);
+        if (!ret || sys.dbi_save_frequency_seconds < 0)
+        {
+            FPS_ERROR_LOG("Error: 'dbi_save_frequency_seconds' must be a double greater than 0.");
+            sys.dbi_save_frequency_seconds = 0;
+            final_ret = false;
+            ret = true;
+        }
+    }
+
     // fixup base_uri
     char tmp[1024];
     const char *sys_id = sys.id;
@@ -3032,4 +3045,241 @@ double get_time_double(TMWDTIME &tmpPtr)
     auto time_point = std::chrono::system_clock::from_time_t(std::mktime(&tm));
     std::chrono::duration<double> duration = time_point - baseTime;
     return duration.count() + (tmpPtr.mSecsAndSecs % 1000) / 1000.0;
+}
+
+bool parse_message_body(GcomSystem &sys, std::string uri, const char *message_body)
+{
+    auto &parser = sys.fims_dependencies->parser;
+    auto &doc = sys.fims_dependencies->doc;
+    Jval_buif to_set;
+
+    // gets doc
+    if (const auto err = parser.iterate(message_body,
+                                        strlen(message_body),
+                                        strlen(message_body) + simdjson::SIMDJSON_PADDING)
+                             .get(doc);
+        err)
+    {
+        return false;
+    }
+
+    simdjson::ondemand::object set_obj;
+    if (const auto err = doc.get(set_obj); err)
+    {
+        return false;
+    }
+
+    for (auto pair : set_obj)
+    {
+        const auto key = pair.unescaped_key();
+        if (const auto err = key.error(); err)
+        {
+            return false;
+        }
+        const auto key_view = key.value_unsafe();
+        auto val = pair.value();
+        if (const auto err = val.error(); err)
+        {
+            return false;
+        }
+
+        auto curr_val = val.value_unsafe();
+        auto val_clothed = curr_val.get_object();
+        auto success = extractValueMulti(sys, val_clothed, curr_val, to_set);
+        if (!success)
+        {
+            continue;
+        }
+
+        TMWSIM_POINT *dbPoint = getDbVar(sys, uri, key_view);
+        if (!dbPoint)
+        {
+            continue;
+        }
+
+        double value = jval_to_double(to_set);
+
+        if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+        {
+            dbPoint->data.analog.value = value;
+        }
+        else if (dbPoint->type == TMWSIM_TYPE_COUNTER)
+        {
+            dbPoint->data.counter.value = static_cast<TMWTYPES_ULONG>(value);
+        }
+        else if (dbPoint->type == TMWSIM_TYPE_BINARY)
+        {
+            dbPoint->data.binary.value = static_cast<bool>(value);
+        }
+    }
+    return true;
+}
+
+void load_points_from_dbi_server(GcomSystem &sys)
+{
+    fims &fims_gateway = sys.fims_dependencies->fims_gateway;
+
+    for (auto uriPair : sys.dburiMap)
+    {
+        if (uriPair.second->multi)
+        {
+            std::string point_group_uri = uriPair.first;
+            std::string dbi_uri = "/dbi/" + std::string(sys.id) + "/saved_registers" + point_group_uri;
+            std::string replyto_uri = "/" + std::string(sys.id) + "/saved_registers" + point_group_uri;
+            if (!fims_gateway.Send("get", dbi_uri.c_str(), replyto_uri.c_str(), nullptr, nullptr))
+            {
+                FPS_ERROR_LOG("[%s] failed to send a fims get message", sys.id);
+                fims_gateway.Close();
+                return;
+            }
+
+            auto point_group_message = fims_gateway.Receive_Timeout(5000000); // give them 5 seconds to respond before erroring
+            if (!point_group_message)
+            {
+                FPS_ERROR_LOG("Failed to retrieve saved register data for [%s] from DBI", point_group_uri.c_str());
+                continue;
+            }
+            if (!point_group_message->body)
+            {
+                FPS_ERROR_LOG("Failed to retrieve saved register data for [%s] from DBI", point_group_uri.c_str());
+                continue;
+            }
+            bool success = parse_message_body(sys, point_group_uri, point_group_message->body);
+            if (!success){
+                FPS_ERROR_LOG("Error parsing saved register data for [%s]", point_group_uri.c_str());
+                continue;
+            }
+        }
+    }
+}
+
+void load_points_from_dbi_client(GcomSystem &sys)
+{
+    fims &fims_gateway = sys.fims_dependencies->fims_gateway;
+
+    for (auto uriPair : sys.dburiMap)
+    {
+        if (uriPair.second->multi)
+        {
+            std::string point_group_uri = uriPair.first;
+            std::string dbi_uri = "/dbi/" + std::string(sys.id) + "/saved_registers" + point_group_uri;
+            std::string replyto_uri = point_group_uri;
+            if (!fims_gateway.Send("get", dbi_uri.c_str(), replyto_uri.c_str(), nullptr, nullptr))
+            {
+                FPS_ERROR_LOG("[%s] failed to send a fims get message", sys.id);
+                fims_gateway.Close();
+                return;
+            }
+            // standard fims listen thread should take care of the rest
+        }
+    }
+}
+
+void write_points_to_dbi_server(void *pSys)
+{
+    GcomSystem *sys = (GcomSystem *)pSys;
+    TMWSIM_POINT *dbPoint;
+    std::string key;
+    fims &fims_gateway = sys->fims_dependencies->fims_gateway;
+    fmt::memory_buffer &send_buf = sys->fims_dependencies->send_buf;
+    
+    sys->db_mutex.lock_shared();
+    for (auto uriPair : sys->dburiMap)
+    {
+        if (uriPair.second->multi)
+        {
+            std::string point_group_uri = uriPair.first;
+            std::string dbi_uri = "/dbi/" + std::string(sys->id) + "/saved_registers" + point_group_uri;
+            bool has_one_point = false;
+            send_buf.clear();
+            send_buf.push_back('{'); // begin object
+
+            for (auto key_point_pair : uriPair.second->dbmap)
+            {
+                key = key_point_pair.first;
+                dbPoint = key_point_pair.second;
+                if(has_one_point){
+                    FORMAT_TO_BUF(send_buf, R"(,)");
+                } else {
+                    has_one_point = true;
+                }
+                
+                FORMAT_TO_BUF(send_buf, R"("{}":)", ((FlexPoint *)(dbPoint->flexPointHandle))->name);
+                if(dbPoint->type == TMWSIM_TYPE_ANALOG){
+                    FORMAT_TO_BUF(send_buf, R"({:.{}g})", dbPoint->data.analog.value, std::numeric_limits<double>::max_digits10 - 1);
+                } else if(dbPoint->type == TMWSIM_TYPE_COUNTER){
+                    FORMAT_TO_BUF(send_buf, R"({})", dbPoint->data.counter.value);
+                } else if(dbPoint->type == TMWSIM_TYPE_BINARY){
+                    FORMAT_TO_BUF(send_buf, R"({})", static_cast<bool>(dbPoint->data.binary.value)?1:0);
+                } else {
+                    FORMAT_TO_BUF(send_buf, R"({})", dbPoint->data.analog.value);
+                }
+            }
+
+            send_buf.push_back('}'); // begin object
+
+            if(has_one_point)
+            {
+                if (!send_set(fims_gateway, dbi_uri.c_str(), std::string_view{send_buf.data(), send_buf.size()}))
+                {
+                    FPS_ERROR_LOG("[%s] failed to send a fims set to DBI", sys->id);
+                    fims_gateway.Close();
+                    return;
+                }
+            }
+        }
+    }
+    sys->db_mutex.unlock_shared();
+    tmwtimer_start(&sys->dbi_save_timer, sys->dbi_save_frequency_seconds*1000, sys->protocol_dependencies->dnp3.pChannel, write_points_to_dbi_server, sys);
+}
+
+void write_points_to_dbi_client(void *pSys)
+{
+    GcomSystem *sys = (GcomSystem *)pSys;
+    TMWSIM_POINT *dbPoint;
+    std::string key;
+    fims &fims_gateway = sys->fims_dependencies->fims_gateway;
+    fmt::memory_buffer &send_buf = sys->fims_dependencies->send_buf;
+    
+    sys->db_mutex.lock_shared();
+    for (auto uriPair : sys->dburiMap)
+    {
+        if (uriPair.second->multi)
+        {
+            std::string point_group_uri = uriPair.first;
+            std::string dbi_uri = "/dbi/" + std::string(sys->id) + "/saved_registers" + point_group_uri;
+            bool has_one_point = false;
+            send_buf.clear();
+            send_buf.push_back('{'); // begin object
+
+            for (auto key_point_pair : uriPair.second->dbmap)
+            {
+                key = key_point_pair.first;
+                dbPoint = key_point_pair.second;
+                if(((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate)
+                {
+                    if(has_one_point){
+                        FORMAT_TO_BUF(send_buf, R"(,)");
+                    } else {
+                        has_one_point = true;
+                    }
+                    
+                    FORMAT_TO_BUF(send_buf, R"("{}":)", ((FlexPoint *)(dbPoint->flexPointHandle))->name);
+                    format_point_value(send_buf, dbPoint, ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value);
+                }
+            }
+
+            send_buf.push_back('}'); // begin object
+
+
+            if (!send_set(fims_gateway, dbi_uri.c_str(), std::string_view{send_buf.data(), send_buf.size()}))
+            {
+                FPS_ERROR_LOG("[%s] failed to send a fims set to DBI", sys->id);
+                fims_gateway.Close();
+                return;
+            }
+        }
+    }
+    sys->db_mutex.unlock_shared();
+    tmwtimer_start(&sys->dbi_save_timer, sys->dbi_save_frequency_seconds*1000, sys->protocol_dependencies->dnp3.pChannel, write_points_to_dbi_client, sys);
 }

@@ -1513,6 +1513,14 @@ int main(int argc, char *argv[])
         FPS_INFO_LOG("DNP3 Client Setup complete: Entering main loop.");
         FPS_LOG_IT("startup");
 
+        if(clientSys.dbi_save_frequency_seconds > 0){
+            load_points_from_dbi_client(clientSys);
+        }
+
+        if(clientSys.dbi_save_frequency_seconds > 0){
+            tmwtimer_start(&clientSys.dbi_save_timer, clientSys.dbi_save_frequency_seconds*1000, clientSys.protocol_dependencies->dnp3.pChannel, write_points_to_dbi_client, &clientSys);
+        }
+
         defer
         {
             clientSys.keep_running = false;
