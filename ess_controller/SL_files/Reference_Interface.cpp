@@ -3,44 +3,42 @@
 
 
 
-std::unordered_map<int, std::unique_ptr<Reference_class>> ReferenceObjects;
-std::unordered_map<int, std::unique_ptr<Reference_class::ExtUPointer_Reference_T>> ReferenceInputs;
-std::unordered_map<int, std::unique_ptr<Reference_class::ExtYPointer_Reference_T>> ReferenceOutputs;
+std::unordered_map<std::string, std::unordered_map<int, std::unique_ptr<Reference_class>>> ReferenceObjects;
+std::unordered_map<std::string, std::unordered_map<int, std::unique_ptr<Reference_class::ExtUPointer_Reference_T>>> ReferenceInputs;
+std::unordered_map<std::string, std::unordered_map<int, std::unique_ptr<Reference_class::ExtYPointer_Reference_T>>> ReferenceOutputs;
 
 
-uint8_t* getReferenceInputs(int instance)
+uint8_t* getReferenceInputs(std::string uri, int instance)
 {
-	std::unique_ptr<Reference_class::ExtUPointer_Reference_T>& uqInputPtr = ReferenceInputs[instance];
+	std::unique_ptr<Reference_class::ExtUPointer_Reference_T>& uqInputPtr = ReferenceInputs[uri][instance];
 
 	Reference_class::ExtUPointer_Reference_T* dmRefInputs = uqInputPtr.get();
 
 	return reinterpret_cast<uint8_t*>(dmRefInputs);
 }
 
-uint8_t* getReferenceOutputs(int instance)
+uint8_t* getReferenceOutputs(std::string uri, int instance)
 {
-	std::unique_ptr<Reference_class::ExtYPointer_Reference_T>& uqOutputPtr = ReferenceOutputs[instance];
+	std::unique_ptr<Reference_class::ExtYPointer_Reference_T>& uqOutputPtr = ReferenceOutputs[uri][instance];
 
 	Reference_class::ExtYPointer_Reference_T* dmRefOutputs = uqOutputPtr.get();
 
 	return reinterpret_cast<uint8_t*>(dmRefOutputs);
 }
 
-void ReferenceRun(int instance)
+void ReferenceRun(std::string uri, int instance)
 {
-	std::unique_ptr<Reference_class>& uqObjPtr = ReferenceObjects[instance];
+	std::unique_ptr<Reference_class>& uqObjPtr = ReferenceObjects[uri][instance];
 
 	Reference_class* dmRefObject = uqObjPtr.get();
 
 	dmRefObject->step();
 
-	FPS_PRINT_INFO("ReferenceObjects[{}].ExtYY->DMTestOut: {}", instance, dmRefObject->ExtYPointer_ref_Y->DMTestOut);
+	FPS_PRINT_INFO("aV [{}] running Reference_{} output: {}", uri, instance, dmRefObject->ExtYPointer_ref_Y->DMTestOut);
 }
 
-void createNewReferenceInstance(int instance)
+void createNewReferenceInstance(std::string uri, int instance)
 {
-	// set up new instance of Reference
-
 	// create a new instance of the Reference inputs struct, output struct, and object
 	Reference_class::ExtUPointer_Reference_T* dmReferenceInput = new Reference_class::ExtUPointer_Reference_T;
 	Reference_class::ExtYPointer_Reference_T* dmReferenceOutput = new Reference_class::ExtYPointer_Reference_T;
@@ -51,26 +49,22 @@ void createNewReferenceInstance(int instance)
     std::unique_ptr<Reference_class::ExtYPointer_Reference_T> dmReferenceOutputPtr(dmReferenceOutput);
 	std::unique_ptr<Reference_class> dmReferenceObjectPtr(dmReferenceObject);
 
-	// move the ownership of the unique pointers to a global map of instances to unique pointers. need a different map for each type of unique pointer
-	ReferenceInputs[instance] = std::move(dmReferenceInputPtr);
-	ReferenceOutputs[instance] = std::move(dmReferenceOutputPtr);
-	ReferenceObjects[instance] = std::move(dmReferenceObjectPtr);
+	// move the ownership of the unique pointers to a global map of instances to unique pointers. the map key needs to be the aV it is running on and its instance
+	ReferenceInputs[uri][instance] = std::move(dmReferenceInputPtr);
+	ReferenceOutputs[uri][instance] = std::move(dmReferenceOutputPtr);
+	ReferenceObjects[uri][instance] = std::move(dmReferenceObjectPtr);
 
-	// set key for modelInputs and modelOutputs
-	std::string inputBlock = "Reference_" + std::to_string(instance) + "Inputs";
-	std::string outputBlock = "Reference_" + std::to_string(instance) + "Outputs";
 
 	// use a function to get modelInputs and modelOutputs when in CoreAmapAcces and store a pointer to that function in our global external map
-	uint8_t* (*getInputsPtr)(int) = &getReferenceInputs;
-	modelFcnRef[inputBlock] = reinterpret_cast<void(*)>(getInputsPtr);
+	uint8_t* (*getInputsPtr)(std::string, int) = &getReferenceInputs;
+	modelFcnRef["ReferenceInputs"] = reinterpret_cast<void(*)>(getInputsPtr);
 
-	uint8_t* (*getOutputsPtr)(int) = &getReferenceOutputs;
-	modelFcnRef[outputBlock] = reinterpret_cast<void(*)>(getOutputsPtr);
+	uint8_t* (*getOutputsPtr)(std::string, int) = &getReferenceOutputs;
+	modelFcnRef["ReferenceOutputs"] = reinterpret_cast<void(*)>(getOutputsPtr);
 
 	// set refernce to Reference's run function using a global external
-	void (*runFuncPtr)(int) = &ReferenceRun;
+	void (*runFuncPtr)(std::string, int) = &ReferenceRun;
 	modelFcnRef["Reference"] = reinterpret_cast<void(*)>(runFuncPtr);
-
 }
 
 void setupReferenceDM(assetVar* aV, int instance)
@@ -131,16 +125,20 @@ void setupReferenceDM(assetVar* aV, int instance)
 	dataMaps[dm->name] = dm;
 }
 
-void setupReferenceAmap(VarMapUtils *vm, varsmap &vmap, asset_manager *am, int instance)
+void setupReferenceAmap(VarMapUtils *vm, varsmap &vmap, asset_manager *am, int instance, std::string uri)
 {
 	int debug = 0;
-	if(debug)FPS_PRINT_INFO("Setting up datamap to amap interface for /control/Reference_{} using amap of asset manager: [{}]", instance, am->name);
 	int iVal = 0;
 	bool bVal = false;
 	double dVal = 0.0;
 
 	std::string instanceStr = std::to_string(instance);
-	std::string ctrlRef = "/control/Reference_" + instanceStr;
+
+	// we want the amap entry to use underscores when displaying the comp instead of slashes
+	std::string underscoreURI = replaceSlashAndColonWithUnderscore(uri);
+	std::string ctrlRef = "/control" + underscoreURI + "/Reference_" + instanceStr;
+
+	if(debug)FPS_PRINT_INFO("Setting up datamap to amap interface for {} using amap of asset manager: [{}]", ctrlRef, am->name);
 
 	// inputs amap vals
 	std::string inputAmap = "DMTestDirection";
@@ -193,17 +191,19 @@ void setupReference(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims
 		aV->setParam("Reference_instance", 0);
 	}
 	int instance = aV->getiParam("Reference_instance") + 1;
-	createNewReferenceInstance(instance);
+
+	// create new instance and set references to it for the rest of the system
+	createNewReferenceInstance(parent_uri, instance);
 
 	// setup the datamap for the aV we are going to run our function on
 	setupReferenceDM(parent_AV, instance);
 
 	// get or make the asset manager for our instance
-	std::string instanceAMname = "Reference_" + std::to_string(instance) + "_asset_manager";
+	std::string instanceAMname = parent_uri + "_Reference_" + std::to_string(instance) + "_asset_manager";
 	asset_manager *datamapInstanceAM = getOrMakeAm(vm, vmap, am->name.c_str(), instanceAMname.c_str());
 
 	// setup amap for this instance
-	setupReferenceAmap(vm, vmap, datamapInstanceAM, instance);
+	setupReferenceAmap(vm, vmap, datamapInstanceAM, instance, parent_uri);
 
 	// tell our parent AV that we are done by setting the setup flag for this function instance high
 	std::string thisFunction = "Reference_" + std::to_string(instance);
@@ -236,16 +236,16 @@ void setupReference(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims
 		else
 		{
 			// if we get here we have no way to signal back to RunThread that we are done setting up. Setting error to our parentAV
-			FPS_PRINT_ERROR("Could not find \"{}\" in [{}]'s list of functions. Signaling error", thisFunction, parent_AV->name);
+			FPS_PRINT_ERROR("Could not find \"{}\" in [{}]'s list of functions. Signaling error", thisFunction, parent_uri);
 
-			std::string errorMsg = fmt::format("Could not find \"{}\" in [{}]'s list of functions.", thisFunction, parent_AV->name);
+			std::string errorMsg = fmt::format("Could not find \"{}\" in [{}]'s list of functions.", thisFunction, parent_uri);
 			parent_AV->setParam("errorType", (char*)"fault");
 			parent_AV->setParam("errorMsg", (char*)errorMsg.c_str());
 
 			bool logging_enabled = parent_AV->getbParam("logging_enabled");
     		char* LogDir = parent_AV->getcParam("LogDir");
 
-			ESSLogger::get().critical("While trying to set up function [{}] on assetVar [{}], we got this error: [{}] ", thisFunction, parent_AV->name, errorMsg);
+			ESSLogger::get().critical("While trying to set up function [{}] on assetVar [{}], we got this error: [{}] ", thisFunction, parent_uri, errorMsg);
 			if (logging_enabled)
 			{
 				std::string dirAndFile = fmt::format("{}/{}.{}", LogDir, "datamap_errors", "txt");

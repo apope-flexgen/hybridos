@@ -3,42 +3,41 @@
 
 
 
-std::unordered_map<int, std::unique_ptr<DC_Augmentation_class::ExtUPointer>> DC_AugmentationInputs;
-std::unordered_map<int, std::unique_ptr<DC_Augmentation_class::ExtYPointer>> DC_AugmentationOutputs;
-std::unordered_map<int, std::unique_ptr<DC_Augmentation_class>>	DC_AugmentationObjects;
+std::unordered_map<std::string, std::unordered_map<int, std::unique_ptr<DC_Augmentation_class::ExtUPointer>>> DC_AugmentationInputs;
+std::unordered_map<std::string, std::unordered_map<int, std::unique_ptr<DC_Augmentation_class::ExtYPointer>>> DC_AugmentationOutputs;
+std::unordered_map<std::string, std::unordered_map<int, std::unique_ptr<DC_Augmentation_class>>>	DC_AugmentationObjects;
 
 
-uint8_t* getDC_AugmentationInputs(int instance)
+uint8_t* getDC_AugmentationInputs(std::string uri, int instance)
 {
-	std::unique_ptr<DC_Augmentation_class::ExtUPointer>& uqInputPtr = DC_AugmentationInputs[instance];
+	std::unique_ptr<DC_Augmentation_class::ExtUPointer>& uqInputPtr = DC_AugmentationInputs[uri][instance];
 
 	DC_Augmentation_class::ExtUPointer* dmDC_AugmentationInputs = uqInputPtr.get();
 
 	return reinterpret_cast<uint8_t*>(dmDC_AugmentationInputs);
 }
 
-uint8_t* getDC_AugmentationOutputs(int instance)
+uint8_t* getDC_AugmentationOutputs(std::string uri, int instance)
 {
-	std::unique_ptr<DC_Augmentation_class::ExtYPointer>& uqOutputPtr = DC_AugmentationOutputs[instance];
+	std::unique_ptr<DC_Augmentation_class::ExtYPointer>& uqOutputPtr = DC_AugmentationOutputs[uri][instance];
 
 	DC_Augmentation_class::ExtYPointer* dmDC_AugmentationOutputs = uqOutputPtr.get();
 
 	return reinterpret_cast<uint8_t*>(dmDC_AugmentationOutputs);
 }
 
-void DC_AugmentationRun(int instance)
+void DC_AugmentationRun(std::string uri, int instance)
 {
-	// run
-	std::unique_ptr<DC_Augmentation_class>& uqObjPtr = DC_AugmentationObjects[instance];
+	std::unique_ptr<DC_Augmentation_class>& uqObjPtr = DC_AugmentationObjects[uri][instance];
 
 	DC_Augmentation_class* dmDC_AugmentationObject = uqObjPtr.get();
 
 	dmDC_AugmentationObject->step();
 
-	FPS_PRINT_INFO("instance [{}]", instance);
+	FPS_PRINT_INFO("aV [{}] instance [{}]", uri, instance);
 }
 
-void createNewDC_AugmentationInstance(int instance)
+void createNewDC_AugmentationInstance(std::string uri, int instance)
 {
 	// create a new instance of the DC_Augmentation inputs struct, output struct, and object
 	DC_Augmentation_class::ExtUPointer* dmDC_AugmentationInput = new DC_Augmentation_class::ExtUPointer;
@@ -50,24 +49,21 @@ void createNewDC_AugmentationInstance(int instance)
     std::unique_ptr<DC_Augmentation_class::ExtYPointer> dmDC_AugmentationOutputPtr(dmDC_AugmentationOutput);
 	std::unique_ptr<DC_Augmentation_class> dmDC_AugmentationObjectPtr(dmDC_AugmentationObject);
 
-	// move the ownership of the unique pointers to a global map of instances to unique pointers. need a different map for each type of unique pointer
-	DC_AugmentationInputs[instance] = std::move(dmDC_AugmentationInputPtr);
-	DC_AugmentationOutputs[instance] = std::move(dmDC_AugmentationOutputPtr);
-	DC_AugmentationObjects[instance] = std::move(dmDC_AugmentationObjectPtr);
+	// move the ownership of the unique pointers to a global map of instances to unique pointers. the map key needs to be the aV it is running on and its instance
+	DC_AugmentationInputs[uri][instance] = std::move(dmDC_AugmentationInputPtr);
+	DC_AugmentationOutputs[uri][instance] = std::move(dmDC_AugmentationOutputPtr);
+	DC_AugmentationObjects[uri][instance] = std::move(dmDC_AugmentationObjectPtr);
 
-	// set key for modelInputs and modelOutputs
-	std::string inputBlock = "DC_Augmentation_" + std::to_string(instance) + "Inputs";
-	std::string outputBlock = "DC_Augmentation_" + std::to_string(instance) + "Outputs";
 
 	// use a function to get modelInputs and modelOutputs when in CoreAmapAcces and store a pointer to that function in our global external map
-	uint8_t* (*getInputsPtr)(int) = &getDC_AugmentationInputs;
-	modelFcnRef[inputBlock] = reinterpret_cast<void(*)>(getInputsPtr);
+	uint8_t* (*getInputsPtr)(std::string, int) = &getDC_AugmentationInputs;
+	modelFcnRef["DC_AugmentationInputs"] = reinterpret_cast<void(*)>(getInputsPtr);
 
-	uint8_t* (*getOutputsPtr)(int) = &getDC_AugmentationOutputs;
-	modelFcnRef[outputBlock] = reinterpret_cast<void(*)>(getOutputsPtr);
+	uint8_t* (*getOutputsPtr)(std::string, int) = &getDC_AugmentationOutputs;
+	modelFcnRef["DC_AugmentationOutputs"] = reinterpret_cast<void(*)>(getOutputsPtr);
 
 	// set reference to DC_Augmentation's run function using a global external
-	void (*runFuncPtr)(int) = &DC_AugmentationRun;
+	void (*runFuncPtr)(std::string, int) = &DC_AugmentationRun;
 	modelFcnRef["DC_Augmentation"] = reinterpret_cast<void(*)>(runFuncPtr);
 }
 
@@ -301,14 +297,18 @@ void setupDC_AugmentationDM(assetVar* aV, int instance)
 	dataMaps[dm->name] = dm;
 }
 
-void setupDC_AugmentationAmap(VarMapUtils *vm, varsmap &vmap, asset_manager *am, int instance)
+void setupDC_AugmentationAmap(VarMapUtils *vm, varsmap &vmap, asset_manager *am, int instance, std::string uri)
 {
 	int debug = 0;
-	if(debug)FPS_PRINT_INFO("Setting up datamap to amap interface for /control/DC_Augmentation");
 	bool bVal = false;
 	double dVal = 0.0;
+
 	std::string instanceStr = std::to_string(instance);
-	std::string ctrlDCA = "/control/DC_Augmentation_" + instanceStr;
+
+	std::string underscoreURI = replaceSlashAndColonWithUnderscore(uri);
+	std::string ctrlDCA = "/control" + underscoreURI + "/DC_Augmentation_" + instanceStr;
+
+	if(debug)FPS_PRINT_INFO("Setting up datamap to amap interface for {} using amap of asset manager: [{}]", ctrlDCA, am->name);
 
 	// input amap vals
 	std::string inputAmap = "Pcmd";
@@ -474,6 +474,8 @@ void setupDC_Augmentation(varsmap &vmap, varmap &amap, const char* aname, fims* 
 		return;
 	}
 	std::string parent_uri = aV->getcParam("parentAV");
+
+	// get parent AV from vmap
     assetVar *parent_AV = vm->getVar(vmap, (char*)parent_uri.c_str(), nullptr);
 	if (!parent_AV)
 	{
@@ -487,17 +489,19 @@ void setupDC_Augmentation(varsmap &vmap, varmap &amap, const char* aname, fims* 
 		aV->setParam("DC_Augmentation_instance", 0);
 	}
 	int instance = aV->getiParam("DC_Augmentation_instance") + 1;
-	createNewDC_AugmentationInstance(instance);
+
+	// create new instance and set references to it for the rest of the system
+	createNewDC_AugmentationInstance(parent_uri, instance);
 
 	// setup the datamap for the aV we are going to run our function on
 	setupDC_AugmentationDM(parent_AV, instance);
 
 	// get or make the asset manager for our instance
-	std::string instanceAMname = "DC_Augmentation_" + std::to_string(instance) + "_asset_manager";
+	std::string instanceAMname = parent_uri + "_DC_Augmentation_" + std::to_string(instance) + "_asset_manager";
 	asset_manager *datamapInstanceAM = getOrMakeAm(vm, vmap, am->name.c_str(), instanceAMname.c_str());
 
 	// setup amap for this instance
-	setupDC_AugmentationAmap(vm, vmap, datamapInstanceAM, instance);
+	setupDC_AugmentationAmap(vm, vmap, datamapInstanceAM, instance, parent_uri);
 
 	std::string thisFunction = "DC_Augmentation_" + std::to_string(instance);
 
@@ -528,16 +532,16 @@ void setupDC_Augmentation(varsmap &vmap, varmap &amap, const char* aname, fims* 
 		else
 		{
 			// if we get here we have no way to signal back to RunThread that we are done setting up. Setting error to our parentAV
-			FPS_PRINT_ERROR("Could not find \"{}\" in [{}]'s list of functions. Signaling error", thisFunction, parent_AV->name);
+			FPS_PRINT_ERROR("Could not find \"{}\" in [{}]'s list of functions. Signaling error", thisFunction, parent_uri);
 
-			std::string errorMsg = fmt::format("Could not find \"{}\" in [{}]'s list of functions.", thisFunction, parent_AV->name);
+			std::string errorMsg = fmt::format("Could not find \"{}\" in [{}]'s list of functions.", thisFunction, parent_uri);
 			parent_AV->setParam("errorType", (char*)"fault");
 			parent_AV->setParam("errorMsg", (char*)errorMsg.c_str());
 
 			bool logging_enabled = parent_AV->getbParam("logging_enabled");
     		char* LogDir = parent_AV->getcParam("LogDir");
 
-			ESSLogger::get().critical("While trying to set up function [{}] on assetVar [{}], we got this error: [{}] ", thisFunction, parent_AV->name, errorMsg);
+			ESSLogger::get().critical("While trying to set up function [{}] on assetVar [{}], we got this error: [{}] ", thisFunction, parent_uri, errorMsg);
 			if (logging_enabled)
 			{
 				std::string dirAndFile = fmt::format("{}/{}.{}", LogDir, "datamap_errors", "txt");

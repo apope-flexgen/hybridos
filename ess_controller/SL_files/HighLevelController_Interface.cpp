@@ -3,39 +3,39 @@
 
 
 
-std::unordered_map<int, std::unique_ptr<HighLevelController>> HighLevelControllerObjects;
+std::unordered_map<std::string, std::unordered_map<int, std::unique_ptr<HighLevelController>>> HighLevelControllerObjects;
 
 
-uint8_t* getHighLevelControllerInputs(int instance)
+uint8_t* getHighLevelControllerInputs(std::string uri, int instance)
 {
-	std::unique_ptr<HighLevelController>& uqObjPtr = HighLevelControllerObjects[instance];
+	std::unique_ptr<HighLevelController>& uqObjPtr = HighLevelControllerObjects[uri][instance];
 
 	HighLevelController* dmHLCObject = uqObjPtr.get();
 
 	return reinterpret_cast<uint8_t*>(&dmHLCObject->HighLevelController_U);
 }
 
-uint8_t* getHighLevelControllerOutputs(int instance)
+uint8_t* getHighLevelControllerOutputs(std::string uri, int instance)
 {
-	std::unique_ptr<HighLevelController>& uqObjPtr = HighLevelControllerObjects[instance];
+	std::unique_ptr<HighLevelController>& uqObjPtr = HighLevelControllerObjects[uri][instance];
 
 	HighLevelController* dmHLCObject = uqObjPtr.get();
 
 	return reinterpret_cast<uint8_t*>(&dmHLCObject->HighLevelController_Y);
 }
 
-void HighLevelControllerRun(int instance)
+void HighLevelControllerRun(std::string uri, int instance)
 {
-	std::unique_ptr<HighLevelController>& uqObjPtr = HighLevelControllerObjects[instance];
+	std::unique_ptr<HighLevelController>& uqObjPtr = HighLevelControllerObjects[uri][instance];
 
 	HighLevelController* dmHLCObject = uqObjPtr.get();
 
 	dmHLCObject->step();
 
-    FPS_PRINT_INFO("HLC[{}] In: [{}]    HLC Out: [{}]", instance, dmHLCObject->HighLevelController_U.In1, dmHLCObject->HighLevelController_Y.Out1);
+    FPS_PRINT_INFO("aV [{}]  HLC[{}] In: [{}]    HLC Out: [{}]", uri, instance, dmHLCObject->HighLevelController_U.In1, dmHLCObject->HighLevelController_Y.Out1);
 }
 
-void createNewHighLevelControllerInstance(int instance)
+void createNewHighLevelControllerInstance(std::string uri, int instance)
 {
 	// set up new instance of HighLevelController
 
@@ -46,21 +46,18 @@ void createNewHighLevelControllerInstance(int instance)
 	std::unique_ptr<HighLevelController> dmHighLevelControllerObjectPtr(dmHighLevelControllerObject);
 
 	// move the ownership of the unique pointer to a global map of instances to unique pointers
-	HighLevelControllerObjects[instance] = std::move(dmHighLevelControllerObjectPtr);
+	HighLevelControllerObjects[uri][instance] = std::move(dmHighLevelControllerObjectPtr);
 
-	// set key for modelInputs and modelOutputs
-	std::string inputBlock = "HighLevelController_" + std::to_string(instance) + "Inputs";
-	std::string outputBlock = "HighLevelController_" + std::to_string(instance) + "Outputs";
 
 	// use a function to get modelInputs and modelOutputs when in CoreAmapAcces and store a pointer to that function in our global external map
-	uint8_t* (*getInputsPtr)(int) = &getHighLevelControllerInputs;
-	modelFcnRef[inputBlock] = reinterpret_cast<void(*)>(getInputsPtr);
+	uint8_t* (*getInputsPtr)(std::string, int) = &getHighLevelControllerInputs;
+	modelFcnRef["HighLevelControllerInputs"] = reinterpret_cast<void(*)>(getInputsPtr);
 
-	uint8_t* (*getOutputsPtr)(int) = &getHighLevelControllerOutputs;
-	modelFcnRef[outputBlock] = reinterpret_cast<void(*)>(getOutputsPtr);
+	uint8_t* (*getOutputsPtr)(std::string, int) = &getHighLevelControllerOutputs;
+	modelFcnRef["HighLevelControllerOutputs"] = reinterpret_cast<void(*)>(getOutputsPtr);
 
 	// set refernce to HighLevelController's run function using a global external
-	void (*runFuncPtr)(int) = &HighLevelControllerRun;
+	void (*runFuncPtr)(std::string, int) = &HighLevelControllerRun;
 	modelFcnRef["HighLevelController"] = reinterpret_cast<void(*)>(runFuncPtr);
 
 }
@@ -107,15 +104,18 @@ void setupHighLevelControllerDM(assetVar* aV, int instance)
 	dataMaps[dm->name] = dm;
 }
 
-void setupHighLevelControllerAmap(VarMapUtils *vm, varsmap &vmap, asset_manager *am, int instance)
+void setupHighLevelControllerAmap(VarMapUtils *vm, varsmap &vmap, asset_manager *am, int instance, std::string uri)
 {
 	int debug = 0;
-	if(debug)FPS_PRINT_INFO("Setting up datamap to amap interface for /control/HighLevelController_{} using amap of asset manager: [{}]", instance, am->name);
 	bool bVal = false;
 	double dVal = 0.0;
 
 	std::string instanceStr = std::to_string(instance);
-	std::string ctrlHLC = "/control/HighLevelController_" + instanceStr;
+
+	std::string underscoreURI = replaceSlashAndColonWithUnderscore(uri);
+	std::string ctrlHLC = "/control" + underscoreURI + "/HighLevelController_" + instanceStr;
+
+	if(debug)FPS_PRINT_INFO("Setting up datamap to amap interface for {} using amap of asset manager: [{}]", ctrlHLC, am->name);
 
 	// inputs amap vals
 	std::string inputAmap = "In1";
@@ -141,29 +141,34 @@ void setupHighLevelController(varsmap &vmap, varmap &amap, const char* aname, fi
 		return;
 	}
 	std::string parent_uri = aV->getcParam("parentAV");
+
+	// get parent AV from vmap
     assetVar *parent_AV = vm->getVar(vmap, (char*)parent_uri.c_str(), nullptr);
 	if (!parent_AV)
 	{
 		FPS_PRINT_ERROR("Could not find parent AV of [{}] using comp [{}]. Cannot signal back to the thread. Timing out", aV->name, parent_uri);
         return;
 	}
+	
 	// determine which instance we are setting up and instantiate it
 	if (!aV->gotParam("HighLevelController_instance"))
 	{
 		aV->setParam("HighLevelController_instance", 0);
 	}
 	int instance = aV->getiParam("HighLevelController_instance") + 1;
-	createNewHighLevelControllerInstance(instance);
+
+	// create new instance and set references to it for the rest of the system
+	createNewHighLevelControllerInstance(parent_uri, instance);
 
 	// setup the datamap for the aV we are going to run our function on
 	setupHighLevelControllerDM(parent_AV, instance);
 
 	// get or make the asset manager for our instance
-	std::string instanceAMname = "HighLevelController_" + std::to_string(instance) + "_asset_manager";
+	std::string instanceAMname = parent_uri + "_HighLevelController_" + std::to_string(instance) + "_asset_manager";
 	asset_manager *datamapInstanceAM = getOrMakeAm(vm, vmap, am->name.c_str(), instanceAMname.c_str());
 
 	// setup amap for this instance
-	setupHighLevelControllerAmap(vm, vmap, datamapInstanceAM, instance);
+	setupHighLevelControllerAmap(vm, vmap, datamapInstanceAM, instance, parent_uri);
 
 	// tell our parent AV that we are done by setting the setup flag for this function instance high
 	std::string thisFunction = "HighLevelController_" + std::to_string(instance);
@@ -196,16 +201,16 @@ void setupHighLevelController(varsmap &vmap, varmap &amap, const char* aname, fi
 		else
 		{
 			// if we get here we have no way to signal back to RunThread that we are done setting up. Setting error to our parentAV
-			FPS_PRINT_ERROR("Could not find \"{}\" in [{}]'s list of functions. Signaling error", thisFunction, parent_AV->name);
+			FPS_PRINT_ERROR("Could not find \"{}\" in [{}]'s list of functions. Signaling error", thisFunction, parent_uri);
 
-			std::string errorMsg = fmt::format("Could not find \"{}\" in [{}]'s list of functions.", thisFunction, parent_AV->name);
+			std::string errorMsg = fmt::format("Could not find \"{}\" in [{}]'s list of functions.", thisFunction, parent_uri);
 			parent_AV->setParam("errorType", (char*)"fault");
 			parent_AV->setParam("errorMsg", (char*)errorMsg.c_str());
 
 			bool logging_enabled = parent_AV->getbParam("logging_enabled");
     		char* LogDir = parent_AV->getcParam("LogDir");
 
-			ESSLogger::get().critical("While trying to set up function [{}] on assetVar [{}], we got this error: [{}] ", thisFunction, parent_AV->name, errorMsg);
+			ESSLogger::get().critical("While trying to set up function [{}] on assetVar [{}], we got this error: [{}] ", thisFunction, parent_uri, errorMsg);
 			if (logging_enabled)
 			{
 				std::string dirAndFile = fmt::format("{}/{}.{}", LogDir, "datamap_errors", "txt");

@@ -832,29 +832,33 @@ int CoreAmapAccess(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims,
         FPS_PRINT_ERROR("Could not find assetVar with comp [{}]. This assetVar ({}) has no parent and cannot signal back to the thread. Timing out", parent_uri, aV->name);
         return 0;
     }
+    if (debug) FPS_PRINT_INFO("Got parent_AV [{}]", parent_uri);
 
     // GET or SEND
     try
     {
         if (!aV->gotParam("datamapName"))
         {
-            FPS_PRINT_ERROR("In {} function and assetVar [{}] did not properly set a datamap name parameter", __func__, parent_AV->name);
-            std::string nameError = "transferAV for [" + parent_AV->name + "] has no datamap name parameter";
+            FPS_PRINT_ERROR("In {} function and assetVar [{}] did not properly set a datamap name parameter", __func__, parent_uri);
+            std::string nameError = "transferAV for [" + parent_uri + "] has no datamap name parameter";
             throw std::invalid_argument(nameError);
         }
         dmName = aV->getcParam("datamapName");
 
         if (!aV->gotParam("function"))
         {
-            FPS_PRINT_ERROR("No \"function\" parameter was set by aV [{}] in scheduleDMfunc()", parent_AV->name);
-            std::string paramError = "No 'function' parameter set to this aV by " + parent_AV->name;
+            FPS_PRINT_ERROR("No \"function\" parameter was set by aV [{}] in scheduleDMfunc()", parent_uri);
+            std::string paramError = "No 'function' parameter set to this aV by " + parent_uri;
             throw std::invalid_argument(paramError);
         }
-        std::string funcName = aV->getcParam("function");
+        std::string funcName_i = aV->getcParam("function");
+
+        // get the function name
+        size_t underscore_index = funcName_i.find_last_of('_');                  // gets the index of the last '_' -> the '_' separates the func name and the instance
+        std::string funcName = funcName_i.substr(0, underscore_index);
 
         // get the instance from the func name
-        size_t underscore_index = funcName.find_last_of('_');
-        std::string instanceNum = funcName.substr(underscore_index + 1);
+        std::string instanceNum = funcName_i.substr(underscore_index + 1);
         int instance = std::stoi(instanceNum);
         
 
@@ -868,8 +872,8 @@ int CoreAmapAccess(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims,
             throw std::invalid_argument(nameError);
         }
 
-        // get the amap specific to this instance
-        std::string amname = funcName + "_asset_manager";
+        // get the amap specific to this assetVar and instance
+        std::string amname = parent_uri + "_" + funcName_i + "_asset_manager";
         am = vm->getaM(vmap, amname.c_str());
         if (!am)
         {
@@ -882,62 +886,68 @@ int CoreAmapAccess(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims,
         // are we getting from or sending to the amap?
         if (!aV->gotParam("operation"))
         {
-            FPS_PRINT_ERROR("In {} function and assetVar [{}] never set an operation parameter; it does not know whether to get from or send to amap", __func__, parent_AV->name);
-            std::string opError = "transferAV for [" + parent_AV->name + "] has no operation parameter";
+            FPS_PRINT_ERROR("In {} function and assetVar [{}] never set an operation parameter; it does not know whether to get from or send to amap", __func__, parent_uri);
+            std::string opError = "transferAV for [" + parent_uri + "] has no operation parameter";
             throw std::invalid_argument(opError);
         }
         op = aV->getcParam("operation");
 
         if (op == "get")
         {
-            std::string inputBlock = funcName + "Inputs";
+            std::string getInputsKey = funcName + "Inputs";
 
             // use global map to get reference to model input block
-            void *inputRef = modelFcnRef[inputBlock];
+            void *inputRef = modelFcnRef[getInputsKey];
             if (!inputRef)
             {
                 // our datamap name does not have the associated ModelObjectInputs
-                FPS_PRINT_ERROR("Datamap Inputs [{}] does not exist in global map of model object inputs", inputBlock);
-                std::string keyError = "Could not find [" + inputBlock + "] in global map of model object inputs";
+                FPS_PRINT_ERROR("Datamap Inputs [{}] does not exist in global map of model object inputs. Check [{}] setup file", getInputsKey, funcName);
+                std::string keyError = "Could not find [" + getInputsKey + "] in global map of model object inputs";
                 throw std::invalid_argument(keyError);
             }
 
             // cast inputRef to a function pointer
-            uint8_t* (*getFuncInputs)(int) = reinterpret_cast<uint8_t* (*)(int)>(inputRef);
+            uint8_t* (*getFuncInputs)(std::string, int) = reinterpret_cast<uint8_t* (*)(std::string, int)>(inputRef);
 
             // run the function that returns this models inputs
-            uint8_t* modelInputs = getFuncInputs(instance);
+            uint8_t* modelInputs = getFuncInputs(parent_uri, instance);
+
+            // get the transferBlock for this specific instance
+            std::string inputBlock = funcName_i + "Inputs";
 
             // run getFromAmap on this datamap
             dm->getFromAmap(inputBlock, am, modelInputs);
-            if (debug) FPS_PRINT_INFO("    just ran dm->getFromAmap using datamap [{}]", dm->name); 
+            if (debug) FPS_PRINT_INFO("    just ran dm->getFromAmap using datamap [{}] and am [{}]", dm->name, am->name); 
 
             signalThread(parent_AV, RUN);
 
         }
         else if (op == "send")
         {
-            std::string outputBlock = funcName + "Outputs";
+            std::string getOutputsKey = funcName + "Outputs";
 
             // use map to get dmReferenceOutput
-            void *outputRef = modelFcnRef[outputBlock];
+            void *outputRef = modelFcnRef[getOutputsKey];
             if (!outputRef)
             {
                 // our datamap name does not have the associated ModelObjectOutputs
-                FPS_PRINT_ERROR("Datamap Outputs [{}] does not exist in global map of model object outputs", outputBlock);
-                std::string keyError = "Could not find [" + outputBlock + "] in global map of model object outputs";
+                FPS_PRINT_ERROR("Datamap Outputs [{}] does not exist in global map of model object outputs. Check [{}] setup file", getOutputsKey, funcName);
+                std::string keyError = "Could not find [" + getOutputsKey + "] in global map of model object outputs";
                 throw std::invalid_argument(keyError);
             }
 
             // cast outputRef to a function pointer
-            uint8_t* (*getFuncOutputs)(int) = reinterpret_cast<uint8_t* (*)(int)>(outputRef);
+            uint8_t* (*getFuncOutputs)(std::string, int) = reinterpret_cast<uint8_t* (*)(std::string, int)>(outputRef);
 
             // run the function that returns this models outputs
-            uint8_t* modelOutputs = getFuncOutputs(instance);
+            uint8_t* modelOutputs = getFuncOutputs(parent_uri, instance);
+
+            // get our transferBlock for this specific instance
+            std::string outputBlock = funcName_i + "Outputs";
 
             // run send to amap using this asset manager and datamap
             dm->sendToAmap(vmap, outputBlock, am, modelOutputs);
-            if (debug) FPS_PRINT_INFO("    just ran dm->sendToAmap using datamap [{}]\n", dm->name);
+            if (debug) FPS_PRINT_INFO("    just ran dm->sendToAmap using datamap [{}] and am [{}]\n", dm->name, am->name);
 
             signalThread(parent_AV, DONE);
 
@@ -945,8 +955,8 @@ int CoreAmapAccess(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims,
         else
         {
             // unknown operation
-            FPS_PRINT_ERROR("In {} function and assetVar [{}] triggered an unknown operation parameter [{}]", __func__, parent_AV->name, op);
-            std::string opError = "AssetVar [" + parent_AV->name + "] does not know what to do with operation [" + op + "]";
+            FPS_PRINT_ERROR("In {} function and assetVar [{}] triggered an unknown operation parameter [{}]", __func__, parent_uri, op);
+            std::string opError = "AssetVar [" + parent_uri + "] does not know what to do with operation [" + op + "]";
             throw std::invalid_argument(opError);
         }
         

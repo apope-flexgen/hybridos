@@ -176,6 +176,7 @@ extern std::unordered_map<std::string, ess_thread*> threadMaps;    // a map of a
 
 asset_manager *getOrMakeAm(VarMapUtils *vm, varsmap &vmap, const char *pname, const char *amname);      // defined in dataMap_thread but used in SL ref files
 assetVar* getOrMakeThreadAV(varsmap& vmap, VarMapUtils *vm, std::string name);                          // defined in dataMapUtils and used in dataMapCore
+std::string replaceSlashAndColonWithUnderscore(const std::string& inputString);
 
 void signalThread(assetVar *targAv, int signal);                   // this function is how the core controller signals the thread
 void startThread(assetVar *aV, varsmap& vmap, char *tname);

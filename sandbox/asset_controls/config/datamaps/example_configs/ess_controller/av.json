@@ -28,7 +28,7 @@
         }
     },
     "/x/uri": {
-        "av2": {
+        "Controller_EX": {
             "value": 0,
             "enable": "/config/ess:enable",
             "func1": "HighLevelController",

@@ -238,10 +238,10 @@ void scheduleDMfunc(assetVar *aV, std::string operation)
             std::string funcError = "Could not find [" + usingFunc + "] as a parameter in assetVar " + aV->name;
             throw std::invalid_argument(funcError);
         }
-        std::string funcName = aV->getcParam((char*)usingFunc.c_str());      // name of function assoc with our func#
-        std::string instanceAM = funcName + "_asset_manager";
+        std::string funcName_i = aV->getcParam((char*)usingFunc.c_str());      // name of function assoc with our func#
+        std::string instanceAM = funcName_i + "_asset_manager";
 
-        transferAV->setParam("function", (char*)funcName.c_str());
+        transferAV->setParam("function", (char*)funcName_i.c_str());
 
         // set up fields for new schedItem
         std::string compStr = "/control/transfer:" + dm->name;              // this matches the uri used to make our transferAV
@@ -340,11 +340,12 @@ void stepDMfunc(assetVar* aV)
         }
 
         // Access the specific function pointer you want from the array
-        void (*runFunc)(int) = reinterpret_cast<void(*)(int)>(funcRef);
+        void (*runFunc)(std::string, int) = reinterpret_cast<void(*)(std::string, int)>(funcRef);
+        std::string uri = aV->comp + ":" + aV->name;
 
         // RUN
-        if (debug) FPS_PRINT_INFO(">>>>> running model func: {} at time [{}]", name, aV->am->vm->get_time_dbl());
-        runFunc(instance);
+        if (debug) FPS_PRINT_INFO(">>>>> running model func: {} from [{}] at time [{}]", name, aV->name, aV->am->vm->get_time_dbl());
+        runFunc(uri, instance);
         if (debug) FPS_PRINT_INFO("<<<<< step function returned at time [{}]\n", aV->am->vm->get_time_dbl());
 
 

@@ -298,6 +298,31 @@ asset_manager *getOrMakeAm(VarMapUtils *vm, varsmap &vmap, const char *pname, co
     return am;
 }
 
+// Function to replace all slashes and colons with underscores for displaying in amap
+std::string replaceSlashAndColonWithUnderscore(const std::string& inputString) 
+{
+    std::string modifiedString = inputString;
+
+    // Replace all instances of "/" except for the first one
+    size_t firstSlashPos = modifiedString.find("/");
+    size_t slashPos = modifiedString.find("/", firstSlashPos + 1);
+    while (slashPos != std::string::npos) 
+	{
+        modifiedString.replace(slashPos, 1, "_");
+        slashPos = modifiedString.find("/", slashPos + 1);
+    }
+
+    // Replace all instances of ":"
+    size_t colonPos = modifiedString.find(":");
+    while (colonPos != std::string::npos) 
+	{
+        modifiedString.replace(colonPos, 1, "_");
+        colonPos = modifiedString.find(":", colonPos + 1);
+    }
+
+    return modifiedString;
+}
+
 std::string global_template_uri;
 // returns an assetVar or creates one using the values from the template AV
 assetVar* getOrMakeThreadAV(varsmap& vmap, VarMapUtils *vm, std::string name)
