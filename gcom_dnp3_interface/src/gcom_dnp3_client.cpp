@@ -1226,12 +1226,7 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
                 ok = false;
                 continue;
             }
-            else if (((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::AnOPF32 &&
-                     ((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::AnOPInt16 &&
-                     ((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::AnOPInt32 &&
-                     ((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::AnalogOS &&
-                     ((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::CROB &&
-                     ((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::BinaryOS)
+            else if (!((FlexPoint *)dbPoint->flexPointHandle)->is_output_point)
             {
                 ok = false;
                 if (sys.debug > 0)
@@ -1242,6 +1237,14 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
                 continue;
             }
             double value = jval_to_double(to_set);
+            std::memcpy(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,
+                        sys.fims_dependencies->process_name_view.data(),
+                        sys.fims_dependencies->process_name_view.size());
+            std::memcpy(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,
+                        sys.fims_dependencies->username_view.data(),
+                        sys.fims_dependencies->username_view.size());
+            ((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process[sys.fims_dependencies->process_name_view.size()] = '\0';
+            ((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username[sys.fims_dependencies->username_view.size()] = '\0';
             if (((FlexPoint *)(dbPoint->flexPointHandle))->batch_sets || ((FlexPoint *)(dbPoint->flexPointHandle))->interval_sets)
             {
                 handle_batch_sets(dbPoint, value);
@@ -1397,12 +1400,7 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
             }
             return false;
         }
-        else if (((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::AnOPF32 &&
-                 ((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::AnOPInt16 &&
-                 ((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::AnOPInt32 &&
-                 ((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::AnalogOS &&
-                 ((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::CROB &&
-                 ((FlexPoint *)dbPoint->flexPointHandle)->type != Register_Types::BinaryOS)
+        else if (!((FlexPoint *)dbPoint->flexPointHandle)->is_output_point)
         {
             if (sys.debug > 0)
             {
@@ -1413,6 +1411,14 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data)
         }
 
         double value = jval_to_double(to_set);
+        std::memcpy(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,
+                        sys.fims_dependencies->process_name_view.data(),
+                        sys.fims_dependencies->process_name_view.size());
+        std::memcpy(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,
+                        sys.fims_dependencies->username_view.data(),
+                        sys.fims_dependencies->username_view.size());
+        ((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process[sys.fims_dependencies->process_name_view.size()] = '\0';
+        ((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username[sys.fims_dependencies->username_view.size()] = '\0';
         handle_batch_sets(dbPoint, value);
         return true;
     }

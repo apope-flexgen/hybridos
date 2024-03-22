@@ -58,7 +58,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":%d}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
@@ -93,7 +97,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":%d}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.counter.value == static_cast<uint32_t>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
@@ -128,7 +136,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":%d}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
@@ -163,7 +175,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":%s}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value ? "true" : "false");
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.binary.value == value);
                 free(fims_message);
@@ -198,7 +214,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":%s}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value ? "true" : "false");
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.binary.value == value);
                 free(fims_message);
@@ -251,6 +271,8 @@ TEST_SUITE("dnp3_server")
 
         meta_data.data_len = combinedJSON.length();
         sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+        sys.fims_dependencies->process_name_view = std::string_view("some_process");
+        sys.fims_dependencies->username_view = std::string_view("some_username");
         CHECK(parseBodyServer(sys, meta_data));
         for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs); i++)
         {
@@ -259,8 +281,10 @@ TEST_SUITE("dnp3_server")
             {
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
             }
-        }        
+        }
         free(sys.fims_dependencies->data_buf);
         shutdown_tmw(&sys.protocol_dependencies->dnp3);
         if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
@@ -289,7 +313,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"value\":%d}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
@@ -324,7 +352,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"value\":%d}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.counter.value == static_cast<uint32_t>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
@@ -359,7 +391,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"blah\":%d}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.analog.value == static_cast<double>(0));
                 free(fims_message);
@@ -394,7 +430,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"blah\":%d}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.counter.value == static_cast<uint32_t>(0));
                 free(fims_message);
@@ -429,7 +469,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"value\":%d}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value);
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
@@ -464,7 +508,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"value\":%s}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value ? "true" : "false");
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.binary.value == value);
                 free(fims_message);
@@ -499,7 +547,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"blah\":%s}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value ? "true" : "false");
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.binary.value == false);
                 free(fims_message);
@@ -534,7 +586,11 @@ TEST_SUITE("dnp3_server")
                 sprintf(sys.fims_dependencies->data_buf, "{\"%s\":{\"value\":%s}}", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), value ? "true" : "false");
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.binary.value == value);
                 free(fims_message);
@@ -586,6 +642,8 @@ TEST_SUITE("dnp3_server")
 
         meta_data.data_len = combinedJSON.length();
         sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+        sys.fims_dependencies->process_name_view = std::string_view("some_process");
+        sys.fims_dependencies->username_view = std::string_view("some_username");
         CHECK(parseBodyServer(sys, meta_data));
         for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs); i++)
         {
@@ -594,6 +652,8 @@ TEST_SUITE("dnp3_server")
             {
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.analog.value == static_cast<double>(value*((FlexPoint *)dbPoint->flexPointHandle)->scale));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
             }
         }
 
@@ -627,7 +687,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
@@ -665,7 +729,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
@@ -703,7 +771,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.binary.value == value);
                 free(fims_message);
@@ -741,7 +813,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.binary.value == value);
                 free(fims_message);
@@ -779,7 +855,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.analog.value == static_cast<double>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
@@ -817,7 +897,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.counter.value == static_cast<uint32_t>(value * ((FlexPoint *)dbPoint->flexPointHandle)->scale));
                 free(fims_message);
@@ -855,7 +939,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.analog.value == static_cast<double>(0));
                 free(fims_message);
@@ -893,7 +981,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.counter.value == static_cast<uint32_t>(0));
                 free(fims_message);
@@ -931,7 +1023,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.analog.value == value * ((FlexPoint *)dbPoint->flexPointHandle)->scale);
                 free(fims_message);
@@ -969,7 +1065,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_ON_LINE);
                 CHECK(dbPoint->data.binary.value == value);
                 free(fims_message);
@@ -1007,7 +1107,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.binary.value == false);
                 free(fims_message);
@@ -1045,7 +1149,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"some_process") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"some_username") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.binary.value == value);
                 free(fims_message);
@@ -1083,7 +1191,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "/some/non_existent/uri%s/%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.binary.value == false);
                 free(fims_message);
@@ -1121,7 +1233,11 @@ TEST_SUITE("dnp3_server")
                 asprintf(&uri, "%s", ((FlexPoint *)(dbPoint->flexPointHandle))->uri);
                 meta_data.data_len = strlen(fims_message);
                 sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
                 CHECK(!parseBodyServer(sys, meta_data));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"") == 0);
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.binary.value == false);
                 free(fims_message);
@@ -1163,6 +1279,8 @@ TEST_SUITE("dnp3_server")
 
         meta_data.data_len = combinedJSON.length();
         sys.fims_dependencies->uri_view = std::string_view(((FlexPoint *)(dbPoint->flexPointHandle))->uri);
+        sys.fims_dependencies->process_name_view = std::string_view("some_process");
+        sys.fims_dependencies->username_view = std::string_view("some_username");
         CHECK(!parseBodyServer(sys, meta_data));
         for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs); i++)
         {
@@ -1171,6 +1289,8 @@ TEST_SUITE("dnp3_server")
             {
                 CHECK(dbPoint->flags == DNPDEFS_DBAS_FLAG_RESTART);
                 CHECK(dbPoint->data.analog.value == static_cast<double>(0));
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,"") == 0);
+                CHECK(strcmp(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,"") == 0);
             }
         }
         free(sys.fims_dependencies->data_buf);

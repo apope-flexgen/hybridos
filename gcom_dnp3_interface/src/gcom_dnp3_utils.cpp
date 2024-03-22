@@ -124,6 +124,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_restart++;
             flexPoint->type = Register_Types::AnOPInt16;
+            flexPoint->is_output_point = true;
         }
         else if (type == AnIn32)
         {
@@ -139,6 +140,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_restart++;
             flexPoint->type = Register_Types::AnOPInt32;
+            flexPoint->is_output_point = true;
         }
         else if (type == AnF32)
         {
@@ -154,6 +156,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_restart++;
             flexPoint->type = Register_Types::AnOPF32;
+            flexPoint->is_output_point = true;
         }
         else if (type == Type_AnalogOS)
         {
@@ -169,6 +172,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_restart++;
             flexPoint->type = Register_Types::AnalogOS;
+            flexPoint->is_output_point = true;
         }
         else if (type == Type_Analog)
         {
@@ -199,6 +203,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_restart++;
             flexPoint->type = Register_Types::BinaryOS;
+            flexPoint->is_output_point = true;
         }
         else if (type == Type_Binary)
         {
@@ -227,6 +232,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_restart++;
             flexPoint->type = Register_Types::CROB;
+            flexPoint->is_output_point = true;
         }
         else if (type == Type_Counter)
         {
@@ -286,6 +292,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_restart++;
             flexPoint->type = Register_Types::AnOPInt16;
+            flexPoint->is_output_point = true;
         }
         else if (type == AnIn32)
         {
@@ -304,6 +311,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_restart++;
             flexPoint->type = Register_Types::AnOPInt32;
+            flexPoint->is_output_point = true;
         }
         else if (type == AnF32)
         {
@@ -322,6 +330,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_restart++;
             flexPoint->type = Register_Types::AnOPF32;
+            flexPoint->is_output_point = true;
         }
         else if (type == Type_AnalogOS)
         {
@@ -340,6 +349,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_analog_outputs_restart++;
             flexPoint->type = Register_Types::AnalogOS;
+            flexPoint->is_output_point = true;
         }
         else if (type == Type_Analog)
         {
@@ -374,6 +384,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_restart++;
             flexPoint->type = Register_Types::BinaryOS;
+            flexPoint->is_output_point = true;
         }
         else if (type == Type_Binary)
         {
@@ -403,6 +414,7 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_restart++;
             flexPoint->type = Register_Types::CROB;
+            flexPoint->is_output_point = true;
         }
         else if (type == Type_Counter)
         {

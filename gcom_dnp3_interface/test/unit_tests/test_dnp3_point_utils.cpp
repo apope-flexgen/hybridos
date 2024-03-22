@@ -525,6 +525,7 @@ TEST_SUITE("dnp3_point_utils")
     flexpoint.crob_string = true;
     double value = 42.0;
 
+    send_buf.clear();
     format_point_value(send_buf, &dbPoint, value);
     std::string result = fmt::to_string(send_buf);
     CHECK_EQ(result, "\"LATCH_ON\""); // Expected result when scale is negative and crob_string is true

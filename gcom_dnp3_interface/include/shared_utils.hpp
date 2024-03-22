@@ -119,9 +119,11 @@ struct fmt::formatter<Register_Types>
         case Register_Types::Binary:
             return fmt::format_to(ctx.out(), "binary input (Group 1)");
         case Register_Types::BinaryOS:
-            return fmt::format_to(ctx.out(), "binary output with commands disabled (Group 10)");
+            return fmt::format_to(ctx.out(), "binary output with commands enabled (Group 10)");
         case Register_Types::CROB:
             return fmt::format_to(ctx.out(), "binary output with commands enabled (CROB; Group 12)");
+        case Register_Types::Counter:
+            return fmt::format_to(ctx.out(), "counter (Group 20)");
         default:
             return fmt::format_to(ctx.out(), "");
         }

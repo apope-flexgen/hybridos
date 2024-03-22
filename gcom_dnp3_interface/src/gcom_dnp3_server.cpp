@@ -807,11 +807,21 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
             }
 
             if (!sys.fims_dependencies->uri_requests.contains_local_uri &&
-                (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog ||
-                 ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary ||
-                 ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter))
+                !(((FlexPoint *)dbPoint->flexPointHandle)->is_output_point))
             {
                 setInputPointOnline(dbPoint);
+            }
+
+            // record who sent the last real value
+            if (!sys.fims_dependencies->uri_requests.contains_local_uri) {
+                std::memcpy(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,
+                        sys.fims_dependencies->process_name_view.data(),
+                        sys.fims_dependencies->process_name_view.size());
+                std::memcpy(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,
+                                sys.fims_dependencies->username_view.data(),
+                                sys.fims_dependencies->username_view.size());
+                ((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process[sys.fims_dependencies->process_name_view.size()] = '\0';
+                ((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username[sys.fims_dependencies->username_view.size()] = '\0';
             }
 
             double value = jval_to_double(to_set);
@@ -928,11 +938,21 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
         }
 
         if (!sys.fims_dependencies->uri_requests.contains_local_uri &&
-            (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog ||
-             ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary ||
-             ((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter))
+            !(((FlexPoint *)dbPoint->flexPointHandle)->is_output_point))
         {
             setInputPointOnline(dbPoint);
+        }
+
+        // record who sent the last real value
+        if (!sys.fims_dependencies->uri_requests.contains_local_uri) {
+            std::memcpy(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,
+                    sys.fims_dependencies->process_name_view.data(),
+                    sys.fims_dependencies->process_name_view.size());
+            std::memcpy(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,
+                            sys.fims_dependencies->username_view.data(),
+                            sys.fims_dependencies->username_view.size());
+            ((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process[sys.fims_dependencies->process_name_view.size()] = '\0';
+            ((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username[sys.fims_dependencies->username_view.size()] = '\0';
         }
 
         double value = jval_to_double(to_set);

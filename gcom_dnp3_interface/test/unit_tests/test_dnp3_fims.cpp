@@ -543,7 +543,7 @@ TEST_SUITE("dnp3_fims")
         meta_data.uri_len = uri.length();
         method = "get";
         message_str = method + uri + reply_to + process_name + username + message;
-        CHECK(parseHeader(sys, meta_data, message_str.data(), message_str.length()));
+        CHECK(!parseHeader(sys, meta_data, message_str.data(), message_str.length()));
         parseHeader_condition_check(sys, FimsMethod::Get, uri, reply_to, process_name, username);
 
         method = "get";
