@@ -1,0 +1,61 @@
+{
+    "root":{
+        "id":"grid",
+        "children":[
+            {
+                "id":"psm_shared_poi",
+                "children":[
+                    {
+                        "id": "tx_grid",
+                        "children":[
+                            {
+                                "id": "biomass_plant_load"
+                            },
+                            {
+                                "id": "psm_split_feeder",
+                                "children":[
+                                    {
+                                        "id":"psm_ess_1"
+                                    },
+                                    {
+                                        "id":"psm_ess_2"
+                                    },
+                                    {
+                                        "id":"psm_pv_1"
+                                    },
+                                    {
+                                        "id":"psm_pv_2"
+                                    },
+                                    {
+                                        "id":"psm_easygen_3500xt"
+                                    },
+                                    {
+                                        "id": "psm_bess_aux",
+                                        "children":[
+                                            {
+                                                "id": "bess_aux_load"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "psm_control_cabinet",
+                                        "children":[
+                                            {
+                                                "id": "tx_control_cabinet",
+                                                "children":[
+                                                    {
+                                                        "id": "control_cabinet_load"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

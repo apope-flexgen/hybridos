@@ -15,6 +15,7 @@ import { DBI_URIs, IDBIService } from 'src/dbi/dbi.interface';
 import { DBI_SERVICE } from 'src/dbi/dbi.interface';
 import { DashboardConfigNotFoundException } from './exceptions/dashboard.exceptions';
 import { DBIDocumentNotFoundException } from '../../../dbi/exceptions/dbi.exceptions';
+import { SiteDiagramResponse } from './responses/dashboard.response';
 
 @Injectable()
 export class DashboardService {
@@ -103,6 +104,20 @@ export class DashboardService {
       displayGroups,
     };
   };
+
+  async getSiteDiagramConfig() {
+    const data = await this.dbiService.getFromDBI(DBI_URIs.UI_Config_Site_Diagram);
+    return this.parseSiteDiagramConfig(data);
+  }
+
+  private parseSiteDiagramConfig = (data): SiteDiagramResponse => {
+    const parsedData: SiteDiagramResponse = {
+      id: data?.root.id,
+      children: data?.root.children
+    };
+
+    return parsedData;
+  }
 
   private getStatusDTOs = (statuses: SingleStatus[] | string[]): DisplayGroupDTO['status'] => {
     const statusDTOs: DisplayGroupDTO['status'] = {};

@@ -2159,6 +2159,42 @@
 				]
 			}
 		},
+		"/api/dashboard/site-diagram": {
+			"get": {
+				"operationId": "getSiteDiagram",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SiteDiagramResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"dashboard"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
 		"/api/sitestatus": {
 			"get": {
 				"operationId": "getSiteStatus",
@@ -4014,6 +4050,26 @@
 				"required": [
 					"count",
 					"data"
+				]
+			},
+			"SiteDiagramResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "ID of the asset as specified in the site diagram"
+					},
+					"children": {
+						"description": "Children of the asset, determined from the site diagram",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"required": [
+					"id",
+					"children"
 				]
 			},
 			"SiteStatusBaseDataDTO": {

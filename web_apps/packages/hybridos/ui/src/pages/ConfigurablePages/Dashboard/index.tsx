@@ -1,7 +1,9 @@
 import { Box, ToggleButton, ToggleButtonGroup } from '@flexgen/storybook';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DashboardLayout } from 'shared/types/dtos/configurablePages.dto';
 
+import useAxiosWebUIInstance from 'src/hooks/useAxios';
+import { SITE_DIAGRAM_URL } from 'src/pages/ConfigurablePages/Dashboard/dashboard.constants';
 import CardDashboard from './CardDashboard';
 import TableDashboard from './TableDashboard';
 import { dashboardBoxSx } from './dashboard.styles';
@@ -9,6 +11,19 @@ import { dashboardBoxSx } from './dashboard.styles';
 const Dashboard = () => {
   const storedLayout: DashboardLayout = (localStorage.getItem('dashboardLayout') as DashboardLayout) ?? DashboardLayout.CARD;
   const [layout, setLayout] = useState<DashboardLayout>(storedLayout);
+
+  const axiosInstance = useAxiosWebUIInstance();
+
+  // TODO: move into site diagram page once it's created
+  const getInitialData = async () => {
+    axiosInstance.get(SITE_DIAGRAM_URL).then((res) => {
+      console.log(res.data);
+    });
+  };
+
+  useEffect(() => {
+    getInitialData();
+  }, []);
 
   const handleLayout = (event: any, value: any) => {
     setLayout(value);
