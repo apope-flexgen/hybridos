@@ -10,10 +10,17 @@ export enum MaintenanceActionStatuses {
   Exiting = 'exiting',
 }
 
+export const convertFromMilliseconds = (duration: number) => {
+  if (!duration) return 'unknown';
+  const minutes = Math.floor(duration / 60000);
+  const seconds = ((duration % 60000) / 1000).toFixed(0);
+  return minutes < 1 ? `${seconds} seconds` : `${minutes} minutes, ${seconds} seconds`;
+};
+
 export const createStepComponents = (steps: MaintenanceActionStep[], stepIndex: number, status: MaintenanceActionStatuses, orientation: 'horizontal' | 'vertical') => steps.map((step, index) => (
   <Step
     label={orientation === 'vertical' ? step.step_name : ''}
-    subheader={orientation === 'vertical' ? `Estimated duration: ${step.estimated_duration} seconds` : ''}
+    subheader={orientation === 'vertical' ? `Estimated duration: ${convertFromMilliseconds(step.estimated_duration)}` : ''}
     orientation={orientation}
     inProgress={
         index === stepIndex
