@@ -96,10 +96,10 @@ const getRoutes = (
       path: '/features',
     },
     siteConfiguration.events && {
-      componentName: 'Events',
+      componentName: 'ActivityLog',
       icon: 'Events',
-      itemName: 'Events',
-      path: '/events',
+      itemName: 'Activity Log',
+      path: '/activity-log',
     },
     siteConfiguration.scheduler && {
       componentName: 'Scheduler',

@@ -17,6 +17,7 @@
         "W/s": "M"
     },
     "inspectorComponentsName": "test_controller",
+    "alerting": true,
     "fleet_manager": true,
     "fleet_name": "ERCOT",
     "customer": {

@@ -75,6 +75,10 @@ export class AppConfig {
     @IsString()
     product: string
 
+    @IsOptional()
+    @IsBoolean()
+    alerting: boolean
+
     @IsNotEmpty()
     @IsObject()
     units: {
@@ -114,6 +118,7 @@ export class AppConfig {
             solar,
             met_station,
             site_status_bar,
+            alerting,
             tracker,
             feeders,
             features,
@@ -136,6 +141,7 @@ export class AppConfig {
             solar: boolean
             met_station: boolean
             site_status_bar: boolean
+            alerting: boolean
             tracker: boolean
             feeders: boolean
             features: boolean
@@ -165,6 +171,7 @@ export class AppConfig {
             (this.solar = solar ?? false),
             (this.met_station = met_station ?? false),
             (this.site_status_bar = site_status_bar ?? false),
+            (this.alerting = alerting ?? false),
             (this.tracker = tracker ?? false),
             (this.feeders = feeders ?? false),
             (this.features = features ?? false),

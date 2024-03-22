@@ -12,6 +12,7 @@ export class SiteConfiguration {
     features: boolean
     site: boolean
     events: boolean
+    alerting: boolean
     control_cabinet: boolean
     fleet_manager_dashboard: boolean
     scheduler: boolean

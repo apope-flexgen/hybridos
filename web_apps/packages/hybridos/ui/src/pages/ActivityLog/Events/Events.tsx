@@ -3,7 +3,7 @@ import { Order } from '@flexgen/storybook/dist/components/PlatformSpecific/HosCo
 import { Box } from '@mui/material';
 import { useState, ChangeEvent } from 'react';
 import { Event, EventsRequestParams } from 'shared/types/dtos/events.dto';
-import { headerBoxSx, mainContentBoxSx, tableBoxSx } from 'src/pages/Events/Styles';
+import { headerBoxSx, mainContentBoxSx, tableBoxSx } from 'src/pages/ActivityLog/Events/Styles';
 import { useTheme } from 'styled-components';
 import EventsHeader from './EventsHeader/EventsHeader';
 import { buildInitialFilters } from './EventsHeader/EventsHeader-helpers';

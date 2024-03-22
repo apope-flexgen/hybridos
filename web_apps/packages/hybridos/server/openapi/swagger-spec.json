@@ -2038,6 +2038,127 @@
 				]
 			}
 		},
+		"/api/alerts/active": {
+			"get": {
+				"operationId": "alerts",
+				"parameters": [
+					{
+						"name": "severity",
+						"required": true,
+						"in": "query",
+						"description": "Severities filter, query will return alerts with the listed severities",
+						"schema": {
+							"type": "number"
+						}
+					},
+					{
+						"name": "limit",
+						"required": true,
+						"in": "query",
+						"description": "The maximum number of alert records the query will return,",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "page",
+						"required": true,
+						"in": "query",
+						"description": "The desired page in the paginated result set",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "order",
+						"required": true,
+						"in": "query",
+						"description": "Order used for sorting",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "orderBy",
+						"required": true,
+						"in": "query",
+						"description": "Which field to order by when sorting",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "status",
+						"required": true,
+						"in": "query",
+						"description": "Status of a particular alert - inactive or active",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "organization",
+						"required": true,
+						"in": "query",
+						"description": "Organization that a particular alert pertains to and arose from",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "sites",
+						"required": true,
+						"in": "query",
+						"description": "Site to which a particular alert pertains",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"name": "resolved",
+						"required": true,
+						"in": "query",
+						"description": "Boolean representing whether the alert has been resolved",
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ActiveAlertsResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"alerts"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
 		"/api/sitestatus": {
 			"get": {
 				"operationId": "getSiteStatus",
@@ -3805,6 +3926,96 @@
 					"data"
 				]
 			},
+			"ActiveAlert": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "ID of particular alert"
+					},
+					"status": {
+						"type": "string",
+						"description": "Status of a particular alert - inactive or active"
+					},
+					"title": {
+						"type": "string",
+						"description": "Title used to identify an alert"
+					},
+					"severity": {
+						"type": "number",
+						"description": "Severity of a particular alert - 0 being lowest severity, 4 being highest"
+					},
+					"organization": {
+						"type": "string",
+						"description": "Organization that a particular alert pertains to and arose from"
+					},
+					"site": {
+						"type": "string",
+						"description": "Site to which a particular alert pertains"
+					},
+					"resolved": {
+						"type": "boolean",
+						"description": "Boolean representing whether the alert has been resolved"
+					},
+					"resolution_time": {
+						"type": "string",
+						"description": "Time at which this alert was marked as resolved"
+					},
+					"resolution_message": {
+						"type": "string",
+						"description": "Message that was given by user as they resolved this alert"
+					},
+					"trigger_time": {
+						"type": "string",
+						"description": "Trigger time of a particular alert"
+					},
+					"details": {
+						"description": "An array of details regarding when all conditions of the alert were met, each interior object contains a message and timestamp",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"deadline": {
+						"type": "number",
+						"description": "Deadline of a particular alert - how quickly the alert must be resolved, in minutes"
+					}
+				},
+				"required": [
+					"id",
+					"status",
+					"title",
+					"severity",
+					"organization",
+					"site",
+					"resolved",
+					"resolution_time",
+					"resolution_message",
+					"trigger_time",
+					"details",
+					"deadline"
+				]
+			},
+			"ActiveAlertsResponse": {
+				"type": "object",
+				"properties": {
+					"count": {
+						"type": "number",
+						"description": "Count of total alerts matching filters"
+					},
+					"data": {
+						"description": "Alerts to display on page",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/ActiveAlert"
+						}
+					}
+				},
+				"required": [
+					"count",
+					"data"
+				]
+			},
 			"SiteStatusBaseDataDTO": {
 				"type": "object",
 				"properties": {
@@ -4024,7 +4235,11 @@
 					},
 					"events": {
 						"type": "boolean",
-						"description": "Whether or not to display the Events page"
+						"description": "Whether or not to display the Events tab of the Activity Log page"
+					},
+					"alerting": {
+						"type": "boolean",
+						"description": "Whether or not to display the Alerting tabs on the Activity Log page"
 					},
 					"control_cabinet": {
 						"type": "boolean",
@@ -4079,6 +4294,7 @@
 					"features",
 					"site",
 					"events",
+					"alerting",
 					"control_cabinet",
 					"fleet_manager_dashboard",
 					"scheduler",

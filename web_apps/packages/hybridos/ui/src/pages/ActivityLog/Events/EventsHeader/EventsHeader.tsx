@@ -1,16 +1,17 @@
-import { CardRow, Typography, CardContainer } from '@flexgen/storybook';
-import { Box } from '@mui/material';
+import {
+  Divider, Box, CardRow, Typography,
+} from '@flexgen/storybook';
 import React, {
   FC, useEffect, useRef, useContext,
 } from 'react';
 import { Event, EventsRequestParams } from 'shared/types/dtos/events.dto';
 import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
-import EventDateTime from 'src/pages/Events/EventFilters/EventDateTime/EventDateTime';
-import EventSearch from 'src/pages/Events/EventFilters/EventSearch';
-import EventSeverities from 'src/pages/Events/EventFilters/EventSeverities/EventSeverities';
-import EventsDownload from 'src/pages/Events/EventsDownload/EventsDownload';
-import { cardHeading, buildURI } from './EventsHeader-helpers';
+import EventDateTime from 'src/pages/ActivityLog/Events/EventFilters/EventDateTime/EventDateTime';
+import EventSearch from 'src/pages/ActivityLog/Events/EventFilters/EventSearch';
+import EventSeverities from 'src/pages/ActivityLog/Events/EventFilters/EventSeverities/EventSeverities';
+import EventsDownload from 'src/pages/ActivityLog/Events/EventsDownload/EventsDownload';
+import { buildURI } from './EventsHeader-helpers';
 
 interface EventsProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -78,22 +79,21 @@ const EventsHeader: FC<EventsProps> = ({
   }, [filters]);
 
   return (
-    <CardRow styleOverrides={{ boxShadow: 'none', height: '30%', alignItems: 'flex-start' }}>
-      <Box sx={{ marginTop: '16px', width: '100%' }}>
-        <CardRow>
-          <Typography text={cardHeading} variant="headingS" />
-        </CardRow>
-        <CardContainer styleOverrides={{ boxShadow: 'none' }}>
-          <CardRow>
-            <EventDateTime filters={filters} setFilters={setFilters} />
-            <EventSeverities filters={filters} setFilters={setFilters} />
-          </CardRow>
-
-          <EventSearch filters={filters} setFilters={setFilters} />
-          <EventsDownload filters={filters} setIsLoading={setIsLoading} />
-        </CardContainer>
-      </Box>
-    </CardRow>
+    <Box sx={{
+      marginTop: '16px', width: '100%', display: 'flex', flexDirection: 'column',
+    }}
+    >
+      <CardRow justifyContent="space-between">
+        <Typography text="Events" variant="bodyXLBold" />
+        <EventSearch filters={filters} setFilters={setFilters} />
+      </CardRow>
+      <Divider variant="fullWidth" orientation="horizontal" />
+      <CardRow styleOverrides={{ paddingTop: '2rem' }}>
+        <EventDateTime filters={filters} setFilters={setFilters} />
+        <EventSeverities filters={filters} setFilters={setFilters} />
+        <EventsDownload filters={filters} setIsLoading={setIsLoading} />
+      </CardRow>
+    </Box>
   );
 };
 

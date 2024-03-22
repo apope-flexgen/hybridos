@@ -6,7 +6,7 @@ import { SelectChangeEvent } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { FC, useState } from 'react';
 import { EventsRequestParams } from 'shared/types/dtos/events.dto';
-import { datePickerSx } from 'src/pages/Events/Styles';
+import { datePickerSx } from 'src/pages/ActivityLog/Events/Styles';
 import {
   checkIfStartBeforeEnd,
   datePickerLabel,

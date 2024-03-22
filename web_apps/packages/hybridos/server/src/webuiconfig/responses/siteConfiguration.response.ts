@@ -37,6 +37,9 @@ export class SiteConfigurationDetailedResponse {
     @ApiProperty({description: SiteConfigDescriptions.events})
     @IsOptional()
     events: boolean
+    @ApiProperty({description: SiteConfigDescriptions.alerting})
+    @IsOptional()
+    alerting: boolean
     @ApiProperty({description: SiteConfigDescriptions.control_cabinet})
     @IsOptional()
     control_cabinet: boolean

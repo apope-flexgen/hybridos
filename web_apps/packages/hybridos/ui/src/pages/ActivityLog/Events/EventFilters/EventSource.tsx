@@ -2,7 +2,7 @@ import { Select } from '@flexgen/storybook';
 import { SelectChangeEvent } from '@mui/material';
 import { FC, useState } from 'react';
 import { EventsRequestParams } from 'shared/types/dtos/events.dto';
-import { Sources } from 'src/pages/Events/EventsHeader/EventsHeaderTypes';
+import { Sources } from 'src/pages/ActivityLog/Events/EventsHeader/EventsHeaderTypes';
 
 interface EventsSourceProps {
   filters: EventsRequestParams

@@ -7,10 +7,17 @@ export const mainContentBoxSx = (theme: ThemeType) => ({
   alignItems: 'flex-start',
   flexDirection: 'column',
   width: '100%',
-  boxShadow: theme.fgb.pageHeader.sizing.boxShadow,
   backgroundColor: theme.fgc.table.color.background,
+  borderRadius: '8px',
 });
 
-export const headerBoxSx = { height: '20%', width: '100%', overflowY: 'auto' };
+export const headerBoxSx = {
+  maxHeight: '175px', width: '100%', overflowY: 'auto', height: '100%',
+};
 
-export const tableBoxSx = { height: '80%', width: '100%', overflowY: 'hidden' };
+export const tableBoxSx = {
+  height: '80%',
+  width: '100%',
+  overflowY: 'hidden',
+  padding: '0px 16px 16px 16px',
+};

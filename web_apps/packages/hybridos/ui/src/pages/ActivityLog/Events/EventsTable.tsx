@@ -3,7 +3,7 @@ import { Order } from '@flexgen/storybook/dist/components/PlatformSpecific/HosCo
 import { ChangeEvent, FC } from 'react';
 import { Event } from 'shared/types/dtos/events.dto';
 
-declare type RowsPerPageOptions = 5 | 10 | 25 | 50 | 100 | 200;
+declare type RowsPerPageOptions = 10 | 25 | 50 | 100 | 200;
 
 const tableLayout = 'event';
 

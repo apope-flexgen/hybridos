@@ -9,6 +9,7 @@ export type SiteConfiguration = {
     feeders: boolean;
     features: boolean;
     site_status_bar?: boolean;
+    alerting?: boolean;
     system_status?: boolean;
     site: boolean;
     events: boolean;

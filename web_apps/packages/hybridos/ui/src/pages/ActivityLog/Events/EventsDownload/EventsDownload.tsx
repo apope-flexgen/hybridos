@@ -7,7 +7,7 @@ import React, {
 import { EventsRequestParams } from 'shared/types/dtos/events.dto';
 import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
-import { buildURI } from 'src/pages/Events/EventsHeader/EventsHeader-helpers';
+import { buildURI } from 'src/pages/ActivityLog/Events/EventsHeader/EventsHeader-helpers';
 import {
   downloadTxt, downloadPdf, downloadXlsxCsv, getTimeSuffix,
 } from './EventsDownload-helpers';
