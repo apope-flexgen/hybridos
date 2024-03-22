@@ -116,7 +116,6 @@ const useGenerateSystemStatusTable = () => {
       iconColor={statusColorMapping[serviceStatus.split(' ')[0].toLowerCase()] || 'primary'}
       variant="outlined"
       size="small"
-      borderStyle="squared"
     />
   );
 
@@ -141,7 +140,7 @@ const useGenerateSystemStatusTable = () => {
     }
     return (
       <Box sx={actionBoxSx}>
-        <Icon src="Remove" color="info" size="small" />
+        <Typography text="-" />
       </Box>
     );
   };

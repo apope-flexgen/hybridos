@@ -4,7 +4,6 @@ import { FIMS_SERVICE } from '../../fims/interfaces/fims.interface'
 import { Observable, map } from 'rxjs';
 import { FimsMsg } from 'src/fims/responses/fimsMsg.response';
 import { ServiceAction, ServiceStatusResponse } from './dto/serviceStatusResponse.dto';
-import { systemStatusDescriptions } from './systemStatus.constants';
 import { ConnectionStatus } from 'shared/types/dtos/systemStatus.dto';
 
 @Injectable()
@@ -21,7 +20,7 @@ export class SystemStatusService {
             fimsSubscribe.pipe(
                 map((event) => {
                     const serviceName = event.uri.split("/").pop()
-                    if (event.uri.includes("system")) return null
+                    if (event.uri.includes('system') && serviceName !== 'summary') return null
                     const parsedFimsData = this.parseSystemStatusData(event.body, serviceName)
                     return parsedFimsData
                 })
@@ -31,6 +30,16 @@ export class SystemStatusService {
     }
 
     private parseSystemStatusData = (rawSystemStatusData: any, serviceName: string): ServiceStatusResponse => {
+        if (serviceName === 'summary') {
+            return {
+                serviceName: serviceName,
+                uptime: rawSystemStatusData.uptime || '',
+                lastRestart: rawSystemStatusData.timestamp_of_last_restart,
+                cpuUsage: rawSystemStatusData.pct_cpu_usage,
+                memoryUsage: rawSystemStatusData.pct_mem_usage
+            }
+        }
+
         const parseConnectionStatus = () => {
             if (rawSystemStatusData.is_connected) return ConnectionStatus.Online;
             else if (rawSystemStatusData.is_connected === false) return ConnectionStatus.Offline;
@@ -57,7 +66,6 @@ export class SystemStatusService {
         return parsedData
     }
 
-    
     private parseSystemStatusGetData = (data: FimsMsg): ServiceStatusResponse[] => {
         const rawSystemStatusData = data.body.procStats;
         const parsedData: ServiceStatusResponse[] = [];
