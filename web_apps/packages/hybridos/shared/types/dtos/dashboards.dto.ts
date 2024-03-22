@@ -12,6 +12,8 @@ export class Info {
   items?: Item[]
   name?: string
   sourceURIs?: string[]
+  alarmFields?: string[]
+  faultFields?: string[]
 }
 
 export class Status {

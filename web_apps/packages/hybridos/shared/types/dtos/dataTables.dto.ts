@@ -71,3 +71,13 @@ export type BatteryViewDataIndexable = {
 export type AlarmFaultDataIndexable = {
   [id: string]: AlarmFaultData;
 };
+
+export type TableSortBehavior = {
+  [key: string]: { columnToSortBy: keyof RowData, reverseOrder: boolean }
+}
+
+export type ColumnSortDirection = {
+  [tableName: string]: {
+    [columnID: string]: boolean;
+  }
+}

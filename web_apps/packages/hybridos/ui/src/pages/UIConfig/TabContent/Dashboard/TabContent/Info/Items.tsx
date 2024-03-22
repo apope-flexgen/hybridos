@@ -5,7 +5,6 @@ import {
   Accordion,
   Divider,
   MuiButton,
-
   Switch,
   TextField,
   Typography,
@@ -33,6 +32,8 @@ import {
   NAME,
   URI,
   DELETE_ITEM,
+  ALARM_FIELDS,
+  FAULT_FIELDS,
 } from './helpers/constants';
 import {
   AccordionDetailsSX, AccordionSX, ColumnLeft, Item, Row,
@@ -318,6 +319,35 @@ const Items = () => {
         </Row>
       )}
       <Divider orientation="horizontal" variant="fullWidth" />
+      <Row>
+        <ColumnLeft>
+          <Typography text={ALARM_FIELDS} variant="bodyL" />
+        </ColumnLeft>
+        <TextField
+          color="primary"
+          disableLabelAnimation
+          helperText={SEPARATE_INPUTS_WITH_COMMA}
+          id="alarmFields"
+          label={ALARM_FIELDS}
+          onChange={handleTextFieldCommaSeparatedChange}
+          value={selectedDashboard?.info.alarmFields?.toString() || ''}
+        />
+      </Row>
+      <Divider orientation="horizontal" variant="fullWidth" />
+      <Row>
+        <ColumnLeft>
+          <Typography text={FAULT_FIELDS} variant="bodyL" />
+        </ColumnLeft>
+        <TextField
+          color="primary"
+          disableLabelAnimation
+          helperText={SEPARATE_INPUTS_WITH_COMMA}
+          id="faultFields"
+          label={FAULT_FIELDS}
+          onChange={handleTextFieldCommaSeparatedChange}
+          value={selectedDashboard?.info.faultFields?.toString() || ''}
+        />
+      </Row>
     </>
   );
 };

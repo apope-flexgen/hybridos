@@ -58,6 +58,14 @@ export class DashboardLayoutInterceptor implements NestInterceptor {
 
       if (groupData.alarmStatus !== undefined) {
         Object.entries(groupData.alarmStatus).forEach(([statusID, statusInfo]) => {
+          if ('static' in statusInfo) {
+            toReturn[tableName].columns['alarm_status'] = {
+              id: 'alarm_status',
+              label: 'Alarm Status',
+              minWidth: 125,
+            };
+          }
+
           if ('state' in statusInfo) {
             toReturn[tableName].alarmStatus[rowName] = {
               ...toReturn[tableName].alarmStatus[rowName],
@@ -69,6 +77,14 @@ export class DashboardLayoutInterceptor implements NestInterceptor {
 
       if (groupData.faultStatus !== undefined) {
         Object.entries(groupData.faultStatus).forEach(([statusID, statusInfo]) => {
+          if ('static' in statusInfo) {
+            toReturn[tableName].columns['fault_status'] = {
+              id: 'fault_status',
+              label: 'Fault Status',
+              minWidth: 125,
+            };
+          }
+
           if ('state' in statusInfo) {
             toReturn[tableName].faultStatus[rowName] = {
               ...toReturn[tableName].faultStatus[rowName],
@@ -80,22 +96,6 @@ export class DashboardLayoutInterceptor implements NestInterceptor {
 
       Object.entries(groupData.status).forEach(([statusID, statusInfo]) => {
         if ('static' in statusInfo) {
-          if (groupData.alarmStatus !== undefined) {
-            toReturn[tableName].columns['alarm_status'] = {
-              id: 'alarm_status',
-              label: 'Alarm Status',
-              minWidth: 125,
-            };
-          }
-
-          if (groupData.faultStatus !== undefined) {
-            toReturn[tableName].columns['fault_status'] = {
-              id: 'fault_status',
-              label: 'Fault Status',
-              minWidth: 125,
-            };
-          }
-
           if (!(statusID in toReturn[tableName].columns)) {
             toReturn[tableName].columns[statusID] = {
               id: statusID,

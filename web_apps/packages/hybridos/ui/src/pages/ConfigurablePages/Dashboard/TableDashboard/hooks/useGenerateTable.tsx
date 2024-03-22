@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { AlarmFaultDataIndexable, ColumnData, RowData } from 'shared/types/dtos/dataTables.dto';
+import {
+  AlarmFaultDataIndexable, ColumnData, RowData, TableSortBehavior,
+} from 'shared/types/dtos/dataTables.dto';
 import { generateAlarmFaultStatusComponent, sortByAlarmFaultStatus } from 'src/pages/ConfigurablePages/Dashboard/TableDashboard/TableDashboard.helpers';
 
 const useGenerateDashboardTable = () => {
+  const storedSortBehavior: TableSortBehavior = JSON.parse(localStorage.getItem('dashboardSortBehavior') || '{}');
   const [results, setResults] = useState<{ [key: string]: RowData[] }>({});
-  const [, setSortBehavior] = useState<{
-    [key: string]: { columnToSortBy: keyof RowData, reverseOrder: boolean }
-  }>({});
+  const [, setSortBehavior] = useState<TableSortBehavior>(storedSortBehavior);
 
   const generateRowsData = (
     tableName: string,
@@ -23,6 +24,7 @@ const useGenerateDashboardTable = () => {
         columnToSortBy: columnToSortBy ?? currentSortBehavior?.columnToSortBy ?? columns[0].id,
         reverseOrder: reverseOrder ?? currentSortBehavior?.reverseOrder ?? false,
       };
+      localStorage.setItem('dashboardSortBehavior', JSON.stringify({ ...prevSortBehavior, [tableName]: newSortBehavior }));
 
       setResults((prevResults) => {
         const updatedRows = (() => {

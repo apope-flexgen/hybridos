@@ -2,7 +2,9 @@ import {
   Box, IconButton, Typography,
 } from '@flexgen/storybook';
 import { useState } from 'react';
-import { AlarmFaultDataIndexable, ColumnData, RowData } from 'shared/types/dtos/dataTables.dto';
+import {
+  AlarmFaultDataIndexable, ColumnData, ColumnSortDirection, RowData,
+} from 'shared/types/dtos/dataTables.dto';
 import { sortedTableHeaderSx } from 'src/pages/ConfigurablePages/Dashboard/TableDashboard/tableDashboard.styles';
 
 interface Props {
@@ -29,7 +31,8 @@ export const SortableColumn = (
     label, columnID, columnData, rowData, tableName, generateRowsData, alarmStatus, faultStatus,
   }: Props,
 ) => {
-  const [reverseOrder, setReverseOrder] = useState<boolean>(false);
+  const storedReverseOrder: ColumnSortDirection = JSON.parse(localStorage.getItem('dashboardColumnSortDirection') || '{}');
+  const [reverseOrder, setReverseOrder] = useState<ColumnSortDirection>(storedReverseOrder);
 
   const handleSort = () => {
     generateRowsData(
@@ -37,11 +40,16 @@ export const SortableColumn = (
       columnData,
       rowData,
       columnID,
-      !reverseOrder,
+      !reverseOrder?.[tableName]?.[columnID] ?? false,
       alarmStatus,
       faultStatus,
     );
-    setReverseOrder(!reverseOrder);
+    setReverseOrder((prevReverseOrder) => {
+      storedReverseOrder[tableName] ??= {};
+      storedReverseOrder[tableName][columnID] = !prevReverseOrder?.[tableName]?.[columnID] ?? false;
+      localStorage.setItem('dashboardColumnSortDirection', JSON.stringify(storedReverseOrder));
+      return storedReverseOrder;
+    });
   };
 
   return (
@@ -49,7 +57,7 @@ export const SortableColumn = (
       <Typography text={label} variant="tableHeader" />
       {label && (
       <IconButton
-        icon={reverseOrder ? 'ArrowDown' : 'ArrowUp'}
+        icon={reverseOrder?.[tableName]?.[columnID] ? 'ArrowDown' : 'ArrowUp'}
         onClick={handleSort}
         size="small"
       />
