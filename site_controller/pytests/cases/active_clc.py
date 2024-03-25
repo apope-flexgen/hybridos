@@ -923,3 +923,63 @@ def test_slow_clc_update_rate(test):
     return test
 
 
+
+# Ensure importing at POI limit signage is correct
+@ fixture
+@ parametrize("test", [
+    # Preconditions
+    Setup(
+        "active_clc_poi_limit",
+        {
+            **Steps.disable_solar_and_gen(),
+            "/features/active_power/runmode1_kW_mode_cmd": 2,
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+            "/features/standalone_power/active_power_poi_limits_enable": True,
+            "/features/standalone_power/active_power_closed_loop_enable": True,
+            "/features/standalone_power/active_power_closed_loop_step_size_kW": 20,  # Larger step size to speed up tests
+            "/features/standalone_power/active_power_poi_limits_min_kW": -2000,
+            "/features/standalone_power/active_power_poi_limits_max_kW": 2000,
+            "/components/bess_aux/active_power_setpoint": 2000
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 2),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_enable", True),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_enable", True),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_step_size_kW", 20),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_min_kW", -2000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/bess_aux/active_power", -2000, wait_secs=10),
+        ]
+    ),
+    Steps(
+        {
+            "/features/active_power/active_power_setpoint_kW_cmd": -2000,
+        },
+        [
+            # Assert ess value is allowed to exceed poi lim
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", -4000, wait_secs=30),
+            # After 30 seconds total correction should have landed at -2000 out though continued to climb before DC-410 patch
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_total_correction", -2000, tolerance=200, tolerance_type=Tolerance_Type.abs),
+        ]
+    ),
+    # Cleanup
+    Teardown(
+        {
+            **Steps.enable_solar_and_gen(),
+            "/components/bess_aux/active_power_setpoint": 0,
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+            "/features/standalone_power/active_power_closed_loop_enable": False,
+            "/features/standalone_power/active_power_poi_limits_enable": False,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/bess_aux/active_power_setpoint", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_enable", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_enable", False),
+        ]
+    )
+])
+def test_active_clc_poi_lims(test):
+    return test
+
+

@@ -5,7 +5,7 @@ from pytest_cases import parametrize
 
 from pytests.pytest_framework import Site_Controller_Instance
 from pytests.pytest_steps import Steps
-from pytests.cases.active_clc import test_fr_clc, test_ess_tsoc_clc, test_solar_tsoc_clc, test_active_clc_zero_bypass, test_slow_clc_update_rate
+from pytests.cases.active_clc import test_fr_clc, test_ess_tsoc_clc, test_solar_tsoc_clc, test_active_clc_zero_bypass, test_slow_clc_update_rate, test_active_clc_poi_lims
 from pytests.cases.reactive_clc import test_reactive_setpoint_clc, test_reactive_clc_zero_bypass
 from pytests.cases.reactive_power_poi_lims import test_reactive_poi_lims
 from pytests.cases.constant_power_factor import test_constant_power_factor
@@ -96,6 +96,7 @@ from pytests.cases.fims_api import test_fr_multiple_inputs
     test_fr_poi_lims,
     test_fr_clc,
     test_slow_clc_update_rate,
+    test_active_clc_poi_lims,
     test_completed_automated_action,
     test_aborted_automated_action,
     test_silent_automated_action,

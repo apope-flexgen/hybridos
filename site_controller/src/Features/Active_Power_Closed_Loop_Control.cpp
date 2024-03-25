@@ -121,7 +121,7 @@ features::Active_Power_Closed_Loop_Control::External_Outputs features::Active_Po
     new_site_kW_demand += new_total_correction;
     // Give enough headroom to accommodate the full correction if needed
     // Because this feature explicitly takes the POI value into account and has determined that it has not been reached yet, the POI limit should not be violated
-    float new_feeder_max_potential_kW = std::max(inputs.feeder_max_potential_kW, current_cmd + zero_check(-1.0f * new_total_correction));
+    float new_feeder_max_potential_kW = std::max(inputs.feeder_max_potential_kW, (current_cmd * -1) + zero_check(-1.0f * new_total_correction));
     // Preserve the active power feature command to be dispatched, but only if closed loop control had a chance to act on the command
     if (command_accepted)
         prev_active_power_feature_cmd = current_cmd;
