@@ -86,13 +86,15 @@ func (l *FimsListener) listenUntil(done <-chan struct{}) error {
 			if msg.Uri == copsSummaryUri {
 				updateStatusFromCopsSummary(&msg)
 			}
-			// only allow pub and post type methods for now
+			// only allow pub, post, and set type methods for now
 			// Archive pubs because that's the method of most of the data we want,
-			// Archive posts because that's the method of events data
+			// Archive posts because that's the method of events data,
+			// Archive sets to see what commands are being sent
 			msgMethod := strings.ToLower(msg.Method)
-			if msgMethod != "pub" && msgMethod != "post" {
+			if msgMethod != "pub" && msgMethod != "post" && msgMethod != "set" {
 				continue
 			}
+
 			l.Out <- &msg
 		}
 	}

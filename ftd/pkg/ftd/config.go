@@ -33,6 +33,7 @@ type UriConfig struct {
 	Sources       []string `json:"sources"`
 	Fields        []string `json:"fields"`
 	Group         string   `json:"group"`
+	Method        []string `json:"message_methods"`
 	DestinationDb string   `json:"destination"` // "influx" or "mongo"
 	Measurement   string   `json:"measurement"`
 }
@@ -124,7 +125,7 @@ func extractLaneConfiguration(body map[string]interface{}) (LaneConfig, error) {
 		return cfg, errors.New("no FIMS URIs provided to subscribe. null config")
 	}
 	cfg.Uris = make([]UriConfig, 0, uriLen)
-	uriHasSources := make(map[string]bool)
+	uriAndMethodHasSources := make(map[string]bool)
 	for index, uri := range urisList {
 		uriObj, ok := uri.(map[string]interface{})
 		if !ok {
@@ -137,6 +138,7 @@ func extractLaneConfiguration(body map[string]interface{}) (LaneConfig, error) {
 			Sources:       []string{},
 			Fields:        []string{},
 			Group:         "",
+			Method:        []string{},
 		}
 
 		uriInterface, err := parsemap.ExtractValueWithType(uriObj, "uri", parsemap.STRING)
@@ -165,13 +167,6 @@ func extractLaneConfiguration(body map[string]interface{}) (LaneConfig, error) {
 			} else {
 				return cfg, fmt.Errorf("failed to extract sourceName for entry %d in storage configuration due to incorrect datatype %T, expected string", index, source)
 			}
-		}
-		// Do not allow the same uri to be listed both with and without sources, it must be one or the other
-		sourcesGiven := len(uriEntry.Sources) > 0
-		if hadSources, exists := uriHasSources[uriEntry.BaseUri]; exists && (hadSources != sourcesGiven) {
-			return cfg, fmt.Errorf("uri entry with id %d mixes having and not having sources", index)
-		} else {
-			uriHasSources[uriEntry.BaseUri] = sourcesGiven
 		}
 
 		fieldsListInterface, ok := uriObj["fields"]
@@ -205,6 +200,28 @@ func extractLaneConfiguration(body map[string]interface{}) (LaneConfig, error) {
 			uriEntry.Group = group
 		}
 
+		methodListInterface, ok := uriObj["message_methods"]
+		var methodList []interface{}
+		// If message_methods isn't in the map, use default value
+		if !ok {
+			log.Infof("Did not find a method list for entry %d in uri configuration, defaulting to capturing pub and post message methods", index)
+			methodList = []interface{}{"pub", "post"} // Set to pub and post to make sure we have backwards compatibility for older configs
+		} else {
+			methodList, ok = methodListInterface.([]interface{})
+			if !ok {
+				return cfg, fmt.Errorf("failed assertion of method list to []interface{} for entry %d in uri configuration", index)
+			}
+			uriEntry.Method = make([]string, 0, len(methodList))
+		}
+
+		for _, method := range methodList {
+			if methodName, ok := method.(string); ok {
+				uriEntry.Method = append(uriEntry.Method, methodName)
+			} else {
+				return cfg, fmt.Errorf("failed to extract methodName for entry %d in storage configuration due to incorrect datatype %T, expected string", index, method)
+			}
+		}
+
 		measurementInterface, err := parsemap.ExtractValueWithType(uriObj, "measurement", parsemap.STRING)
 		if err != nil {
 			return cfg, fmt.Errorf("failed to extract measurement for URI- %s at index %d with error %v", uriEntry.BaseUri, index, err)
@@ -218,6 +235,17 @@ func extractLaneConfiguration(body map[string]interface{}) (LaneConfig, error) {
 		} else {
 			log.Warnf("Failed to extract destination for URI- %s at index %d, default value %s used", uriEntry.BaseUri, index, uriEntry.DestinationDb)
 		}
+
+		// Do not allow the same uri to be listed both with and without sources for the same method, it must be one or the other
+		sourcesGiven := len(uriEntry.Sources) > 0
+		for _, methodName := range uriEntry.Method {
+			if hadSources, exists := uriAndMethodHasSources[uriEntry.BaseUri+"_"+methodName]; exists && (hadSources != sourcesGiven) {
+				return cfg, fmt.Errorf("uri entry with id %d mixes having and not having sources for the same method", index)
+			} else {
+				uriAndMethodHasSources[uriEntry.BaseUri+"_"+methodName] = sourcesGiven
+			}
+		}
+
 		cfg.Uris = append(cfg.Uris, uriEntry)
 	}
 	return cfg, nil

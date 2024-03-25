@@ -14,7 +14,7 @@ type MsgDistributor struct {
 	in         <-chan *fims.FimsMsg
 	Outs       []chan *fims.FimsMsg
 
-	uriToOutsMemo map[string]outListMask // Memoized map from uri to out list used to speed up processing of repeated uris
+	uriAndMethodToOutsMemo map[string]outListMask // Memoized map from uri and method to out list used to speed up processing of repeated uris
 }
 
 // Bitmask over list of outputs indicating which ones to use.
@@ -29,7 +29,7 @@ func NewDistributor(outUriCfgs [][]UriConfig, inputChannel <-chan *fims.FimsMsg,
 		in:         inputChannel,
 		Outs:       make([]chan *fims.FimsMsg, numOutputs),
 
-		uriToOutsMemo: map[string]outListMask{},
+		uriAndMethodToOutsMemo: map[string]outListMask{},
 	}
 }
 
@@ -78,14 +78,10 @@ termination:
 // Distributes copies of the message to outputs.
 // Concurrent modifications to the message body copies will be safe so long as those modifications only add new key-value pairs.
 func (distributor *MsgDistributor) distribute(msg *fims.FimsMsg) {
-	// verify message body is a map
-	bodyMap, ok := msg.Body.(map[string]interface{})
-	if !ok {
-		log.Errorf("Message with URI %s is a %T, but map[string]interface{} is required", msg.Uri, msg.Body)
-		return
-	}
+	// check if message body is a map
+	bodyMap, mapCopyNeeded := msg.Body.(map[string]interface{})
 
-	outMask := distributor.getNecessaryOuts(msg.Uri)
+	outMask := distributor.getNecessaryOuts(msg.Uri, msg.Method)
 
 	// distribute message to outputs based on bits in the necessary outs mask
 	for i := 0; i < len(distributor.Outs); i++ {
@@ -95,11 +91,13 @@ func (distributor *MsgDistributor) distribute(msg *fims.FimsMsg) {
 				// copy message
 				msgCopy := *msg
 				// make a new shallow copy of the body so that other goroutines can safely add new key-value pairs to their copies
-				bodyMapCopy := map[string]interface{}{}
-				for key, val := range bodyMap {
-					bodyMapCopy[key] = val
+				if mapCopyNeeded {
+					bodyMapCopy := map[string]interface{}{}
+					for key, val := range bodyMap {
+						bodyMapCopy[key] = val
+					}
+					msgCopy.Body = bodyMapCopy
 				}
-				msgCopy.Body = bodyMapCopy
 
 				out <- &msgCopy
 			}
@@ -108,9 +106,9 @@ func (distributor *MsgDistributor) distribute(msg *fims.FimsMsg) {
 }
 
 // Determines which outputs will need the given message based on its uri
-func (distributor *MsgDistributor) getNecessaryOuts(msgUri string) outListMask {
+func (distributor *MsgDistributor) getNecessaryOuts(msgUri string, msgMethod string) outListMask {
 	// check memo for preexisting entry
-	if mask, ok := distributor.uriToOutsMemo[msgUri]; ok {
+	if mask, ok := distributor.uriAndMethodToOutsMemo[msgUri+"_"+msgMethod]; ok {
 		return mask
 	}
 	// if no preexisting entry, check uris list of each output lane
@@ -119,13 +117,13 @@ func (distributor *MsgDistributor) getNecessaryOuts(msgUri string) outListMask {
 		outUrisCfg := distributor.OutUriCfgs[i]
 		if outUrisCfg != nil {
 			// set the mask bit if the msg uri falls under the lane's config
-			_, exists := findUriConfig(msgUri, outUrisCfg)
+			_, exists := findUriConfig(msgUri, msgMethod, outUrisCfg)
 			if exists {
 				mask |= (1 << i)
 			}
 		}
 	}
 	// update memo and return mask
-	distributor.uriToOutsMemo[msgUri] = mask
+	distributor.uriAndMethodToOutsMemo[msgUri+"_"+msgMethod] = mask
 	return outListMask(mask)
 }

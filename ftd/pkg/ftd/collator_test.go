@@ -2,6 +2,7 @@ package ftd
 
 import (
 	"fims"
+	"reflect"
 	"testing"
 
 	"github.com/flexgen-power/hybridos/fims_codec"
@@ -10,59 +11,63 @@ import (
 // Test finding the correct config associated with the given uri.
 func TestFindUriConfig(t *testing.T) {
 	configUris := []UriConfig{
-		0: {BaseUri: "/events"},
-		1: {BaseUri: "/assets/ess", Sources: []string{"ess_1", "ess_2"}},
-		2: {BaseUri: "/components"},
-		3: {BaseUri: "/ftd_test", Sources: []string{""}},
+		0: {BaseUri: "/events", Method: []string{"post"}},
+		1: {BaseUri: "/assets/ess", Sources: []string{"ess_1", "ess_2"}, Method: []string{"pub"}},
+		2: {BaseUri: "/components", Method: []string{"pub"}},
+		3: {BaseUri: "/ftd_test", Sources: []string{""}, Method: []string{"pub"}},
+		4: {BaseUri: "/assets/ess", Sources: []string{"ess_1", "ess_2"}, Method: []string{"set"}},
 	}
 
-	// Test uris that should not be found
-	shouldNotExistTestCases := []string{
-		"/site",
-		"/assets/ess",
-		"/assets/ess/summary",
-		"/assets/ess/ess_10",
-		"/assets/ess/ess_11",
-		"/assets/ess/ess_",
-		"/assets/ess/ess_1/",
-		"/assets/ess/ess_1/soc",
-		"/ftd_test/data",
+	// test messages that should not be found
+	shouldNotExistTestCases := []fims.FimsMsg{
+		{Uri: "/site", Method: "pub"},
+		{Uri: "/assets/ess", Method: "pub"},
+		{Uri: "/assets/ess/summary", Method: "pub"},
+		{Uri: "/assets/ess/ess_10", Method: "pub"},
+		{Uri: "/assets/ess/ess_11", Method: "pub"},
+		{Uri: "/assets/ess/ess_", Method: "pub"},
+		{Uri: "/assets/ess/ess_1/", Method: "pub"},
+		{Uri: "/assets/ess/ess_1/soc", Method: "pub"},
+		{Uri: "/ftd_test/data", Method: "pub"},
+		{Uri: "/assets/ess/ess_1", Method: "post"},
 	}
-	testShouldNotExist := func(testUri string) {
-		cfg, exists := findUriConfig(testUri, configUris)
+	testShouldNotExist := func(testMsg fims.FimsMsg) {
+		cfg, exists := findUriConfig(testMsg.Uri, testMsg.Method, configUris)
 		if exists {
-			t.Errorf("%s config was erroneously found with config %v", testUri, cfg)
+			t.Errorf("Uri %s and method %s config was erroneously found with config %v", testMsg.Uri, testMsg.Method, cfg)
 		}
 	}
 	for _, testCase := range shouldNotExistTestCases {
 		testShouldNotExist(testCase)
 	}
 
-	// Test uris that should be found
+	// test messages that should be found
 	type shouldExistTestCase struct {
-		testUri     string
+		testMsg     fims.FimsMsg
 		expectedCfg *UriConfig
 	}
 	shouldExistTestCases := []shouldExistTestCase{
-		{"/events", &configUris[0]},
-		{"/assets/ess/ess_1", &configUris[1]},
-		{"/assets/ess/ess_2", &configUris[1]},
-		{"/components", &configUris[2]},
-		{"/components/feeders", &configUris[2]},
-		{"/components/feeders/feed_1", &configUris[2]},
-		{"/ftd_test", &configUris[3]},
+		{fims.FimsMsg{Uri: "/events", Method: "post"}, &configUris[0]},
+		{fims.FimsMsg{Uri: "/assets/ess/ess_1", Method: "pub"}, &configUris[1]},
+		{fims.FimsMsg{Uri: "/assets/ess/ess_2", Method: "pub"}, &configUris[1]},
+		{fims.FimsMsg{Uri: "/components", Method: "pub"}, &configUris[2]},
+		{fims.FimsMsg{Uri: "/components/feeders", Method: "pub"}, &configUris[2]},
+		{fims.FimsMsg{Uri: "/components/feeders/feed_1", Method: "pub"}, &configUris[2]},
+		{fims.FimsMsg{Uri: "/ftd_test", Method: "pub"}, &configUris[3]},
+		{fims.FimsMsg{Uri: "/assets/ess/ess_1", Method: "set"}, &configUris[4]},
+		{fims.FimsMsg{Uri: "/assets/ess/ess_2", Method: "set"}, &configUris[4]},
 	}
-	testShouldExist := func(testUri string, expectedCfg *UriConfig) {
-		cfg, exists := findUriConfig(testUri, configUris)
+	testShouldExist := func(testMsg fims.FimsMsg, expectedCfg *UriConfig) {
+		cfg, exists := findUriConfig(testMsg.Uri, testMsg.Method, configUris)
 		if !exists {
-			t.Errorf("%s config was erroneously not found", testUri)
+			t.Errorf("Uri %s and method %s config was erroneously not found", testMsg.Uri, testMsg.Method)
 			if cfg != expectedCfg {
-				t.Errorf("%s found the wrong config: %v", testUri, cfg)
+				t.Errorf("Uri %s and method %s found the wrong config: %v", testMsg.Uri, testMsg.Method, cfg)
 			}
 		}
 	}
 	for _, testCase := range shouldExistTestCases {
-		testShouldExist(testCase.testUri, testCase.expectedCfg)
+		testShouldExist(testCase.testMsg, testCase.expectedCfg)
 	}
 }
 
@@ -77,6 +82,7 @@ func TestAllFieldsEncoded(t *testing.T) {
 					Sources:       []string{},
 					Fields:        []string{},
 					Group:         "",
+					Method:        []string{"post"},
 					DestinationDb: "influx",
 					Measurement:   "test",
 				},
@@ -94,13 +100,13 @@ func TestAllFieldsEncoded(t *testing.T) {
 		"OPEN":  true,
 	}
 	testMsg := fims.FimsMsg{
-		Method: "pub",
+		Method: "post",
 		Uri:    "/test",
 		Body:   testMsgBody,
 	}
 	collator.collate(&testMsg)
 
-	data, ok := collator.FimsMsgs["/test"]
+	data, ok := collator.FimsMsgs["/test_post"]
 	if !ok {
 		t.Fatalf("Did not find any encoder messages associated with expected uri.")
 	}
@@ -119,6 +125,7 @@ func TestFieldsFiltered(t *testing.T) {
 					Sources:       []string{},
 					Fields:        []string{"p"},
 					Group:         "",
+					Method:        []string{"pub"},
 					DestinationDb: "influx",
 					Measurement:   "test",
 				},
@@ -142,7 +149,7 @@ func TestFieldsFiltered(t *testing.T) {
 	}
 	collator.collate(&testMsg)
 
-	data, ok := collator.FimsMsgs["/test"]
+	data, ok := collator.FimsMsgs["/test_pub"]
 	if !ok {
 		t.Fatalf("Did not find any encoder associated with expected uri.")
 	}
@@ -161,6 +168,7 @@ func TestFieldsFilteredGrouping(t *testing.T) {
 					Sources:       []string{},
 					Fields:        []string{"p"},
 					Group:         "test_group",
+					Method:        []string{"pub"},
 					DestinationDb: "influx",
 					Measurement:   "test",
 				},
@@ -184,7 +192,7 @@ func TestFieldsFilteredGrouping(t *testing.T) {
 	}
 	collator.collate(&testMsg)
 
-	encoder, ok := collator.groups["test_group"]
+	encoder, ok := collator.groups["test_group_pub"]
 	if !ok {
 		t.Fatalf("Did not find any encoder associated with expected uri.")
 	}
@@ -203,6 +211,7 @@ func TestAllFieldsFilteredOut(t *testing.T) {
 					Sources:       []string{},
 					Fields:        []string{"unused"},
 					Group:         "",
+					Method:        []string{"post", "pub"},
 					DestinationDb: "influx",
 					Measurement:   "test",
 				},
@@ -226,7 +235,7 @@ func TestAllFieldsFilteredOut(t *testing.T) {
 	}
 	collator.collate(&testMsg)
 
-	data, ok := collator.FimsMsgs["/test"]
+	data, ok := collator.FimsMsgs["/test_pub"]
 	if !ok {
 		// we will stil create an encoder, it just won't have any messages yet
 		t.Fatalf("Did not find any encoder associated with expected uri.")
@@ -270,6 +279,60 @@ func checkEncoderKeysAreExpected(t *testing.T, keys []string, expectedKeys []str
 		}
 		if !found {
 			t.Errorf("Did not find key %s in expected keys list", key)
+		}
+	}
+}
+
+func TestConformMessage(t *testing.T) {
+	testMessages := []fims.FimsMsg{
+		{
+			Uri:  "/site/configuration/reserved_bool_11",
+			Body: true,
+		},
+		{
+			Uri: "/dbi/site_controller/setpoints/site/configuration/reserved_bool_11",
+			Body: map[string]interface{}{
+				"value": true,
+			},
+		},
+		{
+			Uri: "/test/multiple_fields",
+			Body: map[string]interface{}{
+				"value":  12,
+				"second": 13,
+			},
+		},
+	}
+
+	expectedResultMessages := []fims.FimsMsg{
+		{
+			Uri: "/site/configuration",
+			Body: map[string]interface{}{
+				"reserved_bool_11": true,
+			},
+		},
+		{
+			Uri: "/dbi/site_controller/setpoints/site/configuration",
+			Body: map[string]interface{}{
+				"reserved_bool_11": true,
+			},
+		},
+		{
+			Uri: "/test/multiple_fields",
+			Body: map[string]interface{}{
+				"value":  12,
+				"second": 13,
+			},
+		},
+	}
+
+	for i, testMsg := range testMessages {
+		resultMsgBody, conformedUri := conformMessage(&testMsg)
+		if conformedUri != expectedResultMessages[i].Uri {
+			t.Errorf("Conformed uri %v did not match expected conformed uri: %v", i, conformedUri)
+		}
+		if !reflect.DeepEqual(resultMsgBody, expectedResultMessages[i].Body) {
+			t.Errorf("Conformed message %v had unexpected body: %v", i, resultMsgBody)
 		}
 	}
 }

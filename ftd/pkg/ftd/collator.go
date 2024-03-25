@@ -82,15 +82,12 @@ termination:
 // Encodes the message with the existing encoder for that uri, or creates a new encoder as needed,
 // returns early if the uri is not one we want to track
 func (collator *MsgCollator) collate(msg *fims.FimsMsg) {
-	uriFtdData, validUri := collator.getFtdData(msg.Uri)
-	if !validUri {
-		return
-	}
+	// conform message body and uri to encodable form
+	bodyMap, conformedUri := conformMessage(msg)
 
-	// verify message body is a map
-	bodyMap, ok := msg.Body.(map[string]interface{})
-	if !ok {
-		log.Errorf("Message with URI %s is a %T, but map[string]interface{} is required", msg.Uri, msg.Body)
+	// determine if the message is one we should collate
+	uriFtdData, validMsg := collator.getFtdData(msg.Uri, msg.Method, conformedUri)
+	if !validMsg {
 		return
 	}
 
@@ -110,11 +107,12 @@ func (collator *MsgCollator) collate(msg *fims.FimsMsg) {
 		bodyMap = newBody
 	}
 
-	// get the codec either from group or the URI
+	// get the codec either from group_method or the URI
 	encoder := uriFtdData.encoder
 	if len(uriFtdData.Config.Group) > 0 {
-		encoder = collator.groups[uriFtdData.Config.Group]
-		bodyMap["ftd_group"] = path.Base(msg.Uri)
+		encoder = collator.groups[uriFtdData.Config.Group+"_"+msg.Method]
+		// ftd_group eventually becomes the source tag in Influx for data using grouping
+		bodyMap["ftd_group"] = path.Base(conformedUri)
 	}
 
 	// now that we recorded URI append msg to codec
@@ -128,41 +126,43 @@ func (collator *MsgCollator) collate(msg *fims.FimsMsg) {
 	}
 }
 
-// Gets the ftdData for the given URI, creating one if it does not already exist.
-func (collator *MsgCollator) getFtdData(uri string) (data *ftdData, validUri bool) {
-	f_data, exist := collator.FimsMsgs[uri]
+// Gets the appropriate ftdData for the given message based on uri and method, creating one if it does not already exist.
+func (collator *MsgCollator) getFtdData(uri string, method string, conformedUri string) (data *ftdData, validMsg bool) {
+	f_data, exist := collator.FimsMsgs[uri+"_"+method]
 	if exist {
 		return &f_data, true
 	}
-	log.Debugf("Received a message on a new URI %s", uri)
+	log.Debugf("Received a message on URI %s with new message method %s", uri, method)
 
 	// get config for this uri
-	uriCfg, exists := findUriConfig(uri, collator.laneCfg.Uris)
+	uriCfg, exists := findUriConfig(uri, method, collator.laneCfg.Uris)
 	if !exists { // ignore URIs that FTD is not configured for
+		log.Infof("Uri: %s, Method: %s, did not find uri config", uri, method)
 		return nil, false
 	}
 
 	// get the right encoder for this URI
 	var encoder *fims_codec.Encoder
 	if len(uriCfg.Group) > 0 {
-		// if uri is part of group that has n
-		_, exist := collator.groups[uriCfg.Group]
+		// if uri is part of a group
+		_, exist := collator.groups[uriCfg.Group+"_"+method]
 		if !exist {
-			log.Infof("Creating codec for group %s", uriCfg.Group)
-			groupEncoder := createEncoderFromConfig(uri, collator.laneCfg.DbName, collator.laneName, uriCfg)
-			collator.groups[uriCfg.Group] = groupEncoder
+			log.Infof("Creating codec for group %s and method %s", uriCfg.Group, method)
+			groupEncoder := createEncoderFromConfig(conformedUri, collator.laneCfg.DbName, collator.laneName, uriCfg, method)
+			collator.groups[uriCfg.Group+"_"+method] = groupEncoder
 		}
 		encoder = nil
 	} else {
 		// Create an individual codec
-		encoder = createEncoderFromConfig(uri, collator.laneCfg.DbName, collator.laneName, uriCfg)
+		log.Infof("Creating codec for uri %s and method %s", uri, method)
+		encoder = createEncoderFromConfig(conformedUri, collator.laneCfg.DbName, collator.laneName, uriCfg, method)
 	}
 
 	f_data = ftdData{
 		encoder: encoder,
 		Config:  uriCfg,
 	}
-	collator.FimsMsgs[uri] = f_data
+	collator.FimsMsgs[uri+"_"+method] = f_data
 	return &f_data, true
 }
 
@@ -205,9 +205,9 @@ func (collator *MsgCollator) flush() {
 	collator.Out <- encoderBatch
 }
 
-// Get the configuration item associated with a uri,
+// Get the configuration item associated with a uri and method,
 // Return the configuration item if it exists
-func findUriConfig(unknownUri string, configUris []UriConfig) (uriCfg *UriConfig, exists bool) {
+func findUriConfig(unknownUri string, method string, configUris []UriConfig) (uriCfg *UriConfig, exists bool) {
 	for _, uriEntry := range configUris {
 		// Check if our unknown uri is a child of the uri we're matching against, or is equal to the uri we're matching against
 		uriPrefix := path.Clean(uriEntry.BaseUri) + "/"
@@ -215,6 +215,18 @@ func findUriConfig(unknownUri string, configUris []UriConfig) (uriCfg *UriConfig
 		if !matched {
 			continue
 		}
+
+		// check that the method is listed in the uri config
+		methodIncluded := false
+		for _, allowedMethod := range uriEntry.Method {
+			if method == allowedMethod {
+				methodIncluded = true
+			}
+		}
+		if !methodIncluded {
+			continue
+		}
+
 		if len(uriEntry.Sources) > 0 {
 			// If there is a sources list, match against uris with sources
 			for _, source := range uriEntry.Sources {
@@ -230,14 +242,14 @@ func findUriConfig(unknownUri string, configUris []UriConfig) (uriCfg *UriConfig
 	return nil, false
 }
 
-// Creates a new encoder using the given URI, database name, lane name, and configuration.
-func createEncoderFromConfig(uri string, database string, laneName string, uriCfg *UriConfig) *fims_codec.Encoder {
-	// name encoder after the uri, or after the group if a group is defined
+// Creates a new encoder using the given conformed URI, database name, lane name, configuration, and message_method.
+func createEncoderFromConfig(conformedUri string, database string, laneName string, uriCfg *UriConfig, method string) *fims_codec.Encoder {
+	// name encoder after the uri or after the group name, this name is eventually parsed for the source tag in Influx
 	var encoderName string
 	if len(uriCfg.Group) > 0 {
 		encoderName = uriCfg.Group
 	} else {
-		encoderName = uri
+		encoderName = conformedUri
 	}
 	// instantiate new encoder
 	newEncoder := fims_codec.NewEncoder(encoderName)
@@ -245,7 +257,42 @@ func createEncoderFromConfig(uri string, database string, laneName string, uriCf
 		"destination": uriCfg.DestinationDb,
 		"database":    database,
 		"measurement": uriCfg.Measurement,
+		"method":      method,
 		"lane":        laneName,
 	}
 	return newEncoder
+}
+
+// Return a version of the message body and uri which can be encoded consistently
+// or return the unmodified original message body and uri if nothing needs to be changed.
+// The purpose of conforming the message and uri is to help ensure the data is organized consistently by the encoder.
+// i.e. a message like {Uri: "/site/configuration/reserved_bool_11", Body: true} should be encoded the same way as
+// a message like {Uri: "/site/configuration", Body: {"reserved_bool_11": true}}.
+// Note however that the message's original uri is still needed for routing to an encoder without clashes.
+func conformMessage(msg *fims.FimsMsg) (conformedBody map[string]interface{}, conformedUri string) {
+	// handle case of the body being a raw json value
+	bodyMap, ok := msg.Body.(map[string]interface{})
+	if !ok {
+		fieldValue := msg.Body
+		fieldName := path.Base(msg.Uri)
+		conformedUri := path.Dir(msg.Uri)
+		bodyMap = map[string]interface{}{
+			fieldName: fieldValue,
+		}
+		return bodyMap, conformedUri
+	}
+
+	// handle case of body being a json object with a single "value" field
+	if len(bodyMap) == 1 {
+		if fieldValue, ok := bodyMap["value"]; ok {
+			fieldName := path.Base(msg.Uri)
+			conformedUri := path.Dir(msg.Uri)
+			bodyMap = map[string]interface{}{
+				fieldName: fieldValue,
+			}
+			return bodyMap, conformedUri
+		}
+	}
+
+	return bodyMap, msg.Uri
 }

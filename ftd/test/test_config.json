@@ -6,9 +6,15 @@
         "archive": "/home/hybridos/ftd_pytest/cold",
         "uris": [
             {
-                "uri": "/test",
+                "uri": "/ftd",
                 "destination": "influx",
                 "measurement": "test"
+            },
+            {
+                "uri": "/ftd",
+                "destination": "influx",
+                "measurement": "test_set",
+                "message_methods": ["set"]
             }
         ]
     },
@@ -19,9 +25,15 @@
         "archive": "/home/hybridos/ftd_pytest/warm",
         "uris": [
             {
-                "uri": "/test",
+                "uri": "/ftd",
                 "destination": "influx",
                 "measurement": "test"
+            },
+            {
+                "uri": "/ftd",
+                "destination": "influx",
+                "measurement": "test_set",
+                "message_methods": ["set"]
             }
         ]
     }

@@ -2,6 +2,7 @@ package ftd
 
 import (
 	"encoding/json"
+	"reflect"
 	"testing"
 )
 
@@ -33,6 +34,10 @@ func TestExtractRootConfiguration(t *testing.T) {
 						"ess_13", "ess_14", "ess_15", "ess_16", "ess_17", "ess_18"
 					],
 					"group": "ess_group",
+					"message_methods": 
+					[
+						"pub", "post", "set"
+					],
 					"destination": "influx",
 					"measurement": "ess"
 				},
@@ -254,6 +259,12 @@ func TestExtractRootConfiguration(t *testing.T) {
 					"uri": "/events",
 					"destination": "mongo",
 					"measurement": "events"
+				},
+				{
+					"destination": "influx",
+					"measurement": "ess_set",
+					"message_methods": ["set"],
+					"uri": "/assets/ess"
 				}
 			]
 		}
@@ -265,6 +276,45 @@ func TestExtractRootConfiguration(t *testing.T) {
 	cfg, err := ExtractRootConfiguration(configBody)
 	if err != nil {
 		t.Fatalf("Failed to extract configuration with err: %v", err)
+	}
+
+	//run test with flag -v to see output of config ingestion (defaults to only show lane 1)
+	//only works when there is no error in config
+	t.Logf("Here is the config: %v\n", cfg.Lane1)
+
+	//checks uri /assets/ess in lane 1 for the configured message_methods
+	var edited_config UriConfig
+	done := false
+	edit_target := []string{"pub", "post", "set"}
+	for _, entry := range cfg.Lane1.Uris {
+		if done {
+			break
+		}
+		if entry.BaseUri == "/assets/ess" {
+			edited_config = entry
+			config_message_method_match := reflect.DeepEqual(edited_config.Method, edit_target)
+			if !config_message_method_match {
+				t.Error("Edited message_method for /assets/ess does not match expected value")
+			}
+			done = true
+		}
+	}
+
+	//checks the /site uri in the config for default message_methods
+	var default_config UriConfig
+	done = false
+	default_target := []string{"pub", "post"}
+	for _, def := range cfg.Lane1.Uris {
+		if done {
+			break
+		}
+		if def.BaseUri == "/site" {
+			default_config = def
+			default_message_method_match := reflect.DeepEqual(default_config.Method, default_target)
+			if !default_message_method_match {
+				t.Error("Default message_method for /site does not match [\"pub\", \"post\"]")
+			}
+		}
 	}
 
 	if cfg.Lane3 != nil {

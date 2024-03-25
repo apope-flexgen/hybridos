@@ -83,13 +83,18 @@ func (archiver *MsgArchiver) writeArchiveData(encoder *fims_codec.Encoder) {
 		encoder.AdditionalData["site_state"] = "secondary"
 	}
 
-	// create suffix with name <database>_<measurement>
 	encoderMeasurement, exist := encoder.AdditionalData["measurement"]
 	if !exist {
 		log.Errorf("Measurement does not exist in Additional Data for encoder %s.", encoder.Uri)
 	}
 
-	archivePrefix := archiver.laneName + "_" + archiver.laneCfg.DbName + "_" + encoderMeasurement
+	encoderMethod, exist := encoder.AdditionalData["method"]
+	if !exist {
+		log.Errorf("Method does not exist in Additional Data for encoder %s.", encoder.Uri)
+	}
+
+	// create an identifying name prefix for the archive
+	archivePrefix := archiver.laneName + "_" + encoderMethod + "_" + archiver.laneCfg.DbName + "_" + encoderMeasurement
 	_, _, err := encoder.CreateArchive(archiver.laneCfg.ArchivePath, archivePrefix)
 	if err != nil {
 		log.Errorf("archive creation failed for URI %s with error: %s", encoder.Uri, err.Error())

@@ -33,10 +33,10 @@ func TestMsgDistributed(t *testing.T) {
 	d := NewDistributor(
 		[][]UriConfig{
 			nil,
-			{UriConfig{BaseUri: "/test"}},
-			{UriConfig{BaseUri: "/unused"}}, // output 2 should not receive any messages because there are no message on its uri
+			{UriConfig{BaseUri: "/ftd", Method: []string{"pub"}}, UriConfig{BaseUri: "/orange", Method: []string{"set"}}},
+			{UriConfig{BaseUri: "/unused", Method: []string{"pub"}}}, // output 2 should not receive any messages because there are no message on its uri
 			nil,
-			{UriConfig{BaseUri: "/test"}},
+			{UriConfig{BaseUri: "/ftd", Method: []string{"pub"}}, UriConfig{BaseUri: "/orange", Method: []string{"set"}}},
 		},
 		in,
 		5,
@@ -56,8 +56,9 @@ func TestMsgDistributed(t *testing.T) {
 		t.Fatalf("Output channels expected to be non-nil were nil: %v", d.Outs)
 	}
 
-	numMsgs := 100
-	msgs := generateMessages(numMsgs, "/test")
+	msgs := generateMessages(100, "/ftd/test", "pub", func(i int) interface{} { return map[string]interface{}{"value": i} })
+	msgs = append(msgs, generateMessages(100, "/orange/test", "set", func(i int) interface{} { return i })...)
+	numMsgs := len(msgs)
 	msgSentCounter := 0
 	msgReceivedCounters := []int{0, 0, 0, 0, 0}
 
@@ -113,49 +114,57 @@ func TestMsgDistributed(t *testing.T) {
 func TestGetNecessaryOuts(t *testing.T) {
 	d := NewDistributor(
 		[][]UriConfig{
-			{UriConfig{BaseUri: "/apple"}},
+			{UriConfig{BaseUri: "/apple", Method: []string{"pub"}}},
 			nil,
-			{UriConfig{BaseUri: "/banana"}},
+			{
+				UriConfig{BaseUri: "/banana", Method: []string{"pub"}},
+				UriConfig{BaseUri: "/cherry", Method: []string{"set"}},
+			},
 			nil,
-			{UriConfig{BaseUri: "/apple"}, UriConfig{BaseUri: "/cherry"}},
+			{
+				UriConfig{BaseUri: "/apple", Method: []string{"pub"}},
+				UriConfig{BaseUri: "/cherry", Method: []string{"pub"}},
+				UriConfig{BaseUri: "/cherry", Method: []string{"set"}},
+			},
 		},
 		nil,
 		5,
 	)
 
-	// map uris to expected mask
-	testCases := map[string]outListMask{
-		"/apple":           0b10001,
-		"/durian":          0b00000,
-		"/apple/seed":      0b10001,
-		"/apple/stem/leaf": 0b10001,
-		"/banana/peel":     0b00100,
-		"/cherry":          0b10000,
+	// map messages to expected mask
+	testCases := map[*fims.FimsMsg]outListMask{
+		{Uri: "/apple", Method: "pub"}:           0b10001,
+		{Uri: "/durian", Method: "pub"}:          0b00000,
+		{Uri: "/apple/seed", Method: "pub"}:      0b10001,
+		{Uri: "/apple/stem/leaf", Method: "pub"}: 0b10001,
+		{Uri: "/banana/peel", Method: "pub"}:     0b00100,
+		{Uri: "/cherry", Method: "pub"}:          0b10000,
+		{Uri: "/cherry", Method: "set"}:          0b10100,
 	}
 
-	for testUri, expectedMask := range testCases {
-		mask := d.getNecessaryOuts(testUri)
+	for testMsg, expectedMask := range testCases {
+		mask := d.getNecessaryOuts(testMsg.Uri, testMsg.Method)
 		if mask != expectedMask {
-			t.Errorf("Expected mask for uri %s was 0b%b but got 0b%b", testUri, expectedMask, mask)
+			t.Errorf("Expected mask for uri %s and method %s was 0b%b but got 0b%b", testMsg.Uri, testMsg.Method, expectedMask, mask)
 		}
 	}
 	// run through all test cases a second time to check that memoization works correctly
-	for testUri, expectedMask := range testCases {
-		mask := d.getNecessaryOuts(testUri)
+	for testMsg, expectedMask := range testCases {
+		mask := d.getNecessaryOuts(testMsg.Uri, testMsg.Method)
 		if mask != expectedMask {
-			t.Errorf("On second run, expected mask for uri %s was 0b%b but got 0b%b", testUri, expectedMask, mask)
+			t.Errorf("On second run, expected mask for uri %s and method %s was 0b%b but got 0b%b", testMsg.Uri, testMsg.Method, expectedMask, mask)
 		}
 	}
 }
 
 // Generate the given number of distinct messages for testing
-func generateMessages(numMessages int, uri string) []*fims.FimsMsg {
+func generateMessages(numMessages int, uri string, method string, bodyGenerator func(i int) interface{}) []*fims.FimsMsg {
 	msgs := make([]*fims.FimsMsg, numMessages)
 	for i := 0; i < numMessages; i++ {
 		msgs[i] = &fims.FimsMsg{
-			Method: "pub",
+			Method: method,
 			Uri:    uri,
-			Body:   map[string]interface{}{"value": i},
+			Body:   bodyGenerator(i),
 		}
 	}
 	return msgs

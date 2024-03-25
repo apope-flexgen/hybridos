@@ -13,15 +13,28 @@ The following rules must be followed by any FIMS message which is processed by P
 ## Message Body
 
 * For the syntax of JSON, see (https://www.json.org).
-* The message body must be of the form
-    ```json
-    {
-        "<field_name_1>": <field_value_1>,
-        "<field_name_2>": <field_value_2>,
-        ...
-        "<field_name_N>": <field_value_N>
-    }
-    ```
+* The message body must be of one of the following forms:
+    * A json object
+        ```json
+        {
+            "<field_name_1>": <field_value_1>,
+            "<field_name_2>": <field_value_2>,
+            ...
+            "<field_name_N>": <field_value_N>
+        }
+        ```
+    * A json object with a single "value" field:
+        ```json
+        {
+            "value": <field_value>
+        }
+        ```
+        In this case, the field_name comes from the last fragment of the URI rather than being "value".
+    * A raw json value:
+        ```json
+        <field_value>
+        ```
+        In this case, the field_name comes from the last fragment of the URI.
 * Each of the field values must be one of the following types:
     * **A naked value:**\
     A naked value can be any of the following types:

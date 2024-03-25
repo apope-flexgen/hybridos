@@ -15,7 +15,7 @@ OUTPUT_PATH_2 = "/home/hybridos/ftd_pytest/warm"
 ARCHIVE_PERIOD_SECONDS = 1
 ARCHIVE_CREATION_DELAY_SECONDS = 0.5
 
-TEST_MESSAGE_URI = "/test"
+TEST_MESSAGE_URI = "/ftd/test"
 TEST_MESSAGE_BODY = '{"value": 1}'
 
 
@@ -41,7 +41,14 @@ def test_archives_created_after_pub(clear_directories):
     time.sleep(ARCHIVE_CREATION_DELAY_SECONDS)
     assert len(os.listdir(OUTPUT_PATH_1)) == 1
     assert len(os.listdir(OUTPUT_PATH_2)) == 1
-    pass
+
+def test_archives_created_after_set(clear_directories):
+    '''Tests that archives are created after a set message is sent'''
+    subprocess.run(["fims_send", "-m", "set", "-u", TEST_MESSAGE_URI, TEST_MESSAGE_BODY])
+    time.sleep(ARCHIVE_PERIOD_SECONDS)
+    time.sleep(ARCHIVE_CREATION_DELAY_SECONDS)
+    assert len(os.listdir(OUTPUT_PATH_1)) == 1
+    assert len(os.listdir(OUTPUT_PATH_2)) == 1
 
 def test_archives_not_created_after_inactivity(clear_directories):
     '''Tests that archives are not created after a period of inactivity'''
@@ -49,4 +56,3 @@ def test_archives_not_created_after_inactivity(clear_directories):
     time.sleep(ARCHIVE_CREATION_DELAY_SECONDS)
     assert len(os.listdir(OUTPUT_PATH_1)) == 0
     assert len(os.listdir(OUTPUT_PATH_2)) == 0
-    pass
