@@ -1,10 +1,10 @@
 /* eslint-disable max-lines */
 import { TimeZones, Timezones } from '@flexgen/storybook';
 import dayjs from 'dayjs';
-import { SchedulerEvent } from 'shared/types/dtos/scheduler.dto';
-import { VariableValues, DaysSelected } from 'src/pages/Scheduler/SchedulerTypes';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import { SchedulerEvent } from 'shared/types/dtos/scheduler.dto';
+import { VariableValues, DaysSelected } from 'src/pages/Scheduler/SchedulerTypes';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -17,9 +17,10 @@ export const setUpVariablesValues = (event: SchedulerEvent, dispatch: React.Disp
       tempVariableValues.push({
         name: key,
         value:
-          typeof event.variables?.[key] === 'string'
-          ? event.variables[key]
-          : event.variables?.[key].toString() || "",
+          typeof event.variables?.[key] !== 'object'
+            ? event.variables[key].toString()
+            : event.variables?.[key].value.toString() || '',
+        batch_value: event.variables?.[key].batch_value,
       });
     }
   });
@@ -82,14 +83,14 @@ export function padStart(num: number, size: number) {
 }
 
 export const getNewStartDate = (
-  startTime: string, 
-  repeatStart: string, 
-  timezone?: TimeZones
+  startTime: string,
+  repeatStart: string,
+  timezone?: TimeZones,
 ): string => {
-  dayjs.tz.setDefault(timezone)
-  const hour = Number(startTime.split(":")[0])
-  const minute = Number(startTime.split(":")[1])
-  const date = dayjs.tz(repeatStart, timezone).set('hour', hour).set('minute', minute)
+  dayjs.tz.setDefault(timezone);
+  const hour = Number(startTime.split(':')[0]);
+  const minute = Number(startTime.split(':')[1]);
+  const date = dayjs.tz(repeatStart, timezone).set('hour', hour).set('minute', minute);
   return date.format();
 };
 
@@ -173,8 +174,8 @@ export const initializeEditModal = (
   timezone: TimeZones,
 ) => {
   const mode = modeIds.find((m) => m.id === event.mode);
-  const startTime =  event.start_time ? dayjs(event.start_time).tz(timezone) : null;
-  const endTime = startTime ?  startTime.add(event.duration, 'm') : null;
+  const startTime = event.start_time ? dayjs(event.start_time).tz(timezone) : null;
+  const endTime = startTime ? startTime.add(event.duration, 'm') : null;
   dispatch({
     type: 'setStartTime',
     payload: startTime?.format('HH:mm') || '',
@@ -189,11 +190,11 @@ export const initializeEditModal = (
   });
   dispatch({
     type: 'setEndTime',
-    payload:  startTime?.add(event.duration, 'minutes').format('HH:mm') || '',
+    payload: startTime?.add(event.duration, 'minutes').format('HH:mm') || '',
   });
   dispatch({
     type: 'setEndHours',
-    payload:  startTime?.add(event.duration, 'minutes').format('HH') || '',
+    payload: startTime?.add(event.duration, 'minutes').format('HH') || '',
   });
   dispatch({
     type: 'setEndMinutes',
@@ -231,6 +232,8 @@ export function reducer(state: any, action: any) {
       return { ...state, modeId: action.payload };
     case 'setVariableValues':
       return { ...state, variableValues: action.payload };
+    case 'setBatchValue':
+      return { ...state, batchValue: action.payload };
     case 'setRepeatEveryValue':
       return { ...state, repeatEveryValue: action.payload };
     case 'setRepeatEveryIncrement':

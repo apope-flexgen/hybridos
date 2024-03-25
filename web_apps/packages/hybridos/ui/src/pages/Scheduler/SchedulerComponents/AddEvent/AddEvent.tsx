@@ -125,7 +125,6 @@ const AddEvent: React.FC = () => {
       typedVariableValues,
       recurring ? repeat : undefined,
     );
-
     addEvent(newEvent);
     handleClear();
   };

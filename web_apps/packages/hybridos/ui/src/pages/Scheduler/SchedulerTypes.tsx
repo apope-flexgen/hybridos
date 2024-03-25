@@ -48,10 +48,14 @@ export interface EventVariables {
   unit: string;
   uri: string;
   value: number | boolean;
+  batch_prefix?: string;
+  batch_range?: string[];
+  batch_value?: string[];
 }
 export interface VariableValues {
   name: string;
   value: string | boolean | number;
+  batch_value?: string[];
 }
 
 export interface ApplyChangesTo {

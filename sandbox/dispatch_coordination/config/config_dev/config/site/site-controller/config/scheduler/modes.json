@@ -96,5 +96,37 @@
                 "value": 100
             }
         ]
+    },
+    "battery_balancing": {
+        "color_code": "lightBlue",
+        "constants": [],
+        "icon": "BatteryCharging",
+        "name": "Battery Balancing",
+        "variables": [
+            {
+                "id": "maint_mode",
+                "name": "Maintenance Mode",
+                "type": "Bool",
+                "unit": "",
+                "uri": "/ess_#/maint_mode",
+                "value": true,
+                "is_template": true,
+                "batch_prefix": "/assets/ess",
+                "batch_range": ["1..2"],
+                "batch_value": ["1..2"]
+            },
+            {
+                "id": "start",
+                "name": "Start Calibration",
+                "type": "Bool",
+                "unit": "",
+                "uri": "/ess_#/actions/Calibration1/start",
+                "value": true,
+                "is_template": true,
+                "batch_prefix": "/assets/ess",
+                "batch_range": ["1..2"],
+                "batch_value": ["1..2"]
+            }
+        ]
     }
 }

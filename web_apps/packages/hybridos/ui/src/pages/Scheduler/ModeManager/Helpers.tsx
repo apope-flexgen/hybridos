@@ -94,6 +94,12 @@ export const schedulerConfigLabels = {
       emptyModeName: 'This field is required',
     },
     setpointRow: {
+      isTemplate: 'Is Template',
+      batchPrefix: 'Batch Prefix',
+      batchRange: 'Batch Range',
+      batchRangeHelper: 'Range of possible assets, please separate with commas.',
+      batchValueHelper: 'Default batch value when new event is created.',
+      batchValue: 'Batch Value',
       name: 'Name',
       duplicateName: 'Duplicate Names are not allowed',
       type: 'Type',

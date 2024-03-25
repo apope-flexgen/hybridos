@@ -2,6 +2,8 @@
 /* eslint-disable no-param-reassign */
 import { Timezones, Views } from '@flexgen/storybook';
 import dayjs, { Dayjs, ManipulateType, OpUnitType } from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { ApiMode, RepeatForAPI, SchedulerEvent } from 'shared/types/dtos/scheduler.dto';
 import {
   DaysSelected,
@@ -10,8 +12,6 @@ import {
   VariableValues,
 } from 'src/pages/Scheduler/SchedulerTypes';
 import { v4 as uuid } from 'uuid';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -38,11 +38,11 @@ export const views = {
 };
 
 export const getStartAndEndTimeFrame = (
-  value: Dayjs | null, 
+  value: Dayjs | null,
   view: Views,
-  timezone: Timezones
+  timezone: Timezones,
 ) => {
-  dayjs.tz.setDefault(timezone)
+  dayjs.tz.setDefault(timezone);
   let startTime: Dayjs = dayjs.tz(value).subtract(48, 'h');
   let endTime: Dayjs = dayjs.tz(value).add(48, 'h');
 
@@ -75,19 +75,38 @@ export const handleVariableValues = (
     variableValues.map((variableValue) => {
       if (variableValue.name === modeVariable.id) {
         if (modeVariable.type === 'Bool') {
-          if (variableValue.value === 'true') typedVariableValues.push({ name: variableValue.name, value: true });
-          else typedVariableValues.push({ name: variableValue.name, value: false });
+          if (variableValue.value === 'true') {
+            typedVariableValues.push({
+              name: variableValue.name,
+              value: true,
+              batch_value: variableValue.batch_value,
+            });
+          } else {
+            typedVariableValues.push({
+              name: variableValue.name,
+              value: false,
+              batch_value: variableValue.batch_value,
+            });
+          }
         } else if (modeVariable.type === 'Float') {
           typedVariableValues.push({
             name: variableValue.name,
             value: parseFloat(variableValue.value.toString()),
+            batch_value: variableValue.batch_value,
           });
         } else if (modeVariable.type === 'Int') {
           typedVariableValues.push({
             name: variableValue.name,
             value: parseInt(variableValue.value.toString(), 10),
+            batch_value: variableValue.batch_value,
           });
-        } else typedVariableValues.push({ name: variableValue.name, value: variableValue.value });
+        } else {
+          typedVariableValues.push({
+            name: variableValue.name,
+            value: variableValue.value,
+            batch_value: variableValue.batch_value,
+          });
+        }
       }
       return variableValue;
     });

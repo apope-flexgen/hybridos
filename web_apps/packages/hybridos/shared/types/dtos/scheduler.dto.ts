@@ -14,7 +14,7 @@ export class SchedulerEvent {
     mode: string
     start_time: string
     variables?: {
-        [key: string]: number | boolean | string
+        [key: string]: any
     }
     repeat?: Repeat 
 }
@@ -124,6 +124,9 @@ export class ModeBody {
         unit: string
         uri: string
         value: number | boolean
+        batch_value?: string[]
+        batch_prefix?: string
+        batch_range?: string[]
     }[]
     constants: {
         id: string

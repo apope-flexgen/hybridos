@@ -56,7 +56,7 @@ export const checkIfStartBeforeEnd = (state: EditEventState): boolean => {
 
 export const checkIfStartOrEndInPast = (
   state: EditEventState,
-  timezone: Timezones
+  timezone: Timezones,
 ): boolean => {
   if (
     state.date === null
@@ -167,13 +167,22 @@ export const schedulerLabels = {
 
 export const getVariables = (variableValues: VariableValues[]) => {
   let tempVariables = {};
-  variableValues.map(
-    // eslint-disable-next-line  no-return-assign
-    (variable) => (tempVariables = {
-      ...tempVariables,
-      [variable.name]: variable.value,
-    }),
-  );
+  variableValues.forEach((variable) => {
+    if (variable.batch_value) {
+      tempVariables = {
+        ...tempVariables,
+        [variable.name]: {
+          value: variable.value,
+          batch_value: variable.batch_value,
+        },
+      };
+    } else {
+      tempVariables = {
+        ...tempVariables,
+        [variable.name]: variable.value,
+      };
+    }
+  });
   return tempVariables;
 };
 

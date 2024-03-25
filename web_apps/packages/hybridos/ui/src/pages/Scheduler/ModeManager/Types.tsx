@@ -16,6 +16,10 @@ export type ModeBody = {
   icon: string;
   variables: {
     id?: string;
+    is_template?: boolean;
+    batch_prefix?: string;
+    batch_range?: string | string[];
+    batch_value?: string | string[];
     name: string;
     type: string;
     unit: string;
@@ -25,6 +29,7 @@ export type ModeBody = {
   constants: {
     id?: string;
     name: string;
+    is_template?: boolean;
     type: string;
     unit: string;
     uri: string;

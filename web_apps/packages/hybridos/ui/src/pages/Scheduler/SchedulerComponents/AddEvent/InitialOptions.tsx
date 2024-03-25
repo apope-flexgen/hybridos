@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
 import React from 'react';
 
 import { useSchedulerContext } from 'src/pages/Scheduler/Scheduler';
-import { addEventLabels } from 'src/pages/Scheduler/SchedulerComponents/AddEvent/AddEventHelpers';
+import { addEventLabels, determineBatchItemsFromRange } from 'src/pages/Scheduler/SchedulerComponents/AddEvent/AddEventHelpers';
 import { EditEventState, EventVariables, VariableValues } from 'src/pages/Scheduler/SchedulerTypes';
 import { useTheme } from 'styled-components';
 
@@ -46,19 +46,57 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
     const variableValue = state.variableValues.find(
       (obj: VariableValues) => obj.name === variable.id,
     );
+
     const { unit, id, name, type } = variable;
+
     const handleVariableChange = (e: any) => {
-      const newValue = [{ name: id, value: e.target.value }];
       const newVariableValues = state.variableValues.map(
-        (obj: VariableValues) => newValue.find((o) => o.name === obj.name) || obj,
+        (obj: VariableValues) => obj.name === id ? {...obj, value: e.target.value} : obj,
       );
       dispatch({ type: 'setVariableValues', payload: newVariableValues });
     };
-    const { value } = variableValue || { value: '' };
+
+    const { value, batch_value } = variableValue || { value: '', batch_value: [] };
+
+    const { menuItems, numericExtensions } = (determineBatchItemsFromRange(variable.batch_prefix || '', variable.uri, variable.batch_range || []));
+    const batchValues = (determineBatchItemsFromRange(variable.batch_prefix || '', variable.uri, batch_value || []));
+
+    const handleBatchChange = (e: any, deleteEvent: boolean) => {
+      if (deleteEvent) {
+        const newVariableValues = state.variableValues.map((obj: VariableValues) => {
+          const numericArray = determineBatchItemsFromRange(variable.batch_prefix || '', variable.uri, obj.batch_value || [])
+          const newBatchValueArray = numericArray.menuItems.filter((value) => value !== e);
+          const newBatchValues = newBatchValueArray.map((item) => numericExtensions[item]);
+          return obj.name === id ? {...obj, batch_value: newBatchValues } : obj
+        })
+        dispatch({ type: 'setVariableValues', payload: newVariableValues });
+      } else {
+        const numericArray = e.target.value.map((item) => numericExtensions[item]);
+        const newVariableValues = state.variableValues.map(
+          (obj: VariableValues) => obj.name === id ? {...obj, batch_value: numericArray} : obj,
+        );
+        dispatch({ type: 'setVariableValues', payload: newVariableValues });
+      }
+    };
+
+    const batchSelector = variable.batch_prefix ? 
+      <Select
+        fullWidth
+        multiSelect
+        label={`Select Batch - ${variable.name}`}
+        onChange={(e) => handleBatchChange(e, false)}
+        onDelete={(e) => handleBatchChange(e, true)}
+        maxMultiSelectLines={3}
+        value={batchValues.menuItems}
+        menuItems={menuItems}
+      />
+    : undefined;
+
 
     if (type === 'Bool') {
       return (
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {batchSelector}
           <Select
             fullWidth
             disabled={disableAllFields || pastEvent}
@@ -73,32 +111,39 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
     }
     if (type === 'Int' || type === 'Float') {
       return (
-        <NumericInput
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {batchSelector}
+          <NumericInput
+            disabled={disableAllFields || pastEvent}
+            endTextAdornment={unit}
+            fullWidth
+            key={name}
+            label={name}
+            onChange={handleVariableChange}
+            validationRegEx={type === 'Float' ? 'floats' : 'integers'}
+            value={value.toString()}
+          />
+        </Box>
+      );
+    }
+    return (
+      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        {batchSelector}
+        <TextField
+          TextAdornment={unit}
+          adornment='end'
           disabled={disableAllFields || pastEvent}
-          endTextAdornment={unit}
           fullWidth
           key={name}
           label={name}
           onChange={handleVariableChange}
-          validationRegEx={type === 'Float' ? 'floats' : 'integers'}
           value={value.toString()}
         />
-      );
-    }
-    return (
-      <TextField
-        TextAdornment={unit}
-        adornment='end'
-        disabled={disableAllFields || pastEvent}
-        fullWidth
-        key={name}
-        label={name}
-        onChange={handleVariableChange}
-        value={value.toString()}
-      />
+      </Box>
     );
   });
 
+  
   return (
     <Box
       sx={{

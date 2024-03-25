@@ -58,10 +58,11 @@ export const mapModesToVariables = (
       const { variables } = modesFromAPI[modeId];
       setVariables(variables);
       variables.map((variable) => {
-        const { id, value } = variable;
+        const { id, value, batch_value } = variable;
         tempVariableValues.push({
           name: id,
           value: value.toString(),
+          batch_value,
         });
         return null;
       });
@@ -69,6 +70,37 @@ export const mapModesToVariables = (
     }
     return null;
   });
+};
+
+export const determineBatchItemsFromRange = (
+  prefix: string,
+  uri: string,
+  batchRange: string[],
+) => {
+  let numericExtensions: { [key: string]: number } = {};
+  const menuItems: string[] = [];
+  const fullURI = `${prefix}${uri.split('#')[0]}`;
+  batchRange.forEach((rangeItem) => {
+    if (typeof rangeItem === 'string' && rangeItem.includes('..')) {
+      const arrayOfRange = rangeItem.split('..');
+      const startNumber = Number(arrayOfRange[0]);
+      const endNumber = Number(arrayOfRange[1]);
+      for (let i = startNumber; i < endNumber + 1; i++) {
+        numericExtensions = {
+          ...numericExtensions,
+          [`${fullURI}${i}`]: i,
+        };
+        menuItems.push(`${fullURI}${i}`);
+      }
+    } else {
+      numericExtensions = {
+        ...numericExtensions,
+        [`${fullURI}${rangeItem}`]: Number(rangeItem),
+      };
+      menuItems.push(`${fullURI}${rangeItem}`);
+    }
+  });
+  return { numericExtensions, menuItems };
 };
 
 export const isOverlappingStartTime = (
