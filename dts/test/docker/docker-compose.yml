@@ -1,0 +1,43 @@
+version: "3.3"
+
+services:
+  dts_test_dts:
+    build:
+      context: .
+      args:
+        imageName: centos7
+        imageTag: devel
+    image:
+      flexgen/dts/test/docker:test
+    networks:
+      dts_test_network:
+        ipv4_address: 1.1.2.0
+    tty: true
+    volumes:
+      - ./config/:/home/config/
+      - /usr/local/bin/:/usr/local/bin/
+      - /usr/local/lib/:/usr/local/lib/
+    restart: always
+
+  dts_test_mongo:
+    image: mongo:latest
+    expose:
+    - "27017"
+    networks:
+      dts_test_network:
+        ipv4_address: 1.1.2.1
+
+  dts_test_influx:
+    image: influxdb:1.8
+    expose:
+    - "8086"
+    networks:
+      dts_test_network:
+        ipv4_address: 1.1.2.2
+
+networks:
+  dts_test_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 1.1.2.0/8

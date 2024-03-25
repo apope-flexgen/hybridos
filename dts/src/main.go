@@ -72,7 +72,7 @@ func initConfig() {
 		log.Fatalf("Failed to configure: %v", err)
 	}
 
-	fmt.Printf("Configured with %+v\n", dts.GlobalConfig)
+	log.Infof("Configured with %+v", dts.GlobalConfig)
 }
 
 // Ensure that all directories necessary for the program to run exist
@@ -111,41 +111,7 @@ func initFlexService() error {
 	serv.SetVersion(fmt.Sprintf("dts %s %s %s", build.BuildVersion.Tag, build.BuildVersion.Build, build.BuildVersion.Commit)) //set version
 
 	//API registrations for flexservice
-	err = serv.RegisterApi(flexservice.ApiCommand{
-		ApiName: "show-dbs",
-		ApiDesc: "displays all active endpoints currently writing to",
-		ApiCallback: flexservice.Callback(func(args []interface{}) (string, error) {
-			var retVal string = ""
-			retVal += fmt.Sprintf("%s\n%#v\n", "---Influx writer---", pipeline.WriterToInflux)
-			retVal += fmt.Sprintf("%s\n%#v\n", "---Mongo writer---", pipeline.WriterToMongo)
-			return retVal, nil
-		}),
-	})
-	if err != nil {
-		return fmt.Errorf("failed to register show-dbs API endpoint: %w", err)
-	}
+	// (No API calls registered)
 
-	err = serv.RegisterApi(flexservice.ApiCommand{
-		ApiName: "show-stats",
-		ApiDesc: "Total number of files decoded",
-		ApiCallback: flexservice.Callback(func(args []interface{}) (string, error) {
-			var retVal string = ""
-			retVal += fmt.Sprintf("# of files that failed validation - %d\n", pipeline.Validator.FailCt)
-			// Influx writer
-			retVal += fmt.Sprintf("stats for db instance -  %s\n", "influx")
-			retVal += fmt.Sprintf("\t db type is %s deployed at %s\n", "influx", pipeline.WriterToInflux.DbUrl)
-			retVal += fmt.Sprintf("\t wrote %d files \n", pipeline.WriterToInflux.WriteCnt)
-			retVal += fmt.Sprintf("\t failed to write %d files \n", pipeline.WriterToInflux.FailCnt)
-			// Mongo writer
-			retVal += fmt.Sprintf("stats for db instance -  %s\n", "mongo")
-			retVal += fmt.Sprintf("\t db type is %s deployed at %s\n", "mongo", pipeline.WriterToMongo.DbUrl)
-			retVal += fmt.Sprintf("\t wrote %d files \n", pipeline.WriterToMongo.WriteCnt)
-			retVal += fmt.Sprintf("\t failed to write %d files \n", pipeline.WriterToMongo.FailCnt)
-			return retVal, nil
-		}),
-	})
-	if err != nil {
-		return fmt.Errorf("failed to register show-status API endpoint: %w", err)
-	}
 	return nil
 }

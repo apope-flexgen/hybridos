@@ -10,7 +10,7 @@ import (
 	"time"
 
 	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
-	influx "github.com/flexgen-power/influxdb_client/v1.7"
+	influx "github.com/flexgen-power/hybridos/influxdb_client/v1.7"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -109,7 +109,15 @@ func (writer *InfluxWriter) prepareBatchesUntil(done <-chan struct{}) error {
 				}
 				continue
 			}
-			writer.preparedBatchesQueue <- preparedBatches
+			select {
+			case <-done:
+				err := removeArchive(data.archiveFilePath, true, GlobalConfig.FailedWritePath)
+				if err != nil {
+					log.Errorf("Unable to move archive %s to failure path after cancellation: %v. Continuing without moving the archive.", data.archiveFilePath, err)
+				}
+				return nil
+			case writer.preparedBatchesQueue <- preparedBatches:
+			}
 		}
 	}
 }
@@ -143,11 +151,7 @@ func (writer *InfluxWriter) sendBatchesUntil(done <-chan struct{}) error {
 	for {
 		select {
 		case <-done:
-			err := writer.disconnect()
-			if err != nil {
-				log.Errorf("Writer failed to disconnect at program shutdown with error: %v", err)
-			}
-			return err
+			return nil
 		case preparedBatches := <-writer.preparedBatchesQueue:
 			archiveFilePath := preparedBatches.archiveFilePath
 
@@ -172,6 +176,12 @@ func (writer *InfluxWriter) sendBatchesUntil(done <-chan struct{}) error {
 				err := removeArchive(archiveFilePath, true, GlobalConfig.FailedWritePath)
 				if err != nil {
 					log.Errorf("Unable to remove failed write archive %s, continuing without deleting, err: %v", archiveFilePath, err)
+				}
+
+				// if we fail to ping the database, terminate the writer
+				err = writer.influxConn.Ping()
+				if err != nil {
+					return fmt.Errorf("influx writer batch sender failed to ping database after failed send: %w", err)
 				}
 			}
 		}

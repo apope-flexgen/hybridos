@@ -1,0 +1,14 @@
+{
+    "input_path"    : "/home/data",
+    "failed_validate_path" : "/home/validate_error",
+    "failed_write_path" : "/home/write_error",
+    "forward" : "",
+    "ext"     : ".tar.gz",
+    "num_validate_workers": 4,
+    "num_influx_prepare_batches_workers": 4,
+    "num_influx_send_batches_workers": 4,
+    "db_health_check_delay_seconds": 0.05,
+    "retention" : "1d",
+    "influx_address" : "1.1.2.2:8086",
+    "mongo_address" : "1.1.2.1:27017"
+}

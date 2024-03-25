@@ -20,14 +20,9 @@ type Pipeline struct {
 	// Decodes and validates archive data
 	Validator *ArchiveValidator
 
-	// Writes decoded data to InfluxDB
-	WriterToInflux *InfluxWriter
-	// Writes decoded data to MongoDB
-	WriterToMongo *MongoWriter
+	// Manages writers which write decoded data to databases
+	WriterManagerStage *WriterManager
 }
-
-// The destination DBs we want to write to
-var destinations = []string{"influx", "mongo"}
 
 // Runs a complete pipeline for decoding archives and writing them to databases
 // New routines are started using the given error group and context.
@@ -46,24 +41,18 @@ func (p *Pipeline) Run(group *errgroup.Group, groupContext context.Context) erro
 
 	// start thread for validator
 	log.MsgDebug("Starting validator")
-	p.Validator = NewArchiveValidator(p.archiveQueue.Out(), destinations)
+	p.Validator = NewArchiveValidator(p.archiveQueue.Out())
 	err = p.Validator.Start(group, groupContext)
 	if err != nil {
 		return fmt.Errorf("failed to start validator stage: %w", err)
 	}
 
-	// start thread for writers
-	log.MsgDebug("Starting writers")
-	log.MsgDebug("Starting writer to influx")
-	p.WriterToInflux = NewInfluxWriter(p.Validator.Outs["influx"])
-	err = p.WriterToInflux.Start(group, groupContext)
+	// start writer manager
+	log.MsgDebug("Starting writer manager")
+	p.WriterManagerStage = NewWriterManager(p.Validator.InfluxOut, p.Validator.MongoOut)
+	err = p.WriterManagerStage.Start(group, groupContext)
 	if err != nil {
-		return fmt.Errorf("failed to start writer to %s stage: %w", "influx", err)
-	}
-	p.WriterToMongo = NewMongoWriter(p.Validator.Outs["mongo"])
-	err = p.WriterToMongo.Start(group, groupContext)
-	if err != nil {
-		return fmt.Errorf("failed to start writer to %s stage: %w", "mongo", err)
+		return fmt.Errorf("failed to start writer manager stage: %w", err)
 	}
 
 	// block until a fatal error

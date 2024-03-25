@@ -1,0 +1,25 @@
+{
+    "1": {
+        "db_name": "test",
+        "period" : 10,
+        "num_archive_workers": 1,
+        "archive": "/home/data",
+        "uris": [
+            {
+                "uri": "/test",
+                "destination": "influx",
+                "measurement": "test"
+            },
+            {
+                "uri": "/test_string",
+                "destination": "influx",
+                "measurement": "test"
+            },
+            {
+                "uri": "/events",
+                "destination": "mongo",
+                "measurement": "events"
+            }
+        ]
+    }
+}

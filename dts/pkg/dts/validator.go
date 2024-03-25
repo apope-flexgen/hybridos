@@ -12,10 +12,12 @@ import (
 )
 
 type ArchiveValidator struct {
-	in   <-chan string
-	Outs map[string]chan *archiveData
+	in        <-chan string
+	InfluxOut chan *archiveData
+	MongoOut  chan *archiveData
 
-	FailCt uint64 // Modifications must be atomic
+	mapDestinationToOut map[string]chan *archiveData // maps destination strings to output channels
+	FailCt              uint64                       // Modifications must be atomic
 }
 
 type archiveData struct {
@@ -27,13 +29,15 @@ type archiveData struct {
 }
 
 // Allocates a new archive validator stage and the needed output channels based on the given destination names
-func NewArchiveValidator(inputChannel <-chan string, destinations []string) *ArchiveValidator {
+func NewArchiveValidator(inputChannel <-chan string) *ArchiveValidator {
 	validator := ArchiveValidator{
-		in:   inputChannel,
-		Outs: make(map[string]chan *archiveData),
+		in:        inputChannel,
+		InfluxOut: make(chan *archiveData),
+		MongoOut:  make(chan *archiveData),
 	}
-	for _, dest := range destinations {
-		validator.Outs[dest] = make(chan *archiveData)
+	validator.mapDestinationToOut = map[string]chan *archiveData{
+		"influx": validator.InfluxOut,
+		"mongo":  validator.MongoOut,
 	}
 	return &validator
 }
@@ -54,7 +58,7 @@ func (validator *ArchiveValidator) validateUntil(done <-chan struct{}) error {
 	for {
 		select {
 		case <-done:
-			return nil
+			goto termination
 		case archiveFilePath := <-validator.in:
 			log.Debugf("[validate] received file %s from channel", archiveFilePath)
 			log.Debugf("[validate] decoding archive %s", archiveFilePath)
@@ -91,23 +95,32 @@ func (validator *ArchiveValidator) validateUntil(done <-chan struct{}) error {
 			archiveSize := info.Size()
 
 			// send to the marked destination's writer
-			out, exists := validator.Outs[addInfo["destination"]]
+			out, exists := validator.mapDestinationToOut[addInfo["destination"]]
 			if !exists {
 				log.Errorf("unknown destination: %s for archive %s, removing invalid archive", addInfo["destination"], archiveFilePath)
 				validator.cleanUpInvalidArchive(archiveFilePath)
 				continue
 			}
 
-			out <- &archiveData{
+			// try to send the data to the next stage, but allow for the send to be cancelled
+			select {
+			case <-done:
+				goto termination
+			case out <- &archiveData{
 				archiveFilePath: archiveFilePath,
 				archiveSize:     archiveSize,
 				db:              addInfo["database"],
 				measurement:     addInfo["measurement"],
 				points:          points,
+			}:
+				log.Debugf("[validator] sent %s to writer %s", archiveFilePath, addInfo["destination"])
 			}
-			log.Debugf("[validator] sent %s to writer %s", archiveFilePath, addInfo["destination"])
 		}
 	}
+
+termination:
+	log.MsgInfo("Validator stage terminating")
+	return nil
 }
 
 func (validator *ArchiveValidator) validateAddInfo(archiveName string, addInfo map[string]string) error {

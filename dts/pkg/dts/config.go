@@ -25,6 +25,7 @@ type Config struct {
 	Extension                      string  `json:"ext"`                                // Extension of archives to look for
 	InfluxAddr                     string  `json:"influx_address"`                     // External IP:Port for influx -- optional (defaults to localhost:8086)
 	MongoAddr                      string  `json:"mongo_address"`                      // External IP:Port for mongo -- optional (defaults to localhost:27017)
+	RetryConnectPeriodSeconds      float64 `json:"retry_connect_period_seconds"`       // Period with which we retry connecting to databases
 }
 
 var (
@@ -33,6 +34,12 @@ var (
 
 // Parses configuration from the source provided: either a filepath or "dbi"
 func ParseConfig(cfgSource string) error {
+	// default config values
+	GlobalConfig = Config{
+		RetryConnectPeriodSeconds: 1,
+	}
+
+	// extract configuration based on source
 	if len(cfgSource) == 0 || strings.EqualFold(cfgSource, "dbi") {
 		log.MsgInfo("Config source set to read from dbi")
 		// Query DBI for configuration
@@ -83,6 +90,9 @@ func validateConfig() error {
 	}
 	if GlobalConfig.DbHealthCheckDelayS < 0 {
 		return fmt.Errorf("configured write delay is %f seconds, but the write delay must be non-negative", GlobalConfig.DbHealthCheckDelayS)
+	}
+	if GlobalConfig.RetryConnectPeriodSeconds <= 0 {
+		return fmt.Errorf("configured retry connection period is %f seconds, but it must be positive", GlobalConfig.DbHealthCheckDelayS)
 	}
 	return nil
 }

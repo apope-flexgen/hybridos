@@ -56,7 +56,7 @@ func (monitor *ArchiveMonitor) monitorUntil(done <-chan struct{}) error {
 	for {
 		select {
 		case <-done:
-			return nil
+			goto termination
 		case ev := <-watcher.Event: // receive from channel
 			// extract filename (will contain path)
 			substring := strings.SplitAfter(ev.String(), `"`)
@@ -75,13 +75,22 @@ func (monitor *ArchiveMonitor) monitorUntil(done <-chan struct{}) error {
 				continue
 			}
 
-			monitor.Out <- filenameWithPath
-			log.Debugf("[monitor] Added new file %s to queue", filenameWithPath)
+			// try to send file name to next stage but allow send to be cancelled
+			select {
+			case <-done:
+				goto termination
+			case monitor.Out <- filenameWithPath:
+				log.Debugf("[monitor] Added new file %s to queue", filenameWithPath)
+			}
 
 		case err := <-watcher.Error:
 			log.Errorf("[monitor] inotify watcher error: %s", err.Error())
 		}
 	}
+
+termination:
+	log.MsgInfo("Monitor stage terminating")
+	return nil
 }
 
 // Gives contents of archive ingestion folder seen at startup to out in chronological order of modification time
