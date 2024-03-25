@@ -12,6 +12,7 @@ export type SiteStatusDataFieldConfig = {
   label: string;
   unit?: string;
   scalar?: number;
+  precision?: number;
 };
 
 export type SiteStatusDataField = SiteStatusDataFieldConfig & {

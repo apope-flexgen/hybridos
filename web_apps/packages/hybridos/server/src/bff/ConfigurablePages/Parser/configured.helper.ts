@@ -41,17 +41,19 @@ export const parseConfiguredData = (
       includeStatic,
       enableAssetPageControls,
       siteConfiguration,
-      false
+      false,
     ),
-    batchControl: hasBatchControls ? parseNakedBodyControl(
-      rawData,
-      setLockMode,
-      metaData,
-      includeStatic,
-      enableAssetPageControls,
-      siteConfiguration,
-      true,
-    ): {},
+    batchControl: hasBatchControls
+      ? parseNakedBodyControl(
+          rawData,
+          setLockMode,
+          metaData,
+          includeStatic,
+          enableAssetPageControls,
+          siteConfiguration,
+          true,
+        )
+      : {},
     fault: parseNakedBodyFault(rawData, metaData),
     alarm: parseNakedBodyAlarm(rawData, metaData),
     maintenanceActions: parseMaintenanceActionData(includeStatic, maintenanceActionsStaticData),
@@ -60,19 +62,19 @@ export const parseConfiguredData = (
   return displayGroupDTO;
 };
 
-const parseMaintenanceActionData = (
-  includeStatic: boolean,
-  maintenanceActionsStaticData: any,
-) => {
-  let maintenanceActionsMetadata = {}
+const parseMaintenanceActionData = (includeStatic: boolean, maintenanceActionsStaticData: any) => {
+  let maintenanceActionsMetadata = {};
   if (maintenanceActionsStaticData) {
-      const dataType = includeStatic ? "static" : "state";
-      Object.keys(maintenanceActionsStaticData).forEach((maintenanceAction) => {
-        maintenanceActionsMetadata = { ...maintenanceActionsMetadata, [maintenanceAction]: { [dataType]: maintenanceActionsStaticData[maintenanceAction] } }
-      });
-  } 
+    const dataType = includeStatic ? 'static' : 'state';
+    Object.keys(maintenanceActionsStaticData).forEach((maintenanceAction) => {
+      maintenanceActionsMetadata = {
+        ...maintenanceActionsMetadata,
+        [maintenanceAction]: { [dataType]: maintenanceActionsStaticData[maintenanceAction] },
+      };
+    });
+  }
   return maintenanceActionsMetadata;
-}
+};
 
 const parseNakedBodyStatus = (
   rawData: nakedBodyFromFims,
@@ -98,9 +100,15 @@ const parseNakedBodyStatus = (
         ? Number(status.scalar)
         : 1;
 
+    const precision =
+      status.precision &&
+      (typeof status.precision === 'number' || !Number.isNaN(Number(status.precision)))
+        ? Number(status.precision)
+        : 2;
+
     const { value: actualValue } =
       typeof computeValue === 'number'
-        ? computeNakedValue(computeValue, scalar, status.units ?? '')
+        ? computeNakedValue(computeValue, scalar, status.units ?? '', precision)
         : { value: computeValue };
 
     aggregatedDTOs[componentID] = {
@@ -132,7 +140,10 @@ const parseNakedBodyControl = (
   isBatchControl: boolean,
 ): { [componentID: string]: ControlComponentDTO } => {
   const aggregatedDTOs: { [componentID: string]: ControlComponentDTO } = {};
-  const controlsFromMetadata = isBatchControl && metaData.batchControls?.length > 0 ? metaData.batchControls :  metaData.controls;
+  const controlsFromMetadata =
+    isBatchControl && metaData.batchControls?.length > 0
+      ? metaData.batchControls
+      : metaData.controls;
 
   const lockModeStatus: controlObjectForNakedBody = rawData[
     'lock_mode'
@@ -150,28 +161,40 @@ const parseNakedBodyControl = (
       state: {
         enabled: setControlEnabled(
           enableAssetPageControls,
-          (rawData[componentID] as controlObjectForNakedBody).enabled === undefined ? true : (rawData[componentID] as controlObjectForNakedBody).enabled,
+          (rawData[componentID] as controlObjectForNakedBody).enabled === undefined
+            ? true
+            : (rawData[componentID] as controlObjectForNakedBody).enabled,
         ),
       },
     };
 
-    let trueScalar = 1
+    let trueScalar = 1;
     const rawValue = rawData[componentID];
 
     const computeValue: ValueType =
-      (rawValue !== null && typeof rawValue === 'object' && rawData[componentID].hasOwnProperty('value')) ? rawValue.value : rawValue;
+      rawValue !== null &&
+      typeof rawValue === 'object' &&
+      rawData[componentID].hasOwnProperty('value')
+        ? rawValue.value
+        : rawValue;
 
-    const optionsArray: any[] = (rawValue !== null && typeof rawValue === 'object' && rawData[componentID].hasOwnProperty('options'))
-      ? rawValue.options.map((option) => {
-        return {
-          name: option.name,
-          value: option.return_value,
-        };
-      })
-      : [];
+    const optionsArray: any[] =
+      rawValue !== null &&
+      typeof rawValue === 'object' &&
+      rawData[componentID].hasOwnProperty('options')
+        ? rawValue.options.map((option) => {
+            return {
+              name: option.name,
+              value: option.return_value,
+            };
+          })
+        : [];
 
     if (optionsArray.length > 0) {
-      aggregatedDTOs[componentID].state.extraProps = {...aggregatedDTOs[componentID].state.extraProps, options: optionsArray};
+      aggregatedDTOs[componentID].state.extraProps = {
+        ...aggregatedDTOs[componentID].state.extraProps,
+        options: optionsArray,
+      };
     }
 
     const scalar =
@@ -179,18 +202,24 @@ const parseNakedBodyControl = (
         ? Number(control.scalar)
         : 1;
 
+    const precision =
+      control.precision &&
+      (typeof control.precision === 'number' || !Number.isNaN(Number(control.precision)))
+        ? Number(control.precision)
+        : 2;
+
     if (includeStatic) {
       // first run
       const { scalar: newScalar } =
         control.inputType === 'number'
-          ? computeNakedValue(undefined, scalar, control.units ?? '')
+          ? computeNakedValue(undefined, scalar, control.units ?? '', precision)
           : { scalar: trueScalar };
       trueScalar = newScalar;
       aggregatedDTOs[componentID].state.value = computeValue;
     } else {
       const { value: trueValue, scalar: newScalar } =
         typeof computeValue === 'number'
-          ? computeNakedValue(computeValue, scalar, control.units ?? '')
+          ? computeNakedValue(computeValue, scalar, control.units ?? '', precision)
           : { value: computeValue, scalar: trueScalar };
 
       aggregatedDTOs[componentID].state.value = trueValue;
@@ -243,8 +272,7 @@ const parseNakedBodyAlarm = (rawData: nakedBodyFromFims, metaData: metadataFromD
   const fieldsToCheck = metaData.info['alarmFields'];
 
   fieldsToCheck.forEach((field: string) => {
-    if (rawData[field] === undefined || rawData[field] === '0')
-      return;
+    if (rawData[field] === undefined || rawData[field] === '0') return;
 
     if (isIndividualClothedBody(rawData[field])) {
       const alarmInfo = rawData[field] as individualClothedBody;
@@ -272,8 +300,7 @@ const parseNakedBodyFault = (rawData: nakedBodyFromFims, metaData: metadataFromD
   const fieldsToCheck = metaData.info['faultFields'];
 
   fieldsToCheck.forEach((field: string) => {
-    if (rawData[field] === undefined || rawData[field] === '0')
-      return;
+    if (rawData[field] === undefined || rawData[field] === '0') return;
 
     if (isIndividualClothedBody(rawData[field])) {
       const faultInfo = rawData[field] as individualClothedBody;

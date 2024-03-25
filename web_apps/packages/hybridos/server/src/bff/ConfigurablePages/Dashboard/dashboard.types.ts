@@ -38,6 +38,7 @@ export type SingleStatus = {
   sourceURI: string;
   units: string;
   uri: string;
+  precision?: number;
 };
 
 export type SingleCardData = {

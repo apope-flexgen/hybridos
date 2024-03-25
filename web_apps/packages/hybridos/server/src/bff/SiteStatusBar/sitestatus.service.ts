@@ -138,7 +138,12 @@ export class SiteStatusService implements ISiteStatusService {
       return this.buildResponse(dataSource, fieldData);
     }
 
-    const { value } = computeNakedValue(fieldData as number, dataSource.scalar, dataSource.unit);
+    const { value } = computeNakedValue(
+      fieldData as number,
+      dataSource.scalar,
+      dataSource.unit,
+      dataSource.precision,
+    );
     return this.buildResponse(dataSource, value, dataSource.unit);
   };
 
@@ -152,6 +157,7 @@ export class SiteStatusService implements ISiteStatusService {
         Number(fieldData['scaler']),
         fieldData['unit'],
         this.siteConfiguration,
+        dataSource.precision,
       );
 
       value = newValue;

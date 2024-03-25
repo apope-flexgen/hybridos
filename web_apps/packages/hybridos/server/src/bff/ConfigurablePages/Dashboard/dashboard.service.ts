@@ -22,6 +22,7 @@ export class DashboardService {
   configData: SingleCardData[] = [];
   scalarStore: { [fullURI: string]: number } = {};
   unitStore: { [fullURI: string]: string } = {};
+  precisionStore: { [fullURI: string]: number } = {};
   constructor(
     @Inject(FIMS_SERVICE)
     private readonly fimsService: FimsService,
@@ -70,9 +71,10 @@ export class DashboardService {
 
       baseURIs.forEach((baseURI) => {
         status.forEach((status) => {
-          const { uri, scalar, units } = status;
+          const { uri, scalar, units, precision } = status;
           this.scalarStore[sourceURI + baseURI.uri + uri] = Number(scalar) ?? 1;
           this.unitStore[sourceURI + baseURI.uri + uri] = units ?? '';
+          this.precisionStore[sourceURI + baseURI.uri + uri] = precision ?? 2;
         });
 
         const batteryViewStatus = {
@@ -91,7 +93,7 @@ export class DashboardService {
               : undefined,
           status: this.getStatusDTOs(status),
           alarmStatus: info.alarmFields ? this.getStatusDTOs(info.alarmFields) : undefined,
-          faultStatus: info.faultFields ? this.getStatusDTOs(info.faultFields) : undefined
+          faultStatus: info.faultFields ? this.getStatusDTOs(info.faultFields) : undefined,
         };
       });
 
@@ -127,9 +129,9 @@ export class DashboardService {
         statusDTOs[status] = {
           static: {},
           state: {
-            value: false
-          }
-        }
+            value: false,
+          },
+        };
       } else {
         const { name, units, uri } = status;
         const uriWithOpeningSlashRemoved = uri.replace(/^\//, '');
@@ -177,8 +179,8 @@ export class DashboardService {
     displayName: string,
     batteryViewStatuses: DisplayGroupDTO['batteryViewStatus'],
     alarmStatus: DisplayGroupDTO['alarmStatus'],
-    faultStatus: DisplayGroupDTO['faultStatus']
-  ): Observable<ConfigurablePageDTO> => { 
+    faultStatus: DisplayGroupDTO['faultStatus'],
+  ): Observable<ConfigurablePageDTO> => {
     const fimsSubscribe = this.fimsService.subscribe(uri);
 
     return fimsSubscribe.pipe(
@@ -192,7 +194,7 @@ export class DashboardService {
               status: {},
               batteryViewStatus: {},
               alarmStatus: {},
-              faultStatus: {}
+              faultStatus: {},
             },
           },
         };
@@ -210,7 +212,8 @@ export class DashboardService {
               ? (() => {
                   const scalar = this.scalarStore[uri + '/' + key] || 1;
                   const units = this.unitStore[uri + '/' + key] || '';
-                  return computeNakedValue(value, scalar, units);
+                  const precision = this.precisionStore[uri + '/' + key] || 2;
+                  return computeNakedValue(value, scalar, units, precision);
                 })()
               : { value };
 

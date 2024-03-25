@@ -32,7 +32,7 @@ export interface metadataFromDBI {
   info: {
     [key: string]: any;
     assetKey: string;
-    tabKey?: string | number,
+    tabKey?: string | number;
     hasSummary: boolean;
     hasBatchControls?: boolean;
     hasMaintenanceActions?: boolean;
@@ -43,7 +43,7 @@ export interface metadataFromDBI {
     faultFields: string[];
     extension?: string;
     numberOfItems?: string | number;
-    range?: (string | number)[]
+    range?: (string | number)[];
   };
   statuses: statusDataFromNakedBody[];
   summary: {
@@ -51,6 +51,7 @@ export interface metadataFromDBI {
     uri: string;
     scalar?: number;
     units?: string;
+    precision?: string;
   }[];
   summaryControls: {
     inputType: string;
@@ -58,6 +59,7 @@ export interface metadataFromDBI {
     uri: string;
     scalar?: number;
     units?: string;
+    precision?: string;
   }[];
 }
 
@@ -70,6 +72,7 @@ export interface statusDataFromNakedBody {
   scalar?: string;
   units?: string;
   uri: string;
+  precision?: string;
 }
 
 export interface controlDataFromNakedBody {
@@ -77,6 +80,7 @@ export interface controlDataFromNakedBody {
   name: string;
   scalar?: string;
   units?: string;
+  precision?: string;
   uri: string;
 }
 

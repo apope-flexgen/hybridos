@@ -64,12 +64,13 @@ export const computeNakedValue = (
   value: number = 1,
   scalar: number = 1,
   targetUnits: string = '',
+  precision: number = 2,
 ): { value: string; scalar: number } => {
   const baseValue = value * scalar;
 
   const siPrefix = extractSIPrefix(targetUnits);
 
-  const displayValue = calcDisplayValue(baseValue, siPrefix);
+  const displayValue = calcDisplayValue(baseValue, siPrefix, precision);
   const uiScalar = calcUIScalar(scalar, siPrefix);
 
   return { value: displayValue, scalar: uiScalar };
@@ -80,6 +81,7 @@ export const computeClothedValue = (
   scalar: number = 1,
   unit: string = '',
   siteConfiguration: SiteConfiguration,
+  precision: number = 2,
 ): { value: string; scalar: number; targetUnit: string } => {
   const { units: unitsMap } = siteConfiguration;
 
@@ -93,7 +95,7 @@ export const computeClothedValue = (
 
   // calculate the display value and the scalar that the UI will use to
   // scale data inputted on the ui to the correct SI units
-  const displayValue = calcDisplayValue(baseValue, targetPrefix);
+  const displayValue = calcDisplayValue(baseValue, targetPrefix, precision);
   const uiScalar = calcUIScalar(trueScalar, targetPrefix);
 
   return {
@@ -108,11 +110,11 @@ const calcUIScalar = (scalar: number, siPrefix: string): number => {
   return uiScalar;
 };
 
-const calcDisplayValue = (value: number, siPrefix: string): string => {
+const calcDisplayValue = (value: number, siPrefix: string, precision: number = 2): string => {
   const displayValue =
     siPrefix in SIPrefixMapReverse ? value / SIPrefixMapReverse[siPrefix] : value;
 
-  return displayValue.toFixed(2);
+  return displayValue.toFixed(precision);
 };
 
 export const UriIsRootOfUri = (uri: string, root: string): boolean => {

@@ -39,9 +39,15 @@ export const parseSummaryData = (
         ? Number(status.scalar)
         : 1;
 
+    const precision =
+      status.precision &&
+      (typeof status.precision === 'number' || !Number.isNaN(Number(status.precision)))
+        ? Number(status.precision)
+        : 2;
+
     const { value: actualValue } =
       typeof computeValue === 'number'
-        ? computeNakedValue(computeValue, scalar, status.units ?? '')
+        ? computeNakedValue(computeValue, scalar, status.units ?? '', precision)
         : { value: computeValue };
 
     displayGroupDTO.status[componentID] = {
@@ -83,9 +89,15 @@ export const parseSummaryData = (
           ? Number(control.scalar)
           : 1;
 
+      const precision =
+        control.precision &&
+        (typeof control.precision === 'number' || !Number.isNaN(Number(control.precision)))
+          ? Number(control.precision)
+          : 2;
+
       const { value: trueValue } =
         typeof computeValue === 'number'
-          ? computeNakedValue(computeValue, scalar, control.units ?? '')
+          ? computeNakedValue(computeValue, scalar, control.units ?? '', precision)
           : { value: computeValue };
       displayGroupDTO.control[componentID].state.value = trueValue;
     }
