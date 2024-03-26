@@ -126,6 +126,9 @@ FUNC_OBJECTS += UpdateToDbi.o
 FUNC_OBJECTS += SaveToDbi.o
 FUNC_OBJECTS += CheckValueChanged.o
 FUNC_OBJECTS += BalancePower.o
+FUNC_OBJECTS += OutputHandler.o
+FUNC_OBJECTS += InputHandler.o
+FUNC_OBJECTS += ScheduledEnableFunctions.o
 
 #datamap simulink source code files. uncomment for testing
 # FUNC_OBJECTS += Reference.o
@@ -156,6 +159,13 @@ ESS_OBJECTS += dbi_funcs.o
 ESS_OBJECTS += dataMapCore.o
 ESS_OBJECTS += dataMapThread.o
 ESS_OBJECTS += dataMapUtils.o
+ESS_OBJECTS += AssetSetupUtility.o
+ESS_OBJECTS += FunctionUtility.o
+ESS_OBJECTS += InfoMessageUtility.o
+ESS_OBJECTS += DataUtility.o
+ESS_OBJECTS += SiteCommandUtility.o
+
+
 
 
 #ESS_OBJECTS += version.o git_build.o git_commit.o git_tag.o
@@ -302,6 +312,18 @@ $(OBJ_DIR)scheduler.o:	$(SRC_DIR)/scheduler.cpp
 	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
 $(OBJ_DIR)AssetSetupUtility.o:	$(SRC_DIR)/AssetSetupUtility.cpp 
+	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)FunctionUtility.o:	$(SRC_DIR)/FunctionUtility.cpp 
+	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)InfoMessageUtility.o:	$(SRC_DIR)/InfoMessageUtility.cpp 
+	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)DataUtility.o: $(SRC_DIR)/DataUtility.cpp 
+	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)SiteCommandUtility.o:	$(SRC_DIR)/SiteCommandUtility.cpp 
 	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
 $(OBJ_DIR)ess_controller.o:	$(SRC_DIR)/ess_controller.cpp 

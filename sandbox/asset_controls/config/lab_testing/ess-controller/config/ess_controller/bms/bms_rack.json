@@ -1,0 +1,181 @@
+{
+    "/config/##BMS_ID##_##RACK_ID##": {
+        "RatedCapacity": 280
+    },
+
+    "/vlinks/##BMS_ID##_##RACK_ID##": {
+        "ui_status": {"value": "/assets/##BMS_ID##/##RACK_ID##:status", "vlink": "/status/##BMS_ID##_##RACK_ID##:Status"}
+    },
+
+    "/schedule/wake_monitor/##BMS_ID##_##RACK_ID##":{
+        "/status/##BMS_ID##_##RACK_ID##:DCPower"          : {"amap": "##BMS_ID##" , "func": "CalculateVar"    },
+        "/status/##BMS_ID##_##RACK_ID##:ChargeableEnergy" : {"amap": "##BMS_ID##" , "func": "CalculateVar"    },
+        "/status/##BMS_ID##_##RACK_ID##:DCVoltage"        : {"amap": "##BMS_ID##" , "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##_##RACK_ID##:DCCurrent"        : {"amap": "##BMS_ID##" , "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##_##RACK_ID##:SOH"              : {"amap": "##BMS_ID##" , "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##_##RACK_ID##:SOC"              : {"amap": "##BMS_ID##" , "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##_##RACK_ID##:MaxCellVoltage"   : {"amap": "##BMS_ID##" , "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##_##RACK_ID##:MinCellVoltage"   : {"amap": "##BMS_ID##" , "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##_##RACK_ID##:MaxCellTemp"      : {"amap": "##BMS_ID##" , "func": "CheckMonitorVar" },
+        "/status/##BMS_ID##_##RACK_ID##:MinCellTemp"      : {"amap": "##BMS_ID##" , "func": "CheckMonitorVar" }
+    },
+
+    "/status/##BMS_ID##_##RACK_ID##": {
+        "Status": "N/A",
+        "DCPower": {
+            "numVars": 2,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:DCVoltage",
+            "variable2": "/status/##BMS_ID##_##RACK_ID##:DCCurrent",
+            "scale": 1000,
+            "operation": "*"
+        },
+        "ChargeableEnergy": {
+            "value": 0,
+            "numVars": 4,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:SOC",
+            "variable2": "/status/##BMS_ID##_##RACK_ID##:SOH",
+            "variable3": "/config/##BMS_ID##_##RACK_ID##:RatedCapacity",
+            "variable4": "/status/##BMS_ID##_##RACK_ID##:InService",
+            "useExpr": true,
+            "expression": "if ({4}, ((1 - {1} / 100) * {2} / 100 * {3}), 0)"
+        },
+        "DCVoltage": {
+            "value": 1250,
+			
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": true,
+            "EnableMinValCheck": false,
+
+            "MinAlarmThreshold": 1077,
+            "MaxAlarmThreshold": 1344,
+            "MinFaultThreshold": 1064,
+            "MaxFaultThreshold": 1375,
+            "MinResetValue": 1080,
+            "MaxResetValue": 1340,
+
+            "MinAlarmTimeout": 0,
+            "MaxAlarmTimeout": 0,
+            "MinFaultTimeout": 1,
+            "MaxFaultTimeout": 0,
+            "MinRecoverTimeout": 1,
+            "MaxRecoverTimeout": 0,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "DCCurrent": {
+            "value": 0,
+			
+            "EnableFaultCheck": false,
+            "EnableMaxValCheck": false,
+            "EnableMinValCheck": false,
+
+            "MinAlarmThreshold": -310,
+            "MinFaultThreshold": -320,
+            "MaxAlarmThreshold": 310,
+            "MaxFaultThreshold": 320,
+
+            "MinAlarmTimeout": 1,
+            "MaxAlarmTimeout": 1,
+            "MinFaultTimeout": 2.5,
+            "MaxFaultTimeout": 2.5,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "SOC": {
+            "value": 0,
+
+            "EnableMinValCheck": false,
+            "EnableMaxValCheck": false,
+            "EnableFaultCheck": false,
+
+            "MinAlarmTimeout": 5.5,
+            "MinFaultTimeout": 2.5,
+            "MinRecoverTimeout": 1.4,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "SOH": {
+            "value": 0,
+            "EnableMinValCheck": true,
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "MinAlarmThreshold": 60,
+            "MinFaultThreshold": 50,
+            "MinResetValue": 60,
+
+            "MinAlarmTimeout": 5.5,
+            "MinFaultTimeout": 2.5,
+            "MinRecoverTimeout": 1.4,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "MaxCellVoltage":{
+            "value": 0,
+
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": true,
+            "MaxAlarmThreshold": 3.60,
+            "MaxFaultThreshold": 3.63,
+            "MaxResetValue": 3.61,
+
+            "MaxAlarmTimeout": 2.5,
+            "MaxFaultTimeout": 0,
+            "MaxRecoverTimeout": 1.4,
+            "actions":{
+                "onSet":[{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "MinCellVoltage":{
+            "value": 0,
+
+            "EnableFaultCheck": true,
+            "EnableMinValCheck": true,
+            "MinAlarmThreshold": 2.80,
+            "MinFaultThreshold": 2.70,
+            "MinResetValue": 2.72,
+
+            "MinAlarmTimeout": 2.5,
+            "MinFaultTimeout": 0.5,
+            "MinRecoverTimeout": 1.4,
+            "actions":{
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "MaxCellTemp": {
+            "value": 0,
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": true,
+
+            "MaxAlarmThreshold": 48,
+            "MaxFaultThreshold": 55,
+            "MaxResetValue": 47,
+
+            "MaxAlarmTimeout": 2.5,
+            "MaxFaultTimeout": 1.0,
+            "MaxRecoverTimeout": 1.4,
+            "actions":{
+                "onSet":[{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "MinCellTemp": {
+            "value": 0,
+            "EnableFaultCheck": true,
+            "EnableMinValCheck": true,
+
+            "MinAlarmThreshold": 10,
+            "MinFaultThreshold": 1,
+            "MinResetValue": 11,
+
+            "MinAlarmTimeout": 2.5,
+            "MinFaultTimeout": 0.5,
+            "MinRecoverTimeout": 1.4,
+            "actions":{
+                "onSet":[{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        }
+    }
+}

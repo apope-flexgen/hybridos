@@ -1,0 +1,27 @@
+{
+    "meta": { "publishRate": 1000},
+    "inputs": {
+        "start_stop_standby": { "uri": "/components/sungrow_pcs_controls/state_cmd", "type": "int", "default": 0},
+        "conditions_met": { "uri": "/mecho/conditions_met", "type": "bool" },
+        "accept_commands": { "uri": "/mecho/accept_commands", "type": "bool" }
+    },
+    "outputs": {
+        "pcs_state": { "uri": "/components/sungrow_pcs_info" },
+        "start_stop_standby": { "uri": "/components/sungrow_pcs_controls/state_cmd", "flags": ["direct_set"] },
+        "state_cmd": { "uri": "/components/sungrow_pcs_controls", "flags": ["group1"] }
+    },
+    "metrics": [
+        {
+            "id": "start_stop_standby_out",
+            "type": "int", 
+            "outputs": [ "start_stop_standby", "state_cmd" ],
+            "expression": "If(accept_commands, start_stop_standby, 0)"
+        },
+        {
+            "id": "status",
+            "type": "int", 
+            "outputs": "pcs_state",
+            "expression": "If(conditions_met, If(start_stop_standby == 5, 1, If(start_stop_standby == 6, 2, If(start_stop_standby == 7, 3))))"
+        }
+    ]
+}

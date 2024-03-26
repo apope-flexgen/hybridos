@@ -1,0 +1,18 @@
+{
+    "meta": { "publishRate": 1000},
+    "inputs": {
+        "close_contactors": { "uri": "/components/catl_bms_1_info/ems_cmd", "type": "int", "default": 0}
+    },
+    "outputs": {
+        "bms_poweron": { "uri": "/components/catl_bms_1_info", "flags": ["direct_set", "lonely"] }
+    },
+    "metrics": [
+        {
+            "id": "status",
+            "type": "int", 
+            "outputs": "bms_poweron",
+            "expression": "If(close_contactors == 2, 1, If(close_contactors == 3, 0))"
+        }
+    ]
+}
+

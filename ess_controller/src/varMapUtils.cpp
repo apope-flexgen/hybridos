@@ -3845,6 +3845,7 @@ void VarMapUtils::processMsgSetPub(varsmap& vmap, const char* method, const char
             auto tmp = cJSON_Print(cjrx);
 
  
+            if(0) FPS_PRINT_INFO("Calling setValfromCj for [{}]", cjrx->string ? cjrx->string : " No String found");
             av = setValfromCj(vmap, my.Uri, cjrx->string, cjrx, uiObject);
             if(0) FPS_PRINT_INFO("called setValfromCj uri [{}] name [{}]  cj [{}] ui [{}] av [{}]"
                 , my.Uri
@@ -8052,7 +8053,7 @@ int debugSystemLoad(VarMapUtils*vm, varsmap& vmap, vecmap &vecs, std::vector<cha
 
         //cJSON* cjbm = ess_man->getConfig();
         char* res = cJSON_Print(cjbm);
-        FPS_PRINT_INFO("Maps (should be ) with links and assets  cjbm {} {} <<< done", fmt::ptr(cjbm), res);
+        if (0) FPS_PRINT_INFO("Maps (should be ) with links and assets  cjbm {} {} <<< done", fmt::ptr(cjbm), res);
         free(res);
         free(fname);
         cJSON_Delete(cjbm);

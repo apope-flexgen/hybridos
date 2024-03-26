@@ -1,0 +1,37 @@
+{
+    "bms": [
+        {
+            "vars": {
+                "id": "bms_##BMS_ID##",
+                "cap": 2000,
+                "dccontactorclosecmd": false,
+                "oncmd": false,
+                "offcmd": true,
+                "soc": {
+                    "value": 50
+                },
+                "disablefault": true,
+                "ctrlword1cfg":[
+                    {
+                        "value": 2,
+                        "controls": [
+                            { "field": "oncmd", "value": true },
+                            { "field": "offcmd", "value": false }
+                        ]
+                    },
+                    {
+                        "value": 3,
+                        "controls": [
+                            { "field": "oncmd", "value": false },
+                            { "field": "offcmd", "value": true }
+                        ]
+                    }
+                ]
+            },
+            "reps": {
+                "list": ["1", "2"],
+                "token": "##BMS_ID##"
+            }
+        }
+    ]
+}

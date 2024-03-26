@@ -13,6 +13,8 @@
 #include "formatters.hpp"
 
 #include "gitinc.h"
+#include "InputHandler.hpp"
+#include "ScheduledEnableFunctions.hpp"
 
 asset_manager* ess_man = nullptr;
 int run_secs = 0;
@@ -389,6 +391,20 @@ void initFuncs(asset_manager* am)
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "UpdateToDbi",        (void*)&UpdateToDbi);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "SaveToDbi",          (void*)&SaveToDbi);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "BalancePower",        (void*)&BalancePower);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "LocalStartBMS",        (void*)&InputHandler::LocalStartBMS);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "LocalStopBMS",        (void*)&InputHandler::LocalStopBMS);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "LocalStartPCS",        (void*)&InputHandler::LocalStartPCS);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "LocalStopPCS",        (void*)&InputHandler::LocalStopPCS);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "LocalStandbyPCS",        (void*)&InputHandler::LocalStandbyPCS);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "SiteRunCmd",        (void*)&InputHandler::SiteRunCmd);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "SiteBMSContactorControl",        (void*)&InputHandler::SiteBMSContactorControl);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "SitePCSStatusControl",        (void*)&InputHandler::SitePCSStatusControl);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "CloseContactorsEnable",        (void*)&ScheduledEnableFunctions::CloseContactorsEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "OpenContactorsEnable",        (void*)&ScheduledEnableFunctions::OpenContactorsEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "StartEnable",        (void*)&ScheduledEnableFunctions::StartEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "StopEnable",        (void*)&ScheduledEnableFunctions::StopEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "StandbyEnable",        (void*)&ScheduledEnableFunctions::StandbyEnable);
+
 
         // Set func for asset instances
         for (auto& iy : amc->assetMap)
@@ -961,7 +977,7 @@ int main_test_new_ess(int argc, char *argv[])
         {
         case 'x':
             vm.simdbi = true;
-            useOpts = true;
+            useOpts = false;
             useArgs = true;
             FPS_PRINT_INFO(" >>>>>>>>>>>>>>>>>>>>>simdbi setup\n" );
             break;
@@ -1046,8 +1062,6 @@ int main_test_new_ess(int argc, char *argv[])
     {
         vm.setFname(FlexDir);  //**
     }
-    
-
     // vm.setRunLog(LOGDIR "/run_logs");
     vm.setRunCfg(LOGDIR "/run_configs");
 
@@ -1064,7 +1078,6 @@ int main_test_new_ess(int argc, char *argv[])
     essName = vm.getSysName(vmap);
 
     
-
     SetupEssSched(&sched, ess_man);
     vm.setFunc(vmap,  essName, "process_sys_alarm",  (void*)&process_sys_alarm);
     vm.setFunc(vmap,  essName, "process_sys_alarm",  (void*)&process_sys_alarm);
@@ -1296,6 +1309,12 @@ int main_test_new_ess(int argc, char *argv[])
     {
         int log_size = 64;
         logging_size_av = vm.makeVar(vmap, config_name.c_str(), "logging_size", log_size);
+    }
+
+    if (0)      //TODO: Put this somewhere better
+    {
+        bool close_contactors_dflt = false;
+        vm.makeVar(vmap, "/assets/bms/summary", "close_contactors", close_contactors_dflt);
     }
 
 

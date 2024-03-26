@@ -1,0 +1,145 @@
+{
+    "/schedule/wake_monitor/bms": {
+        "/assets/bms/summary:HVACState"             : {"amap": "bms", "func": "CalculateVar"},
+        "/assets/bms/summary:HVACInteriorFan"       : {"amap": "bms", "func": "CalculateVar"},
+        "/assets/bms/summary:HVACExteriorFan"       : {"amap": "bms", "func": "CalculateVar"},
+        "/assets/bms/summary:HVACCompressor"        : {"amap": "bms", "func": "CalculateVar"},
+        "/assets/bms/summary:HVACEmergencyFan"      : {"amap": "bms", "func": "CalculateVar"},
+        "/assets/bms/summary:HVACElectricalHeating" : {"amap": "bms", "func": "CalculateVar"},
+        "/status/site:bess_fire_fault"              : {"amap": "bms", "func": "CalculateVar"}
+    },
+    "/assets/bms/summary": {
+        "HVACState":{
+            "value": "N/A",
+            "numVars": 1,
+            "variable1": "/components/bms_running_info:hvac_gen_sys_state",
+            "useExpr": true,
+            "expression": "if (({1} == 0), Stopped, if (({1} == 1), Running, N/A))"
+        },
+        "HVACInteriorFan":{
+            "value": "N/A",
+            "numVars": 1,
+            "variable1": "/components/bms_running_info:hvac_interior_fan_state",
+            "useExpr": true,
+            "expression": "if (({1} == 0), Stopped, if (({1} == 1), Running, N/A))"
+        },
+        "HVACExteriorFan":{
+            "value": "N/A",
+            "numVars": 1,
+            "variable1": "/components/bms_running_info:hvac_exterior_fan_state",
+            "useExpr": true,
+            "expression": "if (({1} == 0), Stopped, if (({1} == 1), Running, N/A))"
+        },
+        "HVACCompressor":{
+            "value": "N/A",
+            "numVars": 1,
+            "variable1": "/components/bms_running_info:hvac_compressor_state",
+            "useExpr": true,
+            "expression": "if (({1} == 0), Stopped, if (({1} == 1), Running, N/A))"
+        },
+        "HVACEmergencyFan":{
+            "value": "N/A",
+            "numVars": 1,
+            "variable1": "/components/bms_running_info:hvac_emergency_fan_state",
+            "useExpr": true,
+            "expression": "if (({1} == 0), Stopped, if (({1} == 1), Running, N/A))"
+        },
+        "HVACElectricalHeating":{
+            "value": "N/A",
+            "numVars": 1,
+            "variable1": "/components/bms_running_info:hvac_electrical_heating",
+            "useExpr": true,
+            "expression": "if (({1} == 0), Stopped, if (({1} == 1), Running, N/A))"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "enabled": true,
+            "actions": {
+                "onSet": [{
+                    "func": [{"func": "LogInfo"}],
+                    "remap": [
+                        {"inValue": true , "ifChanged": false, "uri": "/assets/bms/bms_1:maint_mode", "outValue": true },
+                        {"inValue": true , "ifChanged": false, "uri": "/assets/bms/bms_2:maint_mode", "outValue": true },
+                        {"inValue": false, "ifChanged": false, "uri": "/assets/bms/bms_1:maint_mode", "outValue": false},
+                        {"inValue": false, "ifChanged": false, "uri": "/assets/bms/bms_2:maint_mode", "outValue": false}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        }
+    },
+
+    "/vlinks/ess": {
+        "dc_closed_bool":{ "value": "/status/site:dc_closed_bool", "vlink": "/status/bms:DCClosedBool"}
+    },
+    "/status/bms": {
+        "DCClosed": {
+            "value": false,
+            "numVars": 1,
+            "variable1": "bms:DCClosed",
+            "operation": "max",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"inValue": false, "ifChanged": false, "uri":"/status/bms:DCClosedStatus", "outValue": "Opened"},
+                        {"inValue": true, "ifChanged": false, "uri":"/status/bms:DCClosedStatus", "outValue": "Closed"},
+                        {"inValue": false, "ifChanged": false, "uri":"/status/bms:DCClosedBool", "outValue": false},
+                        {"inValue": true, "ifChanged": false, "uri":"/status/bms:DCClosedBool", "outValue": true}
+                    ]
+                }]
+            }
+        }
+    },
+    "/status/site": {
+        "fss_supervisory":0,
+        "fss_trouble":0,
+        "fss_comms":0,
+        "bess_fire_fault": {
+            "value": 0,
+            "numVars": 24,
+            "useExpr": true,
+            "variable1" : "/faults/bms:SmokeAlarmCab1"     ,
+            "variable2" : "/faults/bms:FireGasReleaseCab1" ,
+            "variable3" : "/faults/bms:SmokeAlarmCab2"     ,
+            "variable4" : "/faults/bms:FireGasReleaseCab2" ,
+            "variable5" : "/faults/bms:SmokeAlarmCab3"     ,
+            "variable6" : "/faults/bms:FireGasReleaseCab3" ,
+            "variable7" : "/faults/bms:SmokeAlarmCab4"     ,
+            "variable8" : "/faults/bms:FireGasReleaseCab4" ,
+            "variable9" : "/faults/bms:SmokeAlarmCab5"     ,
+            "variable10": "/faults/bms:FireGasReleaseCab5" ,
+            "variable11": "/faults/bms:SmokeAlarmCab6"     ,
+            "variable12": "/faults/bms:FireGasReleaseCab6" ,
+            "variable13": "/faults/bms:SmokeAlarmCab7"     ,
+            "variable14": "/faults/bms:FireGasReleaseCab7" ,
+            "variable15": "/faults/bms:SmokeAlarmCab8"     ,
+            "variable16": "/faults/bms:FireGasReleaseCab8" ,
+            "variable17": "/faults/bms:SmokeAlarmCab9"     ,
+            "variable18": "/faults/bms:FireGasReleaseCab9" ,
+            "variable19": "/faults/bms:SmokeAlarmCab10"    ,
+            "variable20": "/faults/bms:FireGasReleaseCab10",
+            "variable21": "/faults/bms:SmokeAlarmCab11"    ,
+            "variable22": "/faults/bms:FireGasReleaseCab11",
+            "variable23": "/faults/bms:SmokeAlarmCab12"    ,
+            "variable24": "/faults/bms:FireGasReleaseCab12",
+            "expression": "{1} == Fault or {2} == Fault or {3} == Fault or {4} == Fault or {5} == Fault or {6} == Fault or {7} == Fault or {8} == Fault or {9} == Fault or {10} == Fault or {11} == Fault or {12} == Fault or {13} == Fault or {14} == Fault or {15} == Fault or {16} == Fault or {17} == Fault or {18} == Fault or {19} == Fault or {20} == Fault or {21} == Fault or {22} == Fault or {23} == Fault or {24} == Fault"
+        }
+    },
+    "/vlinks/##BMS_ID##": {
+        "hvac_interior_temp"       : { "value": "/components/bms_running_info:hvac_interior_temp"       , "vlink": "/assets/bms/summary:HVACInteriorTemp"      },
+        "hvac_exterior_temp"       : { "value": "/components/bms_running_info:hvac_exterior_temp"       , "vlink": "/assets/bms/summary:HVACExteriorTemp"      },
+        "hvac_condensation_temp"   : { "value": "/components/bms_running_info:hvac_condensation_temp"   , "vlink": "/assets/bms/summary:HVACCondensationTemp"  },
+        "hvac_ac_voltage"          : { "value": "/components/bms_running_info:hvac_ac_voltage"          , "vlink": "/assets/bms/summary:HVACACVoltage"         },
+        "hvac_heat_coil_temp"      : { "value": "/components/bms_running_info:hvac_heat_coil_temp"      , "vlink": "/assets/bms/summary:HVACHeatCoilTemp"      },
+        "hvac_humidity"            : { "value": "/components/bms_running_info:hvac_humidity"            , "vlink": "/assets/bms/summary:HVACHumidity"          },
+
+        "gs_version_a" : { "value": "/components/bms_running_info:gs_version_a" , "vlink": "/assets/bms/summary:GSVersionA" },
+        "gs_version_b" : { "value": "/components/bms_running_info:gs_version_b" , "vlink": "/assets/bms/summary:GSVersionB" },
+        "gs_version_c" : { "value": "/components/bms_running_info:gs_version_c" , "vlink": "/assets/bms/summary:GSVersionC" },
+        "gs_version_d" : { "value": "/components/bms_running_info:gs_version_d" , "vlink": "/assets/bms/summary:GSVersionD" }
+    }
+}

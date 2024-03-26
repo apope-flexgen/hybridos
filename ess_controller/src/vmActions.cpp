@@ -9,6 +9,7 @@
 #include "assetVar.h"
 #include "varMapUtils.h"
 #include "formatters.hpp"
+#include "DataUtility.hpp"
 
 assetVar* setValfromAf(VarMapUtils*vm, varsmap& vmap, assetBitField* abf,  const char* uri
                 , const char* var, assFeat*af, bool debug);
@@ -2447,6 +2448,25 @@ bool checkEnable(VarMapUtils*vm, varsmap& vmap, assetVar* av, bool debug)
             if (debug) FPS_PRINT_INFO("####### Set action av [{}] NOT enabled"
                 , av->getfName()
                 );
+
+
+            std::string name = av->getName();
+
+            if(DataUtility::controlsEnabledLogicMap.count(name) > 0){
+                std::string logicMessage = "";
+                logicMessage += fmt::format(
+                    "Failed Attempt to update [{}] because [{}@enabled:{}] == true",
+                    av->getfName(),
+                    av->getName(),
+                    av->getbParam("enabled")
+                );
+                logicMessage += DataUtility::GetEnabledLogicMessage(name);
+                // FPS_PRINT_INFO("{}", logicMessage);
+
+                av->sendEvent("ess", vm->p_fims, Severity::Info, logicMessage.c_str());
+
+            }
+                
             enabled = false;
         }
     }
