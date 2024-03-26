@@ -127,6 +127,7 @@ type Input struct {
 	AttributesMap map[string]string `json:"-"`
 	Name          string            `json:"name,omitempty"`
 	Value         Union             `json:"-"`
+	Method        string            `json:"method,omitempty"`
 }
 
 // the uris that we will publish to for outgoing fims data

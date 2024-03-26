@@ -3,11 +3,26 @@ package go_metrics
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strings"
 
 	log "github.com/flexgen-power/go_flexgen/logger"
 	simdjson "github.com/minio/simdjson-go"
 )
+
+func delete_string_at_index(slice []string, index int) []string {
+
+	// Append function used to append elements to a slice
+	// first parameter as the slice to which the elements
+	// are to be added/appended second parameter is the
+	// element(s) to be appended into the slice
+	// return value as a slice
+	if index >= 0 && len(slice)-1 >= index {
+		return append(slice[:index], slice[index+1:]...)
+	} else {
+		return slice
+	}
+}
 
 // extract filters
 func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
@@ -17,10 +32,16 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 	if FilterScope == nil {
 		FilterScope = make(map[string][]string, 0)
 	}
+	for filter := range filters {
+		FilterScope[filter] = []string{}
+	}
+	filtersListCopy := make([]string, len(FiltersList))
+	copy(filtersListCopy, FiltersList)
 	currentJsonLocation := make([]JsonAccessor, 0)
 	currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "filters", JType: simdjson.TypeObject})
 	// get the filter expressions
-	for filter_name, filter := range filters {
+	for i, filter_name := range filtersListCopy {
+		filter := filters[filter_name]
 		currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: filter_name, JType: simdjson.TypeObject})
 		if _, ok := InputScope[filter_name]; ok {
 			logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("filter variable name '%s' already exists in scope; discarding filter", filter_name))
@@ -31,12 +52,17 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 		for key := range InputScope {
 			inputs = append(inputs, key)
 		}
+		for key := range FilterScope {
+			if filter_name != key && !stringInSlice(inputs, key) {
+				inputs = append(inputs, key)
+			}
+		}
 		var filterObject Filter
 		filterObject.StaticFilterExpressions = make([]Expression, 0)
 		filterObject.DynamicFilterExpressions = make([]Expression, 0)
 		switch x := filter.(type) {
 		case string:
-			stringExpressions := strings.Split(x, "|")
+			stringExpressions := strings.Split(x, " | ")
 			err := getFilterExpressions(stringExpressions, &filterObject)
 			if err != nil {
 				discardFilter = true
@@ -59,6 +85,8 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 
 		if discardFilter {
 			delete(MetricsConfig.Filters, filter_name)
+			delete(FilterScope, filter_name)
+			delete_string_at_index(FiltersList, i)
 			discardFilter = false
 			continue
 		}
@@ -66,9 +94,9 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 		intermediateInputs := inputs
 		var err error
 		// apply static filters where we can
-		for _, expression := range filterObject.StaticFilterExpressions {
+		for p, expression := range filterObject.StaticFilterExpressions {
 			if expression.IsRegex {
-				intermediateInputs, err = EvaluateRegexFilter(expression.String, intermediateInputs)
+				intermediateInputs, err = EvaluateRegexFilter(&expression, intermediateInputs)
 				if err != nil {
 					discardFilter = true
 					logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; discarding filter", err))
@@ -76,7 +104,7 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 					break
 				}
 			} else if expression.IsTypeFilter {
-				intermediateInputs, err = EvaluateTypeFilter(expression.String, intermediateInputs)
+				intermediateInputs, err = EvaluateTypeFilter(&expression, intermediateInputs)
 				if err != nil {
 					logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; discarding filter", err))
 					wasError = true
@@ -84,6 +112,7 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 					break
 				}
 			}
+			filterObject.StaticFilterExpressions[p] = expression
 		}
 
 		if debug {
@@ -110,16 +139,19 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 
 		if discardFilter {
 			delete(MetricsConfig.Filters, filter_name)
+			delete(FilterScope, filter_name)
+			delete_string_at_index(FiltersList, i)
 			discardFilter = false
 			continue
 		}
 
 		// set the intermediate inputs as the first round of dynamic inputs
 		filterObject.DynamicInputs = make([][]string, len(filterObject.DynamicFilterExpressions)+1)
-		for i:= range filterObject.DynamicFilterExpressions {
+		for i := range filterObject.DynamicFilterExpressions {
 			filterObject.DynamicInputs[i] = make([]string, len(intermediateInputs))
 		}
 		filterObject.DynamicInputs[0] = intermediateInputs
+		sort.Strings(filterObject.DynamicInputs[0])
 		output[filter_name] = filterObject
 		InputScope[filter_name] = make([]Union, 0)
 		for _, inputName := range intermediateInputs {
@@ -138,7 +170,7 @@ func getFilterExpressions(stringExpressions []string, filterObject *Filter) erro
 	staticFilter := true
 	for _, exp := range stringExpressions {
 		var expression *Expression
-		if strings.Contains(strings.ToLower(exp), "regex") {
+		if strings.Contains(strings.ToLower(exp), "regex(") {
 			staticFilter = true
 			start := strings.Index(exp, "(")
 			end := strings.Index(exp, ")")
@@ -146,7 +178,7 @@ func getFilterExpressions(stringExpressions []string, filterObject *Filter) erro
 				String:  exp[start+1 : end],
 				IsRegex: true,
 			}
-		} else if strings.Contains(strings.ToLower(exp), "type") {
+		} else if strings.Contains(strings.ToLower(exp), "type(") {
 			staticFilter = true
 			start := strings.Index(exp, "(")
 			end := strings.Index(exp, ")")
@@ -172,9 +204,9 @@ func getFilterExpressions(stringExpressions []string, filterObject *Filter) erro
 }
 
 // string filters are for regexp only right now...
-func EvaluateRegexFilter(filter string, inputs []string) ([]string, error) {
+func EvaluateRegexFilter(expression *Expression, inputs []string) ([]string, error) {
 	output := make([]string, 0)
-	regEx, err := regexp.Compile(filter)
+	regEx, err := regexp.Compile(expression.String)
 	if err != nil {
 		return nil, fmt.Errorf("could not parse regular expression. See https://github.com/google/re2/wiki/Syntax for help constructing")
 	}
@@ -186,24 +218,92 @@ func EvaluateRegexFilter(filter string, inputs []string) ([]string, error) {
 			}
 		}
 	}
+	expression.Vars = make([]string, len(output))
+	copy(expression.Vars, output)
 
 	return output, nil
 }
 
 // determine which inputs have the correct type according to the specified filter
-func EvaluateTypeFilter(filter string, inputs []string) ([]string, error) {
+func EvaluateTypeFilter(expression *Expression, inputs []string) ([]string, error) {
 	output := make([]string, 0)
-	filter = strings.ToLower(filter)
+	expression.String = strings.ToLower(expression.String)
 
 	// double check that the filter is a vaild filter
-	if !stringInSlice([]string{"string", "int", "uint", "float", "bool"}, filter) {
+	if !stringInSlice([]string{"string", "int", "uint", "float", "bool"}, expression.String) {
 		return nil, fmt.Errorf("invalid type filter; must be one of string, int, uint, float, or bool")
 	}
 	for _, input := range inputs {
-		if MetricsConfig.Inputs[input].Type == filter {
+		if MetricsConfig.Inputs[input].Type == expression.String {
 			output = append(output, MetricsConfig.Inputs[input].Name)
 		}
 	}
+	expression.Vars = make([]string, len(output))
+	copy(expression.Vars, output)
 
 	return output, nil
+}
+
+// If one filter relies on another, it needs to be evaluated after that filter
+// This function needs to get called after we've parsed the filter expressions
+func PutFiltersInOrder() {
+	FiltersList = make([]string, len(MetricsConfig.Filters))
+
+	// Helper function to perform depth-first search to resolve dependencies
+	var dfs func(string, map[string]bool, map[string]bool)
+	dfs = func(filterName string, visited map[string]bool, path map[string]bool) {
+		// If already visited or in the current path, return
+		if visited[filterName] || path[filterName] {
+			return
+		}
+
+		// Add to current path
+		path[filterName] = true
+
+		// Get the dependencies of the current filter
+		filter, ok := staticFilterExpressions[filterName]
+		if ok && len(filter.StaticFilterExpressions) > 0 { // we have static filters
+			for _, expr := range filter.StaticFilterExpressions {
+				for _, v := range expr.Vars {
+					if _, ok := MetricsConfig.Filters[v]; ok {
+						dfs(v, visited, path)
+					}
+				}
+			}
+		}
+		filter, ok = dynamicFilterExpressions[filterName]
+		if ok && len(filter.DynamicFilterExpressions) > 0 { // we have dynamic filters
+			for _, expr := range filter.DynamicFilterExpressions {
+				for _, v := range expr.Vars {
+					if v == "value" { // do all other filters first
+						for filterName2 := range MetricsConfig.Filters {
+							if filterName2 == filterName {
+								continue
+							}
+							dfs(filterName2, visited, path)
+						}
+					}
+					if _, ok := MetricsConfig.Filters[v]; ok {
+						dfs(v, visited, path)
+					}
+				}
+			}
+		}
+
+		// Mark as visited and add to the result
+		visited[filterName] = true
+		FiltersList = append(FiltersList, filterName)
+
+		// Remove from current path
+		delete(path, filterName)
+	}
+
+	// Initialize the result and visited maps
+	visited := make(map[string]bool)
+	path := make(map[string]bool)
+
+	// Start depth-first search for each filter
+	for filterName := range MetricsConfig.Filters {
+		dfs(filterName, visited, path)
+	}
 }

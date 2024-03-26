@@ -15,6 +15,7 @@ var MetricsConfig MetricsFile     // the metrics config file
 var SubscribeUris []string        // the uris to subscribe to
 var InputScope map[string][]Union // this holds a map[string][]Input for when we want to go and evaluate things...
 var FilterScope map[string][]string
+var FiltersList []string               // this maintains the order in which we evaluate filters
 var OutputScope map[string][]Union     // this holds a map[string][]Input for when we want to go and evaluate things...
 var UriElements map[string]interface{} // if we decompose a uri, use this to get the elements of that uri that we're interested in -- used for inputs
 var PublishUris map[string][]string    // the uri's to publish to and the vars to publish to each uri

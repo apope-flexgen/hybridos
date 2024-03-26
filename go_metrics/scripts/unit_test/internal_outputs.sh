@@ -22,7 +22,7 @@ test()
     ### TEST 2 ###
 
     fims_send -m pub -u /some/uri/external_input 5
-    
+
 
     usetime 2
     echo "Test fims_send -m pub -u /some/uri/external_input 5"

@@ -18,7 +18,7 @@ fi
 #timeout=20
 #timeused=0
 
-dir=echo
+dir=unit_test
 # dir=$(basename $(dirname "$0"))
 echo "dir is $dir"
 

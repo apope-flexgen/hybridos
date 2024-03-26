@@ -12,104 +12,104 @@ import (
 
 func TestGenerateScope(t *testing.T) {
 	MetricsConfig.Inputs = map[string]Input{
-		"bool1":   Input{Type: "bool", Attributes: []string{"enabled", "scale"}, AttributesMap: map[string]string{"enabled": "bool1@enabled", "scale": "bool1@scale"}},
-		"bool2":   Input{Type: "bool"},
-		"uint1":   Input{Type: "uint", Attributes: []string{"puppy", "kitty"}, AttributesMap: map[string]string{"puppy": "uint1@puppy", "kitty": "uint1@kitty"}},
-		"uint2":   Input{Uri: "some_uri", Type: "uint"},
-		"int1":    Input{Type: "int"},
-		"int2":    Input{Type: "int", Internal: true},
-		"float1":  Input{Type: "float"},
-		"float2":  Input{Type: "float"},
-		"string1": Input{Type: "string", Value: Union{tag: STRING, s: ""}},
-		"string2": Input{Type: "string", Value: Union{tag: STRING, s: "I love puppies!!"}},
+		"bool1":   {Type: "bool", Attributes: []string{"enabled", "scale"}, AttributesMap: map[string]string{"enabled": "bool1@enabled", "scale": "bool1@scale"}},
+		"bool2":   {Type: "bool"},
+		"uint1":   {Type: "uint", Attributes: []string{"puppy", "kitty"}, AttributesMap: map[string]string{"puppy": "uint1@puppy", "kitty": "uint1@kitty"}},
+		"uint2":   {Uri: "some_uri", Type: "uint"},
+		"int1":    {Type: "int"},
+		"int2":    {Type: "int", Internal: true},
+		"float1":  {Type: "float"},
+		"float2":  {Type: "float"},
+		"string1": {Type: "string", Value: Union{tag: STRING, s: ""}},
+		"string2": {Type: "string", Value: Union{tag: STRING, s: "I love puppies!!"}},
 	}
 
 	expectedScope := map[string][]Input{
-		"bool1": []Input{
-			Input{
+		"bool1": {
+			{
 				Name:          "bool1",
 				Type:          "bool",
 				Attributes:    []string{"enabled", "scale"},
 				AttributesMap: map[string]string{"enabled": "bool1@enabled", "scale": "bool1@scale"},
 			},
 		},
-		"bool2": []Input{
-			Input{
+		"bool2": {
+			{
 				Name: "bool2",
 				Type: "bool",
 			},
 		},
-		"uint1": []Input{
-			Input{
+		"uint1": {
+			{
 				Name:          "uint1",
 				Type:          "uint",
 				Attributes:    []string{"puppy", "kitty"},
 				AttributesMap: map[string]string{"puppy": "uint1@puppy", "kitty": "uint1@kitty"},
 			},
 		},
-		"uint2": []Input{
-			Input{
+		"uint2": {
+			{
 				Uri:  "some_uri",
 				Name: "uint2",
 				Type: "uint",
 			},
 		},
-		"int1": []Input{
-			Input{
+		"int1": {
+			{
 				Name: "int1",
 				Type: "int",
 			},
 		},
-		"int2": []Input{
-			Input{
+		"int2": {
+			{
 				Name:     "int2",
 				Type:     "int",
 				Internal: true,
 			},
 		},
-		"float1": []Input{
-			Input{
+		"float1": {
+			{
 				Name: "float1",
 				Type: "float",
 			},
 		},
-		"float2": []Input{
-			Input{
+		"float2": {
+			{
 				Name: "float2",
 				Type: "float",
 			},
 		},
-		"string1": []Input{
-			Input{
+		"string1": {
+			{
 				Name:  "string1",
 				Type:  "string",
 				Value: Union{tag: STRING, s: ""},
 			},
 		},
-		"string2": []Input{
-			Input{
+		"string2": {
+			{
 				Name:  "string2",
 				Type:  "string",
 				Value: Union{tag: STRING, s: "I love puppies!!"},
 			},
 		},
-		"bool1@enabled": []Input{
-			Input{
+		"bool1@enabled": {
+			{
 				Name: "enabled",
 			},
 		},
-		"bool1@scale": []Input{
-			Input{
+		"bool1@scale": {
+			{
 				Name: "scale",
 			},
 		},
-		"uint1@puppy": []Input{
-			Input{
+		"uint1@puppy": {
+			{
 				Name: "puppy",
 			},
 		},
-		"uint1@kitty": []Input{
-			Input{
+		"uint1@kitty": {
+			{
 				Name: "kitty",
 			},
 		},
@@ -141,15 +141,15 @@ func TestGenerateScope(t *testing.T) {
 
 func TestDeleteAtIndex(t *testing.T) {
 	var jalist = []JsonAccessor{
-		JsonAccessor{
+		{
 			Key:   "templates",
 			JType: simdjson.TypeArray,
 		},
-		JsonAccessor{
+		{
 			Index: 2,
 			JType: simdjson.TypeObject,
 		},
-		JsonAccessor{
+		{
 			Key:   "to",
 			JType: simdjson.TypeInt,
 		},
@@ -541,9 +541,9 @@ func compareEcho(echo1, echo2 EchoObject) bool {
 }
 
 var TestTemplates = []Template{
-	Template{List: []string{"a", "b", "c"}, Tok: "##"},
-	Template{List: []string{"1", "2", "3"}, Tok: "!!"},
-	Template{List: []string{"asdf", "jkl;", "asdf", "jkl;"}, Tok: "**"},
+	{List: []string{"a", "b", "c"}, Tok: "##"},
+	{List: []string{"1", "2", "3"}, Tok: "!!"},
+	{List: []string{"asdf", "jkl;", "asdf", "jkl;"}, Tok: "**"},
 }
 
 type TemplateInputTest struct {
@@ -555,7 +555,7 @@ type TemplateInputTest struct {
 
 var TemplateInputTestCase = TemplateInputTest{
 	initial: map[string]Input{
-		"replace_##_me": Input{
+		"replace_##_me": {
 			Name:       "replace_##_me",
 			Uri:        "/some/uri/to/replace/##",
 			Type:       "string",
@@ -567,13 +567,13 @@ var TemplateInputTestCase = TemplateInputTest{
 			Value:    Union{tag: STRING, s: "replace_##_me"},
 			Internal: false,
 		},
-		"var_name!!": Input{
+		"var_name!!": {
 			Name:     "var_name!!",
 			Internal: true,
 			Type:     "string",
 			Value:    Union{tag: STRING, s: ""},
 		},
-		"var_name_**": Input{
+		"var_name_**": {
 			Name:     "var_name_**",
 			Internal: true,
 			Type:     "int",
@@ -581,11 +581,11 @@ var TemplateInputTestCase = TemplateInputTest{
 		},
 	},
 	initialAllPossibleAttributes: map[string][]string{
-		"enabled":     []string{"replace_##_me@enabled"},
-		"attribute##": []string{"replace_##_me@attribute##"},
+		"enabled":     {"replace_##_me@enabled"},
+		"attribute##": {"replace_##_me@attribute##"},
 	},
 	expectedFinal: map[string]Input{
-		"replace_a_me": Input{
+		"replace_a_me": {
 			Name:       "replace_a_me",
 			Uri:        "/some/uri/to/replace/a",
 			Type:       "string",
@@ -597,7 +597,7 @@ var TemplateInputTestCase = TemplateInputTest{
 			Value:    Union{tag: STRING, s: "replace_a_me"},
 			Internal: false,
 		},
-		"replace_b_me": Input{
+		"replace_b_me": {
 			Name:       "replace_b_me",
 			Uri:        "/some/uri/to/replace/b",
 			Type:       "string",
@@ -609,7 +609,7 @@ var TemplateInputTestCase = TemplateInputTest{
 			Value:    Union{tag: STRING, s: "replace_b_me"},
 			Internal: false,
 		},
-		"replace_c_me": Input{
+		"replace_c_me": {
 			Name:       "replace_c_me",
 			Uri:        "/some/uri/to/replace/c",
 			Type:       "string",
@@ -621,31 +621,31 @@ var TemplateInputTestCase = TemplateInputTest{
 			Value:    Union{tag: STRING, s: "replace_c_me"},
 			Internal: false,
 		},
-		"var_name1": Input{
+		"var_name1": {
 			Name:     "var_name1",
 			Internal: true,
 			Type:     "string",
 			Value:    Union{tag: STRING, s: ""},
 		},
-		"var_name2": Input{
+		"var_name2": {
 			Name:     "var_name2",
 			Internal: true,
 			Type:     "string",
 			Value:    Union{tag: STRING, s: ""},
 		},
-		"var_name3": Input{
+		"var_name3": {
 			Name:     "var_name3",
 			Internal: true,
 			Type:     "string",
 			Value:    Union{tag: STRING, s: ""},
 		},
-		"var_name_asdf": Input{
+		"var_name_asdf": {
 			Name:     "var_name_asdf",
 			Internal: true,
 			Type:     "int",
 			Value:    Union{tag: INT, i: 5},
 		},
-		"var_name_jkl;": Input{
+		"var_name_jkl;": {
 			Name:     "var_name_jkl;",
 			Internal: true,
 			Type:     "int",
@@ -653,10 +653,10 @@ var TemplateInputTestCase = TemplateInputTest{
 		},
 	},
 	expectedAllPossibleAttributes: map[string][]string{
-		"enabled":    []string{"replace_a_me@enabled", "replace_b_me@enabled", "replace_c_me@enabled"},
-		"attributea": []string{"replace_a_me@attributea"},
-		"attributeb": []string{"replace_b_me@attributeb"},
-		"attributec": []string{"replace_c_me@attributec"},
+		"enabled":    {"replace_a_me@enabled", "replace_b_me@enabled", "replace_c_me@enabled"},
+		"attributea": {"replace_a_me@attributea"},
+		"attributeb": {"replace_b_me@attributeb"},
+		"attributec": {"replace_c_me@attributec"},
 	},
 }
 
@@ -783,157 +783,157 @@ type TemplateOutputTest struct {
 
 var TemplateOutputTestCase = TemplateOutputTest{
 	initial: map[string]Output{
-		"replace_##_me": Output{
+		"replace_##_me": {
 			Name:        "replace_##_me",
 			Uri:         "/some/uri/to/replace/##",
 			Flags:       []string{"flag", "naked", "enum", "bitfield", "group##"},
 			Attributes:  map[string]interface{}{"value": "no numbers", "scale": "blach##", "something##": "no numbers"},
 			PublishRate: 1000,
 			Enum: []EnumObject{
-				EnumObject{
+				{
 					Value:  0,
 					String: "s##ome string",
 				},
-				EnumObject{
+				{
 					Value:  1,
 					String: "some string##",
 				},
 			},
 			Bitfield: []EnumObject{
-				EnumObject{
+				{
 					Value:  0,
 					String: "some string##",
 				},
-				EnumObject{
+				{
 					Value:  1,
 					String: "som##e string##",
 				},
-				EnumObject{
+				{
 					Value:  2,
 					String: "##",
 				},
 			},
 		},
-		"var_name!!": Output{
+		"var_name!!": {
 			Name: "var_name!!",
 			Uri:  "/some/other/!!/uri",
 		},
-		"var_name_**": Output{
+		"var_name_**": {
 			Name: "var_name_**",
 			Uri:  "/and/another**",
 		},
 	},
 	expectedFinal: map[string]Output{
-		"replace_a_me": Output{
+		"replace_a_me": {
 			Name:        "replace_a_me",
 			Uri:         "/some/uri/to/replace/a",
 			Flags:       []string{"flag", "naked", "enum", "bitfield", "groupa"},
 			Attributes:  map[string]interface{}{"value": "no numbers", "scale": "blacha", "somethinga": "no numbers"},
 			PublishRate: 1000,
 			Enum: []EnumObject{
-				EnumObject{
+				{
 					Value:  0,
 					String: "saome string",
 				},
-				EnumObject{
+				{
 					Value:  1,
 					String: "some stringa",
 				},
 			},
 			Bitfield: []EnumObject{
-				EnumObject{
+				{
 					Value:  0,
 					String: "some stringa",
 				},
-				EnumObject{
+				{
 					Value:  1,
 					String: "somae stringa",
 				},
-				EnumObject{
+				{
 					Value:  2,
 					String: "a",
 				},
 			},
 		},
-		"replace_b_me": Output{
+		"replace_b_me": {
 			Name:        "replace_b_me",
 			Uri:         "/some/uri/to/replace/b",
 			Flags:       []string{"flag", "naked", "enum", "bitfield", "groupb"},
 			Attributes:  map[string]interface{}{"value": "no numbers", "scale": "blachb", "somethingb": "no numbers"},
 			PublishRate: 1000,
 			Enum: []EnumObject{
-				EnumObject{
+				{
 					Value:  0,
 					String: "sbome string",
 				},
-				EnumObject{
+				{
 					Value:  1,
 					String: "some stringb",
 				},
 			},
 			Bitfield: []EnumObject{
-				EnumObject{
+				{
 					Value:  0,
 					String: "some stringb",
 				},
-				EnumObject{
+				{
 					Value:  1,
 					String: "sombe stringb",
 				},
-				EnumObject{
+				{
 					Value:  2,
 					String: "b",
 				},
 			},
 		},
-		"replace_c_me": Output{
+		"replace_c_me": {
 			Name:        "replace_c_me",
 			Uri:         "/some/uri/to/replace/c",
 			Flags:       []string{"flag", "naked", "enum", "bitfield", "groupc"},
 			Attributes:  map[string]interface{}{"value": "no numbers", "scale": "blachc", "somethingc": "no numbers"},
 			PublishRate: 1000,
 			Enum: []EnumObject{
-				EnumObject{
+				{
 					Value:  0,
 					String: "scome string",
 				},
-				EnumObject{
+				{
 					Value:  1,
 					String: "some stringc",
 				},
 			},
 			Bitfield: []EnumObject{
-				EnumObject{
+				{
 					Value:  0,
 					String: "some stringc",
 				},
-				EnumObject{
+				{
 					Value:  1,
 					String: "somce stringc",
 				},
-				EnumObject{
+				{
 					Value:  2,
 					String: "c",
 				},
 			},
 		},
-		"var_name1": Output{
+		"var_name1": {
 			Name: "var_name1",
 			Uri:  "/some/other/1/uri",
 		},
-		"var_name2": Output{
+		"var_name2": {
 			Name: "var_name2",
 			Uri:  "/some/other/2/uri",
 		},
-		"var_name3": Output{
+		"var_name3": {
 			Name: "var_name3",
 			Uri:  "/some/other/3/uri",
 		},
-		"var_name_asdf": Output{
+		"var_name_asdf": {
 			Name: "var_name_asdf",
 			Uri:  "/and/anotherasdf",
 		},
-		"var_name_jkl;": Output{
+		"var_name_jkl;": {
 			Name: "var_name_jkl;",
 			Uri:  "/and/anotherjkl;",
 		},
@@ -968,19 +968,19 @@ type TemplateMetricsTest struct {
 
 var TemplateMetricsTestCase = TemplateMetricsTest{
 	initial: []MetricsObject{
-		MetricsObject{
+		{
 			Type:           INT,
 			Outputs:        []string{"output##"},
 			InternalOutput: "internal_output",
 			Expression:     "Abs(input)",
 		},
-		MetricsObject{
+		{
 			Type:           STRING,
 			Outputs:        []string{"output!!"},
 			InternalOutput: "internal_output!!",
 			Expression:     "Abs(input!!)",
 		},
-		MetricsObject{
+		{
 			Type:           FLOAT,
 			Outputs:        []string{"output**"},
 			InternalOutput: "internal_output**",
@@ -988,49 +988,49 @@ var TemplateMetricsTestCase = TemplateMetricsTest{
 		},
 	},
 	expectedFinal: []MetricsObject{
-		MetricsObject{
+		{
 			Type:           INT,
 			Outputs:        []string{"outputa", "outputb", "outputc"},
 			InternalOutput: "internal_output",
 			Expression:     "Abs(input)",
 		},
-		MetricsObject{
+		{
 			Type:           STRING,
 			Outputs:        []string{"output1"},
 			InternalOutput: "internal_output1",
 			Expression:     "Abs(input1)",
 		},
-		MetricsObject{
+		{
 			Type:           STRING,
 			Outputs:        []string{"output2"},
 			InternalOutput: "internal_output2",
 			Expression:     "Abs(input2)",
 		},
-		MetricsObject{
+		{
 			Type:           STRING,
 			Outputs:        []string{"output3"},
 			InternalOutput: "internal_output3",
 			Expression:     "Abs(input3)",
 		},
-		MetricsObject{
+		{
 			Type:           FLOAT,
 			Outputs:        []string{"outputasdf"},
 			InternalOutput: "internal_outputasdf",
 			Expression:     "Abs(inputasdf)",
 		},
-		MetricsObject{
+		{
 			Type:           FLOAT,
 			Outputs:        []string{"outputjkl;"},
 			InternalOutput: "internal_outputjkl;",
 			Expression:     "Abs(inputjkl;)",
 		},
-		MetricsObject{
+		{
 			Type:           FLOAT,
 			Outputs:        []string{"outputasdf"},
 			InternalOutput: "internal_outputasdf",
 			Expression:     "Abs(inputasdf)",
 		},
-		MetricsObject{
+		{
 			Type:           FLOAT,
 			Outputs:        []string{"outputjkl;"},
 			InternalOutput: "internal_outputjkl;",
@@ -1068,13 +1068,13 @@ type TemplateEchoTest struct {
 
 var TemplateEchoTestCase = TemplateEchoTest{
 	initial: []EchoObject{
-		EchoObject{
+		{
 			PublishUri:  "/omg/I/love/deleting/all/of/my/code",
 			PublishRate: 1,
 			Heartbeat:   "gone...I died",
 			Format:      "ughhh",
 			Inputs: []EchoInput{
-				EchoInput{
+				{
 					Uri: "/no",
 					Registers: map[string]string{
 						"register1": "blah",
@@ -1089,13 +1089,13 @@ var TemplateEchoTestCase = TemplateEchoTest{
 				"string":    "interface",
 			},
 		},
-		EchoObject{
+		{
 			PublishUri:  "/omg/I/love/deleting/all/of/my##/code",
 			PublishRate: 1,
 			Heartbeat:   "gone...I die##d",
 			Format:      "ugh##hh",
 			Inputs: []EchoInput{
-				EchoInput{
+				{
 					Uri: "/n##o",
 					Registers: map[string]string{
 						"registe##r1": "bla##h",
@@ -1110,13 +1110,13 @@ var TemplateEchoTestCase = TemplateEchoTest{
 				"st##ring":    "interfa##ce",
 			},
 		},
-		EchoObject{
+		{
 			PublishUri:  "/omg/I/love/deleting/all/of/my/code",
 			PublishRate: 1,
 			Heartbeat:   "gone...I died",
 			Format:      "ughhh",
 			Inputs: []EchoInput{
-				EchoInput{
+				{
 					Uri: "/no!!",
 					Registers: map[string]string{
 						"register!!1": "blah",
@@ -1131,13 +1131,13 @@ var TemplateEchoTestCase = TemplateEchoTest{
 				"str##i!!ng":  "interf!!ace",
 			},
 		},
-		EchoObject{
+		{
 			PublishUri:  "/omg/I/love/deleting/all/of/my/code",
 			PublishRate: 1,
 			Heartbeat:   "gone...I died",
 			Format:      "ughhh",
 			Inputs: []EchoInput{
-				EchoInput{
+				{
 					Uri: "/no",
 					Registers: map[string]string{
 						"register1": "blah",
@@ -1154,13 +1154,13 @@ var TemplateEchoTestCase = TemplateEchoTest{
 		},
 	},
 	expectedFinal: []EchoObject{
-		EchoObject{
+		{
 			PublishUri:  "/omg/I/love/deleting/all/of/my/code",
 			PublishRate: 1,
 			Heartbeat:   "gone...I died",
 			Format:      "ughhh",
 			Inputs: []EchoInput{
-				EchoInput{
+				{
 					Uri: "/no",
 					Registers: map[string]string{
 						"register1": "blah",
@@ -1175,27 +1175,27 @@ var TemplateEchoTestCase = TemplateEchoTest{
 				"string":    "interface",
 			},
 		},
-		EchoObject{
+		{
 			PublishUri:  "/omg/I/love/deleting/all/of/my/code",
 			PublishRate: 1,
 			Heartbeat:   "gone...I died",
 			Format:      "ughhh",
 			Inputs: []EchoInput{
-				EchoInput{
+				{
 					Uri: "/no1",
 					Registers: map[string]string{
 						"register11": "blah",
 						"register12": "does it matter?",
 					},
 				},
-				EchoInput{
+				{
 					Uri: "/no2",
 					Registers: map[string]string{
 						"register21": "blah",
 						"register22": "does it matter?",
 					},
 				},
-				EchoInput{
+				{
 					Uri: "/no3",
 					Registers: map[string]string{
 						"register31": "blah",
@@ -1230,13 +1230,13 @@ var TemplateEchoTestCase = TemplateEchoTest{
 				"strci3ng":   "interf3ace",
 			},
 		},
-		EchoObject{
+		{
 			PublishUri:  "/omg/I/love/deleting/all/of/my/code",
 			PublishRate: 1,
 			Heartbeat:   "gone...I died",
 			Format:      "ughhh",
 			Inputs: []EchoInput{
-				EchoInput{
+				{
 					Uri: "/no",
 					Registers: map[string]string{
 						"register1": "blah",
@@ -1253,13 +1253,13 @@ var TemplateEchoTestCase = TemplateEchoTest{
 				"stjkl;ring": "interface",
 			},
 		},
-		EchoObject{
+		{
 			PublishUri:  "/omg/I/love/deleting/all/of/mya/code",
 			PublishRate: 1,
 			Heartbeat:   "gone...I diead",
 			Format:      "ughahh",
 			Inputs: []EchoInput{
-				EchoInput{
+				{
 					Uri: "/nao",
 					Registers: map[string]string{
 						"registear1": "blaah",
@@ -1274,13 +1274,13 @@ var TemplateEchoTestCase = TemplateEchoTest{
 				"staring":    "interfaace",
 			},
 		},
-		EchoObject{
+		{
 			PublishUri:  "/omg/I/love/deleting/all/of/myb/code",
 			PublishRate: 1,
 			Heartbeat:   "gone...I diebd",
 			Format:      "ughbhh",
 			Inputs: []EchoInput{
-				EchoInput{
+				{
 					Uri: "/nbo",
 					Registers: map[string]string{
 						"registebr1": "blabh",
@@ -1295,13 +1295,13 @@ var TemplateEchoTestCase = TemplateEchoTest{
 				"stbring":    "interfabce",
 			},
 		},
-		EchoObject{
+		{
 			PublishUri:  "/omg/I/love/deleting/all/of/myc/code",
 			PublishRate: 1,
 			Heartbeat:   "gone...I diecd",
 			Format:      "ughchh",
 			Inputs: []EchoInput{
-				EchoInput{
+				{
 					Uri: "/nco",
 					Registers: map[string]string{
 						"registecr1": "blach",
@@ -1346,20 +1346,20 @@ type CombineFlagsTest struct {
 }
 
 var CombineFlagsTestCase = []CombineFlagsTest{
-	CombineFlagsTest{
+	{
 		outputName: "output1",
 		output: Output{
 			Name: "output1",
 			Uri:  "/some/random/uri",
 		},
 		publishUris: map[string][]string{
-			"/some/random/uri": []string{"output1"},
+			"/some/random/uri": {"output1"},
 		},
 		pubUriFlags: map[string][]string{
-			"/some/random/uri": []string{},
+			"/some/random/uri": {},
 		},
 	},
-	CombineFlagsTest{
+	{
 		outputName: "output2",
 		output: Output{
 			Name:  "output2",
@@ -1367,15 +1367,15 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			Flags: []string{"clothed", "group1"},
 		},
 		publishUris: map[string][]string{
-			"/some/random/uri":         []string{"output1"},
-			"/some/random/uri[group1]": []string{"output2"},
+			"/some/random/uri":         {"output1"},
+			"/some/random/uri[group1]": {"output2"},
 		},
 		pubUriFlags: map[string][]string{
-			"/some/random/uri":         []string{},
-			"/some/random/uri[group1]": []string{"clothed", "group1"},
+			"/some/random/uri":         {},
+			"/some/random/uri[group1]": {"clothed", "group1"},
 		},
 	},
-	CombineFlagsTest{
+	{
 		outputName: "output3",
 		output: Output{
 			Name:  "output3",
@@ -1383,25 +1383,25 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			Flags: []string{"clothed"},
 		},
 		publishUris: map[string][]string{
-			"/some/random/uri":         []string{"output1", "output3"},
-			"/some/random/uri[group1]": []string{"output2"},
+			"/some/random/uri":         {"output1", "output3"},
+			"/some/random/uri[group1]": {"output2"},
 		},
 		pubUriFlags: map[string][]string{
-			"/some/random/uri":         []string{"clothed"},
-			"/some/random/uri[group1]": []string{"clothed", "group1"},
+			"/some/random/uri":         {"clothed"},
+			"/some/random/uri[group1]": {"clothed", "group1"},
 		},
 		configErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output1",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
@@ -1410,7 +1410,7 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			},
 		},
 	},
-	CombineFlagsTest{
+	{
 		outputName: "output4",
 		output: Output{
 			Name:  "output4",
@@ -1418,27 +1418,27 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			Flags: []string{"lonely"},
 		},
 		publishUris: map[string][]string{
-			"/some/random/uri":          []string{"output1", "output3"},
-			"/some/random/uri[group1]":  []string{"output2"},
-			"/some/random/uri[output4]": []string{"output4"},
+			"/some/random/uri":          {"output1", "output3"},
+			"/some/random/uri[group1]":  {"output2"},
+			"/some/random/uri[output4]": {"output4"},
 		},
 		pubUriFlags: map[string][]string{
-			"/some/random/uri":          []string{"clothed"},
-			"/some/random/uri[group1]":  []string{"clothed", "group1"},
-			"/some/random/uri[output4]": []string{"lonely"},
+			"/some/random/uri":          {"clothed"},
+			"/some/random/uri[group1]":  {"clothed", "group1"},
+			"/some/random/uri[output4]": {"lonely"},
 		},
 		configErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output1",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
@@ -1447,7 +1447,7 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			},
 		},
 	},
-	CombineFlagsTest{
+	{
 		outputName: "output5",
 		output: Output{
 			Name:  "output5",
@@ -1455,29 +1455,29 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			Flags: []string{"group2", "naked"},
 		},
 		publishUris: map[string][]string{
-			"/some/random/uri":          []string{"output1", "output3"},
-			"/some/random/uri[group1]":  []string{"output2"},
-			"/some/random/uri[output4]": []string{"output4"},
-			"/some/random/uri[group2]":  []string{"output5"},
+			"/some/random/uri":          {"output1", "output3"},
+			"/some/random/uri[group1]":  {"output2"},
+			"/some/random/uri[output4]": {"output4"},
+			"/some/random/uri[group2]":  {"output5"},
 		},
 		pubUriFlags: map[string][]string{
-			"/some/random/uri":          []string{"clothed"},
-			"/some/random/uri[group1]":  []string{"clothed", "group1"},
-			"/some/random/uri[output4]": []string{"lonely"},
-			"/some/random/uri[group2]":  []string{"group2", "naked"},
+			"/some/random/uri":          {"clothed"},
+			"/some/random/uri[group1]":  {"clothed", "group1"},
+			"/some/random/uri[output4]": {"lonely"},
+			"/some/random/uri[group2]":  {"group2", "naked"},
 		},
 		configErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output1",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
@@ -1486,7 +1486,7 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			},
 		},
 	},
-	CombineFlagsTest{
+	{
 		outputName: "output6",
 		output: Output{
 			Name:  "output6",
@@ -1494,46 +1494,46 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			Flags: []string{"group2", "naked", "clothed"},
 		},
 		publishUris: map[string][]string{
-			"/some/random/uri":          []string{"output1", "output3"},
-			"/some/random/uri[group1]":  []string{"output2"},
-			"/some/random/uri[output4]": []string{"output4"},
-			"/some/random/uri[group2]":  []string{"output5", "output6"},
+			"/some/random/uri":          {"output1", "output3"},
+			"/some/random/uri[group1]":  {"output2"},
+			"/some/random/uri[output4]": {"output4"},
+			"/some/random/uri[group2]":  {"output5", "output6"},
 		},
 		pubUriFlags: map[string][]string{
-			"/some/random/uri":          []string{"clothed"},
-			"/some/random/uri[group1]":  []string{"clothed", "group1"},
-			"/some/random/uri[output4]": []string{"lonely"},
-			"/some/random/uri[group2]":  []string{"group2", "naked", "clothed"},
+			"/some/random/uri":          {"clothed"},
+			"/some/random/uri[group1]":  {"clothed", "group1"},
+			"/some/random/uri[output4]": {"lonely"},
+			"/some/random/uri[group2]":  {"group2", "naked", "clothed"},
 		},
 		configErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output6",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output '%v' has format specified as both naked and clothed; defaulting to clothed", "output6"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output1",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
@@ -1542,7 +1542,7 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			},
 		},
 	},
-	CombineFlagsTest{
+	{
 		outputName: "output7",
 		output: Output{
 			Name:  "output7",
@@ -1550,48 +1550,48 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			Flags: []string{"group3", "naked"},
 		},
 		publishUris: map[string][]string{
-			"/some/random/uri":          []string{"output1", "output3"},
-			"/some/random/uri[group1]":  []string{"output2"},
-			"/some/random/uri[output4]": []string{"output4"},
-			"/some/random/uri[group2]":  []string{"output5", "output6"},
-			"/some/random/uri[group3]":  []string{"output7"},
+			"/some/random/uri":          {"output1", "output3"},
+			"/some/random/uri[group1]":  {"output2"},
+			"/some/random/uri[output4]": {"output4"},
+			"/some/random/uri[group2]":  {"output5", "output6"},
+			"/some/random/uri[group3]":  {"output7"},
 		},
 		pubUriFlags: map[string][]string{
-			"/some/random/uri":          []string{"clothed"},
-			"/some/random/uri[group1]":  []string{"clothed", "group1"},
-			"/some/random/uri[output4]": []string{"lonely"},
-			"/some/random/uri[group2]":  []string{"group2", "naked", "clothed"},
-			"/some/random/uri[group3]":  []string{"group3", "naked"},
+			"/some/random/uri":          {"clothed"},
+			"/some/random/uri[group1]":  {"clothed", "group1"},
+			"/some/random/uri[output4]": {"lonely"},
+			"/some/random/uri[group2]":  {"group2", "naked", "clothed"},
+			"/some/random/uri[group3]":  {"group3", "naked"},
 		},
 		configErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output6",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output '%v' has format specified as both naked and clothed; defaulting to clothed", "output6"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output1",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
@@ -1600,7 +1600,7 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			},
 		},
 	},
-	CombineFlagsTest{
+	{
 		outputName: "output8",
 		output: Output{
 			Name:  "output8",
@@ -1608,65 +1608,65 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			Flags: []string{"group3"},
 		},
 		publishUris: map[string][]string{
-			"/some/random/uri":          []string{"output1", "output3"},
-			"/some/random/uri[group1]":  []string{"output2"},
-			"/some/random/uri[output4]": []string{"output4"},
-			"/some/random/uri[group2]":  []string{"output5", "output6"},
-			"/some/random/uri[group3]":  []string{"output7", "output8"},
+			"/some/random/uri":          {"output1", "output3"},
+			"/some/random/uri[group1]":  {"output2"},
+			"/some/random/uri[output4]": {"output4"},
+			"/some/random/uri[group2]":  {"output5", "output6"},
+			"/some/random/uri[group3]":  {"output7", "output8"},
 		},
 		pubUriFlags: map[string][]string{
-			"/some/random/uri":          []string{"clothed"},
-			"/some/random/uri[group1]":  []string{"clothed", "group1"},
-			"/some/random/uri[output4]": []string{"lonely"},
-			"/some/random/uri[group2]":  []string{"group2", "naked", "clothed"},
-			"/some/random/uri[group3]":  []string{"group3", "naked"},
+			"/some/random/uri":          {"clothed"},
+			"/some/random/uri[group1]":  {"clothed", "group1"},
+			"/some/random/uri[output4]": {"lonely"},
+			"/some/random/uri[group2]":  {"group2", "naked", "clothed"},
+			"/some/random/uri[group3]":  {"group3", "naked"},
 		},
 		configErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output6",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output '%v' has format specified as both naked and clothed; defaulting to clothed", "output6"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output8",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output '%v' has unspecified clothed/naked status; defaulting to naked (warning only)", "output8"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output1",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
@@ -1741,30 +1741,30 @@ type CheckErrorLog struct {
 }
 
 var CheckErrorLogTestCase = []CheckErrorLog{
-	CheckErrorLog{
+	{
 		inputErr: fmt.Errorf("path not found"),
 		currentJsonLocation: []JsonAccessor{
-			JsonAccessor{
+			{
 				Key:   "outputs",
 				JType: simdjson.TypeObject,
 			},
-			JsonAccessor{
+			{
 				Key:   "output1",
 				JType: simdjson.TypeObject,
 			},
-			JsonAccessor{
+			{
 				Key:   "test_key",
 				JType: simdjson.TypeString,
 			},
 		},
 		expectedFinal: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output1",
 						JType: simdjson.TypeObject,
 					},
@@ -1773,47 +1773,47 @@ var CheckErrorLogTestCase = []CheckErrorLog{
 			},
 		},
 	},
-	CheckErrorLog{
+	{
 		inputErr: fmt.Errorf("value is not type string"),
 		currentJsonLocation: []JsonAccessor{
-			JsonAccessor{
+			{
 				Key:   "inputs",
 				JType: simdjson.TypeObject,
 			},
-			JsonAccessor{
+			{
 				Key:   "input1",
 				JType: simdjson.TypeObject,
 			},
-			JsonAccessor{
+			{
 				Key:   "test_string",
 				JType: simdjson.TypeString,
 			},
 		},
 		expectedFinal: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output1",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'test_key' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "input1",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "test_string",
 						JType: simdjson.TypeString,
 					},
@@ -1867,14 +1867,14 @@ type CheckUnmarshalConfig struct {
 }
 
 var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
-	CheckUnmarshalConfig{ // test 1
+	{ // test 1
 		inputFileLoc: "../../test/configs/unmarshal/test1.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta: map[string]interface{}{
 				"publishRate": int64(2000),
 			},
 			Inputs: map[string]Input{
-				"v1": Input{
+				"v1": {
 					Name:          "v1",
 					Uri:           "/components/feeder_52m1/v1",
 					Type:          "float",
@@ -1885,8 +1885,8 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{
-				"v1_times_5": Output{
-					Name:		   "v1_times_5",
+				"v1_times_5": {
+					Name:          "v1_times_5",
 					Uri:           "/some/v1/output",
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
@@ -1897,7 +1897,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 				},
 			},
 			Metrics: []MetricsObject{
-				MetricsObject{
+				{
 					Type:           FLOAT,
 					Outputs:        []string{"v1_times_5"},
 					InternalOutput: "",
@@ -1910,8 +1910,8 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						IsTypeFilter: false,
 					},
 					State: map[string][]Union{
-						"alwaysEvaluate": []Union{Union{tag: BOOL, b: false}},
-						"value":          []Union{Union{tag: FLOAT, f: 0.0}},
+						"alwaysEvaluate": {{tag: BOOL, b: false}},
+						"value":          {{tag: FLOAT, f: 0.0}},
 					},
 				},
 			},
@@ -1919,7 +1919,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 		},
 		expectedErrors: []ErrorLocation{},
 	},
-	CheckUnmarshalConfig{ // test 2
+	{ // test 2
 		inputFileLoc: "../../test/configs/unmarshal/test2.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta: map[string]interface{}{
@@ -1927,7 +1927,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 				"publishRate": int64(2000),
 			},
 			Templates: []Template{
-				Template{
+				{
 					Type: "sequential",
 					From: int64(1),
 					To:   int64(3),
@@ -1935,14 +1935,14 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Tok:  "##",
 					List: []string{"1", "2", "3"},
 				},
-				Template{
+				{
 					Type: "list",
 					Tok:  "qq",
 					List: []string{"bobcat", "cheetah", "lion"},
 				},
 			},
 			Inputs: map[string]Input{
-				"var_name1": Input{
+				"var_name1": {
 					Name:          "var_name1",
 					Uri:           "/components/bms_74b/vnom",
 					Type:          "float",
@@ -1950,7 +1950,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Attributes:    []string{},
 					AttributesMap: map[string]string{},
 				},
-				"var_name2": Input{
+				"var_name2": {
 					Name:          "var_name2",
 					Uri:           "/components/feeder_52m1/v1",
 					Type:          "float",
@@ -1958,7 +1958,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Attributes:    []string{},
 					AttributesMap: map[string]string{},
 				},
-				"var_name3": Input{
+				"var_name3": {
 					Name:          "var_name3",
 					Uri:           "/components/feeder_52m1/id",
 					Type:          "string",
@@ -1966,7 +1966,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Attributes:    []string{},
 					AttributesMap: map[string]string{},
 				},
-				"var_name4": Input{
+				"var_name4": {
 					Name:          "var_name4",
 					Uri:           "/components/feeder_52u1/pmax",
 					Type:          "bool",
@@ -1974,7 +1974,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Attributes:    []string{},
 					AttributesMap: map[string]string{},
 				},
-				"var_name5": Input{
+				"var_name5": {
 					Name:          "var_name5",
 					Uri:           "/components/bms_74b/id",
 					Type:          "string",
@@ -1982,7 +1982,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Attributes:    []string{"enabled", "scale"},
 					AttributesMap: map[string]string{"enabled": "var_name5@enabled", "scale": "var_name5@scale"},
 				},
-				"intermediate_input": Input{
+				"intermediate_input": {
 					Name:          "intermediate_input",
 					Internal:      true,
 					Uri:           "",
@@ -1997,7 +1997,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 				"all_float_vars":   "regex(var_name*) | type(float)",
 			},
 			Outputs: map[string]Output{
-				"output1": Output{
+				"output1": {
 					Name:          "timestamp",
 					Uri:           "/some/output1",
 					Flags:         []string{"group2"},
@@ -2007,7 +2007,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield:      []EnumObject{},
 					Value:         Union{tag: STRING, s: ""},
 				},
-				"output2": Output{
+				"output2": {
 					Name:          "timestamp",
 					Uri:           "/some/output2",
 					Flags:         []string{"group2"},
@@ -2017,7 +2017,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield:      []EnumObject{},
 					Value:         Union{tag: STRING, s: ""},
 				},
-				"output3": Output{
+				"output3": {
 					Name:          "timestamp",
 					Uri:           "/some/output3",
 					Flags:         []string{"group2"},
@@ -2027,8 +2027,8 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield:      []EnumObject{},
 					Value:         Union{tag: STRING, s: ""},
 				},
-				"level2_output": Output{
-					Name:			"level2_output",
+				"level2_output": {
+					Name:          "level2_output",
 					Uri:           "/some/level2",
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
@@ -2037,30 +2037,30 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield:      []EnumObject{},
 					Value:         Union{tag: INT, i: 0},
 				},
-				"enum_output": Output{
+				"enum_output": {
 					Name:          "status",
 					Uri:           "/some/status/output",
 					Flags:         []string{"enum"},
 					Attributes:    map[string]interface{}{},
 					AttributesMap: map[string]string{},
 					Enum: []EnumObject{
-						EnumObject{
+						{
 							Value:  0,
 							String: "Power up",
 						},
-						EnumObject{
+						{
 							Value:  1,
 							String: "Initialization",
 						},
-						EnumObject{
+						{
 							Value:  10,
 							String: "Off",
 						},
-						EnumObject{
+						{
 							Value:  11,
 							String: "Precharge",
 						},
-						EnumObject{
+						{
 							Value:  20,
 							String: "some other value",
 						},
@@ -2068,33 +2068,33 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield: []EnumObject{},
 					Value:    Union{tag: INT, i: 0},
 				},
-				"bitfield_output": Output{
+				"bitfield_output": {
 					Name:          "status2",
 					Uri:           "/some/status/output",
 					Flags:         []string{"bitfield"},
 					Attributes:    map[string]interface{}{},
 					AttributesMap: map[string]string{},
 					Enum:          []EnumObject{},
-					Bitfield: []EnumObject{EnumObject{
+					Bitfield: []EnumObject{{
 						Value:  0,
 						String: "Power up",
 					},
-						EnumObject{
+						{
 							Value:  1,
 							String: "Initialization",
 						},
-						EnumObject{
+						{
 							Value:  2,
 							String: "Off",
 						},
-						EnumObject{
+						{
 							Value:  3,
 							String: "Precharge",
 						},
 					},
 					Value: Union{tag: INT, i: 0},
 				},
-				"output1_cheetah@scale": Output{
+				"output1_cheetah@scale": {
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
 					AttributesMap: map[string]string{},
@@ -2102,7 +2102,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield:      []EnumObject{},
 					Value:         Union{tag: FLOAT, f: 0.0},
 				},
-				"output1_bobcat@scale": Output{
+				"output1_bobcat@scale": {
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
 					AttributesMap: map[string]string{},
@@ -2110,7 +2110,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield:      []EnumObject{},
 					Value:         Union{tag: FLOAT, f: 0.0},
 				},
-				"output1_lion@scale": Output{
+				"output1_lion@scale": {
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
 					AttributesMap: map[string]string{},
@@ -2118,7 +2118,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield:      []EnumObject{},
 					Value:         Union{tag: FLOAT, f: 0.0},
 				},
-				"output2_cheetah@scale": Output{
+				"output2_cheetah@scale": {
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
 					AttributesMap: map[string]string{},
@@ -2126,7 +2126,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield:      []EnumObject{},
 					Value:         Union{tag: FLOAT, f: 0.0},
 				},
-				"output2_bobcat@scale": Output{
+				"output2_bobcat@scale": {
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
 					AttributesMap: map[string]string{},
@@ -2134,7 +2134,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield:      []EnumObject{},
 					Value:         Union{tag: FLOAT, f: 0.0},
 				},
-				"output2_lion@scale": Output{
+				"output2_lion@scale": {
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
 					AttributesMap: map[string]string{},
@@ -2142,7 +2142,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield:      []EnumObject{},
 					Value:         Union{tag: FLOAT, f: 0.0},
 				},
-				"output3_cheetah@scale": Output{
+				"output3_cheetah@scale": {
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
 					AttributesMap: map[string]string{},
@@ -2150,7 +2150,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield:      []EnumObject{},
 					Value:         Union{tag: FLOAT, f: 0.0},
 				},
-				"output3_bobcat@scale": Output{
+				"output3_bobcat@scale": {
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
 					AttributesMap: map[string]string{},
@@ -2158,7 +2158,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Bitfield:      []EnumObject{},
 					Value:         Union{tag: FLOAT, f: 0.0},
 				},
-				"output3_lion@scale": Output{
+				"output3_lion@scale": {
 					Flags:         []string{},
 					Attributes:    map[string]interface{}{},
 					AttributesMap: map[string]string{},
@@ -2168,7 +2168,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 				},
 			},
 			Metrics: []MetricsObject{
-				MetricsObject{
+				{
 					Type:           FLOAT,
 					Outputs:        []string{"output1_bobcat@scale", "output1_cheetah@scale", "output1_lion@scale", "output2_bobcat@scale", "output2_cheetah@scale", "output2_lion@scale", "output3_bobcat@scale", "output3_cheetah@scale", "output3_lion@scale"},
 					InternalOutput: "",
@@ -2181,11 +2181,11 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						IsTypeFilter: false,
 					},
 					State: map[string][]Union{
-						"alwaysEvaluate": []Union{Union{tag: BOOL, b: false}},
-						"value":          []Union{Union{tag: FLOAT, f: 0.0}},
+						"alwaysEvaluate": {{tag: BOOL, b: false}},
+						"value":          {{tag: FLOAT, f: 0.0}},
 					},
 				},
-				MetricsObject{
+				{
 					Type:           STRING,
 					Outputs:        []string{"output1", "output2", "output3"},
 					InternalOutput: "",
@@ -2198,11 +2198,11 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						IsTypeFilter: false,
 					},
 					State: map[string][]Union{
-						"alwaysEvaluate": []Union{Union{tag: BOOL, b: true}},
-						"value":          []Union{Union{tag: STRING, s: ""}},
+						"alwaysEvaluate": {{tag: BOOL, b: true}},
+						"value":          {{tag: STRING, s: ""}},
 					},
 				},
-				MetricsObject{
+				{
 					Type:           INT,
 					Outputs:        []string{"enum_output"},
 					InternalOutput: "",
@@ -2215,11 +2215,11 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						IsTypeFilter: false,
 					},
 					State: map[string][]Union{
-						"alwaysEvaluate": []Union{Union{tag: BOOL, b: false}},
-						"value":          []Union{Union{tag: INT, i: 0}},
+						"alwaysEvaluate": {{tag: BOOL, b: false}},
+						"value":          {{tag: INT, i: 0}},
 					},
 				},
-				MetricsObject{
+				{
 					Type:           INT,
 					Outputs:        []string{"bitfield_output"},
 					InternalOutput: "",
@@ -2232,11 +2232,11 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						IsTypeFilter: false,
 					},
 					State: map[string][]Union{
-						"alwaysEvaluate": []Union{Union{tag: BOOL, b: false}},
-						"value":          []Union{Union{tag: INT, i: 0}},
+						"alwaysEvaluate": {{tag: BOOL, b: false}},
+						"value":          {{tag: INT, i: 0}},
 					},
 				},
-				MetricsObject{
+				{
 					Type:           INT,
 					Outputs:        []string{},
 					InternalOutput: "intermediate_input",
@@ -2249,11 +2249,11 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						IsTypeFilter: false,
 					},
 					State: map[string][]Union{
-						"alwaysEvaluate": []Union{Union{tag: BOOL, b: false}},
-						"value":          []Union{Union{tag: INT, i: 0}},
+						"alwaysEvaluate": {{tag: BOOL, b: false}},
+						"value":          {{tag: INT, i: 0}},
 					},
 				},
-				MetricsObject{
+				{
 					Type:           INT,
 					Outputs:        []string{"level2_output"},
 					InternalOutput: "",
@@ -2266,18 +2266,18 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						IsTypeFilter: false,
 					},
 					State: map[string][]Union{
-						"alwaysEvaluate": []Union{Union{tag: BOOL, b: false}},
-						"value":          []Union{Union{tag: INT, i: 0}},
+						"alwaysEvaluate": {{tag: BOOL, b: false}},
+						"value":          {{tag: INT, i: 0}},
 					},
 				},
 			},
 			Echo: []EchoObject{
-				EchoObject{
+				{
 					PublishUri:  "/components/sel_735",
 					PublishRate: 1000,
 					Format:      "naked",
 					Inputs: []EchoInput{
-						EchoInput{
+						{
 							Uri: "/components/feeder",
 							Registers: map[string]string{
 								"f":  "frequency",
@@ -2325,239 +2325,239 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "expression",
 						JType: simdjson.TypeString,
 					},
 				},
 				"metrics expression produces possible result type int but gets cast to float (warning only)",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output1_cheetah",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output1_cheetah"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output1_bobcat",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output1_bobcat"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output1_lion",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output1_lion"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output2_cheetah",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output2_cheetah"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output2_bobcat",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output2_bobcat"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output2_lion",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output2_lion"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output3_cheetah",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output3_cheetah"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output3_bobcat",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output3_bobcat"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output3_lion",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output3_lion"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "pf",
 						JType: simdjson.TypeString,
 					},
 				},
 				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "pf"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "q",
 						JType: simdjson.TypeString,
 					},
 				},
 				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "q"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "v",
 						JType: simdjson.TypeString,
 					},
 				},
 				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "v"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "v1",
 						JType: simdjson.TypeString,
 					},
 				},
 				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "v1"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "v2",
 						JType: simdjson.TypeString,
 					},
@@ -2566,7 +2566,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 3
+	{ // test 3
 		inputFileLoc: "../../test/configs/unmarshal/test3.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta: map[string]interface{}{
@@ -2574,20 +2574,20 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 				"publishRate": int64(2000),
 			},
 			Templates: []Template{
-				Template{
+				{
 					From: int64(1),
 					To:   int64(3),
 					Step: int64(1),
 					Tok:  "##",
 					List: []string{"1", "2", "3"},
 				},
-				Template{
+				{
 					Tok:  "qq",
 					List: []string{"bobcat", "cheetah", "lion"},
 				},
 			},
 			Inputs: map[string]Input{
-				"var_name3": Input{
+				"var_name3": {
 					Name:          "var_name3",
 					Uri:           "/components/feeder_52m1/v1",
 					Type:          "int",
@@ -2602,546 +2602,546 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "var_name1",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'uri' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "var_name2",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'type' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "var_name3",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"duplicate input variable 'var_name3'; only considering first occurence",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "filters",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "all_vars_enabled",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"unhandled filter expression; discarding filter",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output##_qq",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'uri' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "output1_bobcat@scale"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "output1_cheetah@scale"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "output1_lion@scale"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "output2_bobcat@scale"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "output2_cheetah@scale"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "output2_lion@scale"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "output3_bobcat@scale"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "output3_cheetah@scale"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "output3_lion@scale"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 1,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "output1"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 1,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "output2"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 1,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "output3"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 1,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 2,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "enum_output"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 2,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 3,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "bitfield_output"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 3,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 4,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "internal_output",
 						JType: simdjson.TypeString,
 					},
 				},
 				fmt.Sprintf("internal_output variable '%s' does not have a corresponding input config", "intermediate_input"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 4,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 5,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				fmt.Sprintf("output variable '%s' does not have a corresponding output config", "level2_output"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 5,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'uri' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'publishRate' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "pf",
 						JType: simdjson.TypeString,
 					},
 				},
 				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "pf"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "q",
 						JType: simdjson.TypeString,
 					},
 				},
 				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "q"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "v",
 						JType: simdjson.TypeString,
 					},
 				},
 				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "v"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "v1",
 						JType: simdjson.TypeString,
 					},
 				},
 				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "v1"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "v2",
 						JType: simdjson.TypeString,
 					},
@@ -3150,7 +3150,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 4
+	{ // test 4
 		inputFileLoc: "../../test/configs/unmarshal/test4.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta: map[string]interface{}{
@@ -3158,35 +3158,35 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 				"publishRate": int64(2000),
 			},
 			Templates: []Template{
-				Template{
+				{
 					Tok:  "##",
 					List: []string{"1", "2", "3"},
 				},
-				Template{
+				{
 					Tok:  "qq",
 					List: []string{"map[string:value]", "cheetah", "lion"},
 				},
-				Template{
+				{
 					Tok:  "qq",
 					List: []string{},
 				},
-				Template{
+				{
 					Tok:  "qqq",
 					List: []string{"bobcat", "cheetah", "lion"},
 				},
-				Template{
+				{
 					Tok:  "pp",
 					List: []string{"0", "1", "2", "3"},
 				},
-				Template{
+				{
 					Tok:  "!!",
 					List: []string{"0", "1", "2", "3"},
 				},
-				Template{
+				{
 					Tok:  "cc",
 					List: []string{"0", "1", "2", "3"},
 				},
-				Template{
+				{
 					Tok:  "$!",
 					List: []string{"0", "1", "2", "3"},
 				},
@@ -3198,431 +3198,431 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"could not identify template type; need either from/to pair or list",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 1,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'to' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 2,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'token' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 3,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "from",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"unable to convert type \\\" to int",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 4,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "to",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"unable to convert type \\\" to int",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 5,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "step",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"unable to convert type \\\" to int",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 6,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "token",
 						JType: simdjson.TypeString,
 					},
 				},
 				"expected value to be string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 7,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'from' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 8,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'to' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 9,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'token' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 10,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "from",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"unable to convert type \\\" to int",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 11,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "to",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"unable to convert type \\\" to int",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 12,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "step",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"unable to convert type \\\" to int",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 13,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "token",
 						JType: simdjson.TypeString,
 					},
 				},
 				"expected value to be string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 15,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "list",
 						JType: simdjson.TypeArray,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 16,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "list",
 						JType: simdjson.TypeArray,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 16,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "token",
 						JType: simdjson.TypeString,
 					},
 				},
 				"template 1 contains template 16's token in its entirety; note that neither template may behave as desired",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 17,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "token",
 						JType: simdjson.TypeString,
 					},
 				},
 				"expected value to be string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 18,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "token",
 						JType: simdjson.TypeString,
 					},
 				},
 				"template tokens cannot be empty strings",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 19,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "token",
 						JType: simdjson.TypeString,
 					},
 				},
 				"template tokens cannot contain '@' symbol; symbol is reserved for attributes",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 20,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "token",
 						JType: simdjson.TypeString,
 					},
 				},
 				"template 20 contains template 1's token in its entirety; note that neither template may behave as desired",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 20,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "token",
 						JType: simdjson.TypeString,
 					},
 				},
 				"template 20 contains template 2's token in its entirety; note that neither template may behave as desired",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 21,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "type",
 						JType: simdjson.TypeString,
 					},
 				},
 				"unexpected template type something invalid: need \\\"sequential\\\" or \\\"list\\\"",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 22,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "type",
 						JType: simdjson.TypeString,
 					},
 				},
 				"cannot convert type array to string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 23,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "step",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"cannot have template step of 0; defaulting to a step of 1",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 25,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "step",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"cannot have template step of 0; defaulting to a step of 1",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 26,
 						JType: simdjson.TypeObject,
 					},
@@ -3631,7 +3631,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 5
+	{ // test 5
 		inputFileLoc: "../../test/configs/unmarshal/test5.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta:    map[string]interface{}{},
@@ -3642,9 +3642,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
@@ -3653,7 +3653,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 6
+	{ // test 6
 		inputFileLoc: "../../test/configs/unmarshal/test6.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta:    map[string]interface{}{},
@@ -3664,13 +3664,13 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "templates",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
@@ -3679,12 +3679,12 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 7
+	{ // test 7
 		inputFileLoc: "../../test/configs/unmarshal/test7.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta: map[string]interface{}{},
 			Inputs: map[string]Input{
-				"var_name5": Input{
+				"var_name5": {
 					Name:          "var_name5",
 					Uri:           "/components/bms_74b/id",
 					Type:          "string",
@@ -3692,7 +3692,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Attributes:    []string{},
 					AttributesMap: map[string]string{},
 				},
-				"var_name6": Input{
+				"var_name6": {
 					Name:          "var_name6",
 					Uri:           "",
 					Internal:      true,
@@ -3701,7 +3701,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Attributes:    []string{"enabled", "scale"},
 					AttributesMap: map[string]string{"enabled": "var_name6@enabled", "scale": "var_name6@scale"},
 				},
-				"var_name10": Input{
+				"var_name10": {
 					Name:          "var_name10",
 					Uri:           "/components/bms_74b/id",
 					Type:          "uint",
@@ -3716,157 +3716,157 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "var_name1",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "uri",
 						JType: simdjson.TypeString,
 					},
 				},
 				"expected value to be string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "var_name2",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "type",
 						JType: simdjson.TypeString,
 					},
 				},
 				"expected value to be string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "var_name3",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "type",
 						JType: simdjson.TypeString,
 					},
 				},
 				"invalid data type banana specified for input; must be string, bool, float, int, or uint",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "var_name5",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "attributes",
 						JType: simdjson.TypeArray,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "var_name6",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "internal",
 						JType: simdjson.TypeBool,
 					},
 				},
 				"key 'internal' is specified as true but 'uri' field contains a uri; defaulting to internally calculated value",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "var_name7",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "uri",
 						JType: simdjson.TypeString,
 					},
 				},
 				"type \\\"[\\\" found before object was found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "var_name8",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "internal",
 						JType: simdjson.TypeBool,
 					},
 				},
 				"expected value to be bool, but \\\"",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "var_name9",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "internal",
 						JType: simdjson.TypeBool,
 					},
 				},
 				"key 'internal' is specified as false but 'uri' field is empty; need one or the other",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "var_name10",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "attributes",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeString,
 					},
@@ -3875,7 +3875,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 8
+	{ // test 8
 		inputFileLoc: "../../test/configs/unmarshal/test8.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta:    map[string]interface{}{},
@@ -3886,9 +3886,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
@@ -3897,7 +3897,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 9
+	{ // test 9
 		inputFileLoc: "../../test/configs/unmarshal/test9.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta:    map[string]interface{}{},
@@ -3908,9 +3908,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "filters",
 						JType: simdjson.TypeObject,
 					},
@@ -3919,7 +3919,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 10
+	{ // test 10
 		inputFileLoc: "../../test/configs/unmarshal/test10.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta:    map[string]interface{}{},
@@ -3930,9 +3930,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "filters",
 						JType: simdjson.TypeObject,
 					},
@@ -3941,7 +3941,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 11
+	{ // test 11
 		inputFileLoc: "../../test/configs/unmarshal/test11.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta:    map[string]interface{}{},
@@ -3952,713 +3952,713 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output1",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "uri",
 						JType: simdjson.TypeString,
 					},
 				},
 				"expected value to be string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output2",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output3",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeString,
 					},
 				},
 				"expected value to be string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output4",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "flags",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeString,
 					},
 				},
 				"invalid output flag 'banana'",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output5",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "publishRate",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"unable to convert type \\\" to int",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output6",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "attributes",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output7",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "name",
 						JType: simdjson.TypeString,
 					},
 				},
 				"expected value to be string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output8",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"found 'enum' field, but no matching output flag",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output9",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"found 'enum' flag, but no matching 'enum' field",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output10",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "enum",
 						JType: simdjson.TypeArray,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output11",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"found 'bitfield' flag, but no matching 'bitfield' field",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output12",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"found 'bitfield' field, but no matching output flag",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output13",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "bitfield",
 						JType: simdjson.TypeArray,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output14",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "publishRate",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"publish rate must be greater than 0; defaulting to global publish rate",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output14",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"duplicate output variable 'output14'; only considering first occurence",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output15",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "enum",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "value",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"path not found; using default index of 0",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output15",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "enum",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "string",
 						JType: simdjson.TypeString,
 					},
 				},
 				"path not found; using default string of \\\"Unknown\\\"",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output15",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "enum",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 1,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "string",
 						JType: simdjson.TypeString,
 					},
 				},
 				"cannot convert type array to string; using default index of 1 and string of \\\"Unknown\\\"",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output15",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "enum",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 2,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "value",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"unable to convert type \\\" to int; using default index of 2",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output15",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "enum",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 2,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "string",
 						JType: simdjson.TypeString,
 					},
 				},
 				"cannot convert type array to string; using default string of \\\"Unknown\\\"",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output16",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "bitfield",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "value",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"path not found; using default index of 0",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output16",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "bitfield",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "string",
 						JType: simdjson.TypeString,
 					},
 				},
 				"path not found; using default string of \\\"Unknown\\\"",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output16",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "bitfield",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 1,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "string",
 						JType: simdjson.TypeString,
 					},
 				},
 				"cannot convert type array to string; using default index of 1 and string of \\\"Unknown\\\"",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output16",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "bitfield",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 2,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "value",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"unable to convert type \\\" to int; using default index of 2",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output16",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "bitfield",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 2,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "string",
 						JType: simdjson.TypeString,
 					},
 				},
 				"cannot convert type array to string; using default string of \\\"Unknown\\\"",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output16",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "bitfield",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 3,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "value",
 						JType: simdjson.TypeInt,
 					},
 				},
 				"cannot skip values for bitfields; using default index of 3",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output2",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output2"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output3",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output3"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output4",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output4"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output5",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output5"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output6",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output6"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output7",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output7"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output8",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output8"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output9",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output9"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output10",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output10"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output11",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output11"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output12",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output12"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output13",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output13"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output14",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output14"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output15",
 						JType: simdjson.TypeObject,
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output15"),
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "output16",
 						JType: simdjson.TypeObject,
 					},
@@ -4667,11 +4667,11 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 12
+	{ // test 12
 		inputFileLoc: "../../test/configs/unmarshal/test12.json",
 		expectedMetricsConfig: MetricsFile{
 			Inputs: map[string]Input{
-				"v1": Input{
+				"v1": {
 					Name:          "v1",
 					Uri:           "/components/feeder_52m1/v1",
 					Type:          "float",
@@ -4683,7 +4683,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{},
 			Metrics: []MetricsObject{
-				MetricsObject{
+				{
 					InternalOutput: "v1",
 					Expression:     "5",
 					ParsedExpression: Expression{
@@ -4691,295 +4691,295 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						ResultType: INT,
 					},
 					State: map[string][]Union{
-						"alwaysEvaluate": []Union{Union{tag: BOOL, b: false}},
-						"value":          []Union{Union{tag: INT, i: 0}},
+						"alwaysEvaluate": {{tag: BOOL, b: false}},
+						"value":          {{tag: INT, i: 0}},
 					},
 				},
 			},
 			Echo: []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				"output variable '5' does not have a corresponding output config",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 1,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "expression",
 						JType: simdjson.TypeString,
 					},
 				},
 				"cannot find variable banana in inputs or filters; excluding this metric from calculations",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 2,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "internal_output",
 						JType: simdjson.TypeString,
 					},
 				},
 				"internal_output variable '5' does not have a corresponding input config",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 2,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 3,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "expression",
 						JType: simdjson.TypeString,
 					},
 				},
 				"expected value to be string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 3,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "internal_output",
 						JType: simdjson.TypeString,
 					},
 				},
 				"internal_output variable 'v1_times_5' does not have a corresponding input config",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 3,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 4,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'type' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 5,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'outputs' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 5,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 6,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 1,
 						JType: simdjson.TypeString,
 					},
 				},
 				"expected value to be string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 6,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "expression",
 						JType: simdjson.TypeString,
 					},
 				},
 				"cannot find variable banana in inputs or filters; excluding this metric from calculations",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 7,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "internal_output",
 						JType: simdjson.TypeString,
 					},
 				},
 				"cannot convert type array to string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 7,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 8,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'expression' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 9,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "internal_output",
 						JType: simdjson.TypeString,
 					},
 				},
 				"cannot map internal_output variable to attribute",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 9,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "v1_times_5",
 						JType: simdjson.TypeObject,
 					},
@@ -4988,7 +4988,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 13
+	{ // test 13
 		inputFileLoc: "../../test/configs/unmarshal/test13.json",
 		expectedMetricsConfig: MetricsFile{
 			Inputs:  map[string]Input{},
@@ -4998,9 +4998,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
@@ -5009,7 +5009,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 14
+	{ // test 14
 		inputFileLoc: "../../test/configs/unmarshal/test14.json",
 		expectedMetricsConfig: MetricsFile{
 			Inputs:  map[string]Input{},
@@ -5019,13 +5019,13 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
@@ -5034,7 +5034,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 15
+	{ // test 15
 		inputFileLoc: "../../test/configs/unmarshal/test15.json",
 		expectedMetricsConfig: MetricsFile{
 			Inputs:  map[string]Input{},
@@ -5042,70 +5042,70 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Outputs: map[string]Output{},
 			Metrics: []MetricsObject{},
 			Echo: []EchoObject{
-				EchoObject{
+				{
 					PublishUri:  "/components/sel_735",
 					PublishRate: 2000,
 					Inputs:      []EchoInput{},
 					Echo:        map[string]interface{}{},
 				},
-				EchoObject{
+				{
 					PublishUri:  "/components/sel_735",
 					PublishRate: 2000,
 					Inputs:      []EchoInput{},
 					Echo:        map[string]interface{}{},
 				},
-				EchoObject{
+				{
 					PublishUri:  "/components/sel_735",
 					PublishRate: 2000,
 					Inputs:      []EchoInput{},
 					Echo:        map[string]interface{}{},
 				},
-				EchoObject{
+				{
 					PublishUri:  "/components/sel_735",
 					PublishRate: 2000,
 					Inputs:      []EchoInput{},
 					Echo:        map[string]interface{}{},
 				},
-				EchoObject{
+				{
 					PublishUri:  "/components/sel_735",
 					PublishRate: 2000,
 					Inputs:      []EchoInput{},
 					Echo:        map[string]interface{}{},
 				},
-				EchoObject{
+				{
 					PublishUri:  "/components/sel_735",
 					PublishRate: 2000,
 					Inputs: []EchoInput{
-						EchoInput{
+						{
 							Uri:       "/components/feeder",
 							Registers: map[string]string{},
 						},
 					},
 					Echo: map[string]interface{}{},
 				},
-				EchoObject{
+				{
 					PublishUri:  "/components/sel_735",
 					PublishRate: 2000,
 					Inputs: []EchoInput{
-						EchoInput{
+						{
 							Uri:       "/components/feeder",
 							Registers: map[string]string{},
 						},
 					},
 					Echo: map[string]interface{}{},
 				},
-				EchoObject{
+				{
 					PublishUri:  "/components/sel_735",
 					PublishRate: 2000,
 					Inputs: []EchoInput{
-						EchoInput{
+						{
 							Uri:       "/components/feeder",
 							Registers: map[string]string{},
 						},
 					},
 					Echo: map[string]interface{}{},
 				},
-				EchoObject{
+				{
 					PublishUri:  "/components/sel_735",
 					PublishRate: 2000,
 					Inputs:      []EchoInput{},
@@ -5114,282 +5114,282 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'uri' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'publishRate' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 1,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'publishRate' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 2,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "uri",
 						JType: simdjson.TypeString,
 					},
 				},
 				"cannot convert type object to string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 2,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'publishRate' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 3,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeArray,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 4,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "uri",
 						JType: simdjson.TypeString,
 					},
 				},
 				"type \\\"l\\\" found before object was found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 5,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'registers' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 6,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'uri' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 7,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "registers",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"could not convert registers to map[string]interface{}",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 8,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "registers",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"could not convert registers to map[string]string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 9,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "registers",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "f",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "source",
 						JType: simdjson.TypeString,
 					},
 				},
 				"expected value to be string",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 10,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "registers",
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "f",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"key 'source' not found",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 11,
 						JType: simdjson.TypeObject,
 					},
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeObject,
 					},
@@ -5398,7 +5398,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 16
+	{ // test 16
 		inputFileLoc: "../../test/configs/unmarshal/test16.json",
 		expectedMetricsConfig: MetricsFile{
 			Inputs:  map[string]Input{},
@@ -5408,63 +5408,63 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "meta",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "inputs",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "filters",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "outputs",
 						JType: simdjson.TypeObject,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "metrics",
 						JType: simdjson.TypeArray,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
 				},
 				"next item is not object",
 			},
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
@@ -5473,7 +5473,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			},
 		},
 	},
-	CheckUnmarshalConfig{ // test 17
+	{ // test 17
 		inputFileLoc: "../../test/configs/unmarshal/test17.json",
 		expectedMetricsConfig: MetricsFile{
 			Inputs:  map[string]Input{},
@@ -5483,13 +5483,13 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 			Echo:    []EchoObject{},
 		},
 		expectedErrors: []ErrorLocation{
-			ErrorLocation{
+			{
 				[]JsonAccessor{
-					JsonAccessor{
+					{
 						Key:   "echo",
 						JType: simdjson.TypeArray,
 					},
-					JsonAccessor{
+					{
 						Index: 0,
 						JType: simdjson.TypeObject,
 					},
@@ -5588,7 +5588,7 @@ func TestGetPubTickers(t *testing.T) {
 			"publishRate": int64(2000),
 		},
 		Templates: []Template{
-			Template{
+			{
 				Type: "sequential",
 				From: int64(1),
 				To:   int64(3),
@@ -5596,14 +5596,14 @@ func TestGetPubTickers(t *testing.T) {
 				Tok:  "##",
 				List: []string{"1", "2", "3"},
 			},
-			Template{
+			{
 				Type: "list",
 				Tok:  "qq",
 				List: []string{"bobcat", "cheetah", "lion"},
 			},
 		},
 		Inputs: map[string]Input{
-			"var_name1": Input{
+			"var_name1": {
 				Name:          "var_name1",
 				Uri:           "/components/bms_74b/vnom",
 				Type:          "float",
@@ -5611,7 +5611,7 @@ func TestGetPubTickers(t *testing.T) {
 				Attributes:    []string{},
 				AttributesMap: map[string]string{},
 			},
-			"var_name2": Input{
+			"var_name2": {
 				Name:          "var_name2",
 				Uri:           "/components/feeder_52m1/v1",
 				Type:          "float",
@@ -5619,7 +5619,7 @@ func TestGetPubTickers(t *testing.T) {
 				Attributes:    []string{},
 				AttributesMap: map[string]string{},
 			},
-			"var_name3": Input{
+			"var_name3": {
 				Name:          "var_name3",
 				Uri:           "/components/feeder_52m1/id",
 				Type:          "string",
@@ -5627,7 +5627,7 @@ func TestGetPubTickers(t *testing.T) {
 				Attributes:    []string{},
 				AttributesMap: map[string]string{},
 			},
-			"var_name4": Input{
+			"var_name4": {
 				Name:          "var_name4",
 				Uri:           "/components/feeder_52u1/pmax",
 				Type:          "bool",
@@ -5635,7 +5635,7 @@ func TestGetPubTickers(t *testing.T) {
 				Attributes:    []string{},
 				AttributesMap: map[string]string{},
 			},
-			"var_name5": Input{
+			"var_name5": {
 				Name:          "var_name5",
 				Uri:           "/components/bms_74b/id",
 				Type:          "string",
@@ -5643,7 +5643,7 @@ func TestGetPubTickers(t *testing.T) {
 				Attributes:    []string{"enabled", "scale"},
 				AttributesMap: map[string]string{"enabled": "var_name5@enabled", "scale": "var_name5@scale"},
 			},
-			"intermediate_input": Input{
+			"intermediate_input": {
 				Name:          "intermediate_input",
 				Internal:      true,
 				Uri:           "",
@@ -5658,7 +5658,7 @@ func TestGetPubTickers(t *testing.T) {
 			"all_float_vars":   "regex(var_name*) | type(float)",
 		},
 		Outputs: map[string]Output{
-			"output1_bobcat": Output{
+			"output1_bobcat": {
 				Uri:         "/some/output1",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -5672,7 +5672,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output1_cheetah": Output{
+			"output1_cheetah": {
 				Uri:         "/some/output1",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -5686,7 +5686,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output1_lion": Output{
+			"output1_lion": {
 				Uri:         "/some/output1",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -5700,7 +5700,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output2_bobcat": Output{
+			"output2_bobcat": {
 				Uri:         "/some/output2",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -5714,7 +5714,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output2_cheetah": Output{
+			"output2_cheetah": {
 				Uri:         "/some/output2",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -5728,7 +5728,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output2_lion": Output{
+			"output2_lion": {
 				Uri:         "/some/output2",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -5742,7 +5742,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output3_bobcat": Output{
+			"output3_bobcat": {
 				Uri:         "/some/output3",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -5756,7 +5756,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output3_cheetah": Output{
+			"output3_cheetah": {
 				Uri:         "/some/output3",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -5770,7 +5770,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output3_lion": Output{
+			"output3_lion": {
 				Uri:         "/some/output3",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -5784,7 +5784,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output1": Output{
+			"output1": {
 				Name:          "timestamp",
 				Uri:           "/some/output1",
 				Flags:         []string{"group2"},
@@ -5794,7 +5794,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: STRING, s: ""},
 			},
-			"output2": Output{
+			"output2": {
 				Name:          "timestamp",
 				Uri:           "/some/output2",
 				Flags:         []string{"group2"},
@@ -5804,7 +5804,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: STRING, s: ""},
 			},
-			"output3": Output{
+			"output3": {
 				Name:          "timestamp",
 				Uri:           "/some/output3",
 				Flags:         []string{"group2"},
@@ -5814,7 +5814,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: STRING, s: ""},
 			},
-			"level2_output": Output{
+			"level2_output": {
 				Uri:           "/some/level2",
 				PublishRate:   600,
 				Flags:         []string{"lonely"},
@@ -5824,30 +5824,30 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: INT, i: 0},
 			},
-			"enum_output": Output{
+			"enum_output": {
 				Name:          "status",
 				Uri:           "/some/status/output",
 				Flags:         []string{"enum"},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
 				Enum: []EnumObject{
-					EnumObject{
+					{
 						Value:  0,
 						String: "Power up",
 					},
-					EnumObject{
+					{
 						Value:  1,
 						String: "Initialization",
 					},
-					EnumObject{
+					{
 						Value:  10,
 						String: "Off",
 					},
-					EnumObject{
+					{
 						Value:  11,
 						String: "Precharge",
 					},
-					EnumObject{
+					{
 						Value:  20,
 						String: "some other value",
 					},
@@ -5855,33 +5855,33 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield: []EnumObject{},
 				Value:    Union{tag: INT, i: 0},
 			},
-			"bitfield_output": Output{
+			"bitfield_output": {
 				Name:          "status2",
 				Uri:           "/some/status/output",
 				Flags:         []string{"bitfield"},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
 				Enum:          []EnumObject{},
-				Bitfield: []EnumObject{EnumObject{
+				Bitfield: []EnumObject{{
 					Value:  0,
 					String: "Power up",
 				},
-					EnumObject{
+					{
 						Value:  1,
 						String: "Initialization",
 					},
-					EnumObject{
+					{
 						Value:  2,
 						String: "Off",
 					},
-					EnumObject{
+					{
 						Value:  3,
 						String: "Precharge",
 					},
 				},
 				Value: Union{tag: INT, i: 0},
 			},
-			"output1_cheetah@scale": Output{
+			"output1_cheetah@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -5889,7 +5889,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output1_bobcat@scale": Output{
+			"output1_bobcat@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -5897,7 +5897,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output1_lion@scale": Output{
+			"output1_lion@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -5905,7 +5905,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output2_cheetah@scale": Output{
+			"output2_cheetah@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -5913,7 +5913,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output2_bobcat@scale": Output{
+			"output2_bobcat@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -5921,7 +5921,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output2_lion@scale": Output{
+			"output2_lion@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -5929,7 +5929,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output3_cheetah@scale": Output{
+			"output3_cheetah@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -5937,7 +5937,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output3_bobcat@scale": Output{
+			"output3_bobcat@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -5945,7 +5945,7 @@ func TestGetPubTickers(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output3_lion@scale": Output{
+			"output3_lion@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -5955,7 +5955,7 @@ func TestGetPubTickers(t *testing.T) {
 			},
 		},
 		Metrics: []MetricsObject{
-			MetricsObject{
+			{
 				Type:           FLOAT,
 				Outputs:        []string{"output1_bobcat@scale", "output1_cheetah@scale", "output1_lion@scale", "output2_bobcat@scale", "output2_cheetah@scale", "output2_lion@scale", "output3_bobcat@scale", "output3_cheetah@scale", "output3_lion@scale"},
 				InternalOutput: "",
@@ -5968,11 +5968,11 @@ func TestGetPubTickers(t *testing.T) {
 					IsTypeFilter: false,
 				},
 				State: map[string][]Union{
-					"alwaysEvaluate": []Union{Union{tag: BOOL, b: false}},
-					"value":          []Union{Union{tag: FLOAT, f: 0.0}},
+					"alwaysEvaluate": {{tag: BOOL, b: false}},
+					"value":          {{tag: FLOAT, f: 0.0}},
 				},
 			},
-			MetricsObject{
+			{
 				Type:           STRING,
 				Outputs:        []string{"output1", "output2", "output3"},
 				InternalOutput: "",
@@ -5985,11 +5985,11 @@ func TestGetPubTickers(t *testing.T) {
 					IsTypeFilter: false,
 				},
 				State: map[string][]Union{
-					"alwaysEvaluate": []Union{Union{tag: BOOL, b: true}},
-					"value":          []Union{Union{tag: STRING, s: ""}},
+					"alwaysEvaluate": {{tag: BOOL, b: true}},
+					"value":          {{tag: STRING, s: ""}},
 				},
 			},
-			MetricsObject{
+			{
 				Type:           INT,
 				Outputs:        []string{"enum_output"},
 				InternalOutput: "",
@@ -6002,11 +6002,11 @@ func TestGetPubTickers(t *testing.T) {
 					IsTypeFilter: false,
 				},
 				State: map[string][]Union{
-					"alwaysEvaluate": []Union{Union{tag: BOOL, b: false}},
-					"value":          []Union{Union{tag: INT, i: 0}},
+					"alwaysEvaluate": {{tag: BOOL, b: false}},
+					"value":          {{tag: INT, i: 0}},
 				},
 			},
-			MetricsObject{
+			{
 				Type:           INT,
 				Outputs:        []string{"bitfield_output"},
 				InternalOutput: "",
@@ -6019,11 +6019,11 @@ func TestGetPubTickers(t *testing.T) {
 					IsTypeFilter: false,
 				},
 				State: map[string][]Union{
-					"alwaysEvaluate": []Union{Union{tag: BOOL, b: false}},
-					"value":          []Union{Union{tag: INT, i: 0}},
+					"alwaysEvaluate": {{tag: BOOL, b: false}},
+					"value":          {{tag: INT, i: 0}},
 				},
 			},
-			MetricsObject{
+			{
 				Type:           INT,
 				Outputs:        []string{},
 				InternalOutput: "intermediate_input",
@@ -6036,11 +6036,11 @@ func TestGetPubTickers(t *testing.T) {
 					IsTypeFilter: false,
 				},
 				State: map[string][]Union{
-					"alwaysEvaluate": []Union{Union{tag: BOOL, b: false}},
-					"value":          []Union{Union{tag: INT, i: 0}},
+					"alwaysEvaluate": {{tag: BOOL, b: false}},
+					"value":          {{tag: INT, i: 0}},
 				},
 			},
-			MetricsObject{
+			{
 				Type:           INT,
 				Outputs:        []string{"level2_output"},
 				InternalOutput: "",
@@ -6053,18 +6053,18 @@ func TestGetPubTickers(t *testing.T) {
 					IsTypeFilter: false,
 				},
 				State: map[string][]Union{
-					"alwaysEvaluate": []Union{Union{tag: BOOL, b: false}},
-					"value":          []Union{Union{tag: INT, i: 0}},
+					"alwaysEvaluate": {{tag: BOOL, b: false}},
+					"value":          {{tag: INT, i: 0}},
 				},
 			},
 		},
 		Echo: []EchoObject{
-			EchoObject{
+			{
 				PublishUri:  "/components/sel_735",
 				PublishRate: 1000,
 				Format:      "naked",
 				Inputs: []EchoInput{
-					EchoInput{
+					{
 						Uri: "/components/feeder",
 						Registers: map[string]string{
 							"f":  "frequency",
@@ -6211,7 +6211,7 @@ func TestGetPubTickers(t *testing.T) {
 func TestGetSubscribeUris(t *testing.T) {
 	MetricsConfig = MetricsFile{
 		Inputs: map[string]Input{
-			"var_name1": Input{
+			"var_name1": {
 				Name:          "var_name1",
 				Uri:           "/components/bms_74b/vnom",
 				Type:          "float",
@@ -6219,7 +6219,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Attributes:    []string{},
 				AttributesMap: map[string]string{},
 			},
-			"var_name1_copy": Input{
+			"var_name1_copy": {
 				Name:          "var_name1",
 				Uri:           "/components/bms_74b/vnom",
 				Type:          "float",
@@ -6227,7 +6227,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Attributes:    []string{},
 				AttributesMap: map[string]string{},
 			},
-			"var_name2": Input{
+			"var_name2": {
 				Name:          "var_name2",
 				Uri:           "/components/feeder_52m1/v1",
 				Type:          "float",
@@ -6235,7 +6235,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Attributes:    []string{},
 				AttributesMap: map[string]string{},
 			},
-			"var_name3": Input{
+			"var_name3": {
 				Name:          "var_name3",
 				Uri:           "/components/feeder_52m1/id",
 				Type:          "string",
@@ -6243,7 +6243,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Attributes:    []string{},
 				AttributesMap: map[string]string{},
 			},
-			"var_name4": Input{
+			"var_name4": {
 				Name:          "var_name4",
 				Uri:           "/components/feeder_52u1/pmax",
 				Type:          "bool",
@@ -6251,7 +6251,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Attributes:    []string{},
 				AttributesMap: map[string]string{},
 			},
-			"var_name5": Input{
+			"var_name5": {
 				Name:          "var_name5",
 				Uri:           "/components/bms_74b/id",
 				Type:          "string",
@@ -6259,7 +6259,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Attributes:    []string{"enabled", "scale"},
 				AttributesMap: map[string]string{"enabled": "var_name5@enabled", "scale": "var_name5@scale"},
 			},
-			"intermediate_input": Input{
+			"intermediate_input": {
 				Name:          "intermediate_input",
 				Internal:      true,
 				Uri:           "",
@@ -6274,7 +6274,7 @@ func TestGetSubscribeUris(t *testing.T) {
 			"all_float_vars":   "regex(var_name*) | type(float)",
 		},
 		Outputs: map[string]Output{
-			"output1_bobcat": Output{
+			"output1_bobcat": {
 				Uri:         "/some/output1",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -6286,7 +6286,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output1_cheetah": Output{
+			"output1_cheetah": {
 				Uri:         "/some/output1",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -6298,7 +6298,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output1_lion": Output{
+			"output1_lion": {
 				Uri:         "/some/output1",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -6310,7 +6310,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output2_bobcat": Output{
+			"output2_bobcat": {
 				Uri:         "/some/output2",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -6322,7 +6322,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output2_cheetah": Output{
+			"output2_cheetah": {
 				Uri:         "/some/output2",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -6334,7 +6334,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output2_lion": Output{
+			"output2_lion": {
 				Uri:         "/some/output2",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -6346,7 +6346,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output3_bobcat": Output{
+			"output3_bobcat": {
 				Uri:         "/some/output3",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -6358,7 +6358,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output3_cheetah": Output{
+			"output3_cheetah": {
 				Uri:         "/some/output3",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -6370,7 +6370,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output3_lion": Output{
+			"output3_lion": {
 				Uri:         "/some/output3",
 				Flags:       []string{"clothed", "group1", "clothed"},
 				PublishRate: 1000,
@@ -6382,7 +6382,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{},
 			},
-			"output1": Output{
+			"output1": {
 				Name:          "timestamp",
 				Uri:           "/some/output1",
 				Flags:         []string{"group2"},
@@ -6392,7 +6392,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: STRING, s: ""},
 			},
-			"output2": Output{
+			"output2": {
 				Name:          "timestamp",
 				Uri:           "/some/output2",
 				Flags:         []string{"group2"},
@@ -6402,7 +6402,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: STRING, s: ""},
 			},
-			"output3": Output{
+			"output3": {
 				Name:          "timestamp",
 				Uri:           "/some/output3",
 				Flags:         []string{"group2"},
@@ -6412,7 +6412,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: STRING, s: ""},
 			},
-			"level2_output": Output{
+			"level2_output": {
 				Uri:           "/some/level2",
 				PublishRate:   600,
 				Flags:         []string{"lonely"},
@@ -6422,30 +6422,30 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: INT, i: 0},
 			},
-			"enum_output": Output{
+			"enum_output": {
 				Name:          "status",
 				Uri:           "/some/status/output",
 				Flags:         []string{"enum"},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
 				Enum: []EnumObject{
-					EnumObject{
+					{
 						Value:  0,
 						String: "Power up",
 					},
-					EnumObject{
+					{
 						Value:  1,
 						String: "Initialization",
 					},
-					EnumObject{
+					{
 						Value:  10,
 						String: "Off",
 					},
-					EnumObject{
+					{
 						Value:  11,
 						String: "Precharge",
 					},
-					EnumObject{
+					{
 						Value:  20,
 						String: "some other value",
 					},
@@ -6453,33 +6453,33 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield: []EnumObject{},
 				Value:    Union{tag: INT, i: 0},
 			},
-			"bitfield_output": Output{
+			"bitfield_output": {
 				Name:          "status2",
 				Uri:           "/some/status/output",
 				Flags:         []string{"bitfield"},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
 				Enum:          []EnumObject{},
-				Bitfield: []EnumObject{EnumObject{
+				Bitfield: []EnumObject{{
 					Value:  0,
 					String: "Power up",
 				},
-					EnumObject{
+					{
 						Value:  1,
 						String: "Initialization",
 					},
-					EnumObject{
+					{
 						Value:  2,
 						String: "Off",
 					},
-					EnumObject{
+					{
 						Value:  3,
 						String: "Precharge",
 					},
 				},
 				Value: Union{tag: INT, i: 0},
 			},
-			"output1_cheetah@scale": Output{
+			"output1_cheetah@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -6487,7 +6487,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output1_bobcat@scale": Output{
+			"output1_bobcat@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -6495,7 +6495,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output1_lion@scale": Output{
+			"output1_lion@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -6503,7 +6503,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output2_cheetah@scale": Output{
+			"output2_cheetah@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -6511,7 +6511,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output2_bobcat@scale": Output{
+			"output2_bobcat@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -6519,7 +6519,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output2_lion@scale": Output{
+			"output2_lion@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -6527,7 +6527,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output3_cheetah@scale": Output{
+			"output3_cheetah@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -6535,7 +6535,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output3_bobcat@scale": Output{
+			"output3_bobcat@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -6543,7 +6543,7 @@ func TestGetSubscribeUris(t *testing.T) {
 				Bitfield:      []EnumObject{},
 				Value:         Union{tag: FLOAT, f: 0.0},
 			},
-			"output3_lion@scale": Output{
+			"output3_lion@scale": {
 				Flags:         []string{},
 				Attributes:    map[string]interface{}{},
 				AttributesMap: map[string]string{},
@@ -6554,18 +6554,18 @@ func TestGetSubscribeUris(t *testing.T) {
 		},
 		Metrics: []MetricsObject{},
 		Echo: []EchoObject{
-			EchoObject{
+			{
 				PublishUri:  "/components/sel_735",
 				PublishRate: 1000,
 				Format:      "naked",
 				Inputs: []EchoInput{
-					EchoInput{
+					{
 						Uri: "/components/feeder1",
 						Registers: map[string]string{
 							"f1": "frequency1",
 						},
 					},
-					EchoInput{
+					{
 						Uri: "/components/feeder2",
 						Registers: map[string]string{
 							"f2": "frequency2",
@@ -6594,15 +6594,15 @@ func TestGetSubscribeUris(t *testing.T) {
 		"/components/sel_735",
 	}
 	expecteduriToInputNameMap := map[string][]string{
-		"/components/bms_74b/vnom":     []string{"var_name1", "var_name1_copy"},
-		"/components/feeder_52m1/v1":   []string{"var_name2"},
-		"/components/feeder_52m1/id":   []string{"var_name3"},
-		"/components/feeder_52u1/pmax": []string{"var_name4"},
-		"/components/bms_74b/id":       []string{"var_name5"},
+		"/components/bms_74b/vnom":     {"var_name1", "var_name1_copy"},
+		"/components/feeder_52m1/v1":   {"var_name2"},
+		"/components/feeder_52m1/id":   {"var_name3"},
+		"/components/feeder_52u1/pmax": {"var_name4"},
+		"/components/bms_74b/id":       {"var_name5"},
 	}
 	expecteduriToEchoObjectInputMap := map[string]map[int]int{
-		"/components/feeder1": map[int]int{0: 0},
-		"/components/feeder2": map[int]int{0: 1},
+		"/components/feeder1": {0: 0},
+		"/components/feeder2": {0: 1},
 	}
 	expecteduriToOutputNameMap := map[string]string{
 		"/some/output1/output1_cheetah":       "output1_cheetah",
@@ -6627,143 +6627,7 @@ func TestGetSubscribeUris(t *testing.T) {
 		"/some/status/output/bitfield_output": "bitfield_output",
 	}
 	expectedUriElements := map[string]interface{}{
-			"": map[string]interface{}{
-				"components": map[string]interface{}{
-					"bms_74b": map[string]interface{}{
-						"vnom": map[string]interface{}{},
-						"id":   map[string]interface{}{},
-					},
-					"feeder_52m1": map[string]interface{}{
-						"v1": map[string]interface{}{},
-						"id": map[string]interface{}{},
-					},
-					"feeder_52u1": map[string]interface{}{
-						"pmax": map[string]interface{}{},
-					},
-					"feeder1": map[string]interface{}{
-						"frequency1": map[string]interface{}{},
-					},
-					"feeder2": map[string]interface{}{
-						"frequency2": map[string]interface{}{},
-					},
-					"sel_735": map[string]interface{}{
-						"voltage_l3_l1": map[string]interface{}{},
-						"f": map[string]interface{}{},
-						"f1": map[string]interface{}{},
-						"f2": map[string]interface{}{},
-					},
-				},
-				"some": map[string]interface{}{
-					"output1": map[string]interface{}{
-						"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-						"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-						"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
-						"timestamp":       map[string]interface{}{},
-					},
-					"output2": map[string]interface{}{
-						"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-						"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-						"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
-						"timestamp":       map[string]interface{}{},
-					},
-					"output3": map[string]interface{}{
-						"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-						"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-						"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
-						"timestamp":       map[string]interface{}{},
-					},
-					"level2": map[string]interface{}{
-						"level2_output": map[string]interface{}{},
-					},
-					"status": map[string]interface{}{
-						"output": map[string]interface{}{
-							"status":  map[string]interface{}{},
-							"status2": map[string]interface{}{},
-						},
-					},
-				},
-			},
-			"/":map[string]interface{}{
-				"components": map[string]interface{}{
-					"bms_74b": map[string]interface{}{
-						"vnom": map[string]interface{}{},
-						"id":   map[string]interface{}{},
-					},
-					"feeder_52m1": map[string]interface{}{
-						"v1": map[string]interface{}{},
-						"id": map[string]interface{}{},
-					},
-					"feeder_52u1": map[string]interface{}{
-						"pmax": map[string]interface{}{},
-					},
-					"feeder1": map[string]interface{}{
-						"frequency1": map[string]interface{}{},
-					},
-					"feeder2": map[string]interface{}{
-						"frequency2": map[string]interface{}{},
-					},
-					"sel_735": map[string]interface{}{
-						"voltage_l3_l1": map[string]interface{}{},
-						"f": map[string]interface{}{},
-						"f1": map[string]interface{}{},
-						"f2": map[string]interface{}{},
-					},
-				},
-				"some": map[string]interface{}{
-					"output1": map[string]interface{}{
-						"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-						"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-						"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
-						"timestamp":       map[string]interface{}{},
-					},
-					"output2": map[string]interface{}{
-						"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-						"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-						"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
-						"timestamp":       map[string]interface{}{},
-					},
-					"output3": map[string]interface{}{
-						"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-						"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-						"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
-						"timestamp":       map[string]interface{}{},
-					},
-					"level2": map[string]interface{}{
-						"level2_output": map[string]interface{}{},
-					},
-					"status": map[string]interface{}{
-						"output": map[string]interface{}{
-							"status":  map[string]interface{}{},
-							"status2": map[string]interface{}{},
-						},
-					},
-				},
-			},
-			"/components": map[string]interface{}{
-				"bms_74b": map[string]interface{}{
-					"vnom": map[string]interface{}{},
-					"id":   map[string]interface{}{},
-				},
-				"feeder_52m1": map[string]interface{}{
-					"v1": map[string]interface{}{},
-					"id": map[string]interface{}{},
-				},
-				"feeder_52u1": map[string]interface{}{
-					"pmax": map[string]interface{}{},
-				},
-				"feeder1": map[string]interface{}{
-					"frequency1": map[string]interface{}{},
-				},
-				"feeder2": map[string]interface{}{
-					"frequency2": map[string]interface{}{},
-				},
-				"sel_735": map[string]interface{}{
-					"voltage_l3_l1": map[string]interface{}{},
-					"f": map[string]interface{}{},
-						"f1": map[string]interface{}{},
-						"f2": map[string]interface{}{},
-				},
-			},
+		"": map[string]interface{}{
 			"components": map[string]interface{}{
 				"bms_74b": map[string]interface{}{
 					"vnom": map[string]interface{}{},
@@ -6784,101 +6648,28 @@ func TestGetSubscribeUris(t *testing.T) {
 				},
 				"sel_735": map[string]interface{}{
 					"voltage_l3_l1": map[string]interface{}{},
-					"f": map[string]interface{}{},
-						"f1": map[string]interface{}{},
-						"f2": map[string]interface{}{},
-				},
-			},
-			"/components/sel_735": map[string]interface{}{
-				"voltage_l3_l1": map[string]interface{}{},
-				"f": map[string]interface{}{},
-					"f1": map[string]interface{}{},
-					"f2": map[string]interface{}{},
-			},
-			"/components/sel_735/voltage_l3_l1": map[string]interface{}{},
-			"/components/sel_735/f": map[string]interface{}{},
-			"/components/sel_735/f1": map[string]interface{}{},
-			"/components/sel_735/f2": map[string]interface{}{},
-			"/components/bms_74b": map[string]interface{}{
-				"vnom": map[string]interface{}{},
-				"id":   map[string]interface{}{
-					"enabled":map[string]interface{}{},
-					"scale":map[string]interface{}{},
-				},
-			},
-			"/components/feeder_52m1": map[string]interface{}{
-				"v1": map[string]interface{}{},
-				"id": map[string]interface{}{},
-			},
-			"/components/feeder_52m1/v1": map[string]interface{}{},
-			"/components/feeder_52m1/id": map[string]interface{}{},
-			"/components/feeder_52u1": map[string]interface{}{
-				"pmax": map[string]interface{}{},
-			},
-			"/components/feeder_52u1/pmax": map[string]interface{}{},
-			"/components/feeder1": map[string]interface{}{
-				"frequency1": map[string]interface{}{},
-			},
-			"/components/feeder1/frequency1": map[string]interface{}{},
-			"/components/feeder2": map[string]interface{}{
-				"frequency2": map[string]interface{}{},
-			},
-			"/components/feeder2/frequency2": map[string]interface{}{},
-			"/components/bms_74b/vnom": map[string]interface{}{},
-			"/components/bms_74b/id": map[string]interface{}{
-				"enabled":map[string]interface{}{},
-				"scale":map[string]interface{}{},
-			},
-		"/components/bms_74b/id/enabled": map[string]interface{}{},
-		"/components/bms_74b/id@enabled":map[string]interface{}{},
-		"/components/bms_74b/id/scale":map[string]interface{}{},
-		"/components/bms_74b/id@scale":map[string]interface{}{},
-			"/some": map[string]interface{}{
-				"output1": map[string]interface{}{
-					"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-					"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-					"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
-					"timestamp":       map[string]interface{}{},
-				},
-				"output2": map[string]interface{}{
-					"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-					"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-					"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
-					"timestamp":       map[string]interface{}{},
-				},
-				"output3": map[string]interface{}{
-					"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-					"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-					"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
-					"timestamp":       map[string]interface{}{},
-				},
-				"level2": map[string]interface{}{
-					"level2_output": map[string]interface{}{},
-				},
-				"status": map[string]interface{}{
-					"output": map[string]interface{}{
-						"status":  map[string]interface{}{},
-						"status2": map[string]interface{}{},
-					},
+					"f":             map[string]interface{}{},
+					"f1":            map[string]interface{}{},
+					"f2":            map[string]interface{}{},
 				},
 			},
 			"some": map[string]interface{}{
 				"output1": map[string]interface{}{
-					"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-					"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-					"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+					"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+					"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+					"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
 					"timestamp":       map[string]interface{}{},
 				},
 				"output2": map[string]interface{}{
-					"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-					"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-					"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+					"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+					"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+					"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
 					"timestamp":       map[string]interface{}{},
 				},
 				"output3": map[string]interface{}{
-					"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-					"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-					"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
+					"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+					"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+					"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
 					"timestamp":       map[string]interface{}{},
 				},
 				"level2": map[string]interface{}{
@@ -6891,79 +6682,288 @@ func TestGetSubscribeUris(t *testing.T) {
 					},
 				},
 			},
-			"/some/level2":map[string]interface{}{
+		},
+		"/": map[string]interface{}{
+			"components": map[string]interface{}{
+				"bms_74b": map[string]interface{}{
+					"vnom": map[string]interface{}{},
+					"id":   map[string]interface{}{},
+				},
+				"feeder_52m1": map[string]interface{}{
+					"v1": map[string]interface{}{},
+					"id": map[string]interface{}{},
+				},
+				"feeder_52u1": map[string]interface{}{
+					"pmax": map[string]interface{}{},
+				},
+				"feeder1": map[string]interface{}{
+					"frequency1": map[string]interface{}{},
+				},
+				"feeder2": map[string]interface{}{
+					"frequency2": map[string]interface{}{},
+				},
+				"sel_735": map[string]interface{}{
+					"voltage_l3_l1": map[string]interface{}{},
+					"f":             map[string]interface{}{},
+					"f1":            map[string]interface{}{},
+					"f2":            map[string]interface{}{},
+				},
+			},
+			"some": map[string]interface{}{
+				"output1": map[string]interface{}{
+					"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+					"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+					"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
+					"timestamp":       map[string]interface{}{},
+				},
+				"output2": map[string]interface{}{
+					"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+					"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+					"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
+					"timestamp":       map[string]interface{}{},
+				},
+				"output3": map[string]interface{}{
+					"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+					"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+					"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
+					"timestamp":       map[string]interface{}{},
+				},
+				"level2": map[string]interface{}{
+					"level2_output": map[string]interface{}{},
+				},
+				"status": map[string]interface{}{
+					"output": map[string]interface{}{
+						"status":  map[string]interface{}{},
+						"status2": map[string]interface{}{},
+					},
+				},
+			},
+		},
+		"/components": map[string]interface{}{
+			"bms_74b": map[string]interface{}{
+				"vnom": map[string]interface{}{},
+				"id":   map[string]interface{}{},
+			},
+			"feeder_52m1": map[string]interface{}{
+				"v1": map[string]interface{}{},
+				"id": map[string]interface{}{},
+			},
+			"feeder_52u1": map[string]interface{}{
+				"pmax": map[string]interface{}{},
+			},
+			"feeder1": map[string]interface{}{
+				"frequency1": map[string]interface{}{},
+			},
+			"feeder2": map[string]interface{}{
+				"frequency2": map[string]interface{}{},
+			},
+			"sel_735": map[string]interface{}{
+				"voltage_l3_l1": map[string]interface{}{},
+				"f":             map[string]interface{}{},
+				"f1":            map[string]interface{}{},
+				"f2":            map[string]interface{}{},
+			},
+		},
+		"components": map[string]interface{}{
+			"bms_74b": map[string]interface{}{
+				"vnom": map[string]interface{}{},
+				"id":   map[string]interface{}{},
+			},
+			"feeder_52m1": map[string]interface{}{
+				"v1": map[string]interface{}{},
+				"id": map[string]interface{}{},
+			},
+			"feeder_52u1": map[string]interface{}{
+				"pmax": map[string]interface{}{},
+			},
+			"feeder1": map[string]interface{}{
+				"frequency1": map[string]interface{}{},
+			},
+			"feeder2": map[string]interface{}{
+				"frequency2": map[string]interface{}{},
+			},
+			"sel_735": map[string]interface{}{
+				"voltage_l3_l1": map[string]interface{}{},
+				"f":             map[string]interface{}{},
+				"f1":            map[string]interface{}{},
+				"f2":            map[string]interface{}{},
+			},
+		},
+		"/components/sel_735": map[string]interface{}{
+			"voltage_l3_l1": map[string]interface{}{},
+			"f":             map[string]interface{}{},
+			"f1":            map[string]interface{}{},
+			"f2":            map[string]interface{}{},
+		},
+		"/components/sel_735/voltage_l3_l1": map[string]interface{}{},
+		"/components/sel_735/f":             map[string]interface{}{},
+		"/components/sel_735/f1":            map[string]interface{}{},
+		"/components/sel_735/f2":            map[string]interface{}{},
+		"/components/bms_74b": map[string]interface{}{
+			"vnom": map[string]interface{}{},
+			"id": map[string]interface{}{
+				"enabled": map[string]interface{}{},
+				"scale":   map[string]interface{}{},
+			},
+		},
+		"/components/feeder_52m1": map[string]interface{}{
+			"v1": map[string]interface{}{},
+			"id": map[string]interface{}{},
+		},
+		"/components/feeder_52m1/v1": map[string]interface{}{},
+		"/components/feeder_52m1/id": map[string]interface{}{},
+		"/components/feeder_52u1": map[string]interface{}{
+			"pmax": map[string]interface{}{},
+		},
+		"/components/feeder_52u1/pmax": map[string]interface{}{},
+		"/components/feeder1": map[string]interface{}{
+			"frequency1": map[string]interface{}{},
+		},
+		"/components/feeder1/frequency1": map[string]interface{}{},
+		"/components/feeder2": map[string]interface{}{
+			"frequency2": map[string]interface{}{},
+		},
+		"/components/feeder2/frequency2": map[string]interface{}{},
+		"/components/bms_74b/vnom":       map[string]interface{}{},
+		"/components/bms_74b/id": map[string]interface{}{
+			"enabled": map[string]interface{}{},
+			"scale":   map[string]interface{}{},
+		},
+		"/components/bms_74b/id/enabled": map[string]interface{}{},
+		"/components/bms_74b/id@enabled": map[string]interface{}{},
+		"/components/bms_74b/id/scale":   map[string]interface{}{},
+		"/components/bms_74b/id@scale":   map[string]interface{}{},
+		"/some": map[string]interface{}{
+			"output1": map[string]interface{}{
+				"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+				"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+				"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
+				"timestamp":       map[string]interface{}{},
+			},
+			"output2": map[string]interface{}{
+				"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+				"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+				"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
+				"timestamp":       map[string]interface{}{},
+			},
+			"output3": map[string]interface{}{
+				"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+				"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+				"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
+				"timestamp":       map[string]interface{}{},
+			},
+			"level2": map[string]interface{}{
 				"level2_output": map[string]interface{}{},
 			},
-			"/some/level2/level2_output": map[string]interface{}{},
-			"/some/status":map[string]interface{}{
+			"status": map[string]interface{}{
 				"output": map[string]interface{}{
 					"status":  map[string]interface{}{},
 					"status2": map[string]interface{}{},
 				},
 			},
-			"/some/status/output":map[string]interface{}{
+		},
+		"some": map[string]interface{}{
+			"output1": map[string]interface{}{
+				"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+				"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+				"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
+				"timestamp":       map[string]interface{}{},
+			},
+			"output2": map[string]interface{}{
+				"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+				"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+				"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
+				"timestamp":       map[string]interface{}{},
+			},
+			"output3": map[string]interface{}{
+				"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+				"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+				"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
+				"timestamp":       map[string]interface{}{},
+			},
+			"level2": map[string]interface{}{
+				"level2_output": map[string]interface{}{},
+			},
+			"status": map[string]interface{}{
+				"output": map[string]interface{}{
+					"status":  map[string]interface{}{},
+					"status2": map[string]interface{}{},
+				},
+			},
+		},
+		"/some/level2": map[string]interface{}{
+			"level2_output": map[string]interface{}{},
+		},
+		"/some/level2/level2_output": map[string]interface{}{},
+		"/some/status": map[string]interface{}{
+			"output": map[string]interface{}{
 				"status":  map[string]interface{}{},
 				"status2": map[string]interface{}{},
 			},
-			"/some/status/output/status":map[string]interface{}{},
-			"/some/status/output/status2":map[string]interface{}{},
-			"/some/output1": map[string]interface{}{
-				"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-				"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-				"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
-				"timestamp":       map[string]interface{}{},
-			},
-			"/some/output2": map[string]interface{}{
-				"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-				"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-				"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
-				"timestamp":       map[string]interface{}{},
-			},
-			"/some/output3": map[string]interface{}{
-				"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{},},
-				"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{},},
-				"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{},},
-				"timestamp":       map[string]interface{}{},
-			},
-			"/some/output1/output1_cheetah": map[string]interface{}{
-				"scale": map[string]interface{}{},
-			},
-			"/some/output1/output1_bobcat": map[string]interface{}{
-				"scale": map[string]interface{}{},
-			},
-			"/some/output1/output1_lion": map[string]interface{}{
-				"scale": map[string]interface{}{},
-			},	
-			"/some/output1/timestamp": map[string]interface{}{},
-			"/some/output2/output2_cheetah": map[string]interface{}{
-				"scale": map[string]interface{}{},
-			},
-			"/some/output2/output2_bobcat": map[string]interface{}{
-				"scale": map[string]interface{}{},
-			},
-			"/some/output2/output2_lion": map[string]interface{}{
-				"scale": map[string]interface{}{},
-			},	
-			"/some/output2/timestamp": map[string]interface{}{},
-			"/some/output3/output3_cheetah": map[string]interface{}{
-				"scale": map[string]interface{}{},
-			},
-			"/some/output3/output3_bobcat": map[string]interface{}{
-				"scale": map[string]interface{}{},
-			},
-			"/some/output3/output3_lion": map[string]interface{}{
-				"scale": map[string]interface{}{},
-			},	
-			"/some/output3/timestamp": map[string]interface{}{},	
-			"/some/output1/output1_cheetah/scale": map[string]interface{}{},
-			"/some/output1/output1_bobcat/scale": map[string]interface{}{},
-			"/some/output1/output1_lion/scale": map[string]interface{}{},
-			"/some/output2/output2_cheetah/scale": map[string]interface{}{},
-			"/some/output2/output2_bobcat/scale": map[string]interface{}{},
-			"/some/output2/output2_lion/scale": map[string]interface{}{},
-			"/some/output3/output3_cheetah/scale": map[string]interface{}{},
-			"/some/output3/output3_bobcat/scale": map[string]interface{}{},
-			"/some/output3/output3_lion/scale": map[string]interface{}{},
+		},
+		"/some/status/output": map[string]interface{}{
+			"status":  map[string]interface{}{},
+			"status2": map[string]interface{}{},
+		},
+		"/some/status/output/status":  map[string]interface{}{},
+		"/some/status/output/status2": map[string]interface{}{},
+		"/some/output1": map[string]interface{}{
+			"output1_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+			"output1_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+			"output1_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
+			"timestamp":       map[string]interface{}{},
+		},
+		"/some/output2": map[string]interface{}{
+			"output2_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+			"output2_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+			"output2_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
+			"timestamp":       map[string]interface{}{},
+		},
+		"/some/output3": map[string]interface{}{
+			"output3_cheetah": map[string]interface{}{"scale": map[string]interface{}{}},
+			"output3_bobcat":  map[string]interface{}{"scale": map[string]interface{}{}},
+			"output3_lion":    map[string]interface{}{"scale": map[string]interface{}{}},
+			"timestamp":       map[string]interface{}{},
+		},
+		"/some/output1/output1_cheetah": map[string]interface{}{
+			"scale": map[string]interface{}{},
+		},
+		"/some/output1/output1_bobcat": map[string]interface{}{
+			"scale": map[string]interface{}{},
+		},
+		"/some/output1/output1_lion": map[string]interface{}{
+			"scale": map[string]interface{}{},
+		},
+		"/some/output1/timestamp": map[string]interface{}{},
+		"/some/output2/output2_cheetah": map[string]interface{}{
+			"scale": map[string]interface{}{},
+		},
+		"/some/output2/output2_bobcat": map[string]interface{}{
+			"scale": map[string]interface{}{},
+		},
+		"/some/output2/output2_lion": map[string]interface{}{
+			"scale": map[string]interface{}{},
+		},
+		"/some/output2/timestamp": map[string]interface{}{},
+		"/some/output3/output3_cheetah": map[string]interface{}{
+			"scale": map[string]interface{}{},
+		},
+		"/some/output3/output3_bobcat": map[string]interface{}{
+			"scale": map[string]interface{}{},
+		},
+		"/some/output3/output3_lion": map[string]interface{}{
+			"scale": map[string]interface{}{},
+		},
+		"/some/output3/timestamp":             map[string]interface{}{},
+		"/some/output1/output1_cheetah/scale": map[string]interface{}{},
+		"/some/output1/output1_bobcat/scale":  map[string]interface{}{},
+		"/some/output1/output1_lion/scale":    map[string]interface{}{},
+		"/some/output2/output2_cheetah/scale": map[string]interface{}{},
+		"/some/output2/output2_bobcat/scale":  map[string]interface{}{},
+		"/some/output2/output2_lion/scale":    map[string]interface{}{},
+		"/some/output3/output3_cheetah/scale": map[string]interface{}{},
+		"/some/output3/output3_bobcat/scale":  map[string]interface{}{},
+		"/some/output3/output3_lion/scale":    map[string]interface{}{},
 	}
 
 	GetSubscribeUris()
@@ -7058,7 +7058,7 @@ func TestGetSubscribeUris(t *testing.T) {
 	for subUri := range expectedUriElements {
 		if _, ok := UriElements[subUri]; !ok {
 			t.Errorf("Expected subscribe URI [%s] in uriElements but did not get\n", subUri)
-		} 
+		}
 	}
 	for subUri := range UriElements {
 		if _, ok := expectedUriElements[subUri]; !ok {

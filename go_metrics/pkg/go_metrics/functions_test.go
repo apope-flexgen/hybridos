@@ -18,237 +18,237 @@ type TestCase struct {
 }
 
 var AddTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: INT, i: -5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: "hello"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 6.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: "truehello"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 6},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 6},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 6.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: "1hello"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: 6},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 6},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 6.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: "1hello"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 6.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 10.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 10.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 11.6},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: fmt.Sprintf("%f", 5.3) + "hello"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: "hello true"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: STRING, s: "hello 5"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{tag: STRING, s: "hello -5"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: STRING, s: "hello " + fmt.Sprintf("%f", 6.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{tag: STRING, s: "hello world!"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 7},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = true,true,INT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 7},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),UINT(MaxUint64)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: math.MaxUint64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(maxfloat),FLOAT(maxfloat)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: FLOAT, f: math.MaxFloat64}},
+		inputs:          []Union{{tag: FLOAT, f: math.MaxFloat64}, {tag: FLOAT, f: math.MaxFloat64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(-maxfloat),FLOAT(-maxfloat)",
-		inputs:          []Union{Union{tag: FLOAT, f: -math.MaxFloat64}, Union{tag: FLOAT, f: -math.MaxFloat64}},
+		inputs:          []Union{{tag: FLOAT, f: -math.MaxFloat64}, {tag: FLOAT, f: -math.MaxFloat64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -276,195 +276,195 @@ func TestAdd(t *testing.T) {
 }
 
 var SubTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: INT, i: -1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: -4.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: -4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: -4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: -4.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: -4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: -4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: -4.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 4.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: float64(5.3) - float64(uint64(5))},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: float64(5.3) - float64(int64(5))},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: -1.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),UINT(MaxUint64)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: math.MaxUint64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(maxfloat),FLOAT(-maxfloat)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: FLOAT, f: -math.MaxFloat64}},
+		inputs:          []Union{{tag: FLOAT, f: math.MaxFloat64}, {tag: FLOAT, f: -math.MaxFloat64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(-maxfloat),FLOAT(maxfloat)",
-		inputs:          []Union{Union{tag: FLOAT, f: -math.MaxFloat64}, Union{tag: FLOAT, f: math.MaxFloat64}},
+		inputs:          []Union{{tag: FLOAT, f: -math.MaxFloat64}, {tag: FLOAT, f: math.MaxFloat64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -492,201 +492,201 @@ func TestSub(t *testing.T) {
 }
 
 var MultTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: INT, i: -5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: -1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: (5.3 * 5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: (5.3 * 5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: (5.3 * 6.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(3),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 3}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 3}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 15},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(maxfloat),FLOAT(maxfloat)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: FLOAT, f: math.MaxFloat64}},
+		inputs:          []Union{{tag: FLOAT, f: math.MaxFloat64}, {tag: FLOAT, f: math.MaxFloat64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -714,231 +714,231 @@ func TestMult(t *testing.T) {
 }
 
 var DivTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: -1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0 / 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(5),UINT(2)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(5),INT(2)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 2}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0 / 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(5),FLOAT(1.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: FLOAT, f: 1.3}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: FLOAT, f: 1.3}},
 		expectedOutput:  Union{tag: FLOAT, f: float64(uint64(5)) / 1.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),false",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(5),UINT(2)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(5),INT(2)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 2}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0 / 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),false",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3 / 5.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3 / 5.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3 / 6.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(MaxUint64),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: INT, i: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(maxfloat),FLOAT(0.1)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: FLOAT, f: 0.1}},
+		inputs:          []Union{{tag: FLOAT, f: math.MaxFloat64}, {tag: FLOAT, f: 0.1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -966,225 +966,225 @@ func TestDiv(t *testing.T) {
 }
 
 var ModTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(2),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 2}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(2),UINT(0)",
-		inputs:          []Union{Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: UINT, ui: 2}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(5),UINT(2)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(2),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 2}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 2}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(5),INT(2)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 2}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(5),FLOAT(1.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: FLOAT, f: 1.3}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: FLOAT, f: 1.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),false",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 2}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 2}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(5),UINT(2)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(5),UINT(MaxUint64)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: math.MaxUint64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(MaxUint64),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: INT, i: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 2}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 2}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(5),INT(2)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 2}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),false",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(MaxUint64),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: INT, i: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -1212,183 +1212,183 @@ func TestMod(t *testing.T) {
 }
 
 var BitwiseAndTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: INT, i: -5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: "hello"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: (1 & -1)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 1 & 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(-5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: -5}},
 		expectedOutput:  Union{tag: INT, i: int64(1) & int64(-5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(-1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: int64(-1) & int64(5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 1 & 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(3),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 3}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 3}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: int64(3) & int64(5) & int64(1)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(MaxUint64),INT(MaxInt64)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: math.MinInt64}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: INT, i: math.MinInt64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(MaxInt64), UINT(MaxUint64)",
-		inputs:          []Union{Union{tag: INT, i: math.MaxInt64}, Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:          []Union{{tag: INT, i: math.MaxInt64}, {tag: UINT, ui: math.MaxUint64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -1416,183 +1416,183 @@ func TestBitwiseAnd(t *testing.T) {
 }
 
 var BitwiseOrTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: INT, i: -5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: "hello"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: int64(1) | int64(-1)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 1 | 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: int64(1) | int64(5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: int64(1) | int64(5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: int64(1) | int64(5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(3),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 3}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 3}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: int64(3) | int64(5) | int64(1)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(MaxUint64),INT(MaxInt64)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: math.MinInt64}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: INT, i: math.MinInt64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(MaxInt64), UINT(MaxUint64)",
-		inputs:          []Union{Union{tag: INT, i: math.MaxInt64}, Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:          []Union{{tag: INT, i: math.MaxInt64}, {tag: UINT, ui: math.MaxUint64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -1620,183 +1620,183 @@ func TestBitwiseOr(t *testing.T) {
 }
 
 var BitwiseXorTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: INT, i: -5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: "hello"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: int64(1) ^ int64(-1)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 1 ^ 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: int64(1) ^ int64(5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: int64(1) ^ int64(5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: int64(1) ^ int64(5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(3),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 3}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 3}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: int64(3) ^ int64(5) ^ int64(1)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(MaxUint64),INT(MinInt64)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: math.MinInt64}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: INT, i: math.MinInt64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(MaxInt64), UINT(MaxUint64)",
-		inputs:          []Union{Union{tag: INT, i: math.MaxInt64}, Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:          []Union{{tag: INT, i: math.MaxInt64}, {tag: UINT, ui: math.MaxUint64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -1824,279 +1824,279 @@ func TestBitwiseXor(t *testing.T) {
 }
 
 var LeftShiftTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(2),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 2}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 64},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(2),UINT(0)",
-		inputs:          []Union{Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: UINT, ui: 2}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(2),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 2}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 2}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 64},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),false",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: 32},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 32},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(MaxUint64),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: INT, i: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(0),INT(MaxInt64)",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: INT, i: math.MaxInt64}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: INT, i: math.MaxInt64}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),INT(63)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 63}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 63}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),INT(62)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 62}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 62}},
 		expectedOutput:  Union{tag: INT, i: 1 << 62},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(2),INT(62)",
-		inputs:          []Union{Union{tag: UINT, ui: 2}, Union{tag: INT, i: 62}},
+		inputs:          []Union{{tag: UINT, ui: 2}, {tag: INT, i: 62}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs =INT(MaxInt64-1<<62),INT(1)",
-		inputs:          []Union{Union{tag: INT, i: math.MaxInt64 - (1 << 62)}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: INT, i: math.MaxInt64 - (1 << 62)}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: INT, i: (math.MaxInt64 - (1 << 62)) << 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs =INT(MaxInt64-1<<62),INT(2)",
-		inputs:          []Union{Union{tag: INT, i: math.MaxInt64 - (1 << 62)}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: INT, i: math.MaxInt64 - (1 << 62)}, {tag: INT, i: 2}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(2),INT(61)",
-		inputs:          []Union{Union{tag: UINT, ui: 2}, Union{tag: INT, i: 61}},
+		inputs:          []Union{{tag: UINT, ui: 2}, {tag: INT, i: 61}},
 		expectedOutput:  Union{tag: INT, i: 2 << 61},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(2),UINT(62)",
-		inputs:          []Union{Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 62}},
+		inputs:          []Union{{tag: UINT, ui: 2}, {tag: UINT, ui: 62}},
 		expectedOutput:  Union{tag: UINT, ui: 2 << 62},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(2),UINT(63)",
-		inputs:          []Union{Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 63}},
+		inputs:          []Union{{tag: UINT, ui: 2}, {tag: UINT, ui: 63}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),UINT(63)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 63}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 63}},
 		expectedOutput:  Union{tag: UINT, ui: 1 << 63},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),UINT(64)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 64}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(-1),INT(63)",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: INT, i: 63}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: INT, i: 63}},
 		expectedOutput:  Union{tag: INT, i: -1 << 63},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(-1),INT(64)",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: INT, i: 64}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: INT, i: 64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(MinInt64),INT(1)",
-		inputs:          []Union{Union{tag: INT, i: math.MinInt64}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: INT, i: math.MinInt64}, {tag: INT, i: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(MaxInt64),INT(0)",
-		inputs:          []Union{Union{tag: INT, i: math.MaxInt64}, Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: INT, i: math.MaxInt64}, {tag: INT, i: 0}},
 		expectedOutput:  Union{tag: INT, i: math.MaxInt64},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(MaxUint64),UINT(0)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: UINT, ui: math.MaxUint64},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),UINT(MaxUint64),",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: math.MaxUint64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -2124,189 +2124,189 @@ func TestLeftShift(t *testing.T) {
 }
 
 var RightShiftTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(4),true",
-		inputs:          []Union{Union{tag: UINT, ui: 4}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 4}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(4),UINT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 4}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: UINT, ui: 4}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(2),UINT(0)",
-		inputs:          []Union{Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: UINT, ui: 2}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(4),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 4}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: 4}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),false",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(2),true",
-		inputs:          []Union{Union{tag: INT, i: 2}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 2}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(32),UINT(1)",
-		inputs:          []Union{Union{tag: INT, i: 32}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: INT, i: 32}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: INT, i: 16},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(4),INT(1)",
-		inputs:          []Union{Union{tag: INT, i: 4}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: INT, i: 4}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(MaxUint64),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: INT, i: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1), UINT(MaxUint64)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: math.MaxUint64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(0),INT(MaxInt64)",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: INT, i: math.MaxInt64}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: INT, i: math.MaxInt64}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
@@ -2334,135 +2334,135 @@ func TestRightShift(t *testing.T) {
 }
 
 var BitwiseAndNotTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: int64(1) &^ int64(-1)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 1 &^ 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: int64(1) &^ int64(5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: int64(1) &^ int64(5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: int64(1) &^ int64(5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(MaxUint64),INT(MaxInt64)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: math.MinInt64}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: INT, i: math.MinInt64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(MaxInt64), UINT(MaxUint64)",
-		inputs:          []Union{Union{tag: INT, i: math.MaxInt64}, Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:          []Union{{tag: INT, i: math.MaxInt64}, {tag: UINT, ui: math.MaxUint64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -2490,237 +2490,237 @@ func TestBitwiseAndNot(t *testing.T) {
 }
 
 var AndTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int(0)",
-		inputs:          []Union{Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: INT, i: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint64(0)",
-		inputs:          []Union{Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float(0)",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: ""}},
+		inputs:          []Union{{tag: STRING, s: ""}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(0),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(-5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: -5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(0),true",
-		inputs:          []Union{Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(-1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(0),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
@@ -2748,273 +2748,273 @@ func TestAnd(t *testing.T) {
 }
 
 var OrTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int(0)",
-		inputs:          []Union{Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: INT, i: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint64(0)",
-		inputs:          []Union{Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float(0)",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: ""}},
+		inputs:          []Union{{tag: STRING, s: ""}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,INT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,FLOAT(0.0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,STRING(\"\")",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: STRING, s: ""}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: STRING, s: ""}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(0),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(-5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: -5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(0),true",
-		inputs:          []Union{Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(-1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),false",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(0),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, inputs = UINT(0),INT(0),false, float(0)",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: INT, i: 0}, {tag: BOOL, b: false}, {tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
@@ -3042,298 +3042,298 @@ func TestOr(t *testing.T) {
 }
 
 var NotTests = []TestCase{
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 0",
 		inputs:             []Union{},
 		expectedOutputList: []Union{},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = bool (true)",
-		inputs:             []Union{Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = bool (false)",
-		inputs:             []Union{Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = int",
-		inputs:             []Union{Union{tag: INT, i: -5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: INT, i: -5}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = int(0)",
-		inputs:             []Union{Union{tag: INT, i: 0}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: INT, i: 0}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = uint",
-		inputs:             []Union{Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = uint64(0)",
-		inputs:             []Union{Union{tag: UINT, ui: 0}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: UINT, ui: 0}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = float",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.4}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: FLOAT, f: 5.4}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = float(0)",
-		inputs:             []Union{Union{tag: FLOAT, f: 0.0}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: FLOAT, f: 0.0}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = string",
-		inputs:             []Union{Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = string",
-		inputs:             []Union{Union{tag: STRING, s: ""}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: ""}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,true",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,false",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,UINT(0)",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 0}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 0}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,INT(0)",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 0}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: INT, i: 0}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,FLOAT(0.0)",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 0.0}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: FLOAT, f: 0.0}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,STRING(\"\")",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: STRING, s: ""}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: STRING, s: ""}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(0),UINT(5)",
-		inputs:             []Union{Union{tag: UINT, ui: 0}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: UINT, ui: 0}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),INT(-5)",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: -5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: INT, i: -5}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),true",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(0),true",
-		inputs:             []Union{Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: INT, i: 0}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(-1),UINT(5)",
-		inputs:             []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: INT, i: -1}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(0),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: INT, i: 0}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: INT, i: 0}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(0),STRING(\"\")",
-		inputs:             []Union{Union{tag: INT, i: 0}, Union{tag: STRING, s: ""}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: INT, i: 0}, {tag: STRING, s: ""}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(0.0),true",
-		inputs:             []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(0.0),false",
-		inputs:             []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(0),FLOAT(6.3)",
-		inputs:             []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: FLOAT, f: 6.3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: FLOAT, f: 0.0}, {tag: FLOAT, f: 6.3}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(0),FLOAT(0)",
-		inputs:             []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: FLOAT, f: 0.0}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: FLOAT, f: 0.0}, {tag: FLOAT, f: 0.0}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, inputs = UINT(1),INT(0),true",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: INT, i: 0}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, inputs = UINT(0),INT(0),true",
-		inputs:             []Union{Union{tag: UINT, ui: 0}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: UINT, ui: 0}, {tag: INT, i: 0}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 4, inputs = UINT(0),INT(0),false, float(0)",
-		inputs:             []Union{Union{tag: UINT, ui: 0}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 0.0}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: UINT, ui: 0}, {tag: INT, i: 0}, {tag: BOOL, b: false}, {tag: FLOAT, f: 0.0}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
 }
@@ -3366,333 +3366,333 @@ func TestNot(t *testing.T) {
 }
 
 var EqualTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,INT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,FLOAT(0.0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,STRING(\"\")",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: STRING, s: ""}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: STRING, s: ""}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(0),false",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: -5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(1.0)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),true",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(0),true",
-		inputs:          []Union{Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(-1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),FLOAT(5.0)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: FLOAT, f: 5.0}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: FLOAT, f: 5.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(1.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 1.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 1.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),false",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"true\",true",
-		inputs:          []Union{Union{tag: STRING, s: "true"}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "true"}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1\",1",
-		inputs:          []Union{Union{tag: STRING, s: "1"}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: STRING, s: "1"}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1\",1",
-		inputs:          []Union{Union{tag: STRING, s: "1"}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: STRING, s: "1"}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1.0\",1.0",
-		inputs:          []Union{Union{tag: STRING, s: fmt.Sprintf("%v", 1.0)}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: STRING, s: fmt.Sprintf("%v", 1.0)}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hello\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hellox\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hellox"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hellox"}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(0),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, inputs = UINT(0),INT(0),false, float(0)",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: INT, i: 0}, {tag: BOOL, b: false}, {tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
@@ -3720,333 +3720,333 @@ func TestEqual(t *testing.T) {
 }
 
 var NotEqualTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,INT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,FLOAT(0.0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,STRING(\"\")",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: STRING, s: ""}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: STRING, s: ""}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(0),false",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: -5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(1.0)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),true",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(0),true",
-		inputs:          []Union{Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(-1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),FLOAT(5.0)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: FLOAT, f: 5.0}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: FLOAT, f: 5.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(1.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 1.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 1.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),false",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"true\",true",
-		inputs:          []Union{Union{tag: STRING, s: "true"}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "true"}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1\",1",
-		inputs:          []Union{Union{tag: STRING, s: "1"}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: STRING, s: "1"}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1\",1",
-		inputs:          []Union{Union{tag: STRING, s: "1"}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: STRING, s: "1"}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1.0\",1.0",
-		inputs:          []Union{Union{tag: STRING, s: fmt.Sprintf("%v", 1.0)}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: STRING, s: fmt.Sprintf("%v", 1.0)}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hello\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hellox\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hellox"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hellox"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(0),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, inputs = UINT(0),INT(0),false, float(0)",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: INT, i: 0}, {tag: BOOL, b: false}, {tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
@@ -4074,447 +4074,447 @@ func TestNotEqual(t *testing.T) {
 }
 
 var LessThanTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,INT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(1.0)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(0.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 0.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 0.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,FLOAT(0.0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,STRING(\"\")",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: STRING, s: ""}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: STRING, s: ""}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(0),true",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(0),false",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),UINT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),FLOAT(1.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: FLOAT, f: 1.3}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: FLOAT, f: 1.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(1.0)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),true",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(0),true",
-		inputs:          []Union{Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(-1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),UINT(1)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),INT(1)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),FLOAT(5.0)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: FLOAT, f: 5.0}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: FLOAT, f: 5.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(10),FLOAT(5.0)",
-		inputs:          []Union{Union{tag: INT, i: 10}, Union{tag: FLOAT, f: 5.0}},
+		inputs:          []Union{{tag: INT, i: 10}, {tag: FLOAT, f: 5.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(1.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 1.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 1.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(-1.0),false",
-		inputs:          []Union{Union{tag: FLOAT, f: -1.0}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: FLOAT, f: -1.0}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(6)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 6}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 6}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(6)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 6}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 6}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(6.3),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 6.3}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: FLOAT, f: 6.3}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"true\",true",
-		inputs:          []Union{Union{tag: STRING, s: "true"}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "true"}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1\",1",
-		inputs:          []Union{Union{tag: STRING, s: "1"}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: STRING, s: "1"}, {tag: INT, i: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1\",1",
-		inputs:          []Union{Union{tag: STRING, s: "1"}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: STRING, s: "1"}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1.0\",1.0",
-		inputs:          []Union{Union{tag: STRING, s: fmt.Sprintf("%v", 1.0)}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: STRING, s: fmt.Sprintf("%v", 1.0)}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hello\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hellox\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hellox"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hellox"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hellox\",\"hello\"",
-		inputs:          []Union{Union{tag: STRING, s: "hellox"}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hellox"}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(0),INT(0),true",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = INT(-1),UINT(0),true",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, inputs = UINT(5),INT(6),float(7.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 6}, Union{tag: FLOAT, f: 7.3}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 6}, {tag: FLOAT, f: 7.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, inputs = UINT(7),INT(6),float(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 7}, Union{tag: INT, i: 6}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 7}, {tag: INT, i: 6}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
@@ -4542,447 +4542,447 @@ func TestLessThan(t *testing.T) {
 }
 
 var LessThanOrEqualTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,INT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(1.0)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(0.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 0.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 0.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,FLOAT(0.0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,STRING(\"\")",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: STRING, s: ""}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: STRING, s: ""}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(0),true",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(0),false",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),UINT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),FLOAT(1.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: FLOAT, f: 1.3}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: FLOAT, f: 1.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(1.0)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),true",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(0),true",
-		inputs:          []Union{Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(-1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),UINT(1)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),INT(1)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),FLOAT(5.0)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: FLOAT, f: 5.0}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: FLOAT, f: 5.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(10),FLOAT(5.0)",
-		inputs:          []Union{Union{tag: INT, i: 10}, Union{tag: FLOAT, f: 5.0}},
+		inputs:          []Union{{tag: INT, i: 10}, {tag: FLOAT, f: 5.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(1.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 1.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 1.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(-1.0),false",
-		inputs:          []Union{Union{tag: FLOAT, f: -1.0}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: FLOAT, f: -1.0}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(6)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 6}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 6}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(6)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 6}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 6}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(6.3),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 6.3}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: FLOAT, f: 6.3}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"true\",true",
-		inputs:          []Union{Union{tag: STRING, s: "true"}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "true"}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1\",1",
-		inputs:          []Union{Union{tag: STRING, s: "1"}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: STRING, s: "1"}, {tag: INT, i: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1\",1",
-		inputs:          []Union{Union{tag: STRING, s: "1"}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: STRING, s: "1"}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1.0\",1.0",
-		inputs:          []Union{Union{tag: STRING, s: fmt.Sprintf("%v", 1.0)}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: STRING, s: fmt.Sprintf("%v", 1.0)}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hello\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hellox\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hellox"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hellox"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hellox\",\"hello\"",
-		inputs:          []Union{Union{tag: STRING, s: "hellox"}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hellox"}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(0),INT(0),true",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = INT(-1),UINT(0),true",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, inputs = UINT(5),INT(6),float(7.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 6}, Union{tag: FLOAT, f: 7.3}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 6}, {tag: FLOAT, f: 7.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, inputs = UINT(7),INT(6),float(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 7}, Union{tag: INT, i: 6}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 7}, {tag: INT, i: 6}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
@@ -5010,447 +5010,447 @@ func TestLessThanOrEqual(t *testing.T) {
 }
 
 var GreaterThanTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,INT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(1.0)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(0.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 0.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 0.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,FLOAT(0.0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,STRING(\"\")",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: STRING, s: ""}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: STRING, s: ""}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(0),true",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(0),false",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),UINT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),FLOAT(1.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: FLOAT, f: 1.3}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: FLOAT, f: 1.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(1.0)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),true",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(0),true",
-		inputs:          []Union{Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(-1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),UINT(1)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),INT(1)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),FLOAT(5.0)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: FLOAT, f: 5.0}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: FLOAT, f: 5.0}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(10),FLOAT(5.0)",
-		inputs:          []Union{Union{tag: INT, i: 10}, Union{tag: FLOAT, f: 5.0}},
+		inputs:          []Union{{tag: INT, i: 10}, {tag: FLOAT, f: 5.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(1.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 1.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 1.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(-1.0),false",
-		inputs:          []Union{Union{tag: FLOAT, f: -1.0}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: FLOAT, f: -1.0}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(6)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 6}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 6}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(6)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 6}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 6}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(6.3),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 6.3}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: FLOAT, f: 6.3}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"true\",true",
-		inputs:          []Union{Union{tag: STRING, s: "true"}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "true"}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1\",1",
-		inputs:          []Union{Union{tag: STRING, s: "1"}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: STRING, s: "1"}, {tag: INT, i: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1\",1",
-		inputs:          []Union{Union{tag: STRING, s: "1"}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: STRING, s: "1"}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1.0\",1.0",
-		inputs:          []Union{Union{tag: STRING, s: fmt.Sprintf("%v", 1.0)}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: STRING, s: fmt.Sprintf("%v", 1.0)}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hello\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hellox\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hellox"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hellox"}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hellox\",\"hello\"",
-		inputs:          []Union{Union{tag: STRING, s: "hellox"}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hellox"}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(0),INT(0),true",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = INT(-1),UINT(0),true",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, inputs = UINT(5),INT(6),float(7.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 6}, Union{tag: FLOAT, f: 7.3}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 6}, {tag: FLOAT, f: 7.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, inputs = UINT(7),INT(6),float(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 7}, Union{tag: INT, i: 6}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 7}, {tag: INT, i: 6}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
@@ -5478,447 +5478,447 @@ func TestGreaterThan(t *testing.T) {
 }
 
 var GreaterThanOrEqualTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,INT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(1.0)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(0.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 0.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 0.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,FLOAT(0.0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,STRING(\"\")",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: STRING, s: ""}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: STRING, s: ""}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(0),true",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(0),false",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),UINT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),FLOAT(1.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: FLOAT, f: 1.3}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: FLOAT, f: 1.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(1.0)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),true",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(0),true",
-		inputs:          []Union{Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(-1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),UINT(1)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),INT(1)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),FLOAT(5.0)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: FLOAT, f: 5.0}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: FLOAT, f: 5.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(10),FLOAT(5.0)",
-		inputs:          []Union{Union{tag: INT, i: 10}, Union{tag: FLOAT, f: 5.0}},
+		inputs:          []Union{{tag: INT, i: 10}, {tag: FLOAT, f: 5.0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(1.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 1.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 1.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(-1.0),false",
-		inputs:          []Union{Union{tag: FLOAT, f: -1.0}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: FLOAT, f: -1.0}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(6)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 6}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 6}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(6)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 6}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 6}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(6.3),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 6.3}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: FLOAT, f: 6.3}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"true\",true",
-		inputs:          []Union{Union{tag: STRING, s: "true"}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "true"}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1\",1",
-		inputs:          []Union{Union{tag: STRING, s: "1"}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: STRING, s: "1"}, {tag: INT, i: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1\",1",
-		inputs:          []Union{Union{tag: STRING, s: "1"}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: STRING, s: "1"}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"1.0\",1.0",
-		inputs:          []Union{Union{tag: STRING, s: fmt.Sprintf("%v", 1.0)}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: STRING, s: fmt.Sprintf("%v", 1.0)}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hello\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hellox\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hellox"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hellox"}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hellox\",\"hello\"",
-		inputs:          []Union{Union{tag: STRING, s: "hellox"}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hellox"}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(0),INT(0),true",
-		inputs:          []Union{Union{tag: UINT, ui: 0}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 0}, {tag: INT, i: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = INT(-1),UINT(0),true",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 0}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, inputs = UINT(5),INT(6),float(7.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 6}, Union{tag: FLOAT, f: 7.3}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 6}, {tag: FLOAT, f: 7.3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, inputs = UINT(7),INT(6),float(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 7}, Union{tag: INT, i: 6}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 7}, {tag: INT, i: 6}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
@@ -5946,426 +5946,426 @@ func TestGreaterThanOrEqual(t *testing.T) {
 }
 
 var MaxTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: INT, i: -5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(0.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 0.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 0.3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),false",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 0.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(4.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 4.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 4.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(4.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 4.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 4.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 6.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(5),INT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(5),INT(1),true, float(-10)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: -10.0}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 1}, {tag: BOOL, b: true}, {tag: FLOAT, f: -10.0}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
 }
 
 var RootTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(1, 1.0/5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(25),UINT(2)",
-		inputs:          []Union{Union{tag: UINT, ui: 25}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: UINT, ui: 25}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(25, 0.5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(25),INT(2)",
-		inputs:          []Union{Union{tag: UINT, ui: 25}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: UINT, ui: 25}, {tag: INT, i: 2}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(25, 0.5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(1, 1.0/5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 25}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: INT, i: 25}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(25, 0.5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 25}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: INT, i: 25}, {tag: INT, i: 2}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(25, 0.5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(1, 1/5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(5.3, 1/5.0)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(5.3, 1/5.0)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(5.3, 1/6.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),UINT(MaxUint64)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: math.MaxUint64}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(maxfloat),FLOAT(minNonZeroFloat)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: FLOAT, f: math.SmallestNonzeroFloat64}},
+		inputs:          []Union{{tag: FLOAT, f: math.MaxFloat64}, {tag: FLOAT, f: math.SmallestNonzeroFloat64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(smallestfloat),FLOAT(-maxfloat)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.SmallestNonzeroFloat64}, Union{tag: FLOAT, f: -math.MaxFloat64}},
+		inputs:          []Union{{tag: FLOAT, f: math.SmallestNonzeroFloat64}, {tag: FLOAT, f: -math.MaxFloat64}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0},
 		errorExpected:   false,
 	},
@@ -6393,183 +6393,183 @@ func TestRoot(t *testing.T) {
 }
 
 var PowTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(1, 5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(25),UINT(2)",
-		inputs:          []Union{Union{tag: UINT, ui: 25}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: UINT, ui: 25}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: UINT, ui: 625},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(25),INT(2)",
-		inputs:          []Union{Union{tag: UINT, ui: 25}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: UINT, ui: 25}, {tag: INT, i: 2}},
 		expectedOutput:  Union{tag: INT, i: 625},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(1, 5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(25),UINT(2)",
-		inputs:          []Union{Union{tag: INT, i: 25}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: INT, i: 25}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: INT, i: 625},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(25),INT(2)",
-		inputs:          []Union{Union{tag: INT, i: 25}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: INT, i: 25}, {tag: INT, i: 2}},
 		expectedOutput:  Union{tag: INT, i: 625},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(1, 5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(5.3, 5.0)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(5.3, 5.0)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Pow(5.3, 6.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(MaxUint64), INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: INT, i: math.MaxInt64},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(maxfloat),FLOAT(maxFloat)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: FLOAT, f: math.MaxFloat64}},
+		inputs:          []Union{{tag: FLOAT, f: math.MaxFloat64}, {tag: FLOAT, f: math.MaxFloat64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -6618,237 +6618,237 @@ func TestMax(t *testing.T) {
 }
 
 var MinTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: INT, i: -5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(0)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: -1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(0.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 0.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 0.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),false",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),FLOAT(1.3)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: FLOAT, f: 1.3}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: FLOAT, f: 1.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 0.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(4.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 4.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 4.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 4.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(4.3),INT(3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 4.3}, Union{tag: INT, i: 3}},
+		inputs:          []Union{{tag: FLOAT, f: 4.3}, {tag: INT, i: 3}},
 		expectedOutput:  Union{tag: INT, i: 3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(2.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 2.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 2.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 2.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(5),INT(3),true",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(5),INT(1),true, float(-10)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: -10.0}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 1}, {tag: BOOL, b: true}, {tag: FLOAT, f: -10.0}},
 		expectedOutput:  Union{tag: FLOAT, f: -10.0},
 		errorExpected:   false,
 	},
@@ -6876,219 +6876,219 @@ func TestMin(t *testing.T) {
 }
 
 var AvgTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: INT, i: -5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: "hello"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 6.3 / 2.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 6.3 / 2.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: 3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 6.3 / 2.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 6.3 / 2.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 10.3 / 2.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 10.3 / 2.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 11.6 / 2.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{tag: STRING, s: ""},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 7 / 3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = true,true,INT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 7 / 3},
 		errorExpected:   false,
 	},
@@ -7116,214 +7116,214 @@ func TestAvg(t *testing.T) {
 }
 
 var FloorTests = []TestCase{
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 0",
 		inputs:             []Union{},
 		expectedOutputList: []Union{},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = bool (true)",
-		inputs:             []Union{Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = bool (false)",
-		inputs:             []Union{Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = int",
-		inputs:             []Union{Union{tag: INT, i: -5}},
-		expectedOutputList: []Union{Union{tag: INT, i: -5}},
+		inputs:             []Union{{tag: INT, i: -5}},
+		expectedOutputList: []Union{{tag: INT, i: -5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = uint",
-		inputs:             []Union{Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = float",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = string",
-		inputs:             []Union{Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,true",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,false",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,FLOAT(5.7)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.0}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),FLOAT(5.7)",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.0}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),true",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),FLOAT(5.7)",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.0}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.7),true",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}, {tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.7),INT(5)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: INT, i: 5}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}, {tag: INT, i: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.7),FLOAT(6.7)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}, Union{tag: FLOAT, f: 6.7}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: FLOAT, f: 6.0}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}, {tag: FLOAT, f: 6.7}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}, {tag: FLOAT, f: 6.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello\",INT(-5)",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello\",FLOAT(6.7)",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.7}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.0}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.7}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.0}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",\"world!\"",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, inputs = FLOAT(6.7),INT(5),true",
-		inputs:             []Union{Union{tag: FLOAT, f: 6.7}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 6.0}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: FLOAT, f: 6.7}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 6.0}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
 }
@@ -7356,214 +7356,214 @@ func TestFloor(t *testing.T) {
 }
 
 var CeilTests = []TestCase{
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 0",
 		inputs:             []Union{},
 		expectedOutputList: []Union{},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = bool (true)",
-		inputs:             []Union{Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = bool (false)",
-		inputs:             []Union{Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = int",
-		inputs:             []Union{Union{tag: INT, i: -5}},
-		expectedOutputList: []Union{Union{tag: INT, i: -5}},
+		inputs:             []Union{{tag: INT, i: -5}},
+		expectedOutputList: []Union{{tag: INT, i: -5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = uint",
-		inputs:             []Union{Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = float",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 6.0}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 6.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = string",
-		inputs:             []Union{Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,true",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,false",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 6.0}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 6.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 6.0}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 6.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),true",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 6.0}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 6.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 6.0}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 6.0}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 6.0}, Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 6.0}, {tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 6.0}, Union{tag: INT, i: 5}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 6.0}, {tag: INT, i: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(5.7)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 6.0}, Union{tag: FLOAT, f: 6.0}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 6.0}, {tag: FLOAT, f: 6.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 6.0}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 6.0}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello\",INT(-5)",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello\",FLOAT(5.7)",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.0}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.0}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",\"world!\"",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, inputs = FLOAT(5.7),INT(5),true",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 6.0}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 6.0}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
 }
@@ -7596,220 +7596,220 @@ func TestCeil(t *testing.T) {
 }
 
 var SqrtTests = []TestCase{
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 0",
 		inputs:             []Union{},
 		expectedOutputList: []Union{},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = bool (true)",
-		inputs:             []Union{Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 1}},
+		inputs:             []Union{{tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = bool (false)",
-		inputs:             []Union{Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 0}},
+		inputs:             []Union{{tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = int",
-		inputs:             []Union{Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = uint",
-		inputs:             []Union{Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = float",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(5.7)}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(5.7)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = string",
-		inputs:             []Union{Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,true",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 1}, Union{tag: FLOAT, f: 1}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 1}, {tag: FLOAT, f: 1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,false",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 0}, Union{tag: FLOAT, f: 0}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 0}, {tag: FLOAT, f: 0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,UINT(5)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 1}, Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 1}, {tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,UINT(5)",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 0}, Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 0}, {tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,INT(5)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 1}, Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 1}, {tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,FLOAT(5.7)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(1)}, Union{tag: FLOAT, f: math.Sqrt(5.7)}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(1)}, {tag: FLOAT, f: math.Sqrt(5.7)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(1)}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(1)}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(5),true",
-		inputs:             []Union{Union{tag: UINT, ui: 5}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(5)}, Union{tag: FLOAT, f: math.Sqrt(1)}},
+		inputs:             []Union{{tag: UINT, ui: 5}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(5)}, {tag: FLOAT, f: math.Sqrt(1)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(6),UINT(5)",
-		inputs:             []Union{Union{tag: UINT, ui: 6}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(6)}, Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: UINT, ui: 6}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(6)}, {tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(6),INT(5)",
-		inputs:             []Union{Union{tag: UINT, ui: 6}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(6)}, Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: UINT, ui: 6}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(6)}, {tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(6),FLOAT(5.7)",
-		inputs:             []Union{Union{tag: UINT, ui: 6}, Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(6)}, Union{tag: FLOAT, f: math.Sqrt(5.7)}},
+		inputs:             []Union{{tag: UINT, ui: 6}, {tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(6)}, {tag: FLOAT, f: math.Sqrt(5.7)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(6),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: UINT, ui: 6}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(6)}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: UINT, ui: 6}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(6)}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(6),true",
-		inputs:             []Union{Union{tag: INT, i: 6}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(6)}, Union{tag: FLOAT, f: math.Sqrt(1)}},
+		inputs:             []Union{{tag: INT, i: 6}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(6)}, {tag: FLOAT, f: math.Sqrt(1)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(6),UINT(5)",
-		inputs:             []Union{Union{tag: INT, i: 6}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(6)}, Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: INT, i: 6}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(6)}, {tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:             []Union{Union{tag: INT, i: 6}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(6)}, Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: INT, i: 6}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(6)}, {tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),FLOAT(5.7)",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(1)}, Union{tag: FLOAT, f: math.Sqrt(5.7)}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(1)}, {tag: FLOAT, f: math.Sqrt(5.7)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 1}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.7),true",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(5.7)}, Union{tag: FLOAT, f: math.Sqrt(1)}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(5.7)}, {tag: FLOAT, f: math.Sqrt(1)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.7),UINT(5)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(5.7)}, Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(5.7)}, {tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.7),INT(5)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(5.7)}, Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(5.7)}, {tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.7),FLOAT(6.7)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}, Union{tag: FLOAT, f: 6.7}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(5.7)}, Union{tag: FLOAT, f: math.Sqrt(6.7)}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}, {tag: FLOAT, f: 6.7}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(5.7)}, {tag: FLOAT, f: math.Sqrt(6.7)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(5.3)}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(5.3)}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 1}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 1}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello\",INT(5)",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: math.Sqrt(5)}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: math.Sqrt(5)}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello\",FLOAT(6.7)",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.7}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: math.Sqrt(6.7)}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.7}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: math.Sqrt(6.7)}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",\"world!\"",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, inputs = FLOAT(6.7),INT(5),true",
-		inputs:             []Union{Union{tag: FLOAT, f: 6.7}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.Sqrt(6.7)}, Union{tag: FLOAT, f: math.Sqrt(5)}, Union{tag: FLOAT, f: 1}},
+		inputs:             []Union{{tag: FLOAT, f: 6.7}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.Sqrt(6.7)}, {tag: FLOAT, f: math.Sqrt(5)}, {tag: FLOAT, f: 1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(-5)",
-		inputs:             []Union{Union{tag: FLOAT, f: -5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: -5}},
+		inputs:             []Union{{tag: FLOAT, f: -5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: -5}},
 		errorExpected:      true,
 	},
 }
@@ -7842,237 +7842,237 @@ func TestSqrt(t *testing.T) {
 }
 
 var PctTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: -100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0 / 5.3 * 100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 20},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(5),UINT(2)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: UINT, ui: 250},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 20},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(5),INT(2)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 2}},
 		expectedOutput:  Union{tag: INT, i: 250},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0 / 5.3 * 100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(5),FLOAT(1.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: FLOAT, f: 1.3}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: FLOAT, f: 1.3}},
 		expectedOutput:  Union{tag: FLOAT, f: float64(uint64(5)) / 1.3 * 100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),false",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: 20},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(5),UINT(2)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: INT, i: 250},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 20},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(5),INT(2)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 2}},
 		expectedOutput:  Union{tag: INT, i: 250},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0 / 5.3 * 100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3 * 100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),false",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3 / 5.0 * 100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3 / 5.0 * 100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3 / 6.3 * 100},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(MaxUint64),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: FLOAT, f: math.MaxUint64 * 100.0},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(maxfloat),FLOAT(0.1)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: FLOAT, f: 0.1}},
+		inputs:          []Union{{tag: FLOAT, f: math.MaxFloat64}, {tag: FLOAT, f: 0.1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(maxfloat),FLOAT(1)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: FLOAT, f: 1}},
+		inputs:          []Union{{tag: FLOAT, f: math.MaxFloat64}, {tag: FLOAT, f: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -8100,237 +8100,237 @@ func TestPct(t *testing.T) {
 }
 
 var FloorDivTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: INT, i: -1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(5),UINT(2)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(5),INT(2)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: INT, i: 2}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(5),FLOAT(1.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: FLOAT, f: 1.3}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: FLOAT, f: 1.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),false",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(5),UINT(2)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: INT, i: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(5),INT(2)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 2}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 2}},
 		expectedOutput:  Union{tag: INT, i: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),false",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(6.3),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 6.3}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: FLOAT, f: 6.3}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "inputs = UINT(MaxUint64),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}, {tag: INT, i: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(maxfloat),FLOAT(0.1)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: FLOAT, f: 0.1}},
+		inputs:          []Union{{tag: FLOAT, f: math.MaxFloat64}, {tag: FLOAT, f: 0.1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -8358,58 +8358,58 @@ func TestFloorDiv(t *testing.T) {
 }
 
 var AbsTests = []TestCase{
-	TestCase{
+	{
 		testDescription:    "empty union",
-		inputs:             []Union{Union{}},
-		expectedOutputList: []Union{Union{}},
+		inputs:             []Union{{}},
+		expectedOutputList: []Union{{}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "false bool union",
-		inputs:             []Union{Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "true bool union",
-		inputs:             []Union{Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "UINT union",
-		inputs:             []Union{Union{tag: UINT, ui: 3}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 3}},
+		inputs:             []Union{{tag: UINT, ui: 3}},
+		expectedOutputList: []Union{{tag: UINT, ui: 3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "large UINT union",
-		inputs:             []Union{Union{tag: UINT, ui: math.MaxUint64}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:             []Union{{tag: UINT, ui: math.MaxUint64}},
+		expectedOutputList: []Union{{tag: UINT, ui: math.MaxUint64}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "INT union",
-		inputs:             []Union{Union{tag: INT, i: -3}},
-		expectedOutputList: []Union{Union{tag: INT, i: 3}},
+		inputs:             []Union{{tag: INT, i: -3}},
+		expectedOutputList: []Union{{tag: INT, i: 3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "MinInt64 INT union",
-		inputs:             []Union{Union{tag: INT, i: math.MinInt64}},
-		expectedOutputList: []Union{Union{}},
+		inputs:             []Union{{tag: INT, i: math.MinInt64}},
+		expectedOutputList: []Union{{}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "FLOAT union -3.3",
-		inputs:             []Union{Union{tag: FLOAT, f: -3.3}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 3.3}},
+		inputs:             []Union{{tag: FLOAT, f: -3.3}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 3.3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "STRING",
-		inputs:             []Union{Union{tag: STRING, s: "5"}},
-		expectedOutputList: []Union{Union{}},
+		inputs:             []Union{{tag: STRING, s: "5"}},
+		expectedOutputList: []Union{{}},
 		errorExpected:      true,
 	},
 }
@@ -8442,220 +8442,220 @@ func TestAbs(t *testing.T) {
 }
 
 var RoundTests = []TestCase{
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 0",
 		inputs:             []Union{},
 		expectedOutputList: []Union{},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = bool (true)",
-		inputs:             []Union{Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = bool (false)",
-		inputs:             []Union{Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = int",
-		inputs:             []Union{Union{tag: INT, i: -5}},
-		expectedOutputList: []Union{Union{tag: INT, i: -5}},
+		inputs:             []Union{{tag: INT, i: -5}},
+		expectedOutputList: []Union{{tag: INT, i: -5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = uint",
-		inputs:             []Union{Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = float",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = float",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 6.0}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 6.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 1, input = string",
-		inputs:             []Union{Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,true",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,false",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:             []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:             []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.0}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.0}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),true",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.0}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}, {tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: INT, i: 5}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}, {tag: INT, i: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(5.7)",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: FLOAT, f: 6.0}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}, {tag: FLOAT, f: 6.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: STRING, s: "hello"}},
+		inputs:             []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}, {tag: STRING, s: "hello"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello\",INT(-5)",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello\",FLOAT(5.7)",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 5.7}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.0}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 5.7}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.0}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 2, inputs = \"hello \",\"world!\"",
-		inputs:             []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:             []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
+		expectedOutputList: []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, inputs = FLOAT(5.7),INT(5),true",
-		inputs:             []Union{Union{tag: FLOAT, f: 5.7}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 6.0}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: FLOAT, f: 5.7}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 6.0}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
 }
@@ -8688,94 +8688,94 @@ func TestRound(t *testing.T) {
 }
 
 var BoolTests = []TestCase{
-	TestCase{
+	{
 		testDescription:    "empty union to BOOL",
-		inputs:             []Union{Union{}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "false bool union to BOOL",
-		inputs:             []Union{Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "true bool union to BOOL",
-		inputs:             []Union{Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "UINT union to BOOL",
-		inputs:             []Union{Union{tag: UINT, ui: 3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: UINT, ui: 3}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "UINT union to false BOOL",
-		inputs:             []Union{Union{tag: UINT, ui: 0}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: UINT, ui: 0}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "INT union to BOOL",
-		inputs:             []Union{Union{tag: INT, i: 3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: INT, i: 3}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "negative INT union to BOOL",
-		inputs:             []Union{Union{tag: INT, i: -3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: INT, i: -3}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "INT union to false BOOL",
-		inputs:             []Union{Union{tag: INT, i: 0}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: INT, i: 0}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "FLOAT union to true BOOL",
-		inputs:             []Union{Union{tag: FLOAT, f: 3.3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: FLOAT, f: 3.3}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "FLOAT union to false BOOL",
-		inputs:             []Union{Union{tag: FLOAT, f: 0.0}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: FLOAT, f: 0.0}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "negative FLOAT union to true BOOL",
-		inputs:             []Union{Union{tag: FLOAT, f: -3.3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: FLOAT, f: -3.3}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "non-empty STRING union to BOOL",
-		inputs:             []Union{Union{tag: STRING, s: "some string"}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: "some string"}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "\"true\" STRING union to BOOL",
-		inputs:             []Union{Union{tag: STRING, s: "true"}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: "true"}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "non-empty STRING union to false BOOL",
-		inputs:             []Union{Union{tag: STRING, s: "false"}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: "false"}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "empty STRING union to BOOL",
-		inputs:             []Union{Union{tag: STRING, s: ""}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: ""}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
 }
@@ -8808,94 +8808,94 @@ func TestBool(t *testing.T) {
 }
 
 var IntTests = []TestCase{
-	TestCase{
+	{
 		testDescription:    "empty union to INT",
-		inputs:             []Union{Union{}},
-		expectedOutputList: []Union{Union{tag: INT, i: 0}},
+		inputs:             []Union{{}},
+		expectedOutputList: []Union{{tag: INT, i: 0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "false bool union to INT",
-		inputs:             []Union{Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: INT, i: 0}},
+		inputs:             []Union{{tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: INT, i: 0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "true bool union to INT",
-		inputs:             []Union{Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: INT, i: 1}},
+		inputs:             []Union{{tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: INT, i: 1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "UINT union to INT",
-		inputs:             []Union{Union{tag: UINT, ui: 3}},
-		expectedOutputList: []Union{Union{tag: INT, i: 3}},
+		inputs:             []Union{{tag: UINT, ui: 3}},
+		expectedOutputList: []Union{{tag: INT, i: 3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "large UINT union to INT",
-		inputs:             []Union{Union{tag: UINT, ui: math.MaxUint64}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:             []Union{{tag: UINT, ui: math.MaxUint64}},
+		expectedOutputList: []Union{{tag: UINT, ui: math.MaxUint64}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "INT union to INT",
-		inputs:             []Union{Union{tag: INT, i: 3}},
-		expectedOutputList: []Union{Union{tag: INT, i: 3}},
+		inputs:             []Union{{tag: INT, i: 3}},
+		expectedOutputList: []Union{{tag: INT, i: 3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "FLOAT union to INT, 3.3",
-		inputs:             []Union{Union{tag: FLOAT, f: 3.3}},
-		expectedOutputList: []Union{Union{tag: INT, i: 3}},
+		inputs:             []Union{{tag: FLOAT, f: 3.3}},
+		expectedOutputList: []Union{{tag: INT, i: 3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "FLOAT union to INT, 3.6",
-		inputs:             []Union{Union{tag: FLOAT, f: 3.6}},
-		expectedOutputList: []Union{Union{tag: INT, i: 3}},
+		inputs:             []Union{{tag: FLOAT, f: 3.6}},
+		expectedOutputList: []Union{{tag: INT, i: 3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "negative FLOAT union to INT",
-		inputs:             []Union{Union{tag: FLOAT, f: -3.3}},
-		expectedOutputList: []Union{Union{tag: INT, i: -3}},
+		inputs:             []Union{{tag: FLOAT, f: -3.3}},
+		expectedOutputList: []Union{{tag: INT, i: -3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "large FLOAT union to INT",
-		inputs:             []Union{Union{tag: FLOAT, f: math.MaxFloat64}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.MaxFloat64}},
+		inputs:             []Union{{tag: FLOAT, f: math.MaxFloat64}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.MaxFloat64}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "large negative FLOAT union to INT",
-		inputs:             []Union{Union{tag: FLOAT, f: -math.MaxFloat64}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: -math.MaxFloat64}},
+		inputs:             []Union{{tag: FLOAT, f: -math.MaxFloat64}},
+		expectedOutputList: []Union{{tag: FLOAT, f: -math.MaxFloat64}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "int STRING union to INT",
-		inputs:             []Union{Union{tag: STRING, s: "5"}},
-		expectedOutputList: []Union{Union{tag: INT, i: 5}},
+		inputs:             []Union{{tag: STRING, s: "5"}},
+		expectedOutputList: []Union{{tag: INT, i: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "negative int STRING union to INT",
-		inputs:             []Union{Union{tag: STRING, s: "-5"}},
-		expectedOutputList: []Union{Union{tag: INT, i: -5}},
+		inputs:             []Union{{tag: STRING, s: "-5"}},
+		expectedOutputList: []Union{{tag: INT, i: -5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "float STRING union to INT",
-		inputs:             []Union{Union{tag: STRING, s: "5.0"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "5.0"}},
+		inputs:             []Union{{tag: STRING, s: "5.0"}},
+		expectedOutputList: []Union{{tag: STRING, s: "5.0"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "random STRING union to INT",
-		inputs:             []Union{Union{tag: STRING, s: "some string"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "some string"}},
+		inputs:             []Union{{tag: STRING, s: "some string"}},
+		expectedOutputList: []Union{{tag: STRING, s: "some string"}},
 		errorExpected:      true,
 	},
 }
@@ -8928,100 +8928,100 @@ func TestInt(t *testing.T) {
 }
 
 var UIntTests = []TestCase{
-	TestCase{
+	{
 		testDescription:    "empty union to UINT",
-		inputs:             []Union{Union{}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 0}},
+		inputs:             []Union{{}},
+		expectedOutputList: []Union{{tag: UINT, ui: 0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "false bool union to UINT",
-		inputs:             []Union{Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 0}},
+		inputs:             []Union{{tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: UINT, ui: 0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "true bool union to UINT",
-		inputs:             []Union{Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 1}},
+		inputs:             []Union{{tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: UINT, ui: 1}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "UINT union to UINT",
-		inputs:             []Union{Union{tag: UINT, ui: 3}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 3}},
+		inputs:             []Union{{tag: UINT, ui: 3}},
+		expectedOutputList: []Union{{tag: UINT, ui: 3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "INT union to UINT",
-		inputs:             []Union{Union{tag: INT, i: 3}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 3}},
+		inputs:             []Union{{tag: INT, i: 3}},
+		expectedOutputList: []Union{{tag: UINT, ui: 3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "negative INT union to UINT",
-		inputs:             []Union{Union{tag: INT, i: -3}},
-		expectedOutputList: []Union{Union{tag: INT, i: -3}},
+		inputs:             []Union{{tag: INT, i: -3}},
+		expectedOutputList: []Union{{tag: INT, i: -3}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "max INT union to UINT",
-		inputs:             []Union{Union{tag: INT, i: math.MaxInt64}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: math.MaxInt64}},
+		inputs:             []Union{{tag: INT, i: math.MaxInt64}},
+		expectedOutputList: []Union{{tag: UINT, ui: math.MaxInt64}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "FLOAT union to UINT, 3.3",
-		inputs:             []Union{Union{tag: FLOAT, f: 3.3}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 3}},
+		inputs:             []Union{{tag: FLOAT, f: 3.3}},
+		expectedOutputList: []Union{{tag: UINT, ui: 3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "FLOAT union to UINT, 3.6",
-		inputs:             []Union{Union{tag: FLOAT, f: 3.6}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 3}},
+		inputs:             []Union{{tag: FLOAT, f: 3.6}},
+		expectedOutputList: []Union{{tag: UINT, ui: 3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "negative FLOAT union to UINT",
-		inputs:             []Union{Union{tag: FLOAT, f: -3.3}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: -3.3}},
+		inputs:             []Union{{tag: FLOAT, f: -3.3}},
+		expectedOutputList: []Union{{tag: FLOAT, f: -3.3}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "large FLOAT union to UINT",
-		inputs:             []Union{Union{tag: FLOAT, f: math.MaxFloat64}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: math.MaxFloat64}},
+		inputs:             []Union{{tag: FLOAT, f: math.MaxFloat64}},
+		expectedOutputList: []Union{{tag: FLOAT, f: math.MaxFloat64}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "large negative FLOAT union to UINT",
-		inputs:             []Union{Union{tag: FLOAT, f: -math.MaxFloat64}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: -math.MaxFloat64}},
+		inputs:             []Union{{tag: FLOAT, f: -math.MaxFloat64}},
+		expectedOutputList: []Union{{tag: FLOAT, f: -math.MaxFloat64}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "int STRING union to UINT",
-		inputs:             []Union{Union{tag: STRING, s: "5"}},
-		expectedOutputList: []Union{Union{tag: UINT, ui: 5}},
+		inputs:             []Union{{tag: STRING, s: "5"}},
+		expectedOutputList: []Union{{tag: UINT, ui: 5}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "negative int STRING union to UINT",
-		inputs:             []Union{Union{tag: STRING, s: "-5"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "-5"}},
+		inputs:             []Union{{tag: STRING, s: "-5"}},
+		expectedOutputList: []Union{{tag: STRING, s: "-5"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "float STRING union to UINT",
-		inputs:             []Union{Union{tag: STRING, s: "5.0"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "5.0"}},
+		inputs:             []Union{{tag: STRING, s: "5.0"}},
+		expectedOutputList: []Union{{tag: STRING, s: "5.0"}},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "random STRING union to UINT",
-		inputs:             []Union{Union{tag: STRING, s: "some string"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "some string"}},
+		inputs:             []Union{{tag: STRING, s: "some string"}},
+		expectedOutputList: []Union{{tag: STRING, s: "some string"}},
 		errorExpected:      true,
 	},
 }
@@ -9054,76 +9054,76 @@ func TestUInt(t *testing.T) {
 }
 
 var FloatTests = []TestCase{
-	TestCase{
+	{
 		testDescription:    "empty union to FLOAT",
-		inputs:             []Union{Union{}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 0.0}},
+		inputs:             []Union{{}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 0.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "false bool union to FLOAT",
-		inputs:             []Union{Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 0.0}},
+		inputs:             []Union{{tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 0.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "true bool union to FLOAT",
-		inputs:             []Union{Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 1.0}},
+		inputs:             []Union{{tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 1.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "UINT union to FLOAT",
-		inputs:             []Union{Union{tag: UINT, ui: 3}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 3.0}},
+		inputs:             []Union{{tag: UINT, ui: 3}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 3.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "large UINT union to FLOAT",
-		inputs:             []Union{Union{tag: UINT, ui: math.MaxUint64}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: float64(math.MaxUint64)}},
+		inputs:             []Union{{tag: UINT, ui: math.MaxUint64}},
+		expectedOutputList: []Union{{tag: FLOAT, f: float64(math.MaxUint64)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "INT union to FLOAT",
-		inputs:             []Union{Union{tag: INT, i: 3}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 3.0}},
+		inputs:             []Union{{tag: INT, i: 3}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 3.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "max INT union to FLOAT",
-		inputs:             []Union{Union{tag: INT, i: math.MaxInt64}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: float64(math.MaxInt64)}},
+		inputs:             []Union{{tag: INT, i: math.MaxInt64}},
+		expectedOutputList: []Union{{tag: FLOAT, f: float64(math.MaxInt64)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "FLOAT union to FLOAT",
-		inputs:             []Union{Union{tag: FLOAT, f: 3.3}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 3.3}},
+		inputs:             []Union{{tag: FLOAT, f: 3.3}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 3.3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "int STRING union to FLOAT",
-		inputs:             []Union{Union{tag: STRING, s: "5"}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.0}},
+		inputs:             []Union{{tag: STRING, s: "5"}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.0}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "float STRING union to FLOAT",
-		inputs:             []Union{Union{tag: STRING, s: "5.3"}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: 5.3}},
+		inputs:             []Union{{tag: STRING, s: "5.3"}},
+		expectedOutputList: []Union{{tag: FLOAT, f: 5.3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "negative float STRING union to FLOAT",
-		inputs:             []Union{Union{tag: STRING, s: "-5.3"}},
-		expectedOutputList: []Union{Union{tag: FLOAT, f: -5.3}},
+		inputs:             []Union{{tag: STRING, s: "-5.3"}},
+		expectedOutputList: []Union{{tag: FLOAT, f: -5.3}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "random STRING union to FLOAT",
-		inputs:             []Union{Union{tag: STRING, s: "some string"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "some string"}},
+		inputs:             []Union{{tag: STRING, s: "some string"}},
+		expectedOutputList: []Union{{tag: STRING, s: "some string"}},
 		errorExpected:      true,
 	},
 }
@@ -9156,46 +9156,46 @@ func TestFloat(t *testing.T) {
 }
 
 var StringTests = []TestCase{
-	TestCase{
+	{
 		testDescription:    "empty union to STRING",
-		inputs:             []Union{Union{}},
-		expectedOutputList: []Union{Union{tag: STRING, s: ""}},
+		inputs:             []Union{{}},
+		expectedOutputList: []Union{{tag: STRING, s: ""}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "false bool union to STRING",
-		inputs:             []Union{Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "false"}},
+		inputs:             []Union{{tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: STRING, s: "false"}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "true bool union to STRING",
-		inputs:             []Union{Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "true"}},
+		inputs:             []Union{{tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: STRING, s: "true"}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "UINT union to STRING",
-		inputs:             []Union{Union{tag: UINT, ui: 3}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "3"}},
+		inputs:             []Union{{tag: UINT, ui: 3}},
+		expectedOutputList: []Union{{tag: STRING, s: "3"}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "INT union to STRING",
-		inputs:             []Union{Union{tag: INT, i: 3}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "3"}},
+		inputs:             []Union{{tag: INT, i: 3}},
+		expectedOutputList: []Union{{tag: STRING, s: "3"}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "FLOAT union to STRING",
-		inputs:             []Union{Union{tag: FLOAT, f: 3.3}},
-		expectedOutputList: []Union{Union{tag: STRING, s: fmt.Sprintf("%f", 3.3)}},
+		inputs:             []Union{{tag: FLOAT, f: 3.3}},
+		expectedOutputList: []Union{{tag: STRING, s: fmt.Sprintf("%f", 3.3)}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "STRING union to STRING",
-		inputs:             []Union{Union{tag: STRING, s: "some string"}},
-		expectedOutputList: []Union{Union{tag: STRING, s: "some string"}},
+		inputs:             []Union{{tag: STRING, s: "some string"}},
+		expectedOutputList: []Union{{tag: STRING, s: "some string"}},
 		errorExpected:      false,
 	},
 }
@@ -9230,16 +9230,16 @@ func TestString(t *testing.T) {
 // Not sure how to test Integrate
 // These are the tests that don't depend on time
 var IntegrateTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "large UINT union",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: FLOAT, f: 1.0}, Union{tag: UINT, ui: math.MaxUint64}, Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: FLOAT, f: 1.0}, {tag: UINT, ui: math.MaxUint64}, {tag: INT, i: 0}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "STRING union",
-		inputs:          []Union{Union{tag: STRING, s: "blah"}, Union{tag: FLOAT, f: 1.0}, Union{tag: INT, i: -1}, Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: STRING, s: "blah"}, {tag: FLOAT, f: 1.0}, {tag: INT, i: -1}, {tag: INT, i: 0}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{},
 		errorExpected:   true,
@@ -9300,27 +9300,27 @@ func TestCurrentTimeMilliseconds(t *testing.T) {
 
 // These are the tests that don't depend on time
 var MillisecondsSinceTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "large UINT union",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "large negative FLOAT union to INT",
-		inputs:          []Union{Union{tag: FLOAT, f: float64(math.MinInt64 + int64(100000))}},
+		inputs:          []Union{{tag: FLOAT, f: float64(math.MinInt64 + int64(100000))}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "float STRING union to INT",
-		inputs:          []Union{Union{tag: STRING, s: "5.0"}},
+		inputs:          []Union{{tag: STRING, s: "5.0"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "random STRING union to INT",
-		inputs:          []Union{Union{tag: STRING, s: "some string"}},
+		inputs:          []Union{{tag: STRING, s: "some string"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -9363,69 +9363,69 @@ func TestMillisecondsSince(t *testing.T) {
 }
 
 var MillisecondsToRFC3339Tests = []TestCase{
-	TestCase{
+	{
 		testDescription: "empty union",
-		inputs:          []Union{Union{}},
+		inputs:          []Union{{}},
 		expectedOutput:  Union{tag: STRING, s: time.UnixMilli(0).Format(time.RFC3339)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "false bool union",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: STRING, s: time.UnixMilli(0).Format(time.RFC3339)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "true bool union",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: STRING, s: time.UnixMilli(1).Format(time.RFC3339)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "UINT union",
-		inputs:          []Union{Union{tag: UINT, ui: uint64(time.Now().UnixMilli())}},
+		inputs:          []Union{{tag: UINT, ui: uint64(time.Now().UnixMilli())}},
 		expectedOutput:  Union{tag: STRING, s: time.UnixMilli(time.Now().UnixMilli()).Format(time.RFC3339)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "large UINT union",
-		inputs:          []Union{Union{tag: UINT, ui: math.MaxUint64}},
+		inputs:          []Union{{tag: UINT, ui: math.MaxUint64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "INT union",
-		inputs:          []Union{Union{tag: INT, i: time.Now().UnixMilli()}},
+		inputs:          []Union{{tag: INT, i: time.Now().UnixMilli()}},
 		expectedOutput:  Union{tag: STRING, s: time.UnixMilli(time.Now().UnixMilli()).Format(time.RFC3339)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "INT union",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: STRING, s: time.UnixMilli(-5).Format(time.RFC3339)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "FLOAT union to INT",
-		inputs:          []Union{Union{tag: FLOAT, f: float64(time.Now().UnixMilli())}},
+		inputs:          []Union{{tag: FLOAT, f: float64(time.Now().UnixMilli())}},
 		expectedOutput:  Union{tag: STRING, s: time.UnixMilli(time.Now().UnixMilli()).Format(time.RFC3339)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "negative FLOAT union to INT",
-		inputs:          []Union{Union{tag: FLOAT, f: -5.5}},
+		inputs:          []Union{{tag: FLOAT, f: -5.5}},
 		expectedOutput:  Union{tag: STRING, s: time.UnixMilli(-5).Format(time.RFC3339)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "int STRING union to INT",
-		inputs:          []Union{Union{tag: STRING, s: "5"}},
+		inputs:          []Union{{tag: STRING, s: "5"}},
 		expectedOutput:  Union{tag: STRING, s: time.UnixMilli(5).Format(time.RFC3339)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "random STRING union to INT",
-		inputs:          []Union{Union{tag: STRING, s: "some string"}},
+		inputs:          []Union{{tag: STRING, s: "some string"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -9455,79 +9455,79 @@ func TestMillisecondsToRFC4449(t *testing.T) {
 }
 
 var SrffTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "empty unions, state true",
-		inputs:          []Union{Union{}, Union{}},
-		state:           map[string][]Union{"q": []Union{Union{tag: BOOL, b: true}}},
+		inputs:          []Union{{}, {}},
+		state:           map[string][]Union{"q": {{tag: BOOL, b: true}}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "empty unions, state false",
-		inputs:          []Union{Union{}, Union{}},
-		state:           map[string][]Union{"q": []Union{Union{tag: BOOL, b: false}}},
+		inputs:          []Union{{}, {}},
+		state:           map[string][]Union{"q": {{tag: BOOL, b: false}}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "both inputs false, state true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
-		state:           map[string][]Union{"q": []Union{Union{tag: BOOL, b: true}}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
+		state:           map[string][]Union{"q": {{tag: BOOL, b: true}}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "input 1 true, state true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
-		state:           map[string][]Union{"q": []Union{Union{tag: BOOL, b: true}}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
+		state:           map[string][]Union{"q": {{tag: BOOL, b: true}}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "input 1 true, state false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
-		state:           map[string][]Union{"q": []Union{Union{tag: BOOL, b: false}}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
+		state:           map[string][]Union{"q": {{tag: BOOL, b: false}}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "input 1 false, input 2 true, state true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
-		state:           map[string][]Union{"q": []Union{Union{tag: BOOL, b: true}}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
+		state:           map[string][]Union{"q": {{tag: BOOL, b: true}}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "input 1 false, input 2 true, state false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
-		state:           map[string][]Union{"q": []Union{Union{tag: BOOL, b: false}}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
+		state:           map[string][]Union{"q": {{tag: BOOL, b: false}}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "both inputs true, state true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
-		state:           map[string][]Union{"q": []Union{Union{tag: BOOL, b: true}}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
+		state:           map[string][]Union{"q": {{tag: BOOL, b: true}}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "both inputs false, state false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
-		state:           map[string][]Union{"q": []Union{Union{tag: BOOL, b: false}}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
+		state:           map[string][]Union{"q": {{tag: BOOL, b: false}}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "state nil",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		state:           nil,
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "string input",
-		inputs:          []Union{Union{tag: STRING, s: "some string"}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: STRING, s: "some string"}, {tag: BOOL, b: false}},
 		state:           nil,
 		expectedOutput:  Union{},
 		errorExpected:   true,
@@ -9571,237 +9571,237 @@ func TestSrff(t *testing.T) {
 }
 
 var RssTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(2.0)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: FLOAT, f: 0.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(2.0)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: FLOAT, f: 1.0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(2.0)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(1 + 5.3*5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(2.0)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(26)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(26)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(1 + 5.3*5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(2.0)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(26)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(26)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(1 + 5.3*5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(1 + 5.3*5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(25 + 5.3*5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(25 + 5.3*5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(6.3*6.3 + 5.3*5.3)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",true",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",UINT(5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",INT(-5)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: INT, i: -5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",FLOAT(6.3)",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello \",\"world!\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello "}, Union{tag: STRING, s: "world!"}},
+		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: STRING, s: "world!"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(27)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = true,true,INT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: INT, i: 5}},
 		expectedOutput:  Union{tag: FLOAT, f: math.Sqrt(27)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(SQRT(maxfloat)),FLOAT(SQRT(maxfloat))",
-		inputs:          []Union{Union{tag: FLOAT, f: math.Sqrt(math.MaxFloat64)}, Union{tag: FLOAT, f: math.Sqrt(math.MaxFloat64)}},
+		inputs:          []Union{{tag: FLOAT, f: math.Sqrt(math.MaxFloat64)}, {tag: FLOAT, f: math.Sqrt(math.MaxFloat64)}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(maxfloat),FLOAT(maxfloat)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: FLOAT, f: math.MaxFloat64}},
+		inputs:          []Union{{tag: FLOAT, f: math.MaxFloat64}, {tag: FLOAT, f: math.MaxFloat64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(-maxfloat),FLOAT(-maxfloat)",
-		inputs:          []Union{Union{tag: FLOAT, f: -math.MaxFloat64}, Union{tag: FLOAT, f: -math.MaxFloat64}},
+		inputs:          []Union{{tag: FLOAT, f: -math.MaxFloat64}, {tag: FLOAT, f: -math.MaxFloat64}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -9829,153 +9829,153 @@ func TestRss(t *testing.T) {
 }
 
 var SelectNTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = false,true,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = true,true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = true,false,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = false,false,true",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = true,UINT(5),UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = true,UINT(5),UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = 1,UINT(5),UINT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = 2,UINT(5),UINT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: UINT, ui: 2}, {tag: UINT, ui: 5}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,INT(5)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 5}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = false,INT(5),INT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 5}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 5}, {tag: INT, i: 1}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = true,INT(5),INT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: 5}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: 5}, {tag: INT, i: 1}},
 		expectedOutput:  Union{tag: INT, i: 5},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = true,FLOAT(5.3),FLOAT(1.0)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{tag: FLOAT, f: 5.3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = false,FLOAT(5.3),FLOAT(1.0)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 1.0}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: STRING, s: "hello"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = true,STRING(\"hello\"),STRING(\"world\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "world"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}, {tag: STRING, s: "world"}},
 		expectedOutput:  Union{tag: STRING, s: "hello"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,STRING(\"hello\"),STRING(\"world\")",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "world"}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: STRING, s: "hello"}, {tag: STRING, s: "world"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = MaxFloat64,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: FLOAT, f: math.MaxFloat64}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -10003,39 +10003,39 @@ func TestSelectN(t *testing.T) {
 }
 
 var EnumTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = false,true,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: STRING, s: "Unknown"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = true,true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = 5,5,'some string'",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 5}, Union{tag: STRING, s: "some string"}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 5}, {tag: STRING, s: "some string"}},
 		expectedOutput:  Union{tag: STRING, s: "some string"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 9, inputs = 5,5,'some string'",
-		inputs:          []Union{Union{tag: INT, i: 3}, Union{tag: INT, i: 1}, Union{tag: STRING, s: "some string1"}, Union{tag: INT, i: 2}, Union{tag: STRING, s: "some string2"}, Union{tag: INT, i: 3}, Union{tag: STRING, s: "some string3"}, Union{tag: INT, i: 4}, Union{tag: STRING, s: "some string4"}},
+		inputs:          []Union{{tag: INT, i: 3}, {tag: INT, i: 1}, {tag: STRING, s: "some string1"}, {tag: INT, i: 2}, {tag: STRING, s: "some string2"}, {tag: INT, i: 3}, {tag: STRING, s: "some string3"}, {tag: INT, i: 4}, {tag: STRING, s: "some string4"}},
 		expectedOutput:  Union{tag: STRING, s: "some string3"},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = MaxFloat64,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: FLOAT, f: math.MaxFloat64}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -10063,105 +10063,105 @@ func TestEnum(t *testing.T) {
 }
 
 var SelectorNTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "no input",
 		inputs:          []Union{},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "empty union to BOOL",
-		inputs:          []Union{Union{}},
+		inputs:          []Union{{}},
 		expectedOutput:  Union{tag: INT, i: -1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "false bool union to BOOL",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: INT, i: -1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "true bool union to BOOL",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "UINT union to BOOL",
-		inputs:          []Union{Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "UINT union to false BOOL",
-		inputs:          []Union{Union{tag: UINT, ui: 0}},
+		inputs:          []Union{{tag: UINT, ui: 0}},
 		expectedOutput:  Union{tag: INT, i: -1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "INT union to BOOL",
-		inputs:          []Union{Union{tag: INT, i: 3}},
+		inputs:          []Union{{tag: INT, i: 3}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "negative INT union to BOOL",
-		inputs:          []Union{Union{tag: INT, i: -3}},
+		inputs:          []Union{{tag: INT, i: -3}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "INT union to false BOOL",
-		inputs:          []Union{Union{tag: INT, i: 0}},
+		inputs:          []Union{{tag: INT, i: 0}},
 		expectedOutput:  Union{tag: INT, i: -1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "FLOAT union to true BOOL",
-		inputs:          []Union{Union{tag: FLOAT, f: 3.3}},
+		inputs:          []Union{{tag: FLOAT, f: 3.3}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "FLOAT union to false BOOL",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}},
 		expectedOutput:  Union{tag: INT, i: -1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "negative FLOAT union to true BOOL",
-		inputs:          []Union{Union{tag: FLOAT, f: -3.3}},
+		inputs:          []Union{{tag: FLOAT, f: -3.3}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "non-empty STRING union to BOOL",
-		inputs:          []Union{Union{tag: STRING, s: "some string"}},
+		inputs:          []Union{{tag: STRING, s: "some string"}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "\"true\" STRING union to BOOL",
-		inputs:          []Union{Union{tag: STRING, s: "true"}},
+		inputs:          []Union{{tag: STRING, s: "true"}},
 		expectedOutput:  Union{tag: INT, i: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "non-empty STRING union to false BOOL",
-		inputs:          []Union{Union{tag: STRING, s: "false"}},
+		inputs:          []Union{{tag: STRING, s: "false"}},
 		expectedOutput:  Union{tag: INT, i: -1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "empty STRING union to BOOL",
-		inputs:          []Union{Union{tag: STRING, s: ""}},
+		inputs:          []Union{{tag: STRING, s: ""}},
 		expectedOutput:  Union{tag: INT, i: -1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "empty STRING union to BOOL",
-		inputs:          []Union{Union{tag: STRING, s: ""}, Union{tag: INT, i: 0}, Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: -3.3}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: STRING, s: ""}, {tag: INT, i: 0}, {tag: BOOL, b: false}, {tag: FLOAT, f: -3.3}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: INT, i: 4},
 		errorExpected:   false,
 	},
@@ -10189,49 +10189,49 @@ func TestSelectorN(t *testing.T) {
 }
 
 var PulseTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "trigger true, wait, trigger true (after timeout)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 1000}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 1000}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}, {tag: INT, i: 1000}, {tag: BOOL, b: true}, {tag: BOOL, b: false}, {tag: INT, i: 1000}},
 		state:           nil,
 		wait:            1100,
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "trigger true, wait, trigger false (after timeout)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 1000}, Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 1000}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}, {tag: INT, i: 1000}, {tag: BOOL, b: false}, {tag: BOOL, b: false}, {tag: INT, i: 1000}},
 		state:           nil,
 		wait:            1500,
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "trigger true, wait, trigger false (before timeout)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 1000}, Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 1000}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}, {tag: INT, i: 1000}, {tag: BOOL, b: false}, {tag: BOOL, b: false}, {tag: INT, i: 1000}},
 		state:           nil,
 		wait:            800,
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "trigger true & reset true, wait, trigger true & reset true (before timeout)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 1000}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 1000}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: INT, i: 1000}, {tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: INT, i: 1000}},
 		state:           nil,
 		wait:            800,
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "trigger true & reset false, wait, trigger false & reset true (before timeout)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 1000}, Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 1000}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}, {tag: INT, i: 1000}, {tag: BOOL, b: false}, {tag: BOOL, b: true}, {tag: INT, i: 1000}},
 		state:           nil,
 		wait:            800,
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "large float timeout",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}, Union{tag: FLOAT, f: math.MaxFloat64}, Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: math.MaxFloat64}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}, {tag: FLOAT, f: math.MaxFloat64}, {tag: BOOL, b: false}, {tag: BOOL, b: true}, {tag: FLOAT, f: math.MaxFloat64}},
 		state:           nil,
 		wait:            100,
 		expectedOutput:  Union{},
@@ -10278,153 +10278,153 @@ func TestPulse(t *testing.T) {
 }
 
 var CompareTests = []TestCase{
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, operator not string",
-		inputs:             []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutputList: []Union{},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, ==, true, true",
-		inputs:             []Union{Union{tag: STRING, s: "=="}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: "=="}, {tag: BOOL, b: true}, {tag: BOOL, b: true}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, ==, true, false",
-		inputs:             []Union{Union{tag: STRING, s: "=="}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: "=="}, {tag: BOOL, b: true}, {tag: BOOL, b: false}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, ==, 3, 5",
-		inputs:             []Union{Union{tag: STRING, s: "=="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: "=="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, ==, 3, 3",
-		inputs:             []Union{Union{tag: STRING, s: "=="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: "=="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, !=, 3, 5",
-		inputs:             []Union{Union{tag: STRING, s: "!="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: "!="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, !=, 3, 3",
-		inputs:             []Union{Union{tag: STRING, s: "!="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: "!="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, <, 3, 5",
-		inputs:             []Union{Union{tag: STRING, s: "<"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: "<"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, <, 3, 3",
-		inputs:             []Union{Union{tag: STRING, s: "<"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: "<"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, <, 3, 2",
-		inputs:             []Union{Union{tag: STRING, s: "<"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: "<"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, >, 3, 5",
-		inputs:             []Union{Union{tag: STRING, s: ">"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: ">"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, >, 3, 3",
-		inputs:             []Union{Union{tag: STRING, s: ">"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: ">"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, >, 3, 2",
-		inputs:             []Union{Union{tag: STRING, s: ">"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: ">"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, <=, 3, 5",
-		inputs:             []Union{Union{tag: STRING, s: "<="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: "<="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, <=, 3, 3",
-		inputs:             []Union{Union{tag: STRING, s: "<="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: "<="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, <=, 3, 2",
-		inputs:             []Union{Union{tag: STRING, s: "<="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: "<="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, >=, 3, 5",
-		inputs:             []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, >=, 3, 3",
-		inputs:             []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
+		expectedOutputList: []Union{{tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, >=, 3, 2",
-		inputs:             []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}},
+		inputs:             []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 4, >=, 3, 2,5",
-		inputs:             []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 5}},
-		expectedOutputList: []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: true}},
+		inputs:             []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}, {tag: UINT, ui: 5}},
+		expectedOutputList: []Union{{tag: BOOL, b: false}, {tag: BOOL, b: true}},
 		errorExpected:      false,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) =3, ~, 3, 2",
-		inputs:             []Union{Union{tag: STRING, s: "~"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
+		inputs:             []Union{{tag: STRING, s: "~"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
 		expectedOutputList: []Union{},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, <, 3, 'string'",
-		inputs:             []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: STRING, s: "string"}},
+		inputs:             []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: STRING, s: "string"}},
 		expectedOutputList: []Union{},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) =3, >, 3, 'string'",
-		inputs:             []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: STRING, s: "string"}},
+		inputs:             []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: STRING, s: "string"}},
 		expectedOutputList: []Union{},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, <=, 3, 'string'",
-		inputs:             []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: STRING, s: "string"}},
+		inputs:             []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: STRING, s: "string"}},
 		expectedOutputList: []Union{},
 		errorExpected:      true,
 	},
-	TestCase{
+	{
 		testDescription:    "len(inputs) = 3, >=, 3, 'string'",
-		inputs:             []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: STRING, s: "string"}},
+		inputs:             []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: STRING, s: "string"}},
 		expectedOutputList: []Union{},
 		errorExpected:      true,
 	},
@@ -10458,153 +10458,153 @@ func TestCompare(t *testing.T) {
 }
 
 var CompareOrTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, operator not string",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, ==, true, true",
-		inputs:          []Union{Union{tag: STRING, s: "=="}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "=="}, {tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, ==, true, false",
-		inputs:          []Union{Union{tag: STRING, s: "=="}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: STRING, s: "=="}, {tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, ==, 3, 5",
-		inputs:          []Union{Union{tag: STRING, s: "=="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "=="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, ==, 3, 3",
-		inputs:          []Union{Union{tag: STRING, s: "=="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: STRING, s: "=="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, !=, 3, 5",
-		inputs:          []Union{Union{tag: STRING, s: "!="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "!="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, !=, 3, 3",
-		inputs:          []Union{Union{tag: STRING, s: "!="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: STRING, s: "!="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <, 3, 5",
-		inputs:          []Union{Union{tag: STRING, s: "<"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "<"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <, 3, 3",
-		inputs:          []Union{Union{tag: STRING, s: "<"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: STRING, s: "<"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <, 3, 2",
-		inputs:          []Union{Union{tag: STRING, s: "<"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: STRING, s: "<"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >, 3, 5",
-		inputs:          []Union{Union{tag: STRING, s: ">"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: ">"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >, 3, 3",
-		inputs:          []Union{Union{tag: STRING, s: ">"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: STRING, s: ">"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >, 3, 2",
-		inputs:          []Union{Union{tag: STRING, s: ">"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: STRING, s: ">"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <=, 3, 5",
-		inputs:          []Union{Union{tag: STRING, s: "<="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "<="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <=, 3, 3",
-		inputs:          []Union{Union{tag: STRING, s: "<="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: STRING, s: "<="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <=, 3, 2",
-		inputs:          []Union{Union{tag: STRING, s: "<="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: STRING, s: "<="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >=, 3, 5",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >=, 3, 3",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >=, 3, 2",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, >=, 3, 2,5",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) =3, ~, 3, 2",
-		inputs:          []Union{Union{tag: STRING, s: "~"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: STRING, s: "~"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <, 3, 'string'",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: STRING, s: "string"}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: STRING, s: "string"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) =3, >, 3, 'string'",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: STRING, s: "string"}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: STRING, s: "string"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <=, 3, 'string'",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: STRING, s: "string"}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: STRING, s: "string"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >=, 3, 'string'",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: STRING, s: "string"}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: STRING, s: "string"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -10632,171 +10632,171 @@ func TestCompareOr(t *testing.T) {
 }
 
 var CompareAndTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, operator not string",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, ==, true, true",
-		inputs:          []Union{Union{tag: STRING, s: "=="}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: STRING, s: "=="}, {tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, ==, true, false",
-		inputs:          []Union{Union{tag: STRING, s: "=="}, Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: STRING, s: "=="}, {tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, ==, 3, 5",
-		inputs:          []Union{Union{tag: STRING, s: "=="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "=="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, ==, 3, 3",
-		inputs:          []Union{Union{tag: STRING, s: "=="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: STRING, s: "=="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, !=, 3, 5",
-		inputs:          []Union{Union{tag: STRING, s: "!="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "!="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, !=, 3, 3",
-		inputs:          []Union{Union{tag: STRING, s: "!="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: STRING, s: "!="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <, 3, 5",
-		inputs:          []Union{Union{tag: STRING, s: "<"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "<"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <, 3, 3",
-		inputs:          []Union{Union{tag: STRING, s: "<"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: STRING, s: "<"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <, 3, 2",
-		inputs:          []Union{Union{tag: STRING, s: "<"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: STRING, s: "<"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >, 3, 5",
-		inputs:          []Union{Union{tag: STRING, s: ">"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: ">"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >, 3, 3",
-		inputs:          []Union{Union{tag: STRING, s: ">"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: STRING, s: ">"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >, 3, 2",
-		inputs:          []Union{Union{tag: STRING, s: ">"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: STRING, s: ">"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <=, 3, 5",
-		inputs:          []Union{Union{tag: STRING, s: "<="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "<="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <=, 3, 3",
-		inputs:          []Union{Union{tag: STRING, s: "<="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: STRING, s: "<="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <=, 3, 2",
-		inputs:          []Union{Union{tag: STRING, s: "<="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: STRING, s: "<="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >=, 3, 5",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >=, 3, 3",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 3}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 3}},
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >=, 3, 2",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, >=, 3, 2, 5",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, >, 3, 2, 5",
-		inputs:          []Union{Union{tag: STRING, s: ">"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: ">"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, <, 3, 2,5",
-		inputs:          []Union{Union{tag: STRING, s: "<"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "<"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 4, <=, 3, 2,5",
-		inputs:          []Union{Union{tag: STRING, s: "<="}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: STRING, s: "<="}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}, {tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, ~, 3, 2",
-		inputs:          []Union{Union{tag: STRING, s: "~"}, Union{tag: UINT, ui: 3}, Union{tag: UINT, ui: 2}},
+		inputs:          []Union{{tag: STRING, s: "~"}, {tag: UINT, ui: 3}, {tag: UINT, ui: 2}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <, 3, 'string'",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: STRING, s: "string"}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: STRING, s: "string"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >, 3, 'string'",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: STRING, s: "string"}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: STRING, s: "string"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, <=, 3, 'string'",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: STRING, s: "string"}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: STRING, s: "string"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, >=, 3, 'string'",
-		inputs:          []Union{Union{tag: STRING, s: ">="}, Union{tag: UINT, ui: 3}, Union{tag: STRING, s: "string"}},
+		inputs:          []Union{{tag: STRING, s: ">="}, {tag: UINT, ui: 3}, {tag: STRING, s: "string"}},
 		expectedOutput:  Union{},
 		errorExpected:   true,
 	},
@@ -10824,89 +10824,89 @@ func TestCompareAnd(t *testing.T) {
 }
 
 var MaxOverTimescaleTestCases = []TestCase{
-	TestCase{
+	{
 		testDescription: "NIL union",
-		inputs:          []Union{Union{tag: NIL, s: "false"}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: NIL, s: "false"}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{},
 		errorExpected:   true,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "STRING union",
-		inputs:          []Union{Union{tag: STRING, s: "false"}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: STRING, s: "false"}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{},
 		errorExpected:   true,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "all false unions",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 310}, {tag: BOOL, b: false}, {tag: INT, i: 310}, {tag: BOOL, b: false}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "one true union",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 310}, {tag: BOOL, b: true}, {tag: INT, i: 310}, {tag: BOOL, b: false}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "one true union with timeout",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 100}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 100}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 100}, {tag: BOOL, b: true}, {tag: INT, i: 100}, {tag: BOOL, b: false}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "max with uints",
-		inputs:          []Union{Union{tag: UINT, ui: 100}, Union{tag: INT, i: 310}, Union{tag: UINT, ui: 101}, Union{tag: INT, i: 310}, Union{tag: UINT, ui: 99}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: UINT, ui: 100}, {tag: INT, i: 310}, {tag: UINT, ui: 101}, {tag: INT, i: 310}, {tag: UINT, ui: 99}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: UINT, ui: 101},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "max with uints with timeout",
-		inputs:          []Union{Union{tag: UINT, ui: 100}, Union{tag: INT, i: 100}, Union{tag: UINT, ui: 101}, Union{tag: INT, i: 100}, Union{tag: UINT, ui: 99}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: UINT, ui: 100}, {tag: INT, i: 100}, {tag: UINT, ui: 101}, {tag: INT, i: 100}, {tag: UINT, ui: 99}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: UINT, ui: 99},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "max with ints",
-		inputs:          []Union{Union{tag: INT, i: 100}, Union{tag: INT, i: 310}, Union{tag: INT, i: 101}, Union{tag: INT, i: 310}, Union{tag: INT, i: 99}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: INT, i: 100}, {tag: INT, i: 310}, {tag: INT, i: 101}, {tag: INT, i: 310}, {tag: INT, i: 99}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: INT, i: 101},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "max with ints with timeout",
-		inputs:          []Union{Union{tag: INT, i: 100}, Union{tag: INT, i: 100}, Union{tag: INT, i: 101}, Union{tag: INT, i: 100}, Union{tag: INT, i: 99}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: INT, i: 100}, {tag: INT, i: 100}, {tag: INT, i: 101}, {tag: INT, i: 100}, {tag: INT, i: 99}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: INT, i: 99},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "max with floats",
-		inputs:          []Union{Union{tag: FLOAT, f: 100}, Union{tag: INT, i: 310}, Union{tag: FLOAT, f: 101}, Union{tag: INT, i: 310}, Union{tag: FLOAT, f: 99}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: FLOAT, f: 100}, {tag: INT, i: 310}, {tag: FLOAT, f: 101}, {tag: INT, i: 310}, {tag: FLOAT, f: 99}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: FLOAT, f: 101},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "max with floats with timeout",
-		inputs:          []Union{Union{tag: FLOAT, f: 100}, Union{tag: INT, i: 100}, Union{tag: FLOAT, f: 101}, Union{tag: INT, i: 100}, Union{tag: FLOAT, f: 99}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: FLOAT, f: 100}, {tag: INT, i: 100}, {tag: FLOAT, f: 101}, {tag: INT, i: 100}, {tag: FLOAT, f: 99}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: FLOAT, f: 99},
 		errorExpected:   false,
@@ -10953,89 +10953,89 @@ func TestMaxOverTimescale(t *testing.T) {
 }
 
 var MinOverTimescaleTestCases = []TestCase{
-	TestCase{
+	{
 		testDescription: "NIL union",
-		inputs:          []Union{Union{tag: NIL, s: "false"}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: NIL, s: "false"}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{},
 		errorExpected:   true,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "STRING union",
-		inputs:          []Union{Union{tag: STRING, s: "false"}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: STRING, s: "false"}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{},
 		errorExpected:   true,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "all false unions",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 310}, {tag: BOOL, b: false}, {tag: INT, i: 310}, {tag: BOOL, b: false}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "one false union",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: 310}, {tag: BOOL, b: false}, {tag: INT, i: 310}, {tag: BOOL, b: true}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "one false union with timeout",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: 100}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 100}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: 100}, {tag: BOOL, b: false}, {tag: INT, i: 100}, {tag: BOOL, b: true}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "min with uints",
-		inputs:          []Union{Union{tag: UINT, ui: 100}, Union{tag: INT, i: 310}, Union{tag: UINT, ui: 30}, Union{tag: INT, i: 310}, Union{tag: UINT, ui: 99}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: UINT, ui: 100}, {tag: INT, i: 310}, {tag: UINT, ui: 30}, {tag: INT, i: 310}, {tag: UINT, ui: 99}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: UINT, ui: 30},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "min with uints with timeout",
-		inputs:          []Union{Union{tag: UINT, ui: 100}, Union{tag: INT, i: 100}, Union{tag: UINT, ui: 30}, Union{tag: INT, i: 100}, Union{tag: UINT, ui: 99}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: UINT, ui: 100}, {tag: INT, i: 100}, {tag: UINT, ui: 30}, {tag: INT, i: 100}, {tag: UINT, ui: 99}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: UINT, ui: 99},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "min with ints",
-		inputs:          []Union{Union{tag: INT, i: 100}, Union{tag: INT, i: 310}, Union{tag: INT, i: 30}, Union{tag: INT, i: 310}, Union{tag: INT, i: 99}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: INT, i: 100}, {tag: INT, i: 310}, {tag: INT, i: 30}, {tag: INT, i: 310}, {tag: INT, i: 99}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: INT, i: 30},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "min with ints with timeout",
-		inputs:          []Union{Union{tag: INT, i: 100}, Union{tag: INT, i: 100}, Union{tag: INT, i: 30}, Union{tag: INT, i: 100}, Union{tag: INT, i: 99}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: INT, i: 100}, {tag: INT, i: 100}, {tag: INT, i: 30}, {tag: INT, i: 100}, {tag: INT, i: 99}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: INT, i: 99},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "min with floats",
-		inputs:          []Union{Union{tag: FLOAT, f: 100}, Union{tag: INT, i: 310}, Union{tag: FLOAT, f: 30}, Union{tag: INT, i: 310}, Union{tag: FLOAT, f: 99}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: FLOAT, f: 100}, {tag: INT, i: 310}, {tag: FLOAT, f: 30}, {tag: INT, i: 310}, {tag: FLOAT, f: 99}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: FLOAT, f: 30},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "min with floats with timeout",
-		inputs:          []Union{Union{tag: FLOAT, f: 100}, Union{tag: INT, i: 100}, Union{tag: FLOAT, f: 30}, Union{tag: INT, i: 100}, Union{tag: FLOAT, f: 99}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: FLOAT, f: 100}, {tag: INT, i: 100}, {tag: FLOAT, f: 30}, {tag: INT, i: 100}, {tag: FLOAT, f: 99}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: FLOAT, f: 99},
 		errorExpected:   false,
@@ -11082,73 +11082,73 @@ func TestMinOverTimescale(t *testing.T) {
 }
 
 var AvgOverTimescaleTestCases = []TestCase{
-	TestCase{
+	{
 		testDescription: "NIL union",
-		inputs:          []Union{Union{tag: NIL, s: "false"}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: NIL, s: "false"}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{},
 		errorExpected:   true,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "STRING union",
-		inputs:          []Union{Union{tag: STRING, s: "false"}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: STRING, s: "false"}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{},
 		errorExpected:   true,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "all bool unions",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 310}, {tag: BOOL, b: true}, {tag: INT, i: 310}, {tag: BOOL, b: false}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{},
 		errorExpected:   true,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "avg with uints",
-		inputs:          []Union{Union{tag: UINT, ui: 100}, Union{tag: INT, i: 310}, Union{tag: UINT, ui: 30}, Union{tag: INT, i: 310}, Union{tag: UINT, ui: 99}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: UINT, ui: 100}, {tag: INT, i: 310}, {tag: UINT, ui: 30}, {tag: INT, i: 310}, {tag: UINT, ui: 99}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: UINT, ui: 76},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "avg with uints with timeout",
-		inputs:          []Union{Union{tag: UINT, ui: 100}, Union{tag: INT, i: 100}, Union{tag: UINT, ui: 30}, Union{tag: INT, i: 100}, Union{tag: UINT, ui: 99}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: UINT, ui: 100}, {tag: INT, i: 100}, {tag: UINT, ui: 30}, {tag: INT, i: 100}, {tag: UINT, ui: 99}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: UINT, ui: 99},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "avg with ints",
-		inputs:          []Union{Union{tag: INT, i: 100}, Union{tag: INT, i: 310}, Union{tag: INT, i: 30}, Union{tag: INT, i: 310}, Union{tag: INT, i: 99}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: INT, i: 100}, {tag: INT, i: 310}, {tag: INT, i: 30}, {tag: INT, i: 310}, {tag: INT, i: 99}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: INT, i: 76},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "avg with ints with timeout",
-		inputs:          []Union{Union{tag: INT, i: 100}, Union{tag: INT, i: 100}, Union{tag: INT, i: 30}, Union{tag: INT, i: 100}, Union{tag: INT, i: 99}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: INT, i: 100}, {tag: INT, i: 100}, {tag: INT, i: 30}, {tag: INT, i: 100}, {tag: INT, i: 99}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: INT, i: 99},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "avg with floats",
-		inputs:          []Union{Union{tag: FLOAT, f: 100}, Union{tag: INT, i: 310}, Union{tag: FLOAT, f: 30}, Union{tag: INT, i: 310}, Union{tag: FLOAT, f: 99}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: FLOAT, f: 100}, {tag: INT, i: 310}, {tag: FLOAT, f: 30}, {tag: INT, i: 310}, {tag: FLOAT, f: 99}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: FLOAT, f: (100.0 + 30.0 + 99.0) / 3.0},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "avg with floats with timeout",
-		inputs:          []Union{Union{tag: FLOAT, f: 100}, Union{tag: INT, i: 100}, Union{tag: FLOAT, f: 30}, Union{tag: INT, i: 100}, Union{tag: FLOAT, f: 99}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: FLOAT, f: 100}, {tag: INT, i: 100}, {tag: FLOAT, f: 30}, {tag: INT, i: 100}, {tag: FLOAT, f: 99}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: FLOAT, f: 99.0},
 		errorExpected:   false,
@@ -11195,73 +11195,73 @@ func TestAvgOverTimescale(t *testing.T) {
 }
 
 var SumOverTimescaleTestCases = []TestCase{
-	TestCase{
+	{
 		testDescription: "NIL union",
-		inputs:          []Union{Union{tag: NIL, s: "false"}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: NIL, s: "false"}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{},
 		errorExpected:   true,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "STRING union",
-		inputs:          []Union{Union{tag: STRING, s: "false"}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: STRING, s: "false"}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{},
 		errorExpected:   true,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "all bool unions",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 310}, {tag: BOOL, b: true}, {tag: INT, i: 310}, {tag: BOOL, b: false}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "sum with uints",
-		inputs:          []Union{Union{tag: UINT, ui: 100}, Union{tag: INT, i: 310}, Union{tag: UINT, ui: 30}, Union{tag: INT, i: 310}, Union{tag: UINT, ui: 99}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: UINT, ui: 100}, {tag: INT, i: 310}, {tag: UINT, ui: 30}, {tag: INT, i: 310}, {tag: UINT, ui: 99}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: UINT, ui: 229},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "sum with uints with timeout",
-		inputs:          []Union{Union{tag: UINT, ui: 100}, Union{tag: INT, i: 100}, Union{tag: UINT, ui: 30}, Union{tag: INT, i: 100}, Union{tag: UINT, ui: 99}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: UINT, ui: 100}, {tag: INT, i: 100}, {tag: UINT, ui: 30}, {tag: INT, i: 100}, {tag: UINT, ui: 99}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: UINT, ui: 99},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "sum with ints",
-		inputs:          []Union{Union{tag: INT, i: 100}, Union{tag: INT, i: 310}, Union{tag: INT, i: 30}, Union{tag: INT, i: 310}, Union{tag: INT, i: 99}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: INT, i: 100}, {tag: INT, i: 310}, {tag: INT, i: 30}, {tag: INT, i: 310}, {tag: INT, i: 99}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: INT, i: 229},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "sum with ints with timeout",
-		inputs:          []Union{Union{tag: INT, i: 100}, Union{tag: INT, i: 100}, Union{tag: INT, i: 30}, Union{tag: INT, i: 100}, Union{tag: INT, i: 99}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: INT, i: 100}, {tag: INT, i: 100}, {tag: INT, i: 30}, {tag: INT, i: 100}, {tag: INT, i: 99}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: INT, i: 99},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "sum with floats",
-		inputs:          []Union{Union{tag: FLOAT, f: 100}, Union{tag: INT, i: 310}, Union{tag: FLOAT, f: 30}, Union{tag: INT, i: 310}, Union{tag: FLOAT, f: 99}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: FLOAT, f: 100}, {tag: INT, i: 310}, {tag: FLOAT, f: 30}, {tag: INT, i: 310}, {tag: FLOAT, f: 99}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: FLOAT, f: 229},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "sum with floats with timeout",
-		inputs:          []Union{Union{tag: FLOAT, f: 100}, Union{tag: INT, i: 100}, Union{tag: FLOAT, f: 30}, Union{tag: INT, i: 100}, Union{tag: FLOAT, f: 99}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: FLOAT, f: 100}, {tag: INT, i: 100}, {tag: FLOAT, f: 30}, {tag: INT, i: 100}, {tag: FLOAT, f: 99}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: FLOAT, f: 99.0},
 		errorExpected:   false,
@@ -11308,73 +11308,73 @@ func TestSumOverTimescale(t *testing.T) {
 }
 
 var ValueChangedOverTimescaleTestCases = []TestCase{
-	TestCase{
+	{
 		testDescription: "all false unions",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 310}, {tag: BOOL, b: false}, {tag: INT, i: 310}, {tag: BOOL, b: false}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "one true union",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 310}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 310}, {tag: BOOL, b: true}, {tag: INT, i: 310}, {tag: BOOL, b: false}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "one true union with timeout",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: INT, i: 100}, Union{tag: BOOL, b: true}, Union{tag: INT, i: 100}, Union{tag: BOOL, b: false}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: INT, i: 100}, {tag: BOOL, b: true}, {tag: INT, i: 100}, {tag: BOOL, b: false}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "uint changed",
-		inputs:          []Union{Union{tag: UINT, ui: 100}, Union{tag: INT, i: 310}, Union{tag: UINT, ui: 101}, Union{tag: INT, i: 310}, Union{tag: UINT, ui: 100}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: UINT, ui: 100}, {tag: INT, i: 310}, {tag: UINT, ui: 101}, {tag: INT, i: 310}, {tag: UINT, ui: 100}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "uint with timeout",
-		inputs:          []Union{Union{tag: UINT, ui: 100}, Union{tag: INT, i: 100}, Union{tag: UINT, ui: 101}, Union{tag: INT, i: 100}, Union{tag: UINT, ui: 100}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: UINT, ui: 100}, {tag: INT, i: 100}, {tag: UINT, ui: 101}, {tag: INT, i: 100}, {tag: UINT, ui: 100}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "int changed",
-		inputs:          []Union{Union{tag: INT, i: 100}, Union{tag: INT, i: 310}, Union{tag: INT, i: 101}, Union{tag: INT, i: 310}, Union{tag: INT, i: 100}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: INT, i: 100}, {tag: INT, i: 310}, {tag: INT, i: 101}, {tag: INT, i: 310}, {tag: INT, i: 100}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "int with timeout",
-		inputs:          []Union{Union{tag: INT, i: 100}, Union{tag: INT, i: 100}, Union{tag: INT, i: 101}, Union{tag: INT, i: 100}, Union{tag: INT, i: 100}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: INT, i: 100}, {tag: INT, i: 100}, {tag: INT, i: 101}, {tag: INT, i: 100}, {tag: INT, i: 100}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 		wait:            int64(110),
 	},
-	TestCase{
+	{
 		testDescription: "float changed",
-		inputs:          []Union{Union{tag: FLOAT, f: 100}, Union{tag: INT, i: 310}, Union{tag: FLOAT, f: 101}, Union{tag: INT, i: 310}, Union{tag: FLOAT, f: 100}, Union{tag: INT, i: 310}},
+		inputs:          []Union{{tag: FLOAT, f: 100}, {tag: INT, i: 310}, {tag: FLOAT, f: 101}, {tag: INT, i: 310}, {tag: FLOAT, f: 100}, {tag: INT, i: 310}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 		wait:            int64(100),
 	},
-	TestCase{
+	{
 		testDescription: "float changed with timeout",
-		inputs:          []Union{Union{tag: FLOAT, f: 100}, Union{tag: INT, i: 100}, Union{tag: FLOAT, f: 101}, Union{tag: INT, i: 100}, Union{tag: FLOAT, f: 100}, Union{tag: INT, i: 100}},
+		inputs:          []Union{{tag: FLOAT, f: 100}, {tag: INT, i: 100}, {tag: FLOAT, f: 101}, {tag: INT, i: 100}, {tag: FLOAT, f: 100}, {tag: INT, i: 100}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
@@ -11421,226 +11421,226 @@ func TestValueChangedOverTimescale(t *testing.T) {
 }
 
 var ValueChangedTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "bool no change",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "bool change",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "bool-ui change",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "ui-bool change",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: BOOL, b: true}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 5}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(5),UINT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}, {tag: UINT, ui: 5}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 1}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(5)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: -5}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 5.3}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),FLOAT(1.0)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: FLOAT, f: 1.0}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: FLOAT, f: 1.0}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: STRING, s: "hello"}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),true",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: BOOL, b: true}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),true",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: BOOL, b: true}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(0),true",
-		inputs:          []Union{Union{tag: INT, i: 0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: INT, i: 0}, {tag: BOOL, b: true}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(-1),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: -1}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: -1}, {tag: UINT, ui: 5}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),UINT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: UINT, ui: 5}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: INT, i: 5}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),INT(5)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: INT, i: 5}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: FLOAT, f: 5.3}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(5),FLOAT(5.0)",
-		inputs:          []Union{Union{tag: INT, i: 5}, Union{tag: FLOAT, f: 5.0}},
+		inputs:          []Union{{tag: INT, i: 5}, {tag: FLOAT, f: 5.0}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = INT(1),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: INT, i: 1}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: INT, i: 1}, {tag: STRING, s: "hello"}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(1.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 1.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 1.0}, {tag: BOOL, b: true}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),true",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: true}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(0.0),false",
-		inputs:          []Union{Union{tag: FLOAT, f: 0.0}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: FLOAT, f: 0.0}, {tag: BOOL, b: false}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: UINT, ui: 5}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),UINT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: UINT, ui: 5}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.0),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.0}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.0}, {tag: INT, i: 5}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),INT(5)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: INT, i: 5}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: INT, i: 5}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(6.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 6.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 6.3}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),FLOAT(5.3)",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: FLOAT, f: 5.3}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.3}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",\"hello\"",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hello"}},
 		state:           make(map[string][]Union, 0),
 		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
@@ -11670,94 +11670,94 @@ func TestValueChanged(t *testing.T) {
 }
 
 var CountTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
-		expectedOutput:  Union{tag:UINT, ui:0},
+		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
-		expectedOutput:  Union{tag: UINT, ui:1},
+		inputs:          []Union{{tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
+		inputs:          []Union{{tag: UINT, ui: 5}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
-		expectedOutput: Union{tag: UINT, ui: 3},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: UINT, ui: 3},
 		errorExpected:   false,
 	},
 }
@@ -11784,94 +11784,94 @@ func TestCount(t *testing.T) {
 }
 
 var CombineBitsTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 0",
 		inputs:          []Union{},
-		expectedOutput:  Union{tag:UINT, ui:0},
+		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
-		expectedOutput:  Union{tag: UINT, ui:2},
+		inputs:          []Union{{tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (false)",
-		inputs:          []Union{Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: UINT, ui: 1},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = int",
-		inputs:          []Union{Union{tag: INT, i: -5}},
+		inputs:          []Union{{tag: INT, i: -5}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = uint",
-		inputs:          []Union{Union{tag: UINT, ui: 5}},
-		expectedOutput:  Union{tag: UINT, ui: uint64(1<<5)},
+		inputs:          []Union{{tag: UINT, ui: 5}},
+		expectedOutput:  Union{tag: UINT, ui: uint64(1 << 5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = float",
-		inputs:          []Union{Union{tag: FLOAT, f: 5.4}},
-		expectedOutput:  Union{tag: UINT, ui: uint64(1<<5)},
+		inputs:          []Union{{tag: FLOAT, f: 5.4}},
+		expectedOutput:  Union{tag: UINT, ui: uint64(1 << 5)},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = string",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: UINT, ui: 0},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
 		expectedOutput:  Union{tag: UINT, ui: 4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 4},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: UINT, ui: 1}},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: UINT, ui: 1}},
 		expectedOutput:  Union{tag: UINT, ui: 3},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,INT(-1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: INT, i: -1}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: INT, i: -1}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,FLOAT(5.3)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: FLOAT, f: 5.3}},
-		expectedOutput:  Union{tag: UINT, ui: uint64(2 + (1<<5))},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: FLOAT, f: 5.3}},
+		expectedOutput:  Union{tag: UINT, ui: uint64(2 + (1 << 5))},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,STRING(\"hello\")",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: STRING, s: "hello"}},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: STRING, s: "hello"}},
 		expectedOutput:  Union{tag: UINT, ui: 2},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
-		expectedOutput: Union{tag: UINT, ui: uint64(4+(1<<5))},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: UINT, ui: uint64(4 + (1 << 5))},
 		errorExpected:   false,
 	},
 }
@@ -11897,72 +11897,71 @@ func TestCombineBits(t *testing.T) {
 	}
 }
 
-
 var InTests = []TestCase{
-	TestCase{
+	{
 		testDescription: "len(inputs) = 1, input = bool (true)",
-		inputs:          []Union{Union{tag: BOOL, b: true}},
-		expectedOutput:  Union{tag: BOOL, b:false},
+		inputs:          []Union{{tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,true",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: true}},
-		expectedOutput:  Union{tag: BOOL, b:true},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = false,false",
-		inputs:          []Union{Union{tag: BOOL, b: false}, Union{tag: BOOL, b: false}},
-		expectedOutput:  Union{tag: BOOL, b:true},
+		inputs:          []Union{{tag: BOOL, b: false}, {tag: BOOL, b: false}},
+		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,false",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: BOOL, b: false}},
-		expectedOutput:  Union{tag: BOOL, b:false},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: BOOL, b: false}},
+		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = true,UINT(1)",
-		inputs:          []Union{Union{tag: BOOL, b: true}, Union{tag: UINT, ui: 1}},
-		expectedOutput:  Union{tag: BOOL, b:false},
+		inputs:          []Union{{tag: BOOL, b: true}, {tag: UINT, ui: 1}},
+		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),UINT(1)",
-		inputs:          []Union{Union{tag: UINT, ui:1}, Union{tag: UINT, ui: 1}},
-		expectedOutput:  Union{tag: BOOL, b:true},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: UINT, ui: 1}},
+		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = UINT(1),INT(1)",
-		inputs:          []Union{Union{tag: UINT, ui:1}, Union{tag: INT, i: 1}},
-		expectedOutput:  Union{tag: BOOL, b:false},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 1}},
+		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = STRING(\"hello\"),STRING(\"goodbye\")",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "goodbye"}},
-		expectedOutput:  Union{tag: BOOL, b:false},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "goodbye"}},
+		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 2, inputs = STRING(\"hello\"),STRING(\"hello\")",
-		inputs:          []Union{Union{tag: STRING, s: "hello"}, Union{tag: STRING, s: "hello"}},
-		expectedOutput:  Union{tag: BOOL, b:true},
+		inputs:          []Union{{tag: STRING, s: "hello"}, {tag: STRING, s: "hello"}},
+		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),true",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: BOOL, b: true}},
-		expectedOutput: Union{tag: BOOL, b:false},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}, {tag: BOOL, b: true}},
+		expectedOutput:  Union{tag: BOOL, b: false},
 		errorExpected:   false,
 	},
-	TestCase{
+	{
 		testDescription: "len(inputs) = 3, inputs = UINT(1),INT(5),UINT(1)",
-		inputs:          []Union{Union{tag: UINT, ui: 1}, Union{tag: INT, i: 5}, Union{tag: UINT, ui: 1}},
-		expectedOutput: Union{tag: BOOL, b:true},
+		inputs:          []Union{{tag: UINT, ui: 1}, {tag: INT, i: 5}, {tag: UINT, ui: 1}},
+		expectedOutput:  Union{tag: BOOL, b: true},
 		errorExpected:   false,
 	},
 }
@@ -11970,7 +11969,7 @@ var InTests = []TestCase{
 func TestIn(t *testing.T) {
 	var output Union
 	var err error
-	
+
 	for _, test := range InTests {
 		t0 := time.Now()
 		output, err = In(test.inputs[0], test.inputs[1:])

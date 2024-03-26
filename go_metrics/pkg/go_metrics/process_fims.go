@@ -247,7 +247,7 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 		switch jsonPaths2 := jsonPaths.(type) {
 		case map[string]interface{}:
 			iter.Advance()
-			findValuesInMap(msg, (*msg).Uri, (*msg).Frags[len((*msg).Frags)-1], jsonPaths2, &iter)
+			findValuesInMap(msg, (*msg).Uri, jsonPaths2, &iter)
 		case interface{}:
 			elementValueMutex.Lock()
 			elementValue, _ = iter.Interface()
@@ -257,33 +257,39 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 	}
 }
 
-func findValuesInMap(msg *fims.FimsMsgRaw, currentUri string, currentKey string, valuesToLookFor map[string]interface{}, iter *simdjson.Iter) {
+func findValuesInMap(msg *fims.FimsMsgRaw, currentUri string, valuesToLookFor map[string]interface{}, iter *simdjson.Iter) {
 	fullUri := ""
 	var err error
 	typ := iter.Type()
 	for {
 		switch typ {
 		case simdjson.TypeRoot:
+			// iterMap is used to store the current simdjson.Iter object
+			// We use a map so that we don't have to keep reallocating memory
 			if typ, iterMap[currentUri], err = iter.Root(iterMap[currentUri]); err != nil {
 				return
 			}
 		case simdjson.TypeObject:
 			if _, ok := iterMap[currentUri]; ok {
+				// objMap is used to store the current simdjson.Object object
+				// We use a map so that we don't have to keep reallocating memory
 				if objMap[currentUri], err = iterMap[currentUri].Object(objMap[currentUri]); err != nil {
 					return
 				}
-			} 
+			}
 			// else { // I don't think this is necessary, but it was here just in case.
 			// 	if objMap[currentUri], err = iter.Object(objMap[currentUri]); err != nil {
 			// 		return
 			// 	}
 			// }
-			
-			if _, ok := elemMap[currentUri]; !ok{
+
+			// elemMap is used to store the current simdjson.Iter object for the element that we're on
+			// We use a map so that we don't have to keep reallocating memory
+			if _, ok := elemMap[currentUri]; !ok {
 				elemMap[currentUri] = &simdjson.Iter{}
 			}
 			if _, ok := objMap[currentUri]; ok {
-				name, typ, err := objMap[currentUri].NextElement(elemMap[currentUri]); 
+				name, typ, err := objMap[currentUri].NextElement(elemMap[currentUri])
 				for typ != simdjson.TypeNone && err == nil {
 					if val, ok := valuesToLookFor[name]; ok || name == "value" {
 						if name == "value" {
@@ -295,7 +301,7 @@ func findValuesInMap(msg *fims.FimsMsgRaw, currentUri string, currentKey string,
 						if typ == simdjson.TypeObject {
 							value := val.(map[string]interface{})
 							iterMap[fullUri] = elemMap[currentUri]
-							findValuesInMap(msg, fullUri, name, value, elemMap[currentUri])
+							findValuesInMap(msg, fullUri, value, elemMap[currentUri])
 						} else {
 							elementValueMutex.Lock()
 							elementValue, _ = elemMap[currentUri].Interface()
@@ -303,8 +309,8 @@ func findValuesInMap(msg *fims.FimsMsgRaw, currentUri string, currentKey string,
 							elementValueMutex.Unlock()
 						}
 					}
-					name, typ, err = objMap[currentUri].NextElement(elemMap[currentUri]); 
-				} 
+					name, typ, err = objMap[currentUri].NextElement(elemMap[currentUri])
+				}
 				return
 			}
 		case simdjson.TypeNone:
@@ -320,7 +326,9 @@ func handleUriElement(msg *fims.FimsMsgRaw, uri string, elementName string) {
 	// handle inputs
 	if inputNames, ok := uriToInputNameMap[uri]; ok {
 		for _, inputName := range inputNames {
-			handleDecodedMetricsInputValue(inputName)
+			if MetricsConfig.Inputs[inputName].Method == "" || MetricsConfig.Inputs[inputName].Method == "both" || msg.Method == MetricsConfig.Inputs[inputName].Method {
+				handleDecodedMetricsInputValue(inputName)
+			}
 		}
 	}
 
@@ -328,22 +336,26 @@ func handleUriElement(msg *fims.FimsMsgRaw, uri string, elementName string) {
 	if inputsWithAttribute, ok := allPossibleAttributes[elementName]; ok {
 		if inputNames, ok := uriToInputNameMap[GetParentUri(uri)]; ok {
 			for _, inputName := range inputNames {
-				if stringInSlice(inputsWithAttribute, inputName +"@" + elementName){
-					handleDecodedMetricsAttributeValue(inputName,inputName +"@" + elementName)
+				if MetricsConfig.Inputs[inputName].Method == "" || MetricsConfig.Inputs[inputName].Method == "both" || msg.Method == MetricsConfig.Inputs[inputName].Method {
+					if stringInSlice(inputsWithAttribute, inputName+"@"+elementName) {
+						handleDecodedMetricsAttributeValue(inputName, inputName+"@"+elementName)
+					}
 				}
 			}
 		}
 	}
 
 	// handle attributes at uris like /some/uri/input@attribute
-	if strings.Contains(uri,"@") {
-		input := strings.Split(elementName,"@")[0]
+	if strings.Contains(uri, "@") {
+		input := strings.Split(elementName, "@")[0]
 		elementName2 := strings.Split(uri, "@")[1]
 		if inputsWithAttribute, ok := allPossibleAttributes[elementName2]; ok {
-			if inputNames, ok := uriToInputNameMap[GetParentUri(uri) + "/" + input]; ok {
+			if inputNames, ok := uriToInputNameMap[GetParentUri(uri)+"/"+input]; ok {
 				for _, inputName := range inputNames {
-					if stringInSlice(inputsWithAttribute, inputName +"@" + elementName2){
-						handleDecodedMetricsAttributeValue(inputName,inputName +"@" + elementName2)
+					if MetricsConfig.Inputs[inputName].Method == "" || MetricsConfig.Inputs[inputName].Method == "both" || msg.Method == MetricsConfig.Inputs[inputName].Method {
+						if stringInSlice(inputsWithAttribute, inputName+"@"+elementName2) {
+							handleDecodedMetricsAttributeValue(inputName, inputName+"@"+elementName2)
+						}
 					}
 				}
 			}
@@ -393,7 +405,6 @@ func handleUriElement(msg *fims.FimsMsgRaw, uri string, elementName string) {
 		}
 	}
 }
-
 
 // make it so that we recalculate all filters using the input
 // and all expressions using the result of that filter
@@ -524,27 +535,27 @@ func GetOutputMsgBody(uri string) interface{} {
 		} else {
 			val = 0
 		}
-		if output2,ok := MetricsConfig.Outputs[outputVar]; ok {
-				if stringInSlice(output2.Flags,"clothed") {
-					val = map[string]interface{}{
-						"value": val,
+		if output2, ok := MetricsConfig.Outputs[outputVar]; ok {
+			if stringInSlice(output2.Flags, "clothed") {
+				val = map[string]interface{}{
+					"value": val,
+				}
+				for attributeName := range output2.Attributes {
+					outputVals := []Union{}
+					if _, ok := OutputScope[outputVar+"@"+attributeName]; ok {
+						outputVals = make([]Union, len(OutputScope[outputVar+"@"+attributeName]))
+						copy(outputVals, OutputScope[outputVar+"@"+attributeName])
 					}
-					for attributeName := range output2.Attributes {
-						outputVals := []Union{}
-						if _, ok := OutputScope[outputVar+"@"+attributeName]; ok {
-							outputVals = make([]Union, len(OutputScope[outputVar+"@"+attributeName]))
-							copy(outputVals, OutputScope[outputVar+"@"+attributeName])
-						}
 
-						if len(outputVals) >= 1 {
-							val.(map[string]interface{})[attributeName] = getValueFromUnion(&outputVals[0])
-						} else {
-							val.(map[string]interface{})[attributeName] = output2.Attributes[attributeName]
-						}
+					if len(outputVals) >= 1 {
+						val.(map[string]interface{})[attributeName] = getValueFromUnion(&outputVals[0])
+					} else {
+						val.(map[string]interface{})[attributeName] = output2.Attributes[attributeName]
 					}
 				}
+			}
 		}
-		
+
 		outputScopeMutex.RUnlock()
 		return val
 	} else {
@@ -556,7 +567,7 @@ func GetOutputMsgBody(uri string) interface{} {
 				}
 			} else if strings.HasPrefix(output.Uri, uri) {
 				uriSuffix := output.Uri[len(uri)+1:] // get rid of the uri + first slash
-				uriFrags := strings.Split(uriSuffix,"/")
+				uriFrags := strings.Split(uriSuffix, "/")
 				if len(uriFrags) > 0 {
 					outputMap[uriFrags[0]] = GetOutputMsgBody(uri + "/" + uriFrags[0])
 				}
@@ -566,8 +577,8 @@ func GetOutputMsgBody(uri string) interface{} {
 		for echoIndex := range MetricsConfig.Echo {
 			if uri == MetricsConfig.Echo[echoIndex].PublishUri {
 				for key, value := range MetricsConfig.Echo[echoIndex].Echo {
-					if _,ok := outputMap[key]; ok {
-						if val,ok := outputMap[key].(map[string]interface{}); ok {
+					if _, ok := outputMap[key]; ok {
+						if val, ok := outputMap[key].(map[string]interface{}); ok {
 							val["value"] = value
 						} else {
 							outputMap[key] = value // overwrite the metrics calculation
@@ -576,13 +587,13 @@ func GetOutputMsgBody(uri string) interface{} {
 						outputMap[key] = value
 					}
 				}
-			} else if GetParentUri(uri) == MetricsConfig.Echo[echoIndex].PublishUri{
-				uriFrags := strings.Split(uri,"/")
+			} else if GetParentUri(uri) == MetricsConfig.Echo[echoIndex].PublishUri {
+				uriFrags := strings.Split(uri, "/")
 				if len(uriFrags) > 0 {
 					key := uriFrags[len(uriFrags)-1]
-					if echoValue, isVal := MetricsConfig.Echo[echoIndex].Echo[key]; isVal{
-						if _,ok := outputMap[key]; ok {
-							if val,ok := outputMap[key].(map[string]interface{}); ok {
+					if echoValue, isVal := MetricsConfig.Echo[echoIndex].Echo[key]; isVal {
+						if _, ok := outputMap[key]; ok {
+							if val, ok := outputMap[key].(map[string]interface{}); ok {
 								val["value"] = echoValue
 							} else {
 								outputMap[key] = echoValue // overwrite the metrics calculation
@@ -597,5 +608,4 @@ func GetOutputMsgBody(uri string) interface{} {
 		echoMutex.RUnlock()
 		return outputMap
 	}
-	return nil
 }

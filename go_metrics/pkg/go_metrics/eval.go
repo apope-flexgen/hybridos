@@ -9,6 +9,7 @@ import (
 	"math"
 	"os"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -397,55 +398,67 @@ func addFilterVars(filterName string) []Union {
 	return outputFilterVars
 }
 
+// evaluate a filter, including static and dynamic expressions
+func EvaluateFilter(filterName string) {
+	var needsEval bool
+	filterNeedsEvalMutex.RLock()
+	needsEval = filterNeedsEval[filterName]
+	filterNeedsEvalMutex.RUnlock()
+
+	if needsEval {
+		if debug {
+			if stringInSlice(debug_filters, filterName) {
+				log.Debugf("Evaluating filter [%s]", filterName)
+			}
+		}
+		// this loop for static filters is actually necessary because inputs can change values
+		if filter, ok := staticFilterExpressions[filterName]; ok {
+			InputScope[filterName] = make([]Union, 0)
+			for _, dynamicInput := range filter.DynamicInputs[0] {
+				InputScope[filterName] = append(InputScope[filterName], InputScope[dynamicInput]...)
+			}
+		}
+
+		if filter, ok := dynamicFilterExpressions[filterName]; ok {
+			filtersMutex.RLock()
+			intermediateInputs := filter.DynamicInputs[0]
+			filtersMutex.RUnlock()
+			for p, exp := range filter.DynamicFilterExpressions {
+				stringArr, _ := EvaluateDynamicFilter(&(exp.Ast), intermediateInputs)
+				intermediateInputs = stringArr
+				sort.Strings(intermediateInputs)
+				filtersMutex.Lock()
+				FilterScope[filterName] = make([]string, len(intermediateInputs))
+				copy(FilterScope[filterName], intermediateInputs)
+				copy(dynamicFilterExpressions[filterName].DynamicInputs[p+1], intermediateInputs)
+				filtersMutex.Unlock()
+				if len(intermediateInputs) == 0 {
+					break
+				}
+			}
+			InputScope[filterName] = make([]Union, 0)
+			for _, str := range intermediateInputs {
+				InputScope[filterName] = append(InputScope[filterName], addFilterVars(str)...)
+			}
+			if debug {
+				if stringInSlice(debug_filters, filterName) {
+					log.Debugf("Filter [%s] contains input vars %v", filterName, intermediateInputs)
+				}
+			}
+		}
+		filterNeedsEvalMutex.Lock()
+		filterNeedsEval[filterName] = false
+		filterNeedsEvalMutex.Unlock()
+	}
+}
+
 func EvaluateExpressions() {
 	inputScopeMutex.Lock()
 	evalExpressionsTiming.start()
-	filterNeedsEvalMutex.RLock()
-	filterNeedsEvalCopy := make(map[string]bool, len(filterNeedsEval))
-	for key, val := range filterNeedsEval {
-		filterNeedsEvalCopy[key] = val
+	for _, filterName := range FiltersList {
+		EvaluateFilter(filterName)
 	}
-	filterNeedsEvalMutex.RUnlock()
-	for filterName, needsEval := range filterNeedsEvalCopy {
-		if needsEval {
-			// this loop for static filters is actually necessary because inputs can change values
-			if filter, ok := staticFilterExpressions[filterName]; ok {
-				InputScope[filterName] = make([]Union, 0)
-				for _, dynamicInput := range filter.DynamicInputs[0] {
-					InputScope[filterName] = append(InputScope[filterName], InputScope[dynamicInput]...)
-				}
-			}
-			if filter, ok := dynamicFilterExpressions[filterName]; ok {
-				filtersMutex.RLock()
-				intermediateInputs := filter.DynamicInputs[0]
-				filtersMutex.RUnlock()
-				for p, exp := range filter.DynamicFilterExpressions {
-					stringArr, _ := EvaluateDynamicFilter(&(exp.Ast), intermediateInputs)
-					intermediateInputs = stringArr
-					filtersMutex.Lock()
-					FilterScope[filterName] = make([]string, len(intermediateInputs))
-					copy(FilterScope[filterName], intermediateInputs)
-					copy(dynamicFilterExpressions[filterName].DynamicInputs[p+1], intermediateInputs)
-					filtersMutex.Unlock()
-					if len(intermediateInputs) == 0 {
-						break
-					}
-				}
-				InputScope[filterName] = make([]Union, 0)
-				for _, str := range intermediateInputs {
-					InputScope[filterName] = append(InputScope[filterName], addFilterVars(str)...)
-				}
-				if debug {
-					if stringInSlice(debug_filters, filterName) {
-						log.Debugf("Filter [%s] contains input vars %v", filterName, intermediateInputs)
-					}
-				}
-			}
-			filterNeedsEvalMutex.Lock()
-			filterNeedsEval[filterName] = false
-			filterNeedsEvalMutex.Unlock()
-		}
-	}
+
 	if len(MetricsConfig.Metrics) > 0 {
 		metricsMutex[0].RLock()
 	}
@@ -613,9 +626,11 @@ func evaluate(node *ast.Node, state *map[string][]Union) (values []Union, err er
 // pull a variable out of the map of inputs
 func evaluateIdent(node *ast.Ident) ([]Union, error) {
 	if node.Name == "true" {
-		return []Union{Union{tag: BOOL, b: true}}, nil
+		return []Union{{tag: BOOL, b: true}}, nil
 	} else if node.Name == "false" {
-		return []Union{Union{tag: BOOL, b: false}}, nil
+		return []Union{{tag: BOOL, b: false}}, nil
+	} else if node.Name == "nil" {
+		return []Union{{}}, nil
 	}
 	inputs, found := InputScope[node.Name]
 	if !found {
@@ -1138,7 +1153,7 @@ func evaluateBasicLit(node *ast.BasicLit) ([]Union, error) {
 		if err != nil {
 			return []Union{}, err
 		}
-		return []Union{Union{
+		return []Union{{
 			tag: INT,
 			i:   value,
 		}}, nil
@@ -1147,12 +1162,12 @@ func evaluateBasicLit(node *ast.BasicLit) ([]Union, error) {
 		if err != nil {
 			return []Union{}, err
 		}
-		return []Union{Union{
+		return []Union{{
 			tag: FLOAT,
 			f:   value,
 		}}, nil
 	case token.STRING:
-		return []Union{Union{
+		return []Union{{
 			tag: STRING,
 			s:   strings.ReplaceAll(node.Value, "\"", ""),
 		}}, nil

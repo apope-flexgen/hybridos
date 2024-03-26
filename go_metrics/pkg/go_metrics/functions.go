@@ -74,7 +74,7 @@ func Add(args ...Union) (Union, error) {
 		}
 		return Union{tag: FLOAT, f: sum}, nil
 	}
-	return Union{}, fmt.Errorf("cannot add nil values")
+	return Union{tag: UINT, ui: 0}, nil
 }
 
 // subtract arg2 from arg1
@@ -889,7 +889,7 @@ func Pct(arg1, arg2 Union) (Union, error) {
 	if math.Abs(arg2.f) < 1 && math.Abs(arg1.f) > math.Abs(math.MaxFloat64*arg2.f) {
 		return Union{}, fmt.Errorf("overflow error when attempting to divide numbers")
 	}
-	result, err := Mult([]Union{Union{tag: FLOAT, f: arg1.f / arg2.f}, Union{tag: UINT, ui: 100}}...)
+	result, err := Mult([]Union{{tag: FLOAT, f: arg1.f / arg2.f}, {tag: UINT, ui: 100}}...)
 	if err != nil {
 		return Union{}, err
 	}
@@ -1031,16 +1031,16 @@ func Integrate(input, timescale, minuteReset, minuteOffset Union, state *map[str
 		return Union{}, fmt.Errorf("do not have a defined state for Integrate")
 	} else if *state == nil {
 		*state = make(map[string][]Union, 0)
-		(*state)["timestamp"] = []Union{Union{tag: INT, i: (time.Now()).UnixMilli()}}
+		(*state)["timestamp"] = []Union{{tag: INT, i: (time.Now()).UnixMilli()}}
 		(*state)["minute"] = make([]Union, 1)
 	} else if _, ok := (*state)["timestamp"]; !ok || len((*state)["timestamp"]) == 0 {
-		(*state)["timestamp"] = []Union{Union{tag: INT, i: (time.Now()).UnixMilli()}}
+		(*state)["timestamp"] = []Union{{tag: INT, i: (time.Now()).UnixMilli()}}
 		(*state)["minute"] = make([]Union, 1)
 	}
 
 	prevValue := (*state)["value"]
 	if len(prevValue) == 0 {
-		prevValue = []Union{Union{tag: FLOAT, f: 0}}
+		prevValue = []Union{{tag: FLOAT, f: 0}}
 	}
 	state_minute := (*state)["minute"]
 	if len(state_minute) == 0 {
@@ -1113,7 +1113,7 @@ func Srff(arg1, arg2 Union, state *map[string][]Union) (Union, error) {
 		*state = make(map[string][]Union, 0)
 	}
 	if _, ok := (*state)["q"]; !ok {
-		(*state)["q"] = []Union{Union{tag: BOOL, b: false}}
+		(*state)["q"] = []Union{{tag: BOOL, b: false}}
 	}
 
 	castUnionType(&arg1, BOOL)
@@ -1459,13 +1459,13 @@ func MaxOverTimescale(input, timescale Union, state *map[string][]Union) (Union,
 		*state = make(map[string][]Union, 0)
 		(*state)["timestamps"] = make([]Union, timescale.i)
 		(*state)["values"] = make([]Union, timescale.i)
-		(*state)["currentIndex"] = []Union{Union{tag: UINT, ui: 0}}
-		(*state)["indexOfMax"] = []Union{Union{tag: UINT, ui: 0}}
+		(*state)["currentIndex"] = []Union{{tag: UINT, ui: 0}}
+		(*state)["indexOfMax"] = []Union{{tag: UINT, ui: 0}}
 	} else if _, ok := (*state)["timestamps"]; !ok || len((*state)["timestamps"]) == 0 {
 		(*state)["timestamps"] = make([]Union, timescale.i)
 		(*state)["values"] = make([]Union, timescale.i)
-		(*state)["currentIndex"] = []Union{Union{tag: UINT, ui: 0}}
-		(*state)["indexOfMax"] = []Union{Union{tag: UINT, ui: 0}}
+		(*state)["currentIndex"] = []Union{{tag: UINT, ui: 0}}
+		(*state)["indexOfMax"] = []Union{{tag: UINT, ui: 0}}
 	}
 
 	index := int((*state)["currentIndex"][0].ui)
@@ -1576,13 +1576,13 @@ func MinOverTimescale(input, timescale Union, state *map[string][]Union) (Union,
 		*state = make(map[string][]Union, 0)
 		(*state)["timestamps"] = make([]Union, timescale.i)
 		(*state)["values"] = make([]Union, timescale.i)
-		(*state)["currentIndex"] = []Union{Union{tag: UINT, ui: 0}}
-		(*state)["indexOfMin"] = []Union{Union{tag: UINT, ui: 0}}
+		(*state)["currentIndex"] = []Union{{tag: UINT, ui: 0}}
+		(*state)["indexOfMin"] = []Union{{tag: UINT, ui: 0}}
 	} else if _, ok := (*state)["timestamps"]; !ok || len((*state)["timestamps"]) == 0 {
 		(*state)["timestamps"] = make([]Union, timescale.i)
 		(*state)["values"] = make([]Union, timescale.i)
-		(*state)["currentIndex"] = []Union{Union{tag: UINT, ui: 0}}
-		(*state)["indexOfMin"] = []Union{Union{tag: UINT, ui: 0}}
+		(*state)["currentIndex"] = []Union{{tag: UINT, ui: 0}}
+		(*state)["indexOfMin"] = []Union{{tag: UINT, ui: 0}}
 	}
 
 	index := int((*state)["currentIndex"][0].ui)
@@ -1697,11 +1697,11 @@ func AvgOverTimescale(input, timescale Union, state *map[string][]Union) (Union,
 		*state = make(map[string][]Union, 0)
 		(*state)["timestamps"] = make([]Union, timescale.i)
 		(*state)["values"] = make([]Union, timescale.i)
-		(*state)["currentIndex"] = []Union{Union{tag: UINT, ui: 0}}
+		(*state)["currentIndex"] = []Union{{tag: UINT, ui: 0}}
 	} else if _, ok := (*state)["timestamps"]; !ok || len((*state)["timestamps"]) == 0 {
 		(*state)["timestamps"] = make([]Union, timescale.i)
 		(*state)["values"] = make([]Union, timescale.i)
-		(*state)["currentIndex"] = []Union{Union{tag: UINT, ui: 0}}
+		(*state)["currentIndex"] = []Union{{tag: UINT, ui: 0}}
 	}
 
 	index := int((*state)["currentIndex"][0].ui)
@@ -1754,11 +1754,11 @@ func SumOverTimescale(input, timescale Union, state *map[string][]Union) (Union,
 		*state = make(map[string][]Union, 0)
 		(*state)["timestamps"] = make([]Union, timescale.i)
 		(*state)["values"] = make([]Union, timescale.i)
-		(*state)["currentIndex"] = []Union{Union{tag: UINT, ui: 0}}
+		(*state)["currentIndex"] = []Union{{tag: UINT, ui: 0}}
 	} else if _, ok := (*state)["timestamps"]; !ok || len((*state)["timestamps"]) == 0 {
 		(*state)["timestamps"] = make([]Union, timescale.i)
 		(*state)["values"] = make([]Union, timescale.i)
-		(*state)["currentIndex"] = []Union{Union{tag: UINT, ui: 0}}
+		(*state)["currentIndex"] = []Union{{tag: UINT, ui: 0}}
 	}
 
 	index := int((*state)["currentIndex"][0].ui)
@@ -1822,11 +1822,11 @@ func ValueChangedOverTimescale(input, timescale Union, state *map[string][]Union
 		*state = make(map[string][]Union, 0)
 		(*state)["timestamps"] = make([]Union, timescale.i)
 		(*state)["values"] = make([]Union, timescale.i)
-		(*state)["currentIndex"] = []Union{Union{tag: UINT, ui: 0}}
+		(*state)["currentIndex"] = []Union{{tag: UINT, ui: 0}}
 	} else if _, ok := (*state)["timestamps"]; !ok || len((*state)["timestamps"]) == 0 {
 		(*state)["timestamps"] = make([]Union, timescale.i)
 		(*state)["values"] = make([]Union, timescale.i)
-		(*state)["currentIndex"] = []Union{Union{tag: UINT, ui: 0}}
+		(*state)["currentIndex"] = []Union{{tag: UINT, ui: 0}}
 	}
 
 	index := int((*state)["currentIndex"][0].ui)
@@ -2023,20 +2023,20 @@ func Unicompare(base, compare, balance Union) (Union, error) {
 func Count(argVals []Union) (Union, error) {
 	if len(argVals) == 1 {
 		if argVals[0].tag == NIL {
-			return Union{tag:UINT, ui:uint64(0)}, nil
+			return Union{tag: UINT, ui: uint64(0)}, nil
 		}
 	}
-	return Union{tag:UINT, ui:uint64(len(argVals))}, nil
+	return Union{tag: UINT, ui: uint64(len(argVals))}, nil
 }
 
 func CombineBits(argVals []Union) (Union, error) {
-	returnVal := Union{tag:UINT, ui:0}
+	returnVal := Union{tag: UINT, ui: 0}
 	for _, val := range argVals {
 		if val.tag == STRING || val.tag == NIL || val.f < 0 || val.i < 0 {
 			continue
 		}
 		castUnionType(&val, UINT)
-		if val.ui < 64 && (returnVal.ui < math.MaxUint64 - val.ui){
+		if val.ui < 64 && (returnVal.ui < math.MaxUint64-val.ui) {
 			returnVal.ui += uint64(1 << val.ui)
 		}
 	}
@@ -2044,13 +2044,13 @@ func CombineBits(argVals []Union) (Union, error) {
 }
 
 func In(compareVal Union, argVals []Union) (Union, error) {
-	if compareVal.tag == NIL{
+	if compareVal.tag == NIL {
 		return Union{}, fmt.Errorf("In() function requires the first argument to be a non-null entry")
 	}
 	for _, val := range argVals {
-		if compareVal == val{
-			return Union{tag:BOOL, b:true}, nil
+		if compareVal == val {
+			return Union{tag: BOOL, b: true}, nil
 		}
 	}
-	return Union{tag:BOOL, b:false}, nil
+	return Union{tag: BOOL, b: false}, nil
 }

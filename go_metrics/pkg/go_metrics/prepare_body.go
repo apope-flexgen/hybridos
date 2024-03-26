@@ -60,13 +60,13 @@ func PrepareBody(outputUri string) map[string]interface{} {
 							if pos, ok := output.EnumMap[int(enumIndex)]; ok {
 								clothedOutputVal["value"] = []EnumObject{output.Enum[pos]}
 							} else {
-								clothedOutputVal["value"] = []EnumObject{EnumObject{Value: enumIndex, String: "Unknown"}}
+								clothedOutputVal["value"] = []EnumObject{{Value: enumIndex, String: "Unknown"}}
 							}
 						} else {
-							clothedOutputVal["value"] = []EnumObject{EnumObject{Value: enumIndex, String: "Unknown"}}
+							clothedOutputVal["value"] = []EnumObject{{Value: enumIndex, String: "Unknown"}}
 						}
 					} else {
-						clothedOutputVal["value"] = []EnumObject{EnumObject{Value: -1, String: "Unknown"}}
+						clothedOutputVal["value"] = []EnumObject{{Value: -1, String: "Unknown"}}
 					}
 					outputScopeMutex.RLock()
 					for attributeName := range output.Attributes {
@@ -92,13 +92,13 @@ func PrepareBody(outputUri string) map[string]interface{} {
 							if pos, ok := output.EnumMap[int(enumIndex)]; ok {
 								msgBody[outputVar] = []EnumObject{output.Enum[pos]}
 							} else {
-								msgBody[outputVar] = []EnumObject{EnumObject{Value: enumIndex, String: "Unknown"}}
+								msgBody[outputVar] = []EnumObject{{Value: enumIndex, String: "Unknown"}}
 							}
 						} else {
-							msgBody[outputVar] = []EnumObject{EnumObject{Value: enumIndex, String: "Unknown"}}
+							msgBody[outputVar] = []EnumObject{{Value: enumIndex, String: "Unknown"}}
 						}
 					} else {
-						msgBody[outputVar] = []EnumObject{EnumObject{Value: -1, String: "Unknown"}}
+						msgBody[outputVar] = []EnumObject{{Value: -1, String: "Unknown"}}
 					}
 				}
 			} else if len(output.Bitfield) > 0 {

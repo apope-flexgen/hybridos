@@ -672,6 +672,25 @@ func UnmarshalConfig(data []byte) {
 						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "attributes"
 					}
 
+					// get the fims method
+					element, internal_err = inputIter.FindElement(nil, "method")
+					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "method", JType: simdjson.TypeBool})
+					if internal_err == nil {
+						input.Method, internal_err = element.Iter.String()
+						if internal_err != nil {
+							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+							wasError = true
+							input.Method = ""
+						} else if !(input.Method == "pub" || input.Method == "set" || input.Method == "both") {
+							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid fims input method; must be 'pub', 'set', or 'both'; defaulting to 'both'"))
+							wasError = true
+							input.Method = ""
+						}
+					} else {
+						input.Method = ""
+					}
+					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "method"
+
 					MetricsConfig.Inputs[string(key)] = input
 					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
 				}, nil)
@@ -686,15 +705,31 @@ func UnmarshalConfig(data []byte) {
 		element, internal_err = i.FindElement(nil, "filters")
 		if internal_err == nil {
 			currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "filters", JType: simdjson.TypeObject})
-			metaObject, internal_err := element.Iter.Object(nil)
+			filterObject, internal_err := element.Iter.Object(nil)
 			if internal_err != nil {
 				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
 				wasError = true
 			} else {
-				MetricsConfig.Filters, internal_err = metaObject.Map(MetricsConfig.Filters)
-				if internal_err != nil { // don't know if you can technically end up in here..
-					logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-					wasError = true
+				FiltersList = []string{}
+				nextFilter := simdjson.Iter{}
+				typ := simdjson.TypeObject
+				var err error
+				name := ""
+				for {
+					name, typ, err = filterObject.NextElement(&nextFilter)
+					if typ == simdjson.TypeNone || err != nil {
+						break
+					}
+					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: name, JType: simdjson.TypeObject})
+					FiltersList = append(FiltersList, name) // todo: delete filter if not valid
+					filterInterface, internal_err := nextFilter.Interface()
+					if internal_err == nil {
+						MetricsConfig.Filters[name] = filterInterface
+					} else {
+						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+						wasError = true
+					}
+					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
 				}
 			}
 			currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
@@ -1634,7 +1669,7 @@ func UnmarshalConfig(data []byte) {
 		if ok {
 			for key := range bytesInterface {
 				if !stringInSlice([]string{"meta", "templates", "inputs", "filters", "outputs", "metrics", "echo"}, key) {
-					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: configPathAndFile, JType: simdjson.TypeObject}}, fmt.Errorf("found unknown key '%s' in configuration document; ignoring config element", key))
+					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: configPathAndFile, JType: simdjson.TypeObject}}, fmt.Errorf("found unknown key '%s' in configuration document; ignoring config element", key))
 				}
 			}
 		}
@@ -1762,7 +1797,7 @@ func handleInputsTemplates() {
 					// this is much more likely to happen if we are careless with templating
 					if _, ok := MetricsConfig.Inputs[newInputName]; ok {
 						// fatal error for input
-						logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "inputs", JType: simdjson.TypeObject}, JsonAccessor{Key: newInputName, JType: simdjson.TypeObject}}, fmt.Errorf("duplicate input variable '%s' when unraveling template; only considering first occurence", newInputName))
+						logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "inputs", JType: simdjson.TypeObject}, {Key: newInputName, JType: simdjson.TypeObject}}, fmt.Errorf("duplicate input variable '%s' when unraveling template; only considering first occurence", newInputName))
 						continue
 					}
 
@@ -1828,12 +1863,12 @@ func handleFiltersTemplates() {
 					// this is much more likely to happen if we are careless with templating
 					if _, ok := MetricsConfig.Inputs[newFilterName]; ok {
 						// fatal error
-						logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "filters", JType: simdjson.TypeObject}, JsonAccessor{Key: newFilterName, JType: simdjson.TypeObject}}, fmt.Errorf("templated filter variable '%s' also occurs as input variable; only considering input variable", newFilterName))
+						logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "filters", JType: simdjson.TypeObject}, {Key: newFilterName, JType: simdjson.TypeObject}}, fmt.Errorf("templated filter variable '%s' also occurs as input variable; only considering input variable", newFilterName))
 						continue
 					}
 					if _, ok := MetricsConfig.Filters[newFilterName]; ok {
 						// fatal error
-						logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "filters", JType: simdjson.TypeObject}, JsonAccessor{Key: newFilterName, JType: simdjson.TypeObject}}, fmt.Errorf("duplicate filter variable '%s' when unraveling template; only considering first occurence", newFilterName))
+						logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "filters", JType: simdjson.TypeObject}, {Key: newFilterName, JType: simdjson.TypeObject}}, fmt.Errorf("duplicate filter variable '%s' when unraveling template; only considering first occurence", newFilterName))
 						continue
 					}
 
@@ -1850,7 +1885,7 @@ func handleFiltersTemplates() {
 								newStrFilter := strings.ReplaceAll(strFilter, template.Tok, replacement)
 								newFilterArr = append(newFilterArr, newStrFilter)
 							} else {
-								logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "filters", JType: simdjson.TypeObject}, JsonAccessor{Key: newFilterName, JType: simdjson.TypeArray}, JsonAccessor{Index: filterIndex, JType: simdjson.TypeString}}, fmt.Errorf("could not convert subfilter to string"))
+								logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "filters", JType: simdjson.TypeObject}, {Key: newFilterName, JType: simdjson.TypeArray}, {Index: filterIndex, JType: simdjson.TypeString}}, fmt.Errorf("could not convert subfilter to string"))
 								wasErr = true
 								break
 							}
@@ -1868,7 +1903,7 @@ func handleFiltersTemplates() {
 							MetricsConfig.Filters[newFilterName] = newFilterArr
 						}
 					default:
-						logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "filters", JType: simdjson.TypeObject}, JsonAccessor{Key: newFilterName, JType: simdjson.TypeObject}}, fmt.Errorf("invalid filter type %v", reflect.TypeOf(filter)))
+						logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "filters", JType: simdjson.TypeObject}, {Key: newFilterName, JType: simdjson.TypeObject}}, fmt.Errorf("invalid filter type %v", reflect.TypeOf(filter)))
 						continue
 					}
 				}
@@ -2175,9 +2210,9 @@ func getExpression(metricsObject *MetricsObject, internal_vars []string, netInde
 		strings.Contains((*metricsObject).ParsedExpression.String, "Time") ||
 		strings.Contains((*metricsObject).ParsedExpression.String, "Milliseconds") ||
 		strings.Contains((*metricsObject).ParsedExpression.String, "Pulse") {
-		(*metricsObject).State["alwaysEvaluate"] = []Union{Union{tag: BOOL, b: true}}
+		(*metricsObject).State["alwaysEvaluate"] = []Union{{tag: BOOL, b: true}}
 	} else {
-		(*metricsObject).State["alwaysEvaluate"] = []Union{Union{tag: BOOL, b: false}}
+		(*metricsObject).State["alwaysEvaluate"] = []Union{{tag: BOOL, b: false}}
 	}
 
 	// populate the initialValues map
@@ -2255,6 +2290,7 @@ func getAndParseFilters() bool {
 		}
 		filterNeedsEval[key] = true
 	}
+	PutFiltersInOrder()
 	return wasError
 }
 
@@ -2508,7 +2544,6 @@ func joinMaps(interface1, interface2 interface{}) map[string]interface{} {
 		joinedMaps[""] = []interface{}{interface1, interface2}
 		return joinedMaps
 	}
-	return joinedMaps
 }
 
 func addUriFrags(completeUri string, uriFragList []string, uriMap map[string]interface{}) map[string]interface{} {
@@ -2712,7 +2747,7 @@ func setupConfigLogging() {
 		if len(log.ConfigFile) == 0 { // if it the location hasn't been set via command line options
 			log.ConfigFile, ok = logFileLoc.(string)
 			if !ok {
-				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "log_file", JType: simdjson.TypeString}}, fmt.Errorf("value is not string"))
+				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "log_file", JType: simdjson.TypeString}}, fmt.Errorf("value is not string"))
 			}
 		}
 	}
@@ -2721,21 +2756,21 @@ func setupConfigLogging() {
 		log.SetLogLevel([]interface{}{"debug"})
 		debug, ok = debug_interface.(bool)
 		if !ok {
-			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug", JType: simdjson.TypeBool}}, fmt.Errorf("value is not bool"))
+			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug", JType: simdjson.TypeBool}}, fmt.Errorf("value is not bool"))
 		}
 	}
 
 	if debug_interface, ok := MetricsConfig.Meta["debug_inputs"]; ok {
 		debug_inputs_interface, ok := debug_interface.([]interface{})
 		if !ok {
-			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug_inputs", JType: simdjson.TypeArray}}, fmt.Errorf("value is not []string"))
+			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_inputs", JType: simdjson.TypeArray}}, fmt.Errorf("value is not []string"))
 			MetricsConfig.Meta["debug_inputs"] = []string{}
 		} else {
 			debug_inputs = []string{}
 			for i, debug_input := range debug_inputs_interface {
 				input_str, ok_str := debug_input.(string)
 				if !ok_str {
-					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug_inputs", JType: simdjson.TypeArray}, JsonAccessor{Index: i, JType: simdjson.TypeString}}, fmt.Errorf("value is not string"))
+					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_inputs", JType: simdjson.TypeArray}, {Index: i, JType: simdjson.TypeString}}, fmt.Errorf("value is not string"))
 				} else {
 					debug_inputs = append(debug_inputs, input_str)
 				}
@@ -2746,14 +2781,14 @@ func setupConfigLogging() {
 	if debug_interface, ok := MetricsConfig.Meta["debug_filters"]; ok {
 		debug_filters_interface, ok := debug_interface.([]interface{})
 		if !ok {
-			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug_filters", JType: simdjson.TypeArray}}, fmt.Errorf("value is not []string"))
+			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_filters", JType: simdjson.TypeArray}}, fmt.Errorf("value is not []string"))
 			MetricsConfig.Meta["debug_filters"] = []string{}
 		} else {
 			debug_filters = []string{}
 			for i, debug_filter := range debug_filters_interface {
 				filter_str, ok_str := debug_filter.(string)
 				if !ok_str {
-					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug_filters", JType: simdjson.TypeArray}, JsonAccessor{Index: i, JType: simdjson.TypeString}}, fmt.Errorf("value is not string"))
+					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_filters", JType: simdjson.TypeArray}, {Index: i, JType: simdjson.TypeString}}, fmt.Errorf("value is not string"))
 				} else {
 					debug_filters = append(debug_filters, filter_str)
 				}
@@ -2764,14 +2799,14 @@ func setupConfigLogging() {
 	if debug_interface, ok := MetricsConfig.Meta["debug_outputs"]; ok {
 		debug_outputs_interface, ok := debug_interface.([]interface{})
 		if !ok {
-			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug_outputs", JType: simdjson.TypeArray}}, fmt.Errorf("value is not []string"))
+			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_outputs", JType: simdjson.TypeArray}}, fmt.Errorf("value is not []string"))
 			MetricsConfig.Meta["debug_outputs"] = []string{}
 		} else {
 			debug_outputs = []string{}
 			for i, debug_output := range debug_outputs_interface {
 				output_str, ok_str := debug_output.(string)
 				if !ok_str {
-					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug_outputs", JType: simdjson.TypeArray}, JsonAccessor{Index: i, JType: simdjson.TypeString}}, fmt.Errorf("value is not string"))
+					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_outputs", JType: simdjson.TypeArray}, {Index: i, JType: simdjson.TypeString}}, fmt.Errorf("value is not string"))
 				} else {
 					debug_outputs = append(debug_outputs, output_str)
 				}
@@ -2787,7 +2822,7 @@ func verifyInputConfigLogging() {
 		i := 0
 		for _, debug_input := range copy_debug_inputs {
 			if _, inputExists := MetricsConfig.Inputs[debug_input]; !inputExists {
-				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug_inputs", JType: simdjson.TypeArray}, JsonAccessor{Index: i, JType: simdjson.TypeString}}, fmt.Errorf("debug input '%s' does not exist; no debug info for this variable will be displayed", debug_input))
+				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_inputs", JType: simdjson.TypeArray}, {Index: i, JType: simdjson.TypeString}}, fmt.Errorf("debug input '%s' does not exist; no debug info for this variable will be displayed", debug_input))
 				if i >= 0 && len(debug_inputs)-1 >= i {
 					debug_inputs = append(debug_inputs[:i], debug_inputs[i+1:]...)
 					i -= 1
@@ -2805,7 +2840,7 @@ func verifyFilterConfigLogging() {
 		i := 0
 		for _, debug_filter := range copy_debug_filters {
 			if _, inputExists := MetricsConfig.Filters[debug_filter]; !inputExists {
-				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug_filters", JType: simdjson.TypeArray}, JsonAccessor{Index: i, JType: simdjson.TypeString}}, fmt.Errorf("debug filter '%s' does not exist; no debug info for this variable will be displayed", debug_filter))
+				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_filters", JType: simdjson.TypeArray}, {Index: i, JType: simdjson.TypeString}}, fmt.Errorf("debug filter '%s' does not exist; no debug info for this variable will be displayed", debug_filter))
 				if i >= 0 && len(debug_filters)-1 >= i {
 					debug_filters = append(debug_filters[:i], debug_filters[i+1:]...)
 					i -= 1
@@ -2823,7 +2858,7 @@ func verifyOutputConfigLogging() {
 		i := 0
 		for _, debug_output := range copy_debug_outputs {
 			if _, outputExists := MetricsConfig.Outputs[debug_output]; !outputExists {
-				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug_outputs", JType: simdjson.TypeArray}, JsonAccessor{Index: i, JType: simdjson.TypeString}}, fmt.Errorf("debug output '%s' does not exist; no debug info for this variable will be displayed", debug_output))
+				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_outputs", JType: simdjson.TypeArray}, {Index: i, JType: simdjson.TypeString}}, fmt.Errorf("debug output '%s' does not exist; no debug info for this variable will be displayed", debug_output))
 				if i >= 0 && len(debug_outputs)-1 >= i {
 					debug_outputs = append(debug_outputs[:i], debug_outputs[i+1:]...)
 					i -= 1
@@ -2844,7 +2879,7 @@ func checkUnusedOutputs() {
 			}
 		}
 		if !used {
-			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "outputs", JType: simdjson.TypeObject}, JsonAccessor{Key: outputName, JType: simdjson.TypeObject}}, fmt.Errorf("output '%v' is never set by a metrics expression; excluding from published outputs", outputName))
+			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "outputs", JType: simdjson.TypeObject}, {Key: outputName, JType: simdjson.TypeObject}}, fmt.Errorf("output '%v' is never set by a metrics expression; excluding from published outputs", outputName))
 			delete(MetricsConfig.Outputs, outputName)
 		}
 	}

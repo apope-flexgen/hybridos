@@ -54,7 +54,7 @@ func extract(node ast.Node) (vars []string, resultType DataType, err error) {
 	switch node := node.(type) {
 	case *ast.Ident: // variables
 		vars = []string{node.Name}
-		if node.Name == "true" || node.Name == "false" {
+		if node.Name == "true" || node.Name == "false" || node.Name == "nil" {
 			resultType = BOOL
 		} else if _, ok := InputScope[node.Name]; ok {
 			resultType = BOOL
@@ -63,7 +63,7 @@ func extract(node ast.Node) (vars []string, resultType DataType, err error) {
 			}
 		} else if _, ok := FilterScope[node.Name]; ok {
 			resultType = BOOL
-			
+
 			for _, inputName := range FilterScope[node.Name] {
 				if _, ok := InputScope[inputName]; ok {
 					for _, input := range InputScope[inputName] {
@@ -71,11 +71,11 @@ func extract(node ast.Node) (vars []string, resultType DataType, err error) {
 					}
 				}
 			}
-		}else if _, ok := allPossibleAttributes[node.Name]; ok {
+		} else if _, ok := allPossibleAttributes[node.Name]; ok {
 			resultType = BOOL
-		} else if node.Name == "value"{
+		} else if node.Name == "value" {
 			resultType = BOOL
-		}else {
+		} else {
 			return []string{}, NIL, fmt.Errorf("cannot find variable %v in inputs or filters", node.Name)
 		}
 	case *ast.CallExpr: //function identifier
@@ -702,6 +702,14 @@ func extractFunc(node *ast.CallExpr) ([]string, DataType, error) {
 				return stringArr, NIL, fmt.Errorf("received %v arguments for In function; need at least 2 arguments (the value to check for and the list of arguments to look through)", len(node.Args))
 			}
 			resultType = BOOL
+		case "indexfilter":
+			if len(node.Args) < 2 {
+				return stringArr, NIL, fmt.Errorf("received %v arguments for IndexFilter function; need at least 2 arguments (the condition and the result)", len(node.Args))
+			}
+			resultType = BOOL
+			for _, tag := range tags {
+				resultType = getResultType(resultType, tag)
+			}
 		default:
 			return stringArr, NIL, fmt.Errorf("unrecognized function %v", id.Name)
 		}

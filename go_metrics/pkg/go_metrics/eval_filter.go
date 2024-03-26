@@ -5,6 +5,7 @@ import (
 	"go/ast"
 	"go/token"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -12,15 +13,16 @@ import (
 // Looks at a node in an AST and determines the type of the node.
 // Based on the type, it calls an auxiliary function to do the actual evaluation.
 func EvaluateDynamicFilter(node *ast.Node, inputs []string) (values []string, err error) {
-
 	switch (*node).(type) {
-
 	case *ast.Ident:
 		values, err = evaluateFilterIdent((*node).(*ast.Ident), inputs)
 	case *ast.CallExpr:
 		values, err = evaluateFilterCallExpr((*node).(*ast.CallExpr), inputs)
 	case *ast.BinaryExpr:
 		values, err = evaluateFilterBinary((*node).(*ast.BinaryExpr), inputs)
+	case *ast.ParenExpr:
+		newNode := ast.Node((*node).(*ast.ParenExpr).X)
+		values, err = EvaluateDynamicFilter(&newNode, inputs)
 	default:
 		err = fmt.Errorf("unsupported node %+v (type %+v)", *node, reflect.TypeOf(*node))
 	}
@@ -37,7 +39,7 @@ func evaluateFilterIdent(node *ast.Ident, inputList []string) ([]string, error) 
 		} else if _, ok := InputScope[node.Name]; ok {
 			outputs = append(outputs, node.Name)
 		}
-	} else if node.Name == "value"{
+	} else if node.Name == "value" {
 		for _, inputName := range inputList {
 			if _, ok := FilterScope[inputName]; ok {
 				outputs = append(outputs, FilterScope[inputName]...)
@@ -45,9 +47,9 @@ func evaluateFilterIdent(node *ast.Ident, inputList []string) ([]string, error) 
 				outputs = append(outputs, inputName)
 			}
 		}
-	}else{
+	} else {
 		for _, inputName := range inputList {
-			if strings.Contains(inputName, "@"){
+			if strings.Contains(inputName, "@") {
 				attrList := strings.Split(inputName, "@")
 				if len(attrList) > 1 && attrList[1] == node.Name {
 					if _, ok := FilterScope[inputName]; ok {
@@ -59,6 +61,7 @@ func evaluateFilterIdent(node *ast.Ident, inputList []string) ([]string, error) 
 			}
 		}
 	}
+	sort.Strings(outputs)
 
 	return outputs, nil
 }
@@ -66,28 +69,78 @@ func evaluateFilterIdent(node *ast.Ident, inputList []string) ([]string, error) 
 // evaluate the result of a binary operation
 func evaluateFilterBinary(node *ast.BinaryExpr, inputList []string) ([]string, error) {
 	newNodeL := ast.Node(node.X)
-	lValues, err := EvaluateDynamicFilter(&newNodeL, inputList) // evaluate the left side before combining with the right
-	if err != nil {
-		return []string{}, err
-	}
-	if len(lValues) == 0 {
-		return []string{}, fmt.Errorf("left operand of binary expression has length 0")
-	}
-
-	expr := ast.Node(node.Y)
-	rValue, err := evaluateFilterBasicLit(&expr) // evaluate the right side before combining with the left
-	if err != nil {
-		return []string{}, err
+	lValues, err := EvaluateDynamicFilter(&newNodeL, inputList) // check if we can evaluate the left side into variables first
+	var lValueBasicLit Union
+	if len(lValues) == 0 || err != nil { // if not variables, then it's a basic lit
+		lValues = []string{}
+		lValueBasicLit, err = evaluateFilterBasicLit(&newNodeL) // evaluate the left side before combining with the right
+		if err != nil {                                         // if not basic lit or variable, then we failed
+			return []string{}, err
+		}
 	}
 
-	// I'm lazy so I'm just using the functions to perform binary operations between left and right operands
+	newNodeR := ast.Node(node.Y)
+	rValues, err := EvaluateDynamicFilter(&newNodeR, inputList) // check if we can evaluate the right side into variables first
+	var rValueBasicLit Union
+	if len(rValues) == 0 || err != nil { // if not variables, then it's a basic lit
+		rValues = []string{}
+		rValueBasicLit, err = evaluateFilterBasicLit(&newNodeR) // evaluate the right side before combining with the left
+		if err != nil {                                         // if not basic lit or variable, then we failed
+			return []string{}, err
+		}
+	}
+
 	outputs := make([]string, 0)
-	for _, input := range lValues {
-		intermediateOutputs, err := evaluateFilterBinaryComparison(node, input, rValue)
-		if err != nil {
-			return outputs, err
-		} else {
-			outputs = append(outputs, intermediateOutputs...)
+	if len(lValues) > 0 && len(rValues) == 0 {
+		for _, input := range lValues {
+			intermediateOutputs, err := evaluateFilterBinaryComparison(node, input, rValueBasicLit)
+			if err != nil {
+				return outputs, err
+			} else {
+				if len(intermediateOutputs) > 0 {
+					outputs = append(outputs, intermediateOutputs...)
+				} else {
+					outputs = append(outputs, "nil")
+				}
+			}
+		}
+	} else if len(rValues) > 0 && len(lValues) == 0 {
+		for _, input := range rValues {
+			intermediateOutputs, err := evaluateFilterBinaryComparison(node, input, lValueBasicLit)
+			if err != nil {
+				return outputs, err
+			} else {
+				if len(intermediateOutputs) > 0 {
+					outputs = append(outputs, intermediateOutputs...)
+				} else {
+					outputs = append(outputs, "nil")
+				}
+			}
+		}
+	} else if len(lValues) == len(rValues) {
+		for i := range lValues {
+			expression, err := Parse(lValues[i] + node.Op.String() + rValues[i])
+			if err != nil {
+				return outputs, err
+			}
+
+			// evaluate like a normal expression
+			intermediateOutputs, _ := Evaluate(expression, nil)
+
+			// make sure all values are truthy
+			intermediateOutputs, err = Bool(intermediateOutputs...)
+			if err != nil {
+				return outputs, err
+			}
+
+			// convert to string so that the output agrees with what is expected
+			for _, output := range intermediateOutputs {
+				if output.b {
+					outputs = append(outputs, "true")
+				} else {
+					outputs = append(outputs, "false")
+				}
+			}
 		}
 	}
 
@@ -196,21 +249,57 @@ func evaluateFilterCallExpr(node *ast.CallExpr, inputList []string) ([]string, e
 						return []string{}, err
 					}
 					for _, attribute := range attributeInputsFiltered {
-						outputs = append(outputs, MetricsConfig.Attributes[attribute].InputVar)
+						if _, ok2 := MetricsConfig.Attributes[attribute]; ok2 {
+							outputs = append(outputs, MetricsConfig.Attributes[attribute].InputVar)
+						}
 					}
 				} else {
 					return []string{}, fmt.Errorf("attribute %s does not exist in Scope", attributeName)
 				}
 				return outputs, nil
 			}
-		}
-		if strings.ToLower(id.Name) == "value" {
+		} else if strings.ToLower(id.Name) == "value" {
 			_, ok1 := node.Args[0].(*ast.BinaryExpr)
 			if ok1 {
 				_, ok1 = ast.Node(node.Args[0].(*ast.BinaryExpr).X).(*ast.Ident)
 			}
 			if ok1 {
 				return evaluateFilterBinary(node.Args[0].(*ast.BinaryExpr), inputList)
+			}
+		} else if strings.ToLower(id.Name) == "indexfilter" {
+			outputs := []string{}
+			_, ok1 := node.Args[0].(*ast.BinaryExpr)
+			if ok1 {
+				conditionNode := node.Args[0].(ast.Node)
+				indices, err := EvaluateDynamicFilter(&conditionNode, inputList)
+				if err != nil {
+					return []string{}, fmt.Errorf("could not evaluate index filter")
+				}
+				var selectionTrueList []string
+				if len(node.Args) > 1 {
+					trueNode := node.Args[1].(ast.Node)
+					selectionTrueList, err = EvaluateDynamicFilter(&trueNode, inputList)
+				}
+				if len(selectionTrueList) == 0 || err != nil {
+					return []string{}, fmt.Errorf("could not evaluate index filter")
+				}
+				var selectionFalseList []string
+				if len(node.Args) > 2 {
+					falseNode := node.Args[2].(ast.Node)
+					selectionFalseList, _ = EvaluateDynamicFilter(&falseNode, inputList)
+				}
+				if len(indices) == len(selectionTrueList) {
+					for i, index := range indices {
+						if index == "true" {
+							outputs = append(outputs, selectionTrueList[i])
+						} else {
+							if len(indices) == len(selectionFalseList) {
+								outputs = append(outputs, selectionFalseList[i])
+							}
+						}
+					}
+					return outputs, nil
+				}
 			}
 		}
 	}
