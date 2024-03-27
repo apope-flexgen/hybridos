@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net"
@@ -42,12 +43,13 @@ type server struct {
 }
 
 type ServerConfig struct {
-	IP      string
-	Port    string
-	User    string
-	Dir     string `json:"directory"`
-	Sorted  bool
-	Timeout int
+	IP                  string
+	Port                string
+	User                string
+	Dir                 string `json:"directory"`
+	Sorted              bool
+	SortedRetentionDays int `json:"sorted_retention_days"`
+	Timeout             int
 
 	// S3 components
 	Bucket string
@@ -65,6 +67,24 @@ type sshPipe struct {
 type serverMap map[string]*server
 
 var servers serverMap = make(serverMap)
+
+// Unmarshal a server config
+func (cfg *ServerConfig) UnmarshalJSON(data []byte) error {
+	type MethodlessConfigAlias ServerConfig // type alias with no methods needed to prevent recursive calls to UnmarshalJSON
+
+	// default values
+	tmpCfg := &MethodlessConfigAlias{
+		SortedRetentionDays: 365,
+	}
+
+	err := json.Unmarshal(data, tmpCfg)
+	if err != nil {
+		return err
+	}
+
+	*cfg = ServerConfig(*tmpCfg)
+	return nil
+}
 
 // Creates a new server based on the provided name and config.
 // Standardizes names to be all lower-case and have no spaces.

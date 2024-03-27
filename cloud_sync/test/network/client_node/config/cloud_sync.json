@@ -4,7 +4,20 @@
             "directory" : "/home/archives",
             "private_key" : "/root/.ssh/id_rsa",
             "known_hosts" : "/root/.ssh/known_hosts",
-            "extension" : ".tar.gz"
+            "extension" : ".tar.gz",
+            "servers" : [ "destination", "local_consumer", "backup-buffer" ]
+        },
+        "backup-buffer" : {
+            "directory" : "/home/backup-buffer",
+            "private_key" : "/root/.ssh/id_rsa",
+            "known_hosts" : "/root/.ssh/known_hosts",
+            "extension" : ".tar.gz",
+            "servers" : [ "backup" ],
+            "tar_mode": {
+                "mode": "tar",
+                "interval_seconds": 288,
+                "buffer_size": 10000
+            }
         }
     },
     "servers": {
@@ -18,6 +31,14 @@
         },
         "local_consumer": {
             "directory" : "/home/local_consumer"
+        },
+        "backup-buffer": {
+            "directory" : "/home/backup-buffer"
+        },
+        "backup": {
+            "directory" : "/home/backup",
+            "sorted" : true,
+            "sorted_retention_days": 1
         }
     },
     "db_directory" : "/home/.cloud_sync/db",

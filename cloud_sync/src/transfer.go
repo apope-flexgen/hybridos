@@ -154,6 +154,10 @@ func (serv *server) handleTransferRequest(cl *client, request transferRequest) (
 	} else if serv.config.Sorted {
 		// local servers can optionally have their files sorted by day
 		log.Debugf("Sorted local copy %s to %s from %s.", request.fileName, serv.name, cl.name)
+		err := removeOldestExpiredDatedDir(serv.config.Dir, serv.config.SortedRetentionDays, time.Now())
+		if err != nil {
+			log.Errorf("Failed to apply archive retention to %s", serv.name)
+		}
 		return sortedCopy(cl, serv, request.srcDirPath, request.fileName)
 	} else {
 		// if not sorted, local servers get simple copy
@@ -207,6 +211,55 @@ func parseUnixMicro(fileName string, fileExtension string) (timeStamp time.Time,
 		return time.Time{}, false
 	}
 	return time.UnixMicro(int64(unixMicros)), true
+}
+
+// Removes the oldest directory in a directory of dated subdirectories
+// where the age of a subdirectory is determined by the date in its name.
+// The current time is given as a parameter for ease of testing.
+func removeOldestExpiredDatedDir(dirPath string, retentionDays int, now time.Time) error {
+	dir, err := os.Open(dirPath)
+	if err != nil {
+		return fmt.Errorf("failed to open directory: %w", err)
+	}
+	defer dir.Close()
+	// get all file names directly under the given directory
+	fileNames, err := dir.Readdirnames(-1)
+	if err != nil {
+		return fmt.Errorf("failed to read file names from directory: %w", err)
+	}
+
+	// search the filenames for the oldest date
+	oldestFileName := ""
+	var oldestDate time.Time
+	datedFileNameFound := false
+	for _, fileName := range fileNames {
+		date, err := time.Parse("2006-1-2", fileName) // date layout must match layout used in sorted copy
+		if err != nil {
+			continue
+		}
+
+		if !datedFileNameFound {
+			datedFileNameFound = true
+			oldestFileName = fileName
+			oldestDate = date
+		} else if date.Before(oldestDate) {
+			oldestFileName = fileName
+			oldestDate = date
+		}
+	}
+	if !datedFileNameFound {
+		return nil
+	}
+
+	// if the oldest subdirectory is expired, then remove it
+	if now.Sub(oldestDate) > time.Duration(retentionDays)*24*time.Hour {
+		err := os.RemoveAll(filepath.Join(dirPath, oldestFileName))
+		if err != nil {
+			return fmt.Errorf("failed to remove file: %w", err)
+		}
+	}
+
+	return nil
 }
 
 // Copies the contents of the given file into a new file with the given destination file path.

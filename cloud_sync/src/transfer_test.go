@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"math"
+	"os"
+	"path/filepath"
 	"testing"
 	"time"
 )
@@ -29,6 +31,78 @@ func TestParseUnixMicro(t *testing.T) {
 		}
 		if timeParsed != expectedTime {
 			t.Errorf("Parsed time was %v but expected time was %v for test case params %v", timeParsed, expectedTime, params)
+		}
+	}
+}
+
+// Test that sorted backups function and that retentions applied to them work as well
+func TestSortedBackup(t *testing.T) {
+	var err error
+	testDir := t.TempDir()
+	serverDir := filepath.Join(testDir, "server")
+	err = os.Mkdir(serverDir, os.ModePerm)
+	if err != nil {
+		t.Fatalf("Failed to create server dir: %v", err)
+	}
+	clientDir := filepath.Join(testDir, "client")
+	err = os.Mkdir(clientDir, os.ModePerm)
+	if err != nil {
+		t.Fatalf("Failed to create client dir: %v", err)
+	}
+	serv := &server{
+		config: ServerConfig{
+			Dir:                 serverDir,
+			Sorted:              true,
+			SortedRetentionDays: 30,
+		},
+	}
+	cl := &client{
+		sendSrcDirPath:   clientDir,
+		connectedServers: []*server{serv},
+	}
+
+	// loop over several "hours"
+	testTime := time.Now()
+	for hoursTicked := 0; hoursTicked < 365*24; hoursTicked++ {
+		// create a file timestamped with the hour
+		fileName := fmt.Sprint(testTime.UnixMicro()) + ".tar.gz"
+		file, err := os.Create(filepath.Join(clientDir, fileName))
+		if err != nil {
+			t.Fatalf("Failed creation of file %s: %v", fileName, err)
+		}
+		file.Close()
+		err = removeOldestExpiredDatedDir(clientDir, serv.config.SortedRetentionDays, testTime)
+		if err != nil {
+			t.Fatalf("Failed applying retention")
+		}
+		err, _ = sortedCopy(cl, serv, clientDir, fileName)
+		if err != nil {
+			t.Fatalf("Failed sorted copy of file %s: %v", fileName, err)
+		}
+
+		// check that the file exists and that subdirectories older than the retention don't exist
+		year, month, day := testTime.Date()
+		_, err = os.Stat(filepath.Join(serverDir, fmt.Sprintf("%d-%d-%d", year, int(month), day), fileName))
+		if os.IsNotExist(err) {
+			t.Fatalf("File %s was not found in server dir", fileName)
+		}
+		dir, err := os.Open(serverDir)
+		if err != nil {
+			t.Fatalf("Failed to open server directory: %v", err)
+		}
+		subDirNames, err := dir.Readdirnames(-1)
+		if err != nil {
+			t.Fatalf("Failed to read file names from server directory: %v", err)
+		}
+		dir.Close()
+		for _, subDirName := range subDirNames {
+			subDirDate, err := time.Parse("2006-1-2", subDirName)
+			if err != nil {
+				t.Fatalf("Failed to parse subdir name for date: %v", err)
+			}
+			if testTime.Sub(subDirDate) > time.Duration(serv.config.SortedRetentionDays)*24*time.Hour {
+				t.Fatalf("Found subdir %s older than retention", subDirName)
+			}
 		}
 	}
 }
