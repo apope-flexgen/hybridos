@@ -502,7 +502,7 @@ export class AssetsPageService {
       returnWithMetadata.displayGroups[uri] = {
         ...parsedData,
         displayName,
-        tabKey: dbiMetadata?.[index]?.info.tabKey || Math.random() 
+        tabKey: dbiMetadata?.[index]?.info.tabKey
       };
     });
 
@@ -551,7 +551,6 @@ export class AssetsPageService {
         // otherwise, send empty object
         const maintenanceActions = hasMaintenanceActions ? event.body.actions || {} : {};
 
-
         const parsedData = isSummary
           ? parseSummaryData(
               this.getIndividualAssetMetadata(uri, dbiMetadata),
@@ -586,7 +585,7 @@ export class AssetsPageService {
             [uri]: {
               ...parsedData,
               displayName: name || uri,
-              tabKey: !isDefault ? (this.getIndividualAssetMetadata(uri, dbiMetadata).info.tabKey || Math.random()) : Math.random()
+              tabKey: !isDefault ? this.getIndividualAssetMetadata(uri, dbiMetadata).info.tabKey : undefined
             },
           },
         };

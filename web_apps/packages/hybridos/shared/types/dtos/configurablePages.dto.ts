@@ -10,7 +10,7 @@ export type ConfigurablePageDTO = {
 
 export type DisplayGroupDTO = {
   displayName?: string;
-  tabKey?: string | number,
+  tabKey?: string,
   batteryViewStatus?: {
     [componentID: string]: StatusComponentDTO;
   };

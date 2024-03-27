@@ -32,7 +32,7 @@ export interface metadataFromDBI {
   info: {
     [key: string]: any;
     assetKey: string;
-    tabKey?: string | number;
+    tabKey?: string;
     hasSummary: boolean;
     hasBatchControls?: boolean;
     hasMaintenanceActions?: boolean;

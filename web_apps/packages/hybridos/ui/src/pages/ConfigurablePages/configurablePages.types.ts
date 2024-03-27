@@ -46,7 +46,7 @@ export type ConfigurableBatchControlComponentFunction = (
 
 export type DisplayGroupFunctions = {
   displayName: string
-  tabKey: string | number
+  tabKey: string | undefined
   statusFunctions: ConfigurableComponentFunction[]
   alarmFaultStatusFunction: ConfigurableComponentFunction
   controlFunctions: ConfigurableComponentFunction[]
