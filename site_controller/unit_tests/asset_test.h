@@ -27,6 +27,7 @@ TEST_F(Asset_Mock, add_variable_to_buffer) {
     std::string variable_id_1 = "start";
     std::string variable_id_2 = "start_stop";
     std::string variable_id_3 = "z_ignored";
+    std::string variable_id_4 = "nop"; // doesn't exist
     Fims_Object obj2;
     Fims_Object obj3;
 
@@ -54,6 +55,22 @@ TEST_F(Asset_Mock, add_variable_to_buffer) {
 
     EXPECT_EQ("",  // Naked therefore has no value
               to_string(test_buf));
+
+    prepare_buffer(variable_id_4, test_buf);
+    add_variable_to_buffer(variable_id_4,          // uri
+                           variable_id_4.c_str(),  // variable_id
+                           test_buf);
+
+    // test that a non-existent endpoint returns a "{}"
+    // see below for code that returns the "{}"
+    /*
+    if (to_string(buf).substr(0, 2) == "{}") {
+        FPS_ERROR_LOG("Failed to add variable %s of asset %s to buffer.", variable_id, asset_type_id);
+        return false;
+    }
+    */
+    EXPECT_EQ("\"nop\":{}", to_string(test_buf));
+
 }
 
 TEST_F(Asset_Mock, handle_generic_asset_controls_maintenance_set) {

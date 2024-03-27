@@ -2841,14 +2841,20 @@ bool fimsCtl::makeJSONObject(fmt::memory_buffer& buf, const char* const var, boo
  * @param buf (fmt::memory_buffer&) buf to add to
  * @param actions (std::vector<Action>) this assests actions
  */
-bool fimsCtl::makeJSONObjectWithActionOptions(fmt::memory_buffer& buf, std::vector<Action> actions) const {
+bool fimsCtl::makeJSONObjectWithActionOptions(fmt::memory_buffer& buf, const char* var, std::vector<Action> actions) const {
+    size_t maint_actions_ctl_str_len = strlen("maint_actions_ctl");
     // Skip building JSON object for UI controls that are not configured
     if (!configured) {
         return true;
     }
 
-    bufJSON_AddId(buf, "maint_actions_ctl");  // maint_actions_ctl
-    bufJSON_StartObject(buf);                 // {
+    if (var == nullptr) {
+        bufJSON_AddId(buf, "maint_actions_ctl");  // maint_actions_ctl
+        bufJSON_StartObject(buf);  // UiItemVar {
+    } else if (strncmp("maint_actions_ctl", var, maint_actions_ctl_str_len) != 0 && strnlen(var, MAX_SCAN) != maint_actions_ctl_str_len) {
+        return true;
+    }
+
     bufJSON_AddBool(buf, "enabled", enabled);
     bufJSON_AddId(buf, "options");
     bufJSON_StartArray(buf);  // UiItemOption [
@@ -2860,7 +2866,10 @@ bool fimsCtl::makeJSONObjectWithActionOptions(fmt::memory_buffer& buf, std::vect
     }
     bufJSON_RemoveTrailingComma(buf);
     bufJSON_EndArray(buf);   // ] UiItemOption ]
-    bufJSON_EndObject(buf);  // end actions_ctl }
+    if (var == nullptr) {
+        bufJSON_EndObject(buf);  // } UiItemVar
+    }
+
     return true;
 }
 

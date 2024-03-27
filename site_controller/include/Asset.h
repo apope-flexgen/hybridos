@@ -40,7 +40,7 @@ struct fimsCtl {
     fimsCtl();
     ~fimsCtl();
     bool makeJSONObject(fmt::memory_buffer& buf, const char* const var = NULL, bool configurable_asset = false);
-    bool makeJSONObjectWithActionOptions(fmt::memory_buffer& buf, std::vector<Action> actions) const;
+    bool makeJSONObjectWithActionOptions(fmt::memory_buffer& buf, const char* var, std::vector<Action> actions) const;
     Config_Validation_Result configure(cJSON* varJson, jsonBuildOption cJoption, void* display, valueType numType, displayType uitype, bool varEnabled = true, bool boolStr = false);
     Config_Validation_Result configure_actions_UI(cJSON* JSON);
     void* pDisplay;

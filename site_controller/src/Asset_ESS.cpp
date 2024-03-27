@@ -998,7 +998,7 @@ bool Asset_ESS::generate_asset_ui(fmt::memory_buffer& buf, const char* const var
     // Only need to maintain the maint_actions_select_ctl if there are any actions
     // (TODO: JUD) Might could get away with not pubbing this info at all.
     maint_actions_select_ctl.enabled = inMaintenance && action_status.current_sequence_name.empty();
-    goodBody = maint_actions_select_ctl.makeJSONObjectWithActionOptions(buf, actions);
+    goodBody = maint_actions_select_ctl.makeJSONObjectWithActionOptions(buf, var, actions);
 
     return (goodBody);
 }
