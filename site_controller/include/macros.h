@@ -19,6 +19,7 @@
 #define GENERATORS_TYPE_ID ("generators")
 #define SOLAR_TYPE_ID ("solar")
 #define LONG_MSG_LEN (1024)
+#define MAX_SCAN (50) // used as a maximum word size when evaluating c strings with strnlen() etc.
 #define MAX_COMPS (32)
 #define MAX_MODE_NAME_LENGTH (32)
 #define MAX_NUM_ASSETS (100)

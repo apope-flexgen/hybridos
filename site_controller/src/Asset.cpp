@@ -7,6 +7,7 @@
 
 /* C Standard Library Dependencies */
 #include <climits>
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
 /* C++ Standard Library Dependencies */
@@ -1228,6 +1229,31 @@ bool Asset::send_setpoint(std::string uri, cJSON* valueObject) {
     return data_endpoint->setpoint_writeout(uri, endpoint, &valueObject);
 }
 
+/** 
+ * @brief While there are many variables defined in the base Asset class some don't make as much sense to be 
+ * added to feeder pubs/gets. Use this function to remove them. 
+ *
+ * @param The variable that is about to get added to a fims message
+ *
+ * @return bool if you should exclude this variable
+ */
+bool exclude_variable_for_feeder(const char* variable_id) {
+    size_t controllable_len = strlen("is_controllable");
+    size_t avail_len = strlen("is_available");
+    size_t run_len = strlen("is_running");
+
+    if (strncmp(variable_id, "is_controllable", controllable_len) == 0 && strnlen(variable_id, MAX_SCAN) == controllable_len) {
+        return true;
+    }
+    if (strncmp(variable_id, "is_available", avail_len) == 0 && strnlen(variable_id, MAX_SCAN) == avail_len) {
+        return true;
+    }
+    if (strncmp(variable_id, "is_running", run_len) == 0 && strnlen(variable_id, MAX_SCAN) == run_len) {
+        return true;
+    }
+    return false;
+}
+
 /**
  * @brief Handles any GETs to URIs beginning with /assets/<asset type>/<asset ID>.
  * @param pmsg Pointer to the FIMS GET message.
@@ -1286,9 +1312,22 @@ bool Asset::handle_get(fims_message* pmsg) {
     }
 
     // URI must be /assets/<asset type>/<asset ID>/<variable ID>
-    if (!add_variable_to_buffer(pmsg->uri, pmsg->pfrags[3], send_FIMS_buf)) {
-        return false;
+    switch (this->asset_type_value) {
+        // Feeders don't need all the variables that the other asset types have. 
+        // Use this switch to trim variables off
+        case FEEDERS:
+            if (!exclude_variable_for_feeder(pmsg->pfrags[3])) {
+                if (!add_variable_to_buffer(pmsg->uri, pmsg->pfrags[3], send_FIMS_buf)) {
+                    return false;
+                }
+            }
+            break;
+        default:  
+            if (!add_variable_to_buffer(pmsg->uri, pmsg->pfrags[3], send_FIMS_buf)) {
+                return false;
+            }
     }
+
     return send_buffer_to(pmsg->replyto, send_FIMS_buf);
 }
 
@@ -1318,8 +1357,13 @@ bool Asset::add_asset_data_to_buffer(fmt::memory_buffer& buf) {
     // Begin asset instance object with opening curly brace
     bufJSON_StartObject(buf);
 
-    // Name will not be in asset var map, so add it explicitly
+    // Name/is_controllable/is_available/is_running will not be in asset var map, so add it explicitly
     bufJSON_AddString(buf, "name", name.c_str());
+    if (!(this->asset_type_value == asset_type::FEEDERS)) {
+        bufJSON_AddBool(buf, "is_controllable", is_controllable());
+        bufJSON_AddBool(buf, "is_available", is_available());
+        bufJSON_AddBool(buf, "is_running", is_running());
+    }
 
     // Add UI variables, which will not be in asset var map
     if (!generate_asset_ui(buf)) {
@@ -1469,6 +1513,48 @@ bool Asset::list_action_info(fmt::memory_buffer& buf, bool is_shutdown) {
 
 /**
  * @brief Adds the identified variable's data to the given buffer.
+ * A one of variable in this context is just a variable that isn't in the var map.
+ *
+ * @param variable_id ID of the desired variable.
+ * @param buf Buffer to which the variable's data must be added.
+ * @return True if the data was added to the buffer successfully, or false if there was an error.
+ */
+bool Asset::handle_one_off_variables(const char* variable_id, fmt::memory_buffer& buf) {
+    bool success = false;
+    size_t name_len = strlen("name");
+    size_t controllable_len = strlen("is_controllable");
+    size_t avail_len = strlen("is_available");
+    size_t run_len = strlen("is_running");
+
+    buf.clear(); // clear the "{}"
+                 
+    if (strncmp(variable_id, "name", name_len) == 0 && strnlen(variable_id, MAX_SCAN) == name_len) {
+        bufJSON_AddOnlyString(buf, name.c_str());
+        success = true;
+    }
+    if (strncmp(variable_id, "is_controllable", controllable_len) == 0 && strnlen(variable_id, MAX_SCAN) == controllable_len) {
+        bufJSON_AddOnlyBool(buf, is_controllable());
+        success = true;
+    }
+    if (strncmp(variable_id, "is_available", avail_len) == 0 && strnlen(variable_id, MAX_SCAN) == avail_len) {
+        bufJSON_AddOnlyBool(buf, is_available());
+        success = true;
+    }
+    if (strncmp(variable_id, "is_running", run_len) == 0 && strnlen(variable_id, MAX_SCAN) == run_len) {
+        bufJSON_AddOnlyBool(buf, is_running());
+        success = true;
+    }
+    if (success) {
+        bufJSON_RemoveTrailingComma(buf);
+    } else {
+        buf.clear(); // it's broken just clear it
+    }
+
+    return success;
+}
+
+/**
+ * @brief Adds the identified variable's data to the given buffer.
  * @param uri URI of the desired variable.
  * @param variable_id ID of the desired variable.
  * @param buf Buffer to which the variable's data must be added.
@@ -1503,6 +1589,11 @@ bool Asset::add_variable_to_buffer(std::string uri, const char* variable_id, fmt
     }
 
     if (to_string(buf).substr(0, 2) == "{}") {
+        // one of logic for a couple variables not provided in the asset_var_map
+        if (handle_one_off_variables(variable_id, buf)) {
+            return true;
+        }
+
         FPS_ERROR_LOG("Failed to add variable %s of asset %s to buffer.", variable_id, asset_type_id);
         return false;
     }

@@ -172,6 +172,7 @@ public:
     bool handle_get(fims_message* pmsg);
     bool add_asset_data_to_buffer(fmt::memory_buffer& buf);
     bool add_variable_to_buffer(std::string uri, const char* variable, fmt::memory_buffer& buf);
+    bool handle_one_off_variables(const char* variable_id, fmt::memory_buffer& buf);
     bool list_action_info(fmt::memory_buffer& buf, bool is_shutdown = false);
     bool list_specific_action(fmt::memory_buffer& buf, std::string action_name, bool is_shutdown = false);
     bool list_reduced_action_info(fmt::memory_buffer& buf);

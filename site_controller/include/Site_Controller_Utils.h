@@ -87,6 +87,15 @@ inline void bufJSON_AddBool(fmt::memory_buffer& fmt_buf, const char* const name,
 }
 
 /**
+ * @brief Add just a literal bool to a buffer. Has trailing comma.
+ * @param fmt_buf The string buffer we are adding to.
+ * @param value The value of the item we are adding.
+ */
+inline void bufJSON_AddOnlyBool(fmt::memory_buffer& fmt_buf, const bool value) {
+    FORMAT_TO_BUF(fmt_buf, R"({},)", value);
+}
+
+/**
  * @brief Alternative bufJSON_AddBool used when we might only want to add the value and only of a particular var.
  *  If var is null, it calls the simpler bufJSON_AddBool. If var doesn't match name, we do nothing.
  * @param fmt_buf The string buffer we are adding to.
