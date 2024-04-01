@@ -10,11 +10,12 @@ import (
 	"reflect"
 	"strings"
 )
+
 //returns elements of inslc in reverse order
 func reverse(inslc []float64) (outslc []float64) {
 	inlen := len(inslc)
 	outslc = make([]float64, inlen)
-	for i,member := range inslc {
+	for i, member := range inslc {
 		j := inlen - i - 1
 		outslc[j] = member
 	}
@@ -35,12 +36,13 @@ func add(nums ...float64) float64 {
 	}
 	return total
 }
+
 // implements num[0] - (num[1] + num[2] + ... + num[n])
 func subtract(nums ...float64) float64 {
 	if len(nums) < 1 {
 		return 0
 	}
-	if nums[0] == math.NaN(){
+	if nums[0] == math.NaN() {
 		return math.NaN()
 	}
 	var total float64 = nums[0]
@@ -52,6 +54,7 @@ func subtract(nums ...float64) float64 {
 	}
 	return total
 }
+
 // implements num[0] * num[1] * ... * num[n]
 func multiply(nums ...float64) float64 {
 	if len(nums) < 1 {
@@ -66,6 +69,7 @@ func multiply(nums ...float64) float64 {
 	}
 	return total
 }
+
 // implements num[0] / (num[1] * num[2] * ... * num[n])
 func divide(nums ...float64) float64 {
 	if len(nums) < 1 {
@@ -81,11 +85,12 @@ func divide(nums ...float64) float64 {
 	}
 	return nums[0] / denominator
 }
+
 // implements base ^ exp
 func exponent(base float64, exp float64) float64 {
 	return math.Pow(base, exp)
 }
-func maximum(nums...float64) (float64, int) {
+func maximum(nums ...float64) (float64, int) {
 	var max float64 = math.Inf(-1)
 	var idx int = 0
 	if len(nums) == 0 {
@@ -102,7 +107,7 @@ func maximum(nums...float64) (float64, int) {
 			max = num
 			idx = i
 		}
-	} 
+	}
 	return max, idx
 }
 func minimum(nums ...float64) (float64, int) {
@@ -122,7 +127,7 @@ func minimum(nums ...float64) (float64, int) {
 			min = num
 			idx = i
 		}
-	} 
+	}
 	return min, idx
 }
 func average(nums ...float64) float64 {
@@ -144,16 +149,18 @@ func ceil(num float64) float64 {
 func round(num float64) float64 {
 	return math.Round(num)
 }
+
 //Removes whitespaces and sets all characters to lowercase in the dirty string dString
-func cleanString(dString string) (string) {
+func cleanString(dString string) string {
 	return strings.TrimSpace(strings.ToLower(dString)) //TODO GB: This likely will be ever so slightly faster if switched to ToLower(TrimSpace(string))
 }
+
 //returns a deep copy of slice cslice including indeterminatly nested maps and slices
 //do not use for anything containing channels, structs, etc.
-func deepCopySlice(cslice []interface{}) ([]interface{}) {
+func deepCopySlice(cslice []interface{}) []interface{} {
 	res := make([]interface{}, len(cslice))
 	for i, val := range cslice {
-		valKind := reflect.ValueOf(val).Kind() 
+		valKind := reflect.ValueOf(val).Kind()
 		if valKind == reflect.Map {
 			res[i] = deepCopyMap(val.(map[string]interface{}))
 		} else if valKind == reflect.Slice {
@@ -166,10 +173,10 @@ func deepCopySlice(cslice []interface{}) ([]interface{}) {
 }
 
 //returns a deep copy of map cmap including indeterminatly nested maps and slices
-//do not use for anything containing channels, structs, etc.  
-func deepCopyMap(cmap map[string]interface{}) (map[string]interface{}) {
+//do not use for anything containing channels, structs, etc.
+func deepCopyMap(cmap map[string]interface{}) map[string]interface{} {
 	res := make(map[string]interface{})
-	for k,v := range cmap {
+	for k, v := range cmap {
 		vKind := reflect.ValueOf(v).Kind()
 		if vKind == reflect.Map {
 			res[k] = deepCopyMap(v.(map[string]interface{}))
@@ -185,10 +192,21 @@ func deepCopyMap(cmap map[string]interface{}) (map[string]interface{}) {
 //Prints json-like object pmap as a nicely formatted output
 func printMap(pmap interface{}) {
 	b, err := json.MarshalIndent(pmap, "", "  ")
-	if err != nil{
+	if err != nil {
 		log.Println("Error printing map, could not marshal object")
 		log.Println(err)
 	}
 	fmt.Print(string(b))
 	fmt.Println()
+}
+
+//Appends msgNew to msg separated by "__". If either are empty return the other
+func appendDelimMsg(msg string, msgNew string) (msgOut string) {
+	if msg == "" {
+		return msgNew
+	} else if msgNew != "" {
+		return msg + "__" + msgNew
+	} else {
+		return msg
+	}
 }

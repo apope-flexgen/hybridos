@@ -31,8 +31,8 @@ type bms struct {
 	CellVoltRange float64 // Variance in sbmu cell voltages, where 0.01 = 1%. SBMU may be above or below nominal by this percentage.
 	NumSbmus      int     // Number of sbmus in the bms system
 	// BMS Measured Values
-	Vdc         measurement // Measured dc bus voltage
-	Idc         measurement // Measured dc current
+	Vdc         measurement `name:"DC Voltage"` // Measured dc bus voltage
+	Idc         measurement `name:"DC Current"` // Measured dc current
 	P           float64     // Measured dc power
 	Pdc         float64     // TODO
 	Pcharge     float64     // Battery max charge limit (varies with SOC)
@@ -41,14 +41,14 @@ type bms struct {
 	Idischarge  float64     // Battery max discharge current (varies with SOC)
 	Echarge     float64     // pulled from capacity
 	Edischarge  float64     // pulled from capacity
-	Soc         measurement // Battery state of charge
+	Soc         measurement `name:"SOC"` // Battery state of charge
 	Soh         float64     // Battery state of health
-	MaxCellVolt measurement // maximum cell voltage in the BMS
+	MaxCellVolt measurement `name:"Maximum Cell Voltage"` // maximum cell voltage in the BMS
 	AvgCellVolt float64     // average cell voltage in the BMS
-	MinCellVolt measurement // minimum cell voltage in the BMS
-	MaxCellTemp measurement // maximum cell temperature in the BMS
+	MinCellVolt measurement `name:"Minimum Cell Voltage"`     // minimum cell voltage in the BMS
+	MaxCellTemp measurement `name:"Maximum Cell Temperature"` // maximum cell temperature in the BMS
 	AvgCellTemp float64     // average cell temperature in the BMS
-	MinCellTemp measurement // minimum cell temperature in the BMS
+	MinCellTemp measurement `name:"Minimum Cell Temperature"` // minimum cell temperature in the BMS
 
 	SocChargeVec    []float64
 	PChargeVec      []float64
@@ -84,6 +84,8 @@ type bms struct {
 	Watchdog     float64 // Checks to make sure that the connection to the higher level controller is active. If it does not change regularly, it turns off the BMS. Not implemented.
 	Reset        bool    // Resets warnings and faults
 	DisableFault bool    // Disable fault behavior
+	Faults       string
+	Alarms       string
 	// Droop Parameters
 	Dvoltage  droop
 	faultskip bool // non public parameter. Skip the first fault detection instance in updateMode() to prevent nuisance faults.
@@ -386,21 +388,24 @@ func (b *bms) UpdateMode(input terminal) (output terminal) {
 	processCtrlWordConfig(b, b.CtrlWord2Cfg, b.CtrlWord2)
 	processCtrlWordConfig(b, b.CtrlWord3Cfg, b.CtrlWord3)
 	processCtrlWordConfig(b, b.CtrlWord4Cfg, b.CtrlWord4)
-	// fmt.Println(b.DcContactor, b.DcContactorOpenCmd, b.DcContactorCloseCmd, b.On, b.Oncmd, b.Offcmd)
 
 	// Update measurement fault and alarm states with the updateMeasurements function call
 	if !b.DisableFault && !b.faultskip {
 		if b.Reset {
 			b.Fault, b.Warning = false, false
+			b.Faults, b.Alarms = "", ""
 		}
-		lowerFault, lowerWarning := updateMeasurements(b, b.Reset)
+		lowerFault, lowerWarning, lowerFaultsMsg, lowerAlarmsMsg := updateMeasurements(b, b.Reset)
 		b.Fault = b.Fault || lowerFault
 		b.Warning = b.Warning || lowerWarning
+		b.Faults = appendDelimMsg(b.Faults, lowerFaultsMsg)
+		b.Alarms = appendDelimMsg(b.Alarms, lowerAlarmsMsg)
 		if b.Reset {
 			b.Reset = false
 		}
 	} else {
 		b.Fault, b.Warning, b.Reset = false, false, false
+		b.Faults, b.Alarms = "", ""
 	}
 	b.faultskip = false // this variable is only used to skip the fault detection upon first pass through.
 	// Control DC contactor

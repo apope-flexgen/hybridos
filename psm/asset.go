@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 	"reflect"
@@ -193,18 +194,15 @@ type measurement struct {
 	AlarmLowThreshold  float64
 	FaultLow           bool
 	FaultLowThreshold  float64
+	FaultsMsg          string
+	AlarmsMsg          string
 }
 
-func monitorMeasurement(m interface{}, reset bool) (fault bool, alarm bool) {
+func monitorMeasurement(m interface{}, reset bool, name ...string) (fault bool, alarm bool, faults string, alarms string) {
 	// This function takes an interface containing a Reflect Addr() address pointing to a measurement structure. It also takes a reset command as a boolean.
 	// This function presumes that the measurement structure has fields in a particular order. If that order changes, this function must be updated. Order will be indicated with comments in the code.
 	// The function checks whether it has crossed any of the alarm or fault limits, and sets the alarms and faults as appropriate
 	// Faults and alarms must be reset manually by setting the Reset to true
-	// fieldType := reflect.ValueOf(m).Type().String()
-	// if fieldType != "main.measurement" {
-	// 	log.Printf("Warning - this measurement is not of measurement struct - cannot evaluate: %v", m)
-	// 	return false, false
-	// }
 	meas := m.(*measurement)
 	//meas := reflect.ValueOf(m).Elem() // Get the measurement from its address. This gets the measurement as a Reflect.Value type, allowing Reflect.Set actions
 
@@ -214,27 +212,52 @@ func monitorMeasurement(m interface{}, reset bool) (fault bool, alarm bool) {
 		meas.AlarmLow = false
 		meas.FaultLow = false
 	}
+	meas.FaultsMsg = ""
+	meas.AlarmsMsg = ""
+
+	var vname string
+	if len(name) > 0 {
+		vname = name[0]
+	}
+
+	var msg string
 	if meas.Value > meas.FaultHighThreshold {
+		if !meas.FaultHigh && vname != "" {
+			msg = fmt.Sprintf("%s High Fault: Value %.2f exceeded fault high threshold %.2f", vname, meas.Value, meas.FaultHighThreshold)
+			meas.FaultsMsg = appendDelimMsg(meas.FaultsMsg, msg)
+		}
 		meas.FaultHigh = true // Field 1 of the measurement struct is the FaultHigh flag
 		fault = true
 	}
 	if meas.Value > meas.AlarmHighThreshold {
+		if !meas.AlarmHigh && vname != "" {
+			msg = fmt.Sprintf("%s High Alarm: Value %.2f exceeded alarm high threshold %.2f", vname, meas.Value, meas.AlarmHighThreshold)
+			meas.AlarmsMsg = appendDelimMsg(meas.AlarmsMsg, msg)
+		}
 		meas.AlarmHigh = true // Field 3 of the measurement struct is the AlarmHigh flag
 		alarm = true
 	}
-	if meas.Value < meas.AlarmLowThreshold {
-		meas.AlarmLow = true // Field 5 of the measurement struct is the AlarmLow flag
-		alarm = true
-	}
 	if meas.Value < meas.FaultLowThreshold {
+		if !meas.FaultLow && vname != "" {
+			msg = fmt.Sprintf("%s Low Fault: Value %.2f exceeded fault low threshold %.2f", vname, meas.Value, meas.FaultLowThreshold)
+			meas.FaultsMsg = appendDelimMsg(meas.FaultsMsg, msg)
+		}
 		meas.FaultLow = true // Field 7 of the measurement struct is the FaultLow flag
 		fault = true
 	}
+	if meas.Value < meas.AlarmLowThreshold {
+		if !meas.AlarmLow && vname != "" {
+			msg = fmt.Sprintf("%s Low Alarm: Value %.2f exceeded alarm low threshold %.2f", vname, meas.Value, meas.AlarmLowThreshold)
+			meas.AlarmsMsg = appendDelimMsg(meas.AlarmsMsg, msg)
+		}
+		meas.AlarmLow = true // Field 5 of the measurement struct is the AlarmLow flag
+		alarm = true
+	}
 
-	return fault, alarm
+	return fault, alarm, meas.FaultsMsg, meas.AlarmsMsg
 }
 
-func monitorStruct(inputStruct reflect.Value, reset bool) (fault bool, alarm bool) {
+func monitorStruct(inputStruct reflect.Value, reset bool) (fault bool, alarm bool, faultsMsg string, alarmsMsg string) {
 	// This function inspects a structure to see if it contains measurements structures.
 	// If a measurement structure is found, this function calls monitorMeasurement to update its faults and alarms.
 	// If the structure contains a structure or slice, it calls monitorStruct or monitorSlice to see if they contain measurements.
@@ -242,6 +265,8 @@ func monitorStruct(inputStruct reflect.Value, reset bool) (fault bool, alarm boo
 	// Create variables for measurement fault and alarm status
 	var lowerFault bool
 	var lowerAlarm bool
+	var lowerFaultsMsg string
+	var lowerAlarmsMsg string
 
 	for i := 0; i < inputStruct.NumField(); i++ {
 		thisField := inputStruct.Field(i)
@@ -251,23 +276,25 @@ func monitorStruct(inputStruct reflect.Value, reset bool) (fault bool, alarm boo
 			fieldType := reflect.ValueOf(fieldInter).Type().String() // Type will give us the named type of the variable, including user defined types such as measurement. The .String method converts this output to a string for comparison later
 			fieldKind := reflect.ValueOf(fieldInter).Kind()          // Kind gives us the underlying type of the variable, ignorning user defined types, meaning that it will say that measurement is a structure.
 			if fieldType == "main.measurement" {
-				lowerFault, lowerAlarm = monitorMeasurement(fieldAddr, reset)
+				lowerFault, lowerAlarm, lowerFaultsMsg, lowerAlarmsMsg = monitorMeasurement(fieldAddr, reset)
 			} else if fieldKind == reflect.Struct {
 				// If the field is a struct, we need to peek inside and see if it contains measurements. We should pass down the reset command to reset measurement faults and alarms.
-				lowerFault, lowerAlarm = monitorStruct(thisField, reset)
+				lowerFault, lowerAlarm, lowerFaultsMsg, lowerAlarmsMsg = monitorStruct(thisField, reset)
 			} else if fieldKind == reflect.Slice {
 				// If the field is a slice, we need to peek inside and see if it contains measurements. We should pass down the reset command to reset measurement faults and alarms.
-				lowerFault, lowerAlarm = monitorSlice(thisField, reset)
+				lowerFault, lowerAlarm, lowerFaultsMsg, lowerAlarmsMsg = monitorSlice(thisField, reset)
 			}
 		}
 		fault = fault || lowerFault
 		alarm = alarm || lowerAlarm
+		faultsMsg = appendDelimMsg(faultsMsg, lowerFaultsMsg)
+		alarmsMsg = appendDelimMsg(alarmsMsg, lowerAlarmsMsg)
 	}
 
-	return fault, alarm
+	return fault, alarm, faultsMsg, alarmsMsg
 }
 
-func monitorSlice(inputSlice reflect.Value, reset bool) (fault bool, alarm bool) {
+func monitorSlice(inputSlice reflect.Value, reset bool) (fault bool, alarm bool, faultsMsg string, alarmsMsg string) {
 	// This function inspects a slice to see if it contains measurements structures.
 	// If a measurement structure is found, this function calls monitorMeasurement to update its faults and alarms.
 	// If the structure contains a structure or slice, it calls monitorStruct or monitorSlice to see if they contain measurements.
@@ -275,6 +302,8 @@ func monitorSlice(inputSlice reflect.Value, reset bool) (fault bool, alarm bool)
 	// Create variables for measurement fault and alarm status
 	var lowerFault bool
 	var lowerAlarm bool
+	var lowerFaultsMsg string
+	var lowerAlarmsMsg string
 
 	for i := 0; i < inputSlice.Len(); i++ {
 		thisIndex := inputSlice.Index(i) // thisIndex represents each index in the slice
@@ -284,23 +313,25 @@ func monitorSlice(inputSlice reflect.Value, reset bool) (fault bool, alarm bool)
 			indexType := reflect.ValueOf(indexInter).Type().String() // Type will give us the named type of the variable, including user defined types such as measurement. The .String method converts this output to a string for comparison later
 			indexKind := reflect.ValueOf(indexInter).Kind()          // Kind gives us the underlying type of the variable, ignorning user defined types, meaning that it will say that measurement is a structure.
 			if indexType == "main.measurement" {
-				lowerFault, lowerAlarm = monitorMeasurement(indexAddr, reset)
+				lowerFault, lowerAlarm, lowerFaultsMsg, lowerAlarmsMsg = monitorMeasurement(indexAddr, reset)
 			} else if indexKind == reflect.Struct {
 				// If the field is a struct, we need to peek inside and see if it contains measurements. We should pass down the reset command to reset measurement faults and alarms.
-				lowerFault, lowerAlarm = monitorStruct(thisIndex, reset)
+				lowerFault, lowerAlarm, lowerFaultsMsg, lowerAlarmsMsg = monitorStruct(thisIndex, reset)
 			} else if indexKind == reflect.Slice {
 				// If the field is a slice, we need to peek inside and see if it contains measurements. We should pass down the reset command to reset measurement faults and alarms.
-				lowerFault, lowerAlarm = monitorSlice(thisIndex, reset)
+				lowerFault, lowerAlarm, lowerFaultsMsg, lowerAlarmsMsg = monitorSlice(thisIndex, reset)
 			}
 		}
 		fault = fault || lowerFault
 		alarm = alarm || lowerAlarm
+		faultsMsg = appendDelimMsg(faultsMsg, lowerFaultsMsg)
+		alarmsMsg = appendDelimMsg(alarmsMsg, lowerAlarmsMsg)
 	}
 
-	return fault, alarm
+	return fault, alarm, faultsMsg, alarmsMsg
 }
 
-func updateMeasurements(a interface{}, reset bool) (fault bool, alarm bool) {
+func updateMeasurements(a interface{}, reset bool) (fault bool, alarm bool, faultsMsg string, alarmsMsg string) {
 	// This function takes a pointer to an asset, such as a bms or pcs, that is wrapped in an interface.
 	// It iterates through the parameters in the asset structure to find measurement structures.
 	// This function should only be called by assets with a Reset, Fault, and Alarm parameter
@@ -314,11 +345,12 @@ func updateMeasurements(a interface{}, reset bool) (fault bool, alarm bool) {
 	//fmt.Printf("Value of thisAsset: %v\n", thisAsset)
 	//fmt.Printf("Type of thisAsset: %T\n", thisAsset)
 
-	// Create variables for measurement fault and alarm status
-	var lowerFault bool
-	var lowerAlarm bool
-
 	for i := 0; i < thisAsset.NumField(); i++ {
+		// Create variables for measurement fault and alarm status
+		var lowerFault bool
+		var lowerAlarm bool
+		var lowerFaultsMsg string
+		var lowerAlarmsMsg string
 		// thisAsset.Field(j) gets us the field from the structure as we iterate through the fields in the structure
 		thisField := thisAsset.Field(i)
 		// A Field is a structure with information about a structure's fields. Converting it to an interface enables us to get at the underlying value and type information
@@ -327,23 +359,25 @@ func updateMeasurements(a interface{}, reset bool) (fault bool, alarm bool) {
 			fieldInter := thisField.Interface()
 			fieldAddr := thisField.Addr().Interface()
 			fieldType := reflect.ValueOf(fieldInter).Type().String() // Type will give us the named type of the variable, including user defined types such as measurement. The .String method converts this output to a string for comparison later
-			//fmt.Printf("%s\n", fieldType)
-			fieldKind := reflect.ValueOf(fieldInter).Kind() // Kind gives us the underlying type of the variable, ignorning user defined types, meaning that it will say that measurement is a structure.
+			fieldKind := reflect.ValueOf(fieldInter).Kind()          // Kind gives us the underlying type of the variable, ignorning user defined types, meaning that it will say that measurement is a structure.
 			if fieldType == "main.measurement" {
-				lowerFault, lowerAlarm = monitorMeasurement(fieldAddr, reset)
+				nameTag := reflect.TypeOf(a).Elem().Field(i).Tag.Get("name")
+				lowerFault, lowerAlarm, lowerFaultsMsg, lowerAlarmsMsg = monitorMeasurement(fieldAddr, reset, nameTag)
 			} else if fieldKind == reflect.Struct {
 				// If the field is a struct, we need to peek inside and see if it contains measurements. We should pass down the reset command to reset measurement faults and alarms.
-				lowerFault, lowerAlarm = monitorStruct(thisField, reset)
+				lowerFault, lowerAlarm, lowerFaultsMsg, lowerAlarmsMsg = monitorStruct(thisField, reset)
 			} else if fieldKind == reflect.Slice {
 				// If the field is a slice, we need to peek inside and see if it contains measurements. We should pass down the reset command to reset measurement faults and alarms.
-				lowerFault, lowerAlarm = monitorSlice(thisField, reset)
+				lowerFault, lowerAlarm, lowerFaultsMsg, lowerAlarmsMsg = monitorSlice(thisField, reset)
 			}
 		}
 		fault = fault || lowerFault
 		alarm = alarm || lowerAlarm
+		faultsMsg = appendDelimMsg(faultsMsg, lowerFaultsMsg)
+		alarmsMsg = appendDelimMsg(alarmsMsg, lowerAlarmsMsg)
 	}
 
-	return fault, alarm
+	return fault, alarm, faultsMsg, alarmsMsg
 }
 
 func combineTerminals(t1 terminal, t2 terminal) (t terminal) {
