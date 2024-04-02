@@ -23,6 +23,7 @@ type LaneConfig struct {
 	DbName            string `json:"db_name"`
 	ArchivePeriod     int    `json:"period"`
 	ArchivePath       string `json:"archive"`
+	Parquet           bool   `json:"parquet"`
 	NumArchiveWorkers int    `json:"num_archive_workers"`
 	Uris              []UriConfig
 }
@@ -88,6 +89,13 @@ func extractLaneConfiguration(body map[string]interface{}) (LaneConfig, error) {
 		return cfg, fmt.Errorf("failed to extract db_name from configuration, %w", err)
 	}
 	cfg.DbName = dbNameInterface.(string)
+
+	parquetInterface, err := parsemap.ExtractValueWithType(body, "parquet", parsemap.BOOL)
+	if err != nil {
+		cfg.Parquet = false // default
+	} else {
+		cfg.Parquet = parquetInterface.(bool)
+	}
 
 	periodInterface, err := parsemap.ExtractAsInt(body, "period")
 	if err != nil {

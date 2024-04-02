@@ -17,14 +17,14 @@ type MsgCollator struct {
 	laneName    string
 	flushTicker *time.Ticker // Ticker dictating when encoded data gets flushed to Out
 	in          <-chan *fims.FimsMsg
-	Out         chan []*fims_codec.Encoder
+	Out         chan []*Encoder
 
-	FimsMsgs map[string]ftdData             // Maps from uri to (codec object, config) or (nil, config) if the uri belongs to a group
-	groups   map[string]*fims_codec.Encoder // Maps group name to codec object representing a group
+	FimsMsgs map[string]ftdData  // Maps from uri to (codec object, config) or (nil, config) if the uri belongs to a group
+	groups   map[string]*Encoder // Maps group name to codec object representing a group
 }
 
 type ftdData struct {
-	encoder *fims_codec.Encoder
+	encoder *Encoder
 	Config  *UriConfig
 }
 
@@ -32,16 +32,16 @@ type ftdData struct {
 //
 // Input channel: given as function argument.
 //
-// Output channel: chan []*fims_codec.Encoder.
+// Output channel: chan []*Encoder.
 func NewCollator(cfg LaneConfig, lane string, inputChannel <-chan *fims.FimsMsg) *MsgCollator {
 	return &MsgCollator{
 		laneCfg:     cfg,
 		laneName:    lane,
 		flushTicker: time.NewTicker(time.Duration(cfg.ArchivePeriod) * time.Second),
 		in:          inputChannel,
-		Out:         make(chan []*fims_codec.Encoder),
+		Out:         make(chan []*Encoder),
 		FimsMsgs:    make(map[string]ftdData),
-		groups:      make(map[string]*fims_codec.Encoder),
+		groups:      make(map[string]*Encoder),
 	}
 }
 
@@ -120,10 +120,11 @@ func (collator *MsgCollator) collate(msg *fims.FimsMsg) {
 	if err != nil {
 		log.Errorf("Failed to append msg for URI %s with error: %v", msg.Uri, err)
 	}
-	// if encoder is now full, flush all encoders immediately
-	if encoder.GetNumMessages() == fims_codec.MaxMessageCount {
+	// if fims encoder is now full, flush all encoders immediately
+	if !collator.laneCfg.Parquet && encoder.GetNumMessages() == fims_codec.MaxMessageCount {
 		collator.flush()
 	}
+
 }
 
 // Gets the appropriate ftdData for the given message based on uri and method, creating one if it does not already exist.
@@ -142,22 +143,23 @@ func (collator *MsgCollator) getFtdData(uri string, method string, conformedUri 
 	}
 
 	// get the right encoder for this URI
-	var encoder *fims_codec.Encoder
+	var encoder *Encoder
 	if len(uriCfg.Group) > 0 {
 		// if uri is part of a group
 		_, exist := collator.groups[uriCfg.Group+"_"+method]
 		if !exist {
 			log.Infof("Creating codec for group %s and method %s", uriCfg.Group, method)
-			groupEncoder := createEncoderFromConfig(conformedUri, collator.laneCfg.DbName, collator.laneName, uriCfg, method)
+			groupEncoder := NewEncoderFromConfig(conformedUri, collator.laneCfg.DbName, collator.laneName, method, uriCfg, collator.laneCfg.Parquet)
 			collator.groups[uriCfg.Group+"_"+method] = groupEncoder
 		}
 		encoder = nil
 	} else {
 		// Create an individual codec
 		log.Infof("Creating codec for uri %s and method %s", uri, method)
-		encoder = createEncoderFromConfig(conformedUri, collator.laneCfg.DbName, collator.laneName, uriCfg, method)
+		encoder = NewEncoderFromConfig(conformedUri, collator.laneCfg.DbName, collator.laneName, method, uriCfg, collator.laneCfg.Parquet)
 	}
 
+	// final product
 	f_data = ftdData{
 		encoder: encoder,
 		Config:  uriCfg,
@@ -168,10 +170,11 @@ func (collator *MsgCollator) getFtdData(uri string, method string, conformedUri 
 
 // Flushes current encoders to Out
 func (collator *MsgCollator) flush() {
-	var encoderBatch []*fims_codec.Encoder
+	var encoderBatch []*Encoder // encoders to be batch flushed
+
 	// add individual encoders to batch
 	for uri, encoderAndConfig := range collator.FimsMsgs {
-		if len(encoderAndConfig.Config.Group) > 0 {
+		if len(encoderAndConfig.Config.Group) > 0 { // if a group, skip
 			continue
 		}
 		encoder := encoderAndConfig.encoder
@@ -181,14 +184,16 @@ func (collator *MsgCollator) flush() {
 			continue
 		}
 
-		encoderBatch = append(encoderBatch, encoder)
+		encoderBatch = append(encoderBatch, encoder) // add to batch to be flushed
+
 		// Copy encoder without the data
-		newEncoder := fims_codec.CopyEncoder(encoder)
+		newEncoder := encoder.Copy()
 		collator.FimsMsgs[uri] = ftdData{
 			encoder: newEncoder,
 			Config:  encoderAndConfig.Config,
 		}
 	}
+
 	// add group encoders to batch
 	for groupName, encoder := range collator.groups {
 		// Don't flush encoder if it has no data
@@ -196,9 +201,10 @@ func (collator *MsgCollator) flush() {
 			continue
 		}
 
-		encoderBatch = append(encoderBatch, encoder)
+		encoderBatch = append(encoderBatch, encoder) // add to batch to be flushed
+
 		// Copy encoder without the data
-		newEncoder := fims_codec.CopyEncoder(encoder)
+		newEncoder := encoder.Copy()
 		collator.groups[groupName] = newEncoder
 	}
 	// flush the batch
@@ -240,27 +246,6 @@ func findUriConfig(unknownUri string, method string, configUris []UriConfig) (ur
 		}
 	}
 	return nil, false
-}
-
-// Creates a new encoder using the given conformed URI, database name, lane name, configuration, and message_method.
-func createEncoderFromConfig(conformedUri string, database string, laneName string, uriCfg *UriConfig, method string) *fims_codec.Encoder {
-	// name encoder after the uri or after the group name, this name is eventually parsed for the source tag in Influx
-	var encoderName string
-	if len(uriCfg.Group) > 0 {
-		encoderName = uriCfg.Group
-	} else {
-		encoderName = conformedUri
-	}
-	// instantiate new encoder
-	newEncoder := fims_codec.NewEncoder(encoderName)
-	newEncoder.AdditionalData = map[string]string{
-		"destination": uriCfg.DestinationDb,
-		"database":    database,
-		"measurement": uriCfg.Measurement,
-		"method":      method,
-		"lane":        laneName,
-	}
-	return newEncoder
 }
 
 // Return a version of the message body and uri which can be encoded consistently

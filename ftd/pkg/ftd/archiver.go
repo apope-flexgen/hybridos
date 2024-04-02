@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/flexgen-power/hybridos/fims_codec"
 	"github.com/flexgen-power/hybridos/go_flexgen/fileops"
 	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 	"golang.org/x/sync/errgroup"
@@ -15,11 +14,11 @@ import (
 type MsgArchiver struct {
 	laneCfg  LaneConfig
 	laneName string
-	in       <-chan []*fims_codec.Encoder
+	in       <-chan []*Encoder
 }
 
 // Allocates memory for a new msgArchiver.
-func NewMsgArchiver(cfg LaneConfig, lane string, inputChannel <-chan []*fims_codec.Encoder) *MsgArchiver {
+func NewMsgArchiver(cfg LaneConfig, lane string, inputChannel <-chan []*Encoder) *MsgArchiver {
 	return &MsgArchiver{
 		laneCfg:  cfg,
 		laneName: lane,
@@ -56,6 +55,7 @@ func (archiver *MsgArchiver) archiveUntil(done <-chan struct{}) error {
 			if !ok {
 				goto termination
 			}
+
 			// archive all data in the batch
 			for _, encoder := range encoderBatch {
 				archiver.writeArchiveData(encoder)
@@ -75,28 +75,29 @@ termination:
 }
 
 // Archives a single encoder into a .tar.gz file.
-func (archiver *MsgArchiver) writeArchiveData(encoder *fims_codec.Encoder) {
+func (archiver *MsgArchiver) writeArchiveData(encoder *Encoder) {
 	// update site state to be primary/secondary which gets passed through metadata.txt in .tar.gz file
 	if ControllerStateIsPrimary() {
-		encoder.AdditionalData["site_state"] = "primary"
+		encoder.AddMetadata("site_state", "primary")
 	} else {
-		encoder.AdditionalData["site_state"] = "secondary"
+		encoder.AddMetadata("site_state", "secondary")
 	}
 
-	encoderMeasurement, exist := encoder.AdditionalData["measurement"]
+	// create suffix with name <database>_<measurement>
+	encoderMeasurement, exist := encoder.GetMetadata("measurement")
 	if !exist {
-		log.Errorf("Measurement does not exist in Additional Data for encoder %s.", encoder.Uri)
+		log.Errorf("Measurement does not exist in Additional Data for encoder %s.", encoder.DataSourceId)
 	}
 
-	encoderMethod, exist := encoder.AdditionalData["method"]
+	encoderMethod, exist := encoder.GetMetadata("method")
 	if !exist {
-		log.Errorf("Method does not exist in Additional Data for encoder %s.", encoder.Uri)
+		log.Errorf("Method does not exist in Additional Data for encoder %s.", encoder.DataSourceId)
 	}
 
 	// create an identifying name prefix for the archive
 	archivePrefix := archiver.laneName + "_" + encoderMethod + "_" + archiver.laneCfg.DbName + "_" + encoderMeasurement
-	_, _, err := encoder.CreateArchive(archiver.laneCfg.ArchivePath, archivePrefix)
+	err := encoder.CreateArchive(archiver.laneCfg.ArchivePath, archivePrefix)
 	if err != nil {
-		log.Errorf("archive creation failed for URI %s with error: %s", encoder.Uri, err.Error())
+		log.Errorf("archive creation failed for URI %s with error: %s", encoder.DataSourceId, err.Error())
 	}
 }

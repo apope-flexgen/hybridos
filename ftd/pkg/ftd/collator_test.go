@@ -4,8 +4,6 @@ import (
 	"fims"
 	"reflect"
 	"testing"
-
-	"github.com/flexgen-power/hybridos/fims_codec"
 )
 
 // Test finding the correct config associated with the given uri.
@@ -90,7 +88,7 @@ func TestAllFieldsEncoded(t *testing.T) {
 		},
 		laneName: "1",
 		FimsMsgs: make(map[string]ftdData),
-		groups:   make(map[string]*fims_codec.Encoder),
+		groups:   make(map[string]*Encoder),
 	}
 
 	testMsgBody := map[string]interface{}{
@@ -110,7 +108,7 @@ func TestAllFieldsEncoded(t *testing.T) {
 	if !ok {
 		t.Fatalf("Did not find any encoder messages associated with expected uri.")
 	}
-	encodedKeys := data.encoder.GetKeys()
+	encodedKeys := data.encoder.fims.GetKeys()
 	checkEncoderKeysAreExpected(t, encodedKeys, []string{"p", "value", "name", "OPEN"})
 }
 
@@ -133,7 +131,7 @@ func TestFieldsFiltered(t *testing.T) {
 		},
 		laneName: "1",
 		FimsMsgs: make(map[string]ftdData),
-		groups:   make(map[string]*fims_codec.Encoder),
+		groups:   make(map[string]*Encoder),
 	}
 
 	testMsgBody := map[string]interface{}{
@@ -153,7 +151,7 @@ func TestFieldsFiltered(t *testing.T) {
 	if !ok {
 		t.Fatalf("Did not find any encoder associated with expected uri.")
 	}
-	encodedKeys := data.encoder.GetKeys()
+	encodedKeys := data.encoder.fims.GetKeys()
 	checkEncoderKeysAreExpected(t, encodedKeys, []string{"p"})
 }
 
@@ -176,7 +174,7 @@ func TestFieldsFilteredGrouping(t *testing.T) {
 		},
 		laneName: "1",
 		FimsMsgs: make(map[string]ftdData),
-		groups:   make(map[string]*fims_codec.Encoder),
+		groups:   make(map[string]*Encoder),
 	}
 
 	testMsgBody := map[string]interface{}{
@@ -196,7 +194,7 @@ func TestFieldsFilteredGrouping(t *testing.T) {
 	if !ok {
 		t.Fatalf("Did not find any encoder associated with expected uri.")
 	}
-	encodedKeys := encoder.GetKeys()
+	encodedKeys := encoder.fims.GetKeys()
 	checkEncoderKeysAreExpected(t, encodedKeys, []string{"p", "ftd_group"})
 }
 
@@ -219,7 +217,7 @@ func TestAllFieldsFilteredOut(t *testing.T) {
 		},
 		laneName: "1",
 		FimsMsgs: make(map[string]ftdData),
-		groups:   make(map[string]*fims_codec.Encoder),
+		groups:   make(map[string]*Encoder),
 	}
 
 	testMsgBody := map[string]interface{}{
