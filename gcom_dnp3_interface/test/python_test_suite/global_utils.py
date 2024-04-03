@@ -24,10 +24,10 @@ USE_LATEST_RELEASE = False
 
 # All you really need is the configs directory.
 # The other directories will be made for you.
-CONFIGS_DIR = "configs"
-TEST_CONFIG_DIR = "test_configs"
-TEST_OUTPUT_DIR = "test_output"
-TEST_LOG_DIR = "logs"
-TEST_CONSOLE_OUTPUT_DIR="console"
-TEST_SCRIPT_DIR="test_scripts"
+CONFIGS_DIR = "configs/forced_unforced"
+TEST_CONFIG_DIR = "test_configs/forced_unforced"
+TEST_OUTPUT_DIR = "test_output/forced_unforced"
+TEST_LOG_DIR = "logs/forced_unforced"
+TEST_CONSOLE_OUTPUT_DIR="console/forced_unforced"
+TEST_SCRIPT_DIR="test_scripts/forced_unforced"
 DIRS = [CONFIGS_DIR, TEST_CONFIG_DIR, TEST_OUTPUT_DIR, TEST_LOG_DIR, TEST_CONSOLE_OUTPUT_DIR, TEST_SCRIPT_DIR]

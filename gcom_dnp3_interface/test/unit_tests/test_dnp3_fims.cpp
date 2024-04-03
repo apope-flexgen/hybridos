@@ -1,9 +1,15 @@
 #include "doctest/doctest.h"
+#include "add_points.h"
+
 #include "../../include/gcom_dnp3_fims.h"
 #include "../../include/gcom_dnp3_system_structs.h"
 #include "../../include/gcom_dnp3_utils.h"
+#include "../../include/gcom_dnp3_flags.h"
+#include "../../include/gcom_dnp3_tmw_utils.h"
+#include "../../include/gcom_dnp3_stats.h"
 
-void parseHeader_condition_check(GcomSystem &sys, FimsMethod method, std::string uri, std::string reply_to, std::string process_name, std::string username)
+void parseHeader_condition_check(GcomSystem& sys, FimsMethod method, std::string uri, std::string reply_to,
+                                 std::string process_name, std::string username)
 {
     CHECK(sys.fims_dependencies->method == method);
     CHECK(sys.fims_dependencies->uri_view.compare(uri) == 0);
@@ -14,7 +20,6 @@ void parseHeader_condition_check(GcomSystem &sys, FimsMethod method, std::string
 
 TEST_SUITE("dnp3_fims")
 {
-
     TEST_CASE("init_fims")
     {
         printf("Testing dnp3_fims.cpp...\n");
@@ -66,7 +71,7 @@ TEST_SUITE("dnp3_fims")
         simdjson::ondemand::value json_val;
         Jval_buif to_set;
 
-        char *json_str = strdup(R"({"some_key": 42})");
+        char* json_str = strdup(R"({"some_key": 42})");
         parser.iterate(json_str, strlen(json_str), strlen(json_str) + simdjson::SIMDJSON_PADDING).get(doc);
         doc.get(json_obj);
         for (auto pair : json_obj)
@@ -228,7 +233,7 @@ TEST_SUITE("dnp3_fims")
         simdjson::ondemand::value json_val;
         Jval_buif to_set;
 
-        char *json_str = strdup(R"({"some_key": {"not_value":42}})");
+        char* json_str = strdup(R"({"some_key": {"not_value":42}})");
         parser.iterate(json_str, strlen(json_str), strlen(json_str) + simdjson::SIMDJSON_PADDING).get(doc);
         doc.get(json_obj);
         for (auto pair : json_obj)
@@ -287,11 +292,11 @@ TEST_SUITE("dnp3_fims")
     {
         GcomSystem sys = GcomSystem(Protocol::DNP3);
         simdjson::ondemand::parser parser;
-        simdjson::ondemand::document &doc = sys.fims_dependencies->doc;
+        simdjson::ondemand::document& doc = sys.fims_dependencies->doc;
         simdjson::ondemand::value json_val;
         Jval_buif to_set;
 
-        char *json_str = strdup(R"(42)");
+        char* json_str = strdup(R"(42)");
         parser.iterate(json_str, strlen(json_str), strlen(json_str) + simdjson::SIMDJSON_PADDING).get(doc);
         auto val_clothed = doc.get_object();
         bool result = extractValueSingle(sys, val_clothed, json_val, to_set);
@@ -359,11 +364,11 @@ TEST_SUITE("dnp3_fims")
     {
         GcomSystem sys = GcomSystem(Protocol::DNP3);
         simdjson::ondemand::parser parser;
-        simdjson::ondemand::document &doc = sys.fims_dependencies->doc;
+        simdjson::ondemand::document& doc = sys.fims_dependencies->doc;
         simdjson::ondemand::value json_val;
         Jval_buif to_set;
 
-        char *json_str = strdup(R"({"not_value":42})");
+        char* json_str = strdup(R"({"not_value":42})");
         parser.iterate(json_str, strlen(json_str), strlen(json_str) + simdjson::SIMDJSON_PADDING).get(doc);
         auto val_clothed = doc.get_object();
         bool result = extractValueSingle(sys, val_clothed, json_val, to_set);
@@ -607,19 +612,441 @@ TEST_SUITE("dnp3_fims")
         std::string message_str = method + uri + reply_to + process_name + username + message;
         CHECK(!parseHeader(sys, meta_data, message_str.data(), message_str.length()));
     }
-    TEST_CASE("processCmds")
+    TEST_CASE("processCmds - forced request client")
     {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        Meta_Data_Info meta_data;
+
+        // Set up dependencies
+        sys.fims_dependencies->uri_view = std::string_view{ "/components/test/_force" };
+        sys.fims_dependencies->uri_requests.clear_uri();
+        sys.fims_dependencies->uri_requests.is_force_request = true;
+        sys.protocol_dependencies->who = DNP3_MASTER;
+
+        // create a few mock points
+        TMWSIM_POINT dbPoint_analog_out;
+        FlexPoint fp_an_out(&sys, "analog_out_0", "/components/test");
+        dbPoint_analog_out.flexPointHandle = &fp_an_out;
+        dbPoint_analog_out.type = TMWSIM_TYPE_ANALOG;
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_output_point = true;
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->sent_operate = true;
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->operate_value = 5;
+        addDbUri(sys, "/components/test", &dbPoint_analog_out);
+
+        TMWSIM_POINT dbPoint_analog_in;
+        FlexPoint fp_an_in(&sys, "analog_in_0", "/components/test");
+        dbPoint_analog_in.flexPointHandle = &fp_an_in;
+        dbPoint_analog_in.type = TMWSIM_TYPE_ANALOG;
+        ((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_output_point = false;
+        ((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->sent_operate = true;
+        ((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->operate_value = 5;
+        addDbUri(sys, "/components/test", &dbPoint_analog_in);
+
+        TMWSIM_POINT dbPoint_binary_out;
+        FlexPoint fp_bin_out(&sys, "binary_out_0", "/components/test");
+        dbPoint_binary_out.flexPointHandle = &fp_bin_out;
+        dbPoint_binary_out.type = TMWSIM_TYPE_BINARY;
+        ((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_output_point = true;
+        ((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->sent_operate = true;
+        ((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->operate_value = 1;
+        addDbUri(sys, "/components/test", &dbPoint_binary_out);
+
+        TMWSIM_POINT dbPoint_binary_in;
+        FlexPoint fp_bin_in(&sys, "binary_in_0", "/components/test");
+        dbPoint_binary_in.flexPointHandle = &fp_bin_in;
+        dbPoint_binary_in.type = TMWSIM_TYPE_BINARY;
+        ((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_output_point = false;
+        ((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->sent_operate = true;
+        ((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->operate_value = 1;
+        addDbUri(sys, "/components/test", &dbPoint_binary_in);
+
+        TMWSIM_POINT dbPoint_counter;
+        FlexPoint fp_counter(&sys, "counter_0", "/components/test");
+        dbPoint_counter.flexPointHandle = &fp_counter;
+        dbPoint_counter.type = TMWSIM_TYPE_COUNTER;
+        ((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_output_point = false;
+        ((FlexPoint*)(dbPoint_counter.flexPointHandle))->sent_operate = true;
+        ((FlexPoint*)(dbPoint_counter.flexPointHandle))->operate_value = 5;
+        addDbUri(sys, "/components/test", &dbPoint_counter);
+
+        // call function
+        bool result = processCmds(sys, meta_data);
+
+        // Assert
+        CHECK(result);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->standby_value == 5);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->sent_operate_before_or_during_force);
+
+        CHECK(((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->standby_value == 0);
+        CHECK(!((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->sent_operate_before_or_during_force);
+
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->standby_value == 1);
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->sent_operate_before_or_during_force);
+
+        CHECK(((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->standby_value == 0);
+        CHECK(!((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->sent_operate_before_or_during_force);
+
+        CHECK(((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_counter.flexPointHandle))->standby_value == 0);
+        CHECK(!((FlexPoint*)(dbPoint_counter.flexPointHandle))->sent_operate_before_or_during_force);
+
+        // make sure the result is the same when everything is already forced
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->sent_operate = true;
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->operate_value = 8;
+
+        ((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->sent_operate = true;
+        ((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->operate_value = 8;
+
+        ((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->sent_operate = true;
+        ((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->operate_value = 0;
+
+        ((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->sent_operate = true;
+        ((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->operate_value = 1;
+
+        ((FlexPoint*)(dbPoint_counter.flexPointHandle))->sent_operate = true;
+        ((FlexPoint*)(dbPoint_counter.flexPointHandle))->operate_value = 8;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->standby_value == 5);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->sent_operate_before_or_during_force);
+
+        CHECK(((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->standby_value == 0);
+        CHECK(!((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->sent_operate_before_or_during_force);
+
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->standby_value == 1);
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->sent_operate_before_or_during_force);
+
+        CHECK(((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->standby_value == 0);
+        CHECK(!((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->sent_operate_before_or_during_force);
+
+        CHECK(((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_counter.flexPointHandle))->standby_value == 0);
+        CHECK(!((FlexPoint*)(dbPoint_counter.flexPointHandle))->sent_operate_before_or_during_force);
+
+        // now let's unforce
+        sys.fims_dependencies->uri_view = std::string_view{ "/components/test/_unforce" };
+        sys.fims_dependencies->uri_requests.clear_uri();
+        sys.fims_dependencies->uri_requests.is_unforce_request = true;
+
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->sent_operate = false;
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->operate_value = 7;
+
+        ((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->sent_operate = false;
+        ((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->operate_value = 7;
+
+        ((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->sent_operate = false;
+        ((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->operate_value = 0;
+
+        ((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->sent_operate = false;
+        ((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->operate_value = 0;
+
+        ((FlexPoint*)(dbPoint_counter.flexPointHandle))->sent_operate = false;
+        ((FlexPoint*)(dbPoint_counter.flexPointHandle))->operate_value = 7;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(!((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->operate_value == 5);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->sent_operate);
+
+        CHECK(!((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->operate_value == 7);
+        CHECK(!((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->sent_operate);
+
+        CHECK(!((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->operate_value == 1);
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->sent_operate);
+
+        CHECK(!((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->operate_value == 0);
+        CHECK(!((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->sent_operate);
+
+        CHECK(!((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_counter.flexPointHandle))->operate_value == 7);
+        CHECK(!((FlexPoint*)(dbPoint_counter.flexPointHandle))->sent_operate);
+
+        // make sure running it again doesn't break everything
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->sent_operate_before_or_during_force = true;
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->standby_value = 3;
+
+        ((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->sent_operate_before_or_during_force = true;
+        ((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->standby_value = 3;
+
+        ((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->sent_operate_before_or_during_force = true;
+        ((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->standby_value = 0;
+
+        ((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->sent_operate_before_or_during_force = true;
+        ((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->standby_value = 1;
+
+        ((FlexPoint*)(dbPoint_counter.flexPointHandle))->sent_operate_before_or_during_force = true;
+        ((FlexPoint*)(dbPoint_counter.flexPointHandle))->standby_value = 3;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(!((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->operate_value == 5);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->sent_operate);
+
+        CHECK(!((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->operate_value == 7);
+        CHECK(!((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->sent_operate);
+
+        CHECK(!((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->operate_value == 1);
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->sent_operate);
+
+        CHECK(!((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->operate_value == 0);
+        CHECK(!((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->sent_operate);
+
+        CHECK(!((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_counter.flexPointHandle))->operate_value == 7);
+        CHECK(!((FlexPoint*)(dbPoint_counter.flexPointHandle))->sent_operate);
+
+        // now check individual points work
+        sys.fims_dependencies->uri_view = std::string_view{ "/components/test/analog_out_0/_force" };
+        sys.fims_dependencies->uri_requests.clear_uri();
+        sys.fims_dependencies->uri_requests.is_force_request = true;
+
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->operate_value = 20;
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->sent_operate_before_or_during_force = false;
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->sent_operate = true;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->standby_value == 20);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->sent_operate_before_or_during_force);
+
+        sys.fims_dependencies->uri_view = std::string_view{ "/components/test/analog_out_0/_unforce" };
+        sys.fims_dependencies->uri_requests.clear_uri();
+        sys.fims_dependencies->uri_requests.is_unforce_request = true;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(!((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_forced);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->operate_value == 20);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->sent_operate);
     }
-    TEST_CASE("uriIsMultiOrSingle")
+    TEST_CASE("processCmds - forced request server")
     {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        Meta_Data_Info meta_data;
+
+        // Set up dependencies
+        sys.fims_dependencies->uri_view = std::string_view{ "/components/test/_force" };
+        sys.fims_dependencies->uri_requests.clear_uri();
+        sys.fims_dependencies->uri_requests.is_force_request = true;
+        sys.protocol_dependencies->who = DNP3_OUTSTATION;
+
+        // create a few mock points
+        TMWSIM_POINT dbPoint_analog_out;
+        FlexPoint fp_an_out(&sys, "analog_out_0", "/components/test");
+        dbPoint_analog_out.flexPointHandle = &fp_an_out;
+        dbPoint_analog_out.type = TMWSIM_TYPE_ANALOG;
+        dbPoint_analog_out.flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+        dbPoint_analog_out.data.analog.value = 5;
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_output_point = true;
+        addDbUri(sys, "/components/test", &dbPoint_analog_out);
+
+        TMWSIM_POINT dbPoint_analog_in;
+        FlexPoint fp_an_in(&sys, "analog_in_0", "/components/test");
+        dbPoint_analog_in.flexPointHandle = &fp_an_in;
+        dbPoint_analog_in.type = TMWSIM_TYPE_ANALOG;
+        dbPoint_analog_in.flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+        dbPoint_analog_in.data.analog.value = 5;
+        ((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_output_point = false;
+        addDbUri(sys, "/components/test", &dbPoint_analog_in);
+
+        TMWSIM_POINT dbPoint_binary_out;
+        FlexPoint fp_bin_out(&sys, "binary_out_0", "/components/test");
+        dbPoint_binary_out.flexPointHandle = &fp_bin_out;
+        dbPoint_binary_out.type = TMWSIM_TYPE_BINARY;
+        dbPoint_binary_out.flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+        dbPoint_binary_out.data.binary.value = TMWDEFS_TRUE;
+        ((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_output_point = true;
+        addDbUri(sys, "/components/test", &dbPoint_binary_out);
+
+        TMWSIM_POINT dbPoint_binary_in;
+        FlexPoint fp_bin_in(&sys, "binary_in_0", "/components/test");
+        dbPoint_binary_in.flexPointHandle = &fp_bin_in;
+        dbPoint_binary_in.type = TMWSIM_TYPE_BINARY;
+        dbPoint_binary_in.flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+        dbPoint_binary_in.data.binary.value = TMWDEFS_TRUE;
+        ((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_output_point = false;
+        addDbUri(sys, "/components/test", &dbPoint_binary_in);
+
+        TMWSIM_POINT dbPoint_counter;
+        FlexPoint fp_counter(&sys, "counter_0", "/components/test");
+        dbPoint_counter.flexPointHandle = &fp_counter;
+        dbPoint_counter.type = TMWSIM_TYPE_COUNTER;
+        dbPoint_counter.flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+        dbPoint_counter.data.counter.value = 5;
+        ((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_output_point = false;
+        addDbUri(sys, "/components/test", &dbPoint_counter);
+
+        // call function
+        bool result = processCmds(sys, meta_data);
+
+        // Assert
+        CHECK(result);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_forced);
+        CHECK((dbPoint_analog_out.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->standby_value == 5);
+
+        CHECK(((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_forced);
+        CHECK((dbPoint_analog_in.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0);
+        CHECK(((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->standby_value == 5);
+
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_forced);
+        CHECK((dbPoint_binary_out.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0);
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->standby_value == 1);
+
+        CHECK(((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_forced);
+        CHECK((dbPoint_binary_in.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0);
+        CHECK(((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->standby_value == 1);
+
+        CHECK(((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_forced);
+        CHECK((dbPoint_counter.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0);
+        CHECK(((FlexPoint*)(dbPoint_counter.flexPointHandle))->standby_value == 5);
+
+        // make sure the result is the same when everything is already forced
+        dbPoint_analog_out.data.analog.value = 8;
+        dbPoint_analog_in.data.analog.value = 8;
+        dbPoint_binary_out.data.binary.value = TMWDEFS_FALSE;
+        dbPoint_binary_in.data.binary.value = TMWDEFS_FALSE;
+        dbPoint_counter.data.counter.value = 8;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_forced);
+        CHECK((dbPoint_analog_out.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->standby_value == 5);
+
+        CHECK(((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_forced);
+        CHECK((dbPoint_analog_in.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0);
+        CHECK(((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->standby_value == 5);
+
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_forced);
+        CHECK((dbPoint_binary_out.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0);
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->standby_value == 1);
+
+        CHECK(((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_forced);
+        CHECK((dbPoint_binary_in.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0);
+        CHECK(((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->standby_value == 1);
+
+        CHECK(((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_forced);
+        CHECK((dbPoint_counter.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0);
+        CHECK(((FlexPoint*)(dbPoint_counter.flexPointHandle))->standby_value == 5);
+
+        // now let's unforce
+        sys.fims_dependencies->uri_view = std::string_view{ "/components/test/_unforce" };
+        sys.fims_dependencies->uri_requests.clear_uri();
+        sys.fims_dependencies->uri_requests.is_unforce_request = true;
+
+        dbPoint_analog_out.data.analog.value = 7;
+        dbPoint_analog_in.data.analog.value = 7;
+        dbPoint_binary_out.data.binary.value = TMWDEFS_FALSE;
+        dbPoint_binary_in.data.binary.value = TMWDEFS_FALSE;
+        dbPoint_counter.data.counter.value = 7;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(!((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_forced);
+        CHECK((dbPoint_analog_out.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0);
+        CHECK(dbPoint_analog_out.data.analog.value == 5);
+
+        CHECK(!((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_forced);
+        CHECK((dbPoint_analog_in.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0);
+        CHECK(dbPoint_analog_in.data.analog.value == 5);
+
+        CHECK(!((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_forced);
+        CHECK((dbPoint_binary_out.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0);
+        CHECK(dbPoint_binary_out.data.binary.value == 1);
+
+        CHECK(!((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_forced);
+        CHECK((dbPoint_binary_in.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0);
+        CHECK(dbPoint_binary_in.data.binary.value == 1);
+
+        CHECK(!((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_forced);
+        CHECK((dbPoint_counter.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0);
+        CHECK(dbPoint_counter.data.counter.value == 5);
+
+        // make sure running it again doesn't break everything
+        ((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->standby_value = 7;
+        ((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->standby_value = 7;
+        ((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->standby_value = TMWDEFS_FALSE;
+        ((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->standby_value = TMWDEFS_FALSE;
+        ((FlexPoint*)(dbPoint_counter.flexPointHandle))->standby_value = 7;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(!((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_forced);
+        CHECK((dbPoint_analog_out.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0);
+        CHECK(dbPoint_analog_out.data.analog.value == 5);
+
+        CHECK(!((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_forced);
+        CHECK((dbPoint_analog_in.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0);
+        CHECK(dbPoint_analog_in.data.analog.value == 5);
+
+        CHECK(!((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_forced);
+        CHECK((dbPoint_binary_out.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0);
+        CHECK(dbPoint_binary_out.data.binary.value == 1);
+
+        CHECK(!((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_forced);
+        CHECK((dbPoint_binary_in.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0);
+        CHECK(dbPoint_binary_in.data.binary.value == 1);
+
+        CHECK(!((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_forced);
+        CHECK((dbPoint_counter.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0);
+        CHECK(dbPoint_counter.data.binary.value == 5);
+
+        // now check individual points work
+        sys.fims_dependencies->uri_view = std::string_view{ "/components/test/analog_out_0/_force" };
+        sys.fims_dependencies->uri_requests.clear_uri();
+        sys.fims_dependencies->uri_requests.is_force_request = true;
+
+        dbPoint_analog_out.data.analog.value = 20;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_forced);
+        CHECK((dbPoint_analog_out.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->standby_value == 20);
+
+        sys.fims_dependencies->uri_view = std::string_view{ "/components/test/analog_out_0/_unforce" };
+        sys.fims_dependencies->uri_requests.clear_uri();
+        sys.fims_dependencies->uri_requests.is_unforce_request = true;
+
+        dbPoint_analog_out.data.analog.value = 13;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(!((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_forced);
+        CHECK((dbPoint_analog_out.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0);
+        CHECK(dbPoint_analog_out.data.analog.value == 20);
     }
-    TEST_CASE("replyToFullGet")
-    {
-    }
-    TEST_CASE("formatPointValue")
-    {
-    }
-    TEST_CASE("replyToGet")
-    {
-    }
+    TEST_CASE("uriIsMultiOrSingle") {}
+    TEST_CASE("replyToFullGet") {}
+    TEST_CASE("formatPointValue") {}
+    TEST_CASE("replyToGet") {}
 }

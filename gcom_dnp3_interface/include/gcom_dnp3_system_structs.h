@@ -49,42 +49,50 @@ struct GcomSystem;       // defined below
 enum class FimsMethod : uint8_t;
 enum class FimsFormat : uint8_t;
 enum FimsEventSeverity : uint8_t;
-struct FimsReceiver {
+struct FimsReceiver
+{
     Meta_Data_Info meta_data;
     uint8_t* data_buf;
     uint32_t data_buf_len;
 
-    ~FimsReceiver() {
-        if (data_buf != nullptr) {
+    ~FimsReceiver()
+    {
+        if (data_buf != nullptr)
+        {
             free(data_buf);
         }
     }
 };
 
-struct PointGroup {
+struct PointGroup
+{
     std::string group_name;
     std::map<std::string, TMWSIM_POINT*> points;
 };
 
-struct char_dcmp {
+struct char_dcmp
+{
     bool operator()(std::string a, std::string b) const { return a < b; }
 };
 
-struct SetWork {
+struct SetWork
+{
     fmt::memory_buffer send_uri;
     fmt::memory_buffer send_buf;
     TMWSIM_POINT* dbPoint;
     double value;
 };
 
-struct PubPoint {
+struct PubPoint
+{
     TMWSIM_POINT* dbPoint;
     double value;
     TMWTYPES_UCHAR flags;
     TMWDTIME changeTime;
 };
 
-typedef struct FlexPoint_t {
+typedef struct FlexPoint_t
+{
 public:
     GcomSystem* sys;
     bool crob_string;       // whether or not the CROB value is represented as a string
@@ -115,8 +123,11 @@ public:
                                       // addition to the operate value? (i.e. 40
                                       // AND 41? or just 41?)
     bool sent_operate = false;
-    bool is_output_point = false;  // is it an input or an output? (e.g. Analog
-                                   // Input vs. Analog Output)
+    bool is_output_point = false;                      // is it an input or an output? (e.g. Analog
+                                                       // Input vs. Analog Output)
+    bool is_forced = false;                            // is the point currently in forced mode?
+    bool sent_operate_before_or_during_force = false;  // did we receive a REAL "set" on the
+                                                       // client while the point was being forced?
 
     Register_Types type;
     std::string name;                            // how this point is identified
@@ -137,10 +148,14 @@ public:
     double offset;                 // shift based off of how we're representing the value on this
                                    // side of the connection
     double timeout;                // used to detect COMM_LOSS
-    double standby_value = 0;      // value is currently in LOCAL_FORCED mode, and we
+    double standby_value = 0;      // (server: ) value is currently in LOCAL_FORCED mode, and we
                                    // are saving this value for when we clear that flag
+                                   // (client inputs: ) value is currently being forced, and this is the
+                                   // value that we want to publish instead of the actual value
+                                   // (client outputs: ) value is currently being forced, and this is the
+                                   // value that we last set to the server prior to forcing
     double operate_value = 0;      // the last value sent as an operate command from
-                                   // the client (12 or 41); this is what we will
+                                   // the client (Group 12 or Group 41); this is what we will
                                    // publish by default
     double resend_tolerance = 0;   // do we send another operate command if the
                                    // output status differs by specific tolerance?
@@ -183,7 +198,8 @@ public:
 
     int value_set;  // how many times has this value been set?
 
-    FlexPoint_t(GcomSystem* pSys, const char* iname, const char* iuri) {
+    FlexPoint_t(GcomSystem* pSys, const char* iname, const char* iuri)
+    {
         memset(last_update_username, '\0', 256);
         memset(last_update_process, '\0', 256);
         site_uri = nullptr;
@@ -212,38 +228,51 @@ public:
         lastFlags = DNPDEFS_DBAS_FLAG_RESTART;
         format = FimsFormat::Naked;
 
-        if (iname) {
+        if (iname)
+        {
             name = std::string(iname);
-        } else {
+        }
+        else
+        {
             name = "";
         }
 
-        if (iuri) {
+        if (iuri)
+        {
             uri = strdup(iuri);
-        } else {
+        }
+        else
+        {
             uri = "";
         }
     };
-    ~FlexPoint_t() {
-        if (site_uri != nullptr) {
+    ~FlexPoint_t()
+    {
+        if (site_uri != nullptr)
+        {
             free((void*)site_uri);
         }
-        if (output_status_uri != nullptr) {
+        if (output_status_uri != nullptr)
+        {
             free((void*)output_status_uri);
         }
-        if (uri != nullptr) {
+        if (uri != nullptr)
+        {
             free((void*)uri);
         }
-        if (last_update_process != nullptr) {
+        if (last_update_process != nullptr)
+        {
             delete[] last_update_process;
         }
-        if (last_update_username != nullptr) {
+        if (last_update_username != nullptr)
+        {
             delete[] last_update_username;
         }
     }
 } FlexPoint;
 
-typedef struct varList_t {
+typedef struct varList_t
+{
     varList_t(const char* iuri) { uri = iuri; };
     ~varList_t(){};
 
@@ -256,20 +285,25 @@ typedef struct varList_t {
     std::map<std::string, TMWSIM_POINT*> dbmap;
 } varList;
 
-struct PubWork {
+struct PubWork
+{
     std::string pub_uri;
     std::map<std::string, PubPoint*> pub_vals;
 
-    ~PubWork() {
-        for (auto pair : pub_vals) {
-            if (pair.second) {
+    ~PubWork()
+    {
+        for (auto pair : pub_vals)
+        {
+            if (pair.second)
+            {
                 delete pair.second;
                 pair.second = nullptr;
             }
         }
     }
 };
-struct FimsDependencies {
+struct FimsDependencies
+{
     std::string name = std::string("");
     fims fims_gateway;
     bool (*parseBody)(GcomSystem& sys, Meta_Data_Info& meta_data);
@@ -299,16 +333,20 @@ struct FimsDependencies {
     fmt::memory_buffer send_buf;
     double max_pub_delay;
 
-    FimsDependencies() {
+    FimsDependencies()
+    {
         parseBody = nullptr;
         receiver_bufs.data_buf = nullptr;
         data_buf = nullptr;
         format = FimsFormat::Naked;
     };
 
-    ~FimsDependencies() {
-        for (auto pair : uris_with_data) {
-            for (auto pub_work_item : pair.second) {
+    ~FimsDependencies()
+    {
+        for (auto pair : uris_with_data)
+        {
+            for (auto pub_work_item : pair.second)
+            {
                 if (pub_work_item)
                     delete pub_work_item;
             }
@@ -316,9 +354,12 @@ struct FimsDependencies {
     };
 };
 
-struct ModbusDependencies {};
+struct ModbusDependencies
+{
+};
 
-struct DNP3Dependencies {
+struct DNP3Dependencies
+{
     bool (*openTMWChannel)(GcomSystem& sys);
     bool (*openTMWSession)(GcomSystem& sys);
 
@@ -383,7 +424,8 @@ struct DNP3Dependencies {
 
     int event_buffer = 100;
 
-    DNP3Dependencies() {
+    DNP3Dependencies()
+    {
         // We may need to remove these null pointers. I don't
         // know if they break things or fix things...
         openTMWChannel = nullptr;
@@ -414,17 +456,21 @@ struct DNP3Dependencies {
         show_output_status = false;
     };
 
-    ~DNP3Dependencies() {
-        if (stats_pub_uri != nullptr) {
+    ~DNP3Dependencies()
+    {
+        if (stats_pub_uri != nullptr)
+        {
             free(stats_pub_uri);
         }
-        if (output_status_uri != nullptr) {
+        if (output_status_uri != nullptr)
+        {
             free(output_status_uri);
         }
     };
 };
 
-struct ProtocolDependencies {
+struct ProtocolDependencies
+{
     ModbusDependencies modbus;
     DNP3Dependencies dnp3;
     bool connected = false;  // To tell main whether or not this workspace is up or not
@@ -460,43 +506,54 @@ struct ProtocolDependencies {
     double respTime = 0;
     int maxElapsed = 0;
 
-    ProtocolDependencies(Protocol param_protocol) {
+    ProtocolDependencies(Protocol param_protocol)
+    {
         deviceName = nullptr;
         parity = nullptr;
         flowType = nullptr;
         ip_address = nullptr;
         protocol = param_protocol;
-        if (protocol == Protocol::DNP3) {
+        if (protocol == Protocol::DNP3)
+        {
             DNP3Dependencies();
-        } else {
+        }
+        else
+        {
             ModbusDependencies();
         }
     };
 
-    ProtocolDependencies() {
+    ProtocolDependencies()
+    {
         deviceName = nullptr;
         parity = nullptr;
         flowType = nullptr;
         ip_address = nullptr;
     };
 
-    ~ProtocolDependencies() {
-        if (parity != nullptr) {
+    ~ProtocolDependencies()
+    {
+        if (parity != nullptr)
+        {
             free(parity);
         }
-        if (flowType != nullptr) {
+        if (flowType != nullptr)
+        {
             free(flowType);
         }
-        if (deviceName != nullptr) {
+        if (deviceName != nullptr)
+        {
             free(deviceName);
         }
-        if (ip_address != nullptr) {
+        if (ip_address != nullptr)
+        {
             free(ip_address);
         }
     };
 };
 
-struct GcomSystem {
+struct GcomSystem
+{
     Heartbeat* heartbeat;
     Watchdog* watchdog;
     bool start_signal;  // to synchronize every single thread upon first startup
@@ -537,7 +594,8 @@ struct GcomSystem {
 
     Version git_version_info;
 
-    GcomSystem() {
+    GcomSystem()
+    {
         dbi_save_frequency_seconds = 0;
         debug = 0;
         parse_errors = 0;
@@ -563,7 +621,8 @@ struct GcomSystem {
         protocol_dependencies = nullptr;
     };
 
-    GcomSystem(Protocol protocol) {
+    GcomSystem(Protocol protocol)
+    {
         fims_dependencies = new FimsDependencies();
         protocol_dependencies = new ProtocolDependencies(protocol);
         id = nullptr;
@@ -578,43 +637,57 @@ struct GcomSystem {
         keep_running = false;
     };
 
-    ~GcomSystem() {
-        if (fims_dependencies != nullptr) {
+    ~GcomSystem()
+    {
+        if (fims_dependencies != nullptr)
+        {
             delete fims_dependencies;
         }
-        if (protocol_dependencies != nullptr) {
+        if (protocol_dependencies != nullptr)
+        {
             delete protocol_dependencies;
         }
-        if (id != nullptr) {
+        if (id != nullptr)
+        {
             free(id);
         }
-        if (defUri != nullptr) {
+        if (defUri != nullptr)
+        {
             free(defUri);
         }
-        if (base_uri != nullptr) {
+        if (base_uri != nullptr)
+        {
             free(base_uri);
         }
-        if (local_uri != nullptr) {
+        if (local_uri != nullptr)
+        {
             free(local_uri);
         }
-        if (config != nullptr) {
+        if (config != nullptr)
+        {
             cJSON_Delete(config);
         }
-        for (auto& pair : dburiMap) {
-            if (pair.second != nullptr) {
+        for (auto& pair : dburiMap)
+        {
+            if (pair.second != nullptr)
+            {
                 delete pair.second;  // Deallocate memory for varList* value
             }
         }
         dburiMap.clear();  // Clear the map
-        for (auto& pair : outputStatusUriMap) {
-            if (pair.second != nullptr) {
+        for (auto& pair : outputStatusUriMap)
+        {
+            if (pair.second != nullptr)
+            {
                 delete pair.second;  // Deallocate memory for varList* value
             }
         }
         outputStatusUriMap.clear();  // Clear the map
 
-        for (auto& pair : individualBitsMap) {
-            if (pair.second != nullptr) {
+        for (auto& pair : individualBitsMap)
+        {
+            if (pair.second != nullptr)
+            {
                 delete pair.second;  // Deallocate memory for varList* value
             }
         }
@@ -623,11 +696,13 @@ struct GcomSystem {
 };
 
 template <>
-struct fmt::formatter<TMWSIM_POINT> {
+struct fmt::formatter<TMWSIM_POINT>
+{
     constexpr auto parse(format_parse_context& ctx) { return ctx.end(); }
 
     template <typename FormatContext>
-    auto format(const TMWSIM_POINT& dbPoint, FormatContext& ctx) const {
+    auto format(const TMWSIM_POINT& dbPoint, FormatContext& ctx) const
+    {
         FlexPoint* flexPoint = (FlexPoint*)dbPoint.flexPointHandle;
         fmt::format_to(ctx.out(), R"({{)");
         fmt::format_to(ctx.out(), R"("name": "{}", )", flexPoint->name);
@@ -636,41 +711,58 @@ struct fmt::formatter<TMWSIM_POINT> {
         fmt::format_to(ctx.out(), R"("point_num": {}, )", dbPoint.pointNumber);
         fmt::format_to(ctx.out(), R"("static_variation": {}, )", dbPoint.defaultStaticVariation);
         fmt::format_to(ctx.out(), R"("event_variation": {}, )", dbPoint.defaultEventVariation);
-        if (dbPoint.type == TMWSIM_TYPE_ANALOG) {
+        if (dbPoint.type == TMWSIM_TYPE_ANALOG)
+        {
             fmt::format_to(ctx.out(), R"("raw_value": {}, )", dbPoint.data.analog.value);
-            if (flexPoint->scale == 0) {
+            if (flexPoint->scale == 0)
+            {
                 fmt::format_to(ctx.out(), R"("scaled_value": {}, )", dbPoint.data.analog.value);
-            } else {
+            }
+            else
+            {
                 fmt::format_to(ctx.out(), R"("scaled_value": {}, )", dbPoint.data.analog.value / flexPoint->scale);
             }
             fmt::format_to(ctx.out(), R"("deadband": {}, )", dbPoint.data.analog.deadband);
-        } else {
+        }
+        else
+        {
             fmt::format_to(ctx.out(), R"("raw_value": {}, )", dbPoint.data.binary.value ? "true" : "false");
-            if (flexPoint->scale < 0) {
+            if (flexPoint->scale < 0)
+            {
                 fmt::format_to(ctx.out(), R"("scaled_value": {}, )", (!dbPoint.data.binary.value) ? "true" : "false");
-            } else {
+            }
+            else
+            {
                 fmt::format_to(ctx.out(), R"("scaled_value": {}, )", dbPoint.data.binary.value ? "true" : "false");
             }
         }
+        fmt::format_to(ctx.out(), R"("is_forced": {},)", flexPoint->is_forced);
         fmt::format_to(ctx.out(), R"("flags": {},)", DNP_FLAGS{ dbPoint.flags });
-        if (flexPoint->timeout > 0) {
+        if (flexPoint->timeout > 0)
+        {
             fmt::format_to(ctx.out(), R"("timeout": {}, )", flexPoint->timeout);
         }
-        if (flexPoint->batch_pubs) {
+        if (flexPoint->batch_pubs)
+        {
             fmt::format_to(ctx.out(), R"("batch_pub_rate": {}, )", flexPoint->batch_pub_rate);
         }
-        if (flexPoint->interval_pubs) {
+        if (flexPoint->interval_pubs)
+        {
             fmt::format_to(ctx.out(), R"("interval_pub_rate": {}, )", flexPoint->interval_pub_rate);
         }
-        if (flexPoint->batch_sets) {
+        if (flexPoint->batch_sets)
+        {
             fmt::format_to(ctx.out(), R"("batch_set_rate": {}, )", flexPoint->batch_set_rate);
         }
-        if (flexPoint->interval_sets) {
+        if (flexPoint->interval_sets)
+        {
             fmt::format_to(ctx.out(), R"("interval_set_rate": {}, )", flexPoint->interval_set_rate);
         }
         const TMWDTIME* tmpPtr = &(dbPoint.timeStamp);
         fmt::format_to(ctx.out(),
-                       R"("value_last_updated":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}", )", tmpPtr->year, tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000, tmpPtr->mSecsAndSecs % 1000);
+                       R"("value_last_updated":"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}", )", tmpPtr->year,
+                       tmpPtr->month, tmpPtr->dayOfMonth, tmpPtr->hour, tmpPtr->minutes, tmpPtr->mSecsAndSecs / 1000,
+                       tmpPtr->mSecsAndSecs % 1000);
         fmt::format_to(ctx.out(), R"("value_updated_by_process":"{}", )", flexPoint->last_update_process);
         fmt::format_to(ctx.out(), R"("value_updated_by_username":"{}")", flexPoint->last_update_username);
         return fmt::format_to(ctx.out(), R"(}})");
@@ -678,14 +770,17 @@ struct fmt::formatter<TMWSIM_POINT> {
 };
 
 template <>
-struct fmt::formatter<PointGroup> {
+struct fmt::formatter<PointGroup>
+{
     constexpr auto parse(format_parse_context& ctx) { return ctx.end(); }
 
     template <typename FormatContext>
-    auto format(const PointGroup& point_group, FormatContext& ctx) const {
+    auto format(const PointGroup& point_group, FormatContext& ctx) const
+    {
         fmt::format_to(ctx.out(), R"({{)");
         auto it = point_group.points.begin();
-        for (it = point_group.points.begin(); it != std::prev(point_group.points.end()); it++) {
+        for (it = point_group.points.begin(); it != std::prev(point_group.points.end()); it++)
+        {
             const TMWSIM_POINT* dbPoint = it->second;
             fmt::format_to(ctx.out(), R"("{}": )", it->first);
             fmt::format_to(ctx.out(), R"({{)");

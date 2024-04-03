@@ -1,4 +1,5 @@
-// Run using: g++ -g -std=c++17 -o gcom_fims -I ../include -I /usr/local/include -I ../TMW -I ../TMW/tmwscl/tmwtarg/LinIoTarg -I ../TMW/tmwscl/tmwtarg gcom_fims.cpp -lfims -lsimdjson -lIoTarg -ldnp -lutils
+// Run using: g++ -g -std=c++17 -o gcom_fims -I ../include -I /usr/local/include -I ../TMW -I
+// ../TMW/tmwscl/tmwtarg/LinIoTarg -I ../TMW/tmwscl/tmwtarg gcom_fims.cpp -lfims -lsimdjson -lIoTarg -ldnp -lutils
 #include "gcom_dnp3_fims.h"
 #include <map>
 #include <chrono>
@@ -13,14 +14,17 @@
 #include "gcom_dnp3_flags.h"
 #include "shared_utils.hpp"
 #include "gcom_dnp3_utils.h"
+#include "gcom_dnp3_client_utils.h"
 
-using namespace std::string_view_literals; // gives us sv
+using namespace std::string_view_literals;  // gives us sv
 
-bool send_pub(fims &fims_gateway, std::string_view uri, std::string_view body) noexcept
+bool send_pub(fims& fims_gateway, std::string_view uri, std::string_view body) noexcept
 {
     if (fims_gateway.Connected())
     {
-        return fims_gateway.Send(fims::str_view{"pub", sizeof("pub") - 1}, fims::str_view{uri.data(), uri.size()}, fims::str_view{nullptr, 0}, fims::str_view{nullptr, 0}, fims::str_view{body.data(), body.size()});
+        return fims_gateway.Send(fims::str_view{ "pub", sizeof("pub") - 1 }, fims::str_view{ uri.data(), uri.size() },
+                                 fims::str_view{ nullptr, 0 }, fims::str_view{ nullptr, 0 },
+                                 fims::str_view{ body.data(), body.size() });
     }
     else
     {
@@ -28,11 +32,13 @@ bool send_pub(fims &fims_gateway, std::string_view uri, std::string_view body) n
     }
 }
 
-bool send_set(fims &fims_gateway, std::string_view uri, std::string_view body) noexcept
+bool send_set(fims& fims_gateway, std::string_view uri, std::string_view body) noexcept
 {
     if (fims_gateway.Connected())
     {
-        return fims_gateway.Send(fims::str_view{"set", sizeof("set") - 1}, fims::str_view{uri.data(), uri.size()}, fims::str_view{nullptr, 0}, fims::str_view{nullptr, 0}, fims::str_view{body.data(), body.size()});
+        return fims_gateway.Send(fims::str_view{ "set", sizeof("set") - 1 }, fims::str_view{ uri.data(), uri.size() },
+                                 fims::str_view{ nullptr, 0 }, fims::str_view{ nullptr, 0 },
+                                 fims::str_view{ body.data(), body.size() });
     }
     else
     {
@@ -41,11 +47,13 @@ bool send_set(fims &fims_gateway, std::string_view uri, std::string_view body) n
 }
 
 // used for emit_event
-bool send_post(fims &fims_gateway, std::string_view uri, std::string_view body) noexcept
+bool send_post(fims& fims_gateway, std::string_view uri, std::string_view body) noexcept
 {
     if (fims_gateway.Connected())
     {
-        return fims_gateway.Send(fims::str_view{"post", sizeof("post") - 1}, fims::str_view{uri.data(), uri.size()}, fims::str_view{nullptr, 0}, fims::str_view{nullptr, 0}, fims::str_view{body.data(), body.size()});
+        return fims_gateway.Send(fims::str_view{ "post", sizeof("post") - 1 }, fims::str_view{ uri.data(), uri.size() },
+                                 fims::str_view{ nullptr, 0 }, fims::str_view{ nullptr, 0 },
+                                 fims::str_view{ body.data(), body.size() });
     }
     else
     {
@@ -53,7 +61,7 @@ bool send_post(fims &fims_gateway, std::string_view uri, std::string_view body) 
     }
 }
 
-void emit_event(fims *pFims, const char *source, const char *message, int severity)
+void emit_event(fims* pFims, const char* source, const char* message, int severity)
 {
     if (pFims->Connected())
     {
@@ -70,10 +78,11 @@ void emit_event(fims *pFims, const char *source, const char *message, int severi
     }
 }
 
-bool init_fims(GcomSystem &sys)
+bool init_fims(GcomSystem& sys)
 {
     sys.fims_dependencies->receiver_bufs.data_buf_len = sys.fims_dependencies->data_buf_len;
-    sys.fims_dependencies->receiver_bufs.data_buf = reinterpret_cast<uint8_t *>(malloc(sys.fims_dependencies->receiver_bufs.data_buf_len));
+    sys.fims_dependencies->receiver_bufs.data_buf = reinterpret_cast<uint8_t*>(
+        malloc(sys.fims_dependencies->receiver_bufs.data_buf_len));
     sys.fims_dependencies->subs.push_back("/" + std::string(sys.id));
 
     // get the process name
@@ -88,13 +97,13 @@ bool init_fims(GcomSystem &sys)
     return true;
 }
 
-bool add_fims_sub(GcomSystem &sys, std::string name)
+bool add_fims_sub(GcomSystem& sys, std::string name)
 {
     sys.fims_dependencies->subs.push_back(name);
     return true;
 }
 
-bool show_fims_subs(GcomSystem &sys)
+bool show_fims_subs(GcomSystem& sys)
 {
     std::string subs = "Subscribed to:\n";
     for (auto s : sys.fims_dependencies->subs)
@@ -106,36 +115,38 @@ bool show_fims_subs(GcomSystem &sys)
     return true;
 }
 
-bool fims_connect(GcomSystem &sys)
+bool fims_connect(GcomSystem& sys)
 {
     if (!sys.fims_dependencies->fims_gateway.Connect(sys.fims_dependencies->name.c_str()))
     {
-        FPS_ERROR_LOG("For client with init uri '%s': could not connect to fims_server", sys.fims_dependencies->name.c_str());
+        FPS_ERROR_LOG("For client with init uri '%s': could not connect to fims_server",
+                      sys.fims_dependencies->name.c_str());
         return false;
     }
     if (!sys.fims_dependencies->fims_gateway.Subscribe(sys.fims_dependencies->subs, false))
     {
-        FPS_ERROR_LOG("For client with init uri '%s': failed to subscribe for uri init", sys.fims_dependencies->name.c_str());
+        FPS_ERROR_LOG("For client with init uri '%s': failed to subscribe for uri init",
+                      sys.fims_dependencies->name.c_str());
         return false;
     }
     return true;
 }
 
-bool parseHeader(GcomSystem &sys, Meta_Data_Info &meta_data, char *data_buf, uint32_t data_buf_len)
+bool parseHeader(GcomSystem& sys, Meta_Data_Info& meta_data, char* data_buf, uint32_t data_buf_len)
 {
     // meta data views:
     auto ix = 0;
-    sys.fims_dependencies->method_view = std::string_view{(char *)&data_buf[ix], meta_data.method_len};
+    sys.fims_dependencies->method_view = std::string_view{ (char*)&data_buf[ix], meta_data.method_len };
     ix += meta_data.method_len;
-    sys.fims_dependencies->uri_view = std::string_view{(char *)&data_buf[ix], meta_data.uri_len};
+    sys.fims_dependencies->uri_view = std::string_view{ (char*)&data_buf[ix], meta_data.uri_len };
     ix += meta_data.uri_len;
-    sys.fims_dependencies->replyto_view = std::string_view{(char *)&data_buf[ix], meta_data.replyto_len};
+    sys.fims_dependencies->replyto_view = std::string_view{ (char*)&data_buf[ix], meta_data.replyto_len };
     ix += meta_data.replyto_len;
-    sys.fims_dependencies->process_name_view = std::string_view{(char *)&data_buf[ix], meta_data.process_name_len};
+    sys.fims_dependencies->process_name_view = std::string_view{ (char*)&data_buf[ix], meta_data.process_name_len };
     ix += meta_data.process_name_len;
-    sys.fims_dependencies->username_view = std::string_view{(char *)&data_buf[ix], meta_data.username_len};
+    sys.fims_dependencies->username_view = std::string_view{ (char*)&data_buf[ix], meta_data.username_len };
     ix += meta_data.username_len;
-    sys.fims_dependencies->data_buf = (char *)&data_buf[ix];
+    sys.fims_dependencies->data_buf = (char*)&data_buf[ix];
 
     // method check:
     sys.fims_dependencies->method = FimsMethod::Unknown;
@@ -167,22 +178,21 @@ bool parseHeader(GcomSystem &sys, Meta_Data_Info &meta_data, char *data_buf, uin
         {
             if (sys.debug > 0)
             {
-                FPS_ERROR_LOG("Listener for : %s, from sender: %s method %s is not supported by dnp3_server. Message dropped",
-                              sys.fims_dependencies->name.c_str(),
-                              sys.fims_dependencies->process_name_view,
-                              sys.fims_dependencies->method_view);
+                FPS_ERROR_LOG(
+                    "Listener for : %s, from sender: %s method %s is not supported by dnp3_server. Message dropped",
+                    sys.fims_dependencies->name.c_str(), sys.fims_dependencies->process_name_view,
+                    sys.fims_dependencies->method_view);
                 FPS_LOG_IT("fims_method_error");
             }
             return false;
         }
     }
-    else // method not supported by gcom_client (it's not set, pub, or get)
+    else  // method not supported by gcom_client (it's not set, pub, or get)
     {
         if (sys.debug > 0)
         {
             FPS_ERROR_LOG("Listener for : %s, from sender: %s method %s is not supported. Message dropped",
-                          sys.fims_dependencies->name.c_str(),
-                          sys.fims_dependencies->process_name_view,
+                          sys.fims_dependencies->name.c_str(), sys.fims_dependencies->process_name_view,
                           sys.fims_dependencies->method_view);
             FPS_LOG_IT("fims_method_error");
         }
@@ -207,56 +217,52 @@ bool parseHeader(GcomSystem &sys, Meta_Data_Info &meta_data, char *data_buf, uin
     }
 
     // request handling
-    sys.fims_dependencies->uri_requests.set_uri(sys.fims_dependencies->uri_view, sys.local_uri, sys.protocol_dependencies->who, sys.fims_dependencies->method);
+    sys.fims_dependencies->uri_requests.set_uri(sys.fims_dependencies->uri_view, sys.local_uri,
+                                                sys.protocol_dependencies->who, sys.fims_dependencies->method);
 
     // the outstation can't do "sets" unless it's in local mode (i.e. sent to local_uri)
-    if (sys.fims_dependencies->method == FimsMethod::Set &&
-        sys.protocol_dependencies->who == DNP3_OUTSTATION &&
+    if (sys.fims_dependencies->method == FimsMethod::Set && sys.protocol_dependencies->who == DNP3_OUTSTATION &&
         !sys.fims_dependencies->uri_requests.contains_local_uri &&
         !sys.fims_dependencies->uri_requests.is_force_request &&
         !sys.fims_dependencies->uri_requests.is_unforce_request &&
-        !sys.fims_dependencies->uri_requests.is_full_request &&
-        !sys.fims_dependencies->uri_requests.is_request)
+        !sys.fims_dependencies->uri_requests.is_full_request && !sys.fims_dependencies->uri_requests.is_request)
     {
         if (sys.debug > 0)
         {
-            FPS_ERROR_LOG("Listener for : %s, from sender: %s method %s is not supported by dnp3_server. Message dropped",
-                          sys.fims_dependencies->name.c_str(),
-                          sys.fims_dependencies->process_name_view,
-                          sys.fims_dependencies->method_view);
+            FPS_ERROR_LOG(
+                "Listener for : %s, from sender: %s method %s is not supported by dnp3_server. Message dropped",
+                sys.fims_dependencies->name.c_str(), sys.fims_dependencies->process_name_view,
+                sys.fims_dependencies->method_view);
             FPS_LOG_IT("fims_method_error");
         }
         return false;
     }
 
     // the outstation can't do "gets" unless it's in local mode (i.e. sent to local_uri)
-    if (sys.fims_dependencies->method == FimsMethod::Get &&
-        sys.protocol_dependencies->who == DNP3_OUTSTATION &&
+    if (sys.fims_dependencies->method == FimsMethod::Get && sys.protocol_dependencies->who == DNP3_OUTSTATION &&
         !sys.fims_dependencies->uri_requests.contains_local_uri)
     {
         if (sys.debug > 0)
         {
-            FPS_ERROR_LOG("Listener for : %s, from sender: %s method %s is not supported by dnp3_server. Message dropped",
-                          sys.fims_dependencies->name.c_str(),
-                          sys.fims_dependencies->process_name_view,
-                          sys.fims_dependencies->method_view);
+            FPS_ERROR_LOG(
+                "Listener for : %s, from sender: %s method %s is not supported by dnp3_server. Message dropped",
+                sys.fims_dependencies->name.c_str(), sys.fims_dependencies->process_name_view,
+                sys.fims_dependencies->method_view);
             FPS_LOG_IT("fims_method_error");
         }
         return false;
     }
 
     // the outstation can't do "gets" unless it's in local mode (i.e. sent to local_uri)
-    if (sys.fims_dependencies->method == FimsMethod::Get &&
-        sys.protocol_dependencies->who == DNP3_OUTSTATION &&
+    if (sys.fims_dependencies->method == FimsMethod::Get && sys.protocol_dependencies->who == DNP3_OUTSTATION &&
         !sys.fims_dependencies->uri_requests.contains_local_uri)
     {
         if (!spam_limit(&sys, sys.fims_errors))
         {
-
-            FPS_ERROR_LOG("Listener for : %s, from sender: %s method %s is not supported by dnp3_server. Message dropped",
-                          sys.fims_dependencies->name.c_str(),
-                          sys.fims_dependencies->process_name_view,
-                          sys.fims_dependencies->method_view);
+            FPS_ERROR_LOG(
+                "Listener for : %s, from sender: %s method %s is not supported by dnp3_server. Message dropped",
+                sys.fims_dependencies->name.c_str(), sys.fims_dependencies->process_name_view,
+                sys.fims_dependencies->method_view);
             FPS_LOG_IT("fims_method_error");
         }
         return false;
@@ -267,7 +273,8 @@ bool parseHeader(GcomSystem &sys, Meta_Data_Info &meta_data, char *data_buf, uin
         // TODO think about this
         if (!spam_limit(&sys, sys.fims_errors))
         {
-            FPS_ERROR_LOG("Fims receive buffer is too small. Recommend increasing data_buf_len to at least %d", meta_data.data_len);
+            FPS_ERROR_LOG("Fims receive buffer is too small. Recommend increasing data_buf_len to at least %d",
+                          meta_data.data_len);
             FPS_LOG_IT("fims_receive_buffer");
         }
         return false;
@@ -276,23 +283,23 @@ bool parseHeader(GcomSystem &sys, Meta_Data_Info &meta_data, char *data_buf, uin
     return true;
 }
 
-int getUriType(GcomSystem &sys, std::string_view uri)
+int getUriType(GcomSystem& sys, std::string_view uri)
 {
-    std::string suri = {uri.begin(), uri.end()};
-    std::map<std::string, varList *>::iterator it = sys.dburiMap.find(suri);
+    std::string suri = { uri.begin(), uri.end() };
+    std::map<std::string, varList*>::iterator it = sys.dburiMap.find(suri);
     if (it != sys.dburiMap.end())
     {
         const auto multi = it->second->multi;
         if (multi)
             return 1;
-        else {
+        else
+        {
             const auto bit = it->second->bit;
             if (bit)
                 return 5;
             else
                 return 2;
         }
-            
     }
     it = sys.outputStatusUriMap.find(suri);
     if (it != sys.outputStatusUriMap.end())
@@ -300,7 +307,8 @@ int getUriType(GcomSystem &sys, std::string_view uri)
         const auto multi = it->second->multi;
         if (multi)
             return 3;
-        else{
+        else
+        {
             const auto bit = it->second->bit;
             if (bit)
                 return 6;
@@ -311,19 +319,22 @@ int getUriType(GcomSystem &sys, std::string_view uri)
     return -1;
 }
 
-std::string_view getUriElement(std::string_view uri) {
+std::string_view getUriElement(std::string_view uri)
+{
     size_t lastSlashPos = uri.find_last_of('/');
-    if (lastSlashPos != std::string_view::npos) {
-        return uri.substr(lastSlashPos + 1, uri.length()); // Extract substring after the last slash
-    } else {
+    if (lastSlashPos != std::string_view::npos)
+    {
+        return uri.substr(lastSlashPos + 1, uri.length());  // Extract substring after the last slash
+    }
+    else
+    {
         // If no slash found, return the entire URI
         return uri;
     }
 }
 
-bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
+bool processCmds(GcomSystem& sys, Meta_Data_Info& meta_data)
 {
-
     // handle reset_timings request - set
     if (sys.fims_dependencies->uri_requests.is_reset_timings_request)
     {
@@ -364,18 +375,20 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
 
         if (sys.debug == 1)
         {
-            sys.protocol_dependencies->dnp3.channelConfig.chnlDiagMask = (TMWDIAG_ID_PHYS | TMWDIAG_ID_LINK | TMWDIAG_ID_TPRT | TMWDIAG_ID_APPL |
-                                                                          TMWDIAG_ID_USER | TMWDIAG_ID_MMI | TMWDIAG_ID_STATIC_DATA |
-                                                                          TMWDIAG_ID_STATIC_HDRS | TMWDIAG_ID_EVENT_DATA | TMWDIAG_ID_EVENT_HDRS |
-                                                                          TMWDIAG_ID_CYCLIC_DATA | TMWDIAG_ID_CYCLIC_HDRS | TMWDIAG_ID_SECURITY_DATA |
-                                                                          TMWDIAG_ID_SECURITY_HDRS | TMWDIAG_ID_TX | TMWDIAG_ID_RX |
-                                                                          TMWDIAG_ID_TIMESTAMP | TMWDIAG_ID_ERROR | TMWDIAG_ID_TARGET);
-            sys.protocol_dependencies->dnp3.clientSesnConfig.sesnDiagMask = (TMWDIAG_ID_PHYS | TMWDIAG_ID_LINK | TMWDIAG_ID_TPRT | TMWDIAG_ID_APPL |
-                                                                             TMWDIAG_ID_USER | TMWDIAG_ID_MMI | TMWDIAG_ID_STATIC_DATA |
-                                                                             TMWDIAG_ID_STATIC_HDRS | TMWDIAG_ID_EVENT_DATA | TMWDIAG_ID_EVENT_HDRS |
-                                                                             TMWDIAG_ID_CYCLIC_DATA | TMWDIAG_ID_CYCLIC_HDRS | TMWDIAG_ID_SECURITY_DATA |
-                                                                             TMWDIAG_ID_SECURITY_HDRS | TMWDIAG_ID_TX | TMWDIAG_ID_RX |
-                                                                             TMWDIAG_ID_TIMESTAMP | TMWDIAG_ID_ERROR | TMWDIAG_ID_TARGET);
+            sys.protocol_dependencies->dnp3.channelConfig
+                .chnlDiagMask = (TMWDIAG_ID_PHYS | TMWDIAG_ID_LINK | TMWDIAG_ID_TPRT | TMWDIAG_ID_APPL |
+                                 TMWDIAG_ID_USER | TMWDIAG_ID_MMI | TMWDIAG_ID_STATIC_DATA | TMWDIAG_ID_STATIC_HDRS |
+                                 TMWDIAG_ID_EVENT_DATA | TMWDIAG_ID_EVENT_HDRS | TMWDIAG_ID_CYCLIC_DATA |
+                                 TMWDIAG_ID_CYCLIC_HDRS | TMWDIAG_ID_SECURITY_DATA | TMWDIAG_ID_SECURITY_HDRS |
+                                 TMWDIAG_ID_TX | TMWDIAG_ID_RX | TMWDIAG_ID_TIMESTAMP | TMWDIAG_ID_ERROR |
+                                 TMWDIAG_ID_TARGET);
+            sys.protocol_dependencies->dnp3.clientSesnConfig
+                .sesnDiagMask = (TMWDIAG_ID_PHYS | TMWDIAG_ID_LINK | TMWDIAG_ID_TPRT | TMWDIAG_ID_APPL |
+                                 TMWDIAG_ID_USER | TMWDIAG_ID_MMI | TMWDIAG_ID_STATIC_DATA | TMWDIAG_ID_STATIC_HDRS |
+                                 TMWDIAG_ID_EVENT_DATA | TMWDIAG_ID_EVENT_HDRS | TMWDIAG_ID_CYCLIC_DATA |
+                                 TMWDIAG_ID_CYCLIC_HDRS | TMWDIAG_ID_SECURITY_DATA | TMWDIAG_ID_SECURITY_HDRS |
+                                 TMWDIAG_ID_TX | TMWDIAG_ID_RX | TMWDIAG_ID_TIMESTAMP | TMWDIAG_ID_ERROR |
+                                 TMWDIAG_ID_TARGET);
             tmwtargp_registerPutDiagStringFunc(TMWDEFS_NULL);
         }
         else
@@ -384,8 +397,12 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
             sys.protocol_dependencies->dnp3.clientSesnConfig.sesnDiagMask = TMWDIAG_ID_ERROR;
             tmwtargp_registerPutDiagStringFunc(Logging::log_TMW_message);
         }
-        dnpchnl_setChannelConfig(sys.protocol_dependencies->dnp3.pChannel, &(sys.protocol_dependencies->dnp3.channelConfig), &(sys.protocol_dependencies->dnp3.tprtConfig), &(sys.protocol_dependencies->dnp3.linkConfig), &(sys.protocol_dependencies->dnp3.physConfig));
-        mdnpsesn_setSessionConfig(sys.protocol_dependencies->dnp3.pSession, &sys.protocol_dependencies->dnp3.clientSesnConfig);
+        dnpchnl_setChannelConfig(
+            sys.protocol_dependencies->dnp3.pChannel, &(sys.protocol_dependencies->dnp3.channelConfig),
+            &(sys.protocol_dependencies->dnp3.tprtConfig), &(sys.protocol_dependencies->dnp3.linkConfig),
+            &(sys.protocol_dependencies->dnp3.physConfig));
+        mdnpsesn_setSessionConfig(sys.protocol_dependencies->dnp3.pSession,
+                                  &sys.protocol_dependencies->dnp3.clientSesnConfig);
 
         return true;
     }
@@ -394,34 +411,70 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
     if (sys.fims_dependencies->uri_requests.is_force_request)
     {
         const auto uri_len = sys.fims_dependencies->uri_view.size();
-        const auto request_len = std::string_view{"/_force"}.size();
-        std::string uri = std::string{sys.fims_dependencies->uri_view.substr(0, uri_len - request_len)};
-        std::map<std::string, varList *>::iterator uri_item = sys.dburiMap.find(uri);
-
+        const auto request_len = std::string_view{ "/_force" }.size();
+        std::string uri = std::string{ sys.fims_dependencies->uri_view.substr(0, uri_len - request_len) };
+        std::map<std::string, varList*>::iterator uri_item = sys.dburiMap.find(uri);
         if (uri_item != sys.dburiMap.end())
         {
-            for (std::pair<const std::string, TMWSIM_POINT *> pair : uri_item->second->dbmap)
+            FPS_INFO_LOG("Received force request for [%s]", uri.c_str());
+            for (std::pair<const std::string, TMWSIM_POINT*> pair : uri_item->second->dbmap)
             {
-                TMWSIM_POINT *dbPoint = pair.second;
-                sys.db_mutex.lock();
-                dbPoint->flags |= DNPDEFS_DBAS_FLAG_LOCAL_FORCED;
-                sys.db_mutex.unlock();
-                if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+                TMWSIM_POINT* dbPoint = pair.second;
+                if (sys.protocol_dependencies->who == DNP3_MASTER)
                 {
-                    sys.db_mutex.lock();
-                    ((FlexPoint *)dbPoint->flexPointHandle)->standby_value = dbPoint->data.analog.value;
-                    sys.db_mutex.unlock();
+                    // only do this if the point isn't already forced
+                    if (((FlexPoint*)(dbPoint->flexPointHandle))->is_output_point &&
+                        !((FlexPoint*)(dbPoint->flexPointHandle))->is_forced)
+                    {
+#ifndef DNP3_TEST_MODE
+                        // cancel any active batch/interval set timers
+                        tmwtimer_cancel(&((FlexPoint*)(dbPoint->flexPointHandle))->set_timer);
+#endif
+
+                        // NOT doing this because it may cause issues:
+                        // if we've sent an operate command, move it to our standby_value
+                        sys.db_mutex.lock();
+                        if (((FlexPoint*)(dbPoint->flexPointHandle))->sent_operate)
+                        {
+                            ((FlexPoint*)(dbPoint->flexPointHandle))
+                                ->standby_value = ((FlexPoint*)(dbPoint->flexPointHandle))->operate_value;
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->sent_operate_before_or_during_force = true;
+                        }
+                        sys.db_mutex.unlock();
+                    }
+
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->is_forced = true;
                 }
-                else if (dbPoint->type == TMWSIM_TYPE_BINARY)
+                else  // DNP3_OUTSTATION
                 {
+                    // only do this if the point isn't already forced
+                    if (!((FlexPoint*)(dbPoint->flexPointHandle))->is_forced)
+                    {
+                        if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+                        {
+                            sys.db_mutex.lock();
+                            ((FlexPoint*)dbPoint->flexPointHandle)->standby_value = dbPoint->data.analog.value;
+                            sys.db_mutex.unlock();
+                        }
+                        else if (dbPoint->type == TMWSIM_TYPE_BINARY)
+                        {
+                            sys.db_mutex.lock();
+                            ((FlexPoint*)dbPoint->flexPointHandle)->standby_value = static_cast<double>(
+                                dbPoint->data.binary.value);
+                            sys.db_mutex.unlock();
+                        }
+                        else if (dbPoint->type == TMWSIM_TYPE_COUNTER)
+                        {
+                            sys.db_mutex.lock();
+                            ((FlexPoint*)dbPoint->flexPointHandle)->standby_value = static_cast<double>(
+                                dbPoint->data.counter.value);
+                            sys.db_mutex.unlock();
+                        }
+                    }
+
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->is_forced = true;
                     sys.db_mutex.lock();
-                    ((FlexPoint *)dbPoint->flexPointHandle)->standby_value = static_cast<double>(dbPoint->data.binary.value);
-                    sys.db_mutex.unlock();
-                }
-                else if (dbPoint->type == TMWSIM_TYPE_COUNTER)
-                {
-                    sys.db_mutex.lock();
-                    ((FlexPoint *)dbPoint->flexPointHandle)->standby_value = static_cast<double>(dbPoint->data.counter.value);
+                    dbPoint->flags |= DNPDEFS_DBAS_FLAG_LOCAL_FORCED;
                     sys.db_mutex.unlock();
                 }
             }
@@ -434,35 +487,71 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
     if (sys.fims_dependencies->uri_requests.is_unforce_request)
     {
         const auto uri_len = sys.fims_dependencies->uri_view.size();
-        const auto request_len = std::string_view{"/_unforce"}.size();
-        std::string uri = std::string{sys.fims_dependencies->uri_view.substr(0, uri_len - request_len)};
-        std::map<std::string, varList *>::iterator uri_item = sys.dburiMap.find(uri);
+        const auto request_len = std::string_view{ "/_unforce" }.size();
+        std::string uri = std::string{ sys.fims_dependencies->uri_view.substr(0, uri_len - request_len) };
+        std::map<std::string, varList*>::iterator uri_item = sys.dburiMap.find(uri);
 
         if (uri_item != sys.dburiMap.end())
         {
-
-            for (std::pair<const std::string, TMWSIM_POINT *> pair : uri_item->second->dbmap)
+            FPS_INFO_LOG("Received unforce request for [%s]", uri.c_str());
+            for (std::pair<const std::string, TMWSIM_POINT*> pair : uri_item->second->dbmap)
             {
-                TMWSIM_POINT *dbPoint = pair.second;
-                sys.db_mutex.lock();
-                dbPoint->flags &= ~DNPDEFS_DBAS_FLAG_LOCAL_FORCED;
-                sys.db_mutex.unlock();
-                if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+                TMWSIM_POINT* dbPoint = pair.second;
+                if (sys.protocol_dependencies->who == DNP3_MASTER)
                 {
-                    sys.db_mutex.lock();
-                    dbPoint->data.analog.value = ((FlexPoint *)dbPoint->flexPointHandle)->standby_value;
-                    sys.db_mutex.unlock();
+                    // only do this if the point is currently forced
+                    if (((FlexPoint*)(dbPoint->flexPointHandle))->is_output_point &&
+                        ((FlexPoint*)(dbPoint->flexPointHandle))->is_forced)
+                    {
+#ifndef DNP3_TEST_MODE
+                        // cancel any active batch/interval set timers
+                        tmwtimer_cancel(&((FlexPoint*)(dbPoint->flexPointHandle))->set_timer);
+#endif
+
+                        if (((FlexPoint*)(dbPoint->flexPointHandle))->sent_operate_before_or_during_force)
+                        {
+                            ((FlexPoint*)(dbPoint->flexPointHandle))
+                                ->operate_value = ((FlexPoint*)(dbPoint->flexPointHandle))->standby_value;
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->sent_operate = true;
+                            // don't send it out just in case that's not what we want to do
+                        }
+                        else
+                        {
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->sent_operate = false;
+                        }
+                    }
+
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->is_forced = false;
                 }
-                else if (dbPoint->type == TMWSIM_TYPE_BINARY)
+                else  // DNP3_OUTSTATION
                 {
+                    if (((FlexPoint*)(dbPoint->flexPointHandle))->is_forced)
+                    {
+                        if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+                        {
+                            sys.db_mutex.lock();
+                            dbPoint->data.analog.value = ((FlexPoint*)dbPoint->flexPointHandle)->standby_value;
+                            sys.db_mutex.unlock();
+                        }
+                        else if (dbPoint->type == TMWSIM_TYPE_BINARY)
+                        {
+                            sys.db_mutex.lock();
+                            dbPoint->data.binary.value = static_cast<bool>(
+                                ((FlexPoint*)dbPoint->flexPointHandle)->standby_value);
+                            sys.db_mutex.unlock();
+                        }
+                        else if (dbPoint->type == TMWSIM_TYPE_COUNTER)
+                        {
+                            sys.db_mutex.lock();
+                            dbPoint->data.counter.value = static_cast<double>(
+                                ((FlexPoint*)dbPoint->flexPointHandle)->standby_value);
+                            sys.db_mutex.unlock();
+                        }
+                    }
+
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->is_forced = false;
                     sys.db_mutex.lock();
-                    dbPoint->data.binary.value = static_cast<bool>(((FlexPoint *)dbPoint->flexPointHandle)->standby_value);
-                    sys.db_mutex.unlock();
-                }
-                else if (dbPoint->type == TMWSIM_TYPE_COUNTER)
-                {
-                    sys.db_mutex.lock();
-                    dbPoint->data.counter.value = static_cast<double>(((FlexPoint *)dbPoint->flexPointHandle)->standby_value);
+                    dbPoint->flags &= ~DNPDEFS_DBAS_FLAG_LOCAL_FORCED;
                     sys.db_mutex.unlock();
                 }
             }
@@ -499,7 +588,8 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
             FORMAT_TO_BUF(send_buf, R"({})", *sys.protocol_dependencies->dnp3.point_status_info);
             send_buf.push_back('}');
         }
-        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view, std::string_view{send_buf.data(), send_buf.size()}))
+        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view,
+                      std::string_view{ send_buf.data(), send_buf.size() }))
         {
             if (!spam_limit(&sys, sys.fims_errors))
             {
@@ -518,7 +608,6 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
     // handle stats request - get
     if (sys.fims_dependencies->uri_requests.is_stats_request)
     {
-
         fmt::memory_buffer send_buf;
         send_buf.clear();
         bool is_specific_stat = false;
@@ -549,10 +638,13 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
         }
         if (!is_specific_stat)
         {
-            FORMAT_TO_BUF(send_buf, R"({{"channel_stats":{},"session_stats":{}}})", *sys.protocol_dependencies->dnp3.channel_stats, *sys.protocol_dependencies->dnp3.session_stats);
+            FORMAT_TO_BUF(send_buf, R"({{"channel_stats":{},"session_stats":{}}})",
+                          *sys.protocol_dependencies->dnp3.channel_stats,
+                          *sys.protocol_dependencies->dnp3.session_stats);
         }
 
-        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view, std::string_view{send_buf.data(), send_buf.size()}))
+        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view,
+                      std::string_view{ send_buf.data(), send_buf.size() }))
         {
             if (!spam_limit(&sys, sys.fims_errors))
             {
@@ -573,7 +665,7 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
         fmt::memory_buffer send_buf;
         send_buf.clear();
         bool is_specific_stat = false;
-        for (std::pair<const std::string, Timing *> specific_stat : sys.protocol_dependencies->dnp3.timings->timings_map)
+        for (std::pair<const std::string, Timing*> specific_stat : sys.protocol_dependencies->dnp3.timings->timings_map)
         {
             if (std::string_view::npos != sys.fims_dependencies->uri_view.find(specific_stat.first))
             {
@@ -587,11 +679,11 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
             FORMAT_TO_BUF(send_buf, R"({})", *sys.protocol_dependencies->dnp3.timings);
         }
 
-        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view, std::string_view{send_buf.data(), send_buf.size()}))
+        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view,
+                      std::string_view{ send_buf.data(), send_buf.size() }))
         {
             if (!spam_limit(&sys, sys.fims_errors))
             {
-
                 FPS_ERROR_LOG("Listener for '%s', could not send replyto fims message. Exiting",
                               sys.fims_dependencies->name.c_str());
                 FPS_LOG_IT("fims_send_error");
@@ -615,11 +707,11 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
         FORMAT_TO_BUF(send_buf, R"("watchdog_errors": {}}})", sys.watchdog_errors);
         sys.error_mutex.unlock();
 
-        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view, std::string_view{send_buf.data(), send_buf.size()}))
+        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view,
+                      std::string_view{ send_buf.data(), send_buf.size() }))
         {
             if (!spam_limit(&sys, sys.fims_errors))
             {
-
                 FPS_ERROR_LOG("Listener for '%s', could not send replyto fims message. Exiting",
                               sys.fims_dependencies->name.c_str());
                 FPS_LOG_IT("fims_send_error");
@@ -634,10 +726,11 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
     {
         fmt::memory_buffer send_buf;
         send_buf.clear();
-        char *config_str = cJSON_PrintUnformatted(sys.config);
+        char* config_str = cJSON_PrintUnformatted(sys.config);
         FORMAT_TO_BUF(send_buf, R"({})", config_str);
 
-        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view, std::string_view{send_buf.data(), send_buf.size()}))
+        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view,
+                      std::string_view{ send_buf.data(), send_buf.size() }))
         {
             if (!spam_limit(&sys, sys.fims_errors))
             {
@@ -658,13 +751,17 @@ bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data)
 /// @param curr_val
 /// @param to_set
 /// @return
-bool extractValueMulti(GcomSystem &sys, simdjson::simdjson_result<simdjson::fallback::ondemand::object> &val_clothed, simdjson::fallback::ondemand::value &curr_val, Jval_buif &to_set)
+bool extractValueMulti(GcomSystem& sys, simdjson::simdjson_result<simdjson::fallback::ondemand::object>& val_clothed,
+                       simdjson::fallback::ondemand::value& curr_val, Jval_buif& to_set)
 {
-    if (const auto err = val_clothed.error(); !(err == simdjson::error_code::SUCCESS || err == simdjson::error_code::INCORRECT_TYPE))
+    if (const auto err = val_clothed.error();
+        !(err == simdjson::error_code::SUCCESS || err == simdjson::error_code::INCORRECT_TYPE))
     {
         if (!spam_limit(&sys, sys.parse_errors))
         {
-            FPS_ERROR_LOG("Could not get a clothed value as an object while parsing a multi-value message, err = %s Message dropped", simdjson::error_message(err));
+            FPS_ERROR_LOG(
+                "Could not get a clothed value as an object while parsing a multi-value message, err = %s Message dropped",
+                simdjson::error_message(err));
             FPS_LOG_IT("parsing_error");
         }
         return false;
@@ -676,7 +773,9 @@ bool extractValueMulti(GcomSystem &sys, simdjson::simdjson_result<simdjson::fall
         {
             if (!spam_limit(&sys, sys.parse_errors))
             {
-                FPS_ERROR_LOG("Could not get the clothed key 'value' while parsing a multi-value message, err = %s skipping this uri: %s", simdjson::error_message(err), sys.fims_dependencies->uri_view);
+                FPS_ERROR_LOG(
+                    "Could not get the clothed key 'value' while parsing a multi-value message, err = %s skipping this uri: %s",
+                    simdjson::error_message(err), sys.fims_dependencies->uri_view);
                 FPS_LOG_IT("parsing_error");
             }
             return false;
@@ -699,13 +798,15 @@ bool extractValueMulti(GcomSystem &sys, simdjson::simdjson_result<simdjson::fall
     }
     else if (auto val_bool = curr_val.get_bool(); !val_bool.error())
     {
-        to_set = static_cast<uint64_t>(val_bool.value_unsafe()); // just set booleans equal to the whole numbers 1/0 for sets
+        to_set = static_cast<uint64_t>(
+            val_bool.value_unsafe());  // just set booleans equal to the whole numbers 1/0 for sets
     }
     else
     {
         if (!spam_limit(&sys, sys.parse_errors))
         {
-            FPS_ERROR_LOG("only floats, uints, ints, and bools are supported, skipping this uri: %s", sys.fims_dependencies->uri_view);
+            FPS_ERROR_LOG("only floats, uints, ints, and bools are supported, skipping this uri: %s",
+                          sys.fims_dependencies->uri_view);
             FPS_LOG_IT("parsing_error");
         }
         return false;
@@ -713,26 +814,32 @@ bool extractValueMulti(GcomSystem &sys, simdjson::simdjson_result<simdjson::fall
     return true;
 }
 
-bool extractValueSingle(GcomSystem &sys, simdjson::simdjson_result<simdjson::fallback::ondemand::object> &val_clothed, simdjson::fallback::ondemand::value &curr_val, Jval_buif &to_set)
+bool extractValueSingle(GcomSystem& sys, simdjson::simdjson_result<simdjson::fallback::ondemand::object>& val_clothed,
+                        simdjson::fallback::ondemand::value& curr_val, Jval_buif& to_set)
 {
-    auto &doc = sys.fims_dependencies->doc;
-    if (const auto err = val_clothed.error(); !(err == simdjson::error_code::SUCCESS || err == simdjson::error_code::INCORRECT_TYPE))
+    auto& doc = sys.fims_dependencies->doc;
+    if (const auto err = val_clothed.error();
+        !(err == simdjson::error_code::SUCCESS || err == simdjson::error_code::INCORRECT_TYPE))
     {
         if (!spam_limit(&sys, sys.parse_errors))
         {
-            FPS_ERROR_LOG("with single-value uri '%s': could not get a clothed value as an object while parsing a single-value message, err = %s Message dropped", sys.fims_dependencies->uri_view, simdjson::error_message(err));
+            FPS_ERROR_LOG(
+                "with single-value uri '%s': could not get a clothed value as an object while parsing a single-value message, err = %s Message dropped",
+                sys.fims_dependencies->uri_view, simdjson::error_message(err));
             FPS_LOG_IT("parsing_error");
         }
         return false;
     }
-    if (!val_clothed.error()) // they sent a clothed value:
+    if (!val_clothed.error())  // they sent a clothed value:
     {
         auto inner_val = val_clothed.find_field("value");
         if (const auto err = inner_val.error(); err)
         {
             if (!spam_limit(&sys, sys.parse_errors))
             {
-                FPS_ERROR_LOG("with single-value uri '%s': could not get the clothed key 'value' while parsing a single-value message, err = %s skipping this value", sys.fims_dependencies->uri_view, simdjson::error_message(err));
+                FPS_ERROR_LOG(
+                    "with single-value uri '%s': could not get the clothed key 'value' while parsing a single-value message, err = %s skipping this value",
+                    sys.fims_dependencies->uri_view, simdjson::error_message(err));
                 FPS_LOG_IT("parsing_error");
             }
             return false;
@@ -740,27 +847,32 @@ bool extractValueSingle(GcomSystem &sys, simdjson::simdjson_result<simdjson::fal
         curr_val = std::move(inner_val.value_unsafe());
     }
 
-    if (auto val_uint = val_clothed.error() ? doc.get_uint64() : curr_val.get_uint64(); !val_uint.error()) // it is an unsigned integer
+    if (auto val_uint = val_clothed.error() ? doc.get_uint64() : curr_val.get_uint64();
+        !val_uint.error())  // it is an unsigned integer
     {
         to_set = val_uint.value_unsafe();
     }
-    else if (auto val_int = val_clothed.error() ? doc.get_int64() : curr_val.get_int64(); !val_int.error()) // it is an integer
+    else if (auto val_int = val_clothed.error() ? doc.get_int64() : curr_val.get_int64();
+             !val_int.error())  // it is an integer
     {
         to_set = val_int.value_unsafe();
     }
-    else if (auto val_float = val_clothed.error() ? doc.get_double() : curr_val.get_double(); !val_float.error()) // it is a float
+    else if (auto val_float = val_clothed.error() ? doc.get_double() : curr_val.get_double();
+             !val_float.error())  // it is a float
     {
         to_set = val_float.value_unsafe();
     }
-    else if (auto val_bool = val_clothed.error() ? doc.get_bool() : curr_val.get_bool(); !val_bool.error()) // it is a bool
+    else if (auto val_bool = val_clothed.error() ? doc.get_bool() : curr_val.get_bool();
+             !val_bool.error())  // it is a bool
     {
-        to_set = static_cast<uint64_t>(val_bool.value_unsafe()); // just set booleans to the whole numbers 1/0
+        to_set = static_cast<uint64_t>(val_bool.value_unsafe());  // just set booleans to the whole numbers 1/0
     }
     else
     {
         if (!spam_limit(&sys, sys.parse_errors))
         {
-            FPS_ERROR_LOG("only floats, uints, ints, and bools are supported, skipping this uri: %s", sys.fims_dependencies->uri_view);
+            FPS_ERROR_LOG("only floats, uints, ints, and bools are supported, skipping this uri: %s",
+                          sys.fims_dependencies->uri_view);
             FPS_LOG_IT("parsing_error");
         }
         return false;
@@ -770,7 +882,7 @@ bool extractValueSingle(GcomSystem &sys, simdjson::simdjson_result<simdjson::fal
 /// @brief
 /// @param to_set
 /// @return
-double jval_to_double(Jval_buif &to_set)
+double jval_to_double(Jval_buif& to_set)
 {
     double value;
     if (to_set.holds_int())
@@ -797,12 +909,11 @@ double jval_to_double(Jval_buif &to_set)
 /// @param data_buf
 /// @param data_buf_len
 /// @return
-bool gcom_recv_raw_message(fims &fims_gateway, Meta_Data_Info &meta_data, void *data_buf, uint32_t data_buf_len) noexcept
+bool gcom_recv_raw_message(fims& fims_gateway, Meta_Data_Info& meta_data, void* data_buf,
+                           uint32_t data_buf_len) noexcept
 {
     int connection = fims_gateway.get_socket();
-    struct iovec bufs[] = {
-        {(void *)&meta_data, sizeof(Meta_Data_Info)},
-        {(void *)data_buf, data_buf_len}};
+    struct iovec bufs[] = { { (void*)&meta_data, sizeof(Meta_Data_Info) }, { (void*)data_buf, data_buf_len } };
     const auto bytes_read = readv(connection, bufs, sizeof(bufs) / sizeof(*bufs));
     if (bytes_read > 0)
     {
@@ -818,13 +929,13 @@ bool gcom_recv_raw_message(fims &fims_gateway, Meta_Data_Info &meta_data, void *
 /// @brief
 /// @param sys
 /// @param send_buf
-void replyToFullGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
+void replyToFullGet(GcomSystem& sys, fmt::memory_buffer& send_buf)
 {
     sys.db_mutex.lock();
     const auto uri_len = sys.fims_dependencies->uri_view.size();
-    const auto request_len = std::string_view{"/_full"}.size();
-    std::string uri = std::string{sys.fims_dependencies->uri_view.substr(0, uri_len - request_len)};
-    std::map<std::string, varList *>::iterator uri_item = sys.dburiMap.find(uri);
+    const auto request_len = std::string_view{ "/_full" }.size();
+    std::string uri = std::string{ sys.fims_dependencies->uri_view.substr(0, uri_len - request_len) };
+    std::map<std::string, varList*>::iterator uri_item = sys.dburiMap.find(uri);
     if (uri_item == sys.dburiMap.end())
     {
         uri_item = sys.outputStatusUriMap.find(uri);
@@ -839,7 +950,7 @@ void replyToFullGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
     {
         send_buf.clear();
         FORMAT_TO_BUF(send_buf, R"({{)");
-        for (std::pair<const std::string, TMWSIM_POINT *> pair : uri_item->second->dbmap)
+        for (std::pair<const std::string, TMWSIM_POINT*> pair : uri_item->second->dbmap)
         {
             if (first)
             {
@@ -849,19 +960,19 @@ void replyToFullGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
             {
                 FORMAT_TO_BUF(send_buf, R"(, )");
             }
-            TMWSIM_POINT *dbPoint = pair.second;
+            TMWSIM_POINT* dbPoint = pair.second;
             if (dbPoint)
             {
-                FORMAT_TO_BUF(send_buf, R"("{}":{})", ((FlexPoint *)(dbPoint->flexPointHandle))->name, *dbPoint);
+                FORMAT_TO_BUF(send_buf, R"("{}":{})", ((FlexPoint*)(dbPoint->flexPointHandle))->name, *dbPoint);
             }
         }
         FORMAT_TO_BUF(send_buf, R"(}})");
     }
     else
     {
-        for (std::pair<const std::string, TMWSIM_POINT *> pair : uri_item->second->dbmap)
+        for (std::pair<const std::string, TMWSIM_POINT*> pair : uri_item->second->dbmap)
         {
-            TMWSIM_POINT *dbPoint = pair.second;
+            TMWSIM_POINT* dbPoint = pair.second;
             if (dbPoint)
             {
                 send_buf.clear();
@@ -870,7 +981,8 @@ void replyToFullGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
         }
     }
     sys.db_mutex.unlock();
-    if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view, std::string_view{send_buf.data(), send_buf.size()}))
+    if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view,
+                  std::string_view{ send_buf.data(), send_buf.size() }))
     {
         if (!spam_limit(&sys, sys.fims_errors))
         {
@@ -884,50 +996,50 @@ void replyToFullGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
 /// @brief
 /// @param sys
 /// @param send_buf
-void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
+void replyToGet(GcomSystem& sys, fmt::memory_buffer& send_buf)
 {
     sys.db_mutex.lock();
-    TMWSIM_POINT *dbPoint = nullptr;
+    TMWSIM_POINT* dbPoint = nullptr;
     bool has_one_point = false;
     int uriType = getUriType(sys, sys.fims_dependencies->uri_view);
     if (uriType == 1)
     {
         send_buf.clear();
         FORMAT_TO_BUF(send_buf, R"({{)");
-        for (auto &dbVar : sys.dburiMap[std::string{sys.fims_dependencies->uri_view}]->dbmap)
+        for (auto& dbVar : sys.dburiMap[std::string{ sys.fims_dependencies->uri_view }]->dbmap)
         {
             dbPoint = dbVar.second;
             if (dbPoint)
             {
                 double value;
-                if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog)
+                if (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::Analog)
                 {
                     value = dbPoint->data.analog.value;
                 }
-                else if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter)
+                else if (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::Counter)
                 {
                     value = dbPoint->data.counter.value;
                 }
-                else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
-                         ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
-                         ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
-                         ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32)
+                else if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
+                         ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+                         ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+                         ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32)
                 {
-                    if (((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate)
+                    if (((FlexPoint*)(dbPoint->flexPointHandle))->sent_operate)
                     {
-                        value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value;
+                        value = ((FlexPoint*)(dbPoint->flexPointHandle))->operate_value;
                     }
                     else
                     {
                         value = dbPoint->data.analog.value;
                     }
                 }
-                else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
-                         ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB)
+                else if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+                         ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::CROB)
                 {
-                    if (((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate)
+                    if (((FlexPoint*)(dbPoint->flexPointHandle))->sent_operate)
                     {
-                        value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value;
+                        value = ((FlexPoint*)(dbPoint->flexPointHandle))->operate_value;
                     }
                     else
                     {
@@ -943,7 +1055,7 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
                 has_one_point = true;
             }
         }
-        send_buf.resize(send_buf.size() - (2 * has_one_point)); // get rid of the last comma and space if we have them
+        send_buf.resize(send_buf.size() - (2 * has_one_point));  // get rid of the last comma and space if we have them
         FORMAT_TO_BUF(send_buf, R"(}})");
     }
     else if (uriType == 2 || uriType == 5)
@@ -953,34 +1065,34 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
         {
             send_buf.clear();
             double value;
-            if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog)
+            if (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::Analog)
             {
                 value = dbPoint->data.analog.value;
             }
-            else if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter)
+            else if (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::Counter)
             {
                 value = dbPoint->data.counter.value;
             }
-            else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
-                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
-                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
-                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32)
+            else if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
+                     ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+                     ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+                     ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32)
             {
-                if (((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate)
+                if (((FlexPoint*)(dbPoint->flexPointHandle))->sent_operate)
                 {
-                    value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value;
+                    value = ((FlexPoint*)(dbPoint->flexPointHandle))->operate_value;
                 }
                 else
                 {
                     value = dbPoint->data.analog.value;
                 }
             }
-            else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
-                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB)
+            else if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+                     ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::CROB)
             {
-                if (((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate)
+                if (((FlexPoint*)(dbPoint->flexPointHandle))->sent_operate)
                 {
-                    value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value;
+                    value = ((FlexPoint*)(dbPoint->flexPointHandle))->operate_value;
                 }
                 else
                 {
@@ -991,10 +1103,13 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
             {
                 value = static_cast<double>(dbPoint->data.binary.value);
             }
-            if(uriType == 5) {
+            if (uriType == 5)
+            {
                 std::string bitstring = std::string(getUriElement(sys.fims_dependencies->uri_view));
                 format_individual_bit(send_buf, dbPoint, value, dbPoint->flags, &dbPoint->timeStamp, bitstring);
-            } else {
+            }
+            else
+            {
                 format_point(send_buf, dbPoint, value, dbPoint->flags, &dbPoint->timeStamp, false);
             }
             has_one_point = true;
@@ -1004,7 +1119,7 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
     {
         send_buf.clear();
         FORMAT_TO_BUF(send_buf, R"({{)");
-        for (auto &dbVar : sys.outputStatusUriMap[std::string{sys.fims_dependencies->uri_view}]->dbmap)
+        for (auto& dbVar : sys.outputStatusUriMap[std::string{ sys.fims_dependencies->uri_view }]->dbmap)
         {
             dbPoint = dbVar.second;
             if (dbPoint)
@@ -1024,7 +1139,7 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
                 has_one_point = true;
             }
         }
-        send_buf.resize(send_buf.size() - (2 * has_one_point)); // get rid of the last comma and space if we have them
+        send_buf.resize(send_buf.size() - (2 * has_one_point));  // get rid of the last comma and space if we have them
         FORMAT_TO_BUF(send_buf, R"(}})");
     }
     else if (uriType == 4 || uriType == 6)
@@ -1043,10 +1158,13 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
                 value = static_cast<double>(dbPoint->data.binary.value);
             }
 
-            if(uriType == 6) {
+            if (uriType == 6)
+            {
                 std::string bitstring = std::string(getUriElement(sys.fims_dependencies->uri_view));
                 format_individual_bit(send_buf, dbPoint, value, dbPoint->flags, &dbPoint->timeStamp, bitstring);
-            } else {
+            }
+            else
+            {
                 format_point(send_buf, dbPoint, value, dbPoint->flags, &dbPoint->timeStamp, false);
             }
 
@@ -1057,7 +1175,8 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
 
     if (has_one_point)
     {
-        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view, std::string_view{send_buf.data(), send_buf.size()}))
+        if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view,
+                      std::string_view{ send_buf.data(), send_buf.size() }))
         {
             if (!spam_limit(&sys, sys.fims_errors))
             {
@@ -1071,7 +1190,7 @@ void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf)
 /// @brief
 /// @param sys
 /// @return
-bool listener_thread(GcomSystem &sys) noexcept
+bool listener_thread(GcomSystem& sys) noexcept
 {
     if (sys.fims_dependencies->parseBody == nullptr)
     {
@@ -1080,14 +1199,14 @@ bool listener_thread(GcomSystem &sys) noexcept
     }
 
     const auto client_name = sys.fims_dependencies->name;
-    auto &fims_gateway = sys.fims_dependencies->fims_gateway;
-    auto &receiver_bufs = sys.fims_dependencies->receiver_bufs;
+    auto& fims_gateway = sys.fims_dependencies->fims_gateway;
+    auto& receiver_bufs = sys.fims_dependencies->receiver_bufs;
     fmt::memory_buffer send_buf;
 
-    auto &meta_data = receiver_bufs.meta_data;
+    auto& meta_data = receiver_bufs.meta_data;
 
     unsigned int mydata_size = sys.fims_dependencies->data_buf_len;
-    unsigned char *mydata = (unsigned char *)calloc(1, mydata_size);
+    unsigned char* mydata = (unsigned char*)calloc(1, mydata_size);
 
     defer
     {
@@ -1099,18 +1218,18 @@ bool listener_thread(GcomSystem &sys) noexcept
     };
 
     {
-        std::unique_lock<std::mutex> lk{sys.main_mutex};
-        sys.main_cond.wait(lk, [&]()
-                           { return sys.start_signal; });
+        std::unique_lock<std::mutex> lk{ sys.main_mutex };
+        sys.main_cond.wait(lk, [&]() { return sys.start_signal; });
     }
 
     // setup the timeout to be 2 seconds (so we can stop listener thread without it spinning infinitely on errors):
     struct timeval tv;
     tv.tv_sec = 2;
     tv.tv_usec = 0;
-    if (setsockopt(fims_gateway.get_socket(), SOL_SOCKET, SO_RCVTIMEO, (const char *)&tv, sizeof(tv)) == -1)
+    if (setsockopt(fims_gateway.get_socket(), SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv)) == -1)
     {
-        FPS_ERROR_LOG("listener for '%s': could not set socket timeout to 2 seconds. Exiting", sys.fims_dependencies->name.c_str());
+        FPS_ERROR_LOG("listener for '%s': could not set socket timeout to 2 seconds. Exiting",
+                      sys.fims_dependencies->name.c_str());
         return false;
     }
 
@@ -1121,13 +1240,14 @@ bool listener_thread(GcomSystem &sys) noexcept
         {
             const auto curr_errno = errno;
             if (curr_errno == EAGAIN || curr_errno == EWOULDBLOCK)
-                continue; // we just timed out
+                continue;  // we just timed out
             // This is if we have a legitimate error (no timeout):
-            FPS_ERROR_LOG("Listener for '%s': could not receive message over fims. Exiting", sys.fims_dependencies->name.c_str());
+            FPS_ERROR_LOG("Listener for '%s': could not receive message over fims. Exiting",
+                          sys.fims_dependencies->name.c_str());
             return false;
         }
 
-        auto parseOK = parseHeader(sys, meta_data, (char *)mydata, mydata_size);
+        auto parseOK = parseHeader(sys, meta_data, (char*)mydata, mydata_size);
         if (!parseOK)
             continue;
 
@@ -1145,7 +1265,8 @@ bool listener_thread(GcomSystem &sys) noexcept
             sys.fims_dependencies->parseBody(sys, meta_data);
             if (!sys.fims_dependencies->replyto_view.empty())
             {
-                if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view, std::string_view{reinterpret_cast<char *>(sys.fims_dependencies->data_buf)}))
+                if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view,
+                              std::string_view{ reinterpret_cast<char*>(sys.fims_dependencies->data_buf) }))
                 {
                     if (!spam_limit(&sys, sys.fims_errors))
                     {
@@ -1156,7 +1277,8 @@ bool listener_thread(GcomSystem &sys) noexcept
                 }
             }
         }
-        else if ((sys.fims_dependencies->method == FimsMethod::Pub && sys.protocol_dependencies->who == DNP3_OUTSTATION))
+        else if ((sys.fims_dependencies->method == FimsMethod::Pub &&
+                  sys.protocol_dependencies->who == DNP3_OUTSTATION))
         {
             sys.fims_dependencies->parseBody(sys, meta_data);
         }

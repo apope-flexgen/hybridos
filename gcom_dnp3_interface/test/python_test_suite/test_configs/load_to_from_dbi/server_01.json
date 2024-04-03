@@ -7,7 +7,9 @@
           "mongod --config /etc/mongod.conf &\n",
           "sleep 1\n",
           "dbi &\n",
-          "sleep 1\n"
+          "sleep 1\n",
+          "fims_send -m del -u /dbi/test_client\n",
+          "fims_send -m del -u /dbi/test_server\n"
       ],
       "expected": [
       ],

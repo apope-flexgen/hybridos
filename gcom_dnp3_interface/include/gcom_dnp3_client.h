@@ -1,5 +1,4 @@
-extern "C"
-{
+extern "C" {
 #include "tmwscl/utils/tmwtypes.h"
 #include "tmwscl/utils/tmwsim.h"
 #include "tmwscl/dnp/dnpdefs.h"
@@ -9,6 +8,37 @@ extern "C"
 
 struct GcomSystem;
 struct Meta_Data_Info;
+struct PubPoint;
+
+/**
+ * Creates a new PubPoint instance based on the provided TMWSIM_POINT object.
+ *
+ * This method initializes a new PubPoint instance with the necessary attributes
+ * extracted from the given TMWSIM_POINT object, including the database point, flags,
+ * and change time.
+ *
+ * Used in addPointToPubWork().
+ *
+ * @param dbPoint The TMWSIM_POINT object from which to create the PubPoint.
+ * @return A new PubPoint instance initialized with the attributes from dbPoint.
+ */
+PubPoint* createPubPoint(TMWSIM_POINT* dbPoint);
+
+/**
+ * Assigns the value to the PubPoint based on the DNP3 point type.
+ *
+ * This method determines the appropriate value for the given PubPoint based on the DNP3
+ * point type associated with the provided TMWSIM_POINT object. It handles various scenarios
+ * including forced values, sent operate values, and resend tolerance checks. If a status_point
+ * is provided, it also assigns the value for the status_point accordingly.
+ *
+ * Used in addPointToPubWork().
+ *
+ * @param point The PubPoint to which the value will be assigned.
+ * @param status_point The status PubPoint to which the value will be assigned, if applicable.
+ * @param dbPoint The TMWSIM_POINT that corresponds to the pub point.
+ */
+void assignValueBasedOnType(PubPoint* point, PubPoint* status_point, TMWSIM_POINT* dbPoint);
 
 /**
  * @brief Add a dbPoint to a queue for publishing.
@@ -23,7 +53,7 @@ struct Meta_Data_Info;
  *
  * @pre pDbPoint is a valid pointer to a TMWSIM_POINT struct
  */
-void addPointToPubWork(void *pDbPoint);
+void addPointToPubWork(void* pDbPoint);
 
 /**
  * @brief Call addPointToPubWork and then restart the interval timer for the point to call
@@ -33,7 +63,7 @@ void addPointToPubWork(void *pDbPoint);
  *
  * @pre pDbPoint is a valid pointer to a TMWSIM_POINT struct
  */
-void addPointToIntervalPubWork(void *pDbPoint);
+void addPointToIntervalPubWork(void* pDbPoint);
 
 /**
  * @brief In response to an incoming DNP3 message, prepare to send a 'pub' over fims based
@@ -56,7 +86,8 @@ void addPointToIntervalPubWork(void *pDbPoint);
  * Group 10 (if watchdog point).
  * @param pointNumber TMWTYPES_UINT the point number for the current point being handled
  */
-void updatePointCallback(void *pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_OBJ_GROUP_ID objectGroup, TMWTYPES_USHORT pointNumber);
+void updatePointCallback(void* pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_OBJ_GROUP_ID objectGroup,
+                         TMWTYPES_USHORT pointNumber);
 
 /**
  * @brief Call tmwdb_storeEntry for all entries on the tmwdb queue.
@@ -65,7 +96,7 @@ void updatePointCallback(void *pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_OBJ_GR
  *
  * @param sys pointer to fully initialized GcomSystem for client
  */
-void storeData(GcomSystem *sys);
+void storeData(GcomSystem* sys);
 
 /**
  * @brief Format fims messages depending on point format and type. Publish all data
@@ -73,7 +104,7 @@ void storeData(GcomSystem *sys);
  *
  * @param sys pointer to fully initialized GcomSystem for client
  */
-void queuePubs(GcomSystem *sys);
+void queuePubs(GcomSystem* sys);
 
 /**
  * @brief Update timings for direct operate responses.
@@ -84,7 +115,7 @@ void queuePubs(GcomSystem *sys);
  * @param sys void* pointer to fully initialized GcomSystem for client
  * @param response DNPCHNL_RESPONSE_INFO pointer (filled out by TMW)
  */
-void process_analog_direct_operate_response(void *sys, DNPCHNL_RESPONSE_INFO *response);
+void process_analog_direct_operate_response(void* sys, DNPCHNL_RESPONSE_INFO* response);
 
 /**
  * @brief Update timings for direct operate responses.
@@ -95,7 +126,7 @@ void process_analog_direct_operate_response(void *sys, DNPCHNL_RESPONSE_INFO *re
  * @param sys void* pointer to fully initialized GcomSystem for client
  * @param response DNPCHNL_RESPONSE_INFO pointer (filled out by TMW)
  */
-void process_binary_direct_operate_response(void *sys, DNPCHNL_RESPONSE_INFO *response);
+void process_binary_direct_operate_response(void* sys, DNPCHNL_RESPONSE_INFO* response);
 
 /**
  * @brief Update timings for integrity poll. Store incoming data in MDNPSIM_DATABASE
@@ -107,7 +138,7 @@ void process_binary_direct_operate_response(void *sys, DNPCHNL_RESPONSE_INFO *re
  * @param sys void* pointer to fully initialized GcomSystem for client
  * @param response DNPCHNL_RESPONSE_INFO pointer (filled out by TMW)
  */
-void process_integrity_response(void *sys, DNPCHNL_RESPONSE_INFO *response);
+void process_integrity_response(void* sys, DNPCHNL_RESPONSE_INFO* response);
 
 /**
  * @brief Update timings for class 1 scan. Store incoming data in MDNPSIM_DATABASE
@@ -119,7 +150,7 @@ void process_integrity_response(void *sys, DNPCHNL_RESPONSE_INFO *response);
  * @param sys void* pointer to fully initialized GcomSystem for client
  * @param response DNPCHNL_RESPONSE_INFO pointer (filled out by TMW)
  */
-void process_class1_response(void *sys, DNPCHNL_RESPONSE_INFO *response);
+void process_class1_response(void* sys, DNPCHNL_RESPONSE_INFO* response);
 
 /**
  * @brief Update timings for class 2 scan. Store incoming data in MDNPSIM_DATABASE
@@ -131,7 +162,7 @@ void process_class1_response(void *sys, DNPCHNL_RESPONSE_INFO *response);
  * @param sys void* pointer to fully initialized GcomSystem for client
  * @param response DNPCHNL_RESPONSE_INFO pointer (filled out by TMW)
  */
-void process_class2_response(void *sys, DNPCHNL_RESPONSE_INFO *response);
+void process_class2_response(void* sys, DNPCHNL_RESPONSE_INFO* response);
 
 /**
  * @brief Update timings for class 3 scan. Store incoming data in MDNPSIM_DATABASE
@@ -143,7 +174,7 @@ void process_class2_response(void *sys, DNPCHNL_RESPONSE_INFO *response);
  * @param sys void* pointer to fully initialized GcomSystem for client
  * @param response DNPCHNL_RESPONSE_INFO pointer (filled out by TMW)
  */
-void process_class3_response(void *sys, DNPCHNL_RESPONSE_INFO *response);
+void process_class3_response(void* sys, DNPCHNL_RESPONSE_INFO* response);
 
 /**
  * @brief Store incoming data in MDNPSIM_DATABASE and queue fims pubs for all input points.
@@ -154,12 +185,7 @@ void process_class3_response(void *sys, DNPCHNL_RESPONSE_INFO *response);
  * @param sys void* pointer to fully initialized GcomSystem for client
  * @param response MDNPSESN_UNSOL_RESP_INFO pointer (filled out by TMW)
  */
-void process_unsolicited_response(void *sys, MDNPSESN_UNSOL_RESP_INFO *response);
-void send_analog_command_callback(void *pSetWork);
-void send_binary_command_callback(void *pSetWork);
-void send_interval_analog_command_callback(void *pSetWork);
-void send_interval_binary_command_callback(void *pSetWork);
-void handle_batch_sets(TMWSIM_POINT *dbPoint, double value);
+void process_unsolicited_response(void* sys, MDNPSESN_UNSOL_RESP_INFO* response);
 
 /**
  * @brief Parse incoming set messages. For each incoming data point, queue a DNP3 command
@@ -176,7 +202,7 @@ void handle_batch_sets(TMWSIM_POINT *dbPoint, double value);
  * sys.fims_dependencies->uri_view corresponds to the current message uri.
  * @pre sys.fims_dependencies->data_buf has been properly initialized
  */
-bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data);
+bool parseBodyClient(GcomSystem& sys, Meta_Data_Info& meta_data);
 
 /**
  * @brief Upon receiving a value via fims, check that the received value is within the dbPoint's
@@ -187,4 +213,4 @@ bool parseBodyClient(GcomSystem &sys, Meta_Data_Info &meta_data);
  * @param dbPoint the TMWSIM_POINT * currently being updated
  * @param value the value that was passed over fims that will be stored in dbPoint->data.analog.value
  */
-void check_limits_client(TMWSIM_POINT *dbPoint, double &value);
+void check_limits_client(TMWSIM_POINT* dbPoint, double& value);

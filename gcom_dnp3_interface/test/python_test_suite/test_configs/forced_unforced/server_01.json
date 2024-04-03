@@ -1,0 +1,487 @@
+{
+    "Client Forced AnOPInt32 Baseline": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_0\":54321}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 54321
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPInt32 Force": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/analog_out_0/_force \nsleep 0.3\n",
+            "fims_send -m set -u /local_client/components/test/analog_out_0 11111\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPInt32 Forced 2": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_0\":54321}'\nsleep 0.3\n"
+        ],
+        "expected": [
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPInt32 Forced 3": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_0\":55432}'\nsleep 0.3\n"
+        ],
+        "expected": [
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPInt32 Forced 4": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/analog_out_0 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPInt32 Unforced": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/analog_out_0/_unforce\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPInt16 Baseline": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_2\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPInt16 Force": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/analog_out_2/_force\nsleep 0.3\n",
+            "fims_send -m set -u /local_client/components/test/analog_out_2 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPInt16 Forced 2": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_2 12345'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPInt16 Forced 3": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_2\":12344}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPInt16 Forced 4": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test '{\"analog_out_2\":333}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPInt16 Unforced": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/analog_out_2/_unforce\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPF32 Baseline": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_4\":12345.1}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 12345.1,
+                        "tolerance":0.001
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPF32 Force": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/analog_out_4/_force\nsleep 0.3\n",
+            "fims_send -m set -u /local_client/components/test/analog_out_4 555.3\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 555.3,
+                        "tolerance":0.001
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPF32 Forced 2": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_4\":12345.3}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPF32 Forced 3": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_4\":12344.3}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPF32 Forced 4": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test '{\"analog_out_4\":333}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 333,
+                        "tolerance":0.001
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced AnOPF32 Unforced": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/analog_out_4/_unforce\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced analogOS Baseline": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_6\":12345.1}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 12345.1,
+                        "tolerance":0.001
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced analogOS Force": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/analog_out_6/_force\nsleep 0.3\n",
+            "fims_send -m set -u /local_client/components/test/analog_out_6 555.3\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 555.3,
+                        "tolerance":0.001
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced analogOS Forced 2": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_6\":12345.3}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced analogOS Forced 3": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_6\":12344.3}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced analogOS Forced 4": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test '{\"analog_out_6\":333}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 333,
+                        "tolerance":0.001
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced analogOS Unforced": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/analog_out_6/_unforce\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced CROB Baseline": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_0\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced CROB Force": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/binary_out_0/_force\nsleep 0.3\n",
+            "fims_send -m set -u /local_client/components/test/binary_out_0 false\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced CROB Forced 2": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_0\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced CROB Forced 3": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_0\":false}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced CROB Forced 4": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test '{\"binary_out_0\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced CROB Unforced": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/binary_out_0/_unforce\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced binaryOS Baseline": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_2\":false}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced binaryOS Force": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/binary_out_2/_force\nsleep 0.3\n",
+            "fims_send -m set -u /local_client/components/test/binary_out_2 true\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced binaryOS Forced 2": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_2\":false}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced binaryOS Forced 3": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_2 true\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced binaryOS Forced 4": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test '{\"binary_out_2\":false}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client Forced binaryOS Unforced": {
+        "commands": [
+            "fims_send -m set -u /local_client/components/test/binary_out_2/_unforce\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "git_commit_hash": null,
+    "git_branch": null,
+    "git_commit_author": null
+}

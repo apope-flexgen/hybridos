@@ -22,8 +22,7 @@
 #include <fims/libfims.h>
 #include <fims/defer.hpp>
 
-extern "C"
-{
+extern "C" {
 #include "tmwscl/utils/tmwsim.h"
 }
 
@@ -70,28 +69,24 @@ enum FimsEventSeverity : uint8_t
 
 struct UriRequest
 {
+    static constexpr auto Reset_Timings_Request_Suffix = "_reset_timings";  // set
+    static constexpr auto Reset_Errors_Request_Suffix = "_reset_errors";    // set
+    static constexpr auto Reload_Request_Suffix = "_reload";                // set
+    static constexpr auto Debug_Suffix = "_debug";                          // set
+    static constexpr auto Force_Suffix = "_force";                          // set
+    static constexpr auto Unforce_Suffix = "_unforce";                      // set
 
-    static constexpr auto Reset_Timings_Request_Suffix = "_reset_timings"; // set
-    static constexpr auto Reset_Errors_Request_Suffix = "_reset_errors";   // set
-    static constexpr auto Reload_Request_Suffix = "_reload";               // set
-    static constexpr auto Debug_Suffix = "_debug";                         // set
-    static constexpr auto Force_Suffix = "_force";                         // set
-    static constexpr auto Unforce_Suffix = "_unforce";                     // set
+    static constexpr auto Points_Suffix = "_points";            // get
+    static constexpr auto Full_Suffix = "_full";                // get
+    static constexpr auto Stats_Suffix = "_stats";              // get
+    static constexpr auto Raw_Request_Suffix = "_raw";          // get
+    static constexpr auto Timings_Request_Suffix = "_timings";  // get
+    static constexpr auto Errors_Request_Suffix = "_errors";    // get
+    static constexpr auto Config_Suffix = "_config";            // get
 
-    static constexpr auto Points_Suffix = "_points";           // get
-    static constexpr auto Full_Suffix = "_full";               // get
-    static constexpr auto Stats_Suffix = "_stats";             // get
-    static constexpr auto Raw_Request_Suffix = "_raw";         // get
-    static constexpr auto Timings_Request_Suffix = "_timings"; // get
-    static constexpr auto Errors_Request_Suffix = "_errors";   // get
-    static constexpr auto Config_Suffix = "_config";           // get
+    UriRequest() { clear_uri(); };
 
-    UriRequest()
-    {
-        clear_uri();
-    };
-
-    void set_uri(std::string_view &uri_view, char *local_uri, int who, FimsMethod method)
+    void set_uri(std::string_view& uri_view, char* local_uri, int who, FimsMethod method)
     {
         clear_uri();
         contains_local_uri = false;
@@ -119,11 +114,11 @@ struct UriRequest
                         is_reload_request = true;
                     else if (uri_frags[idx] == Debug_Suffix)
                         is_debug_request = true;
-                    else if (uri_frags[idx] == Force_Suffix && contains_local_uri && who == DNP3_OUTSTATION)
+                    else if (uri_frags[idx] == Force_Suffix && contains_local_uri)
                     {
                         is_force_request = true;
                     }
-                    else if (uri_frags[idx] == Unforce_Suffix && contains_local_uri && who == DNP3_OUTSTATION)
+                    else if (uri_frags[idx] == Unforce_Suffix && contains_local_uri)
                     {
                         is_unforce_request = true;
                     }
@@ -142,7 +137,8 @@ struct UriRequest
                     {
                         is_points_request = true;
                     }
-                    else if (uri_frags[idx] == Full_Suffix && (who == DNP3_MASTER || (contains_local_uri && who == DNP3_OUTSTATION)))
+                    else if (uri_frags[idx] == Full_Suffix &&
+                             (who == DNP3_MASTER || (contains_local_uri && who == DNP3_OUTSTATION)))
                     {
                         is_full_request = true;
                     }
@@ -151,7 +147,10 @@ struct UriRequest
                 }
             }
         }
-        is_request = is_raw_request || is_timings_request || is_errors_request || is_reset_timings_request || is_reset_errors_request || is_reload_request || is_config_request || is_debug_request || is_force_request || is_unforce_request || is_points_request || is_stats_request; // omit is_full_request because that's handled a little differently
+        is_request = is_raw_request || is_timings_request || is_errors_request || is_reset_timings_request ||
+                     is_reset_errors_request || is_reload_request || is_config_request || is_debug_request ||
+                     is_force_request || is_unforce_request || is_points_request ||
+                     is_stats_request;  // omit is_full_request because that's handled a little differently
     };
 
     void clear_uri()
@@ -174,7 +173,7 @@ struct UriRequest
     }
 
     // Function to split the URI path and store parts into a vector
-    void splitUri(const std::string_view &uri_view)
+    void splitUri(const std::string_view& uri_view)
     {
         size_t start = 0;
         size_t end = uri_view.find('/');
@@ -218,7 +217,7 @@ struct UriRequest
  *
  * @pre fims_gateway is connected to fims
  */
-bool send_pub(fims &fims_gateway, std::string_view uri, std::string_view body) noexcept;
+bool send_pub(fims& fims_gateway, std::string_view uri, std::string_view body) noexcept;
 
 /**
  * @brief Send a fims set to a given uri with a given message body.
@@ -229,7 +228,7 @@ bool send_pub(fims &fims_gateway, std::string_view uri, std::string_view body) n
  *
  * @pre fims_gateway is connected to fims
  */
-bool send_set(fims &fims_gateway, std::string_view uri, std::string_view body) noexcept;
+bool send_set(fims& fims_gateway, std::string_view uri, std::string_view body) noexcept;
 
 /**
  * @brief Send a fims post to a given uri with a given message body.
@@ -240,7 +239,7 @@ bool send_set(fims &fims_gateway, std::string_view uri, std::string_view body) n
  *
  * @pre fims_gateway is connected to fims
  */
-bool send_post(fims &fims_gateway, std::string_view uri, std::string_view body) noexcept;
+bool send_post(fims& fims_gateway, std::string_view uri, std::string_view body) noexcept;
 
 /**
  * @brief Emits an event to /events
@@ -252,7 +251,7 @@ bool send_post(fims &fims_gateway, std::string_view uri, std::string_view body) 
  *
  * @pre fims_gateway is connected to fims
  */
-void emit_event(fims *fims_gateway, const char *source, const char *message, int severity);
+void emit_event(fims* fims_gateway, const char* source, const char* message, int severity);
 
 /**
  * @brief Initialize the receiver buffer for fims, create a subscription string for the system ID (sys.id),
@@ -264,7 +263,7 @@ void emit_event(fims *fims_gateway, const char *source, const char *message, int
  * @pre sys.protocol_dependencies->who, sys.fims_dependencies->data_buf_len, and sys.config_file_name have
  * been set appropriately
  */
-bool init_fims(GcomSystem &sys);
+bool init_fims(GcomSystem& sys);
 
 /**
  * @brief Add a single uri to sys.fims_dependencies->subs
@@ -273,14 +272,14 @@ bool init_fims(GcomSystem &sys);
  * but not necessarily any data points
  * @param name The subscription to add. Must include a '/' as the first character.
  */
-bool add_fims_sub(GcomSystem &sys, std::string name);
+bool add_fims_sub(GcomSystem& sys, std::string name);
 
 /**
  * @brief Print and log the contents of sys.fims_dependencies->subs.
  *
  * @param sys A partially initialized GcomSystem, in which sys.fims_dependencies->subs has been populated
  */
-bool show_fims_subs(GcomSystem &sys);
+bool show_fims_subs(GcomSystem& sys);
 
 /**
  * @brief Connect to fims using sys.fims_dependencies->name and subscribe to all uris in sys.fims_dependencies->subs.
@@ -288,22 +287,23 @@ bool show_fims_subs(GcomSystem &sys);
  * @param sys a GcomSystem with a valid sys.fims_dependencies->name (no spaces) and a valid vector of uris to
  * subscribe to
  */
-bool fims_connect(GcomSystem &sys);
+bool fims_connect(GcomSystem& sys);
 
 /**
  * @brief Parse the value in a key-value pair in a JSON object.
  *
  * Of the format <value> or "value": <value>
  *
- * @param val_clothed In a key-value pair, val_clothed represents the value as an object. This may or may not be valid based
- * on the particular JSON message. (Either this will be valid or curr_val will be valid.) Example: {"value": 5}
+ * @param val_clothed In a key-value pair, val_clothed represents the value as an object. This may or may not be valid
+ * based on the particular JSON message. (Either this will be valid or curr_val will be valid.) Example: {"value": 5}
  * @param curr_val In a key-value pair, curr_val represents the value as a raw value. This may or may not be valid based
  * on the particular JSON message. (Either this will be valid or val_clothed will be valid.) Example: 5
  * @param to_set a Jval_buif that will be se to the value in the json object
  *
  * @pre val_clothed and curr_val contain the results from parsing a simdjson doc object down to a key-value pair
  */
-bool extractValueMulti(GcomSystem &sys, simdjson::simdjson_result<simdjson::fallback::ondemand::object> &val_clothed, simdjson::fallback::ondemand::value &curr_val, Jval_buif &to_set);
+bool extractValueMulti(GcomSystem& sys, simdjson::simdjson_result<simdjson::fallback::ondemand::object>& val_clothed,
+                       simdjson::fallback::ondemand::value& curr_val, Jval_buif& to_set);
 
 /**
  * @brief Parse the value in a single-item JSON message
@@ -311,22 +311,24 @@ bool extractValueMulti(GcomSystem &sys, simdjson::simdjson_result<simdjson::fall
  * Of the format <value> or {"value": <value>}
  *
  * @param sys GcomSystem with sys.fims_dependencies->doc and pre-parsed sys.fims_dependencies->uri_view
- * @param val_clothed In a single-value message, val_clothed represents the value as an object. This may or may not be valid based
- * on the particular JSON message. (Either this will be valid or curr_val will be valid.) Example: {"value": 5}
+ * @param val_clothed In a single-value message, val_clothed represents the value as an object. This may or may not be
+ * valid based on the particular JSON message. (Either this will be valid or curr_val will be valid.) Example: {"value":
+ * 5}
  * @param curr_val In a key-value pair, curr_val represents the value as a raw value. This may or may not be valid based
  * on the particular JSON message. (Either this will be valid or val_clothed will be valid.) Example: 5
  * @param to_set a Jval_buif that will be se to the value in the json object
  *
  * @pre val_clothed and curr_val contain the results from parsing a simdjson doc object down to a key-value pair
  */
-bool extractValueSingle(GcomSystem &sys, simdjson::simdjson_result<simdjson::fallback::ondemand::object> &val_clothed, simdjson::fallback::ondemand::value &curr_val, Jval_buif &to_set);
+bool extractValueSingle(GcomSystem& sys, simdjson::simdjson_result<simdjson::fallback::ondemand::object>& val_clothed,
+                        simdjson::fallback::ondemand::value& curr_val, Jval_buif& to_set);
 
 /**
  * @brief Convert a Jval_buif to a double, regardless of the subtype.
  *
  * @param to_set the Jval_buif to convert to a double
  */
-double jval_to_double(Jval_buif &to_set);
+double jval_to_double(Jval_buif& to_set);
 
 /**
  * @brief Parse header data for an incoming fims message, where data is stored in data_buf.
@@ -341,14 +343,15 @@ double jval_to_double(Jval_buif &to_set);
  * @param data_buf the full data buffer received over fims
  * @param data_buf_len the full length of the received data
  */
-bool parseHeader(GcomSystem &sys, Meta_Data_Info &meta_data, char *data_buf, uint32_t data_buf_len);
-bool processCmds(GcomSystem &sys, Meta_Data_Info &meta_data, void *data_buf, uint32_t data_buf_len);
-bool gcom_recv_raw_message(fims &fims_gateway, Meta_Data_Info &meta_data, void *data_buf, uint32_t data_buf_len) noexcept;
-bool listener_thread(GcomSystem &sys) noexcept;
+bool parseHeader(GcomSystem& sys, Meta_Data_Info& meta_data, char* data_buf, uint32_t data_buf_len);
+bool processCmds(GcomSystem& sys, Meta_Data_Info& meta_data);
+bool gcom_recv_raw_message(fims& fims_gateway, Meta_Data_Info& meta_data, void* data_buf,
+                           uint32_t data_buf_len) noexcept;
+bool listener_thread(GcomSystem& sys) noexcept;
 
 // 1 = multi, 2 = single, 3 = multi output status, 4 = single output status
-int getUriType(GcomSystem &sys, std::string_view uri);
-void replyToFullGet(GcomSystem &sys, fmt::memory_buffer &send_buf);
+int getUriType(GcomSystem& sys, std::string_view uri);
+void replyToFullGet(GcomSystem& sys, fmt::memory_buffer& send_buf);
 
 /**
  * @brief Format a naked TMWSIM_POINT value to a pre-initialized memory buffer.
@@ -362,7 +365,7 @@ void replyToFullGet(GcomSystem &sys, fmt::memory_buffer &send_buf);
  * @param send_buf fmt::memory_buffer to store the output string
  * @param dbPoint TMWSIM_POINT * to a pre-initialized dbPoint
  */
-void formatPointValue(fmt::memory_buffer &send_buf, TMWSIM_POINT *dbPoint);
+void formatPointValue(fmt::memory_buffer& send_buf, TMWSIM_POINT* dbPoint);
 
 /**
  * @brief Generate the message body for the reply to a fims-get on one of the uris
@@ -371,4 +374,4 @@ void formatPointValue(fmt::memory_buffer &send_buf, TMWSIM_POINT *dbPoint);
  * @param sys a fully-initilized GcomSystem with an active TMW session
  * @param send_buf fmt::memory_buffer to store the message body output string
  */
-void replyToGet(GcomSystem &sys, fmt::memory_buffer &send_buf);
+void replyToGet(GcomSystem& sys, fmt::memory_buffer& send_buf);

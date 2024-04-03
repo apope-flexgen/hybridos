@@ -45,7 +45,7 @@
 
 using namespace std;
 
-void toLowercase(char *str)
+void toLowercase(char* str)
 {
     for (int i = 0; str[i] != '\0'; i++)
     {
@@ -53,7 +53,7 @@ void toLowercase(char *str)
     }
 }
 
-bool spam_limit(GcomSystem *sys, int &max_errors)
+bool spam_limit(GcomSystem* sys, int& max_errors)
 {
     sys->error_mutex.lock();
     max_errors++;
@@ -69,30 +69,31 @@ bool spam_limit(GcomSystem *sys, int &max_errors)
 
 // these are the types decoded from the config file
 // must match the typedef sequence
-const char *dreg_types[] = {"AnOPInt16", "AnOPInt32", "AnOPF32", "CROB", "analog", "binary", "analogOS", "binaryOS", "counter", 0};
+const char* dreg_types[] = { "AnOPInt16", "AnOPInt32", "AnOPF32",  "CROB",    "analog",
+                             "binary",    "analogOS",  "binaryOS", "counter", 0 };
 /// @brief
 /// @param fp
-void deleteFlexPoint(void *fp)
+void deleteFlexPoint(void* fp)
 {
     if (fp != nullptr)
     {
-        if (((FlexPoint *)fp)->timeout_timer.pCallbackParam != nullptr)
+        if (((FlexPoint*)fp)->timeout_timer.pCallbackParam != nullptr)
         {
-            tmwtimer_cancel(&((FlexPoint *)fp)->timeout_timer);
-            if ((PointTimeoutStruct *)((FlexPoint *)fp)->timeout_timer.pCallbackParam != nullptr)
+            tmwtimer_cancel(&((FlexPoint*)fp)->timeout_timer);
+            if ((PointTimeoutStruct*)((FlexPoint*)fp)->timeout_timer.pCallbackParam != nullptr)
             {
-                delete (PointTimeoutStruct *)((FlexPoint *)fp)->timeout_timer.pCallbackParam;
+                delete (PointTimeoutStruct*)((FlexPoint*)fp)->timeout_timer.pCallbackParam;
             }
         }
-        if (((FlexPoint *)fp)->set_timer.active)
+        if (((FlexPoint*)fp)->set_timer.active)
         {
-            tmwtimer_cancel(&((FlexPoint *)fp)->set_timer);
+            tmwtimer_cancel(&((FlexPoint*)fp)->set_timer);
         }
-        if (((FlexPoint *)fp)->pub_timer.active)
+        if (((FlexPoint*)fp)->pub_timer.active)
         {
-            tmwtimer_cancel(&((FlexPoint *)fp)->pub_timer);
+            tmwtimer_cancel(&((FlexPoint*)fp)->pub_timer);
         }
-        delete (FlexPoint *)fp;
+        delete (FlexPoint*)fp;
     }
 }
 /// @brief
@@ -103,21 +104,22 @@ void deleteFlexPoint(void *fp)
 /// @param uri
 /// @param variation
 /// @return
-TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset, char *uri, char *variation)
+TMWSIM_POINT* newDbVar(GcomSystem& sys, const char* iname, int type, int offset, char* uri, char* variation)
 {
     if (sys.protocol_dependencies->who == DNP3_OUTSTATION)
     {
-        TMWSIM_POINT *dbPoint;
-        FlexPoint *flexPoint = new FlexPoint(&sys, iname, uri);
-        void *dbHandle = ((SDNPSESN *)(sys.protocol_dependencies->dnp3.pSession))->pDbHandle;
+        TMWSIM_POINT* dbPoint;
+        FlexPoint* flexPoint = new FlexPoint(&sys, iname, uri);
+        void* dbHandle = ((SDNPSESN*)(sys.protocol_dependencies->dnp3.pSession))->pDbHandle;
         if (type == AnIn16)
         {
-            while (sdnpsim_anlgOutGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
+            while (sdnpsim_anlgOutGetPoint(dbHandle, offset) ==
+                   TMWDEFS_NULL)  // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0);
-                dbPoint->enabled = false; // do this by default until we find the point we want
+                dbPoint = (TMWSIM_POINT*)sdnpsim_addAnalogOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0);
+                dbPoint->enabled = false;  // do this by default until we find the point we want
             }
-            dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgOutGetPoint(dbHandle, offset);
             dbPoint->enabled = true;
             dbPoint->defaultStaticVariation = Group40Var2;
             dbPoint->defaultEventVariation = Group42Var2;
@@ -128,12 +130,13 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == AnIn32)
         {
-            while (sdnpsim_anlgOutGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
+            while (sdnpsim_anlgOutGetPoint(dbHandle, offset) ==
+                   TMWDEFS_NULL)  // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0);
-                dbPoint->enabled = false; // do this by default until we find the point we want
+                dbPoint = (TMWSIM_POINT*)sdnpsim_addAnalogOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0);
+                dbPoint->enabled = false;  // do this by default until we find the point we want
             }
-            dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgOutGetPoint(dbHandle, offset);
             dbPoint->enabled = true;
             dbPoint->defaultStaticVariation = Group40Var1;
             dbPoint->defaultEventVariation = Group42Var1;
@@ -144,12 +147,13 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == AnF32)
         {
-            while (sdnpsim_anlgOutGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
+            while (sdnpsim_anlgOutGetPoint(dbHandle, offset) ==
+                   TMWDEFS_NULL)  // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0.0);
-                dbPoint->enabled = false; // do this by default until we find the point we want
+                dbPoint = (TMWSIM_POINT*)sdnpsim_addAnalogOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0.0);
+                dbPoint->enabled = false;  // do this by default until we find the point we want
             }
-            dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgOutGetPoint(dbHandle, offset);
             dbPoint->enabled = true;
             dbPoint->defaultStaticVariation = Group40Var3;
             dbPoint->defaultEventVariation = Group42Var5;
@@ -160,12 +164,13 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == Type_AnalogOS)
         {
-            while (sdnpsim_anlgOutGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
+            while (sdnpsim_anlgOutGetPoint(dbHandle, offset) ==
+                   TMWDEFS_NULL)  // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0.0);
-                dbPoint->enabled = false; // do this by default until we find the point we want
+                dbPoint = (TMWSIM_POINT*)sdnpsim_addAnalogOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0.0);
+                dbPoint->enabled = false;  // do this by default until we find the point we want
             }
-            dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgOutGetPoint(dbHandle, offset);
             dbPoint->enabled = true;
             dbPoint->defaultStaticVariation = Group40Var3;
             dbPoint->defaultEventVariation = Group42Var5;
@@ -176,12 +181,13 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == Type_Analog)
         {
-            while (sdnpsim_anlgInGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
+            while (sdnpsim_anlgInGetPoint(dbHandle, offset) ==
+                   TMWDEFS_NULL)  // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addAnalogInput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0, 0.0);
-                dbPoint->enabled = false; // do this by default until we find the point we want
+                dbPoint = (TMWSIM_POINT*)sdnpsim_addAnalogInput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0, 0.0);
+                dbPoint->enabled = false;  // do this by default until we find the point we want
             }
-            dbPoint = (TMWSIM_POINT *)sdnpsim_anlgInGetPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgInGetPoint(dbHandle, offset);
             dbPoint->enabled = true;
             dbPoint->defaultStaticVariation = Group30Var5;
             dbPoint->defaultEventVariation = Group32Var5;
@@ -191,12 +197,13 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == Type_BinaryOS)
         {
-            while (sdnpsim_binOutGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
+            while (sdnpsim_binOutGetPoint(dbHandle, offset) ==
+                   TMWDEFS_NULL)  // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addBinaryOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0, 15);
-                dbPoint->enabled = false; // do this by default until we find the point we want
+                dbPoint = (TMWSIM_POINT*)sdnpsim_addBinaryOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0, 15);
+                dbPoint->enabled = false;  // do this by default until we find the point we want
             }
-            dbPoint = (TMWSIM_POINT *)sdnpsim_binOutGetPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binOutGetPoint(dbHandle, offset);
             dbPoint->enabled = true;
             dbPoint->defaultStaticVariation = Group10Var1;
             dbPoint->defaultEventVariation = CROB;
@@ -207,12 +214,13 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == Type_Binary)
         {
-            while (sdnpsim_binInGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
+            while (sdnpsim_binInGetPoint(dbHandle, offset) ==
+                   TMWDEFS_NULL)  // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addBinaryInput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, false);
-                dbPoint->enabled = false; // do this by default until we find the point we want
+                dbPoint = (TMWSIM_POINT*)sdnpsim_addBinaryInput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, false);
+                dbPoint->enabled = false;  // do this by default until we find the point we want
             }
-            dbPoint = (TMWSIM_POINT *)sdnpsim_binInGetPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binInGetPoint(dbHandle, offset);
             dbPoint->enabled = true;
             dbPoint->defaultStaticVariation = Group1Var1;
             dbPoint->defaultEventVariation = Group2Var1;
@@ -222,12 +230,13 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == Type_Crob)
         {
-            while (sdnpsim_binOutGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
+            while (sdnpsim_binOutGetPoint(dbHandle, offset) ==
+                   TMWDEFS_NULL)  // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addBinaryOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0, 15);
-                dbPoint->enabled = false; // do this by default until we find the point we want
+                dbPoint = (TMWSIM_POINT*)sdnpsim_addBinaryOutput(dbHandle, 0, DNPDEFS_DBAS_FLAG_RESTART, 0, 15);
+                dbPoint->enabled = false;  // do this by default until we find the point we want
             }
-            dbPoint = (TMWSIM_POINT *)sdnpsim_binOutGetPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binOutGetPoint(dbHandle, offset);
             dbPoint->enabled = true;
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_restart++;
@@ -237,12 +246,13 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         else if (type == Type_Counter)
         {
             // I have no clue why it's called a "binary counter" even though it does uints...
-            while (sdnpsim_binaryCounterGetPoint(dbHandle, offset) == TMWDEFS_NULL) // if the point offset doesn't exist, add a new point
+            while (sdnpsim_binaryCounterGetPoint(dbHandle, offset) ==
+                   TMWDEFS_NULL)  // if the point offset doesn't exist, add a new point
             {
-                dbPoint = (TMWSIM_POINT *)sdnpsim_addBinaryCounter(dbHandle, 0, 0, DNPDEFS_DBAS_FLAG_RESTART, 0);
-                dbPoint->enabled = false; // do this by default until we find the point we want
+                dbPoint = (TMWSIM_POINT*)sdnpsim_addBinaryCounter(dbHandle, 0, 0, DNPDEFS_DBAS_FLAG_RESTART, 0);
+                dbPoint->enabled = false;  // do this by default until we find the point we want
             }
-            dbPoint = (TMWSIM_POINT *)sdnpsim_binaryCounterGetPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binaryCounterGetPoint(dbHandle, offset);
             dbPoint->enabled = true;
             dbPoint->defaultStaticVariation = Group20Var1;
             dbPoint->defaultEventVariation = Group22Var1;
@@ -272,20 +282,20 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
     }
     else
     {
-        TMWSIM_POINT *dbPoint = nullptr;
-        FlexPoint *flexPoint = new FlexPoint(&sys, iname, uri);
-        void *dbHandle = ((MDNPSESN *)(sys.protocol_dependencies->dnp3.pSession))->pDbHandle;
+        TMWSIM_POINT* dbPoint = nullptr;
+        FlexPoint* flexPoint = new FlexPoint(&sys, iname, uri);
+        void* dbHandle = ((MDNPSESN*)(sys.protocol_dependencies->dnp3.pSession))->pDbHandle;
         if (type == AnIn16)
         {
-            dbPoint = (TMWSIM_POINT *)mdnpsim_analogOutputLookupPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)mdnpsim_analogOutputLookupPoint(dbHandle, offset);
             if (dbPoint == TMWDEFS_NULL)
             {
-                dbPoint = (TMWSIM_POINT *)mdnpsim_analogOutputAddPoint(dbHandle, offset);
+                dbPoint = (TMWSIM_POINT*)mdnpsim_analogOutputAddPoint(dbHandle, offset);
             }
             if (dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
                 FPS_ERROR_LOG("Duplicate point offset detected for Analog Output %d", offset);
-                delete (FlexPoint *)(dbPoint->flexPointHandle);
+                delete (FlexPoint*)(dbPoint->flexPointHandle);
             }
             dbPoint->defaultStaticVariation = Group40Var2;
             dbPoint->defaultEventVariation = Group42Var0;
@@ -296,15 +306,15 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == AnIn32)
         {
-            dbPoint = (TMWSIM_POINT *)mdnpsim_analogOutputLookupPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)mdnpsim_analogOutputLookupPoint(dbHandle, offset);
             if (dbPoint == TMWDEFS_NULL)
             {
-                dbPoint = (TMWSIM_POINT *)mdnpsim_analogOutputAddPoint(dbHandle, offset);
+                dbPoint = (TMWSIM_POINT*)mdnpsim_analogOutputAddPoint(dbHandle, offset);
             }
             if (dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
                 FPS_ERROR_LOG("Duplicate point offset detected for Analog Output %d", offset);
-                delete (FlexPoint *)(dbPoint->flexPointHandle);
+                delete (FlexPoint*)(dbPoint->flexPointHandle);
             }
             dbPoint->defaultStaticVariation = Group40Var1;
             dbPoint->defaultEventVariation = Group42Var0;
@@ -315,15 +325,15 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == AnF32)
         {
-            dbPoint = (TMWSIM_POINT *)mdnpsim_analogOutputLookupPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)mdnpsim_analogOutputLookupPoint(dbHandle, offset);
             if (dbPoint == TMWDEFS_NULL)
             {
-                dbPoint = (TMWSIM_POINT *)mdnpsim_analogOutputAddPoint(dbHandle, offset);
+                dbPoint = (TMWSIM_POINT*)mdnpsim_analogOutputAddPoint(dbHandle, offset);
             }
             if (dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
                 FPS_ERROR_LOG("Duplicate point offset detected for Analog Output %d", offset);
-                delete (FlexPoint *)(dbPoint->flexPointHandle);
+                delete (FlexPoint*)(dbPoint->flexPointHandle);
             }
             dbPoint->defaultStaticVariation = Group40Var3;
             dbPoint->defaultEventVariation = Group42Var5;
@@ -334,15 +344,15 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == Type_AnalogOS)
         {
-            dbPoint = (TMWSIM_POINT *)mdnpsim_analogOutputLookupPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)mdnpsim_analogOutputLookupPoint(dbHandle, offset);
             if (dbPoint == TMWDEFS_NULL)
             {
-                dbPoint = (TMWSIM_POINT *)mdnpsim_analogOutputAddPoint(dbHandle, offset);
+                dbPoint = (TMWSIM_POINT*)mdnpsim_analogOutputAddPoint(dbHandle, offset);
             }
             if (dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
                 FPS_ERROR_LOG("Duplicate point offset detected for Analog Output %d", offset);
-                delete (FlexPoint *)(dbPoint->flexPointHandle);
+                delete (FlexPoint*)(dbPoint->flexPointHandle);
             }
             dbPoint->defaultStaticVariation = Group40Var3;
             dbPoint->defaultEventVariation = Group42Var5;
@@ -353,15 +363,15 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == Type_Analog)
         {
-            dbPoint = (TMWSIM_POINT *)mdnpsim_analogInputLookupPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)mdnpsim_analogInputLookupPoint(dbHandle, offset);
             if (dbPoint == TMWDEFS_NULL)
             {
-                dbPoint = (TMWSIM_POINT *)mdnpsim_analogInputAddPoint(dbHandle, offset);
+                dbPoint = (TMWSIM_POINT*)mdnpsim_analogInputAddPoint(dbHandle, offset);
             }
             if (dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
                 FPS_ERROR_LOG("Duplicate point offset detected for Analog Input %d", offset);
-                delete (FlexPoint *)(dbPoint->flexPointHandle);
+                delete (FlexPoint*)(dbPoint->flexPointHandle);
             }
             dbPoint->defaultStaticVariation = Group30Var5;
             dbPoint->defaultEventVariation = Group32Var5;
@@ -371,15 +381,15 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == Type_BinaryOS)
         {
-            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryOutputLookupPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryOutputLookupPoint(dbHandle, offset);
             if (dbPoint == TMWDEFS_NULL)
             {
-                dbPoint = (TMWSIM_POINT *)mdnpsim_binaryOutputAddPoint(dbHandle, offset);
+                dbPoint = (TMWSIM_POINT*)mdnpsim_binaryOutputAddPoint(dbHandle, offset);
             }
             if (dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
                 FPS_ERROR_LOG("Duplicate point offset detected for Binary Output %d", offset);
-                delete (FlexPoint *)(dbPoint->flexPointHandle);
+                delete (FlexPoint*)(dbPoint->flexPointHandle);
             }
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_restart++;
@@ -388,10 +398,10 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == Type_Binary)
         {
-            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryInputLookupPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryInputLookupPoint(dbHandle, offset);
             if (dbPoint == TMWDEFS_NULL)
             {
-                dbPoint = (TMWSIM_POINT *)mdnpsim_binaryInputAddPoint(dbHandle, offset);
+                dbPoint = (TMWSIM_POINT*)mdnpsim_binaryInputAddPoint(dbHandle, offset);
             }
             dbPoint->defaultStaticVariation = Group1Var1;
             dbPoint->defaultEventVariation = Group2Var0;
@@ -401,15 +411,15 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == Type_Crob)
         {
-            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryOutputLookupPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryOutputLookupPoint(dbHandle, offset);
             if (dbPoint == TMWDEFS_NULL)
             {
-                dbPoint = (TMWSIM_POINT *)mdnpsim_binaryOutputAddPoint(dbHandle, offset);
+                dbPoint = (TMWSIM_POINT*)mdnpsim_binaryOutputAddPoint(dbHandle, offset);
             }
             if (dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
                 FPS_ERROR_LOG("Duplicate point offset detected for CROB %d", offset);
-                delete (FlexPoint *)(dbPoint->flexPointHandle);
+                delete (FlexPoint*)(dbPoint->flexPointHandle);
             }
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs++;
             sys.protocol_dependencies->dnp3.point_status_info->num_binary_outputs_restart++;
@@ -418,15 +428,15 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
         }
         else if (type == Type_Counter)
         {
-            dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterLookupPoint(dbHandle, offset);
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryCounterLookupPoint(dbHandle, offset);
             if (dbPoint == TMWDEFS_NULL)
             {
-                dbPoint = (TMWSIM_POINT *)mdnpsim_binaryCounterAddPoint(dbHandle, offset);
+                dbPoint = (TMWSIM_POINT*)mdnpsim_binaryCounterAddPoint(dbHandle, offset);
             }
             if (dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
                 FPS_ERROR_LOG("Duplicate point offset detected for Counter %d", offset);
-                delete (FlexPoint *)(dbPoint->flexPointHandle);
+                delete (FlexPoint*)(dbPoint->flexPointHandle);
             }
             sys.protocol_dependencies->dnp3.point_status_info->num_counters++;
             sys.protocol_dependencies->dnp3.point_status_info->num_counters_restart++;
@@ -461,10 +471,10 @@ TMWSIM_POINT *newDbVar(GcomSystem &sys, const char *iname, int type, int offset,
 /// @param uri
 /// @param name
 /// @return
-TMWSIM_POINT *getDbVar(GcomSystem &sys, std::string_view uri, std::string_view name)
+TMWSIM_POINT* getDbVar(GcomSystem& sys, std::string_view uri, std::string_view name)
 {
-    std::string suri = {uri.begin(), uri.end()};
-    std::map<std::string, varList *>::iterator it = sys.dburiMap.find(suri);
+    std::string suri = { uri.begin(), uri.end() };
+    std::map<std::string, varList*>::iterator it = sys.dburiMap.find(suri);
     if (it != sys.dburiMap.end())
     {
         // dbvar_map
@@ -473,7 +483,7 @@ TMWSIM_POINT *getDbVar(GcomSystem &sys, std::string_view uri, std::string_view n
 
         if (dvar->multi && name.size() > 0)
         {
-            std::map<std::string, TMWSIM_POINT *>::iterator itd = dbm.find({name.begin(), name.end()});
+            std::map<std::string, TMWSIM_POINT*>::iterator itd = dbm.find({ name.begin(), name.end() });
 
             if (itd != dbm.end())
             {
@@ -495,7 +505,7 @@ TMWSIM_POINT *getDbVar(GcomSystem &sys, std::string_view uri, std::string_view n
 
         if (dvar->multi && name.size() > 0)
         {
-            std::map<std::string, TMWSIM_POINT *>::iterator itd = dbm.find({name.begin(), name.end()});
+            std::map<std::string, TMWSIM_POINT*>::iterator itd = dbm.find({ name.begin(), name.end() });
 
             if (itd != dbm.end())
             {
@@ -513,12 +523,12 @@ TMWSIM_POINT *getDbVar(GcomSystem &sys, std::string_view uri, std::string_view n
 
 /// @brief
 /// @param sys
-void showNewUris(GcomSystem &sys)
+void showNewUris(GcomSystem& sys)
 {
     FPS_INFO_LOG(" %s uris===> \n\n", __FUNCTION__);
 
-    std::map<std::string, varList *>::iterator it;
-    std::map<std::string, TMWSIM_POINT *>::iterator itd;
+    std::map<std::string, varList*>::iterator it;
+    std::map<std::string, TMWSIM_POINT*>::iterator itd;
     for (it = sys.dburiMap.begin(); it != sys.dburiMap.end(); ++it)
     {
         FPS_INFO_LOG(" .. uri [%s] num vars %d\n", it->first.c_str(), static_cast<int32_t>(it->second->dbmap.size()));
@@ -540,7 +550,7 @@ void showNewUris(GcomSystem &sys)
 /// @param num
 /// @param who
 /// @return
-int getSubs(GcomSystem &sys, const char **subs, int num, int who)
+int getSubs(GcomSystem& sys, const char** subs, int num, int who)
 {
     if (num < (static_cast<int32_t>(sys.dburiMap.size()) + static_cast<int32_t>(sys.outputStatusUriMap.size())))
     {
@@ -549,7 +559,7 @@ int getSubs(GcomSystem &sys, const char **subs, int num, int who)
     int idx = 0;
     if (subs)
     {
-        std::map<std::string, varList *>::iterator it;
+        std::map<std::string, varList*>::iterator it;
         it = sys.dburiMap.find(sys.base_uri);
         if (it == sys.dburiMap.end())
         {
@@ -596,21 +606,21 @@ int getSubs(GcomSystem &sys, const char **subs, int num, int who)
 /// @param sys
 /// @param uri
 /// @param dbPoint
-void addDbUri(GcomSystem &sys, const char *uri, TMWSIM_POINT *dbPoint)
+void addDbUri(GcomSystem& sys, const char* uri, TMWSIM_POINT* dbPoint)
 {
     if (sys.dburiMap.find(uri) == sys.dburiMap.end())
     {
         sys.dburiMap[uri] = new varList_t(uri);
     }
 
-    varList_t *vl = sys.dburiMap[uri];
+    varList_t* vl = sys.dburiMap[uri];
     vl->multi = true;
     vl->bit = false;
     vl->addDb(dbPoint);
 
     {
         std::string full_uri(uri);
-        full_uri.append("/").append(((FlexPoint *)(dbPoint->flexPointHandle))->name);
+        full_uri.append("/").append(((FlexPoint*)(dbPoint->flexPointHandle))->name);
         if (sys.dburiMap.find(full_uri.c_str()) == sys.dburiMap.end())
         {
             sys.dburiMap[full_uri.c_str()] = new varList_t(full_uri.c_str());
@@ -621,11 +631,12 @@ void addDbUri(GcomSystem &sys, const char *uri, TMWSIM_POINT *dbPoint)
         vl->addDb(dbPoint);
     }
 
-    if (((FlexPoint *)(dbPoint->flexPointHandle))->is_individual_bits)
+    if (((FlexPoint*)(dbPoint->flexPointHandle))->is_individual_bits)
     {
-        for (auto bit : ((FlexPoint *)(dbPoint->flexPointHandle))->dbBits)
+        for (auto bit : ((FlexPoint*)(dbPoint->flexPointHandle))->dbBits)
         {
-            if(bit.first != "Unknown"){
+            if (bit.first != "Unknown")
+            {
                 std::string full_uri(uri);
                 full_uri.append("/").append(bit.first);
                 if (sys.dburiMap.find(full_uri.c_str()) == sys.dburiMap.end())
@@ -641,21 +652,21 @@ void addDbUri(GcomSystem &sys, const char *uri, TMWSIM_POINT *dbPoint)
     }
 };
 
-void addOutputStatusUri(GcomSystem &sys, const char *uri, TMWSIM_POINT *dbPoint)
+void addOutputStatusUri(GcomSystem& sys, const char* uri, TMWSIM_POINT* dbPoint)
 {
     if (sys.outputStatusUriMap.find(uri) == sys.outputStatusUriMap.end())
     {
         sys.outputStatusUriMap[uri] = new varList_t(uri);
     }
 
-    varList_t *vl = sys.outputStatusUriMap[uri];
+    varList_t* vl = sys.outputStatusUriMap[uri];
     vl->multi = true;
     vl->bit = false;
     vl->addDb(dbPoint);
 
     {
         std::string full_uri(uri);
-        full_uri.append("/").append(((FlexPoint *)(dbPoint->flexPointHandle))->name);
+        full_uri.append("/").append(((FlexPoint*)(dbPoint->flexPointHandle))->name);
         if (sys.outputStatusUriMap.find(full_uri.c_str()) == sys.outputStatusUriMap.end())
         {
             sys.outputStatusUriMap[full_uri.c_str()] = new varList_t(full_uri.c_str());
@@ -666,11 +677,12 @@ void addOutputStatusUri(GcomSystem &sys, const char *uri, TMWSIM_POINT *dbPoint)
         vl->addDb(dbPoint);
     }
 
-    if (((FlexPoint *)(dbPoint->flexPointHandle))->is_individual_bits)
+    if (((FlexPoint*)(dbPoint->flexPointHandle))->is_individual_bits)
     {
-        for (auto bit : ((FlexPoint *)(dbPoint->flexPointHandle))->dbBits)
+        for (auto bit : ((FlexPoint*)(dbPoint->flexPointHandle))->dbBits)
         {
-            if(bit.first != "Unknown"){
+            if (bit.first != "Unknown")
+            {
                 std::string full_uri(uri);
                 full_uri.append("/").append(bit.first);
                 if (sys.outputStatusUriMap.find(full_uri.c_str()) == sys.outputStatusUriMap.end())
@@ -689,7 +701,7 @@ void addOutputStatusUri(GcomSystem &sys, const char *uri, TMWSIM_POINT *dbPoint)
 /// @param sys
 /// @param who
 /// @return
-char *getDefUri(GcomSystem &sys, int who)
+char* getDefUri(GcomSystem& sys, int who)
 {
     if (sys.defUri == NULL)
     {
@@ -716,7 +728,7 @@ char *getDefUri(GcomSystem &sys, int who)
 /// @param argv
 /// @param num
 /// @return
-cJSON *get_config_json(int argc, char *argv[], int num)
+cJSON* get_config_json(int argc, char* argv[], int num)
 {
     if (argc <= 1)
     {
@@ -740,9 +752,9 @@ cJSON *get_config_json(int argc, char *argv[], int num)
 /// @brief
 /// @param fname
 /// @return
-cJSON *get_config_file(char *fname)
+cJSON* get_config_file(char* fname)
 {
-    char *newFname;
+    char* newFname;
     if (std::strstr(fname, ".json") == nullptr)
     {
         // Calculate the length for the new string
@@ -778,7 +790,7 @@ cJSON *get_config_file(char *fname)
     t.seekg(0);
     t.read(&buff[0], size);
 
-    cJSON *config = cJSON_Parse(buff.c_str());
+    cJSON* config = cJSON_Parse(buff.c_str());
     if (config == NULL)
         FPS_ERROR_LOG("Invalid JSON object in file");
 
@@ -789,7 +801,7 @@ cJSON *get_config_file(char *fname)
 /// @brief
 /// @param t
 /// @return
-const char *iotypToStr(int t)
+const char* iotypToStr(int t)
 {
     //    if (t < Type_of_Var::NumTypes)
     if (t < static_cast<int32_t>(sizeof(dreg_types)) / static_cast<int32_t>(sizeof(dreg_types[0])))
@@ -801,7 +813,7 @@ const char *iotypToStr(int t)
 /// @brief
 /// @param t
 /// @return
-int iotypToId(const char *t)
+int iotypToId(const char* t)
 {
     int i;
     for (i = 0; i < Type_of_Var::NumTypes; i++)
@@ -815,7 +827,7 @@ int iotypToId(const char *t)
 /// @param ivar
 /// @param type
 /// @return
-int static_variation_decode(const char *ivar, int type)
+int static_variation_decode(const char* ivar, int type)
 {
     if (ivar)
     {
@@ -880,7 +892,7 @@ int static_variation_decode(const char *ivar, int type)
 /// @param ivar
 /// @param type
 /// @return
-int event_variation_decode(const char *ivar, int type)
+int event_variation_decode(const char* ivar, int type)
 {
     if (ivar)
     {
@@ -952,7 +964,7 @@ int event_variation_decode(const char *ivar, int type)
 /// @brief
 /// @param cji
 /// @return
-cJSON *parse_files(cJSON *cji)
+cJSON* parse_files(cJSON* cji)
 {
     return cJSON_GetObjectItem(cji, "files");
 }
@@ -962,10 +974,10 @@ cJSON *parse_files(cJSON *cji)
 /// @param val
 /// @param required
 /// @return
-bool getCJint(cJSON *cj, const char *name, int &val, bool required)
+bool getCJint(cJSON* cj, const char* name, int& val, bool required)
 {
     bool ok = !required;
-    cJSON *cji = cJSON_GetObjectItem(cj, name);
+    cJSON* cji = cJSON_GetObjectItem(cj, name);
     if (cji)
     {
         val = cji->valueint;
@@ -979,10 +991,10 @@ bool getCJint(cJSON *cj, const char *name, int &val, bool required)
 /// @param val
 /// @param required
 /// @return
-bool getCJdouble(cJSON *cj, const char *name, double &val, bool required)
+bool getCJdouble(cJSON* cj, const char* name, double& val, bool required)
 {
     bool ok = !required;
-    cJSON *cji = cJSON_GetObjectItem(cj, name);
+    cJSON* cji = cJSON_GetObjectItem(cj, name);
     if (cji)
     {
         val = cji->valuedouble;
@@ -996,10 +1008,10 @@ bool getCJdouble(cJSON *cj, const char *name, double &val, bool required)
 /// @param val
 /// @param required
 /// @return
-bool getCJbool(cJSON *cj, const char *name, bool &val, bool required)
+bool getCJbool(cJSON* cj, const char* name, bool& val, bool required)
 {
     bool ok = !required;
-    cJSON *cji = cJSON_GetObjectItem(cj, name);
+    cJSON* cji = cJSON_GetObjectItem(cj, name);
     if (cji)
     {
         val = cJSON_IsTrue(cji);
@@ -1013,10 +1025,10 @@ bool getCJbool(cJSON *cj, const char *name, bool &val, bool required)
 /// @param val
 /// @param required
 /// @return
-bool getCJstr(cJSON *cj, const char *name, char *&val, bool required)
+bool getCJstr(cJSON* cj, const char* name, char*& val, bool required)
 {
     bool ok = !required;
-    cJSON *cji = cJSON_GetObjectItem(cj, name);
+    cJSON* cji = cJSON_GetObjectItem(cj, name);
     if (cji)
     {
         val = strdup(cji->valuestring);
@@ -1027,10 +1039,10 @@ bool getCJstr(cJSON *cj, const char *name, char *&val, bool required)
 /// @brief
 /// @param input
 /// @return
-char *parseRegisterName(char *input)
+char* parseRegisterName(char* input)
 {
-    char *lastSlash = nullptr;
-    char *current = input;
+    char* lastSlash = nullptr;
+    char* current = input;
 
     while (*current != '\0')
     {
@@ -1047,15 +1059,15 @@ char *parseRegisterName(char *input)
 /// @brief
 /// @param input
 /// @return
-char *parseFullUri(char *input)
+char* parseFullUri(char* input)
 {
-    char *firstSlash = strchr(input, '/');
-    char *lastSlash = strrchr(input, '/'); // finds last occurrence of character
+    char* firstSlash = strchr(input, '/');
+    char* lastSlash = strrchr(input, '/');  // finds last occurrence of character
 
     if (firstSlash != nullptr && lastSlash != nullptr && lastSlash > firstSlash)
     {
         size_t length = lastSlash - firstSlash;
-        char *result = new char[length + 1];
+        char* result = new char[length + 1];
         strncpy(result, firstSlash, length + 1);
         result[length] = '\0';
         return result;
@@ -1068,25 +1080,25 @@ char *parseFullUri(char *input)
 /// @param sys
 /// @param who
 /// @return
-bool parse_system(cJSON *cji, GcomSystem &sys, int who)
+bool parse_system(cJSON* cji, GcomSystem& sys, int who)
 {
     bool ret = true;
     bool final_ret = true;
-    cJSON *cj = cJSON_GetObjectItem(cji, "system");
+    cJSON* cj = cJSON_GetObjectItem(cji, "system");
 
     if (cj == NULL)
     {
         FPS_ERROR_LOG("system  missing from file!");
         ret = false;
     }
-    sys.protocol_dependencies->who = who; // DNP3_MASTER or DNP3_OUTSTATION
+    sys.protocol_dependencies->who = who;  // DNP3_MASTER or DNP3_OUTSTATION
 
     // todo add different frequencies for each zone -- not there by default, but can be configured
-    sys.protocol_dependencies->frequency = 1000; // default once a second
+    sys.protocol_dependencies->frequency = 1000;  // default once a second
     sys.protocol_dependencies->port = 20000;
     sys.protocol_dependencies->deadband = 0.01;
-    sys.protocol_dependencies->respTime = 30000; // default response time 30 Sec (TMW default)
-    sys.protocol_dependencies->maxElapsed = 100; // default max task elapsed time before we print an error in the log
+    sys.protocol_dependencies->respTime = 30000;  // default response time 30 Sec (TMW default)
+    sys.protocol_dependencies->maxElapsed = 100;  // default max task elapsed time before we print an error in the log
     sys.fims_dependencies->max_pub_delay = 0;
 
     sys.protocol_dependencies->baud = 9600;
@@ -1102,7 +1114,7 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
 
     sys.protocol_dependencies->dnp3.point_status_info = new PointStatusInfo();
 
-    char *tmp_uri = NULL;
+    char* tmp_uri = NULL;
 
     if (ret)
     {
@@ -1279,7 +1291,7 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
         ret = getCJdouble(cj, "timeout", sys.protocol_dependencies->timeout, false);
         if (sys.protocol_dependencies->timeout > 0)
         {
-            sys.protocol_dependencies->timeout *= 1000; // convert to milliseconds (e.g. timeout = 5 s ----> 5000 ms)
+            sys.protocol_dependencies->timeout *= 1000;  // convert to milliseconds (e.g. timeout = 5 s ----> 5000 ms)
         }
         if (sys.protocol_dependencies->timeout == 0)
         {
@@ -1306,7 +1318,7 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
 
     if (ret)
     {
-        char *tmp_fmt = nullptr;
+        char* tmp_fmt = nullptr;
         ret = getCJstr(cj, "format", tmp_fmt, false);
         if (!ret)
         {
@@ -1324,7 +1336,7 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
             {
                 sys.fims_dependencies->format = FimsFormat::Full;
             }
-            else // defaults to naked
+            else  // defaults to naked
             {
                 sys.fims_dependencies->format = FimsFormat::Naked;
             }
@@ -1347,7 +1359,8 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
         ret = getCJint(cj, "event_buffer", sys.protocol_dependencies->dnp3.event_buffer, false);
         if (sys.protocol_dependencies->dnp3.event_buffer <= 0)
         {
-            FPS_ERROR_LOG("Invalid  event buffer  %d  setting to default 100", sys.protocol_dependencies->dnp3.event_buffer);
+            FPS_ERROR_LOG("Invalid  event buffer  %d  setting to default 100",
+                          sys.protocol_dependencies->dnp3.event_buffer);
             sys.protocol_dependencies->dnp3.event_buffer = 100;
         }
     }
@@ -1420,7 +1433,7 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
 
     if (ret)
     {
-        char *protocol_str = nullptr;
+        char* protocol_str = nullptr;
         ret = getCJstr(cj, "protocol", protocol_str, false);
         if (protocol_str != nullptr)
         {
@@ -1439,7 +1452,7 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
     // conn type:
     if (ret)
     {
-        char *conn_str = nullptr;
+        char* conn_str = nullptr;
         ret = getCJstr(cj, "conn_type", conn_str, false);
         if (conn_str != nullptr)
         {
@@ -1848,7 +1861,7 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
 
     // fixup base_uri
     char tmp[1024];
-    const char *sys_id = sys.id;
+    const char* sys_id = sys.id;
 
     if (sys.base_uri)
         free(sys.base_uri);
@@ -1884,62 +1897,78 @@ bool parse_system(cJSON *cji, GcomSystem &sys, int who)
     return final_ret;
 }
 
-int getNumBits(TMWSIM_POINT *dbPoint)
+int getNumBits(TMWSIM_POINT* dbPoint)
 {
-    if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
+    if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
     {
-        if(dbPoint->defaultStaticVariation == 1) {
-            return 31; // technically these are signed integers
-        } else if(dbPoint->defaultStaticVariation == 2) {
-            return 16; // technically these are signed integers
-        } else if(dbPoint->defaultStaticVariation == 3) {
-            return 31; // technically these are signed integers
-        } else if(dbPoint->defaultStaticVariation == 4) {
-            return 16; // technically these are signed integers
-        }else if(dbPoint->defaultStaticVariation == 6) {
-            return 32; // floats
-        }else {
-            return 64; // doubles
-        }
-    }
-    else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS)
-    {
-        if(dbPoint->defaultStaticVariation == 1) {
-            return 31; // technically these are signed integers
-        } else if(dbPoint->defaultStaticVariation == 2) {
-            return 16; // technically these are signed integers
-        } else if(dbPoint->defaultStaticVariation == 3) {
-            return 32; // floats
-        } else {
-            return 64; // doubles
-        }
-    }
-    else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16)
-    {
-        return 15; // technically these are signed integers
-    }
-    else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32)
-    {
-        return 31; // technically these are signed integers
-    }
-    else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32)
-    {
-        return 32; // this is kind of a weird situation, so I don't know if we would really use this...
-    }
-    else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
-    {
-        if (dbPoint->defaultStaticVariation == 1 ||
-            dbPoint->defaultStaticVariation == 3 ||
-            dbPoint->defaultStaticVariation == 5 ||
-            dbPoint->defaultStaticVariation == 7)
+        if (dbPoint->defaultStaticVariation == 1)
         {
-            return 32; // uint32
+            return 31;  // technically these are signed integers
         }
-        return 16; // uint16
+        else if (dbPoint->defaultStaticVariation == 2)
+        {
+            return 16;  // technically these are signed integers
+        }
+        else if (dbPoint->defaultStaticVariation == 3)
+        {
+            return 31;  // technically these are signed integers
+        }
+        else if (dbPoint->defaultStaticVariation == 4)
+        {
+            return 16;  // technically these are signed integers
+        }
+        else if (dbPoint->defaultStaticVariation == 6)
+        {
+            return 32;  // floats
+        }
+        else
+        {
+            return 64;  // doubles
+        }
     }
-    else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Binary ||
-             ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
-             ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB)
+    else if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS)
+    {
+        if (dbPoint->defaultStaticVariation == 1)
+        {
+            return 31;  // technically these are signed integers
+        }
+        else if (dbPoint->defaultStaticVariation == 2)
+        {
+            return 16;  // technically these are signed integers
+        }
+        else if (dbPoint->defaultStaticVariation == 3)
+        {
+            return 32;  // floats
+        }
+        else
+        {
+            return 64;  // doubles
+        }
+    }
+    else if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16)
+    {
+        return 15;  // technically these are signed integers
+    }
+    else if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32)
+    {
+        return 31;  // technically these are signed integers
+    }
+    else if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32)
+    {
+        return 32;  // this is kind of a weird situation, so I don't know if we would really use this...
+    }
+    else if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+    {
+        if (dbPoint->defaultStaticVariation == 1 || dbPoint->defaultStaticVariation == 3 ||
+            dbPoint->defaultStaticVariation == 5 || dbPoint->defaultStaticVariation == 7)
+        {
+            return 32;  // uint32
+        }
+        return 16;  // uint16
+    }
+    else if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::Binary ||
+             ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+             ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::CROB)
     {
         return 1;
     }
@@ -1951,17 +1980,18 @@ int getNumBits(TMWSIM_POINT *dbPoint)
 /// @param dbPoint
 /// @param bits
 /// @return
-int addBits(GcomSystem &sys, TMWSIM_POINT *dbPoint, cJSON *bits)
+int addBits(GcomSystem& sys, TMWSIM_POINT* dbPoint, cJSON* bits)
 {
     int asiz = cJSON_GetArraySize(bits);
     int num_bits = getNumBits(dbPoint);
-    if (asiz > num_bits) {
+    if (asiz > num_bits)
+    {
         asiz = num_bits;
     }
 
     for (int i = 0; i < asiz; i++)
     {
-        cJSON *cji = cJSON_GetArrayItem(bits, i);
+        cJSON* cji = cJSON_GetArrayItem(bits, i);
         std::string bitstring = "Unknown";
 
         if (cJSON_IsString(cji))
@@ -1969,28 +1999,30 @@ int addBits(GcomSystem &sys, TMWSIM_POINT *dbPoint, cJSON *bits)
             bitstring = cji->valuestring;
         }
 
-        if(bitstring == "IGNORE") {
+        if (bitstring == "IGNORE")
+        {
             bitstring = "Unknown";
         }
 
         // add bit
-        ((FlexPoint *)(dbPoint->flexPointHandle))->dbBits.push_back(std::pair<std::string, int>(bitstring,i));
+        ((FlexPoint*)(dbPoint->flexPointHandle))->dbBits.push_back(std::pair<std::string, int>(bitstring, i));
     }
     return asiz;
 }
 
-int addEnum(GcomSystem &sys, TMWSIM_POINT *dbPoint, cJSON *bits)
+int addEnum(GcomSystem& sys, TMWSIM_POINT* dbPoint, cJSON* bits)
 {
     int asiz = cJSON_GetArraySize(bits);
     int num_bits = getNumBits(dbPoint);
-    if (num_bits > 0 && num_bits < 31 && asiz > (1 << num_bits) ) {
+    if (num_bits > 0 && num_bits < 31 && asiz > (1 << num_bits))
+    {
         asiz = 1 << num_bits;
     }
 
     int bit_value = 0;
     for (int i = 0; i < asiz; i++)
     {
-        cJSON *cji = cJSON_GetArrayItem(bits, i);
+        cJSON* cji = cJSON_GetArrayItem(bits, i);
 
         std::string bitstring = "Unknown";
         if (cJSON_IsObject(cji))
@@ -2009,11 +2041,12 @@ int addEnum(GcomSystem &sys, TMWSIM_POINT *dbPoint, cJSON *bits)
         {
             bitstring = cji->valuestring;
         }
-        if(bitstring == "IGNORE") {
+        if (bitstring == "IGNORE")
+        {
             bitstring = "Unknown";
         }
 
-        ((FlexPoint *)(dbPoint->flexPointHandle))->dbBits.push_back(std::pair<std::string, int>(bitstring,bit_value));
+        ((FlexPoint*)(dbPoint->flexPointHandle))->dbBits.push_back(std::pair<std::string, int>(bitstring, bit_value));
 
         bit_value++;
     }
@@ -2026,15 +2059,15 @@ int addEnum(GcomSystem &sys, TMWSIM_POINT *dbPoint, cJSON *bits)
 /// @param type
 /// @param who
 /// @return
-bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
+bool parse_items(GcomSystem& sys, cJSON* objs, int type, int who)
 {
-    cJSON *obj;
+    cJSON* obj;
     int mytype = type;
 
     cJSON_ArrayForEach(obj, objs)
     {
         cJSON *id, *offset, *uri, *variation;
-        cJSON *evariation, *class_num, *rsize; //, *sign;
+        cJSON *evariation, *class_num, *rsize;  //, *sign;
         cJSON *scale, *cjidx, *cjcfalse, *opvar, *deadband;
         cJSON *cjfmt, *cjtout;
         cJSON *cjcstring, *cjctrue, *cjcint, *event_pub;
@@ -2052,7 +2085,7 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
         }
 
         // standard stuff
-        id = cJSON_GetObjectItem(obj, "id"); // note that id translates to name
+        id = cJSON_GetObjectItem(obj, "id");  // note that id translates to name
         cjidx = cJSON_GetObjectItem(obj, "idx");
         offset = cJSON_GetObjectItem(obj, "offset");
         rsize = cJSON_GetObjectItem(obj, "size");
@@ -2069,15 +2102,15 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
         // sign = cJSON_GetObjectItem(obj, "signed");
         scale = cJSON_GetObjectItem(obj, "scale");
         deadband = cJSON_GetObjectItem(obj, "deadband");
-        opvar = cJSON_GetObjectItem(obj, "OPvar"); // 1 = 16 bit , 2 = 32 bit , 3 float32
+        opvar = cJSON_GetObjectItem(obj, "OPvar");  // 1 = 16 bit , 2 = 32 bit , 3 float32
         cjfmt = cJSON_GetObjectItem(obj, "format");
         cjtout = cJSON_GetObjectItem(obj, "timeout");
 
         // allows more detailed manipulation of the crob type
-        cjcstring = cJSON_GetObjectItem(obj, "crob_string"); // true / false
-        cjctrue = cJSON_GetObjectItem(obj, "crob_true");     // string like POWER_ON
-        cjcfalse = cJSON_GetObjectItem(obj, "crob_false");   // string like POWER_OFF
-        cjcint = cJSON_GetObjectItem(obj, "crob_int");       // true / false
+        cjcstring = cJSON_GetObjectItem(obj, "crob_string");  // true / false
+        cjctrue = cJSON_GetObjectItem(obj, "crob_true");      // string like POWER_ON
+        cjcfalse = cJSON_GetObjectItem(obj, "crob_false");    // string like POWER_OFF
+        cjcint = cJSON_GetObjectItem(obj, "crob_int");        // true / false
 
         // stuff for outputs
         batch_set_rate = cJSON_GetObjectItem(obj, "batch_set_rate");
@@ -2120,18 +2153,18 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
         {
             switch (opvar->valueint)
             {
-            case 1:
-                mytype = AnIn16;
-                break;
-            case 2:
-                mytype = AnIn32;
-                break;
-            case 3:
-                mytype = AnF32;
-                break;
-            default:
-                mytype = AnIn32;
-                break;
+                case 1:
+                    mytype = AnIn16;
+                    break;
+                case 2:
+                    mytype = AnIn32;
+                    break;
+                case 3:
+                    mytype = AnF32;
+                    break;
+                default:
+                    mytype = AnIn32;
+                    break;
             }
         }
 
@@ -2140,14 +2173,13 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
         // we can have the same TMWSIM_POINT name for different uris.
         // incoming messages from master only know type (AnIn16,AnIn32,AF32,CROB) and offset.
         // for these items offset is still set by the config file.
-        // The return path from outstation to master still has type an index. The system has changed to use the offset from the conig file here too.
-        // so we can no longer use the vector position as an index.
-        // items are added from the config file against a registered uri ot the default one.
-        // pubs, gets and sets from FIMS ues a combination of URI + var name to find vars.
-        // data incoming from master to outstation will use type and offset to find the variable.
-        // each type will have a map <int,TMWSIM_POINT *> to search
-        // Data base for the outstation vars (analog and binary) will no longer use the vector size but max offset as dbPoint size ????
-        // the <int , TMWSIM_POINT *> map can also  be used for these vars
+        // The return path from outstation to master still has type an index. The system has changed to use the offset
+        // from the conig file here too. so we can no longer use the vector position as an index. items are added from
+        // the config file against a registered uri ot the default one. pubs, gets and sets from FIMS ues a combination
+        // of URI + var name to find vars. data incoming from master to outstation will use type and offset to find the
+        // variable. each type will have a map <int,TMWSIM_POINT *> to search Data base for the outstation vars (analog
+        // and binary) will no longer use the vector size but max offset as dbPoint size ???? the <int , TMWSIM_POINT *>
+        // map can also  be used for these vars
         //
         // Get this going as follows
         //   1.. parse config file using the uri's.
@@ -2170,223 +2202,240 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
         if (mytype == AnF32)
         {
             if (sys.debug)
-                FPS_DEBUG_LOG("****** AF32 variable [%s] vidx %d",
-                              id->valuestring, vidx);
+                FPS_DEBUG_LOG("****** AF32 variable [%s] vidx %d", id->valuestring, vidx);
         }
         if (sys.debug)
-            FPS_DEBUG_LOG("****** mtype %d xxvariable [%s] vidx %d debug %d",
-                          mytype, id->valuestring, vidx, sys.debug);
+            FPS_DEBUG_LOG("****** mtype %d xxvariable [%s] vidx %d debug %d", mytype, id->valuestring, vidx, sys.debug);
         // set up name uri
-        char *nuri = getDefUri(sys, who);
+        char* nuri = getDefUri(sys, who);
         if (uri && uri->valuestring)
         {
             nuri = uri->valuestring;
         }
 
-        TMWSIM_POINT *dbPoint = newDbVar(sys, id->valuestring, mytype, vidx,
-                                         nuri, variation ? variation->valuestring : NULL);
+        TMWSIM_POINT* dbPoint = newDbVar(sys, id->valuestring, mytype, vidx, nuri,
+                                         variation ? variation->valuestring : NULL);
         if (dbPoint != NULL)
         {
             size_t id_len = strlen(id->valuestring);
-            if (sys.watchdog && (id_len == strlen(sys.watchdog->id)) && (strcmp(id->valuestring, sys.watchdog->id) == 0))
+            if (sys.watchdog && (id_len == strlen(sys.watchdog->id)) &&
+                (strcmp(id->valuestring, sys.watchdog->id) == 0))
             {
                 sys.watchdog->io_point = dbPoint;
             }
-            if (sys.heartbeat && (id_len == strlen(sys.heartbeat->heartbeat_read_uri)) && (strcmp(id->valuestring, sys.heartbeat->heartbeat_read_uri) == 0))
+            if (sys.heartbeat && (id_len == strlen(sys.heartbeat->heartbeat_read_uri)) &&
+                (strcmp(id->valuestring, sys.heartbeat->heartbeat_read_uri) == 0))
             {
                 sys.heartbeat->heartbeat_read_point = dbPoint;
             }
-            if (sys.heartbeat && (id_len == strlen(sys.heartbeat->heartbeat_write_uri)) && (strcmp(id->valuestring, sys.heartbeat->heartbeat_write_uri) == 0))
+            if (sys.heartbeat && (id_len == strlen(sys.heartbeat->heartbeat_write_uri)) &&
+                (strcmp(id->valuestring, sys.heartbeat->heartbeat_write_uri) == 0))
             {
                 sys.heartbeat->heartbeat_write_point = dbPoint;
             }
-            ((FlexPoint *)(dbPoint->flexPointHandle))->format = sys.fims_dependencies->format;
+            ((FlexPoint*)(dbPoint->flexPointHandle))->format = sys.fims_dependencies->format;
 
             if (event_pub)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub = cJSON_IsTrue(event_pub);
+                ((FlexPoint*)(dbPoint->flexPointHandle))->event_pub = cJSON_IsTrue(event_pub);
             }
             else
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub = sys.protocol_dependencies->dnp3.event_pub;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->event_pub = sys.protocol_dependencies->dnp3.event_pub;
             }
 
-            if (show_output_status && (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
-                                       ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
-                                       ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
-                                       ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||
-                                       ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
-                                       ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB))
+            if (show_output_status && (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
+                                       ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+                                       ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+                                       ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||
+                                       ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+                                       ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::CROB))
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->show_output_status = cJSON_IsTrue(show_output_status);
+                ((FlexPoint*)(dbPoint->flexPointHandle))->show_output_status = cJSON_IsTrue(show_output_status);
                 if (output_status_uri)
                 {
-                    ((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri = strdup(output_status_uri->valuestring);
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->output_status_uri = strdup(
+                        output_status_uri->valuestring);
                 }
                 else if (sys.protocol_dependencies->dnp3.output_status_uri)
                 {
-                    ((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri = strdup(sys.protocol_dependencies->dnp3.output_status_uri);
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->output_status_uri = strdup(
+                        sys.protocol_dependencies->dnp3.output_status_uri);
                 }
             }
-            else if (sys.protocol_dependencies->dnp3.show_output_status && (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
-                                                                            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
-                                                                            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
-                                                                            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||
-                                                                            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
-                                                                            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB))
+            else if (sys.protocol_dependencies->dnp3.show_output_status &&
+                     (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
+                      ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+                      ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+                      ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||
+                      ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+                      ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::CROB))
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->show_output_status = sys.protocol_dependencies->dnp3.show_output_status;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->show_output_status = sys.protocol_dependencies->dnp3
+                                                                                   .show_output_status;
                 if (output_status_uri)
                 {
-                    ((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri = strdup(output_status_uri->valuestring);
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->output_status_uri = strdup(
+                        output_status_uri->valuestring);
                 }
                 else if (sys.protocol_dependencies->dnp3.output_status_uri)
                 {
-                    ((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri = strdup(sys.protocol_dependencies->dnp3.output_status_uri);
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->output_status_uri = strdup(
+                        sys.protocol_dependencies->dnp3.output_status_uri);
                 }
             }
-            if (((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri)
+            if (((FlexPoint*)(dbPoint->flexPointHandle))->output_status_uri)
             {
-                addOutputStatusUri(sys, ((FlexPoint *)(dbPoint->flexPointHandle))->output_status_uri, dbPoint);
+                addOutputStatusUri(sys, ((FlexPoint*)(dbPoint->flexPointHandle))->output_status_uri, dbPoint);
             }
             else
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->show_output_status = false;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->show_output_status = false;
             }
 
-            if (resend_tolerance && (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
-                                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
-                                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
-                                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||
-                                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
-                                     ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB))
+            if (resend_tolerance && (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
+                                     ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+                                     ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+                                     ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||
+                                     ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+                                     ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::CROB))
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->resend_tolerance = resend_tolerance->valuedouble;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->resend_tolerance = resend_tolerance->valuedouble;
                 if (resend_rate_ms)
                 {
-                    ((FlexPoint *)(dbPoint->flexPointHandle))->resend_rate_ms = resend_rate_ms->valuedouble;
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->resend_rate_ms = resend_rate_ms->valuedouble;
                 }
                 else if (sys.protocol_dependencies->dnp3.resend_rate_ms)
                 {
-                    ((FlexPoint *)(dbPoint->flexPointHandle))->resend_rate_ms = sys.protocol_dependencies->dnp3.resend_rate_ms;
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->resend_rate_ms = sys.protocol_dependencies->dnp3
+                                                                                   .resend_rate_ms;
                 }
             }
-            else if (sys.protocol_dependencies->dnp3.show_output_status && (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
-                                                                            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
-                                                                            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
-                                                                            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||
-                                                                            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
-                                                                            ((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::CROB))
+            else if (sys.protocol_dependencies->dnp3.resend_tolerance &&
+                     (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnalogOS ||
+                      ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt32 ||
+                      ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPInt16 ||
+                      ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::AnOPF32 ||
+                      ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::BinaryOS ||
+                      ((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::CROB))
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->resend_tolerance = sys.protocol_dependencies->dnp3.resend_tolerance;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->resend_tolerance = sys.protocol_dependencies->dnp3
+                                                                                 .resend_tolerance;
                 if (resend_rate_ms)
                 {
-                    ((FlexPoint *)(dbPoint->flexPointHandle))->resend_rate_ms = resend_rate_ms->valuedouble;
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->resend_rate_ms = resend_rate_ms->valuedouble;
                 }
                 else if (sys.protocol_dependencies->dnp3.resend_rate_ms)
                 {
-                    ((FlexPoint *)(dbPoint->flexPointHandle))->resend_rate_ms = sys.protocol_dependencies->dnp3.resend_rate_ms;
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->resend_rate_ms = sys.protocol_dependencies->dnp3
+                                                                                   .resend_rate_ms;
                 }
             }
 
             // batch set rate
             if (batch_set_rate && batch_set_rate->valueint > 0)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->batch_sets = true;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->batch_set_rate = batch_set_rate->valueint;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->batch_sets = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->batch_set_rate = batch_set_rate->valueint;
             }
             else if (sys.protocol_dependencies->dnp3.batch_set_rate > 0)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->batch_sets = true;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->batch_set_rate = sys.protocol_dependencies->dnp3.batch_set_rate;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->batch_sets = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->batch_set_rate = sys.protocol_dependencies->dnp3
+                                                                               .batch_set_rate;
             }
             else
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->batch_sets = false;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->batch_set_rate = 0;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->batch_sets = false;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->batch_set_rate = 0;
             }
 
             // interval set rate
             if (interval_set_rate && interval_set_rate->valueint > 0)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_sets = true;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_set_rate = interval_set_rate->valueint;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_sets = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_set_rate = interval_set_rate->valueint;
             }
             else if (sys.protocol_dependencies->dnp3.interval_set_rate > 0)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_sets = true;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_set_rate = sys.protocol_dependencies->dnp3.interval_set_rate;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_sets = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_set_rate = sys.protocol_dependencies->dnp3
+                                                                                  .interval_set_rate;
             }
             else
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_sets = false;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_set_rate = 0;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_sets = false;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_set_rate = 0;
             }
 
             // batch pub rate
             if (batch_pub_rate && batch_pub_rate->valueint > 0)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->batch_pubs = true;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->batch_pub_rate = batch_pub_rate->valueint;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->batch_pubs = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->batch_pub_rate = batch_pub_rate->valueint;
             }
             else if (sys.protocol_dependencies->dnp3.batch_pub_rate > 0)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->batch_pubs = true;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->batch_pub_rate = sys.protocol_dependencies->dnp3.batch_pub_rate;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->batch_pubs = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->batch_pub_rate = sys.protocol_dependencies->dnp3
+                                                                               .batch_pub_rate;
             }
             else
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->batch_pubs = false;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->batch_pub_rate = 0;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->batch_pubs = false;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->batch_pub_rate = 0;
             }
 
             // interval pub rate
             if (interval_pub_rate && interval_pub_rate->valueint > 0)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pubs = true;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate = interval_pub_rate->valueint;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pubs = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pub_rate = interval_pub_rate->valueint;
                 if (sys.heartbeat && sys.heartbeat->heartbeat_read_point == dbPoint)
                 {
-                    ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub = true;
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->event_pub = true;
                 }
             }
             else if (sys.protocol_dependencies->dnp3.interval_pub_rate > 0)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pubs = true;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate = sys.protocol_dependencies->dnp3.interval_pub_rate;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pubs = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pub_rate = sys.protocol_dependencies->dnp3
+                                                                                  .interval_pub_rate;
                 if (sys.heartbeat && sys.heartbeat->heartbeat_read_point == dbPoint)
                 {
-                    ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub = true;
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->event_pub = true;
                 }
             }
             else if (sys.heartbeat && sys.heartbeat->frequency > 0 && sys.heartbeat->heartbeat_read_point == dbPoint)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pubs = true;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate = sys.heartbeat->frequency;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->event_pub = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pubs = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pub_rate = sys.heartbeat->frequency;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->event_pub = true;
             }
-            else if (((FlexPoint *)(dbPoint->flexPointHandle))->interval_pubs)
+            else if (((FlexPoint*)(dbPoint->flexPointHandle))->interval_pubs)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pubs = false;
-                ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate = 0;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pubs = false;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pub_rate = 0;
             }
 
-            if (!((FlexPoint *)(dbPoint->flexPointHandle))->interval_pubs && !((FlexPoint *)(dbPoint->flexPointHandle))->batch_pubs)
+            if (!((FlexPoint*)(dbPoint->flexPointHandle))->interval_pubs &&
+                !((FlexPoint*)(dbPoint->flexPointHandle))->batch_pubs)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->direct_pubs = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->direct_pubs = true;
             }
             else
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->direct_pubs = false;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->direct_pubs = false;
             }
 
-            if (!((FlexPoint *)(dbPoint->flexPointHandle))->interval_sets && !((FlexPoint *)(dbPoint->flexPointHandle))->batch_sets)
+            if (!((FlexPoint*)(dbPoint->flexPointHandle))->interval_sets &&
+                !((FlexPoint*)(dbPoint->flexPointHandle))->batch_sets)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->direct_sets = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->direct_sets = true;
             }
             else
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->direct_sets = false;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->direct_sets = false;
             }
 
             if (cjfmt)
@@ -2396,36 +2445,36 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
                     std::string fmt = cjfmt->valuestring;
                     if (fmt == "clothed")
                     {
-                        ((FlexPoint *)(dbPoint->flexPointHandle))->format = FimsFormat::Clothed;
+                        ((FlexPoint*)(dbPoint->flexPointHandle))->format = FimsFormat::Clothed;
                     }
                     else if (fmt == "full")
                     {
-                        ((FlexPoint *)(dbPoint->flexPointHandle))->format = FimsFormat::Full;
+                        ((FlexPoint*)(dbPoint->flexPointHandle))->format = FimsFormat::Full;
                     }
-                    else // defaults to naked
+                    else  // defaults to naked
                     {
-                        ((FlexPoint *)(dbPoint->flexPointHandle))->format = FimsFormat::Naked;
+                        ((FlexPoint*)(dbPoint->flexPointHandle))->format = FimsFormat::Naked;
                     }
                 }
             }
             if (cjcstring)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->crob_string = (cjcstring->type == cJSON_True);
+                ((FlexPoint*)(dbPoint->flexPointHandle))->crob_string = (cjcstring->type == cJSON_True);
             }
 
             if (cjcint)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->crob_int = (cjcint->type == cJSON_True);
+                ((FlexPoint*)(dbPoint->flexPointHandle))->crob_int = (cjcint->type == cJSON_True);
             }
 
             if (cjctrue && cjctrue->valuestring)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->crob_true = strdup(cjctrue->valuestring);
+                ((FlexPoint*)(dbPoint->flexPointHandle))->crob_true = strdup(cjctrue->valuestring);
             }
 
             if (cjcfalse && cjcfalse->valuestring)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->crob_false = strdup(cjcfalse->valuestring);
+                ((FlexPoint*)(dbPoint->flexPointHandle))->crob_false = strdup(cjcfalse->valuestring);
             }
         }
         if (dbPoint != NULL)
@@ -2445,13 +2494,13 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
 
             if (cjtout)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->timeout = cjtout->valuedouble;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->timeout = cjtout->valuedouble;
             }
             else
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->timeout = sys.protocol_dependencies->timeout;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->timeout = sys.protocol_dependencies->timeout;
             }
-            tmwtimer_init(&((FlexPoint *)dbPoint->flexPointHandle)->timeout_timer);
+            tmwtimer_init(&((FlexPoint*)dbPoint->flexPointHandle)->timeout_timer);
             // if (((FlexPoint *)(dbPoint->flexPointHandle))->timeout == 0)
             // {
             //     dbPoint->flags = 0;
@@ -2462,79 +2511,89 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
             // }
 
             // for batching pubs
-            tmwtimer_init(&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer);
+            tmwtimer_init(&((FlexPoint*)(dbPoint->flexPointHandle))->pub_timer);
 
             // set work stuff
-            tmwtimer_init(&((FlexPoint *)(dbPoint->flexPointHandle))->set_timer);
-            ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_uri.clear();
-            FORMAT_TO_BUF(((FlexPoint *)(dbPoint->flexPointHandle))->set_work.send_uri, R"({}/{})", ((FlexPoint *)(dbPoint->flexPointHandle))->uri, ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
-            ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.dbPoint = dbPoint;
-            ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value = 0.0;
+            tmwtimer_init(&((FlexPoint*)(dbPoint->flexPointHandle))->set_timer);
+            ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.send_uri.clear();
+            FORMAT_TO_BUF(((FlexPoint*)(dbPoint->flexPointHandle))->set_work.send_uri, R"({}/{})",
+                          ((FlexPoint*)(dbPoint->flexPointHandle))->uri,
+                          ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+            ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.dbPoint = dbPoint;
+            ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.value = 0.0;
 
             if (class_num)
             {
                 if (class_num->valueint >= 1)
-                    dbPoint->classMask = 1 << (class_num->valueint - 1); // can be any value from 1 to 3
+                    dbPoint->classMask = 1 << (class_num->valueint - 1);  // can be any value from 1 to 3
                 else
                     dbPoint->classMask = 0;
                 if (sys.debug)
-                    FPS_DEBUG_LOG("****** variable [%s] set to class_num %d", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), dbPoint->classMask);
+                    FPS_DEBUG_LOG("****** variable [%s] set to class_num %d",
+                                  ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(), dbPoint->classMask);
             }
 
             // if (sign)
             // {
             //     ((FlexPoint *)(dbPoint->flexPointHandle))->sign = (sign->type == cJSON_True);
             //     if (sys.debug)
-            //         FPS_DEBUG_LOG("****** variable [%s] set to signed %d", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), ((FlexPoint *)(dbPoint->flexPointHandle))->sign);
+            //         FPS_DEBUG_LOG("****** variable [%s] set to signed %d", ((FlexPoint
+            //         *)(dbPoint->flexPointHandle))->name.c_str(), ((FlexPoint *)(dbPoint->flexPointHandle))->sign);
             // }
             // else
             // {
             //     ((FlexPoint *)(dbPoint->flexPointHandle))->sign = sys.protocol_dependencies->dnp3.sign;
             //     if (sys.debug)
-            //         FPS_DEBUG_LOG("****** variable [%s] set to signed %d", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), ((FlexPoint *)(dbPoint->flexPointHandle))->sign);
+            //         FPS_DEBUG_LOG("****** variable [%s] set to signed %d", ((FlexPoint
+            //         *)(dbPoint->flexPointHandle))->name.c_str(), ((FlexPoint *)(dbPoint->flexPointHandle))->sign);
             // }
 
             if (scale)
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->scale = (scale->valuedouble);
+                ((FlexPoint*)(dbPoint->flexPointHandle))->scale = (scale->valuedouble);
                 if (sys.debug)
 
-                    FPS_DEBUG_LOG("****** variable [%s] scale set %f", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str(), ((FlexPoint *)(dbPoint->flexPointHandle))->scale);
+                    FPS_DEBUG_LOG("****** variable [%s] scale set %f",
+                                  ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(),
+                                  ((FlexPoint*)(dbPoint->flexPointHandle))->scale);
             }
             else
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->scale = 0;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->scale = 0;
             }
 
             if (is_bitfield && bitstrings && (bitstrings->type == cJSON_Array))
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->is_bitfield = (is_bitfield->type == cJSON_True);
-                if (((FlexPoint *)(dbPoint->flexPointHandle))->is_bitfield)
+                ((FlexPoint*)(dbPoint->flexPointHandle))->is_bitfield = (is_bitfield->type == cJSON_True);
+                if (((FlexPoint*)(dbPoint->flexPointHandle))->is_bitfield)
                 {
                     if (sys.debug)
-                        FPS_DEBUG_LOG("*****************Adding bitfields for %s", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
+                        FPS_DEBUG_LOG("*****************Adding bitfields for %s",
+                                      ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
                     addBits(sys, dbPoint, bitstrings);
                 }
             }
 
             if (is_enum && bitstrings && (bitstrings->type == cJSON_Array))
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->is_enum = (is_enum->type == cJSON_True);
-                if (((FlexPoint *)(dbPoint->flexPointHandle))->is_enum)
+                ((FlexPoint*)(dbPoint->flexPointHandle))->is_enum = (is_enum->type == cJSON_True);
+                if (((FlexPoint*)(dbPoint->flexPointHandle))->is_enum)
                 {
                     if (sys.debug)
-                        FPS_DEBUG_LOG("*****************Adding enum for %s", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
+                        FPS_DEBUG_LOG("*****************Adding enum for %s",
+                                      ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
                     addEnum(sys, dbPoint, bitstrings);
                 }
             }
 
             if (is_individual_bits && bitstrings && (bitstrings->type == cJSON_Array))
             {
-                ((FlexPoint *)(dbPoint->flexPointHandle))->is_individual_bits = (is_individual_bits->type == cJSON_True);
-                if (((FlexPoint *)(dbPoint->flexPointHandle))->is_individual_bits)
+                ((FlexPoint*)(dbPoint->flexPointHandle))->is_individual_bits = (is_individual_bits->type == cJSON_True);
+                if (((FlexPoint*)(dbPoint->flexPointHandle))->is_individual_bits)
                 {
                     if (sys.debug)
-                        FPS_DEBUG_LOG("*****************Adding individual bits for %s", ((FlexPoint *)(dbPoint->flexPointHandle))->name.c_str());
+                        FPS_DEBUG_LOG("*****************Adding individual bits for %s",
+                                      ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
                     addBits(sys, dbPoint, bitstrings);
                 }
             }
@@ -2543,15 +2602,15 @@ bool parse_items(GcomSystem &sys, cJSON *objs, int type, int who)
                 FPS_DEBUG_LOG(" config adding name [%s] idx [%d]", id->valuestring, vidx);
             // was nuri
 
-            addDbUri(sys, ((FlexPoint *)(dbPoint->flexPointHandle))->uri, dbPoint);
+            addDbUri(sys, ((FlexPoint*)(dbPoint->flexPointHandle))->uri, dbPoint);
         }
     }
     return true;
 }
 
-int parse_object(GcomSystem &sys, cJSON *objs, int idx, int who)
+int parse_object(GcomSystem& sys, cJSON* objs, int idx, int who)
 {
-    cJSON *cjlist = cJSON_GetObjectItem(objs, iotypToStr(idx));
+    cJSON* cjlist = cJSON_GetObjectItem(objs, iotypToStr(idx));
     if (cjlist == NULL)
     {
         FPS_DEBUG_LOG("[%s] objects missing from config!", iotypToStr(idx));
@@ -2564,16 +2623,16 @@ int parse_object(GcomSystem &sys, cJSON *objs, int idx, int who)
 /// @param sys
 /// @param who
 /// @return
-bool parse_modbus(cJSON *cj, GcomSystem &sys, int who)
+bool parse_modbus(cJSON* cj, GcomSystem& sys, int who)
 {
     // config file has "objects" with children groups "binary" and "analog"
     // who is needd to stop cross referencing linkvars
-    cJSON *cji;
+    cJSON* cji;
     cJSON_ArrayForEach(cji, cj)
     {
-        cJSON *cjmap = cJSON_GetObjectItem(cji, "map");
-        cJSON *cjdtype = cJSON_GetObjectItem(cji, "dnp3_type");
-        cJSON *cjtype = cJSON_GetObjectItem(cji, "type");
+        cJSON* cjmap = cJSON_GetObjectItem(cji, "map");
+        cJSON* cjdtype = cJSON_GetObjectItem(cji, "dnp3_type");
+        cJSON* cjtype = cJSON_GetObjectItem(cji, "type");
         // dnp3_type can be output, valuedouble holds it all
         if ((cjmap == NULL) || (cjmap->type != cJSON_Array))
         {
@@ -2621,17 +2680,17 @@ bool parse_modbus(cJSON *cj, GcomSystem &sys, int who)
 /// @param sys
 /// @param who
 /// @return
-bool parse_variables(cJSON *object, GcomSystem &sys, int who)
+bool parse_variables(cJSON* object, GcomSystem& sys, int who)
 {
     // config file has "objects" with children groups "binary" and "analog"
     // who is needd to stop cross referencing linkvars
-    cJSON *cjregs = cJSON_GetObjectItem(object, "registers");
+    cJSON* cjregs = cJSON_GetObjectItem(object, "registers");
     if (cjregs != NULL)
     {
         return parse_modbus(cjregs, sys, who);
     }
 
-    cJSON *JSON_objects = cJSON_GetObjectItem(object, "objects");
+    cJSON* JSON_objects = cJSON_GetObjectItem(object, "objects");
     if (JSON_objects == NULL)
     {
         FPS_ERROR_LOG("objects object is missing from file!");
@@ -2650,7 +2709,7 @@ bool parse_variables(cJSON *object, GcomSystem &sys, int who)
 /// @param who
 /// @param nums
 /// @return
-int getSysUris(GcomSystem &sys, int who, int nums)
+int getSysUris(GcomSystem& sys, int who, int nums)
 {
     int num_subs = 0;
     int i;
@@ -2660,7 +2719,7 @@ int getSysUris(GcomSystem &sys, int who, int nums)
         num_subs += getSubs(sys, NULL, 0, who);
     }
     // int num = sys.protocol_dependencies->getSubs(NULL, 0, who);
-    const char **subs = (const char **)malloc((num_subs + 3) * sizeof(char *));
+    const char** subs = (const char**)malloc((num_subs + 3) * sizeof(char*));
     if (subs == NULL)
     {
         FPS_ERROR_LOG("Failed to create subs array.");
@@ -2682,7 +2741,7 @@ int getSysUris(GcomSystem &sys, int who, int nums)
 /// @param num_configs
 /// @param who
 /// @return
-bool run_config(cJSON *config, GcomSystem &sys, int &num_configs, int who)
+bool run_config(cJSON* config, GcomSystem& sys, int& num_configs, int who)
 {
     bool ret = false;
     sys.config = config;
@@ -2701,130 +2760,130 @@ bool run_config(cJSON *config, GcomSystem &sys, int &num_configs, int who)
 
 /// @brief
 /// @param sys
-void init_point_groups(GcomSystem &sys)
+void init_point_groups(GcomSystem& sys)
 {
-    TMWSIM_POINT *dbPoint;
-    DNP3Dependencies *dnp3_sys = &(sys.protocol_dependencies->dnp3);
+    TMWSIM_POINT* dbPoint;
+    DNP3Dependencies* dnp3_sys = &(sys.protocol_dependencies->dnp3);
 
     if (sys.protocol_dependencies->who == DNP3_OUTSTATION)
     {
         dnp3_sys->point_group_map["/analog_outputs"] = PointGroup{};
-        PointGroup &point_group_1 = dnp3_sys->point_group_map["/analog_outputs"];
+        PointGroup& point_group_1 = dnp3_sys->point_group_map["/analog_outputs"];
         point_group_1.group_name = "analog_outputs";
-        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogOutputs); i++)
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogOutputs); i++)
         {
-            dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetPoint(dnp3_sys->dbHandle, i);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgOutGetPoint(dnp3_sys->dbHandle, i);
             if (dbPoint && dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
-                point_group_1.points[((FlexPoint *)dbPoint->flexPointHandle)->name] = dbPoint;
+                point_group_1.points[((FlexPoint*)dbPoint->flexPointHandle)->name] = dbPoint;
             }
         }
         dnp3_sys->point_group_map["/binary_outputs"] = PointGroup{};
-        PointGroup &point_group_2 = dnp3_sys->point_group_map["/binary_outputs"];
+        PointGroup& point_group_2 = dnp3_sys->point_group_map["/binary_outputs"];
         point_group_2.group_name = "binary_outputs";
-        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
         {
-            dbPoint = (TMWSIM_POINT *)sdnpsim_binOutGetPoint(dnp3_sys->dbHandle, i);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binOutGetPoint(dnp3_sys->dbHandle, i);
             if (dbPoint && dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
-                point_group_2.points[((FlexPoint *)dbPoint->flexPointHandle)->name] = dbPoint;
+                point_group_2.points[((FlexPoint*)dbPoint->flexPointHandle)->name] = dbPoint;
             }
         }
         dnp3_sys->point_group_map["/analog_inputs"] = PointGroup{};
-        PointGroup &point_group_3 = dnp3_sys->point_group_map["/analog_inputs"];
+        PointGroup& point_group_3 = dnp3_sys->point_group_map["/analog_inputs"];
         point_group_3.group_name = "analog_inputs";
-        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs); i++)
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogInputs); i++)
         {
-            dbPoint = (TMWSIM_POINT *)sdnpsim_anlgInGetPoint(dnp3_sys->dbHandle, i);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgInGetPoint(dnp3_sys->dbHandle, i);
             if (dbPoint && dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
-                point_group_3.points[((FlexPoint *)dbPoint->flexPointHandle)->name] = dbPoint;
+                point_group_3.points[((FlexPoint*)dbPoint->flexPointHandle)->name] = dbPoint;
             }
         }
         dnp3_sys->point_group_map["/binary_inputs"] = PointGroup{};
-        PointGroup &point_group_4 = dnp3_sys->point_group_map["/binary_inputs"];
+        PointGroup& point_group_4 = dnp3_sys->point_group_map["/binary_inputs"];
         point_group_4.group_name = "binary_inputs";
-        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs); i++)
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryInputs); i++)
         {
-            dbPoint = (TMWSIM_POINT *)sdnpsim_binInGetPoint(dnp3_sys->dbHandle, i);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binInGetPoint(dnp3_sys->dbHandle, i);
             if (dbPoint && dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
-                point_group_4.points[((FlexPoint *)dbPoint->flexPointHandle)->name] = dbPoint;
+                point_group_4.points[((FlexPoint*)dbPoint->flexPointHandle)->name] = dbPoint;
             }
         }
         dnp3_sys->point_group_map["/counters"] = PointGroup{};
-        PointGroup &point_group_5 = dnp3_sys->point_group_map["/counters"];
+        PointGroup& point_group_5 = dnp3_sys->point_group_map["/counters"];
         point_group_5.group_name = "counters";
-        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryCounters); i++)
         {
-            dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
             if (dbPoint && dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
-                point_group_5.points[((FlexPoint *)dbPoint->flexPointHandle)->name] = dbPoint;
+                point_group_5.points[((FlexPoint*)dbPoint->flexPointHandle)->name] = dbPoint;
             }
         }
     }
     else
     {
         dnp3_sys->point_group_map["/analog_outputs"] = PointGroup{};
-        PointGroup &point_group_1 = dnp3_sys->point_group_map["/analog_outputs"];
+        PointGroup& point_group_1 = dnp3_sys->point_group_map["/analog_outputs"];
         point_group_1.group_name = "analog_outputs";
-        dbPoint = tmwsim_tableGetFirstPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogOutputs);
-        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogOutputs); i++)
+        dbPoint = tmwsim_tableGetFirstPoint(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogOutputs);
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogOutputs); i++)
         {
             if (dbPoint && dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
-                point_group_1.points[((FlexPoint *)dbPoint->flexPointHandle)->name] = dbPoint;
+                point_group_1.points[((FlexPoint*)dbPoint->flexPointHandle)->name] = dbPoint;
             }
-            dbPoint = tmwsim_tableGetNextPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogOutputs, dbPoint);
+            dbPoint = tmwsim_tableGetNextPoint(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogOutputs, dbPoint);
         }
         dnp3_sys->point_group_map["/binary_outputs"] = PointGroup{};
-        PointGroup &point_group_2 = dnp3_sys->point_group_map["/binary_outputs"];
+        PointGroup& point_group_2 = dnp3_sys->point_group_map["/binary_outputs"];
         point_group_2.group_name = "binary_outputs";
-        dbPoint = tmwsim_tableGetFirstPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryOutputs);
-        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        dbPoint = tmwsim_tableGetFirstPoint(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs);
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
         {
             if (dbPoint && dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
-                point_group_2.points[((FlexPoint *)dbPoint->flexPointHandle)->name] = dbPoint;
+                point_group_2.points[((FlexPoint*)dbPoint->flexPointHandle)->name] = dbPoint;
             }
-            dbPoint = tmwsim_tableGetNextPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryOutputs, dbPoint);
+            dbPoint = tmwsim_tableGetNextPoint(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs, dbPoint);
         }
         dnp3_sys->point_group_map["/analog_inputs"] = PointGroup{};
-        PointGroup &point_group_3 = dnp3_sys->point_group_map["/analog_inputs"];
+        PointGroup& point_group_3 = dnp3_sys->point_group_map["/analog_inputs"];
         point_group_3.group_name = "analog_inputs";
-        dbPoint = tmwsim_tableGetFirstPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs);
-        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs); i++)
+        dbPoint = tmwsim_tableGetFirstPoint(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogInputs);
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogInputs); i++)
         {
             if (dbPoint && dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
-                point_group_3.points[((FlexPoint *)dbPoint->flexPointHandle)->name] = dbPoint;
+                point_group_3.points[((FlexPoint*)dbPoint->flexPointHandle)->name] = dbPoint;
             }
-            dbPoint = tmwsim_tableGetNextPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs, dbPoint);
+            dbPoint = tmwsim_tableGetNextPoint(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogInputs, dbPoint);
         }
         dnp3_sys->point_group_map["/binary_inputs"] = PointGroup{};
-        PointGroup &point_group_4 = dnp3_sys->point_group_map["/binary_inputs"];
+        PointGroup& point_group_4 = dnp3_sys->point_group_map["/binary_inputs"];
         point_group_4.group_name = "binary_inputs";
-        dbPoint = tmwsim_tableGetFirstPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs);
-        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs); i++)
+        dbPoint = tmwsim_tableGetFirstPoint(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryInputs);
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryInputs); i++)
         {
             if (dbPoint && dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
-                point_group_4.points[((FlexPoint *)dbPoint->flexPointHandle)->name] = dbPoint;
+                point_group_4.points[((FlexPoint*)dbPoint->flexPointHandle)->name] = dbPoint;
             }
-            dbPoint = tmwsim_tableGetNextPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs, dbPoint);
+            dbPoint = tmwsim_tableGetNextPoint(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryInputs, dbPoint);
         }
         dnp3_sys->point_group_map["/counters"] = PointGroup{};
-        PointGroup &point_group_5 = dnp3_sys->point_group_map["/counters"];
+        PointGroup& point_group_5 = dnp3_sys->point_group_map["/counters"];
         point_group_5.group_name = "counters";
-        dbPoint = tmwsim_tableGetFirstPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters);
-        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        dbPoint = tmwsim_tableGetFirstPoint(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryCounters);
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryCounters); i++)
         {
             if (dbPoint && dbPoint->flexPointHandle != TMWDEFS_NULL)
             {
-                point_group_5.points[((FlexPoint *)dbPoint->flexPointHandle)->name] = dbPoint;
+                point_group_5.points[((FlexPoint*)dbPoint->flexPointHandle)->name] = dbPoint;
             }
-            dbPoint = tmwsim_tableGetNextPoint(&((MDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters, dbPoint);
+            dbPoint = tmwsim_tableGetNextPoint(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryCounters, dbPoint);
         }
     }
 }
@@ -2832,7 +2891,7 @@ void init_point_groups(GcomSystem &sys)
 /// @param sys
 /// @param who
 /// @return
-bool init_vars(GcomSystem &sys, int who)
+bool init_vars(GcomSystem& sys, int who)
 {
     bool ret = false;
     if (!parse_variables(sys.config, sys, who))
@@ -2854,19 +2913,19 @@ bool init_vars(GcomSystem &sys, int who)
     return ret;
 }
 
-const char *get_program_name(const char *uri)
+const char* get_program_name(const char* uri)
 {
     // Find the last occurrence of '/'
-    const char *lastSlash = std::strrchr(uri, '/');
+    const char* lastSlash = std::strrchr(uri, '/');
 
     // If '/' is found, return the part after it; otherwise, return the whole URI
     return (lastSlash != nullptr) ? (lastSlash + 1) : uri;
 }
 
-cJSON *load_from_dbi(int argc, char *argv[])
+cJSON* load_from_dbi(int argc, char* argv[])
 {
     if (argc <= 2)
-    { // it would have to be equal to 2 in order to get here, but just to be safe
+    {  // it would have to be equal to 2 in order to get here, but just to be safe
         FPS_ERROR_LOG("Need URI to load from DBI");
         return nullptr;
     }
@@ -2886,32 +2945,36 @@ cJSON *load_from_dbi(int argc, char *argv[])
         return nullptr;
     }
     const auto sub_string = "/" + program_name + "_uri_init" + fname;
-    if (!fims_gateway.Subscribe(std::vector<std::string>{sub_string}))
+    if (!fims_gateway.Subscribe(std::vector<std::string>{ sub_string }))
     {
         FPS_ERROR_LOG("For %s with init uri \"%s\": failed to subscribe for uri init", program_name.c_str(), argv[2]);
         fims_gateway.Close();
         return nullptr;
     }
-    if (!fims_gateway.Send(fims::str_view{"get", sizeof("get") - 1}, fims::str_view{fname.data(), fname.size()}, fims::str_view{sub_string.data(), sub_string.size()}, fims::str_view{nullptr, 0}, fims::str_view{nullptr, 0}))
+    if (!fims_gateway.Send(fims::str_view{ "get", sizeof("get") - 1 }, fims::str_view{ fname.data(), fname.size() },
+                           fims::str_view{ sub_string.data(), sub_string.size() }, fims::str_view{ nullptr, 0 },
+                           fims::str_view{ nullptr, 0 }))
     {
         FPS_ERROR_LOG("For %s with inti uri \"%s\": failed to send a fims get message", program_name.c_str(), argv[2]);
         fims_gateway.Close();
         return nullptr;
     }
-    auto config_msg = fims_gateway.Receive_Timeout(5000000); // give them 5 seconds to respond before erroring
+    auto config_msg = fims_gateway.Receive_Timeout(5000000);  // give them 5 seconds to respond before erroring
     if (!config_msg)
     {
-        FPS_ERROR_LOG("For %s with init uri \"%s\": failed to receive a message in 5 seconds", program_name.c_str(), argv[2]);
+        FPS_ERROR_LOG("For %s with init uri \"%s\": failed to receive a message in 5 seconds", program_name.c_str(),
+                      argv[2]);
         fims_gateway.Close();
         return nullptr;
     }
     if (!config_msg->body)
     {
-        FPS_ERROR_LOG("For %s with init uri \"%s\": message was received, but body doesn't exist", program_name.c_str(), argv[2]);
+        FPS_ERROR_LOG("For %s with init uri \"%s\": message was received, but body doesn't exist", program_name.c_str(),
+                      argv[2]);
         fims_gateway.Close();
         return nullptr;
     }
-    cJSON *config = cJSON_Parse(config_msg->body);
+    cJSON* config = cJSON_Parse(config_msg->body);
     if (config == NULL)
         fprintf(stderr, "Invalid JSON object in file\n");
     fims_gateway.Close();
@@ -2929,14 +2992,14 @@ cJSON *load_from_dbi(int argc, char *argv[])
 /// @param sys
 /// @param who
 /// @return
-int getConfigs(int argc, char *argv[], GcomSystem &sys, int who)
+int getConfigs(int argc, char* argv[], GcomSystem& sys, int who)
 {
     int num_configs = 0;
     while (true)
     {
         if (argc >= 2 && std::strcmp(argv[1], "-u") == 0)
         {
-            cJSON *config = load_from_dbi(argc, argv);
+            cJSON* config = load_from_dbi(argc, argv);
             if (config == NULL)
             {
                 if (num_configs == 0)
@@ -2955,7 +3018,7 @@ int getConfigs(int argc, char *argv[], GcomSystem &sys, int who)
         }
         else
         {
-            cJSON *config = get_config_json(argc, argv, num_configs);
+            cJSON* config = get_config_json(argc, argv, num_configs);
             if (config == NULL)
             {
                 if (num_configs == 0)
@@ -2968,10 +3031,10 @@ int getConfigs(int argc, char *argv[], GcomSystem &sys, int who)
                     break;
                 }
             }
-            cJSON *cjfiles = parse_files(config);
+            cJSON* cjfiles = parse_files(config);
             if (cjfiles)
             {
-                cJSON *cjfile;
+                cJSON* cjfile;
                 cJSON_ArrayForEach(cjfile, cjfiles)
                 {
                     FPS_ERROR_LOG(" NOTE config file [%s]", cjfile->valuestring);
@@ -2997,7 +3060,7 @@ int getConfigs(int argc, char *argv[], GcomSystem &sys, int who)
 /// @param argc
 /// @param argv
 /// @return
-std::string getFileName(int argc, char *argv[])
+std::string getFileName(int argc, char* argv[])
 {
     std::string file_name;
     if (argc > 1)
@@ -3010,7 +3073,8 @@ std::string getFileName(int argc, char *argv[])
         std::size_t last_slash = file_name.find_last_of("/\\");
         file_name = file_name.substr(last_slash + 1);
         std::size_t extension = file_name.find(".json");
-        file_name = file_name.substr(0, extension); // not entirely sure why I had to do this in two steps, but trying to do it in one step didn't work
+        file_name = file_name.substr(0, extension);  // not entirely sure why I had to do this in two steps, but trying
+                                                     // to do it in one step didn't work
     }
     else if (argc == 1)
     {
@@ -3041,7 +3105,7 @@ double get_time_double()
 /// @brief
 /// @param tmpPtr
 /// @return
-double get_time_double(TMWDTIME &tmpPtr)
+double get_time_double(TMWDTIME& tmpPtr)
 {
     std::lock_guard<std::mutex> lock(timeDoubleMutex);
     if (!timeInit)
@@ -3059,16 +3123,16 @@ double get_time_double(TMWDTIME &tmpPtr)
     return duration.count() + (tmpPtr.mSecsAndSecs % 1000) / 1000.0;
 }
 
-bool parse_message_body(GcomSystem &sys, std::string uri, const char *message_body)
+bool parse_message_body(GcomSystem& sys, std::string uri, const char* message_body)
 {
-    auto &parser = sys.fims_dependencies->parser;
-    auto &doc = sys.fims_dependencies->doc;
+    auto& parser = sys.fims_dependencies->parser;
+    auto& doc = sys.fims_dependencies->doc;
     Jval_buif to_set;
 
     // gets doc
-    if (const auto err = parser.iterate(message_body,
-                                        strlen(message_body),
-                                        strlen(message_body) + simdjson::SIMDJSON_PADDING)
+    if (const auto err = parser
+                             .iterate(message_body, strlen(message_body),
+                                      strlen(message_body) + simdjson::SIMDJSON_PADDING)
                              .get(doc);
         err)
     {
@@ -3103,7 +3167,7 @@ bool parse_message_body(GcomSystem &sys, std::string uri, const char *message_bo
             continue;
         }
 
-        TMWSIM_POINT *dbPoint = getDbVar(sys, uri, key_view);
+        TMWSIM_POINT* dbPoint = getDbVar(sys, uri, key_view);
         if (!dbPoint)
         {
             continue;
@@ -3127,9 +3191,9 @@ bool parse_message_body(GcomSystem &sys, std::string uri, const char *message_bo
     return true;
 }
 
-void load_points_from_dbi_server(GcomSystem &sys)
+void load_points_from_dbi_server(GcomSystem& sys)
 {
-    fims &fims_gateway = sys.fims_dependencies->fims_gateway;
+    fims& fims_gateway = sys.fims_dependencies->fims_gateway;
 
     for (auto uriPair : sys.dburiMap)
     {
@@ -3145,7 +3209,8 @@ void load_points_from_dbi_server(GcomSystem &sys)
                 return;
             }
 
-            auto point_group_message = fims_gateway.Receive_Timeout(5000000); // give them 5 seconds to respond before erroring
+            auto point_group_message = fims_gateway.Receive_Timeout(
+                5000000);  // give them 5 seconds to respond before erroring
             if (!point_group_message)
             {
                 FPS_ERROR_LOG("Failed to retrieve saved register data for [%s] from DBI", point_group_uri.c_str());
@@ -3157,7 +3222,8 @@ void load_points_from_dbi_server(GcomSystem &sys)
                 continue;
             }
             bool success = parse_message_body(sys, point_group_uri, point_group_message->body);
-            if (!success){
+            if (!success)
+            {
                 FPS_ERROR_LOG("Error parsing saved register data for [%s]", point_group_uri.c_str());
                 continue;
             }
@@ -3165,9 +3231,9 @@ void load_points_from_dbi_server(GcomSystem &sys)
     }
 }
 
-void load_points_from_dbi_client(GcomSystem &sys)
+void load_points_from_dbi_client(GcomSystem& sys)
 {
-    fims &fims_gateway = sys.fims_dependencies->fims_gateway;
+    fims& fims_gateway = sys.fims_dependencies->fims_gateway;
 
     for (auto uriPair : sys.dburiMap)
     {
@@ -3187,14 +3253,14 @@ void load_points_from_dbi_client(GcomSystem &sys)
     }
 }
 
-void write_points_to_dbi_server(void *pSys)
+void write_points_to_dbi_server(void* pSys)
 {
-    GcomSystem *sys = (GcomSystem *)pSys;
-    TMWSIM_POINT *dbPoint;
+    GcomSystem* sys = (GcomSystem*)pSys;
+    TMWSIM_POINT* dbPoint;
     std::string key;
-    fims &fims_gateway = sys->fims_dependencies->fims_gateway;
-    fmt::memory_buffer &send_buf = sys->fims_dependencies->send_buf;
-    
+    fims& fims_gateway = sys->fims_dependencies->fims_gateway;
+    fmt::memory_buffer& send_buf = sys->fims_dependencies->send_buf;
+
     sys->db_mutex.lock_shared();
     for (auto uriPair : sys->dburiMap)
     {
@@ -3204,35 +3270,46 @@ void write_points_to_dbi_server(void *pSys)
             std::string dbi_uri = "/dbi/" + std::string(sys->id) + "/saved_registers" + point_group_uri;
             bool has_one_point = false;
             send_buf.clear();
-            send_buf.push_back('{'); // begin object
+            send_buf.push_back('{');  // begin object
 
             for (auto key_point_pair : uriPair.second->dbmap)
             {
                 key = key_point_pair.first;
                 dbPoint = key_point_pair.second;
-                if(has_one_point){
+                if (has_one_point)
+                {
                     FORMAT_TO_BUF(send_buf, R"(,)");
-                } else {
+                }
+                else
+                {
                     has_one_point = true;
                 }
-                
-                FORMAT_TO_BUF(send_buf, R"("{}":)", ((FlexPoint *)(dbPoint->flexPointHandle))->name);
-                if(dbPoint->type == TMWSIM_TYPE_ANALOG){
-                    FORMAT_TO_BUF(send_buf, R"({:.{}g})", dbPoint->data.analog.value, std::numeric_limits<double>::max_digits10 - 1);
-                } else if(dbPoint->type == TMWSIM_TYPE_COUNTER){
+
+                FORMAT_TO_BUF(send_buf, R"("{}":)", ((FlexPoint*)(dbPoint->flexPointHandle))->name);
+                if (dbPoint->type == TMWSIM_TYPE_ANALOG)
+                {
+                    FORMAT_TO_BUF(send_buf, R"({:.{}g})", dbPoint->data.analog.value,
+                                  std::numeric_limits<double>::max_digits10 - 1);
+                }
+                else if (dbPoint->type == TMWSIM_TYPE_COUNTER)
+                {
                     FORMAT_TO_BUF(send_buf, R"({})", dbPoint->data.counter.value);
-                } else if(dbPoint->type == TMWSIM_TYPE_BINARY){
-                    FORMAT_TO_BUF(send_buf, R"({})", static_cast<bool>(dbPoint->data.binary.value)?1:0);
-                } else {
+                }
+                else if (dbPoint->type == TMWSIM_TYPE_BINARY)
+                {
+                    FORMAT_TO_BUF(send_buf, R"({})", static_cast<bool>(dbPoint->data.binary.value) ? 1 : 0);
+                }
+                else
+                {
                     FORMAT_TO_BUF(send_buf, R"({})", dbPoint->data.analog.value);
                 }
             }
 
-            send_buf.push_back('}'); // begin object
+            send_buf.push_back('}');  // begin object
 
-            if(has_one_point)
+            if (has_one_point)
             {
-                if (!send_set(fims_gateway, dbi_uri.c_str(), std::string_view{send_buf.data(), send_buf.size()}))
+                if (!send_set(fims_gateway, dbi_uri.c_str(), std::string_view{ send_buf.data(), send_buf.size() }))
                 {
                     FPS_ERROR_LOG("[%s] failed to send a fims set to DBI", sys->id);
                     fims_gateway.Close();
@@ -3242,17 +3319,18 @@ void write_points_to_dbi_server(void *pSys)
         }
     }
     sys->db_mutex.unlock_shared();
-    tmwtimer_start(&sys->dbi_save_timer, sys->dbi_save_frequency_seconds*1000, sys->protocol_dependencies->dnp3.pChannel, write_points_to_dbi_server, sys);
+    tmwtimer_start(&sys->dbi_save_timer, sys->dbi_save_frequency_seconds * 1000,
+                   sys->protocol_dependencies->dnp3.pChannel, write_points_to_dbi_server, sys);
 }
 
-void write_points_to_dbi_client(void *pSys)
+void write_points_to_dbi_client(void* pSys)
 {
-    GcomSystem *sys = (GcomSystem *)pSys;
-    TMWSIM_POINT *dbPoint;
+    GcomSystem* sys = (GcomSystem*)pSys;
+    TMWSIM_POINT* dbPoint;
     std::string key;
-    fims &fims_gateway = sys->fims_dependencies->fims_gateway;
-    fmt::memory_buffer &send_buf = sys->fims_dependencies->send_buf;
-    
+    fims& fims_gateway = sys->fims_dependencies->fims_gateway;
+    fmt::memory_buffer& send_buf = sys->fims_dependencies->send_buf;
+
     sys->db_mutex.lock_shared();
     for (auto uriPair : sys->dburiMap)
     {
@@ -3262,29 +3340,31 @@ void write_points_to_dbi_client(void *pSys)
             std::string dbi_uri = "/dbi/" + std::string(sys->id) + "/saved_registers" + point_group_uri;
             bool has_one_point = false;
             send_buf.clear();
-            send_buf.push_back('{'); // begin object
+            send_buf.push_back('{');  // begin object
 
             for (auto key_point_pair : uriPair.second->dbmap)
             {
                 key = key_point_pair.first;
                 dbPoint = key_point_pair.second;
-                if(((FlexPoint *)(dbPoint->flexPointHandle))->sent_operate)
+                if (((FlexPoint*)(dbPoint->flexPointHandle))->sent_operate)
                 {
-                    if(has_one_point){
+                    if (has_one_point)
+                    {
                         FORMAT_TO_BUF(send_buf, R"(,)");
-                    } else {
+                    }
+                    else
+                    {
                         has_one_point = true;
                     }
-                    
-                    FORMAT_TO_BUF(send_buf, R"("{}":)", ((FlexPoint *)(dbPoint->flexPointHandle))->name);
-                    format_point_value(send_buf, dbPoint, ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value);
+
+                    FORMAT_TO_BUF(send_buf, R"("{}":)", ((FlexPoint*)(dbPoint->flexPointHandle))->name);
+                    format_point_value(send_buf, dbPoint, ((FlexPoint*)(dbPoint->flexPointHandle))->operate_value);
                 }
             }
 
-            send_buf.push_back('}'); // begin object
+            send_buf.push_back('}');  // begin object
 
-
-            if (!send_set(fims_gateway, dbi_uri.c_str(), std::string_view{send_buf.data(), send_buf.size()}))
+            if (!send_set(fims_gateway, dbi_uri.c_str(), std::string_view{ send_buf.data(), send_buf.size() }))
             {
                 FPS_ERROR_LOG("[%s] failed to send a fims set to DBI", sys->id);
                 fims_gateway.Close();
@@ -3293,5 +3373,6 @@ void write_points_to_dbi_client(void *pSys)
         }
     }
     sys->db_mutex.unlock_shared();
-    tmwtimer_start(&sys->dbi_save_timer, sys->dbi_save_frequency_seconds*1000, sys->protocol_dependencies->dnp3.pChannel, write_points_to_dbi_client, sys);
+    tmwtimer_start(&sys->dbi_save_timer, sys->dbi_save_frequency_seconds * 1000,
+                   sys->protocol_dependencies->dnp3.pChannel, write_points_to_dbi_client, sys);
 }
