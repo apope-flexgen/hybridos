@@ -400,6 +400,7 @@ void Site_Manager::build_JSON_site_configuration(fmt::memory_buffer& buf, const 
     // config status
     // input source status
     input_source_status.add_to_JSON_buffer(buf, var);
+    configured_primary.add_to_JSON_buffer(buf, var);
     // asset slews
     if (pAssets->get_num_ess_parsed() > 0) {
         ess_kVAR_slew_rate.add_to_JSON_buffer(buf, var);
@@ -1129,7 +1130,7 @@ void Site_Manager::send_FIMS(const char* method, const char* uri, const char* re
 
     // Disable publish if second controller (shadow mode)
     // Only allow the heartbeat response to be sent to COPS
-    if (!*is_primary && strcmp(uri, "/cops/heartbeat/site_controller") != 0)
+    if (!*is_primary && strcmp(uri, "/cops/heartbeat/site_controller") != 0 && strcmp(uri, "/site/configuration/configured_primary") != 0)
         return;
 
     // borrowed from libfims, get URI segments

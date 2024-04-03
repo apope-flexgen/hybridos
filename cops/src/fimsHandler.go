@@ -86,6 +86,19 @@ func getDBIUpdate() {
 	}
 }
 
+// Periodically poll /site/configuration to retrieve the value of configured_primary
+// for the purpose of eventually surfacing this value to UI.
+// Function is called periodically under watchdog.go alongside patrolling processes.
+func getCfgPrimaryUpdate() error {
+	// Send get to set the controller's configured_primary status in global config.
+	cfg_primary_uri := "/site/configuration/configured_primary"
+	err := f.SendGet(cfg_primary_uri, "/cops/failover/configured_status")
+	if err != nil {
+		return fmt.Errorf("error getting configured_primary: %w", err)
+	}
+	return nil
+}
+
 // Put all FIMS GET hooks here
 func handleGet(msg fims.FimsMsg) error {
 	switch {
@@ -101,6 +114,10 @@ func handleGet(msg fims.FimsMsg) error {
 		f.SendSet(msg.Replyto, "", controllerName)
 	case msg.Uri == "/cops":
 		f.SendSet(msg.Replyto, "", buildBriefingReport())
+	case strings.HasPrefix(msg.Uri, "/cops/stats/system"):
+		if err := handleGetSystemStats(msg); err != nil {
+			return fmt.Errorf("getting cops system stats: %w", err)
+		}
 	case strings.HasPrefix(msg.Uri, "/cops/stats/"):
 		if err := handleGetStats(msg); err != nil {
 			return fmt.Errorf("getting cops stats: %w", err)
@@ -117,6 +134,8 @@ func handleSet(msg fims.FimsMsg) error {
 	// Set received from UI or command line enabling or disabling Update mode
 	case msg.Uri == "/cops/update_mode":
 		return handleUpdateMode(msg)
+	case msg.Uri == "/cops/failover/configured_status":
+		return handleControllerConfiguredState(msg)
 	case msg.Nfrags == 3 && strings.HasPrefix(msg.Uri, "/cops/connection"):
 		// Handle monitoring connect/disconnect.
 		return handleConnectionStatus(msg)
@@ -197,6 +216,18 @@ func handleSet(msg fims.FimsMsg) error {
 	return nil
 }
 
+// Handle get on site controller's variables.json to retrieve configured_primary status.
+func handleControllerConfiguredState(msg fims.FimsMsg) error {
+	// Check for connection status.
+	if m, ok := msg.Body.(map[string]interface{}); ok {
+		// Update process connection information
+		status := m["value"].(bool)
+		config.controllerConfiguredPrimary = status
+		return nil
+	}
+	return fmt.Errorf("fims body is not a map: %v", msg.Body)
+}
+
 // Handle reporting connection status for a given process.
 func handleConnectionStatus(msg fims.FimsMsg) error {
 	// Process name in uri is built off existing process. Guranteed to always exist.
@@ -238,6 +269,40 @@ func handleGetStats(msg fims.FimsMsg) error {
 	}
 
 	return nil
+}
+
+// Expose gets on all system statistics.
+// Currently exists are /cops/stats/system/summary and .../failover
+func handleGetSystemStats(msg fims.FimsMsg) error {
+	switch {
+	case msg.Uri == "/cops/stats/system":
+		f.SendSet(msg.Replyto, "", getSystemStats())
+	case msg.Uri == "/cops/stats/system/failover":
+		f.SendSet(msg.Replyto, "", getFailoverConfig())
+	default:
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
+	}
+
+	return nil
+}
+
+// Handle reporting system stats to FIMS.
+func getSystemStats() map[string]interface{} {
+	cfg := make(map[string]interface{})
+	cfg["failover"] = getFailoverConfig()
+	return cfg
+}
+
+// Handle reporting failover variables to FIMS.
+func getFailoverConfig() map[string]interface{} {
+	cfg := make(map[string]interface{})
+	cfg["controller_name"] = config.Name
+	cfg["status"] = statusNames[controllerMode]
+	cfg["c2c_connected"] = c2c.connected
+	cfg["redundant_failover_enabled"] = config.EnableRedundantFailover
+	cfg["configured_primary"] = config.controllerConfiguredPrimary
+
+	return cfg
 }
 
 // Handle URIs targeted at specific process stats.

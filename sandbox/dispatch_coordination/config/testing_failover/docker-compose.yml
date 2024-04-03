@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  site-controller-01:
+    image: ${SITE_IMAGE}${HYBRIDOS_IMAGE_SUFFIX}:${HYBRIDOS_IMAGE_TAG}
+    container_name: site-controller-01
+    hostname: site-controller-01
+    privileged: true
+    stdin_open: true
+    tty: true
+    ports:
+      - 10001:443
+    expose:
+      - "8000"
+    links:
+      - site-controller-02  
+    volumes:
+      - ${CFG_DEV}:${CONTAINER_CFG_DIR} 
+      - ${SITE_01_CFG_DIR}/cops:${CONTAINER_CFG_DIR}/cops
+      - ${BIN_DIR}:${BIN_DIR}
+    networks:
+      site-net:
+        ipv4_address: 172.3.27.101
+    restart: always
+
+  site-controller-02:
+    image: ${SITE_IMAGE}${HYBRIDOS_IMAGE_SUFFIX}:${HYBRIDOS_IMAGE_TAG}
+    container_name: site-controller-02
+    hostname: site-controller-02
+    privileged: true
+    stdin_open: true
+    tty: true
+    ports:
+      - 10002:443
+    expose:
+      - "8000"
+    volumes:
+      - ${CFG_DEV}:${CONTAINER_CFG_DIR}
+      - ${SITE_02_CFG_DIR}/cops:${CONTAINER_CFG_DIR}/cops
+      - ${BIN_DIR}:${BIN_DIR}
+    networks:
+      site-net:
+        ipv4_address: 172.3.27.102
+
+networks:
+  site-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.3.27.0/24
+

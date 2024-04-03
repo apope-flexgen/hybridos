@@ -12,6 +12,15 @@ import (
 // Initialize to true. If systemd does not exist on initial try, it will be set to false.
 var isDbusValid bool = true
 
+// Define severity level for sending events
+const (
+	base   = iota // 0
+	Info          // 1
+	Status        // 2
+	Alarm         // 3
+	Fault         // 4
+)
+
 // Print a message if there is a fatal error and panic
 func fatalErrorCheck(err error, message string) {
 	if err != nil {
@@ -49,6 +58,11 @@ func patrolProcesses() error {
 		}
 	}
 
+	// Patrol /site/configuration/configured_primary for any change in status
+	if err := getCfgPrimaryUpdate(); err != nil {
+		return fmt.Errorf("getting controller's configured primary flag: %w", err)
+	}
+
 	return nil
 }
 
@@ -57,28 +71,28 @@ func takeFailureAction(process *processInfo) {
 	log.Infof("Failure: Process %s declared hung or dead. Last confirmed alive at %s. Sending alarm notification to events.", process.name, process.healthStats.lastConfirmedAlive.String())
 	processHungMsg := fmt.Sprintf("Process %s is hung or dead (last confirmed alive at %v).", process.name, process.healthStats.lastConfirmedAlive.Round(time.Millisecond))
 	if process.killOnHang {
-		sendAlarm(processHungMsg + " Sending kill signal.")
+		sendEvent(Alarm, processHungMsg+" Sending kill signal.")
 		err := kill(process)
 		if err != nil {
 			log.Errorf("Failed to send kill signal to %s: %v", process.name, err)
-			sendAlarm(fmt.Sprintf("Failed to send kill signal to process %s.", process.name))
+			sendEvent(Alarm, fmt.Sprintf("Failed to send kill signal to process %s.", process.name))
 		} else {
-			sendAlarm(fmt.Sprintf("Successfully sent kill signal to process %s.", process.name))
+			sendEvent(Alarm, fmt.Sprintf("Successfully sent kill signal to process %s.", process.name))
 			process.healthStats.copsRestarts++
 		}
 	} else {
-		sendAlarm(processHungMsg)
+		sendEvent(Alarm, processHungMsg)
 	}
 	process.alive = false
 }
 
 // Sends an alarm notification to the events module via FIMS
-func sendAlarm(message string) {
+func sendEvent(severity int, message string) {
 	// Build notification JSON
 	body := make(map[string]interface{})
 	body["source"] = "COPS"
 	body["message"] = message
-	body["severity"] = 3 // severity of 3 is for alarms
+	body["severity"] = severity
 
 	// Send notification
 	_, err := f.Send(fims.FimsMsg{

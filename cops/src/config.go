@@ -42,6 +42,7 @@ type Config struct {
 	OtherCtrlrOutlet            string    `json:"otherCtrlrOutlet"`
 	AllowActions                bool      `json:"allowActions"` // Global for whether or not to allow taking an action
 	ProcessList                 []Process `json:"processList"`
+	controllerConfiguredPrimary bool      // Represents the boolean value set in variables.json for site controller configuration
 }
 
 type Process struct {
@@ -287,8 +288,8 @@ func (config *Config) validateFailoverConfig() error {
 // Configure internal variables
 func configureCOPS(config Config) error {
 	beginningTime = time.Now()
-
 	controllerName = config.Name
+
 	if enableRedundantFailover = config.EnableRedundantFailover; enableRedundantFailover {
 		// Store the IP addresses of the primary
 		for _, ip := range config.PrimaryIP {

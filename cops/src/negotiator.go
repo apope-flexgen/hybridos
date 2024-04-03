@@ -173,6 +173,7 @@ func (config *Config) handleEncryptionConfig() error {
 
 // Claim the virtual interface and add the Primary IP to it
 func setupPrimaryIP() error {
+
 	if len(primaryIP) < 1 || len(primaryNetworkInterface) != len(primaryIP) {
 		return fmt.Errorf("failed to takeover: there must be one network interface for each ip, received %d ips and %d interfaces.", len(primaryIP), len(primaryNetworkInterface))
 	}
@@ -215,7 +216,9 @@ func configureSNMP() {
 // Sets controller mode to Primary, takes over primary IP and restarts the other controller
 func takeOverAsPrimary() {
 	controllerMode = Primary
-	log.Infof("Taking over as Primary controller")
+	if enableRedundantFailover { // Only send status event of restarting controller during failover operation
+		sendEvent(Status, "Controller is attempting to take over as primary, restarting other controller.")
+	}
 	for _, process := range processJurisdiction {
 		process.sendPrimaryFlag(true)
 	}
@@ -241,12 +244,20 @@ func takeOverAsPrimary() {
 			},
 		})
 		if err != nil {
+
 			log.Errorf("Failed to restart other outlet: %v\n", err)
 		}
 		if result != nil && result.Error != 0 {
 			log.Errorf("Failed to restart other outlet: %v\n", result.Error)
 		}
+
+		if err != nil || result.Error != 0 {
+			sendEvent(Fault, "Controller error with restarting PDU. Are two controllers running as primary?")
+			log.Errorf("failed to restart other outlet. Packet error: %v. Error: %v", result.Error, err)
+		}
+
 	}
+
 }
 
 // sendPrimaryFlag sends the passed-in boolean value to the URI of the handler process's primary mode endpoint

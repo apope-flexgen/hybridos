@@ -57,6 +57,13 @@ const serverCrtPath = serverKeyPairPath + "c2c_server.crt"
 const serverKeyPath = serverKeyPairPath + "c2c_server.key"
 const C2CPort = ":8000"
 
+// Set to one second to generate inital event if connection error occurs
+var eventTimer = time.NewTimer(1 * time.Second)
+var eventConnectionCheck bool
+
+// Establish a connection wait time for events to generate after the initial event occurs
+var connectionEventWaitTime = 1 * time.Second
+
 // Error wrapper to distinguish connection errors
 type connectionError struct {
 	err error
@@ -86,6 +93,16 @@ func (c2c *C2C) close() {
 func (c2c *C2C) setConnection(newConn net.Conn) {
 	c2c.connectionLock.Lock()
 	defer c2c.connectionLock.Unlock()
+
+	// Send event status when a valid connection has been made
+	sendEvent(Status, "Controller has made a connection via c2c.")
+	eventConnectionCheck = false
+
+	// Reset event timer that generates an event when c2c.connected is true
+	// and we receive a connection error during retrieving socket data
+	// Otherwise, this event is generated one time for a connected instance
+	eventTimer.Reset(connectionEventWaitTime)
+
 	c2c.tcpConnection = newConn
 	c2c.connected = true
 	c2c.resolvingConnection = false
@@ -169,7 +186,13 @@ func connectOverTCP() {
 	} else {
 		connectToTCPServer(otherCtrlrStaticIP)
 	}
-	log.Infof("TCP connection established")
+
+	// Report on server/client connection status
+	if c2c.amServerNotClient {
+		log.Infof("Server - TCP connection established - status: %v", c2c.connected)
+	} else {
+		log.Infof("Client - TCP connection established - status: %v", c2c.connected)
+	}
 }
 
 // Closes the existing connection and listens for a new TCP client connection request
@@ -206,6 +229,7 @@ func connectToTCPServer(serverAddr string) {
 			c2c.setConnection(tcpServerConnection)
 			return
 		}
+		log.Errorf("error dialing tcp: %v", err)
 		time.Sleep(time.Second) // Wait a second before trying again
 	}
 }
@@ -251,6 +275,16 @@ func numberfyIP(ip string) (uint64, error) {
 func getC2CMessage() (string, error) {
 	c2c.connectionLock.RLock()
 	defer c2c.connectionLock.RUnlock()
+
+	// Check status and generate event if we never initially connected
+	if !eventConnectionCheck {
+		if !c2c.connected {
+			// We currently never made an initial connection and have not generated an initial fault
+			sendEvent(Fault, "C2C is not currently connected. Potentially have two controllers in primary mode.")
+			eventConnectionCheck = true
+		}
+	}
+
 	// Only read if connected
 	if !c2c.connected {
 		time.Sleep(waitUntilNextRead)
@@ -274,6 +308,7 @@ func getC2CMessage() (string, error) {
 	if err != nil {
 		return "", &parseError{err}
 	}
+
 	return msg, nil
 }
 
@@ -309,6 +344,17 @@ func processC2C() {
 		if err != nil {
 			switch err.(type) {
 			case *connectionError:
+				// Select on timer only if timer is reset by a reset connection status
+				select {
+				case <-eventTimer.C:
+					// Generate event
+					sendEvent(Fault, "TCP connection error receiving C2C message. Potentially have two controllers in primary mode.")
+
+				default:
+					// Do nothing, continue with the rest of the logic
+				}
+
+				// Log error more often than event
 				log.Errorf("TCP Connection error: %s", err.Error())
 				go c2c.handleConnectionError()
 				continue
@@ -346,11 +392,20 @@ func sendC2CMsg(msgBody string) {
 	}
 
 	msgHeader := startWord + strconv.Itoa(len(msgBody)) + " "
+
 	c2c.tcpConnection.SetWriteDeadline(time.Now().Add(replyFromOtherAllowableDelay))
 	_, err := c2c.tcpConnection.Write([]byte(msgHeader + string(msgBody)))
 	c2c.connectionLock.RUnlock()
 	if err != nil {
-		log.Errorf("TCP Connection error: %v", err)
+		select {
+		case <-eventTimer.C:
+			// Generate event
+			sendEvent(Fault, "TCP connection error sending C2C message. Are two controllers in primary mode?")
+
+			// Don't generate another event until defined wait time
+			eventTimer.Reset(connectionEventWaitTime)
+		default: // Do nothing, continue with the rest of the logic
+		}
 		c2c.handleConnectionError()
 	}
 }
@@ -375,7 +430,8 @@ func splitIPAddr(ip string) (ipFrags [5]int, err error) {
 
 // Convert a fims message (uri, body) to a single string that can be sent via C2C
 // Use '$$' as a delimiter
-//		the JSON may contain spaces, commas, etc
+//
+//	the JSON may contain spaces, commas, etc
 func fimsToC2C(keyword string, uri string, body interface{}) (message string) {
 	bodyJSON, err := json.Marshal(body)
 	if err != nil {
