@@ -280,8 +280,8 @@ void addVarToBuilder (UpdateBuilder& builder, DbVar* db, int debug, bool useVind
     if(useVindex)
         idx = db->vindex;
 
-    UTCTimestamp Now();
-    auto now = Now();
+    UTCTimestamp Now;
+    auto now = Now;
 
     switch (db->type) 
     {

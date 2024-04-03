@@ -21,7 +21,7 @@ LIBS = -LTMW/bin -L$(LIBS_DIR) -L$(LIBS_DIR64) -L$(SLIBS_DIR) -L$(SLIBS_DIR64) -
 # had to use CPPXFLAGS to prevent a conflict with TMW
 CPPXFLAGS += -std=c++17
 CPPXFLAGS += -Wall -Werror
-CPPXFLAGS += -DSPDLOG_COMPILED_LIB
+#CPPXFLAGS += -DSPDLOG_COMPILED_LIB
 CPPXFLAGS += -g -DFPS_DEBUG_MODE
 
 GITBRANCH  = $(shell git branch | grep \* | cut -d ' ' -f2)

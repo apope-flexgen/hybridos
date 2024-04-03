@@ -16,11 +16,43 @@
 #include "autoLoadHeaders.h"
 
 const char* FimsDir;
+#include <openssl/evp.h>
+#include <string>
+#include <vector>
+
+#if (__GNUC__ > 11) || (__GNUC__ == 11 && __GNUC_MINOR__ >= 0)
+
+std::string bodymd5(const char* body, int len) {
+    EVP_MD_CTX* mdctx;
+    const EVP_MD* md;
+    unsigned char md_value[EVP_MAX_MD_SIZE];
+    unsigned int md_len, i;
+    std::string result;
+
+    md = EVP_md5();
+    mdctx = EVP_MD_CTX_new();
+    EVP_DigestInit_ex(mdctx, md, nullptr);
+    EVP_DigestUpdate(mdctx, body, len);
+    EVP_DigestFinal_ex(mdctx, md_value, &md_len);
+    EVP_MD_CTX_free(mdctx);
+
+    // Convert the hash to a hexadecimal string
+    for (i = 0; i < md_len; i++) {
+        char hex[3];
+        snprintf(hex, sizeof(hex), "%02x", md_value[i]);
+        result.append(hex);
+    }
+
+    return result;
+}
+#else
 
 std::string bodymd5 (const char* body, int len)
 {
     unsigned char result[MD5_DIGEST_LENGTH];
-    MD5((unsigned char*)body, len, result);
+    MD5((const unsigned char*)body, len, result);
+    //char result[MD5_DIGEST_LENGTH];
+    //MD5((void*)body, len, result);
 
     std::ostringstream sout;
     sout<<std::hex<<std::setfill('0');
@@ -31,6 +63,7 @@ std::string bodymd5 (const char* body, int len)
     return sout.str();
 }
 
+#endif 
 // stdcfg map for referencing JSON strings loaded in autoLoadHeaders.h
 const std::map<std::string, const char*> autoCfgMap = 
 {

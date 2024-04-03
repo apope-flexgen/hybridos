@@ -1983,7 +1983,13 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
                     }
                 }
             }
+
             mypub->pubStats.snap(mypub->pmtx);
+            {
+                std::lock_guard<std::mutex> lock(mypub->tmtx);
+                mypub->comp_time = tNow;
+            }
+
 
             //io_work->pub_struct = mypub;
             //myCfg.performance_timers.pub_timer.snap();

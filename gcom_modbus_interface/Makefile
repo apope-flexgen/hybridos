@@ -4,8 +4,8 @@ $(info PROJECT_ROOT="$(PROJECT_ROOT)")
 $(info MAKEFILE_LIST="$(MAKEFILE_LIST)")
 
 BINS = gcom_modbus_client gcom_modbus_server
-BINS += gcom_modbus_test
-BINS += gcom_modbus_server_id
+#BINS += gcom_modbus_test
+#BINS += gcom_modbus_server_id
 
 # BINS = gcom_modbus_test modbus_server modbus_client gcom_modbus_client
 # BINS = modbus_client modbus_server gcom_modbus_test
@@ -28,7 +28,7 @@ LIBS = -L$(LIBS_DIR) -L$(LIBS_DIR64) -L$(SLIBS_DIR) -L$(SLIBS_DIR64) -Wl,-rpath=
 CPPFLAGS += -std=c++17
 CPPFLAGS += -Wall -Wpedantic -Werror 
 #CPPFLAGS += -Wextra
-CPPFLAGS += -DSPDLOG_COMPILED_LIB
+#CPPFLAGS += -DSPDLOG_COMPILED_LIB
 CPPFLAGS += -DSERVER_DELAY
 
 GITBRANCH  = $(shell git branch | grep \* | cut -d ' ' -f2)

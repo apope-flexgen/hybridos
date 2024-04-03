@@ -7572,6 +7572,12 @@ assetVar* VarMapUtils::setDefault(varsmap &vmap, const char* vcomp, const char*v
     return av;
 }
 
+
+    //assetVar* VarMapUtils::setVal(varsmap& vmap, const char* comp, const char* var, T& value)
+template assetVar* VarMapUtils::setVal<double>(varsmap& vmap, const char* comp, const char* var, double& value);
+template assetVar* VarMapUtils::setVal<const char*>(varsmap& vmap, const char* comp, const char* var, const char*& value);
+template assetVar* VarMapUtils::setVal<char*>(varsmap& vmap, const char* comp, const char* var, char*& value);
+template assetVar* VarMapUtils::setVal<int>(varsmap& vmap, const char* comp, const char* var, int& value);
 int forceVmTemplates()
 {
     using namespace std::chrono;
@@ -7664,8 +7670,11 @@ int forceVmTemplates()
     am->amap["timeString"]           = am->vm->setLinkVal(vmap,"test", "/status", "timeString", tbuffer);
     av->sendAlarm(av, nullptr, nullptr, 1);
     char *ss = strdup("some string");
+    char const*ssc = (char const*)ss;
     am->vm->setVal(vmap, "/build/ess","cval",ss);
+    am->vm->setVal(vmap, "/build/ess","cval",ssc);
     am->vm->setVal(vmap, "/build/ess","bval",bval);
+    am->vm->setVal(vmap, "/build/ess","dval",dval);
     am->vm->setVal(vmap, "/build/ess","dval",dval);
     am->vm->setVal(vmap, "/build/ess","ival",ival);
     char* tval = (char*)"thisisfoo";

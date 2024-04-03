@@ -405,8 +405,7 @@ struct cfg
 
     struct pub_struct
     {
-        ~pub_struct()
-        {};
+        ~pub_struct(){};
         std::string id;
         Stats pubStats;
         double tLate;    // when is it late
@@ -421,6 +420,13 @@ struct cfg
         double pend_timeout = 0.0;
         double kill_timeout = 0.0;
         int pub_threads = 0;
+
+        std::mutex tmtx; // comp time mutex
+        int num_pubs = 0;
+        int num_missed = 0;
+        double start_time = 0.0;
+        double comp_time = 0.0;
+        
     };
 
 

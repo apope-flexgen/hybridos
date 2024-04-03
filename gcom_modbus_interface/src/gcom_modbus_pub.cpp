@@ -29,6 +29,7 @@
 #include <vector>
 #include <any>
 #include <map>
+#include <climits>
 
 #include "gcom_config.h"
 #include "gcom_timer.h"
@@ -81,6 +82,9 @@ int GetNumThreads(struct cfg *myCfg);
 bool testThread();
 bool killThread();
 
+// When a pub completes we need to record the completion time. no point in sending out a new pub idthe last one is not yet done.
+// I think we'll just skip the current request.
+//
 
 
 void pubCallback(std::shared_ptr<TimeObject>tObj, void *p)
@@ -88,12 +92,42 @@ void pubCallback(std::shared_ptr<TimeObject>tObj, void *p)
     bool debug = false;
     std::lock_guard<std::mutex> lock2(cb_output_mutex);
     std::shared_ptr<cfg::pub_struct> mypub = std::shared_ptr<cfg::pub_struct>(static_cast<cfg::pub_struct *>(p), [](cfg::pub_struct *) {});
-    double rtime = get_time_double();
-    // TODO we need to lock this
-    // maybe add a mutes pointer to the stats start / snap / showNum
+    double tNow = get_time_double();
+    int num_threads = GetNumThreads(mypub->cfg);
+
+    if (mypub->num_pubs > 0)
+    {
+        double tdiff;
+        {
+            std::lock_guard<std::mutex> lock(mypub->tmtx);
+            tdiff = mypub->comp_time - mypub->start_time;
+        }
+
+        if (tdiff < 0.0)
+        {
+            if (mypub->num_missed < 5)
+            {
+                mypub->num_missed++;
+                return;
+            }
+            // we've missed 5 pubs have to continue.
+        }
+
+    }
+
+    // we are gathering a new pub
+    {
+        std::lock_guard<std::mutex> lock(mypub->tmtx);
+
+        mypub->start_time = tNow;
+        mypub->comp_time = 0.0; // set to tNow when the pub aborts or completes
+        if (mypub->num_pubs < INT_MAX) 
+            mypub->num_pubs++;
+        mypub->num_missed = 0;
+    }
+    // maybe add a mutex pointer to the stats start / snap / showNum
     mypub->pubStats.start(mypub->pmtx);
     // std::string pstr = "pub_" + base + "_" + component_name;
-    int num_threads = GetNumThreads(mypub->cfg);
 
     // if (1 || mypub->cfg->pub_debug)
     // {
@@ -118,14 +152,14 @@ void pubCallback(std::shared_ptr<TimeObject>tObj, void *p)
 
     if (mypub->cfg->pub_debug)
         std::cout << "Callback for :" <<tObj->name
-                  << " executed at : " << rtime
+                  << " executed at : " << tNow
                   << " with sync: " <<tObj->sync
                   << " and run: " <<tObj->run
                   << " and psid: " << mypub->id
                   << " num_threads: " << num_threads
                   << std::endl;
 
-    // set up the pup id == rtime
+    // set up the pup id == tNow
     // TODO set up the timeout callback
     // we have the componentss so find the register groups
     // we have to create an io_work structure.
@@ -137,7 +171,7 @@ void pubCallback(std::shared_ptr<TimeObject>tObj, void *p)
 
     // Create and IO_Work object ( or get one)
     // bool queue_work(RegisterTypes register_type, int device_id, int offset, int num_regs, uint16_t* u16bufs, uint8_t* u8bufs, WorkTypes work_type )
-    double tNow = get_time_double();
+    //double tNow = get_time_double();
     int work_id = 1;
     cfg::component_struct *compshr = mypub->component;
     bool sent_something = false;

@@ -107,7 +107,7 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<T
     sys->tNow = diff.count();
     sys->tLastMsg = sys->tNow;
     sys->setLock.unlock();
-    UTCTimestamp Now();
+    UTCTimestamp Now;
 
     if(sys->debug)
         FPS_ERROR_PRINT(">> ******************************TimeAndInterval:  enum [%04x] \n", (int)info.gv);
@@ -123,14 +123,17 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<B
     sys->tNow = diff.count();
     sys->tLastMsg = sys->tNow;
     sys->setLock.unlock();
-    UTCTimestamp Now();
+    UTCTimestamp Now;
 
     static int items = 0;
     if(sysdb->debug)
         FPS_ERROR_PRINT(">> ******************************Bin:  enum [%04x] ->[%s] fmt [%d] events [%s]  tnow [%2.3f]\n"
                     , (int)info.gv, variation_encode((int)info.gv), sys->fmt,sys->events?"true":"false", sys->tNow);
     auto print = [info, sys](const Indexed<Binary>& pair) {
-        auto now = Now();
+        auto now = std::chrono::system_clock::now();
+        // Convert time point to duration since epoch, then cast to milliseconds
+        auto msSinceEpoch = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+
 
         DbVar* db = sys->getDbVarId(Type_Binary, pair.index);
         if(db == NULL)
@@ -189,13 +192,13 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<B
             }
             else if(etype == 0x0201)
             {
-                db->ltime = ToUTCString(DNPTime(now.msSinceEpoch));
+                db->ltime = ToUTCString(DNPTime(msSinceEpoch));
             }
             else
             {
-                db->etime = ToUTCString(DNPTime(now.msSinceEpoch));
+                db->etime = ToUTCString(DNPTime(msSinceEpoch));
             }
-            db->stime = ToUTCString(DNPTime(now.msSinceEpoch));
+            db->stime = ToUTCString(DNPTime(msSinceEpoch));
             if(sys->debug)
                 FPS_ERROR_PRINT("***************************** bin idx %d name [%s] value [%d] flags [%d] q [%s] stime [%s] db_events [%s]\n"
                                      , pair.index, db->name.c_str(), pair.value.value, flags, db->sflags.c_str(), 
@@ -275,7 +278,7 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<A
     sys->tLastMsg = sys->tNow;
     sys->setLock.unlock();
     
-    UTCTimestamp Now();
+    UTCTimestamp Now;
  
     static int items = 0;
     if(sysdb->debug)
@@ -287,7 +290,11 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<A
                 );
     auto print = [info, sys](const Indexed<Analog>& pair) {
 
-        auto now = Now();
+        auto now = std::chrono::system_clock::now();
+        // Convert time point to duration since epoch, then cast to milliseconds
+        auto msSinceEpoch = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+
+
         auto etype = (int)info.gv;
         int ptype = 0;
         double dval = pair.value.value;
@@ -360,13 +367,13 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<A
             else if(etype == 0x2001 ) //Group32Var1)  // 0x2001)
             {
                 // this event did not include time !!! so we use local time
-                db->ltime = ToUTCString(DNPTime(now.msSinceEpoch));
+                db->ltime = ToUTCString(DNPTime(msSinceEpoch));
             }
             else
             {
-                db->etime = ToUTCString(DNPTime(now.msSinceEpoch));
+                db->etime = ToUTCString(DNPTime(msSinceEpoch));
             }
-            db->stime = ToUTCString(DNPTime(now.msSinceEpoch));
+            db->stime = ToUTCString(DNPTime(msSinceEpoch));
             //db->stime = ToUTCString(pair.value.time);
             if(sys->debug)
                 FPS_ERROR_PRINT("***************************** analog pair idx %d var idx %d flags %d q [%s] name [%s] uri [%s] value [%f] stime [%s] info [%04x] db_events [%s]\n"

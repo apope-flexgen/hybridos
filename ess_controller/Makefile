@@ -30,7 +30,7 @@ THREADS = -pthread
 
 #CPPFLAGS += -g -std=c++11 -Wall -pedantic -Werror  -Wno-format-security -Wno-format-truncation
 #CPPFLAGS += -g 
-CPPFLAGS += -std=c++11
+CPPFLAGS += -std=c++17
 
 CPPFLAGS += -Wall -Wno-format-security -Wno-format-truncation -Werror
 GITBRANCH  = $(shell git branch | grep \* | cut -d ' ' -f2)
@@ -46,7 +46,13 @@ CPPFLAGS += -DGITBRANCH="\"$(GITBRANCH)\""
 CPPFLAGS += -DGITCOMMIT="\"$(GITCOMMIT)\""
 CPPFLAGS += -DGITVERSION="\"$(GITVERSION)\""
 CPPFLAGS += -DGITTAG="\"$(GITTAG)\""
-CPPFLAGS += -DSPDLOG_COMPILED_LIB
+# Check g++ version
+GCC_VERSION := $(shell expr `g++ -dumpversion | cut -f1 -d.` \>= 11)
+
+# Conditionally add -DSPDLOG_COMPILED_LIB to CPPFLAGS
+ifeq "$(GCC_VERSION)" "0"
+    CPPFLAGS += -DSPDLOG_COMPILED_LIB
+endif
 
 ifeq ($(BUILD_MODE),debug)
 	CPPFLAGS += -g -DFPS_DEBUG_MODE

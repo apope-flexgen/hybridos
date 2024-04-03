@@ -187,7 +187,7 @@ int establish_connection(system_config* config)
     {
         char ip[128];
         int ret;
-        ret = hostname_to_ip(config->ip_address ,ip, 128);
+        ret = hostname_to_ip(config->ip_address ,ip, 127);
         if (ret == 0)
         {
 	      free(config->ip_address);

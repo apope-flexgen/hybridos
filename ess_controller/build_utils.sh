@@ -2,6 +2,7 @@
 
 name=ess_controller
 type=cpp
+gcc=9
 image=
 artifacts=(ess_controller ess_controller@.service gpio_controller gpio_controller.service modprobe_i2c.service libess.so libessfunc.so)
 submodules=()
