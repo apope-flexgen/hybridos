@@ -27,7 +27,7 @@ def test_del_events_schedule():
 
 
 def test_post_events_schedule():
-    result = send_post('/scheduler/events/durham', event_2)
+    result = send_post('/scheduler/events/durham', dict(sorted(event_2.items())))
     event_2['id'] = result[2]['id']
     event_2['repeat']['id'] = result[2]['repeat']['id']
     assert result == [event_0, event_1, event_2]
@@ -49,7 +49,7 @@ def test_disallow_post_events_schedule_without_time_zone():
 
 def test_disallow_post_overlapping_event():
     overlapping_event = {
-        'start_time': '2024-03-13T08:00:00-04:00',  # Wednesday
+        'start_time': '2025-03-13T08:00:00-04:00',  # Wednesday
         'duration': 90, 'mode': 'target_soc', 'variables': { 'soc_target': 50 },
     }
     assert { 'error': 'Overlapping Events' } == send_post('/scheduler/events/durham', overlapping_event)
@@ -160,8 +160,8 @@ def test_get_event_mode():
 
 def test_set_event_start_time():
     # this also tests that the exception's time is updated
-    new_start_time = '2024-04-12T08:00:00-04:00'  # Friday
-    new_exception = '2024-04-16T08:00:00-04:00'
+    new_start_time = '2025-04-12T08:00:00-04:00'  # Friday
+    new_exception = '2025-04-16T08:00:00-04:00'
     assert new_start_time == send_set(f'/scheduler/events/durham/{event_1["id"]}/start_time', new_start_time)
     assert new_start_time == send_get(f'/scheduler/events/durham/{event_1["id"]}/start_time')
     assert new_exception == send_get(f'/scheduler/events/durham/{event_1["id"]}/repeat/exceptions')[0]
@@ -194,8 +194,8 @@ def test_set_event_repeat_object():
     new_repeat_object = {
         'cycle': 'week',
         'day_mask': 65,  # Sundays & Saturdays
-        'end_time': '2024-04-27T09:00:00-04:00',  # Saturday
-        'exceptions': ['2024-04-20T09:00:00-04:00'],
+        'end_time': '2025-04-27T09:00:00-04:00',  # Saturday
+        'exceptions': ['2025-04-20T09:00:00-04:00'],
         'frequency': 1,
         'id': event_1['repeat']['id']
     }
@@ -221,7 +221,7 @@ def test_set_event_repeat_day_mask():
 
 
 def test_set_event_repeat_end_time():
-    new_repeat_end_time = '2024-05-04T09:00:00-04:00'  # Saturday
+    new_repeat_end_time = '2025-05-04T09:00:00-04:00'  # Saturday
     assert new_repeat_end_time == send_set(f'/scheduler/events/durham/{event_1["id"]}/repeat/end_time', new_repeat_end_time)
     assert new_repeat_end_time == send_get(f'/scheduler/events/durham/{event_1["id"]}/repeat/end_time')
     assert 0 == send_get(f'/scheduler/events/durham/{event_1["id"]}/repeat/end_count')
@@ -235,7 +235,7 @@ def test_set_event_repeat_end_count():
 
 
 def test_set_event_repeat_exceptions():
-    new_repeat_exceptions = ['2024-04-20T09:00:00-04:00', '2024-04-27T09:00:00-04:00']
+    new_repeat_exceptions = ['2025-04-20T09:00:00-04:00', '2025-04-27T09:00:00-04:00']
     assert new_repeat_exceptions == send_set(f'/scheduler/events/durham/{event_1["id"]}/repeat/exceptions', new_repeat_exceptions)
     assert new_repeat_exceptions == send_get(f'/scheduler/events/durham/{event_1["id"]}/repeat/exceptions')
 
@@ -249,7 +249,7 @@ def test_set_event_repeat_frequency():
 
 
 def test_post_event_repeat_exception():
-    new_exception = '2024-05-05T09:00:00-04:00'
+    new_exception = '2025-05-05T09:00:00-04:00'
     current_exceptions = send_get(f'/scheduler/events/durham/{event_1["id"]}/repeat/exceptions')
     current_exceptions.append(new_exception)
     assert current_exceptions == send_post(f'/scheduler/events/durham/{event_1["id"]}/repeat/exceptions', new_exception)
@@ -257,7 +257,7 @@ def test_post_event_repeat_exception():
 
 
 def test_delete_event_repeat_specific_exception():
-    exception_to_delete = '2024-04-16T09:00:00-04:00'
+    exception_to_delete = '2025-04-16T09:00:00-04:00'
     # set up this test by verifying the targeted exception is indeed in the existing exceptions array
     current_exceptions = send_get(f'/scheduler/events/durham/{event_1["id"]}/repeat/exceptions')
     index_to_delete = current_exceptions.index(exception_to_delete)

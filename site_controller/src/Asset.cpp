@@ -1643,6 +1643,9 @@ bool Asset::handle_actions_set(fims_message& msg) {
                     case ACTION_STATUS_STATE::IN_PROGRESS:
                         FPS_WARNING_LOG("Action requested (%s), but no action taken because asset is in progress. Actions can only clear when in a static state.", msg.uri);
                         break;
+                    case ACTION_STATUS_STATE::EXITING:
+                        FPS_WARNING_LOG("Action requested (%s), but no action taken because asset is in exiting. Actions can only clear when in a static state.", msg.uri);
+                        break;
                     default:
                         action.clear_action(action_status);
                         break;
@@ -2960,7 +2963,6 @@ bool fimsCtl::makeJSONObjectWithActionOptions(fmt::memory_buffer& buf, const cha
     if (var == nullptr) {
         bufJSON_EndObject(buf);  // } UiItemVar
     }
-
     return true;
 }
 

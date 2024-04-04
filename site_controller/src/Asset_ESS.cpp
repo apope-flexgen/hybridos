@@ -1268,6 +1268,9 @@ bool Asset_ESS::call_action_functions(const char* cmd, Value_Object* value, int 
         start();
     } else if (strcmp(cmd, "stop") == 0) {
         stop();
+    } else if (strcmp(cmd, "set_maint_mode") == 0) {
+        FPS_DEBUG_LOG("You have reached the set_maint_mode function for ess in asset.cpp");
+        inMaintenance = value->value_bool;
     } else if (strcmp(cmd, "set_maint_active_power_setpoint") == 0) {
         FPS_DEBUG_LOG("You have reached the set_maint_active_power function for ess in asset.cpp");
         maint_active_power_setpoint = value->value_float;

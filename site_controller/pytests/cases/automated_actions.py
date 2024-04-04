@@ -1,12 +1,16 @@
 # Automated Action tests
+from os import times
 from pytest_cases import parametrize, fixture
 from pytests.assertion_framework import Assertion_Type, Flex_Assertion
 from pytests.pytest_steps import Setup, Steps, Teardown
-from pytests.fims import fims_set
+from pytests.fims import fims_set, fims_get
 from pytest_utils.fims_listen_parser import listen_reply, listen_reply_validator
+from datetime import datetime, timedelta
 from subprocess import Popen, PIPE
 from typing import List, Union
-from json import loads
+from pytest_utils.sample_modes import Constants_Variables_Json, Mode, modes_cfg
+from pytest_utils.sample_events import balance_event
+from json import JSONDecodeError, JSONDecoder, loads
 import threading
 import time
 
@@ -37,7 +41,11 @@ def grok_reply() -> Union[listen_reply, None]:
                 username = line[line.find("Username:") + len("Username:"):].strip()
             if line.find("Body:") != -1:
                 body_str = line[line.find("Body:") + len("Body:"):].strip()
-                body = loads(body_str)
+                try:
+                    body = loads(body_str)
+                except JSONDecodeError:
+                    print("failed to parse body string")
+                    print(body_str)
             if line.find("Timestamp:") != -1:
                 timestamp = line[line.find("Timestamp:") + len("Timestamp:"):].strip()
                 stdout = []
@@ -155,6 +163,84 @@ def validate_action_pubs(uri: Union[str, None] = None, expected_info: Union[List
                     proc.wait()
 
             reply = None
+
+def schedule_a_battery_balancing_event(expected_info: Union[List[listen_reply_validator], None] = None, set_SoC_on_step: Union[tuple, None] = None, ignore_step:Union[str, None] = None, action_name: Union[str, None] = None) -> Union[listen_reply, None]:
+    """ This will create a mode for battery balancing and then schedule an event
+    starting in 1 minute from now. Then watch the balancing and make sure it behaves as expected."""
+
+    # first we need to create the mode to make sure it's there
+    def check_for_bat_bal():
+        reply = fims_get("/scheduler/modes")
+        if 'battery_balancing' in reply:
+            return True
+        return False
+    def set_modes():
+       assert modes_cfg == fims_set('/scheduler/modes', modes_cfg)
+       assert modes_cfg == fims_get('/scheduler/modes')
+
+    while not check_for_bat_bal():
+        # create the mode
+        set_modes()
+    else: 
+        print("already there")
+
+    cmd = ["fims_listen", "-u", "/assets/ess/ess_1"]
+    reply = None
+    proc = Popen(cmd, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+
+    # clear all events
+    fims_set('/scheduler/events', {'durham':[]})
+    # get current time int utf format
+    utc_now = datetime.utcnow()
+    # Add one minute to the current time
+    one_minute_later = utc_now + timedelta(minutes=1)
+    event = balance_event
+    event['start_time'] = one_minute_later.strftime("%Y-%m-%dT%H:%M:%SZ")
+    fims_set('/scheduler/events', {'durham':[event]})
+
+    global stdout
+    stdout = []
+
+    info_index = 0
+
+    while proc.poll() is None:
+        if proc.stdout is not None:
+            stdout.append(proc.stdout.readline())
+
+        reply = grok_reply()
+        if reply is not None:
+            stdout = []
+            if reply.contains_action_pub():
+                if expected_info is not None and len(expected_info) > 0:
+                    if info_index <= len(expected_info) -1:
+                        if ignore_step is not None and ignore_step == reply.body['actions'][action_name]['step_name']:
+                            continue # this step is hard to catch in pubs because it is so fast
+
+                        # if you are supposed to find exiting check for it otherwise skip it
+                        # why? Because exiting can appear in many pubs and it's hard to make it pub consistently
+                        # whats important is that we see the exiting step and then eventually make it out.
+                        if reply.body['actions'][action_name]['status'] == "Exiting" and expected_info[info_index].status != "Exiting":
+                            continue
+                        else: 
+                            assert reply.body['actions'][action_name]['path_name'] == expected_info[info_index].path_name
+                            assert reply.body['actions'][action_name]['step_name'] == expected_info[info_index].step_name
+                            assert reply.body['actions'][action_name]['status'] == expected_info[info_index].status
+
+                            if set_SoC_on_step is not None and reply.body['actions'][action_name]['step_name'] == set_SoC_on_step[0]: 
+                                fims_set("/components/ess_psm/bms_soc", set_SoC_on_step[1])
+                            print(fims_get("/assets/ess/ess_1/maint_mode"))
+                            if not fims_get("/assets/ess/ess_1/maint_mode"):
+                                proc.kill()
+                                proc.wait()
+
+                            info_index = info_index + 1
+
+                if reply.body['actions'][action_name]['status'] == "Completed" or reply.body['actions'][action_name]['status'] == "Aborted" or reply.body['actions'][action_name]['status'] == "Failed":
+                    proc.kill()
+                    proc.wait()
+
+            reply = None
+
 
 #####################################################################TESTS########################################################################
 
@@ -675,4 +761,58 @@ test7.append(listen_reply_validator(path_name="ESS Calibration", step_name="Set 
     )
 ])
 def test_maint_mode_early_exit(test):
+    return test
+
+# This test will set up a scheduler event starting in 1 minute and then 
+# make sure that it works and successfully automatically exits maintenance mode.
+# issue exit maint_mode
+test8 = []
+test8.append(listen_reply_validator(path_name="ESS Calibration", step_name="Start ESS", status="In Progress"))
+test8.append(listen_reply_validator(path_name="ESS Calibration", step_name="Setup limits", status="In Progress"))
+test8.append(listen_reply_validator(path_name="ESS Calibration", step_name="Enable limits", status="In Progress"))
+test8.append(listen_reply_validator(path_name="ESS Calibration", step_name="Set Maint Active Power", status="In Progress"))
+test8.append(listen_reply_validator(path_name="ESS Calibration", step_name="Set Maint Active Power 0", status="In Progress"))
+test8.append(listen_reply_validator(path_name="ESS Calibration", step_name="Completed", status="Exiting"))
+test8.append(listen_reply_validator(path_name="ESS Calibration", step_name="Completed", status="Completed"))
+
+@ fixture
+@ parametrize("test", [
+    # place all assets in maint_mode
+    Setup(
+        "Test maint mode interactions",
+        {},
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/status", "Running"),
+        ]
+    ),
+    Steps(
+        {},
+        [],
+        pre_lambda=[
+            lambda: schedule_a_battery_balancing_event(expected_info=test8, ignore_step="Charge to 80%", set_SoC_on_step=("Setup limits", 75), action_name="Calibration1"),
+        ]    
+    ),
+    # re-enter maint after exiting in above lambda
+    Steps(
+        {
+            "/assets/ess/ess_1/maint_mode": True,
+        },
+        []    
+    ),
+    # Turn off maint_mode
+    Teardown(
+        {
+            "/assets/ess/ess_1/clear_faults": True,
+            **Steps.config_dev_remove_assets_from_maint(),
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/maint_mode", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_1/maint_mode", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/gen_1/maint_mode", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_2/maint_mode", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_2/maint_mode", False),
+        ]
+    )
+])
+def test_scheduler_balancing(test):
     return test

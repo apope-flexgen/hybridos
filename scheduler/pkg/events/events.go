@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"reflect"
 	"time"
 
 	log "github.com/flexgen-power/go_flexgen/logger"
@@ -88,20 +89,42 @@ func (e *Event) Validate(timeZone *time.Location, mapOfVariables map[string]setp
 	}
 	for _, modeVar := range modeVariables {
 		var err error
-		switch modeVar.VarType {
-		case "Float":
-			_, err = parsemap.ExtractValueWithType(e.Variables, modeVar.Id, parsemap.FLOAT64)
-		case "Int":
-			var valueInt int
-			valueInt, err = parsemap.ExtractAsInt(e.Variables, modeVar.Id)
-			e.Variables[modeVar.Id] = valueInt
-		case "Bool":
-			_, err = parsemap.ExtractValueWithType(e.Variables, modeVar.Id, parsemap.BOOL)
-		case "String":
-			_, err = parsemap.ExtractValueWithType(e.Variables, modeVar.Id, parsemap.STRING)
-		}
-		if err != nil {
-			return fmt.Errorf("failed to validate %s %s: %w", modeVar.VarType, modeVar.Id, err)
+		switch eventVar := e.Variables[modeVar.Id].(type) {
+		case map[string]interface{}:
+			// get the inner value
+			_, err := parsemap.ExtractValueWithType(eventVar, "value", parsemap.BOOL)
+			if err != nil {
+				return fmt.Errorf("error while extracting %v value: %w", eventVar, err)
+			}
+			_, err = parsemap.ExtractValueWithType(eventVar, "batch_value", parsemap.INTERFACE_SLICE)
+			if err != nil {
+				return fmt.Errorf("error while extracting %v batch_value: %w", eventVar, err)
+			}
+		default:
+			switch modeVar.VarType {
+			case "Float":
+				_, err = parsemap.ExtractValueWithType(e.Variables, modeVar.Id, parsemap.FLOAT64)
+				if err != nil {
+					return fmt.Errorf("error while extracting float value: %w", eventVar, err)
+				}
+			case "Int":
+				var valueInt int
+				valueInt, err = parsemap.ExtractAsInt(e.Variables, modeVar.Id)
+				if err != nil {
+					return fmt.Errorf("error while extracting int value: %w", eventVar, err)
+				}
+				e.Variables[modeVar.Id] = valueInt
+			case "Bool":
+				_, err = parsemap.ExtractValueWithType(e.Variables, modeVar.Id, parsemap.BOOL)
+				if err != nil {
+					return fmt.Errorf("error while extracting bool value: %w", eventVar, err)
+				}
+			case "String":
+				_, err = parsemap.ExtractValueWithType(e.Variables, modeVar.Id, parsemap.STRING)
+				if err != nil {
+					return fmt.Errorf("error while extracting string value: %w", eventVar, err)
+				}
+			}
 		}
 	}
 
@@ -265,13 +288,44 @@ func (e1 *Event) Equals(e2 *Event) (areEqual bool, reasonNotEqual string) {
 
 	// check each variable value, also checking if the same variables are in each map
 	for k, v1 := range e1.Variables {
-		if v2, ok := e2.Variables[k]; ok {
-			if v1 != v2 {
-				return false, fmt.Sprintf("variable %s's value %v does not equal %v", k, v1, v2)
-			}
-		} else {
+		v2, ok := e2.Variables[k]
+		if !ok {
 			// since variable array lengths were already verified to be equal, do not need to check that all e2 vars are in e1
 			return false, fmt.Sprintf("variable %s is in e1 but missing from e2", k)
+		}
+		if reflect.TypeOf(v1) == reflect.TypeOf(v2) {
+			if T1, ok := v1.(map[string]interface{}); ok {
+				mapsEqual := true
+				// Check if the maps have the same number of key-value pairs
+				T2, ok := v2.(map[string]interface{})
+				if !ok {
+					return false, fmt.Sprintf("types for v1 and v2 are not the same.")
+				}
+				if len(T1) != len(T2) {
+					mapsEqual = false
+				}
+
+				// Iterate over each key-value pair in the first map
+				for key, val1 := range T1 {
+					// Check if the key exists in the second map
+					val2, ok := T2[key]
+					if !ok {
+						mapsEqual = false
+					}
+
+					// Check if the values are equal
+					if !reflect.DeepEqual(val1, val2) {
+						mapsEqual = false
+					}
+				}
+				if !mapsEqual {
+					return false, fmt.Sprintf("variable %s's value %v does not equal %v", k, v1, v2)
+				}
+			} else {
+				if v1 != v2 {
+					return false, fmt.Sprintf("variable %s's value %v does not equal %v", k, v1, v2)
+				}
+			}
 		}
 	}
 

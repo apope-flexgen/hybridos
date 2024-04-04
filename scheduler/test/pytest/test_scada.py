@@ -52,17 +52,18 @@ def test_scada_basic_overwrite_and_append():
         Stages a daily-repeating event and tests that the Overwrite command works.
         Stages a one-off event and tests that the Append command works.
     """
+    assert False == send_set('/scheduler/configuration/scada/append_can_edit', False)
     # mode=0 translates to Absolute ESS mode which has one float and one bool
-    stage_event(stage_index=0, year=2024, month=3, day=20, hour=12, minute=0, duration=60, repeat_daily=1, site=0, mode=0, variables={'float_1': 1000, 'bool_1': 0})
+    stage_event(stage_index=0, year=2025, month=3, day=20, hour=12, minute=0, duration=60, repeat_daily=1, site=0, mode=0, variables={'float_1': 1000, 'bool_1': 0})
     # overwrite with Command 2 to replace existing schedule
     assert "Success" == send_set('/scheduler/scada/write/command', 2)
-    assert_event_read(event_index=0, year=2024, month=3, day=20, hour=12, minute=0, duration=60, repeat_daily=1, site=0, mode=0, variables={'float_1': 1000, 'bool_1': 0})
+    assert_event_read(event_index=0, year=2025, month=3, day=20, hour=12, minute=0, duration=60, repeat_daily=1, site=0, mode=0, variables={'float_1': 1000, 'bool_1': 0})
 
     # now append with Command 1 to add to existing schedule
-    stage_event(stage_index=1, year=2024, month=3, day=21, hour=20, minute=0, duration=60, repeat_daily=0, site=0, mode=0, variables={'float_1': 1000, 'bool_1': 1})
+    stage_event(stage_index=1, year=2025, month=3, day=21, hour=20, minute=0, duration=60, repeat_daily=0, site=0, mode=0, variables={'float_1': 1000, 'bool_1': 1})
     assert "Success" == send_set('/scheduler/scada/write/command', 1)
-    assert_event_read(event_index=0, year=2024, month=3, day=20, hour=12, minute=0, duration=60, repeat_daily=1, site=0, mode=0, variables={'float_1': 1000, 'bool_1': 0})
-    assert_event_read(event_index=1, year=2024, month=3, day=21, hour=20, minute=0, duration=60, repeat_daily=0, site=0, mode=0, variables={'float_1': 1000, 'bool_1': 1})
+    assert_event_read(event_index=0, year=2025, month=3, day=20, hour=12, minute=0, duration=60, repeat_daily=1, site=0, mode=0, variables={'float_1': 1000, 'bool_1': 0})
+    assert_event_read(event_index=1, year=2025, month=3, day=21, hour=20, minute=0, duration=60, repeat_daily=0, site=0, mode=0, variables={'float_1': 1000, 'bool_1': 1})
 
 
 def test_scada_overwrite_and_append_with_append_can_edit_turned_on():
@@ -75,12 +76,13 @@ def test_scada_append_cannot_edit_by_default():
         When the append_can_edit configuration flag is false, the Append command should not be allowed to
         add an event if the event has the same start time as an existing event.
     """
+    assert False == send_set('/scheduler/configuration/scada/append_can_edit', False)
     # stage event that has same start time as existing event added by automatic test fixture but different duration
-    stage_event(stage_index=0, year=2024, month=3, day=13, hour=13, minute=0, duration=45, repeat_daily=0, site=0, mode=1, variables={'float_1': 50})
+    stage_event(stage_index=0, year=2025, month=3, day=13, hour=13, minute=0, duration=45, repeat_daily=0, site=0, mode=2, variables={'float_1': 50})
     # send Append command. "Success" in this context just means that the command was successfully received, even if it was not successfully executed
     assert "Success" == send_set('/scheduler/scada/write/command', 1)
     # make sure that the existing event was not edited by the staged event
-    assert_event_read(event_index=0, year=2024, month=3, day=13, hour=13, minute=0, duration=90, repeat_daily=0, site=0, mode=1, variables={'float_1': 50})
+    assert_event_read(event_index=0, year=2025, month=3, day=13, hour=13, minute=0, duration=90, repeat_daily=0, site=0, mode=2, variables={'float_1': 50})
 
 
 def test_scada_append_can_edit_when_configuration_option_is_true():
@@ -91,12 +93,12 @@ def test_scada_append_can_edit_when_configuration_option_is_true():
     assert True == send_set('/scheduler/configuration/scada/append_can_edit', True)
 
     # stage event that has same start time as existing event added by automatic test fixture but different duration
-    stage_event(stage_index=0, year=2024, month=3, day=13, hour=13, minute=0, duration=45, repeat_daily=0, site=0, mode=1, variables={'float_1': 50})
+    stage_event(stage_index=0, year=2025, month=3, day=13, hour=13, minute=0, duration=45, repeat_daily=0, site=0, mode=2, variables={'float_1': 50})
 
     assert "Success" == send_set('/scheduler/scada/write/command', 1)
 
     # make sure Append command successfully edited the existing event
-    assert_event_read(event_index=0, year=2024, month=3, day=13, hour=13, minute=0, duration=45, repeat_daily=0, site=0, mode=1, variables={'float_1': 50})
+    assert_event_read(event_index=0, year=2025, month=3, day=13, hour=13, minute=0, duration=45, repeat_daily=0, site=0, mode=2, variables={'float_1': 50})
 
 
 def test_scada_append_fails_on_overlap():
@@ -104,7 +106,7 @@ def test_scada_append_fails_on_overlap():
         The Append command cannot add an event that has a different start time than an existing event yet overlaps it.
     """
     # stage event that starts an hour before existing event and overlaps it
-    stage_event(stage_index=0, year=2024, month=3, day=13, hour=12, minute=0, duration=90, repeat_daily=0, site=0, mode=1, variables={'float_1': 50})
+    stage_event(stage_index=0, year=2025, month=3, day=13, hour=12, minute=0, duration=90, repeat_daily=0, site=0, mode=1, variables={'float_1': 50})
     # send Append command. "Success" in this context just means that the command was successfully received, even if it was not successfully executed
     assert "Success" == send_set('/scheduler/scada/write/command', 1)
     # make sure that the event was not added

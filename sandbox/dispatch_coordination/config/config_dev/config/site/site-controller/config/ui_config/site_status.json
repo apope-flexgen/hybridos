@@ -8,10 +8,10 @@
             "label": "Mode"
         },
         {
-            "uri": "/features/active_power",
-            "field": "site_kW_load",
+            "uri": "/assets/feeders/feed_1",
+            "field": "active_power",
             "dataType": "number",
-            "label": "Active Power"
+            "label": "POI active power"
         },
         {
             "uri": "/assets/ess/ess_1",

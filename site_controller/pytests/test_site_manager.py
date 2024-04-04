@@ -27,6 +27,7 @@ from pytests.cases.maint_mode import test_min_charge_discharge, test_maint_soc_l
 from pytests.cases.ess_calibration import test_ess_cali
 from pytests.cases.enable_flags import test_enable_flags
 from pytests.cases.automated_actions import test_completed_automated_action, test_aborted_automated_action, test_silent_automated_action, test_path_switch_automated_action, test_failed_automated_action, test_alarm_automated_action, test_maint_mode_early_exit
+from pytests.cases.automated_actions import test_completed_automated_action, test_aborted_automated_action, test_silent_automated_action, test_path_switch_automated_action, test_failed_automated_action, test_alarm_automated_action, test_maint_mode_early_exit, test_scheduler_balancing
 from pytests.cases.fims_api import test_fr_multiple_inputs
 
 # Test runner AKA main() for each individual test
@@ -104,7 +105,8 @@ from pytests.cases.fims_api import test_fr_multiple_inputs
     test_failed_automated_action,
     test_alarm_automated_action,
     test_maint_mode_early_exit,
-    test_fr_multiple_inputs
+    test_fr_multiple_inputs,
+    test_scheduler_balancing
     #
     # config_dev_slow_slews
     # TODO find a way to make these tests run automatically under different configs rather than just commenting out :(

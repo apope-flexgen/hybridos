@@ -225,8 +225,8 @@ bat_bal = {
 		"batch_prefix": "/assets/ess",
 		"batch_range": ["1..2"],
 		"batch_value": [1,2]
-	}
-	]
+	}	
+    ]
 }
 
 modes_cfg = {

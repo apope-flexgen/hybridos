@@ -212,7 +212,9 @@ func (slot *scadaSlot) reset() {
 
 // insert adds an event with given site and slot status to the SCADA slot.
 func (slot *scadaSlot) insert(e *events.Event, site *schedule, s slotStatus) {
-	slot.event.fillWithData(e, site)
+	if err := slot.event.fillWithData(e, site); err != nil {
+		log.Errorf("Error filling data: %v.", err)
+	}
 	slot.status = s
 }
 
@@ -234,7 +236,7 @@ func (slot *scadaSlot) handleGet(endpoint, replyTo string) error {
 }
 
 // fillWithData fills in a SCADA event with data coming from a standard event object.
-func (eScada *scadaEvent) fillWithData(e *events.Event, site *schedule) {
+func (eScada *scadaEvent) fillWithData(e *events.Event, site *schedule) error {
 	eScada.reset()
 	eScada.site = site
 	eScada.modeId = e.Mode
@@ -254,23 +256,26 @@ func (eScada *scadaEvent) fillWithData(e *events.Event, site *schedule) {
 	floatIndex, intIndex, boolIndex, stringIndex := 0, 0, 0, 0
 	mode, ok := modes[e.Mode]
 	if !ok {
-		log.Errorf("Error filling SCADA event: mode %s not found in mode map.", e.Mode)
-		return
+		return fmt.Errorf("mode %s not found in mode map", e.Mode)
 	}
 	for _, sp := range mode.Variables {
 		val, ok := e.Variables[sp.Id]
 		if !ok {
-			log.Errorf("Error filling SCADA event: event variables do not match mode variables!")
-			eScada.reset()
-			return
+			return fmt.Errorf("could not find setpoint id \"%s\" in variable", sp.Id)
 		}
+
+                _, ok = val.(map[string]interface{})
+                if ok {
+			eScada.reset()
+			return fmt.Errorf("value of type %T. Currently not supported. You are likely trying to use batching for SCADA which is not supported", val)
+                }
+
 		switch sp.VarType {
 		case "Float":
 			valFloat, ok := val.(float64)
 			if !ok {
-				log.Errorf("Error filling SCADA event: float variable %s has type %T, not float64.", sp.Id, val)
 				eScada.reset()
-				return
+				return fmt.Errorf("float variable %s has type %T, not float64", sp.Id, val)
 			}
 			if floatIndex < schedCfg.Scada.NumFloats {
 				eScada.floatVars[floatIndex] = valFloat
@@ -279,9 +284,8 @@ func (eScada *scadaEvent) fillWithData(e *events.Event, site *schedule) {
 		case "Int":
 			valInt, ok := val.(int)
 			if !ok {
-				log.Errorf("Error filling SCADA event: int variable %s has type %T, not int.", sp.Id, val)
 				eScada.reset()
-				return
+				return fmt.Errorf("int variable %s has type %T, not int", sp.Id, val)
 			}
 			if intIndex < schedCfg.Scada.NumInts {
 				eScada.intVars[intIndex] = valInt
@@ -290,9 +294,8 @@ func (eScada *scadaEvent) fillWithData(e *events.Event, site *schedule) {
 		case "Bool":
 			valBool, ok := val.(bool)
 			if !ok {
-				log.Errorf("Error filling SCADA event: boolean variable %s has type %T, not bool.", sp.Id, val)
 				eScada.reset()
-				return
+				return fmt.Errorf("boolean variable %s has type %T, not bool", sp.Id, val)
 			}
 			if boolIndex < schedCfg.Scada.NumBools {
 				if valBool {
@@ -305,9 +308,8 @@ func (eScada *scadaEvent) fillWithData(e *events.Event, site *schedule) {
 		case "String":
 			valString, ok := val.(string)
 			if !ok {
-				log.Errorf("Error filling SCADA event: string variable %s has type %T, not string.", sp.Id, val)
 				eScada.reset()
-				return
+				return fmt.Errorf("string variable %s has type %T, not string", sp.Id, val)
 			}
 			if stringIndex < schedCfg.Scada.NumStrings {
 				eScada.stringVars[stringIndex] = valString
@@ -315,6 +317,7 @@ func (eScada *scadaEvent) fillWithData(e *events.Event, site *schedule) {
 			}
 		}
 	}
+	return nil
 }
 
 func (e *scadaEvent) handleGet(endpoint, replyTo string) error {
@@ -1164,7 +1167,10 @@ func loadStage() error {
 			return fmt.Errorf("no event found with selected start time within the schedule of the selected site/day")
 		}
 	}
-	scadaStagedEvent.fillWithData(e, scadaStagedEvent.site)
+
+	if err := scadaStagedEvent.fillWithData(e, scadaStagedEvent.site); err != nil {
+		return fmt.Errorf("error filling data: %v.", err)
+	}
 	pubScadaStage()
 	return nil
 }

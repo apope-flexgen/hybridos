@@ -13,6 +13,7 @@ import (
 	"errors"
 	"fims"
 	"fmt"
+	"reflect"
 	"time"
 
 	log "github.com/flexgen-power/go_flexgen/logger"
@@ -148,7 +149,10 @@ func (sched *schedule) check() (scheduleChanged bool) {
 	// only execute events for local schedules
 	if schedCfg.LocalSchedule != nil && sched.id == schedCfg.LocalSchedule.Id {
 		log.Infof("Executing event for schedule %s", sched.id)
-		executeEvent(nextEvent)
+		if err := executeEvent(nextEvent); err != nil {
+			log.Errorf("Error while starting event for local schedule: %v", err)
+		}
+
 	}
 	sched.activeEvent = nextEvent
 	return true
@@ -274,7 +278,9 @@ func (sched *schedule) replaceActiveEvent(e *events.Event) {
 	// only execute events local schedules.
 	// aka do not execute Site Controller events on Fleet Manager and vice versa
 	if schedCfg.LocalSchedule != nil && sched.id == schedCfg.LocalSchedule.Id {
-		executeEvent(e)
+		if err := executeEvent(e); err != nil {
+			log.Errorf("Error while replacing active event: %v", err)
+		}
 	}
 }
 
@@ -299,7 +305,9 @@ func (sched *schedule) deleteEventsWithMode(modeBeingDeleted string) {
 // re-executes a schedule's active event if it uses the given mode. used if there is a URI change to a mode variable
 func (sched *schedule) resendActiveEventsWithMode(changedMode string) {
 	if sched.activeEvent != nil && sched.activeEvent.Mode == changedMode {
-		executeEvent(sched.activeEvent)
+		if err := executeEvent(sched.activeEvent); err != nil {
+			log.Errorf("Error while resending active events with mode: %v", err)
+		}
 	}
 }
 
@@ -846,23 +854,39 @@ func (sched1 *schedule) equals(sched2 *schedule) (areEqual bool, reasonNotEqual 
 }
 
 // Sends an event's setpoints to their respective URIs.
-func executeEvent(e *events.Event) {
+func executeEvent(e *events.Event) error {
 	m, ok := modes[e.Mode]
 	if !ok {
-		log.Errorf("Mode %s not found in modes map.", e.Mode)
-		return
+		return fmt.Errorf("Mode %s not found in modes map", e.Mode)
 	}
 
 	m.sendConstants()
 
+	var attempted, failed int
 	for _, sp := range m.Variables {
+		attempted++
 		variableValue, ok := e.Variables[sp.Id]
 		if !ok {
 			log.Errorf("Did not find %s mode's variable setpoint %s in event variable map. Event details: %+v.", m.Name, sp.Id, *e)
+			failed++
 			continue
 		}
-		sp.SendSet(f, variableValue, schedCfg.LocalSchedule.ClothedSetpoints)
+		if sp.IsTemplate {
+			if err := sp.SendTemplatedSet(f, variableValue, schedCfg.LocalSchedule.ClothedSetpoints); err != nil {
+				log.Errorf("Error while sending templated set: %v", err)
+				failed++
+				continue
+			}
+		} else {
+			sp.SendSet(f, variableValue, schedCfg.LocalSchedule.ClothedSetpoints)
+		}
 	}
+
+	if failed != 0 {
+		return fmt.Errorf("attempted %d setpoints but failed %d", attempted, failed)
+	}
+
+	return nil
 }
 
 // updateActiveEvent is a special case of update for active events.
@@ -906,10 +930,12 @@ func updateActiveEvent(eOld *events.Event, eNew *events.Event) {
 			log.Errorf("Mode variable %s does not match any variables in new event variable map while trying to update active event.", modeVar.Id)
 			continue
 		}
+
 		// if the variable value has not changed, no need to send a new SET
-		if oldVarVal == newVarVal {
-			continue
+		if reflect.DeepEqual(oldVarVal, newVarVal) {
+			return
 		}
+
 		// if we have made it to this point, then a variable value has been changed. send an update
 		modeVar.SendSet(f, newVarVal, schedCfg.LocalSchedule.ClothedSetpoints)
 		// also update event object's stored value
