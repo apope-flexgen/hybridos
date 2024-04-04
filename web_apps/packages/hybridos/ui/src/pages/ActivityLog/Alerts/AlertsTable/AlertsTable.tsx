@@ -1,12 +1,13 @@
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import DataTable from '@flexgen/storybook/dist/components/DataDisplay/DataTable';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAppContext } from 'src/App/App';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import { activeAlertsColumns, initialActiveAlertsFilters } from 'src/pages/ActivityLog/Alerts/alerts.helpers';
 import { dataTableBox } from 'src/pages/ActivityLog/Alerts/alerts.styles';
-import useGenerateRows from 'src/pages/ActivityLog/Alerts/hooks/useGenerateRows';
-import { ActiveAlertObject } from 'src/pages/ActivityLog/activityLog.types';
+import useGenerateActiveAlertRows from 'src/pages/ActivityLog/Alerts/hooks/useGenerateRows';
+import { ActiveAlertObject, AlertFilters } from 'src/pages/ActivityLog/activityLog.types';
+import QueryService from 'src/services/QueryService';
 
 export interface AlertsTableProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
@@ -15,11 +16,11 @@ export interface AlertsTableProps {
 const AlertsTable = ({
   setIsLoading,
 }: AlertsTableProps) => {
-  const [filters] = useState<{ [key: string]: any }>(initialActiveAlertsFilters);
+  const [filters] = useState<AlertFilters>(initialActiveAlertsFilters);
   const [activeAlertsData, setActiveAlertsData] = useState<ActiveAlertObject[]>([]);
   const [count, setCount] = useState<number>(1);
   const { product } = useAppContext();
-  const { results, generateRowsData } = useGenerateRows();
+  const { results, generateRowsData } = useGenerateActiveAlertRows();
   const axiosInstance = useAxiosWebUIInstance();
 
   const getInitialData = async () => {
@@ -36,6 +37,16 @@ const AlertsTable = ({
       setIsLoading(false);
     });
   };
+
+  const handleDataOnSocket = useCallback(() => { getInitialData(); }, []);
+
+  // start listening to web sockets
+  useEffect(() => {
+    QueryService.getAlertsPage(handleDataOnSocket);
+    return () => {
+      QueryService.cleanupSocket();
+    };
+  }, [handleDataOnSocket]);
 
   // initial GET request to populate data for page
   useEffect(() => {
@@ -57,11 +68,12 @@ const AlertsTable = ({
         headerColor="secondary"
         pagination
         rowsPerPage={[10, 20, 50]}
-        paperSx={{ boxShadow: 'none' }}
+        paperSx={{ boxShadow: 'none', minHeight: '400px' }}
         expandable
         showExpandableRowIcons
         totalRows={count}
         onPageChange={() => { getInitialData(); }}
+        emptyStateText="No Active Alerts"
       />
     </Box>
   );

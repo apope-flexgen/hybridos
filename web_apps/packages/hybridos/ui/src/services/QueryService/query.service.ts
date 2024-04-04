@@ -78,6 +78,13 @@ class QueryService {
     this.realTimeService.send('scheduler', URIs, 'scheduler');
   };
 
+  getAlertsPage: (listenerFunction: (data: any) => void) => void = async (
+    listenerFunction: (data: any) => void,
+  ) => {
+    this.realTimeService.listen(listenerFunction, 'alerts');
+    this.realTimeService.send('alerts', '', 'alerts');
+  };
+  
   getErcotOverridePage: (siteId: string, listenerFunction: (data: any) => void) => void = async (
     siteId: string,
     listenerFunction: (data: any) => void,

@@ -1,11 +1,11 @@
 import { Column } from '@flexgen/storybook';
 import { FLEET_MANAGER } from 'src/components/BaseApp';
+import { AlertFilters } from 'src/pages/ActivityLog/activityLog.types';
 
 export const formatColumnLabel = (column: string) => column.replace(/_/g, ' ');
 
-export const initialActiveAlertsFilters = {
-  resolved: false,
-  organization: 'VFakeCo',
+export const initialActiveAlertsFilters: AlertFilters = {
+  resolvedFilter: false,
   limit: 50,
   page: 0,
   order: -1,

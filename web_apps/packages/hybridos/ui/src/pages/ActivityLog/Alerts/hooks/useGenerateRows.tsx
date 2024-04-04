@@ -10,7 +10,7 @@ import SeverityIndicator from 'src/pages/ActivityLog/Alerts/SeverityIndicator/Se
 import { expandedRowBoxSx, expandedRowContentSx } from 'src/pages/ActivityLog/Alerts/alerts.styles';
 import { ActiveAlertObject, ActiveAlertRow } from 'src/pages/ActivityLog/activityLog.types';
 
-const useGenerateRows = () => {
+const useGenerateActiveAlertRows = () => {
   const [results, setResults] = useState<ActiveAlertRow[]>([]);
 
   const generateSeverityComponent = (severity: number) => <SeverityIndicator severity={severity} />;
@@ -69,7 +69,7 @@ const useGenerateRows = () => {
             <Box sx={expandedRowContentSx}>
               <Typography text={instance.timestamp} variant="bodySBold" />
               <Box sx={{ display: 'flex', gap: '2px' }}>
-                <Typography text={`${alertTitle} -`} variant="bodySBold" />
+                <Typography text={alertTitle ? `${alertTitle} -` : ''} variant="bodySBold" />
                 <Typography text={instance.message} variant="bodyS" />
               </Box>
             </Box>
@@ -112,4 +112,4 @@ const useGenerateRows = () => {
   return { results, generateRowsData };
 };
 
-export default useGenerateRows;
+export default useGenerateActiveAlertRows;

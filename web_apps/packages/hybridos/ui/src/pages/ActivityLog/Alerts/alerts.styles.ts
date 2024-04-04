@@ -15,10 +15,11 @@ export const headerBoxSx = {
 export const tableBoxSx = {
   width: '100%',
   overflowY: 'hidden',
+  height: '100%',
   padding: '16px',
 };
 
-export const dataTableBox = { width: '100%', height: '100%' };
+export const dataTableBox = { width: '100%' };
 export const expandedRowBoxSx = {
   display: 'flex', flexDirection: 'column', width: '100%', gap: '8px', padding: '2.5rem 0.5rem',
 };

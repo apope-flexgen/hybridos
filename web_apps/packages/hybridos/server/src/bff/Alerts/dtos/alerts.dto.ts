@@ -2,10 +2,11 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsNumberString, IsOptional } from 'class-validator'
 import { AlertsDescriptions } from '../alerts.constants'
 
-export class ActiveAlertsRequest {
+export class AlertsRequest {
     @ApiProperty({ description: AlertsDescriptions.severityFilter })
     @IsOptional()
-    severity: number
+    @IsNumberString()
+    severityFilter: string
     @ApiProperty({ description: AlertsDescriptions.limit })
     @IsOptional()
     @IsNumberString()
@@ -23,14 +24,14 @@ export class ActiveAlertsRequest {
     orderBy: string
     @ApiProperty({ description: AlertsDescriptions.status })
     @IsOptional()
-    status: string
+    statusFilter: string
     @ApiProperty({ description: AlertsDescriptions.organization })
     @IsOptional()
-    organization: string
+    orgFilter: string
     @ApiProperty({ description: AlertsDescriptions.site })
     @IsOptional()
-    sites: string[]
+    sitesFilter: string[]
     @ApiProperty({ description: AlertsDescriptions.resolved })
     @IsOptional()
-    resolved: boolean   
+    resolvedFilter: boolean   
 }

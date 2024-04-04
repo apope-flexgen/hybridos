@@ -1,6 +1,11 @@
 import dayjs from 'dayjs';
 import { ActiveAlert } from './responses/alerts.response'
+import { AlertConfiguration } from './responses/alertConfig.response'
 
+export const AlertURIs = {
+  ALERT_CONFIGS: '/events/alerts/management',
+  ALERT_INSTANCES: '/events/alerts',
+}
 export const AlertsDescriptions = {
     alertId: 'ID of particular alert',
     title: 'Title used to identify an alert',
@@ -22,9 +27,177 @@ export const AlertsDescriptions = {
     page: 'The desired page in the paginated result set',
     order: 'Order used for sorting',
     orderBy: 'Which field to order by when sorting',
-    aliases: 'An object containing the aliases and their corresponding URIs used by this alert',
+    deliver: 'A boolean representing whether or not to silence the alert instances stemming from this alert configuration',
+    deleted: 'A boolean flag representing whether or not this alert has been deleted',
+    aliases: 'An array of objects containing the aliases and their corresponding URIs used by this alert',
+    templates: 'An array of objects containing the templated wildcards and their corresponding definitions used by this alert',
+    conditions: 'An array of front-end friendly expressions representing the rule logic for this alert',
+    sites: 'An array of all configured sites that this alert configuration pertains to',
+    name: 'The name associated with the alert',
+    message: 'An error or success message returned from the events service',
+    success: 'A status of whether the post request was successful returned form the events service'
 }
 
+export const mockedAlertConfigurationData: AlertConfiguration[] = [
+  {
+    id: `${Math.floor(Math.random()*90000) + 10000}`,
+    enabled: true,
+    severity: 0, 
+    organization: 'VFakeCo',
+    sites: ['Sudden Valley', 'Lima'],
+    title: 'ESS 1 or ESS 2 SOC < 60%',
+    last_trigger_time: dayjs().format() ,
+    deadline: 30,
+    aliases: [
+        {
+          alias: "ESS 1 SOC",
+          uri: '/assets/ess/ess_1/soc',
+          type: 'number',
+        }, {
+          alias: "ESS 2 SOC",
+          uri: '/assets/ess/ess_2/soc',
+          type: 'number',
+        }
+    ],
+    conditions: [
+      {
+        index: 0,
+        connectionOperator: null,
+        operand1: {
+          type: 'alias',
+          value: 'ESS 1 SOC',
+        },
+        operator: "<",
+        operand2: {
+          type: 'literal',
+          value: 60,
+          unit: '%',
+        },
+      },
+      {
+        index: 1,
+        connectionOperator: 'or',
+        operand1: {
+          type: 'alias',
+          value: 'ESS 2 SOC',
+        },
+        operator: "<",
+        operand2: {
+          type: 'literal',
+          value: 60,
+          unit: '%',
+        },
+      }
+    ]
+  },
+  {
+    id: `${Math.floor(Math.random()*90000) + 10000}`,
+    enabled: true,
+    severity: 2, 
+    organization: 'VFakeCo',
+    sites: ['Sudden Valley', 'Lima'],
+    title: 'Site Status is Shutdown',
+    last_trigger_time: dayjs().format() ,
+    deadline: 60,
+    aliases: [
+        {
+          alias: "Site Status",
+          uri: '/site/##/status/',
+          type: 'string',
+        }
+    ],
+    templates: [
+      {
+        type: "list",
+        list: ['sudden_valley, lima'],
+        token: '##',
+      }
+    ],
+    conditions: [
+      {
+        index: 0,
+        connectionOperator: null,
+        operand1: {
+          type: 'alias',
+          value: 'Site Status',
+        },
+        operator: "=",
+        operand2: {
+          type: 'literal',
+          value: "Shutdown",
+        },
+      }
+    ]
+  },
+  {
+    id: `${Math.floor(Math.random()*90000) + 10000}`,
+    enabled: false,
+    severity: 3, 
+    organization: 'VFakeCo',
+    sites: ['Sudden Valley', 'Lima', 'Site3', 'Site4', 'Site 5', 'Site 6'],
+    title: 'ESS Reactive Power Setpoint > 2',
+    last_trigger_time: dayjs().format() ,
+    deadline: 60,
+    aliases: [
+      { alias: "ESS Reactive Power Setpoint",
+        uri: '/site/ess_kVAR_cmd',
+        type: 'number',
+      },
+    ],
+    conditions: [
+      {
+        index: 0,
+        connectionOperator: null,
+        operand1: {
+          type: 'alias',
+          value: 'ESS Reactive Power Setpoint',
+        },
+        operator: ">",
+        operand2: {
+          type: 'literal',
+          value: "2",
+          unit: 'VAR'
+        },
+      }
+    ]
+  },
+  {
+    id: `${Math.floor(Math.random()*90000) + 10000}`,
+    enabled: true,
+    severity: 2, 
+    organization: 'AnotherFakeCo',
+    sites: ['Sudden Valley', 'Lima', 'Oxford'],
+    title: 'ESS State of Health < 50%',
+    last_trigger_time: dayjs().format() ,
+    deadline: 60,
+    aliases: [
+      { alias: "ESS State of Health", uri: '/assets/ess/ess_!/soh', type: 'number'} 
+    ],
+    templates: [
+      { type: 'sequential', to: 10, from: 1, token: '!'}
+    ],
+    conditions: [
+      {
+        index: 0,
+        connectionOperator: null,
+        operand1: {
+          type: 'alias',
+          value: 'ESS State of Health',
+        },
+        operator: "<",
+        operand2: {
+          type: 'literal',
+          value: "50",
+          unit: '%'
+        },
+        duration: {
+          value: "20",
+          unit: "minutes"
+        }
+      }
+    ]
+  },
+]
 
 export const mockedActiveAlertData: ActiveAlert[] = [
     {

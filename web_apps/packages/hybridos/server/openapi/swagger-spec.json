@@ -2043,12 +2043,12 @@
 				"operationId": "alerts",
 				"parameters": [
 					{
-						"name": "severity",
+						"name": "severityFilter",
 						"required": true,
 						"in": "query",
 						"description": "Severities filter, query will return alerts with the listed severities",
 						"schema": {
-							"type": "number"
+							"type": "string"
 						}
 					},
 					{
@@ -2088,7 +2088,7 @@
 						}
 					},
 					{
-						"name": "status",
+						"name": "statusFilter",
 						"required": true,
 						"in": "query",
 						"description": "Status of a particular alert - inactive or active",
@@ -2097,7 +2097,7 @@
 						}
 					},
 					{
-						"name": "organization",
+						"name": "orgFilter",
 						"required": true,
 						"in": "query",
 						"description": "Organization that a particular alert pertains to and arose from",
@@ -2106,7 +2106,7 @@
 						}
 					},
 					{
-						"name": "sites",
+						"name": "sitesFilter",
 						"required": true,
 						"in": "query",
 						"description": "Site to which a particular alert pertains",
@@ -2118,7 +2118,7 @@
 						}
 					},
 					{
-						"name": "resolved",
+						"name": "resolvedFilter",
 						"required": true,
 						"in": "query",
 						"description": "Boolean representing whether the alert has been resolved",
@@ -2134,6 +2134,132 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ActiveAlertsResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"alerts"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
+		"/api/alerts/configuration": {
+			"get": {
+				"operationId": "alertConfiguration",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AlertConfigurationsResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"alerts"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			},
+			"post": {
+				"operationId": "updateConfiguration",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AlertConfigDTO"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AlertsPostResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"alerts"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
+		"/api/alerts/configuration/{alertId}": {
+			"post": {
+				"operationId": "postConfiguration",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AlertConfigDTO"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AlertsPostResponse"
 								}
 							}
 						}
@@ -4050,6 +4176,191 @@
 				"required": [
 					"count",
 					"data"
+				]
+			},
+			"AlertConfiguration": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "ID of particular alert"
+					},
+					"enabled": {
+						"type": "boolean",
+						"description": "A boolean representing whether or not to silence the alert instances stemming from this alert configuration"
+					},
+					"deleted": {
+						"type": "boolean",
+						"description": "A boolean flag representing whether or not this alert has been deleted"
+					},
+					"title": {
+						"type": "string",
+						"description": "The name associated with the alert"
+					},
+					"severity": {
+						"type": "number",
+						"description": "Severity of a particular alert - 0 being lowest severity, 4 being highest"
+					},
+					"organization": {
+						"type": "string",
+						"description": "Organization that a particular alert pertains to and arose from"
+					},
+					"sites": {
+						"description": "An array of all configured sites that this alert configuration pertains to",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"last_trigger_time": {
+						"type": "string",
+						"description": "Trigger time of a particular alert"
+					},
+					"deadline": {
+						"type": "number",
+						"description": "Deadline of a particular alert - how quickly the alert must be resolved, in minutes"
+					},
+					"aliases": {
+						"description": "An array of objects containing the aliases and their corresponding URIs used by this alert",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"templates": {
+						"description": "An array of objects containing the templated wildcards and their corresponding definitions used by this alert",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"conditions": {
+						"description": "An array of front-end friendly expressions representing the rule logic for this alert",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"required": [
+					"id",
+					"enabled",
+					"deleted",
+					"title",
+					"severity",
+					"organization",
+					"sites",
+					"last_trigger_time",
+					"deadline",
+					"aliases",
+					"templates",
+					"conditions"
+				]
+			},
+			"AlertConfigurationsResponse": {
+				"type": "object",
+				"properties": {
+					"data": {
+						"description": "Alerts to display on page",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/AlertConfiguration"
+						}
+					}
+				},
+				"required": [
+					"data"
+				]
+			},
+			"AlertConfigDTO": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "ID of particular alert"
+					},
+					"enabled": {
+						"type": "boolean",
+						"description": "A boolean representing whether or not to silence the alert instances stemming from this alert configuration"
+					},
+					"deleted": {
+						"type": "boolean",
+						"description": "A boolean flag representing whether or not this alert has been deleted"
+					},
+					"title": {
+						"type": "string",
+						"description": "The name associated with the alert"
+					},
+					"deadline": {
+						"type": "number",
+						"description": "Deadline of a particular alert - how quickly the alert must be resolved, in minutes"
+					},
+					"severity": {
+						"type": "number",
+						"description": "Severity of a particular alert - 0 being lowest severity, 4 being highest"
+					},
+					"organization": {
+						"type": "string",
+						"description": "Organization that a particular alert pertains to and arose from"
+					},
+					"sites": {
+						"description": "An array of all configured sites that this alert configuration pertains to",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"conditions": {
+						"description": "An array of front-end friendly expressions representing the rule logic for this alert",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"aliases": {
+						"description": "An array of objects containing the aliases and their corresponding URIs used by this alert",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"templates": {
+						"description": "An array of objects containing the templated wildcards and their corresponding definitions used by this alert",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"required": [
+					"id",
+					"enabled",
+					"deleted",
+					"title",
+					"deadline",
+					"severity",
+					"organization",
+					"sites",
+					"conditions",
+					"aliases",
+					"templates"
+				]
+			},
+			"AlertsPostResponse": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"description": "A status of whether the post request was successful returned form the events service"
+					},
+					"message": {
+						"type": "string",
+						"description": "An error or success message returned from the events service"
+					}
+				},
+				"required": [
+					"success",
+					"message"
 				]
 			},
 			"SiteDiagramResponse": {
