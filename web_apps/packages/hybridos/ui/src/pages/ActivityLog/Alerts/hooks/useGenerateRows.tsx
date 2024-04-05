@@ -1,12 +1,11 @@
 import {
   Box,
-  Chip, ColorType, Countdown, MuiButton, Typography,
+  Chip, ColorType, Countdown, Typography,
 } from '@flexgen/storybook';
 import dayjs from 'dayjs';
-
 import { useState } from 'react';
+import ResolveAlertButton from 'src/pages/ActivityLog/Alerts/ResolveAlertButton/ResolveAlertButton';
 import SeverityIndicator from 'src/pages/ActivityLog/Alerts/SeverityIndicator/SeverityIndicator';
-
 import { expandedRowBoxSx, expandedRowContentSx } from 'src/pages/ActivityLog/Alerts/alerts.styles';
 import { ActiveAlertObject, ActiveAlertRow } from 'src/pages/ActivityLog/activityLog.types';
 
@@ -56,8 +55,8 @@ const useGenerateActiveAlertRows = () => {
   };
 
   const generateResolveButton = (
-    id: string,
-  ) => <MuiButton label="Resolve" variant="text" onClick={() => { console.log(id); }} />;
+    alert: ActiveAlertObject,
+  ) => <ResolveAlertButton alertInfo={alert} />;
 
   const generateExpandRowContent = (
     instances: { message: string, timestamp: string }[],
@@ -88,9 +87,9 @@ const useGenerateActiveAlertRows = () => {
   const generateRowsData = (
     alertsData: ActiveAlertObject[],
   ) => {
-    const returnData: ActiveAlertRow[] = [];
-    alertsData.forEach((alert) => {
-      returnData.push({
+    const returnData: ActiveAlertRow[] = alertsData
+      .filter((alert) => !alert.resolved)
+      .map((alert) => ({
         id: alert.id,
         status: generateStatusBadge(alert.status),
         severity: generateSeverityComponent(alert.severity),
@@ -99,11 +98,10 @@ const useGenerateActiveAlertRows = () => {
         alert: alert.details[0].message,
         timestamp: alert.trigger_time,
         deadline: generateDeadline(alert.trigger_time, alert.deadline),
-        resolve: generateResolveButton(alert.id),
+        resolve: generateResolveButton(alert),
         expandRowContent: generateExpandRowContent(alert.details, alert.title),
         rowHoverColor: rowHoverColorMapping[alert.severity],
-      });
-    });
+      }));
 
     setResults(returnData);
     return returnData;

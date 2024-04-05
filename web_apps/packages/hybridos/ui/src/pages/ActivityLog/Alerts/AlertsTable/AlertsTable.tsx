@@ -54,9 +54,7 @@ const AlertsTable = ({
   }, []);
 
   useEffect(() => {
-    if (activeAlertsData?.length > 0) {
-      generateRowsData(activeAlertsData);
-    }
+    generateRowsData(activeAlertsData);
   }, [activeAlertsData]);
 
   return (

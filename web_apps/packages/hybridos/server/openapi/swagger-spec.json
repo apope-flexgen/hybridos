@@ -2285,6 +2285,51 @@
 				]
 			}
 		},
+		"/api/alerts/{id}": {
+			"post": {
+				"operationId": "resolveAlert",
+				"parameters": [
+					{
+						"name": "id",
+						"required": true,
+						"in": "path",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ResolveAlertResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"alerts"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
 		"/api/dashboard/site-diagram": {
 			"get": {
 				"operationId": "getSiteDiagram",
@@ -4351,7 +4396,7 @@
 				"properties": {
 					"success": {
 						"type": "boolean",
-						"description": "A status of whether the post request was successful returned form the events service"
+						"description": "A status of whether the request was successfully returned from the events service"
 					},
 					"message": {
 						"type": "string",
@@ -4361,6 +4406,23 @@
 				"required": [
 					"success",
 					"message"
+				]
+			},
+			"ResolveAlertResponse": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"description": "A status of whether the request was successfully returned from the events service"
+					},
+					"error_message": {
+						"type": "string",
+						"description": "If alert could not be resolved, error message describes the issue that occurred"
+					}
+				},
+				"required": [
+					"success",
+					"error_message"
 				]
 			},
 			"SiteDiagramResponse": {

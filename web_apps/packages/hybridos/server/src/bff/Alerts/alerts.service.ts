@@ -20,7 +20,7 @@ export class AlertsService {
         const filter = {
             ...query,
             resolvedFilter: resolvedFilter ? `${resolvedFilter}`.toLowerCase() === 'true' : null,
-            severityFilter: severityFilter ? parseInt(severityFilter.toString()) : null,
+            severityFilter: severityFilter !== null && severityFilter !== undefined ? parseInt(severityFilter.toString()) : null,
             limit: limit ? parseInt(limit) : null,
             page: page ? parseInt(page.toString()) : null,
         }
@@ -29,6 +29,7 @@ export class AlertsService {
 
         return filter;
     }
+
     async activeAlerts(query: AlertsRequest): Promise<ActiveAlertsResponse> {
         const filters = this.parseQueryToFilters(query);
         const fimsResponse: FimsMsg = await this.fimsService.get(AlertURIs.ALERT_INSTANCES, filters)
@@ -137,5 +138,22 @@ export class AlertsService {
         )
 
         return newObservable
+    }
+
+    async resolveAlert(
+        id: string,
+        message: string,
+        username: string
+    ): Promise<FimsMsg> {
+        return await this.fimsService.send({
+            method: 'set',
+            uri: `${AlertURIs.ALERT_INSTANCES}/${id}`,
+            replyto: `/web_server/alerts/${id}`,
+            body: JSON.stringify({
+                resolved: true,
+                resolution_message: message
+            }),
+            username: username,
+        });
     }
 }

@@ -264,7 +264,7 @@ importers:
       '@babel/plugin-proposal-nullish-coalescing-operator': ^7.18.6
       '@babel/plugin-proposal-optional-chaining': ^7.18.9
       '@cypress/webpack-dev-server': ^3.2.2
-      '@flexgen/storybook': ^0.2.239
+      '@flexgen/storybook': ^0.2.242
       '@joint/core': 4.0.1
       '@joint/plus': file:../../../lib/joint-plus/joint-plus.tgz
       '@mui/lab': ^5.0.0-alpha.117
@@ -321,7 +321,7 @@ importers:
     dependencies:
       '@babel/plugin-proposal-nullish-coalescing-operator': 7.18.6
       '@babel/plugin-proposal-optional-chaining': 7.21.0
-      '@flexgen/storybook': 0.2.239_4xtjz2lzknrfvf6xatpvzjkoji
+      '@flexgen/storybook': 0.2.242_4xtjz2lzknrfvf6xatpvzjkoji
       '@joint/core': 4.0.1
       '@joint/plus': file:lib/joint-plus/joint-plus.tgz
       '@mui/lab': 5.0.0-alpha.126_3s4dnupztyagn6qsu5ojimuy6y
@@ -3554,8 +3554,8 @@ packages:
     resolution: {integrity: sha512-K7tGdKszZob1sLUSnqYAplf11pjVmTrKcSTiwz2m6seLNJSbCEv+JBgNplXG2Io/9U7ufYYZ3Rv0Gt/cX7m5vA==, tarball: '@flexgen/fims/-/@flexgen/fims-1.4.0.tgz'}
     dev: false
 
-  /@flexgen/storybook/0.2.239_4xtjz2lzknrfvf6xatpvzjkoji:
-    resolution: {integrity: sha512-/2AQNCUdXWASmAQe0Qh0wI1abl30MEebPp77OIColobirZGxWRaV1Dl/plSOwf0KC44JPVWUL69z8xPD93aShw==, tarball: '@flexgen/storybook/-/@flexgen/storybook-0.2.239.tgz'}
+  /@flexgen/storybook/0.2.242_4xtjz2lzknrfvf6xatpvzjkoji:
+    resolution: {integrity: sha512-Eow6fcGTUT4CjkBQD8LLBWMw0OrM9MsmSup0sOhhfIz+wx6SBTPw6z+OkfkhGajifzZdfAM3IkbrmqCVBOq8bQ==, tarball: '@flexgen/storybook/-/@flexgen/storybook-0.2.242.tgz'}
     dependencies:
       '@emotion/react': 11.10.6_aoxwbmlfj6hwnimj5m3kry62qm
       '@emotion/styled': 11.10.6_khgiysqzv5tamvgmw5bnwiu5gi

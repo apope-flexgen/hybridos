@@ -47,7 +47,6 @@ export class ActiveAlert {
     deadline: number
 }
 
-
 export class ActiveAlertsResponse {
     @ApiProperty({ description: AlertsDescriptions.count })
     @IsNumber()
@@ -55,4 +54,13 @@ export class ActiveAlertsResponse {
     @ApiProperty({ description: AlertsDescriptions.data, type: ActiveAlert, isArray: true })
     @IsArray()
     data: ActiveAlert[]
+}
+
+export class ResolveAlertResponse {
+    @ApiProperty({ description: AlertsDescriptions.success })
+    @IsBoolean()
+    success: boolean
+    @ApiProperty({ description: AlertsDescriptions.error_message })
+    @IsString()
+    error_message: string
 }

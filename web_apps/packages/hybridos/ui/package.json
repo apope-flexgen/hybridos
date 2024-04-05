@@ -18,7 +18,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.18.9",
     "@joint/core": "4.0.1",
     "@joint/plus": "file:../../../lib/joint-plus/joint-plus.tgz",
-    "@flexgen/storybook": "^0.2.239",
+    "@flexgen/storybook": "^0.2.242",
     "@mui/lab": "^5.0.0-alpha.117",
     "@mui/material": "^5.11.13",
     "@mui/system": "^5.11.13",
