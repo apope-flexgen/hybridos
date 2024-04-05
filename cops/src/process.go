@@ -10,6 +10,7 @@ import (
 
 	dbus "github.com/coreos/go-systemd/dbus"
 	log "github.com/flexgen-power/go_flexgen/logger"
+	sys "github.com/flexgen-power/hybridos/cops/syswatch"
 )
 
 // Contains release version info about a process
@@ -233,7 +234,7 @@ func (process *processInfo) updateStatus() error {
 		// Format our time accordingly and store the values to health statistics.
 		timeUnix := convertMicrosecondsToUnixTime(timeUint64)
 		process.healthStats.timestampOfLastRestart = timeUnix.Format("01-02-2006 15:04:05")
-		process.healthStats.elapsedTimeSinceRestart = formatUnixDuration(timeUnix)
+		process.healthStats.elapsedTimeSinceRestart = sys.FormatUnixDuration(timeUnix)
 	}
 
 	return nil

@@ -18,8 +18,6 @@ type Collectors struct {
 	Name    string
 	Mem     MemCollector
 	CPU     CPUCollector
-	Disk    DiskCollector
-	Net     NetCollector
 	Process ProcessCollector
 }
 
@@ -46,35 +44,17 @@ func configureDefaults(proccessList []string) error {
 		},
 		CPU: CPUCollector{
 			DataMan: defaultDataMan,
-			LoadAvg: 5,
+			LoadAvg: 1,
 			// TODO: keep data types consistent between cops and collector data.
 			// The temp and uptime should be TempEnable and UptimeEnable, with
 			// extra fields for storing true values.
 			Temp:   true,
 			Uptime: true,
 		},
-		Disk: DiskCollector{
-			DataMan:        defaultDataMan,
-			Mounts:         true,
-			Dirs:           []string{},
-			FileCountLimit: 50000,
-			MBSizeLimit:    5000,
-		},
-		Net: NetCollector{
-			DataMan:    defaultDataMan,
-			Fims:       true,
-			Interfaces: true,
-			IPs:        map[string]string{},
-			Stats:      []string{"wmem_max", "rmem_max"},
-		},
 		Process: ProcessCollector{
 			DataMan:   defaultDataMan,
 			Refresh:   10,
 			Processes: proccessList,
-			// Databases: map[string]string{
-			// 	"influx": "localhost:8086",
-			// 	"mongo":  "127.0.0.1:27017",
-			// },
 		},
 	}
 

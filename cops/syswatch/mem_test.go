@@ -1,10 +1,13 @@
 package syswatch
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+var memDir = "../test/testfiles/mem_testcases"
 
 func MakeMemCollector(dmActive bool, fields ...string) MemCollector {
 	defaultDataMan := DataManager{
@@ -34,14 +37,14 @@ func TestMemInit(t *testing.T) {
 
 	//normal case, test if lines are correct
 	mem1 := MakeMemCollector(true, "MemAvailable", "MemTotal", "MemFree", "Active", "Dirty")
-	dataDir = "../unit_test_files/mem_testcases/testcase_1"
+	dataDir = fmt.Sprintf("%s/testcase_1", memDir)
 	err = mem1.init()
 	expected := []int{2, 0, 1, 6, 16}
 	assert.Nil(err)
 	assert.ElementsMatch(expected, mem1.lines, "Two elements do not match")
 
 	//cannot read /proc/meminfo
-	dataDir = "../unit_test_files/mem_testcases/testcase_0"
+	dataDir = fmt.Sprintf("%s/testcase_0", memDir)
 	err = mem1.init()
 	assert.ErrorContains(err, "could not read /proc/meminfo")
 
@@ -52,12 +55,12 @@ func TestGetMemInfo(t *testing.T) {
 
 	//could not read /proc/meminfo
 	mem := MakeMemCollector(true, "MemAvailable", "MemTotal", "MemFree", "Active", "Dirty")
-	dataDir = "../unit_test_files/mem_testcases/testcase_0"
+	dataDir = fmt.Sprintf("%s/testcase_0", memDir)
 	data := mem.getMemInfo()
 	assert.Empty(data)
 
 	//default fields
-	testcase := "../unit_test_files/mem_testcases/testcase_1"
+	testcase := fmt.Sprintf("%s/testcase_1", memDir)
 	expected := map[string]interface{}{
 		"totalKB":     3879624,
 		"freeKB":      307552,
@@ -116,7 +119,7 @@ func compareDataOfGetMem(t *testing.T, expected map[string]interface{}, tcFile s
 func TestMemScrape(t *testing.T) {
 	assert := assert.New(t)
 	mem := MakeMemCollector(true, "MemAvailable", "MemTotal", "MemFree", "Active", "Dirty")
-	dataDir = "../unit_test_files/mem_testcases/testcase_1"
+	dataDir = fmt.Sprintf("%s/testcase_1", memDir)
 	err := mem.init()
 	assert.Nil(err)
 	data := mem.scrape()
@@ -135,7 +138,7 @@ func TestMemScrape(t *testing.T) {
 
 	// no status to track
 	mem = MakeMemCollector(true)
-	dataDir = "../unit_test_files/mem_testcases/testcase_1"
+	dataDir = fmt.Sprintf("%s/testcase_1", memDir)
 	err = mem.init()
 	assert.Error(err)
 	data = mem.scrape()

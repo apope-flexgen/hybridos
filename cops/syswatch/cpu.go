@@ -23,6 +23,9 @@ type CPUCollector struct {
 	zones map[string]string
 }
 
+// Global value indicating the load average selected
+var cpuLoadAvg int
+
 // === Collector funcs ===
 
 func (cpu *CPUCollector) init() error {
@@ -34,6 +37,7 @@ func (cpu *CPUCollector) init() error {
 	}
 
 	cpu.zones = make(map[string]string)
+	cpuLoadAvg = cpu.LoadAvg
 
 	// TODO: Handle contents to take temperatureSource from cops config file.
 	// Only handle from cops config if it is provided in config file.

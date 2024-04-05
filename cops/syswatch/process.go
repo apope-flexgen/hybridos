@@ -16,6 +16,17 @@ import (
 	//mongo "github.com/flexgen-power/mongodb_client"
 )
 
+// Global data of hardware process information.
+// Store updated process data here when retrieved from writeChannel.
+// Avoid reading from writeChannel in multiple locations.
+type ProcData struct {
+	data map[string]interface{}
+	sync.RWMutex
+}
+
+// Global variable of storing the process collector's output.
+var procInfos *ProcData
+
 type ProcessCollector struct {
 	// configurable options
 	DataMan   DataManager `json:"collection"`
@@ -53,6 +64,10 @@ func (process *ProcessCollector) init() error {
 
 	process.mutex = sync.Mutex{}
 	process.procInfos = make(map[string]ProcInfo)
+
+	// Initialize global process struct
+	procInfos = &ProcData{}
+	procInfos.data = make(map[string]interface{})
 
 	// getconf to find clock ticks per sec (hz)
 	// EXEC command - one time ran only. This is ok for initialization.
@@ -111,29 +126,6 @@ func (process *ProcessCollector) init() error {
 		}
 	}
 
-	// TODO: in future ticket, add support for influx to COPS.
-	// Ignoring influx/mongodb handling for now, prioritizing system status information retrieval only
-	// init db health check connectors
-	// if len(process.Databases) > 0 {
-	// 	if addr, exists := process.Databases["influx"]; exists {
-	// 		process.influxConn = influx.NewConnector(addr, time.Duration((int)(time.Second)*process.DataMan.Interval), time.Second/10, false)
-	// 		err = process.influxConn.Connect()
-	// 		if err != nil {
-	// 			log.Errorf("could not connect to influx @%s: %v", addr, err)
-	// 		}
-	// 		process.influxOnline = true
-	// 	}
-
-	// 	if addr, exists := process.Databases["mongo"]; exists {
-	// 		process.mongoConn = mongo.NewConnector(addr, time.Second/10, time.Duration((int)(time.Second)*process.DataMan.Interval))
-	// 		err = process.mongoConn.Connect()
-	// 		if err != nil {
-	// 			log.Errorf("could not connect to mongo @%s: %v", addr, err)
-	// 		}
-	// 		process.mongoOnline = true
-	// 	}
-	// }
-
 	go process.DataMan.start(process)
 	return nil
 }
@@ -146,10 +138,6 @@ func (process *ProcessCollector) scrape() map[string]interface{} {
 	if len(process.Processes) > 0 {
 		data = mergeMaps(data, process.getProcessInfo())
 	}
-	// TODO: handling implementing database monitoring metrics
-	// if len(process.Databases) > 0 {
-	// 	data = mergeMaps(data, process.getDatabaseInfo())
-	// }
 
 	return data
 }
@@ -217,65 +205,29 @@ func (process *ProcessCollector) getProcessInfo() map[string]interface{} {
 	return data
 }
 
-// TODO: low-priority - handle service info wrt to databases
-// Deprecating this temporarily - in the advent COPS wants to provide this information
-// then it is here for reference.
-
-// func (process *ProcessCollector) getDatabaseInfo() map[string]interface{} {
-// 	data := make(map[string]interface{})
-
-// 	if _, exists := process.Databases["influx"]; exists {
-// 		if !process.influxOnline {
-// 			data["influx_health"] = -1
-// 		} else {
-// 			healthy, err := process.influxConn.HealthCheck()
-// 			if !healthy {
-// 				log.Warnf("failed influx health check: %v", err)
-// 				data["influx_health"] = -1
-// 			} else {
-// 				data["influx_health"] = 1
-// 			}
-// 		}
-// 	}
-
-// 	if _, exists := process.Databases["mongo"]; exists {
-// 		if !process.mongoOnline {
-// 			data["mongo_health"] = -1
-// 		} else {
-// 			healthy, err := process.mongoConn.HealthCheck()
-// 			if !healthy {
-// 				log.Warnf("failed mongo health check: %v", err)
-// 				data["mongo_health"] = -1
-// 			} else {
-// 				data["mongo_health"] = 1
-// 			}
-// 		}
-// 	}
-
-// 	return data
-// }
-
 // === Helper funcs ===
 
-// Read from writeCh and return
-// the cpu and mem % usage of the given process name.
+// Update global procdata struct with new information from writeChannel
+func (pd *ProcData) update(data map[string]interface{}) {
+	// Update global process data struct
+	pd.Lock()
+	defer pd.Unlock()
+	pd.data = deepCopyMap(data)
+}
+
+// Provide a getable method to pull data from the global process structure
+func (pd *ProcData) get() map[string]interface{} {
+	// Update global process data struct
+	pd.RLock()
+	defer pd.RUnlock()
+	return pd.data
+}
+
+// Retrieve data from the global process information structure.
+// Directly read from data without popping information off the write channel.
 func GetProcessCollectorData() (data map[string]interface{}, err error) {
-
-	// Read from global data channel.
-	for data = range writeCh {
-		val, exists := data["collector"]
-		if !exists {
-			return nil, fmt.Errorf("unknown collection source for data: %v", data)
-		}
-
-		// Retrieve the process collector data map.
-		if fmt.Sprintf("%v", val) == "process" {
-			return data, nil
-		} else {
-			return nil, fmt.Errorf("process collector was not found")
-		}
-	}
-	return nil, fmt.Errorf("no data found on channel")
+	data = procInfos.get()
+	return data, nil
 }
 
 // Provide the process collector data and extract the cpu and mem for a given process name.
@@ -336,23 +288,6 @@ func (process *ProcessCollector) refreshPID(name string, info ProcInfo) {
 		info.getPID_method = method
 		info.pid = pid
 		process.safeWriteToProcessInfo(name, info)
-
-		// TODO: handle database connection info if we so desire down the road
-		// re-up database monitors
-		// if strings.Contains(name, "influx") {
-		// 	err = process.influxConn.Connect()
-		// 	if err != nil {
-		// 		log.Errorf("could not connect to influx: %v", err)
-		// 	}
-		// 	process.influxOnline = true
-		// }
-		// if strings.Contains(name, "mongo") {
-		// 	err = process.mongoConn.Connect()
-		// 	if err != nil {
-		// 		log.Errorf("could not connect to mongo: %v", err)
-		// 	}
-		// 	process.mongoOnline = true
-		// }
 
 		return
 	}

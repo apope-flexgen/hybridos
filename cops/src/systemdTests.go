@@ -88,7 +88,7 @@ func testTimestamps(wg *sync.WaitGroup, result chan string) {
 
 	// Restart test service.
 	if err := takeAction("restart", testMsg); err != nil {
-		log.Fatalf("performing restart on %s: %w", testProcess, err)
+		log.Fatalf("performing restart on %s: %v", testProcess, err)
 	}
 
 	// Get timestamp using
@@ -106,9 +106,9 @@ func testTimestamps(wg *sync.WaitGroup, result chan string) {
 	// Check expected timestamp vs the service timestamp.
 	// Verify difference between the two is less than a defined margin (10 secs).
 	if expectedTime.Sub(serviceTime) < margin {
-		log.Printf("TEST PASS: timestamps verified.\n")
+		log.Printf("PASS: timestamps verified.\n")
 	} else {
-		log.Printf("TEST FAIL: timestamps are not within margin.\n")
+		log.Printf("FAIL: timestamps are not within margin.\n")
 	}
 
 	// Stop the unit.
@@ -155,7 +155,7 @@ func testActions(wg *sync.WaitGroup, result chan string) {
 
 // Verify actions are restricted based upon runtime status.
 // Restart is always allowed.
-//handleSystemdCmd is our unit to test here
+// handleSystemdCmd is our unit to test here
 func testActionRestrictions(wg *sync.WaitGroup, result chan string) {
 	defer wg.Done()
 
@@ -234,9 +234,9 @@ func testAction(action string, process string, beforeState, afterState string) e
 	}
 
 	if strings.Contains(state, afterState) {
-		log.Printf("TEST PASS: %s on %s.", action, service)
+		log.Printf("PASS: %s on %s.", action, service)
 	} else {
-		log.Printf("TEST FAIL: %s on %s: expected state %s but received %s.", action, service, afterState, state)
+		log.Printf("FAIL: %s on %s: expected state %s but received %s.", action, service, afterState, state)
 	}
 
 	return nil

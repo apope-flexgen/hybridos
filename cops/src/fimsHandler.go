@@ -10,6 +10,7 @@ import (
 	"time"
 
 	log "github.com/flexgen-power/go_flexgen/logger"
+	sys "github.com/flexgen-power/hybridos/cops/syswatch"
 )
 
 // Parse the PID out of a SET message
@@ -279,6 +280,8 @@ func handleGetSystemStats(msg fims.FimsMsg) error {
 		f.SendSet(msg.Replyto, "", getSystemStats())
 	case msg.Uri == "/cops/stats/system/failover":
 		f.SendSet(msg.Replyto, "", getFailoverConfig())
+	case msg.Uri == "/cops/stats/system/summary":
+		f.SendSet(msg.Replyto, "", sys.GetHardwareSummary())
 	default:
 		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
 	}
@@ -290,6 +293,7 @@ func handleGetSystemStats(msg fims.FimsMsg) error {
 func getSystemStats() map[string]interface{} {
 	cfg := make(map[string]interface{})
 	cfg["failover"] = getFailoverConfig()
+	cfg["hardware_summary"] = sys.GetHardwareSummary()
 	return cfg
 }
 

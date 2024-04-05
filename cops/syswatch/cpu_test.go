@@ -1,8 +1,11 @@
 package syswatch
 
 import (
+	"fmt"
 	"testing"
 )
+
+var cpuDir = "../test/testfiles/cpu_testcases"
 
 func MakeCpuCollector(dmActive bool, loadavg int, temp bool, uptime bool) CPUCollector {
 	defaultDataMan := DataManager{
@@ -22,7 +25,7 @@ func MakeCpuCollector(dmActive bool, loadavg int, temp bool, uptime bool) CPUCol
 
 func TestCPUInit(t *testing.T) {
 	//success case, check if the cpu.zone has expected data
-	dataDir = "../unit_test_files/cpu_testcases/temp/testcase_1"
+	dataDir = fmt.Sprintf("%s/temp/testcase_1", cpuDir)
 	cpu := MakeCpuCollector(true, 5, true, true)
 	err := cpu.init()
 	if err != nil {
@@ -64,21 +67,21 @@ func TestCPUInit(t *testing.T) {
 
 	//cannot open folder thermal
 	cpu = MakeCpuCollector(true, 5, true, true)
-	dataDir = "../unit_test_files/cpu_testcases/temp/testcase_0"
+	dataDir = fmt.Sprintf("%s/temp/testcase_0", cpuDir)
 	err = cpu.init()
 	if err == nil {
 		t.Errorf("Expected error of %v, but got nil \n", "could not read /sys/class/thermal")
 	}
 
 	//cannot open folder thermal/thermal_zoneX/type
-	dataDir = "../unit_test_files/cpu_testcases/temp/testcase_2"
+	dataDir = fmt.Sprintf("%s/temp/testcase_2", cpuDir)
 	err = cpu.init()
 	if err == nil {
 		t.Errorf("Expected error of %v, but got nil \n", "could not read /sys/class/thermal/thermal_zoneX/type")
 	}
 
 	// /sys/class/thermal/thermal_zone0/type is empty
-	dataDir = "../unit_test_files/cpu_testcases/temp/testcase_3"
+	dataDir = fmt.Sprintf("%s/temp/testcase_3", cpuDir)
 	err = cpu.init()
 	if err != nil {
 		t.Errorf("Expected error nil, but got %v \n", err.Error())
@@ -98,7 +101,7 @@ func TestCPUInit(t *testing.T) {
 	}
 
 	// /sys/class/thermal/thermal_zone0/type has more than 1 fields
-	dataDir = "../unit_test_files/cpu_testcases/temp/testcase_4"
+	dataDir = fmt.Sprintf("%s/temp/testcase_4", cpuDir)
 	err = cpu.init()
 	if err != nil {
 		t.Errorf("Expected error nil, but got %v \n", err.Error())
@@ -121,7 +124,7 @@ func TestCPUInit(t *testing.T) {
 
 func TestGetUpTimeInfo(t *testing.T) {
 	cpu := MakeCpuCollector(true, 5, true, true)
-	dataDir = "../unit_test_files/cpu_testcases/uptime/testcase_1"
+	dataDir = fmt.Sprintf("%s/uptime/testcase_1", cpuDir)
 	data := cpu.getUptimeInfo()
 	expected := map[string]float32{
 		"uptimesec":   1400.42,
@@ -137,14 +140,14 @@ func TestGetUpTimeInfo(t *testing.T) {
 	}
 
 	// uptime has more than 2 fields
-	dataDir = "../unit_test_files/cpu_testcases/uptime/testcase_2"
+	dataDir = fmt.Sprintf("%s/uptime/testcase_2", cpuDir)
 	data = cpu.getUptimeInfo()
 	if len(data) != 0 {
 		t.Errorf("Expected data of size %d, but got %d \n", 0, len(data))
 	}
 
 	// uptime first field cannot be parsed into a float
-	dataDir = "../unit_test_files/cpu_testcases/uptime/testcase_3"
+	dataDir = fmt.Sprintf("%s/uptime/testcase_3", cpuDir)
 	data = cpu.getUptimeInfo()
 	if len(data) != 1 {
 		t.Errorf("Expected data of size %d, but got %d \n", 0, len(data))
@@ -154,7 +157,7 @@ func TestGetUpTimeInfo(t *testing.T) {
 	}
 
 	// uptime second field cannot be parsed into a float
-	dataDir = "../unit_test_files/cpu_testcases/uptime/testcase_4"
+	dataDir = fmt.Sprintf("%s/uptime/testcase_4", cpuDir)
 	data = cpu.getUptimeInfo()
 	if len(data) != 1 {
 		t.Errorf("Expected data of size %d, but got %d \n", 0, len(data))
@@ -164,14 +167,14 @@ func TestGetUpTimeInfo(t *testing.T) {
 	}
 
 	//could not read /proc/uptime:
-	dataDir = "../unit_test_files/cpu_testcases/uptime/testcase_0"
+	dataDir = fmt.Sprintf("%s/uptime/testcase_0", cpuDir)
 	data = cpu.getUptimeInfo()
 	if len(data) != 0 {
 		t.Errorf("Expected data of size %d, but got %d \n", 0, len(data))
 	}
 
 	//could not scan /proc/uptime:
-	dataDir = "../unit_test_files/cpu_testcases/uptime/testcase_5"
+	dataDir = fmt.Sprintf("%s/uptime/testcase_5", cpuDir)
 	data = cpu.getUptimeInfo()
 	if len(data) != 0 {
 		t.Errorf("Expected data of size %d, but got %d \n", 0, len(data))
@@ -182,7 +185,7 @@ func TestGetUpTimeInfo(t *testing.T) {
 func TestGetLoadInfo(t *testing.T) {
 	//1 min
 	cpu := MakeCpuCollector(true, 1, true, true)
-	dataDir = "../unit_test_files/cpu_testcases/loadavg/testcase_1"
+	dataDir = fmt.Sprintf("%s/loadavg/testcase_1", cpuDir)
 	data := cpu.getLoadInfo()
 	var expected float32 = 0.61
 	if data["loadavg_1m"] != expected {
@@ -214,14 +217,14 @@ func TestGetLoadInfo(t *testing.T) {
 	}
 
 	//could not read /proc/loadavg
-	dataDir = "../unit_test_files/cpu_testcases/loadavg/testcase_0"
+	dataDir = fmt.Sprintf("%s/loadvavg/testcase_0", cpuDir)
 	data = cpu.getLoadInfo()
 	if len(data) != 0 {
 		t.Errorf("Expected data of size %d, but got %d \n", 0, len(data))
 	}
 
 	// /proc/loadavg has more than 5 fields
-	dataDir = "../unit_test_files/cpu_testcases/loadavg/testcase_2"
+	dataDir = fmt.Sprintf("%s/loadvavg/testcase_2", cpuDir)
 	data = cpu.getLoadInfo()
 	if len(data) != 0 {
 		t.Errorf("Expected data of size %d, but got %d \n", 0, len(data))
@@ -229,14 +232,14 @@ func TestGetLoadInfo(t *testing.T) {
 
 	//could not parse float:
 	cpu.LoadAvg = 1
-	dataDir = "../unit_test_files/cpu_testcases/loadavg/testcase_3"
+	dataDir = fmt.Sprintf("%s/loadvavg/testcase_3", cpuDir)
 	data = cpu.getLoadInfo()
 	if len(data) != 0 {
 		t.Errorf("Expected data of size %d, but got %d \n", 0, len(data))
 	}
 
 	// could not scan /proc/loadavg
-	dataDir = "../unit_test_files/cpu_testcases/loadavg/testcase_4"
+	dataDir = fmt.Sprintf("%s/loadvavg/testcase_4", cpuDir)
 	data = cpu.getLoadInfo()
 	if len(data) != 0 {
 		t.Errorf("Expected data of size %d, but got %d \n", 0, len(data))
@@ -246,7 +249,7 @@ func TestGetLoadInfo(t *testing.T) {
 
 func TestGetTempInfo(t *testing.T) {
 	cpu := MakeCpuCollector(true, 5, true, true)
-	dataDir = "../unit_test_files/cpu_testcases/temp/testcase_1"
+	dataDir = fmt.Sprintf("%s/temp/testcase_1", cpuDir)
 	cpu.init()
 	data := cpu.getTempInfo()
 	expected := map[string]interface{}{
@@ -266,7 +269,7 @@ func TestGetTempInfo(t *testing.T) {
 	}
 
 	// cannot parse temp as Uint
-	dataDir = "../unit_test_files/cpu_testcases/temp/testcase_5"
+	dataDir = fmt.Sprintf("%s/temp/testcase_5", cpuDir)
 	expected["a0_tempC"] = "NA"
 	data = cpu.getTempInfo()
 	if len(data) != len(expected) {
@@ -282,7 +285,7 @@ func TestGetTempInfo(t *testing.T) {
 
 func TestCPUScrape(t *testing.T) {
 	cpu := MakeCpuCollector(true, 5, true, true)
-	dataDir = "../unit_test_files/cpu_testcases/scrape"
+	dataDir = fmt.Sprintf("%s/scrape", cpuDir)
 	cpu.init()
 	data := cpu.scrape()
 	expected := map[string]interface{}{

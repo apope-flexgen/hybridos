@@ -13,7 +13,7 @@
     "otherCtrlrStaticIP": "172.16.2.82",
     "pduIP": "10.0.1.83",
     "otherCtrlrOutlet": "2",
-    "syswatch": true,
+    "syswatch": false,
     "allowActions": true,
     "processList": [
         {

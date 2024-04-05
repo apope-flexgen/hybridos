@@ -91,9 +91,7 @@ func main() {
 	getDBIUpdateModeStatus()
 
 	// Execute system hardware collection if enabled.
-	if args.syswatch || config.Syswatch {
-		go runCollectors(args.prof)
-	}
+	go runCollectors(args.prof, args.syswatch || config.Syswatch)
 
 	// Operating loop
 	for {
@@ -173,6 +171,7 @@ func extractMapStringInterfaceValue(i interface{}, fieldName string, fieldType r
 }
 
 // Put "defer timeTaken(time.Now(), "funcName")" at the beginning of a long function to measure execution time
+//
 //lint:ignore U1000 ignore "unused function" warning as this function is kept to be used by coders during development
 func timeTaken(t time.Time, name string) {
 	elapsed := time.Since(t)

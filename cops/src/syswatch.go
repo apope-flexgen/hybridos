@@ -11,7 +11,7 @@ import (
 
 // Start data collection on hardware statistics.
 // Run function as it's own dedicated goroutine.
-func runCollectors(prof string) {
+func runCollectors(prof string, syswatch bool) {
 
 	// Setup profiling: -prof=["cpu", "mem", "trace"]
 	sys.Setup(prof, generateProcessList(config.ProcessList))
@@ -20,7 +20,9 @@ func runCollectors(prof string) {
 	sys.StartCollectors()
 
 	// Begin periodic pubs to FIMS containing system data.
-	go sys.PublishSystemStats(f)
+	if syswatch {
+		go sys.PublishSystemStats(f)
+	}
 
 	if prof == "trace" {
 		signalChan := make(chan os.Signal, 1)

@@ -6,6 +6,7 @@ import (
 	"fims"
 	"fmt"
 	"os"
+	"runtime"
 	"runtime/trace"
 	"strconv"
 	"strings"
@@ -18,10 +19,31 @@ import (
 
 var (
 	// global vars
-	config  *Collectors
-	writeCh = make(chan map[string]interface{})
-	dataDir string
+	config    *Collectors
+	summary   = &summaryStats{}
+	writeCh   = make(chan map[string]interface{})
+	dataDir   string
+	coreCount int
 )
+
+// Store a few selected summarized hardware statistics to be reported on FIMS only
+type summaryStats struct {
+	timeOfLastSystemRestart string
+	uptime                  string
+	cpuUsage                float32
+	memUsage                float32
+}
+
+// Return an interface to publish on FIMS of the summarized hardware statistics.
+func GetHardwareSummary() map[string]interface{} {
+	body := make(map[string]interface{})
+	body["pct_cpu_usage"] = summary.cpuUsage
+	body["pct_mem_usage"] = summary.memUsage
+	body["uptime"] = summary.uptime
+	body["timestamp_of_last_restart"] = summary.timeOfLastSystemRestart
+
+	return body
+}
 
 // Initialize and run system hardware data collection.
 // Profiling flags can be one of the following in the array:
@@ -53,6 +75,9 @@ func Setup(prof string, processList []string) {
 	if err != nil {
 		log.Fatalf("Config error: %v", err)
 	}
+
+	// Retrieve the core count of the system
+	coreCount = runtime.NumCPU()
 }
 
 // Start all collection on all system level metrics.
@@ -60,8 +85,6 @@ func StartCollectors() {
 	collectors := map[string]Collector{
 		"mem":     &config.Mem,
 		"cpu":     &config.CPU,
-		"disk":    &config.Disk,
-		"net":     &config.Net,
 		"process": &config.Process,
 	}
 
@@ -85,32 +108,119 @@ func PublishSystemStats(f fims.Fims) {
 	for data := range writeCh {
 		val, exists := data["collector"]
 		if !exists {
-			log.Errorf("unknown collection source for data: %v\nmoving on...", data)
+			log.Debugf("unknown collection source for data: %v\nmoving on...", data)
 			continue
 		}
 		collector := fmt.Sprintf("%v", val)
 		delete(data, "collector")
 
-		// Don't publish process stats.
-		if collector == "process" {
-			continue
+		// Update the summarized info with a given collector.
+		switch collector {
+		case "cpu":
+			summary.updateCPU(data)
+		case "mem":
+			summary.updateMem(data)
+		case "process":
+			// Internally update global process data from the write channel.
+			procInfos.update(data)
+		default:
+			// Ignore the other collector types for now.
 		}
 
-		// Publish data
+		// Publish only summarized data. Don't publish other collectors.
 		msg := fims.FimsMsg{
 			Method:  "pub",
-			Uri:     "/cops/stats/system/" + collector,
+			Uri:     "/cops/stats/system/summary",
 			Replyto: "",
-			Body:    data,
+			Body:    GetHardwareSummary(),
 		}
 		_, err := f.Send(msg)
 		if err != nil {
-			log.Errorf(err.Error())
+			log.Errorf("Error publishing hardware statistics: %v", err)
 			continue
 		} else {
 			log.Tracef("Successfully sent!")
 		}
 	}
+}
+
+// Take cpu collector data and update hardware summary statistics.
+func (s *summaryStats) updateCPU(data map[string]interface{}) {
+	var cpuload float32
+	var uptime float32
+	var ok bool
+
+	// Retrieve and set the uptime in seconds.
+	if val, found := data["uptimesec"]; found {
+		if _, ok = val.(float32); ok {
+			uptime = data["uptimesec"].(float32)
+
+			// Update timestamp since last system restart.
+			systemStart := time.Now().Add(-time.Duration(uptime) * time.Second)
+			s.timeOfLastSystemRestart = systemStart.Format("01-02-2006 15:04:05")
+			s.uptime = FormatUnixDuration(systemStart)
+		}
+	} else {
+		// Don't set nil values to summary. Just provide a warn statement.
+		log.Warnf("uptimesec not found in cpu collection.")
+	}
+
+	// Retrieve cpu average load and calculate % in use.
+	key := fmt.Sprintf("loadavg_%vm", cpuLoadAvg)
+	if val, found := data[key]; found {
+		if _, ok = val.(float32); ok {
+			cpuload = data[key].(float32)
+
+			// Guard against invalid core count.
+			if coreCount > 0 {
+				s.cpuUsage = -1
+				s.cpuUsage = cpuload / float32(coreCount) * 100
+			} else {
+				s.cpuUsage = -1
+			}
+		}
+	} else {
+		// Return without setting nil values.
+		log.Warnf("cpu load average not found in cpu collection.")
+	}
+}
+
+// Take mem collector data and update hardware summary statistics.
+func (s *summaryStats) updateMem(data map[string]interface{}) {
+	var activeKB float32
+	var totalKB float32
+	var ok bool
+
+	// Retrieve available mem statistic.
+	if val, found := data["activeKB"]; found {
+		if _, ok = val.(int); ok {
+			activeKB = float32(data["activeKB"].(int))
+		}
+	} else {
+		// Don't calculate mem % with nil data, return instead.
+		log.Warnf("activeKB not found in memory collection.")
+		return
+	}
+
+	// Retrieve total mem statistic.
+	if val, found := data["totalKB"]; found {
+		if _, ok = val.(int); ok {
+			totalKB = float32(data["totalKB"].(int))
+		}
+	} else {
+		// Don't calculate mem % with nil data, return instead
+		log.Warnf("totalKB not found in memory collection.")
+		return
+	}
+
+	// Guard in the event total system memory returned 0.
+	if totalKB == 0 {
+		log.Errorf("Total system memory returned 0. Unable to calculate memory usage.")
+		return
+	}
+
+	// Calculate total % memory usage.
+	s.memUsage = activeKB / totalKB * 100
 }
 
 // === HELPER FUNCS ===
@@ -163,4 +273,11 @@ func deepCopyMap(original map[string]interface{}) map[string]interface{} {
 	}
 
 	return deepCopy
+}
+
+// Determine time elapsed from a provided unix Timestamp
+// and format it as: #w#d#h#m#s.
+func FormatUnixDuration(unixTimestamp time.Time) string {
+	duration := time.Since(unixTimestamp).Truncate(time.Second)
+	return duration.String()
 }

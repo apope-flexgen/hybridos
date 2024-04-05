@@ -178,7 +178,7 @@ func (c *Config) validate() error {
 
 	if c.ConnectionHangtimeAllowance == 0 {
 		log.Infof("Using default c2c messaging frequency value: %v.", defaultC2CmsgMS)
-		c.C2cMsgFrequencyMS = defaultConnMS
+		c.ConnectionHangtimeAllowance = defaultConnMS
 	}
 
 	// Validate process list
