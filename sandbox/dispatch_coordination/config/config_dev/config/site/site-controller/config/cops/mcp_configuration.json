@@ -20,7 +20,7 @@
             "allowActions": true,
             "configRestart": true,
             "hangTimeAllowanceMS": 3000,
-            "killOnHang": true,
+            "killOnHang": false,
             "name": "site_controller",
             "requiredForHealthyStatus": true,
             "uri": "/site",

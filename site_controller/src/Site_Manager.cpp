@@ -2626,7 +2626,10 @@ void Site_Manager::runmode1_state(void) {
 
     // FR MODE (frequency response) - output or absorb additional power if frequency deviates by a set amount
     if (frequency_response.enable_flag.value.value_bool) {
-        frequency_response.execute(asset_cmd, get_ess_total_rated_active_power(), site_frequency.value.value_float, sequences_status.current_time);
+        // don't run if ess_discharge_prevention is enabled
+        if (!ess_discharge_prevention.enable_flag.value.value_bool) {
+            frequency_response.execute(asset_cmd, get_ess_total_rated_active_power(), site_frequency.value.value_float, sequences_status.current_time);
+        }
     } else {
         frequency_response.clear_all_component_outputs();
     }

@@ -9,8 +9,8 @@
 #define INCLUDE_SLEW_OBJECT_H_
 
 /* C Standard Library Dependencies */
+#include <ctime>
 /* C++ Standard Library Dependencies */
-#include <string>
 /* External Dependencies */
 /* System Internal Dependencies */
 /* Local Internal Dependencies */
@@ -31,7 +31,6 @@ public:
     float get_max_target(void) const;
     float get_min_target(void) const;
 
-private:
 private:
     int slew_rate;          // rate at which slew occurs (delta x per second)
     float current_value;    // present value of slew

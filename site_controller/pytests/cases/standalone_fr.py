@@ -1,18 +1,17 @@
 from typing import Union
-from unittest.result import failfast
 from pytest_cases import parametrize, fixture
 from pytests.fims import fims_set, fims_del
 from pytests.pytest_framework import Site_Controller_Instance
 from pytests.assertion_framework import Assertion_Type, Flex_Assertion
 from pytests.pytest_steps import Setup, Steps, Teardown
 from pytests.controls import run_psm_command
-import time
 
 # Test standalone FR interactions with other features. Adapted from original standalone PFR tests
 def add_underfrequency_configs(trigger_freq_hz: Union[float, None] = None, droop_freq_hz: Union[float, None] = None, 
                                active_cmd_kw: Union[float, None] = None, instant_recovery_freq_hz: Union[float, None] = None, 
                                trigger_duration_sec: Union[float, None] = None, recovery_freq_hz: Union[float, None] = None, 
-                               recovery_duration_sec: Union[float, None] = None, cooldown_duration_sec: Union[float, None] = None):
+                               recovery_duration_sec: Union[float, None] = None, cooldown_duration_sec: Union[float, None] = None,
+                               slew_rate_kw: Union[float, None] = None, cooldown_slew_rate_kw: Union[float, None] = None):
     """Use this function to setup configuration for each test"""
     # Add underfrequency variables to config so that asymmetric underfrequency variable configuarion parsing can be tested
     uf_prefix = "/dbi/site_controller/variables/variables/features/standalone_power/frequency_response/components/0"
@@ -122,6 +121,30 @@ def add_underfrequency_configs(trigger_freq_hz: Union[float, None] = None, droop
         config_edits.append({
             "uri": f"{uf_prefix}/cooldown_duration_sec",
             "up": new_variables["cooldown_duration_sec"]
+        })
+    if slew_rate_kw is not None:
+        new_variables["slew_rate_kw"] = {
+                "name": "Slew Rate",
+                "scaler": 1,
+                "ui_type": "control",
+                "value": slew_rate_kw,
+                "var_type": "Int"
+                }
+        config_edits.append({
+            "uri": f"{uf_prefix}/slew_rate_kw",
+            "up": new_variables["slew_rate_kw"]
+        })
+    if cooldown_slew_rate_kw is not None:
+        new_variables["cooldown_slew_rate_kw"] = {
+                "name": "Cooldown Slew Rate",
+                "scaler": 1,
+                "ui_type": "control",
+                "value": cooldown_slew_rate_kw,
+                "var_type": "Int"
+                }
+        config_edits.append({
+            "uri": f"{uf_prefix}/cooldown_slew_rate_kw",
+            "up": new_variables["cooldown_slew_rate_kw"]
         })
     return config_edits
 
@@ -564,7 +587,7 @@ def test_pfr_minimum_load_poi_lim(test):
         ],
         # Restart with asymmetric configs
         pre_lambda=[
-            lambda: Site_Controller_Instance.get_instance().mig.upload(add_underfrequency_configs(trigger_freq_hz= 59,droop_freq_hz=57, active_cmd_kw=-1000)),
+            lambda: Site_Controller_Instance.get_instance().mig.upload(add_underfrequency_configs(trigger_freq_hz= 59,droop_freq_hz=57, active_cmd_kw=-1000, slew_rate_kw=1000, cooldown_slew_rate_kw=1000)),
             lambda: Site_Controller_Instance.get_instance().restart_site_controller(True)
         ]
     ),
@@ -759,7 +782,9 @@ def test_pfr_force_start(test):
                 trigger_duration_sec=15, # FR will last for 15 seconds
                 cooldown_duration_sec=5, # 5 second cooldown
                 recovery_freq_hz=59, # seems reasonable, but won't be able to recover
-                recovery_duration_sec=5 # 5 second recovery to give time for tests
+                recovery_duration_sec=5, # 5 second recovery to give time for tests
+                slew_rate_kw=1000, 
+                cooldown_slew_rate_kw=1000
                 )),
             lambda: Site_Controller_Instance.get_instance().restart_site_controller(True)
         ]
@@ -869,7 +894,9 @@ def test_pfr_force_start_pulse(test):
                 instant_recovery_freq_hz=60, # instant_recover at 60, but won't be able to
                 trigger_duration_sec=15, # FR will last for 15 seconds
                 cooldown_duration_sec=5, # 5 second cooldown
-                recovery_freq_hz=59 # seems reasonable, but won't be able to recover
+                recovery_freq_hz=59, # seems reasonable, but won't be able to recover
+                slew_rate_kw=1000, 
+                cooldown_slew_rate_kw=1000
                 )),
             lambda: Site_Controller_Instance.get_instance().restart_site_controller(True)
         ]
@@ -968,7 +995,7 @@ def test_pfr_force_start_pulse(test):
             # make sure we aren't pushing extra power anymore
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 50, tolerance=0.5, wait_secs=10) 
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 50, tolerance=0.5, wait_secs=15) 
         ]
     ),
     Teardown(
@@ -1019,7 +1046,9 @@ def test_pfr_force_start_graph_1(test):
                 trigger_duration_sec=15, # FR will last for 15 seconds
                 cooldown_duration_sec=5, # 5 second cooldown
                 recovery_freq_hz=59, # seems reasonable, but won't be able to recover
-                recovery_duration_sec=1 # quick recovery to prove we bypass it
+                recovery_duration_sec=1, # quick recovery to prove we bypass it
+                slew_rate_kw=1000, 
+                cooldown_slew_rate_kw=1000
                 )),
             lambda: Site_Controller_Instance.get_instance().restart_site_controller(True)
         ]
@@ -1126,4 +1155,126 @@ def test_pfr_force_start_graph_1(test):
     )
 ])
 def test_pfr_force_start_graph_2(test):
+    return test
+
+# Force start PFR
+@ fixture
+@ parametrize("test", [
+    # Preconditions 
+    # demonstrate that the trigger_duration_sec will be obeyed
+    # event will start again as soon as cooldown is over
+    Setup(
+        "pfr_asymmetric_slew",
+        {},
+        [],
+        pre_lambda=[
+            lambda: Site_Controller_Instance.get_instance().mig.upload(add_underfrequency_configs(
+                trigger_freq_hz=1, # we will trigger it move out of the way
+                droop_freq_hz=0, # must be less than trigger
+                active_cmd_kw=1000, # simple small
+                instant_recovery_freq_hz=60, # instant_recover at 60, but won't be able to
+                trigger_duration_sec=15, # FR will last for 15 seconds
+                cooldown_duration_sec=60, # LONG cooldown to give time to play with slow ramp down
+                recovery_freq_hz=59, # seems reasonable, but won't be able to recover
+                recovery_duration_sec=1, # quick recovery to prove we bypass it
+                slew_rate_kw=1000, 
+                cooldown_slew_rate_kw=50 # VERY SLOW cooldown ramp 
+                )),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller(True)
+        ]
+    ),
+    Steps(
+        {
+            "/features/active_power/runmode1_kW_mode_cmd": 2,
+            "/features/active_power/active_power_setpoint_load_method": 0,
+            "/features/standalone_power/fr_mode_enable_flag": True,
+            "/components/ess_psm/bms_soc": 50,
+            "/components/ess_real_ls/bms_soc": 50,
+            # place solar and gen  assets in maint to simplify this test
+            **Steps.config_dev_place_solar_in_maint(),
+            **Steps.config_dev_place_gen_in_maint(),
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 2),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", True),
+        ]
+    ),
+    Steps(
+        {
+            # 5MW active power command, 1MW load 
+            "/features/active_power/active_power_setpoint_kW_cmd": 1000,
+            "/components/bess_aux/active_power_setpoint": -1000, # active_power_setpoint will cover
+            "/features/standalone_power/uf_pfr_droop_bypass_flag": True, # bypass droop to make test simple
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 1000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_load", 1050, wait_secs=5),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 50, tolerance=0.5) 
+        ]
+    ),
+    Steps(
+        {
+            # going to use force_start to start the response
+            # frequency -> 59.5 in pre_lambda 
+            # feat should want to recover, but won't be allowed because force_start true
+            "/features/standalone_power/uf_pfr_force_start": True,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 59.5, wait_secs=3),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 2000, wait_secs=0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -1000, tolerance=0.1, wait_secs=0),
+        ],
+        pre_lambda=[
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 59.5 -r /$$'),
+        ]
+    ),
+    Steps(
+        {
+            # stop it and watch it ramp down slow
+            "/features/standalone_power/uf_pfr_force_start": False,
+            # should instantly recover. NOT BECAUSE WE ARE AT instant_recovery_freq_hz, but because it has been longer than recovery_duration_sec
+            # above recovery_freq_hz, BUT force_start "ors together" and overrides it.
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/uf_pfr_in_cooldown", True, tolerance=0.1, wait_secs=3),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 1850, wait_secs=0), # cooldown_slew_rate_kw * 3
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -850, tolerance=0.1, wait_secs=0), # cooldown_slew_rate_kw * 3
+        ]
+    ),
+    Steps(
+        {
+            # wait another 5 seconds recheck
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 1600, wait_secs=5), # 1850 - cooldown_slew_rate_kw * 5
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -600, tolerance=0.5, wait_secs=0),  # 850 - cooldown_slew_rate_kw * 5 
+        ]
+    ),
+    Teardown(
+        {
+            # frequency -> 60 in pre_lambda 
+            "/features/standalone_power/fr_mode_enable_flag": False,
+            "/features/active_power/active_power_setpoint_load_method": 0,
+            "/features/standalone_power/active_power_poi_limits_enable": False,
+            "/features/standalone_power/active_power_poi_limits_min_kW": -10000,
+            "/features/standalone_power/active_power_poi_limits_max_kW": 10000,
+            "/features/standalone_power/uf_pfr_droop_bypass_flag": False, # reinstate droop
+            **Steps.config_dev_remove_solar_from_maint(),
+            **Steps.config_dev_remove_gen_from_maint(),
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 60),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_enable", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_min_kW", -10000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 10000)
+        ],
+        pre_lambda=[
+            lambda: run_psm_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
+        ]
+    )
+])
+def test_pfr_asymmetric_slew(test):
     return test

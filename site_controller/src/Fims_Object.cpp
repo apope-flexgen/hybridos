@@ -853,10 +853,11 @@ bool Fims_Object::configure(const std::string& var_id, bool* p_flag, Input_Sourc
     // if the variable is a Multiple-Input Command Variable, configure it as such
     if (multiple_inputs) {
         // init all input regs with variable.json initial value (all except UI reg should be quickly overwritten by their source)
-        for (int i = 0; i < (int)input_sources->get_num_sources(); ++i) {
+        for (int i = 0; i < static_cast<int>(input_sources->get_num_sources()); ++i) {
             inputs.push_back(value);
         }
         multi_input_command_vars.push_back(this);
     }
+    configured = true;
     return true;
 }

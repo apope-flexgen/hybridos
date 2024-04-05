@@ -62,7 +62,9 @@ protected:
     Fims_Object instant_recovery_freq_hz;
     Fims_Object cooldown_duration_sec;
     Fims_Object slew_rate_kw;
+    Fims_Object cooldown_slew_rate_kw;
     int prev_slew_rate_kw;
+    int prev_cooldown_slew_rate_kw;
     Fims_Object ess_slew_override;
     Fims_Object freeze_active_cmd_flag;
     // outputs
@@ -93,6 +95,10 @@ protected:
         { &in_cooldown, "in_cooldown" },
         { &in_recovery, "in_recovery" },
         { &output_kw, "output_kw" }
+    };
+    std::vector<std::pair<Fims_Object*, std::string>> optional_variable_ids = {
+        // inputs
+        { &cooldown_slew_rate_kw, "cooldown_slew_rate_kw" },
     };
 
     bool is_underfrequency_component;  // True when UF, false when OF

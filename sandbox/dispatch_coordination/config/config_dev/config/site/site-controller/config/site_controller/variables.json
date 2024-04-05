@@ -1104,7 +1104,7 @@
                                 "name": "Active Response Command",
                                 "ui_type": "control",
                                 "unit": "kW",
-                                "value": 100.0
+                                "value": 5000.0
                             },
                             "active_response_status": {
                                 "name": "Active Response Status",
@@ -1131,7 +1131,7 @@
                             "droop_bypass_flag": {
                                 "name": "Droop Bypass",
                                 "type": "enum_slider",
-                                "ui_type": "none",
+                                "ui_type": "control",
                                 "value": false,
                                 "var_type": "Bool"
                             },
@@ -1151,7 +1151,7 @@
                             "ess_slew_override": {
                                 "name": "Slew Override",
                                 "type": "enum_slider",
-                                "ui_type": "none",
+                                "ui_type": "control",
                                 "value": false,
                                 "var_type": "Bool"
                             },
@@ -1164,19 +1164,19 @@
                             },
                             "in_cooldown": {
                                 "name": "Post-Response Cooldown Status",
-                                "ui_type": "none",
+                                "ui_type": "status",
                                 "value": false,
                                 "var_type": "Bool"
                             },
                             "in_recovery": {
                                 "name": "In-Recovery Status",
-                                "ui_type": "none",
+                                "ui_type": "status",
                                 "value": false,
                                 "var_type": "Bool"
                             },
                             "inactive_cmd_kw": {
                                 "name": "Inactive Command",
-                                "ui_type": "none",
+                                "ui_type": "control",
                                 "unit": "kW"
                             },
                             "instant_recovery_freq_hz": {
@@ -1192,7 +1192,7 @@
                             },
                             "recovery_duration_sec": {
                                 "name": "Recovery Duration",
-                                "ui_type": "none",
+                                "ui_type": "status",
                                 "unit": "s",
                                 "value": 0,
                                 "var_type": "Int"
@@ -1212,10 +1212,16 @@
                             },
                             "slew_rate_kw": {
                                 "name": "Slew Rate",
-                                "scaler": 1000,
-                                "ui_type": "none",
-                                "unit": "W/s",
-                                "value": 10000000,
+                                "scaler": 1,
+                                "ui_type": "control",
+                                "value": 1000,
+                                "var_type": "Int"
+                            },
+                            "cooldown_slew_rate_kw": {
+                                "name": "Cooldown Slew Rate",
+                                "scaler": 1,
+                                "ui_type": "control",
+                                "value": 1000,
                                 "var_type": "Int"
                             },
                             "trigger_duration_sec": {

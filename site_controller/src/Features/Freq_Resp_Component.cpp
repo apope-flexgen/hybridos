@@ -7,6 +7,7 @@
 /* C Standard Library Dependencies */
 /* C++ Standard Library Dependencies */
 #include <algorithm>
+#include "Fims_Object.h"
 #include "Logger.h"
 /* External Dependencies */
 /* System Internal Dependencies */
@@ -34,8 +35,18 @@ Frequency_Response_Outputs Freq_Resp_Component::frequency_response(const Frequen
         prev_droop_limit_flag = droop_limit_flag.value.value_bool;
     }
     if (prev_slew_rate_kw != slew_rate_kw.value.value_int) {
-        slew_cmd_kw.set_slew_rate(slew_rate_kw.value.value_int);
+        if (!in_cooldown.value.value_bool) {
+            slew_cmd_kw.set_slew_rate(slew_rate_kw.value.value_int);
+        }
         prev_slew_rate_kw = slew_rate_kw.value.value_int;
+    }
+    if (cooldown_slew_rate_kw.configured) {
+        if (prev_cooldown_slew_rate_kw != cooldown_slew_rate_kw.value.value_int) {
+            if (in_cooldown.value.value_bool) {
+                slew_cmd_kw.set_slew_rate(cooldown_slew_rate_kw.value.value_int);
+            }
+            prev_cooldown_slew_rate_kw = cooldown_slew_rate_kw.value.value_int;
+        }
     }
 
     // Set limits on how large response can be this time based on how big it was last time
@@ -90,7 +101,7 @@ void Freq_Resp_Component::update_state(timespec current_time, float site_frequen
     }
 
     // force_start only obeys the max_duration bit
-    if(force_start.value.value_bool) {
+    if (force_start.value.value_bool) {
         // if maxed out trigger time, event can be immediately ended
         if (check_expired_time(current_time, trigger_over_time)) {
             end_active_response();
@@ -111,7 +122,7 @@ void Freq_Resp_Component::update_state(timespec current_time, float site_frequen
             FPS_WARNING_LOG("Trying to use droop when force starting a FR. Is this intended?");
         }
         return;
-    } 
+    }
 
     // if not in recovery, reset the recovery timer and check if recovery state should be entered
     if (!in_recovery.value.value_bool) {
@@ -129,8 +140,8 @@ void Freq_Resp_Component::update_state(timespec current_time, float site_frequen
     }
 
     // end event if recovery has lasted long enough
-    // IMPORTANT force_start will prevent the event from ending, BUT the second it goes false the 
-    // response should end if you've been in recovery for a sufficient amount of time. 
+    // IMPORTANT force_start will prevent the event from ending, BUT the second it goes false the
+    // response should end if you've been in recovery for a sufficient amount of time.
     if (in_recovery.value.value_bool && check_expired_time(current_time, recovery_over_time) && !force_start.value.value_bool) {
         end_active_response();
     }
@@ -169,9 +180,13 @@ void Freq_Resp_Component::start_active_response() {
     if (droop_bypass_flag.value.value_bool) {
 #ifndef FPS_TEST_MODE  // bypass emit event when running gtest as emit_event() will cause seg fault.
         FPS_INFO_LOG("Frequency Response: response %s triggered.", component_id.value.value_string);
-        emit_event("Site", is_underfrequency_component ? "Frequency deviation: underfrequency event triggered" : "Frequency deviation: overfrequency event triggered", INFO_ALERT);
+        emit_event("Site", is_underfrequency_component ? "Frequency deviation: underfrequency event triggered" : "Frequency deviation: overfrequency event triggered",
+                   INFO_ALERT);
 #endif
     }
+
+    // NOTE: feat potentially has 2 slew rates set the active if you need to
+    slew_cmd_kw.set_slew_rate(slew_rate_kw.value.value_float);
 }
 
 /**
@@ -187,6 +202,11 @@ void Freq_Resp_Component::end_active_response() {
     cooldown_over_time.tv_sec += cooldown_duration_sec.value.value_int;
     in_cooldown.value.value_bool = true;
     active_cmd_kw.value.value_float = latest_active_cmd_kw_received;
+
+    // NOTE: optionally able to configure an asymmetric slew down after event. Do that here.
+    if (cooldown_slew_rate_kw.configured) {
+        slew_cmd_kw.set_slew_rate(cooldown_slew_rate_kw.value.value_float);
+    }
 }
 
 /**
@@ -244,7 +264,8 @@ void Freq_Resp_Component::clear_outputs(void) {
  * if any of Frequency Response's inputs are configured to be Multiple Input Command Variables.
  * @returns True if parsing is successful or false if parsing failed.
  */
-bool Freq_Resp_Component::parse_json_config(cJSON* JSON_config, bool* p_flag, Input_Source_List* inputs, const Fims_Object& defaults, std::vector<Fims_Object*>& multiple_inputs) {
+bool Freq_Resp_Component::parse_json_config(cJSON* JSON_config, bool* p_flag, Input_Source_List* inputs, const Fims_Object& defaults,
+                                            std::vector<Fims_Object*>& multiple_inputs) {
     // caller must not pass a NULL cJSON*
     if (JSON_config == NULL) {
         FPS_ERROR_LOG("JSON_config is NULL");
@@ -293,6 +314,28 @@ bool Freq_Resp_Component::parse_json_config(cJSON* JSON_config, bool* p_flag, In
         FORMAT_TO_BUF_C_STRING(name, "{} {}", (const char*)JSON_component_name->valuestring, variable_id_pair.first->get_name());
         variable_id_pair.first->set_name(name.data());
     }
+
+    // parse optional variables
+    for (auto& variable_id_pair : optional_variable_ids) {
+        cJSON* JSON_variable = cJSON_GetObjectItem(JSON_config, variable_id_pair.second.c_str());
+        if (JSON_variable == NULL) {
+            FPS_WARNING_LOG("Optional variable %s omitted in %s. Continuing with configuration.", variable_id_pair.second.c_str(), component_id.value.value_string);
+            continue;
+        }
+
+        // prepend the component ID to the variable ID
+        std::string combined_setting_var = std::string(component_id.value.value_string) + '_' + variable_id_pair.second;
+        if (!variable_id_pair.first->configure(combined_setting_var, p_flag, inputs, JSON_variable, defaults, multiple_inputs)) {
+            FPS_ERROR_LOG("Failed to configure variable %s for frequency response component %s", variable_id_pair.second.c_str(), component_id.value.value_string);
+            return false;
+        }
+
+        // prepend the component name to the variable name
+        fmt::memory_buffer name;
+        FORMAT_TO_BUF_C_STRING(name, "{} {}", (const char*)JSON_component_name->valuestring, variable_id_pair.first->get_name());
+        variable_id_pair.first->set_name(name.data());
+    }
+
     return true;
 }
 
@@ -309,6 +352,10 @@ void Freq_Resp_Component::handle_fims_set(const cJSON* JSON_body, const char* va
     if (static_cast<bool>(cJSON_IsBool(JSON_body))) {
         body_bool = static_cast<bool>(cJSON_IsTrue(JSON_body));
     }
+
+    // TODO(Jud): this function is cringe. Is there some way to loop over this stuff.
+    // Maybe do this later.
+    // Like the point is not every variable is fimsable, but still. Kinda lame.
 
     // Use fuzzy matching by only checking against the length of the variable id
     // This will allow multiple inputs variables to come through and be checked by set_fims_float()
@@ -356,6 +403,13 @@ void Freq_Resp_Component::handle_fims_set(const cJSON* JSON_body, const char* va
         return;
     }
 
+    // optional variable sets
+    if (cooldown_slew_rate_kw.configured) {
+        if (cooldown_slew_rate_kw.set_fims_float(variable_id, body_float)) {
+            return;
+        }
+    }
+
     FPS_ERROR_LOG("FIMS SET with endpoint %s did not match any frequency response component endpoints.", variable_id);
 }
 
@@ -367,6 +421,12 @@ void Freq_Resp_Component::handle_fims_set(const cJSON* JSON_body, const char* va
 void Freq_Resp_Component::get_feature_vars(std::vector<Fims_Object*>& var_list) {
     for (auto& curr_fims_obj : variable_ids) {
         var_list.push_back(curr_fims_obj.first);
+    }
+
+    for (auto& curr_fims_obj : optional_variable_ids) {
+        if (curr_fims_obj.first->configured) {
+            var_list.push_back(curr_fims_obj.first);
+        }
     }
 }
 
@@ -383,11 +443,17 @@ bool Freq_Resp_Component::initialize_state(float grid_target_freq_hz) {
     is_underfrequency_component = trigger_freq_hz.value.value_float < grid_target_freq_hz;
     if (is_underfrequency_component) {
         if (droop_freq_hz.value.value_float > trigger_freq_hz.value.value_float) {
-            FPS_ERROR_LOG("Invalid config: Frequency Response component %s is under-frequency response but droop frequency is greater than trigger frequency. Must be less than or equal to trigger frequency.", component_id.value.value_string);
+            FPS_ERROR_LOG(
+                "Invalid config: Frequency Response component %s is under-frequency response but droop frequency is greater than trigger frequency. Must be less than or "
+                "equal to trigger frequency.",
+                component_id.value.value_string);
             return false;
         }
     } else if (droop_freq_hz.value.value_float < trigger_freq_hz.value.value_float) {
-        FPS_ERROR_LOG("Invalid config: Frequency Response component %s is over-frequency response but droop frequency is less than trigger frequency. Must be greater than or equal to trigger frequency.", component_id.value.value_string);
+        FPS_ERROR_LOG(
+            "Invalid config: Frequency Response component %s is over-frequency response but droop frequency is less than trigger frequency. Must be greater than or equal to "
+            "trigger frequency.",
+            component_id.value.value_string);
         return false;
     }
     sync_active_cmd_kw();

@@ -76,6 +76,10 @@ public:
     void parse_json_config(cJSON* JSON_object, const Fims_Object& default_vals);
     bool configure(const std::string& var_id, bool* p_flag, Input_Source_List* input_sources, cJSON* JSON_config, const Fims_Object& default_vals, std::vector<Fims_Object*>& multi_input_command_vars);
 
+    // did you call configure
+    // else could be strange
+    bool configured;
+
     // Map used to store one or more string/value pairs held by the fims register
     // This is typically used for alarms/faults/statuses and site feature selections
     std::unordered_map<uint64_t, std::pair<std::string, Value_Object>> options_map;
