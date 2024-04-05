@@ -21,53 +21,58 @@
 #include "rtwtypes.h"
 
 // Output and update for referenced model: 'func1'
-void func1::step(int32_T arg_In1, boolean_T arg_In2, int32_T *arg_Out1)
+void func1::step(int32_T arg_In1, boolean_T arg_In2, int32_T* arg_Out1)
 {
-  int32_T tmp;
-  int32_T tmp_0;
+    int32_T tmp;
+    int32_T tmp_0;
 
-  // Switch: '<S1>/Switch1' incorporates:
-  //   Constant: '<S1>/Constant2'
-  //   Delay: '<S1>/Delay'
-  //   RelationalOperator: '<S1>/NotEqual'
+    // Switch: '<S1>/Switch1' incorporates:
+    //   Constant: '<S1>/Constant2'
+    //   Delay: '<S1>/Delay'
+    //   RelationalOperator: '<S1>/NotEqual'
 
-  if (arg_In2 != func1_DW.Delay_DSTATE) {
-    tmp = 0;
-  } else {
-    tmp = arg_In1;
-  }
+    if (arg_In2 != func1_DW.Delay_DSTATE)
+    {
+        tmp = 0;
+    }
+    else
+    {
+        tmp = arg_In1;
+    }
 
-  // Switch: '<S1>/Switch' incorporates:
-  //   Constant: '<S1>/Constant'
-  //   Constant: '<S1>/Constant1'
+    // Switch: '<S1>/Switch' incorporates:
+    //   Constant: '<S1>/Constant'
+    //   Constant: '<S1>/Constant1'
 
-  if (arg_In2) {
-    tmp_0 = 1;
-  } else {
-    tmp_0 = -1;
-  }
+    if (arg_In2 != 0u)
+    {
+        tmp_0 = 1;
+    }
+    else
+    {
+        tmp_0 = -1;
+    }
 
-  // Sum: '<S1>/Sum' incorporates:
-  //   Switch: '<S1>/Switch'
-  //   Switch: '<S1>/Switch1'
+    // Sum: '<S1>/Sum' incorporates:
+    //   Switch: '<S1>/Switch'
+    //   Switch: '<S1>/Switch1'
 
-  *arg_Out1 = tmp + tmp_0;
+    *arg_Out1 = tmp + tmp_0;
 
-  // Update for Delay: '<S1>/Delay'
-  func1_DW.Delay_DSTATE = arg_In2;
+    // Update for Delay: '<S1>/Delay'
+    func1_DW.Delay_DSTATE = arg_In2;
 }
 
 // Constructor
-func1::func1():
-  func1_DW()
+func1::func1() : func1_DW()
 {
-  // Currently there is no constructor body generated.
+    // Currently there is no constructor body generated.
 }
 
 // Destructor
 func1::~func1()
 {
-  // Currently there is no destructor body generated.
+    // Currently there is no destructor body generated.
 }
 
 //

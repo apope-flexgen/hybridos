@@ -2,23 +2,23 @@
 #ifndef __NEW_AV2_CPP
 #define __NEW_AV2_CPP
 
-#include<iostream>
-#include<string>
-#include<map>
-#include<vector>
 #include <cjson/cJSON.h>
 #include <cstring>
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
+#include <iostream>
 #include <limits.h>
+#include <map>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <vector>
 
 #include "newAv2.h"
 
 using namespace std;
 
 #define DBL_EPSILON 2.2204460492503131e-16
-//int decodeCJ(AssetVar*vmap, cJSON* cji, int level =0);
+// int decodeCJ(AssetVar*vmap, cJSON* cji, int level =0);
 
 // setVal will trigger actions
 // actAv["shift"] = 2;
@@ -34,28 +34,28 @@ using namespace std;
 //
 // we have a function "enum" .. then  that to the vectors
 // as an av
-// add the actVec to the enum var 
+// add the actVec to the enum var
 
 // after this we will have a multi dimensional vmap with params and actions
-// all over the place.  
+// all over the place.
 
-//g++ -std=c++11 -o av doc/newAv.cpp//  Time stuff
-//g++ -std=c++11 -o av doc/newAv2.cpp -lcjson
+// g++ -std=c++11 -o av doc/newAv.cpp//  Time stuff
+// g++ -std=c++11 -o av doc/newAv2.cpp -lcjson
 // Dont have time today to work out the chrono stuff.
 
 // // decode options
-// // '{"a":b}'   -- simple av(a) ->value = b what ever b's type is stick it in a value
+// // '{"a":b}'   -- simple av(a) ->value = b what ever b's type is stick it in
+// a value
 // // '{"a":{"value":c,"p1":d}}' populate params value p1 etc
-// //                    
+// //
 // // we loose the varsmap instead root everything from a base av.
 
 // int decodeCJ(AssetVar*vmap, cJSON* cji, int level =0)
 // {
 // 	const char* sname;
-// 	// we need to make sure we know the type of asset var we are playing with.
-// 	cJSON *cj = cji;
-// 	string head = "";
-// 	for ( int i = 0 ; i < level; i++)
+// 	// we need to make sure we know the type of asset var we are playing
+// with. 	cJSON *cj = cji; 	string head = ""; 	for ( int i = 0
+// ; i < level; i++)
 // 	{
 // 		head += "  ";
 // 	}
@@ -73,46 +73,49 @@ using namespace std;
 // 		if (cJSON_IsObject(cj))
 // 		{
 // 			if(!sname)sname = "{";
-// 			cout << head+" CJ ["<< sname <<"] IS an Object >>"<< cj<<endl;
-// 			AssetVar* av = vmap->setTParam(sname, "Object");
+// 			cout << head+" CJ ["<< sname <<"] IS an Object >>"<<
+// cj<<endl; 			AssetVar* av = vmap->setTParam(sname, "Object");
 // 			if(cj->child)
 // 				decodeCJ(av, cj->child, level+1);
 // 		}
 // 		else if (cJSON_IsTrue(cj))
 // 		{
-// 			cout << head+" CJ ["<< sname <<"] IS True >>"<< cj<<endl;
-// 			AssetVar* av = vmap->setParam(sname, true);
+// 			cout << head+" CJ ["<< sname <<"] IS True >>"<<
+// cj<<endl; 			AssetVar* av = vmap->setParam(sname, true);
 // 			if(cj->child)
 // 				decodeCJ(av, cj->child, level+1);
 // 		}
 // 		else if (cJSON_IsFalse(cj))
 // 		{
-// 			cout << head+" CJ ["<< sname <<"] IS False >>"<< cj<<endl;
-// 			AssetVar* av = vmap->setParam(sname, false);
+// 			cout << head+" CJ ["<< sname <<"] IS False >>"<<
+// cj<<endl; 			AssetVar* av = vmap->setParam(sname, false);
 // 			if(cj->child)
 // 				decodeCJ(av, cj->child, level+1);
 // 		}
 // 		else if (cJSON_IsString(cj))
 // 		{
-// 			cout << head+" CJ ["<< sname <<"] IS a String >>"<< cj<<endl;
-// 			AssetVar* av = vmap->setParam(sname, "String");
+// 			cout << head+" CJ ["<< sname <<"] IS a String >>"<<
+// cj<<endl; 			AssetVar* av = vmap->setParam(sname, "String");
 // 			if(cj->child)
 // 				decodeCJ(av, cj->child, level+1);
 // 		}
 // 		else if (cJSON_IsArray(cj))
 // 		{
 // 			if(!sname)sname = "[";
-// 			cout << head+" CJ ["<< sname<<"] IS an Array >>"<< cj<<endl;
-// 			AssetVar* av = vmap->setTParam(sname, "Array");
+// 			cout << head+" CJ ["<< sname<<"] IS an Array >>"<<
+// cj<<endl; 			AssetVar* av = vmap->setTParam(sname, "Array");
 // 			cJSON* cji = cj->child;
 // 			decodeCJ(av, cji, level+1);
 // 		}
 // 		else if (cJSON_IsNumber(cj))
 // 		{
-// 			// numbers strings etc simply add to the curent object params
-// 			cout << head+" CJ ["<< sname<<"] IS a Number >>"<< cj<<endl;
-// 			AssetVar * av = vmap->setParam(sname, cj->valuedouble);
-// 			cout << head+"   Type "<<cj->type <<"  CJ next["<< cj->next<<"] "<< cj<<endl;
+// 			// numbers strings etc simply add to the curent object
+// params
+// 			cout << head+" CJ ["<< sname<<"] IS a Number >>"<<
+// cj<<endl; 			AssetVar * av = vmap->setParam(sname,
+// cj->valuedouble);
+// 			cout << head+"   Type "<<cj->type <<"  CJ next["<<
+// cj->next<<"] "<< cj<<endl;
 // 			////vmap->getParam(cj->string)->show();
 // 			if(cj->child)
 // 				decodeCJ(av, cj->child, level + 1);
@@ -124,21 +127,20 @@ using namespace std;
 // 		cj = cj->next;
 
 // 	}
-	
+
 // 	return 0;
 // }
 
 // these are all taken from cJSON
 // converted a bit to c++
-bool print_CJarray(const cJSON * const item, int &depth);
-bool print_CJnumber(const cJSON * const item, int &depth);
-bool print_CJstring(const cJSON * const item, int &depth);
-bool print_CJobject(const cJSON * const item, int &depth);
+bool print_CJarray(const cJSON* const item, int& depth);
+bool print_CJnumber(const cJSON* const item, int& depth);
+bool print_CJstring(const cJSON* const item, int& depth);
+bool print_CJobject(const cJSON* const item, int& depth);
 
 /* Render a value to text. */
-bool print_CJvalue(const cJSON* const item, int &depth)
+bool print_CJvalue(const cJSON* const item, int& depth)
 {
-
     switch ((item->type) & 0xFF)
     {
         case cJSON_NULL:
@@ -146,11 +148,11 @@ bool print_CJvalue(const cJSON* const item, int &depth)
             return true;
 
         case cJSON_False:
-            cout<< "false";
+            cout << "false";
             return true;
 
         case cJSON_True:
-            cout<< "true";
+            cout << "true";
             return true;
 
         case cJSON_Number:
@@ -163,7 +165,7 @@ bool print_CJvalue(const cJSON* const item, int &depth)
                 return false;
             }
 
-            cout <<item->valuestring;
+            cout << item->valuestring;
             return true;
         }
 
@@ -179,17 +181,16 @@ bool print_CJvalue(const cJSON* const item, int &depth)
         default:
             return false;
     }
-	if(depth == 0)
-	   cout << endl;
+    if (depth == 0)
+        cout << endl;
 }
 
 /* Render an array to text */
-bool print_CJarray(const cJSON * const item, int &depth)
+bool print_CJarray(const cJSON* const item, int& depth)
 {
-
     cout << "[";
     depth++;
- 	cJSON *current_element = item->child;
+    cJSON* current_element = item->child;
     while (current_element != NULL)
     {
         if (!print_CJvalue(current_element, depth))
@@ -203,21 +204,21 @@ bool print_CJarray(const cJSON * const item, int &depth)
         }
         current_element = current_element->next;
     }
-	for (int i = 0; i < (depth - 1); i++)
+    for (int i = 0; i < (depth - 1); i++)
     {
         cout << "\t";
     }
-    cout <<  "]";
+    cout << "]";
     depth--;
 
     return true;
 }
 /* Render an object to text. */
-bool print_CJobject(const cJSON * const item, int &depth)
+bool print_CJobject(const cJSON* const item, int& depth)
 {
-    cJSON *current_item = item->child;
-    cout<< "{";
-    cout<< endl;
+    cJSON* current_item = item->child;
+    cout << "{";
+    cout << endl;
     while (current_item)
     {
         for (int i = 0; i < depth; i++)
@@ -246,7 +247,7 @@ bool print_CJobject(const cJSON * const item, int &depth)
     {
         cout << "\t";
     }
-    
+
     cout << "}";
     depth--;
 
@@ -254,15 +255,14 @@ bool print_CJobject(const cJSON * const item, int &depth)
 }
 
 /* Render the number nicely from the given item into a string. */
-bool print_CJnumber(const cJSON * const item, int &depth)
+bool print_CJnumber(const cJSON* const item, int& depth)
 {
     double d = item->valuedouble;
-    //size_t i = 0;
-	size_t length = 0;
-    unsigned char number_buffer[26] = {0}; /* temporary buffer to print the number into */
-    //unsigned char decimal_point = '.';
+    // size_t i = 0;
+    size_t length = 0;
+    unsigned char number_buffer[26] = { 0 }; /* temporary buffer to print the number into */
+    // unsigned char decimal_point = '.';
     double test = 0.0;
-
 
     /* This checks for NaN and Infinity */
     if (isnan(d) || isinf(d))
@@ -271,7 +271,8 @@ bool print_CJnumber(const cJSON * const item, int &depth)
     }
     else
     {
-        /* Try 15 decimal places of precision to avoid nonsignificant nonzero digits */
+        /* Try 15 decimal places of precision to avoid nonsignificant nonzero digits
+         */
         length = sprintf((char*)number_buffer, "%1.15g", d);
 
         /* Check whether the original double can be recovered */
@@ -288,26 +289,24 @@ bool print_CJnumber(const cJSON * const item, int &depth)
         return false;
     }
 
-
     /* copy the printed number to the output and replace locale
      * dependent decimal point with '.' */
-	cout << number_buffer;
+    cout << number_buffer;
 
     return true;
 }
 
 /* Render the cstring provided to an escaped version that can be printed. */
-bool print_CJstring_ptr(const unsigned char * const input, int &depth)
+bool print_CJstring_ptr(const unsigned char* const input, int& depth)
 {
-    
     /* empty string */
     if (input == NULL)
     {
-		cout << "\"\"";
+        cout << "\"\"";
 
         return true;
     }
-  
+
     cout << "\"";
     cout << input;
     cout << "\"";
@@ -316,25 +315,26 @@ bool print_CJstring_ptr(const unsigned char * const input, int &depth)
 }
 
 /* Invoke print_string_ptr (which is useful) on an item. */
-bool print_CJstring(const cJSON * const item, int &depth)
+bool print_CJstring(const cJSON* const item, int& depth)
 {
     return print_CJstring_ptr((unsigned char*)item->valuestring, depth);
 }
 
-
-bool parse_CJvalue(cJSON * const item, parse_buffer * const input_buffer);
-//bool print_value(const cJSON * const item, printbuffer * const output_buffer);
-bool parse_CJarray(cJSON * const item, parse_buffer * const input_buffer);
-//static cJSON_bool print_array(const cJSON * const item, printbuffer * const output_buffer);
-bool parse_CJobject(cJSON * const item, parse_buffer * const input_buffer);
-bool parse_CJstring(cJSON * const item, parse_buffer * const input_buffer);
-bool parse_CJnumber(cJSON * const item, parse_buffer * const input_buffer);
+bool parse_CJvalue(cJSON* const item, parse_buffer* const input_buffer);
+// bool print_value(const cJSON * const item, printbuffer * const
+// output_buffer);
+bool parse_CJarray(cJSON* const item, parse_buffer* const input_buffer);
+// static cJSON_bool print_array(const cJSON * const item, printbuffer * const
+// output_buffer);
+bool parse_CJobject(cJSON* const item, parse_buffer* const input_buffer);
+bool parse_CJstring(cJSON* const item, parse_buffer* const input_buffer);
+bool parse_CJnumber(cJSON* const item, parse_buffer* const input_buffer);
 
 /* Build an object from the text. */
-bool parse_CJobject(cJSON * const item, parse_buffer * const input_buffer)
+bool parse_CJobject(cJSON* const item, parse_buffer* const input_buffer)
 {
-    cJSON *head = NULL; /* linked list head */
-    cJSON *current_item = NULL;
+    cJSON* head = NULL; /* linked list head */
+    cJSON* current_item = NULL;
 
     if (input_buffer->depth >= CJSON_NESTING_LIMIT)
     {
@@ -367,7 +367,7 @@ bool parse_CJobject(cJSON * const item, parse_buffer * const input_buffer)
     do
     {
         /* allocate next item */
-        cJSON *new_item = cJSON_CreateObject();
+        cJSON* new_item = cJSON_CreateObject();
         if (new_item == NULL)
         {
             goto fail; /* allocation failure */
@@ -413,8 +413,7 @@ bool parse_CJobject(cJSON * const item, parse_buffer * const input_buffer)
             goto fail; /* failed to parse value */
         }
         buffer_skip_whitespace(input_buffer);
-    }
-    while (can_access_at_index(input_buffer, 0) && (buffer_at_offset(input_buffer)[0] == ','));
+    } while (can_access_at_index(input_buffer, 0) && (buffer_at_offset(input_buffer)[0] == ','));
 
     if (cannot_access_at_index(input_buffer, 0) || (buffer_at_offset(input_buffer)[0] != '}'))
     {
@@ -424,7 +423,8 @@ bool parse_CJobject(cJSON * const item, parse_buffer * const input_buffer)
 success:
     input_buffer->depth--;
 
-    if (head != NULL) {
+    if (head != NULL)
+    {
         head->prev = current_item;
     }
 
@@ -444,10 +444,10 @@ fail:
 }
 
 /* Build an array from input text. */
-bool parse_CJarray(cJSON * const item, parse_buffer * const input_buffer)
+bool parse_CJarray(cJSON* const item, parse_buffer* const input_buffer)
 {
-    cJSON *head = NULL; /* head of the linked list */
-    cJSON *current_item = NULL;
+    cJSON* head = NULL; /* head of the linked list */
+    cJSON* current_item = NULL;
 
     if (input_buffer->depth >= CJSON_NESTING_LIMIT)
     {
@@ -482,7 +482,7 @@ bool parse_CJarray(cJSON * const item, parse_buffer * const input_buffer)
     do
     {
         /* allocate next item */
-        cJSON *new_item = cJSON_CreateObject();
+        cJSON* new_item = cJSON_CreateObject();
         if (new_item == NULL)
         {
             goto fail; /* allocation failure */
@@ -510,8 +510,7 @@ bool parse_CJarray(cJSON * const item, parse_buffer * const input_buffer)
             goto fail; /* failed to parse value */
         }
         buffer_skip_whitespace(input_buffer);
-    }
-    while (can_access_at_index(input_buffer, 0) && (buffer_at_offset(input_buffer)[0] == ','));
+    } while (can_access_at_index(input_buffer, 0) && (buffer_at_offset(input_buffer)[0] == ','));
 
     if (cannot_access_at_index(input_buffer, 0) || buffer_at_offset(input_buffer)[0] != ']')
     {
@@ -521,7 +520,8 @@ bool parse_CJarray(cJSON * const item, parse_buffer * const input_buffer)
 success:
     input_buffer->depth--;
 
-    if (head != NULL) {
+    if (head != NULL)
+    {
         head->prev = current_item;
     }
 
@@ -542,12 +542,12 @@ fail:
 }
 
 /* Parse the input text into an unescaped cinput, and populate item. */
-bool parse_CJstring(cJSON * const item, parse_buffer * const input_buffer)
+bool parse_CJstring(cJSON* const item, parse_buffer* const input_buffer)
 {
-    const unsigned char *input_pointer = buffer_at_offset(input_buffer) + 1;
-    const unsigned char *input_end = buffer_at_offset(input_buffer) + 1;
-    unsigned char *output_pointer = NULL;
-    unsigned char *output = NULL;
+    const unsigned char* input_pointer = buffer_at_offset(input_buffer) + 1;
+    const unsigned char* input_end = buffer_at_offset(input_buffer) + 1;
+    unsigned char* output_pointer = NULL;
+    unsigned char* output = NULL;
 
     /* not a string */
     if (buffer_at_offset(input_buffer)[0] != '\"')
@@ -580,7 +580,7 @@ bool parse_CJstring(cJSON * const item, parse_buffer * const input_buffer)
         }
 
         /* This is at most how much we need for the output */
-        allocation_length = (size_t) (input_end - buffer_at_offset(input_buffer)) - skipped_bytes;
+        allocation_length = (size_t)(input_end - buffer_at_offset(input_buffer)) - skipped_bytes;
         output = (unsigned char*)malloc(allocation_length + sizeof(""));
         if (output == NULL)
         {
@@ -651,7 +651,7 @@ bool parse_CJstring(cJSON * const item, parse_buffer * const input_buffer)
     item->type = cJSON_String;
     item->valuestring = (char*)output;
 
-    input_buffer->offset = (size_t) (input_end - input_buffer->content);
+    input_buffer->offset = (size_t)(input_end - input_buffer->content);
     input_buffer->offset++;
 
     return true;
@@ -669,11 +669,12 @@ fail:
 
     return false;
 }
-/* Parse the input text to generate a number, and populate the result into item. */
-bool parse_CJnumber(cJSON * const item, parse_buffer * const input_buffer)
+/* Parse the input text to generate a number, and populate the result into item.
+ */
+bool parse_CJnumber(cJSON* const item, parse_buffer* const input_buffer)
 {
     double number = 0;
-    unsigned char *after_end = NULL;
+    unsigned char* after_end = NULL;
     unsigned char number_c_string[64];
     unsigned char decimal_point = get_decimal_point();
     size_t i = 0;
@@ -683,9 +684,9 @@ bool parse_CJnumber(cJSON * const item, parse_buffer * const input_buffer)
         return false;
     }
 
-    /* copy the number into a temporary buffer and replace '.' with the decimal point
-     * of the current locale (for strtod)
-     * This also takes care of '\0' not necessarily being available for marking the end of the input */
+    /* copy the number into a temporary buffer and replace '.' with the decimal
+     * point of the current locale (for strtod) This also takes care of '\0' not
+     * necessarily being available for marking the end of the input */
     for (i = 0; (i < (sizeof(number_c_string) - 1)) && can_access_at_index(input_buffer, i); i++)
     {
         switch (buffer_at_offset(input_buffer)[i])
@@ -783,7 +784,9 @@ bool parse_CJvalue(cJSON* const item, parse_buffer* const input_buffer)
         return parse_CJstring(item, input_buffer);
     }
     /* number */
-    if (can_access_at_index(input_buffer, 0) && ((buffer_at_offset(input_buffer)[0] == '-') || ((buffer_at_offset(input_buffer)[0] >= '0') && (buffer_at_offset(input_buffer)[0] <= '9'))))
+    if (can_access_at_index(input_buffer, 0) &&
+        ((buffer_at_offset(input_buffer)[0] == '-') ||
+         ((buffer_at_offset(input_buffer)[0] >= '0') && (buffer_at_offset(input_buffer)[0] <= '9'))))
     {
         return parse_CJnumber(item, input_buffer);
     }
@@ -801,10 +804,11 @@ bool parse_CJvalue(cJSON* const item, parse_buffer* const input_buffer)
     return false;
 }
 
-cJSON* cJSON_CJParseWithLengthOpts(const char *value, size_t buffer_length, const char **return_parse_end, bool require_null_terminated);
+cJSON* cJSON_CJParseWithLengthOpts(const char* value, size_t buffer_length, const char** return_parse_end,
+                                   bool require_null_terminated);
 
-
-CJSON_PUBLIC(cJSON *) cJSON_CJParseWithOpts(const char *value, const char **return_parse_end, cJSON_bool require_null_terminated)
+CJSON_PUBLIC(cJSON*)
+cJSON_CJParseWithOpts(const char* value, const char** return_parse_end, cJSON_bool require_null_terminated)
 {
     size_t buffer_length;
 
@@ -820,11 +824,12 @@ CJSON_PUBLIC(cJSON *) cJSON_CJParseWithOpts(const char *value, const char **retu
 }
 
 /* Parse an object - create a new root, and populate. */
-cJSON* cJSON_CJParseWithLengthOpts(const char *value, size_t buffer_length, const char **return_parse_end, bool require_null_terminated)
+cJSON* cJSON_CJParseWithLengthOpts(const char* value, size_t buffer_length, const char** return_parse_end,
+                                   bool require_null_terminated)
 {
-    //parse_buffer buffer = { 0, 0, 0, 0, { 0, 0, 0 } };
+    // parse_buffer buffer = { 0, 0, 0, 0, { 0, 0, 0 } };
     parse_buffer buffer = { 0, 0, 0, 0 };
-    cJSON *item = NULL;
+    cJSON* item = NULL;
 
     // /* reset error position */
     // global_error.json = NULL;
@@ -836,9 +841,9 @@ cJSON* cJSON_CJParseWithLengthOpts(const char *value, size_t buffer_length, cons
     }
 
     buffer.content = (const unsigned char*)value;
-    buffer.length = buffer_length; 
+    buffer.length = buffer_length;
     buffer.offset = 0;
-    //buffer.hooks = global_hooks;
+    // buffer.hooks = global_hooks;
 
     item = cJSON_CreateObject();
     if (item == NULL) /* memory fail */
@@ -852,7 +857,8 @@ cJSON* cJSON_CJParseWithLengthOpts(const char *value, size_t buffer_length, cons
         goto fail;
     }
 
-    /* if we require null-terminated JSON without appended garbage, skip and then check for a null terminator */
+    /* if we require null-terminated JSON without appended garbage, skip and then
+     * check for a null terminator */
     if (require_null_terminated)
     {
         buffer_skip_whitespace(&buffer);
@@ -894,83 +900,84 @@ fail:
             *return_parse_end = (const char*)local_error.json + local_error.position;
         }
 
-        //global_error = local_error;
+        // global_error = local_error;
     }
 
     return NULL;
 }
 
 /* Default options for cJSON_Parse */
-cJSON *cJSON_CJParse(const char *value)
+cJSON* cJSON_CJParse(const char* value)
 {
     return cJSON_CJParseWithOpts(value, 0, 0);
 }
 
-
-//this is crap
-int printCJItem(cJSON *cj, int level = 0, int comma = 0)
+// this is crap
+int printCJItem(cJSON* cj, int level = 0, int comma = 0)
 {
-	string lev = "  ";
-	for(int i = 0; i < level;i++ )
-	{
-		lev += "  ";
-	}
-	if (cj->string)
-	{
-		cout << comma << ">"<<lev << "\""<<cj->string<<"\":";
-	}
-	else
-	{
-	 	cout << comma << ">"<<lev;
-	}
-	if (cJSON_IsString(cj))
-		cout << "\""<<cj->valuestring<<"\"";
-	if (cJSON_IsNumber(cj))
-		cout <<cj->valuedouble;
-	if (cJSON_IsTrue(cj))
-		cout << "true";//<<cj->valuedouble<<"\"";
-	if (cJSON_IsFalse(cj))
-		cout << "false";//<<cj->valuedouble<<"\"";
-	if (cJSON_IsArray(cj))
-		cout << cj << "  array type "<< cj->type << " next "<< cj->next << " child " << cj->child << " ";//<<cj->valuedouble<<"\"";
-	if (cJSON_IsObject(cj))
-		cout << cj << "  object type "<< cj->type << " next "<< cj->next << " child " << cj->child << " ";//<<cj->valuedouble<<"\"";
-	// if(comma)
-	// 	cout<<",";
-	cout << endl;
+    string lev = "  ";
+    for (int i = 0; i < level; i++)
+    {
+        lev += "  ";
+    }
+    if (cj->string)
+    {
+        cout << comma << ">" << lev << "\"" << cj->string << "\":";
+    }
+    else
+    {
+        cout << comma << ">" << lev;
+    }
+    if (cJSON_IsString(cj))
+        cout << "\"" << cj->valuestring << "\"";
+    if (cJSON_IsNumber(cj))
+        cout << cj->valuedouble;
+    if (cJSON_IsTrue(cj))
+        cout << "true";  //<<cj->valuedouble<<"\"";
+    if (cJSON_IsFalse(cj))
+        cout << "false";  //<<cj->valuedouble<<"\"";
+    if (cJSON_IsArray(cj))
+        cout << cj << "  array type " << cj->type << " next " << cj->next << " child " << cj->child
+             << " ";  //<<cj->valuedouble<<"\"";
+    if (cJSON_IsObject(cj))
+        cout << cj << "  object type " << cj->type << " next " << cj->next << " child " << cj->child
+             << " ";  //<<cj->valuedouble<<"\"";
+    // if(comma)
+    // 	cout<<",";
+    cout << endl;
     return 0;
 }
 
-int printCJTree(cJSON *cj, int level = 0, int comma = 0)
+int printCJTree(cJSON* cj, int level = 0, int comma = 0)
 {
-	string lev = "  ";
-	for(int i = 0; i < level;i++ )
-	{
-		lev += "  ";
-	}
-    //level += 1;
-	printCJItem(cj, level, (cj->next != NULL));
+    string lev = "  ";
+    for (int i = 0; i < level; i++)
+    {
+        lev += "  ";
+    }
+    // level += 1;
+    printCJItem(cj, level, (cj->next != NULL));
 
-	cJSON* cji = cj->next;
-	while (cji)
-	{   
-		if(cji)
-			printCJTree(cji, level, (cji->next != NULL));	
-		cji = cji->next;
-	}
-	if(cj->next)
-		cout << lev<<"done with loop cj "<<cj<<" next "<<cj->next <<" child " <<cj->child <<endl;
-	if (cj->child)
-	{
+    cJSON* cji = cj->next;
+    while (cji)
+    {
+        if (cji)
+            printCJTree(cji, level, (cji->next != NULL));
+        cji = cji->next;
+    }
+    if (cj->next)
+        cout << lev << "done with loop cj " << cj << " next " << cj->next << " child " << cj->child << endl;
+    if (cj->child)
+    {
+        cout << lev << "running child  cj" << cj << " child " << cj->child << endl;
+        // cout << comma << ">"<<lev << "Child
+        // \""<<av->getChild()->getName()<<"\":";
 
-		cout << lev<<"running child  cj" << cj << " child "<< cj->child<< endl;
-		//cout << comma << ">"<<lev << "Child \""<<av->getChild()->getName()<<"\":";
-	
-		printCJTree(cj->child, level +1, 0);
-		cout << lev << "}" << endl;
-		cout << lev<<"child done" <<endl;
-	}
-	cout << lev<<"all done" <<endl;
-	return 1;
+        printCJTree(cj->child, level + 1, 0);
+        cout << lev << "}" << endl;
+        cout << lev << "child done" << endl;
+    }
+    cout << lev << "all done" << endl;
+    return 1;
 }
 #endif

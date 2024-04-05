@@ -1,13 +1,14 @@
 /*
-* this is the file for "released" or completed application functions
-* as a function is getting ready to be released put it in here and we'll get working on signing it off
-*
-*/
+ * this is the file for "released" or completed application functions
+ * as a function is getting ready to be released put it in here and we'll get
+ * working on signing it off
+ *
+ */
 #include "asset.h"
 #include "assetFunc.h"
 //#include "assetFunc.cpp"
-#include "math.h"
 #include "chrono_utils.hpp"
+#include "math.h"
 
 #include "../funcs/SimHandleHeartbeat.cpp"
 
@@ -22,7 +23,8 @@ static const bool simulation = false;
 //  * Used in:
 //  * Test Script:
 //  */
-// int HandleAssetHeartBeat(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* am)
+// int HandleAssetHeartBeat(varsmap& vmap, varmap& amap, const char* aname,
+// fims* p_fims, asset* am)
 // {
 //     bool bval = false;
 //     int reload;
@@ -31,46 +33,57 @@ static const bool simulation = false;
 //     int ival = 0;
 //     VarMapUtils* vmp = am->vm;
 
-
 //     double dvalHBnow = vmp->get_time_dbl();
 //     assetVar* HandleAssetHeartBeat = amap["HandleAssetHeartBeat"];
-//     if (!HandleAssetHeartBeat || (reload = HandleAssetHeartBeat->getiVal()) == 0)
+//     if (!HandleAssetHeartBeat || (reload = HandleAssetHeartBeat->getiVal())
+//     == 0)
 //     {
-//         reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
+//         reload = 0;  // complete reset  reload = 1 for remap ( links may have
+//         changed)
 //     }
 
 //     if (reload < 2)
 //     {
 //         //reload = 0;
-//         amap["HandleAssetHeartBeat"]   = vmp->setLinkVal(vmap, aname, "/reload", "HandleAssetHeartBeat", reload);
-//         amap["HeartBeatLast"]          = vmp->setLinkVal(vmap, aname, "/status", "HeartBeatLast", dvalHBnow);
-//         amap["HeartBeatInterval"]      = vmp->setLinkVal(vmap, aname, "/status", "HeartBeatInterval", dvalHB);
-//         amap["ess_todSec"]             = vmp->setLinkVal(vmap, "ess", "/status", "ess_todSec", ival);
-//         amap["ess_todMin"]             = vmp->setLinkVal(vmap, "ess", "/status", "ess_todMin", ival);
-//         amap["ess_todHr"]              = vmp->setLinkVal(vmap, "ess", "/status", "ess_todHr", ival);
-//         amap["ess_todDay"]             = vmp->setLinkVal(vmap, "ess", "/status", "ess_todDay", ival);
+//         amap["HandleAssetHeartBeat"]   = vmp->setLinkVal(vmap, aname,
+//         "/reload", "HandleAssetHeartBeat", reload); amap["HeartBeatLast"]
+//         = vmp->setLinkVal(vmap, aname, "/status", "HeartBeatLast",
+//         dvalHBnow); amap["HeartBeatInterval"]      = vmp->setLinkVal(vmap,
+//         aname, "/status", "HeartBeatInterval", dvalHB); amap["ess_todSec"]
+//         = vmp->setLinkVal(vmap, "ess", "/status", "ess_todSec", ival);
+//         amap["ess_todMin"]             = vmp->setLinkVal(vmap, "ess",
+//         "/status", "ess_todMin", ival); amap["ess_todHr"]              =
+//         vmp->setLinkVal(vmap, "ess", "/status", "ess_todHr", ival);
+//         amap["ess_todDay"]             = vmp->setLinkVal(vmap, "ess",
+//         "/status", "ess_todDay", ival);
 
-//         amap["OkToSend"]               = vmp->setLinkVal(vmap, aname, "/config", "OkToSend", bval);
+//         amap["OkToSend"]               = vmp->setLinkVal(vmap, aname,
+//         "/config", "OkToSend", bval);
 
-//         amap["op_todSec"]              = vmp->setLinkVal(vmap, aname, "/status", "op_todSec", ival);
-//         amap["op_todMin"]              = vmp->setLinkVal(vmap, aname, "/status", "op_todMin", ival);
-//         amap["op_todHr"]               = vmp->setLinkVal(vmap, aname, "/status", "op_todHr",  ival);
-//         amap["op_todDay"]              = vmp->setLinkVal(vmap, aname, "/status", "op_todDay",      ival);
-//         amap["op_todMon"]              = vmp->setLinkVal(vmap, aname, "/status", "op_todMon",      ival);
-//         amap["op_todYr"]               = vmp->setLinkVal(vmap, aname, "/status", "op_todYr",       ival);
-//         amap["op_HB"]                  = vmp->setLinkVal(vmap, aname, "/status", "op_HB",          ival);
+//         amap["op_todSec"]              = vmp->setLinkVal(vmap, aname,
+//         "/status", "op_todSec", ival); amap["op_todMin"]              =
+//         vmp->setLinkVal(vmap, aname, "/status", "op_todMin", ival);
+//         amap["op_todHr"]               = vmp->setLinkVal(vmap, aname,
+//         "/status", "op_todHr",  ival); amap["op_todDay"]              =
+//         vmp->setLinkVal(vmap, aname, "/status", "op_todDay",      ival);
+//         amap["op_todMon"]              = vmp->setLinkVal(vmap, aname,
+//         "/status", "op_todMon",      ival); amap["op_todYr"]               =
+//         vmp->setLinkVal(vmap, aname, "/status", "op_todYr",       ival);
+//         amap["op_HB"]                  = vmp->setLinkVal(vmap, aname,
+//         "/status", "op_HB",          ival);
 
-//         amap["HeartBeat"]              = vmp->setLinkVal(vmap, aname, "/status", "HeartBeat",     ival);
-//         amap["HeartBeatDbl"]           = vmp->setLinkVal(vmap, aname, "/status", "HeartBeatDbl", dval);
-//         amap["HeartBeatLink"]          = vmp->setLinkVal(vmap, aname, "/status", "HeartBeatLink", ival);
+//         amap["HeartBeat"]              = vmp->setLinkVal(vmap, aname,
+//         "/status", "HeartBeat",     ival); amap["HeartBeatDbl"]           =
+//         vmp->setLinkVal(vmap, aname, "/status", "HeartBeatDbl", dval);
+//         amap["HeartBeatLink"]          = vmp->setLinkVal(vmap, aname,
+//         "/status", "HeartBeatLink", ival);
 //         //amap["]->setVal(2);  // revert reload
-//         if (reload == 0) // complete restart 
+//         if (reload == 0) // complete restart
 //         {
 //             ival = 0; amap["HeartBeat"]->setVal(ival);
 //         }
 //     }
 //     ival = 2; amap["HandleAssetHeartBeat"]->setVal(ival);
-
 
 //     // if get_time_dbl() > HBLast + HBInterval) recalc HB and tod
 //     double HBLast = amap["HeartBeatLast"]->getdVal();
@@ -84,8 +97,8 @@ static const bool simulation = false;
 //         amap["HeartBeatLast"]->setVal(HBnow);
 
 //         dval = 1.0;
-//         // this value is used to trigger the heartbeats for all the assets that need it
-//         amap["HeartBeat"]->addVal(dval);
+//         // this value is used to trigger the heartbeats for all the assets
+//         that need it amap["HeartBeat"]->addVal(dval);
 //         amap["op_todSec"]->setVal(amap["ess_todSec"]->getiVal());
 //         amap["op_todMin"]->setVal(amap["ess_todMin"]->getiVal());
 //         amap["op_todHr"]->setVal(amap["ess_todHr"]->getiVal());
@@ -93,9 +106,11 @@ static const bool simulation = false;
 //         amap["op_todMon"]->setVal(amap["ess_todMon"]->getiVal());
 //         amap["op_todYr"]->setVal(amap["ess_todYr"]->getiVal());
 
-//         // this stuff collects a bunch of assetVars and send them out to their default locations.
+//         // this stuff collects a bunch of assetVars and send them out to
+//         their default locations.
 //         // the link will determine where that location is.
-//         // if the link is defined in the config file then that destination will be maintained.
+//         // if the link is defined in the config file then that destination
+//         will be maintained.
 
 //         varsmap* vlist = vmp->createVlist();
 //         vmp->addVlist(vlist, amap["HeartBeat"]);
@@ -112,11 +127,10 @@ static const bool simulation = false;
 //     return 0;
 // }
 
-// 
-// Look for TimeStamp 
+//
+// Look for TimeStamp
 // decode it to a time in seconds
 // make sure it increments
-
 
 /**
  * Phil Code
@@ -131,7 +145,8 @@ static const bool simulation = false;
  * Used in:
  * Test Script: test_HeartBeatCheck.sh
  */
-// int CheckAssetHeartBeat(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* am)
+// int CheckAssetHeartBeat(varsmap& vmap, varmap& amap, const char* aname, fims*
+// p_fims, asset* am)
 // {
 //     hbTestFunc* hbTest;
 //     if (!amap["CheckAssetHBFunc"])
@@ -147,16 +162,18 @@ static const bool simulation = false;
 //}
 
 /**
- * Checks the heartbeat state, warnings, and errors for asset managers and assets
+ * Checks the heartbeat state, warnings, and errors for asset managers and
+ * assets
  *
  * Review 10/21/2020
  *
  * Used in:
  * Test script: test_HeartBeatCheck.sh
-  * Deprecated use CheckAmHeartbeat
+ * Deprecated use CheckAmHeartbeat
  */
 
-// int CheckHeartBeat(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am)
+// int CheckHeartBeat(varsmap& vmap, varmap& amap, const char* aname, fims*
+// p_fims, asset_manager* am)
 // {
 //     double dval = 0.0;
 //     int ival = 0;
@@ -164,13 +181,15 @@ static const bool simulation = false;
 //     char* csVal = (char*)"All HeartBeat Init";
 //     VarMapUtils* vmp = am->vm;
 //     //const char *manName = am->name.c_str();
-//     if (0)FPS_ERROR_PRINT("%s >> for [%s]   parent %p\n", __func__, aname, (void*)am->am);
+//     if (0)FPS_ERROR_PRINT("%s >> for [%s]   parent %p\n",
+//     __func__, aname, (void*)am->am);
 
 //     //if(am->am)
 //     //    manName = am->am->name.c_str();  // refer up unless we're top
 //     int reload = 0;
 
-//     if (!amap["CheckHeartBeat"] || (reload = amap["CheckHeartBeat"]->getiVal()) == 0)
+//     if (!amap["CheckHeartBeat"] || (reload =
+//     amap["CheckHeartBeat"]->getiVal()) == 0)
 //     {
 //         reload = 0;
 //     }
@@ -178,30 +197,39 @@ static const bool simulation = false;
 //     if (reload < 2)
 //     {
 
-//         //if(0)FPS_ERROR_PRINT("%s >> for [%s]  reload [%d]  amap[CheckHeartBeat]  %p amap %p\n", __func__, aname, reload, (void *)amap["CheckHeartBeat"],(void *)&amap);
+//         //if(0)FPS_ERROR_PRINT("%s >> for [%s]  reload [%d]
+//         amap[CheckHeartBeat]  %p amap %p\n", __func__,
+//         aname, reload, (void
+//         *)amap["CheckHeartBeat"],(void *)&amap);
 
 //         //double warnVal = 3.5;
 //         //double toVal = 5.0;
 //         double pper = 0.250;  // does this need to be a parameter?
 
-
-//         amap["CheckHeartBeat"] = vmp->setLinkVal(vmap, aname, "/reload", "CheckHeartBeat", reload);
-//         amap["CheckHeartBeatPeriod"] = vmp->setLinkVal(vmap, aname, "/config", "CheckHeartBeatPeriod", pper);
-//         amap["CheckHeartBeatRun"] = vmp->setLinkVal(vmap, aname, "/config", "CheckHeartBeatRun", dval);
-//         amap["essHeartBeatFaults"] = vmp->setLinkVal(vmap, "ess", "/status", "essHeartBeatFaults", ival);
-//         amap["essHeartBeatAlarms"] = vmp->setLinkVal(vmap, "ess", "/status", "essHeartBeatAlarms", ival);
-//         if (am->am)
+//         amap["CheckHeartBeat"] = vmp->setLinkVal(vmap, aname, "/reload",
+//         "CheckHeartBeat", reload); amap["CheckHeartBeatPeriod"] =
+//         vmp->setLinkVal(vmap, aname, "/config", "CheckHeartBeatPeriod",
+//         pper); amap["CheckHeartBeatRun"] = vmp->setLinkVal(vmap, aname,
+//         "/config", "CheckHeartBeatRun", dval); amap["essHeartBeatFaults"] =
+//         vmp->setLinkVal(vmap, "ess", "/status", "essHeartBeatFaults", ival);
+//         amap["essHeartBeatAlarms"] = vmp->setLinkVal(vmap, "ess", "/status",
+//         "essHeartBeatAlarms", ival); if (am->am)
 //         {
-//             amap["amHeartBeatFaults"] = vmp->setLinkVal(vmap, am->am->name.c_str(), "/status", "HeartBeaFaults", ival);
-//             amap["amHeartBeatAlarms"] = vmp->setLinkVal(vmap, am->am->name.c_str(), "/status", "HeartBeatAlarms", ival);
+//             amap["amHeartBeatFaults"] = vmp->setLinkVal(vmap,
+//             am->am->name.c_str(), "/status", "HeartBeaFaults", ival);
+//             amap["amHeartBeatAlarms"] = vmp->setLinkVal(vmap,
+//             am->am->name.c_str(), "/status", "HeartBeatAlarms", ival);
 //         }
-//         amap["HeartBeatTick"] = vmp->setLinkVal(vmap, aname, "/status", "HeartBeatTick", ival);
-//         amap["HeartBeatFaults"] = vmp->setLinkVal(vmap, aname, "/status", "HeartBeatFaults", ival);
-//         amap["HeartBeatAlarms"] = vmp->setLinkVal(vmap, aname, "/status", "HeartBeatAlarms", ival);
-//         amap["HeartBeatState"] = vmp->setLinkVal(vmap, aname, "/status", "HeartBeatState", csVal);
-//         amap["HeartBeatStateNum"] = vmp->setLinkVal(vmap, aname, "/status", "HeartBeatStateNum", csVal);
+//         amap["HeartBeatTick"] = vmp->setLinkVal(vmap, aname, "/status",
+//         "HeartBeatTick", ival); amap["HeartBeatFaults"] =
+//         vmp->setLinkVal(vmap, aname, "/status", "HeartBeatFaults", ival);
+//         amap["HeartBeatAlarms"] = vmp->setLinkVal(vmap, aname, "/status",
+//         "HeartBeatAlarms", ival); amap["HeartBeatState"] =
+//         vmp->setLinkVal(vmap, aname, "/status", "HeartBeatState", csVal);
+//         amap["HeartBeatStateNum"] = vmp->setLinkVal(vmap, aname, "/status",
+//         "HeartBeatStateNum", csVal);
 
-//         if (reload == 0) // complete restart 
+//         if (reload == 0) // complete restart
 //         {
 //             cval = (char*)"HeartBeat Init";
 //             amap["HeartBeatState"]->setVal(cval);
@@ -227,7 +255,8 @@ static const bool simulation = false;
 
 //     if (!am->am)
 //     {
-//         if (0)FPS_ERROR_PRINT("%s >> OK Test Again  CheckHeartBeat >> pval: %2.3f plim: %2.3f \n", __func__, pval, plim);
+//         if (0)FPS_ERROR_PRINT("%s >> OK Test Again  CheckHeartBeat >> pval:
+//         %2.3f plim: %2.3f \n", __func__, pval, plim);
 //             if (pval < plim)
 //             {
 //                 runme = false;
@@ -258,16 +287,17 @@ static const bool simulation = false;
 //             {
 //                 char* tVal;
 //                 amc->amap["HeartBeatState"]->getcVal();
-//                 if (0)FPS_ERROR_PRINT("%s >> OK  CheckHeartBeat > [%s]  state [%s]\n", __func__, amc->name.c_str(), tVal);
-//                 ival = 0;
-//                 amap["HeartBeatTick"]->setVal(ival);
+//                 if (0)FPS_ERROR_PRINT("%s >> OK  CheckHeartBeat > [%s]  state
+//                 [%s]\n", __func__, amc->name.c_str(),
+//                 tVal); ival = 0; amap["HeartBeatTick"]->setVal(ival);
 //             }
 
 //         }
 //         for (auto ix : am->assetMap)
 //         {
 //             asset* amc = ix.second;
-//             CheckAssetHeartBeat(vmap, amc->amap, amc->name.c_str(), p_fims, amc);
+//             CheckAssetHeartBeat(vmap, amc->amap, amc->name.c_str(), p_fims,
+//             amc);
 //         }
 //         // collect output and pass to parent
 //         if (am->am)
@@ -277,7 +307,8 @@ static const bool simulation = false;
 
 //             amap["amHeartBeatFaults"]->addVal(faults);
 //             amap["amHeartBeatAlarms"]->addVal(alarms);
-//             if (0)FPS_ERROR_PRINT("%s >>>>>> AM [%s]  Manager [%s] alarms %d faults %d\n "
+//             if (0)FPS_ERROR_PRINT("%s >>>>>> AM [%s]  Manager [%s] alarms %d
+//             faults %d\n "
 //                 , __func__
 //                 , aname
 //                 , am->am->name.c_str()
@@ -292,7 +323,8 @@ static const bool simulation = false;
 //             faults = amap["essHeartBeatFaults"]->getiVal();
 //         }
 
-//         if (0)FPS_ERROR_PRINT("%s >>>>>> [%s]  alarms %d faults %d\n ", __func__, aname
+//         if (0)FPS_ERROR_PRINT("%s >>>>>> [%s]  alarms %d faults %d\n ",
+//         __func__, aname
 //             , alarms
 //             , faults
 //         );
@@ -318,7 +350,8 @@ static const bool simulation = false;
 //         ival = amap["HeartBeatStateNum"]->getiVal();
 //         if (ival != snum && snum != 0 && cval2)
 //         {
-//             if (0)FPS_ERROR_PRINT("%s >>>>>> AM [%s]  Manager [%s] state [%s] alarms %d faults %d\n"
+//             if (0)FPS_ERROR_PRINT("%s >>>>>> AM [%s]  Manager [%s] state [%s]
+//             alarms %d faults %d\n"
 //                 , __func__
 //                 , aname
 //                 , am->am ? am->am->name.c_str() : "System Controller"
@@ -348,7 +381,7 @@ int CheckAssetComms(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims
     int ival = 0;
     if (!amap["CheckAssetCommsFunc"])
     {
-        commsTest = (commsTestFunc*) new commsTestFunc(aname);
+        commsTest = (commsTestFunc*)new commsTestFunc(aname);
         amap["CheckAssetCommsFunc"] = (assetVar*)commsTest;
         commsTest->toFault = 5.0;
         commsTest->toAlarm = 3.5;
@@ -359,7 +392,8 @@ int CheckAssetComms(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims
     //     tVal = amap["CommsState"]->getcVal();
     //     ival = amap["CommsStateNum"]->getiVal();
 
-    //     if(1)FPS_ERROR_PRINT("%s >> OK  CheckComms  1 > [%s]  state [%s] num %d\n",__func__, aname, tVal, ival);
+    //     if(1)FPS_ERROR_PRINT("%s >> OK  CheckComms  1 > [%s]  state [%s] num
+    //     %d\n",__func__, aname, tVal, ival);
     // }
     commsTest = (commsTestFunc*)amap["CheckAssetCommsFunc"];
 
@@ -371,10 +405,12 @@ int CheckAssetComms(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims
         if (ival != 1)
         {
             // 1 is CommsOK
-            //amap["amCommsErrors"]->addVal(1);
-            if (0)FPS_ERROR_PRINT("%s >> OK  > [%s]  state [%s] num %d\n", __func__, aname, tVal, ival);
+            // amap["amCommsErrors"]->addVal(1);
+            if (0)
+                FPS_ERROR_PRINT("%s >> OK  > [%s]  state [%s] num %d\n", __func__, aname, tVal, ival);
         }
-        //if(1)FPS_ERROR_PRINT("%s >> OK  CheckComms   2  > [%s]  state [%s]\n",__func__, aname, tVal);
+        // if(1)FPS_ERROR_PRINT("%s >> OK  CheckComms   2  > [%s]  state
+        // [%s]\n",__func__, aname, tVal);
     }
     return ret;
 }
@@ -400,15 +436,17 @@ int CheckComms(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, ass
     VarMapUtils* vm = am->vm;
     int reload = vm->CheckReload(vmap, amap, aname, __func__);
 
-    //const char *manName = am->name.c_str();
-    if (0)FPS_ERROR_PRINT("%s >> for [%s]   parent %p\n", __func__, aname, (void*)am->am);
+    // const char *manName = am->name.c_str();
+    if (0)
+        FPS_ERROR_PRINT("%s >> for [%s]   parent %p\n", __func__, aname, (void*)am->am);
 
-    //if(am->am)
+    // if(am->am)
     //    manName = am->am->name.c_str();  // refer up unless we're top
     if (reload < 2)
     {
-
-        if (0)FPS_ERROR_PRINT("%s >> for [%s]  reload [%d]  amap[CheckComms]  %p amap %p\n", __func__, aname, reload, (void*)amap["CheckComms"], (void*)&amap);
+        if (0)
+            FPS_ERROR_PRINT("%s >> for [%s]  reload [%d]  amap[CheckComms]  %p amap %p\n", __func__, aname, reload,
+                            (void*)amap["CheckComms"], (void*)&amap);
 
         double pper = 1.0;
         amap["CheckComms"] = vm->setLinkVal(vmap, aname, "/reload", "CheckComms", reload);
@@ -429,8 +467,7 @@ int CheckComms(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, ass
         amap["CommsState"] = vm->setLinkVal(vmap, aname, "/status", "CommsState", csVal);
         amap["CommsStateNum"] = vm->setLinkVal(vmap, aname, "/status", "CommsStateNum", ival);
 
-
-        if (reload == 0) // complete restart 
+        if (reload == 0)  // complete restart
         {
             cval = (char*)"Comms Init";
             amap["CommsState"]->setVal(cval);
@@ -439,7 +476,8 @@ int CheckComms(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, ass
             ival = 1;
             amap["CommsInit"]->setVal(ival);
         }
-        ival = 2; amap["CheckComms"]->setVal(ival);
+        ival = 2;
+        amap["CheckComms"]->setVal(ival);
     }
 
     double tNow = vm->get_time_dbl();
@@ -458,13 +496,13 @@ int CheckComms(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, ass
         }
         else
         {
-            if (0)FPS_ERROR_PRINT("%s >> OK Test Again  CheckComms >> pval: %2.3f plim: %2.3f \n", __func__, pval, plim);\
+            if (0)
+                FPS_ERROR_PRINT("%s >> OK Test Again  CheckComms >> pval: %2.3f plim: %2.3f \n", __func__, pval, plim);
 
-                amap["CheckCommsRun"]->setVal(tNow);
+            amap["CheckCommsRun"]->setVal(tNow);
             amap["essCommsAlarms"]->setVal(0);
             amap["essCommsFaults"]->setVal(0);
             amap["essCommsInit"]->setVal(0);
-
         }
     }
     // runme is set when its time to run the check
@@ -481,8 +519,8 @@ int CheckComms(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, ass
             CheckComms(vmap, amc->amap, amc->name.c_str(), p_fims, amc);
             char* tVal;
             tVal = amc->amap["CommsState"]->getcVal();
-            if (0)FPS_ERROR_PRINT("%s >> OK  CheckComms > [%s]  state [%s]\n", __func__, amc->name.c_str(), tVal);
-
+            if (0)
+                FPS_ERROR_PRINT("%s >> OK  CheckComms > [%s]  state [%s]\n", __func__, amc->name.c_str(), tVal);
         }
         for (auto ix : am->assetMap)
         {
@@ -499,37 +537,23 @@ int CheckComms(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, ass
             amap["amCommsFaults"]->addVal(faults);
             amap["amCommsAlarms"]->addVal(alarms);
             amap["amCommsInit"]->addVal(init);
-            if (0)FPS_ERROR_PRINT("%s >>>>>> AM [%s]  Manager [%s] Alarms %d Faults %d Init %d\n"
-                , __func__
-                , aname
-                , am->am ? am->am->name.c_str() : "System Controller"
-                , alarms
-                , faults
-                , init
-            );
-
+            if (0)
+                FPS_ERROR_PRINT("%s >>>>>> AM [%s]  Manager [%s] Alarms %d Faults %d Init %d\n", __func__, aname,
+                                am->am ? am->am->name.c_str() : "System Controller", alarms, faults, init);
         }
         else
         {
             alarms = amap["essCommsAlarms"]->getiVal();
             faults = amap["essCommsFaults"]->getiVal();
             init = amap["essCommsInit"]->getiVal();
-            if (0)FPS_ERROR_PRINT("%s >>>>>> AM [%s]  Manager [%s] alarms %d faults %d Init %d\n "
-                , __func__
-                , aname
-                , am->name.c_str()
-                , alarms
-                , faults
-                , init
-            );
-
+            if (0)
+                FPS_ERROR_PRINT("%s >>>>>> AM [%s]  Manager [%s] alarms %d faults %d Init %d\n ", __func__, aname,
+                                am->name.c_str(), alarms, faults, init);
         }
 
         char* cval2 = nullptr;
-        if (0)FPS_ERROR_PRINT("%s >>>>>> ESS [%s]  alarms %d faults %d\n ", __func__, aname
-            , alarms
-            , faults
-        );
+        if (0)
+            FPS_ERROR_PRINT("%s >>>>>> ESS [%s]  alarms %d faults %d\n ", __func__, aname, alarms, faults);
         ival = amap["CommsStateNum"]->getiVal();
         int snum = 0;
         if (init > 0)
@@ -554,19 +578,14 @@ int CheckComms(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, ass
         }
         if (ival != snum && snum != 0 && cval2)
         {
-            if (0)FPS_ERROR_PRINT("%s >>>>>> AM [%s]  Manager [%s] state %s alarms %d faults %d init %d\n "
-                , __func__
-                , aname
-                , am->am ? am->am->name.c_str() : "System Controller"
-                , cval2
-                , alarms
-                , faults
-                , init
-            );
+            if (0)
+                FPS_ERROR_PRINT(
+                    "%s >>>>>> AM [%s]  Manager [%s] state %s alarms %d "
+                    "faults %d init %d\n ",
+                    __func__, aname, am->am ? am->am->name.c_str() : "System Controller", cval2, alarms, faults, init);
             amap["CommsStateNum"]->setVal(snum);
             amap["CommsState"]->setVal(cval2);
         }
-
     }
     return 0;
 }
@@ -587,34 +606,35 @@ int HandleHeartBeat(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims
     reload = vm->CheckReload(vmap, amap, aname, __func__);
     assetVar* HandleHeartBeat = amap[__func__];
 
-
     if (reload < 2)
     {
-        //reload = 0;
+        // reload = 0;
         amap["HeartBeat"] = vm->setLinkVal(vmap, aname, "/status", "HeartBeat", dval);
         dval = 255.0;
         amap["HeartBeatMax"] = vm->setLinkVal(vmap, aname, "/config", "HeartBeatMax", dval);
         amap["HandleHeartBeat"]->setVal(2);  // revert reload
-        if (reload == 0) // complete restart 
+        if (reload == 0)                     // complete restart
         {
             amap["HeartBeat"]->setVal(0);
             amap["HandleHeartBeat"]->setVal(2);
         }
-        reload = 2;    HandleHeartBeat->setVal(reload);
+        reload = 2;
+        HandleHeartBeat->setVal(reload);
     }
-    // get the reference to the variable 
+    // get the reference to the variable
     assetVar* hb = amap["HeartBeat"];
     assetVar* hbmax = amap["HeartBeatMax"];
-    //double ival;
+    // double ival;
     double dvalmax = hbmax->getdVal();
     dval = hb->getdVal();
     dval++;
-    if (dval > dvalmax) dval = 0;
-    //if(1)printf("HeartBeat %s val %f ", aname, dval);
+    if (dval > dvalmax)
+        dval = 0;
+    // if(1)printf("HeartBeat %s val %f ", aname, dval);
 
     hb->setVal(dval);
-    //dval = hb->getdVal();
-    //if(1)printf("HeartBeat val after set %f\n", dval);
+    // dval = hb->getdVal();
+    // if(1)printf("HeartBeat val after set %f\n", dval);
 
     vm->sendAssetVar(hb, p_fims);
     return dval;
@@ -627,8 +647,8 @@ int HandleHeartBeat(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims
 int GetESSLimits(varsmap& vmap, varmap& amap, const char* aname, asset_manager* am = nullptr)
 {
     double dval;
-    //double Ppu;
-    //double Pcmd_dbl=0.0;
+    // double Ppu;
+    // double Pcmd_dbl=0.0;
     int rc = 1;
     int reload;
     int ival;
@@ -636,7 +656,8 @@ int GetESSLimits(varsmap& vmap, varmap& amap, const char* aname, asset_manager* 
     reload = vm->CheckReload(vmap, amap, aname, __func__);
     assetVar* GetESSLimits = amap[__func__];
     const char* StartCmd_uri = simulation ? "/components/pcs/ctrlword1" : nullptr;
-    //if(1)printf("%s >> %s --- Running\n", __func__, aname);
+    // if(1)printf("%s >> %s --- Running\n", __func__,
+    // aname);
     if (reload < 2)
     {
         amap["ctrlword1"] = vm->setLinkVal(vmap, aname, "/components", "ctrlword1cfg", ival);
@@ -654,7 +675,7 @@ int GetESSLimits(varsmap& vmap, varmap& amap, const char* aname, asset_manager* 
         amap["pcsApparentPowerLimit"] = vm->setLinkVal(vmap, "pcs", "/variables", "ApparentPowerLimit", dval);
         if (reload == 0)
         {
-            //Note reload will be 1 for any wam start
+            // Note reload will be 1 for any wam start
             // do any reset work here
             dval = 0.0;
             amap["ActivePowerChargeLimit"]->setVal(dval);
@@ -679,23 +700,29 @@ int GetESSLimits(varsmap& vmap, varmap& amap, const char* aname, asset_manager* 
     assetVar* Qmax_PCS = amap["pcsReactivePowerLimit"];
     assetVar* Smax_PCS = amap["pcsApparentPowerLimit"];
     double dval2;
-    //FPS_ERROR_PRINT(" %s >> running the  family  numBMS %d \n", __func__, numActBms->getiVal());
-    //FPS_ERROR_PRINT(" %s >> meet the family  \n", __func__);
+    // FPS_ERROR_PRINT(" %s >> running the  family  numBMS %d \n",
+    // __func__, numActBms->getiVal());  FPS_ERROR_PRINT(" %s
+    // >> meet the family  \n", __func__);
 
-    if (0)FPS_ERROR_PRINT(" %s >> send manager wakeups  \n", __func__);
+    if (0)
+        FPS_ERROR_PRINT(" %s >> send manager wakeups  \n", __func__);
     for (auto ix : am->assetManMap)
     {
         asset_manager* amm = ix.second;
-        if (0)FPS_ERROR_PRINT(" %s >> Wake up manager child [%s]  with %d kids \n", __func__, ix.first.c_str(), (int)amm->assetMap.size());
-        //this is the wake up for limit aggregation
+        if (0)
+            FPS_ERROR_PRINT(" %s >> Wake up manager child [%s]  with %d kids \n", __func__, ix.first.c_str(),
+                            (int)amm->assetMap.size());
+        // this is the wake up for limit aggregation
         amm->run_wakeup(amm, WAKE_LEVEL1);
         // send each manager a wake up
     }
-    if (0)FPS_ERROR_PRINT(" %s >> thats it for the family  numBMS %d \n", __func__, numActBms->getiVal());
+    if (0)
+        FPS_ERROR_PRINT(" %s >> thats it for the family  numBMS %d \n", __func__, numActBms->getiVal());
     // now calculate limits
-    dval2 = 0.0; // compiler happy
+    dval2 = 0.0;  // compiler happy
     // TODO rework this valueIsDiff
-    if ((PmaxC_BMS->valueChangedReset() | E_C_BMS->valueChangedReset()) || Pmax_PCS->valueIsDiff(dval2) || numActBms->valueIsDiff(ival))
+    if ((PmaxC_BMS->valueChangedReset() | E_C_BMS->valueChangedReset()) || Pmax_PCS->valueIsDiff(dval2) ||
+        numActBms->valueIsDiff(ival))
     {
         if ((dval = E_C_BMS->getdVal()) == 0)
             PmaxC->setVal(0.0);
@@ -705,9 +732,10 @@ int GetESSLimits(varsmap& vmap, varmap& amap, const char* aname, asset_manager* 
             PmaxC->setVal(Pmax_PCS->getdVal());
     }
     // valueChanged resets test
-    // Note: With or statements, not all conditions will go through if one evaluates to true
-    // Could test for single-line or
-    if (PmaxD_BMS->valueChangedReset() | E_D_BMS->valueChangedReset() | Pmax_PCS->valueChangedReset() | numActBms->valueChangedReset())
+    // Note: With or statements, not all conditions will go through if one
+    // evaluates to true Could test for single-line or
+    if (PmaxD_BMS->valueChangedReset() | E_D_BMS->valueChangedReset() | Pmax_PCS->valueChangedReset() |
+        numActBms->valueChangedReset())
     {
         if (E_D_BMS->getdVal() == 0)
             PmaxD->setVal(0.0);
@@ -734,22 +762,14 @@ int GetESSLimits(varsmap& vmap, varmap& amap, const char* aname, asset_manager* 
             am->p_fims->Send("set", StartCmd_uri, nullptr, "{\"value\":0}");
     }
 
-    if (0) FPS_ERROR_PRINT("PmaxC BMS: %f Pmax PCS: %f Pmax C: %f Energy C: %f\n"
-        , PmaxC_BMS->getdVal()
-        , Pmax_PCS->getdVal()
-        , PmaxC->getdVal()
-        , E_C_BMS->getdVal()
-    );
-    if (0) FPS_ERROR_PRINT("PmaxD BMS: %f Pmax PCS: %f Pmax D: %f Energy D: %f\n"
-        , PmaxD_BMS->getdVal()
-        , Pmax_PCS->getdVal()
-        , PmaxD->getdVal()
-        , E_D_BMS->getdVal()
-    );
+    if (0)
+        FPS_ERROR_PRINT("PmaxC BMS: %f Pmax PCS: %f Pmax C: %f Energy C: %f\n", PmaxC_BMS->getdVal(),
+                        Pmax_PCS->getdVal(), PmaxC->getdVal(), E_C_BMS->getdVal());
+    if (0)
+        FPS_ERROR_PRINT("PmaxD BMS: %f Pmax PCS: %f Pmax D: %f Energy D: %f\n", PmaxD_BMS->getdVal(),
+                        Pmax_PCS->getdVal(), PmaxD->getdVal(), E_D_BMS->getdVal());
     return rc;
 }
-
-
 
 /**
  * #include "../src/pcs_functions.cpp"
@@ -771,7 +791,8 @@ int HandlePower(varsmap& vmap, varmap& amap, const char* aname, asset_manager* a
 
     reload = vm->CheckReload(vmap, amap, aname, __func__);
     assetVar* HandlePower = amap[__func__];
-    if (0)FPS_ERROR_PRINT("%s >> %s --- Running\n", __func__, aname);
+    if (0)
+        FPS_ERROR_PRINT("%s >> %s --- Running\n", __func__, aname);
 
     if (reload < 2)
     {
@@ -784,14 +805,17 @@ int HandlePower(varsmap& vmap, varmap& amap, const char* aname, asset_manager* a
         amap["PowerPriority"] = vm->setLinkVal(vmap, aname, "/variables", "PowerPriority", sval);
         amap["ActivePowerCmd"] = vm->setLinkVal(vmap, "pcs", "/controls", "ActivePowerCmd", dval);
         amap["ReactivePowerCmd"] = vm->setLinkVal(vmap, "pcs", "/controls", "ReactivePowerCmd", dval);
-        // amap["CtrlwordPMode"] = vm->setLinkVal(vmap, "pcs", "/controls", "ctrlword_pmode", ival);
-        // amap["CtrlwordQMode"] = vm->setLinkVal(vmap, "pcs", "/controls", "ctrlword_qmode", ival);
+        // amap["CtrlwordPMode"] = vm->setLinkVal(vmap, "pcs", "/controls",
+        // "ctrlword_pmode", ival); amap["CtrlwordQMode"] = vm->setLinkVal(vmap,
+        // "pcs", "/controls", "ctrlword_qmode", ival);
         amap["ConstantActiveCurrent"] = vm->setLinkVal(vmap, "pcs", "/controls", "PMode_I", bval);
         amap["ConstantActivePower"] = vm->setLinkVal(vmap, "pcs", "/controls", "PMode_P", bval);
-        // amap["ConstantReactiveCurrent"]   = vm->setLinkVal(vmap, "pcs", "/controls", "QMode_I", bval);
-        // amap["ConstantReactivePower"]     = vm->setLinkVal(vmap, "pcs", "/controls", "QMode_P", bval);
-        // amap["ConstantCosPhi"]            = vm->setLinkVal(vmap, "pcs", "/controls", "QMode_CosPhi", bval);
-        // amap["ConstantVQ"]                = vm->setLinkVal(vmap, "pcs", "/controls", "QMode_VQ", bval);
+        // amap["ConstantReactiveCurrent"]   = vm->setLinkVal(vmap, "pcs",
+        // "/controls", "QMode_I", bval); amap["ConstantReactivePower"]     =
+        // vm->setLinkVal(vmap, "pcs", "/controls", "QMode_P", bval);
+        // amap["ConstantCosPhi"]            = vm->setLinkVal(vmap, "pcs",
+        // "/controls", "QMode_CosPhi", bval); amap["ConstantVQ"]                =
+        // vm->setLinkVal(vmap, "pcs", "/controls", "QMode_VQ", bval);
         amap["Prated"] = vm->setLinkVal(vmap, "pcs", "/params", "rated_active_power", dval);
         amap["Qrated"] = vm->setLinkVal(vmap, "pcs", "/params", "rated_reactive_power", dval);
         amap["Srated"] = vm->setLinkVal(vmap, "pcs", "/params", "rated_apparent_power", dval);
@@ -829,15 +853,11 @@ int HandlePower(varsmap& vmap, varmap& amap, const char* aname, asset_manager* a
     double Pcmd_lim = Pset->getdVal();
     double Qcmd_lim = Qset->getdVal();
     sval = nullptr;
-    if (0) FPS_ERROR_PRINT("Pcmd_lim [%f] Qcmd_lim [%f] Smax [%f]\n", Pcmd_lim, Qcmd_lim, Smax->getdVal());
+    if (0)
+        FPS_ERROR_PRINT("Pcmd_lim [%f] Qcmd_lim [%f] Smax [%f]\n", Pcmd_lim, Qcmd_lim, Smax->getdVal());
 
-    if (Pset->valueChangedReset()
-        | Qset->valueChangedReset()
-        | PmaxC->valueChangedReset()
-        | PmaxD->valueChangedReset()
-        | Qmax->valueChangedReset()
-        | Smax->valueChangedReset()
-        | Pri->valueChangedReset())
+    if (Pset->valueChangedReset() | Qset->valueChangedReset() | PmaxC->valueChangedReset() |
+        PmaxD->valueChangedReset() | Qmax->valueChangedReset() | Smax->valueChangedReset() | Pri->valueChangedReset())
     {
         // coerce Pcmd into acceptable range
         if (Pcmd_lim > PmaxD->getdVal())
@@ -850,7 +870,9 @@ int HandlePower(varsmap& vmap, varmap& amap, const char* aname, asset_manager* a
             Qcmd_lim = Qmax->getdVal();
         else if (Qcmd_lim < Qmax->getdVal() * -1)
             Qcmd_lim = Qmax->getdVal() * -1;
-        if (0) FPS_ERROR_PRINT("After PCS/BMS limits: Pcmd_lim [%f] Qcmd_lim [%f] Smax [%f]\n", Pcmd_lim, Qcmd_lim, Smax->getdVal());
+        if (0)
+            FPS_ERROR_PRINT("After PCS/BMS limits: Pcmd_lim [%f] Qcmd_lim [%f] Smax [%f]\n", Pcmd_lim, Qcmd_lim,
+                            Smax->getdVal());
 
         // Make sure S isn't too large given P and Q requests
         // Decrease P or Q accordingly depending on power priority
@@ -887,10 +909,10 @@ int HandlePower(varsmap& vmap, varmap& amap, const char* aname, asset_manager* a
         Qcmd->setVal(Qcmd_lim * 100 / Qrated->getdVal());
     }
 
-    if (0) FPS_ERROR_PRINT("Pcmd: %f Qcmd: %f S: %f\n",
-        Pcmd->getdVal(),
-        Qcmd->getdVal(),
-        Prated->getdVal() * sqrt((Pcmd->getdVal() * Pcmd->getdVal()) + (Qcmd->getdVal() * Qcmd->getdVal())));
+    if (0)
+        FPS_ERROR_PRINT(
+            "Pcmd: %f Qcmd: %f S: %f\n", Pcmd->getdVal(), Qcmd->getdVal(),
+            Prated->getdVal() * sqrt((Pcmd->getdVal() * Pcmd->getdVal()) + (Qcmd->getdVal() * Qcmd->getdVal())));
 
     const char* Pcmd_uri = simulation ? "/components/pcs/pcmd" : nullptr;
     const char* Qcmd_uri = simulation ? "/components/pcs/qcmd" : nullptr;
@@ -907,8 +929,9 @@ int HandlePower(varsmap& vmap, varmap& amap, const char* aname, asset_manager* a
 }
 
 /**
- * Retrieves and reports the max charge/discharge power and the current number of active BMS's.
- * Runs bms asset functions to find the bms asset status and limits
+ * Retrieves and reports the max charge/discharge power and the current number
+ * of active BMS's. Runs bms asset functions to find the bms asset status and
+ * limits
  *
  * Review 10/21/2020
  *
@@ -924,7 +947,8 @@ int HandleBMSChargeL1(varsmap& vmap, varmap& amap, const char* aname, fims* p_fi
     VarMapUtils* vm = am->vm;
     reload = vm->CheckReload(vmap, amap, aname, __func__);
     assetVar* HandleBMSChargeL1Av = amap[__func__];
-    if (0) FPS_ERROR_PRINT("%s >> %s --- Running\n", __func__, aname);
+    if (0)
+        FPS_ERROR_PRINT("%s >> %s --- Running\n", __func__, aname);
 
     if (reload < 2)
     {
@@ -939,28 +963,31 @@ int HandleBMSChargeL1(varsmap& vmap, varmap& amap, const char* aname, fims* p_fi
         }
         reload = 2;
         HandleBMSChargeL1Av->setVal(reload);
-
     }
 
     assetVar* PmaxC = amap["maxChargePower"];
     assetVar* PmaxD = amap["maxDischargePower"];
     assetVar* numActBms = amap["numActiveBms"];
 
-    ival = 0; numActBms->setVal(ival);
-    //double dval1, dval2;
-    if (0)FPS_ERROR_PRINT("%s >> %s --- BMS Manager: NUM %d max C [%f] max D [%f]\n", __func__, aname, numActBms->getiVal(), PmaxC->getdVal(), PmaxD->getdVal());
+    ival = 0;
+    numActBms->setVal(ival);
+    // double dval1, dval2;
+    if (0)
+        FPS_ERROR_PRINT("%s >> %s --- BMS Manager: NUM %d max C [%f] max D [%f]\n", __func__, aname,
+                        numActBms->getiVal(), PmaxC->getdVal(), PmaxD->getdVal());
     // we should manually run the asset wakeup...
     // now do the assets
     for (auto ix : am->assetMap)
     {
-        asset* ass = ix.second; //am->getManAsset("bms");
-        if (0)FPS_ERROR_PRINT("%s >>>>>>>>>%s ASSETS >>>>>>>>>>> running for Asset [%s] \n", __func__, am->name.c_str(), ix.first.c_str());
+        asset* ass = ix.second;  // am->getManAsset("bms");
+        if (0)
+            FPS_ERROR_PRINT("%s >>>>>>>>>%s ASSETS >>>>>>>>>>> running for Asset [%s] \n", __func__, am->name.c_str(),
+                            ix.first.c_str());
         if (ass->run_wakeup)
             ass->run_wakeup(ass, WAKE_LEVEL1);
     }
 
     return rc;
-
 }
 
 /**
@@ -976,8 +1003,8 @@ int HandleBMSChargeL1(varsmap& vmap, varmap& amap, const char* aname, fims* p_fi
 int GetBMSStatus(varsmap& vmap, varmap& amap, const char* aname, asset* am)
 {
     double dval;
-    //double dval1;
-    //double dval2;
+    // double dval1;
+    // double dval2;
     int ival = 0;
     int rc = 0;
     int reload;
@@ -989,8 +1016,8 @@ int GetBMSStatus(varsmap& vmap, varmap& amap, const char* aname, asset* am)
     const char* Oncmd_uri = simulation ? sim_oncmd_uri.c_str() : nullptr;
     const char* comp_r = simulation ? "/components" : "/variables";
 
-    if (0)FPS_ERROR_PRINT("%s >> %s --- Running\n", __func__, aname);
-
+    if (0)
+        FPS_ERROR_PRINT("%s >> %s --- Running\n", __func__, aname);
 
     if (reload < 2)
     {
@@ -1000,13 +1027,14 @@ int GetBMSStatus(varsmap& vmap, varmap& amap, const char* aname, asset* am)
         amap["bmsMaxDischargePower"] = vm->setLinkVal(vmap, aname, comp_r, "pdischarge", dval);
         amap["bmsChargeEnergy"] = vm->setLinkVal(vmap, aname, comp_r, "echarge", dval);
         amap["bmsDischargeEnergy"] = vm->setLinkVal(vmap, aname, comp_r, "edischarge", dval);
-        // amap["mbmuStatus"]                = vm->setLinkVal(vmap, aname, "/status", "mbmu_status", dval);
+        // amap["mbmuStatus"]                = vm->setLinkVal(vmap, aname,
+        // "/status", "mbmu_status", dval);
         amap["maxChargePower"] = vm->setLinkVal(vmap, "bms", "/status", "maxChargePower", dval);
         amap["maxDischargePower"] = vm->setLinkVal(vmap, "bms", "/status", "maxDischargePower", dval);
         amap["ChargeEnergy"] = vm->setLinkVal(vmap, "bms", "/status", "ChargeEnergy", dval);
         amap["DischargeEnergy"] = vm->setLinkVal(vmap, "bms", "/status", "DischargeEnergy", dval);
         amap["numActiveBms"] = vm->setLinkVal(vmap, "bms", "/status", "numActiveBms", ival);
-        if (reload == 0) // complete restart 
+        if (reload == 0)  // complete restart
         {
             // DO any set up here
             dval = 100.0;  // can change this if needed
@@ -1039,11 +1067,13 @@ int GetBMSStatus(varsmap& vmap, varmap& amap, const char* aname, asset* am)
     ival = bmsStatus->getiVal();
     if (ival == 0)
     {
-        if (0)FPS_ERROR_PRINT("%s inactive, initializing\n", aname);
+        if (0)
+            FPS_ERROR_PRINT("%s inactive, initializing\n", aname);
     }
     else if (ival == 5)  // Need to know the bms status
     {
-        if (0)FPS_ERROR_PRINT("%s inactive, faulted\n", aname);
+        if (0)
+            FPS_ERROR_PRINT("%s inactive, faulted\n", aname);
     }
     else
     {
@@ -1057,10 +1087,14 @@ int GetBMSStatus(varsmap& vmap, varmap& amap, const char* aname, asset* am)
         }
         else
         {
-            if ((dval = bmsPmaxC->getdVal()) < PmaxC->getdVal()) PmaxC->setVal(dval);
-            if ((dval = bmsPmaxD->getdVal()) < PmaxD->getdVal()) PmaxD->setVal(dval);
-            if ((dval = bmsErC->getdVal()) < ErC->getdVal()) ErC->setVal(dval);
-            if ((dval = bmsErD->getdVal()) < ErD->getdVal()) ErD->setVal(dval);
+            if ((dval = bmsPmaxC->getdVal()) < PmaxC->getdVal())
+                PmaxC->setVal(dval);
+            if ((dval = bmsPmaxD->getdVal()) < PmaxD->getdVal())
+                PmaxD->setVal(dval);
+            if ((dval = bmsErC->getdVal()) < ErC->getdVal())
+                ErC->setVal(dval);
+            if ((dval = bmsErD->getdVal()) < ErD->getdVal())
+                ErD->setVal(dval);
         }
         if (ctrlword1->valueIsDiff(ival))
         {
@@ -1072,10 +1106,13 @@ int GetBMSStatus(varsmap& vmap, varmap& amap, const char* aname, asset* am)
     }
 
     // looks like a double add here
-    //ival = 1; numActBms->addVal(ival);
+    // ival = 1; numActBms->addVal(ival);
 
-    if (0)FPS_ERROR_PRINT("%s   --- numActBMS [%d] max C [%f] max D [%f]\n", aname, numActBms->getiVal(), bmsPmaxC->getdVal(), bmsPmaxD->getdVal());
-    if (0)FPS_ERROR_PRINT("bms_man --- max C [%f] max D [%f]\n", PmaxC->getdVal(), PmaxD->getdVal());
+    if (0)
+        FPS_ERROR_PRINT("%s   --- numActBMS [%d] max C [%f] max D [%f]\n", aname, numActBms->getiVal(),
+                        bmsPmaxC->getdVal(), bmsPmaxD->getdVal());
+    if (0)
+        FPS_ERROR_PRINT("bms_man --- max C [%f] max D [%f]\n", PmaxC->getdVal(), PmaxD->getdVal());
 
     return rc;
 }
@@ -1091,9 +1128,9 @@ int GetBMSStatus(varsmap& vmap, varmap& amap, const char* aname, asset* am)
 int GetPCSLimits(varsmap& vmap, varmap& amap, const char* aname, asset_manager* am)
 {
     double dval;
-    //double dval1;
-    //double dval2;
-    //int ival = 0;
+    // double dval1;
+    // double dval2;
+    // int ival = 0;
 
     int rc = 0;
     int reload;
@@ -1101,9 +1138,9 @@ int GetPCSLimits(varsmap& vmap, varmap& amap, const char* aname, asset_manager* 
     reload = vm->CheckReload(vmap, amap, aname, __func__);
 
     assetVar* GetPCSLimits = amap["GetPCSLimits"];
-    if (0) FPS_ERROR_PRINT("%s >> %s --- Running\n", __func__, aname);
+    if (0)
+        FPS_ERROR_PRINT("%s >> %s --- Running\n", __func__, aname);
     const char* comp_r = simulation ? "/components" : "/variables";
-
 
     if (reload < 2)
     {
@@ -1119,9 +1156,9 @@ int GetPCSLimits(varsmap& vmap, varmap& amap, const char* aname, asset_manager* 
         amap["ReactivePowerLimit"] = vm->setLinkVal(vmap, aname, "/variables", "ReactivePowerLimit", dval);
         amap["ApparentPowerLimit"] = vm->setLinkVal(vmap, aname, "/variables", "ApparentPowerLimit", dval);
 
-        // if(reload == 0) // complete restart 
+        // if(reload == 0) // complete restart
         // {
-        //      // DO any setup here    
+        //      // DO any setup here
         // }
         reload = 2;
         GetPCSLimits->setVal(reload);
@@ -1129,8 +1166,8 @@ int GetPCSLimits(varsmap& vmap, varmap& amap, const char* aname, asset_manager* 
     assetVar* Prated = amap["Prated"];
     assetVar* Qrated = amap["Qrated"];
     assetVar* Srated = amap["Srated"];
-    //assetVar * ILmax   = amap["InductiveILimit"];
-    //assetVar * ICmax   = amap["CapacitiveILimit"];
+    // assetVar * ILmax   = amap["InductiveILimit"];
+    // assetVar * ICmax   = amap["CapacitiveILimit"];
     assetVar* PmaxPU = amap["ActivePowerLimitPU"];
     assetVar* QmaxPU = amap["ReactivePowerLimitPU"];
     assetVar* SmaxPU = amap["ApparentPowerLimitPU"];
@@ -1142,21 +1179,25 @@ int GetPCSLimits(varsmap& vmap, varmap& amap, const char* aname, asset_manager* 
     Qmax->setVal(QmaxPU->getdVal() * 0.01 * Qrated->getdVal());
     Smax->setVal(SmaxPU->getdVal() * 0.01 * Srated->getdVal());
 
-    if (0)FPS_ERROR_PRINT("%s --- Prated [%f] PmaxPU [%f] Pmax [%f]\n", aname, Prated->getdVal(), PmaxPU->getdVal(), Pmax->getdVal());
-    if (0)FPS_ERROR_PRINT("%s --- Qrated [%f] QmaxPU [%f] Qmax [%f]\n", aname, Qrated->getdVal(), QmaxPU->getdVal(), Qmax->getdVal());
+    if (0)
+        FPS_ERROR_PRINT("%s --- Prated [%f] PmaxPU [%f] Pmax [%f]\n", aname, Prated->getdVal(), PmaxPU->getdVal(),
+                        Pmax->getdVal());
+    if (0)
+        FPS_ERROR_PRINT("%s --- Qrated [%f] QmaxPU [%f] Qmax [%f]\n", aname, Qrated->getdVal(), QmaxPU->getdVal(),
+                        Qmax->getdVal());
     return rc;
 }
 
 int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manager* am = nullptr)
 {
     double dval;
-    //char* sval;
+    // char* sval;
     int rc = 0;
     int reload = 2;
     int ival = 0;
     bool bval;
     char* tval = (char*)" Test Char";
-    //bool fval = false;
+    // bool fval = false;
     VarMapUtils* vm = am->vm;
     reload = vm->CheckReload(vmap, amap, aname, __func__);
     assetVar* PowerModeSelect = amap["PowerModeSelect"];
@@ -1168,12 +1209,13 @@ int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manage
     bool tb2;
     bool lasttb2;
 
-
     if (reload < 2)
     {
-        if (1)printf("%s >> %s --- >>>>>>>>>>>>> Running reload %d\n", __func__, aname, reload);
-        // amap["CtrlwordPMode"]             = vm->setLinkVal(vmap, aname, "/controls", "ctrlword_pmode", ival);
-        // amap["CtrlwordQMode"]             = vm->setLinkVal(vmap, aname, "/controls", "ctrlword_qmode", ival);
+        if (1)
+            printf("%s >> %s --- >>>>>>>>>>>>> Running reload %d\n", __func__, aname, reload);
+        // amap["CtrlwordPMode"]             = vm->setLinkVal(vmap, aname,
+        // "/controls", "ctrlword_pmode", ival); amap["CtrlwordQMode"]             =
+        // vm->setLinkVal(vmap, aname, "/controls", "ctrlword_qmode", ival);
         amap["ConstantActiveCurrentSet"] = vm->setLinkVal(vmap, aname, "/controls", "PMode_I_set", bval);
         amap["ConstantActivePowerSet"] = vm->setLinkVal(vmap, aname, "/controls", "PMode_P_set", bval);
         amap["ConstantActiveCurrent"] = vm->setLinkVal(vmap, aname, "/controls", "PMode_I", bval);
@@ -1186,7 +1228,6 @@ int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manage
         amap["TestDouble"] = vm->setLinkVal(vmap, aname, "/status", "TestDouble", dval);
         amap["TestInt"] = vm->setLinkVal(vmap, aname, "/status", "TestInt", ival);
         amap["TestChar"] = vm->setLinkVal(vmap, aname, "/status", "TestChar", tval);
-
 
         if (reload == 0)
         {
@@ -1216,14 +1257,9 @@ int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manage
             amap["TestBool"]->setVal(bval);
             tb2 = amap["TestBool"]->getbVal();
             lasttb2 = amap["TestBool"]->getbLVal();
-            printf("%s >> xxx>>>>>tb [%s] -> [%s]  tb1 [%s] -> [%s] tb2 [%s] -> [%s]\n"
-                , __func__
-                , lasttb ? "true" : "false"
-                , tb ? "true" : "false"
-                , lasttb1 ? "true" : "false"
-                , tb1 ? "true" : "false"
-                , lasttb2 ? "true" : "false"
-                , tb2 ? "true" : "false"
+            printf("%s >> xxx>>>>>tb [%s] -> [%s]  tb1 [%s] -> [%s] tb2 [%s] -> [%s]\n", __func__,
+                   lasttb ? "true" : "false", tb ? "true" : "false", lasttb1 ? "true" : "false", tb1 ? "true" : "false",
+                   lasttb2 ? "true" : "false", tb2 ? "true" : "false"
 
             );
             assetVar* cXX = amap["TestBool"];
@@ -1231,14 +1267,11 @@ int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manage
             vm->setVal(vmap, cXX->comp.c_str(), cXX->name.c_str(), bval);
             tb2 = amap["TestBool"]->getbVal();
             lasttb2 = amap["TestBool"]->getbLVal();
-            printf("%s >> xxx>>>>>tb [%s] -> [%s]  tb1 [%s] -> [%s] xxx tb2 [%s] -> [%s]\n"
-                , __func__
-                , lasttb ? "true" : "false"
-                , tb ? "true" : "false"
-                , lasttb1 ? "true" : "false"
-                , tb1 ? "true" : "false"
-                , lasttb2 ? "true" : "false"
-                , tb2 ? "true" : "false"
+            printf(
+                "%s >> xxx>>>>>tb [%s] -> [%s]  tb1 [%s] -> [%s] xxx tb2 [%s] -> "
+                "[%s]\n",
+                __func__, lasttb ? "true" : "false", tb ? "true" : "false", lasttb1 ? "true" : "false",
+                tb1 ? "true" : "false", lasttb2 ? "true" : "false", tb2 ? "true" : "false"
 
             );
             dval = 1.0;
@@ -1255,14 +1288,8 @@ int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manage
             amap["TestDouble"]->setVal(dval);
             double db2 = amap["TestDouble"]->getdVal();
             double lastdb2 = amap["TestDouble"]->getdLVal();
-            printf("%s >> xxx>>>>>db [%f] -> [%f]  db1 [%f] -> [%f] db2 [%f] -> [%f]\n"
-                , __func__
-                , lastdb
-                , db
-                , lastdb1
-                , db1
-                , lastdb2
-                , db2
+            printf("%s >> xxx>>>>>db [%f] -> [%f]  db1 [%f] -> [%f] db2 [%f] -> [%f]\n", __func__, lastdb, db, lastdb1,
+                   db1, lastdb2, db2
 
             );
 
@@ -1271,14 +1298,10 @@ int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manage
             vm->setVal(vmap, cXXD->comp.c_str(), cXXD->name.c_str(), dval);
             db2 = amap["TestDouble"]->getdVal();
             lastdb2 = amap["TestDouble"]->getdLVal();
-            printf("%s >> xxx>>>>>tb [%f] -> [%f]  tb1 [%f] -> [%f] xxx tb2 [%f] -> [%f]\n"
-                , __func__
-                , lastdb
-                , db
-                , lastdb1
-                , db1
-                , lastdb2
-                , db2
+            printf(
+                "%s >> xxx>>>>>tb [%f] -> [%f]  tb1 [%f] -> [%f] xxx tb2 [%f] -> "
+                "[%f]\n",
+                __func__, lastdb, db, lastdb1, db1, lastdb2, db2
 
             );
 
@@ -1296,32 +1319,20 @@ int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manage
             amap["TestInt"]->setVal(ival);
             int ib2 = amap["TestInt"]->getbVal();
             int lastib2 = amap["TestInt"]->getiLVal();
-            printf("%s >> xxx>>>>>ib [%d] -> [%d]  ib1 [%d] -> [%d] ib2 [%d] -> [%d]\n"
-                , __func__
-                , lastib
-                , ib
-                , lastib1
-                , ib1
-                , lastib2
-                , ib2
-            );
+            printf("%s >> xxx>>>>>ib [%d] -> [%d]  ib1 [%d] -> [%d] ib2 [%d] -> [%d]\n", __func__, lastib, ib, lastib1,
+                   ib1, lastib2, ib2);
 
             assetVar* cXXI = amap["TestInt"];
             ival = 5;
             vm->setVal(vmap, cXXI->comp.c_str(), cXXI->name.c_str(), ival);
             ib2 = amap["TestInt"]->getiVal();
             lastib2 = amap["TestInt"]->getiLVal();
-            printf("%s >> xxx>>>>>ib [%d] -> [%d]  ib1 [%d] -> [%d] xxx ib2 [%d] -> [%d]\n"
-                , __func__
-                , lastib
-                , ib
-                , lastib1
-                , ib1
-                , lastib2
-                , ib2
+            printf(
+                "%s >> xxx>>>>>ib [%d] -> [%d]  ib1 [%d] -> [%d] xxx ib2 [%d] -> "
+                "[%d]\n",
+                __func__, lastib, ib, lastib1, ib1, lastib2, ib2
 
             );
-
 
             tval = (char*)"TextVal 1";
             amap["TestChar"]->setVal(tval);
@@ -1337,14 +1348,8 @@ int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manage
             amap["TestChar"]->setVal(tval);
             char* tc2 = amap["TestChar"]->getcVal();
             char* lasttc2 = amap["TestChar"]->getcLVal();
-            printf("%s >> xxx>>>>>tc [%s] -> [%s]  tc1 [%s] -> [%s] tc2 [%s] -> [%s]\n"
-                , __func__
-                , lasttc
-                , tc
-                , lasttc1
-                , tc1
-                , lasttc2
-                , tc2
+            printf("%s >> xxx>>>>>tc [%s] -> [%s]  tc1 [%s] -> [%s] tc2 [%s] -> [%s]\n", __func__, lasttc, tc, lasttc1,
+                   tc1, lasttc2, tc2
 
             );
             assetVar* cXXT = amap["TestChar"];
@@ -1352,16 +1357,10 @@ int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manage
             vm->setVal(vmap, cXXT->comp.c_str(), cXXT->name.c_str(), tval);
             tc2 = amap["TestChar"]->getcVal();
             lasttc2 = amap["TestChar"]->getcLVal();
-            printf("%s >> xxx>>>>>tc [%s] -> [%s]  tc1 [%s] -> [%s] xxx tc2 [%s] -> [%s]\n"
-                , __func__
-                , lasttc
-                , tc
-                , lasttc1
-                , tc1
-                , lasttc2
-                , tc2
-            );
-
+            printf(
+                "%s >> xxx>>>>>tc [%s] -> [%s]  tc1 [%s] -> [%s] xxx tc2 [%s] -> "
+                "[%s]\n",
+                __func__, lasttc, tc, lasttc1, tc1, lasttc2, tc2);
         }
         reload = 2;
         PowerModeSelect->setVal(reload);
@@ -1371,18 +1370,21 @@ int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manage
     assetVar* CP_s = amap["ConstantActivePowerSet"];
     assetVar* CId = amap["ConstantActiveCurrent"];
     assetVar* CP = amap["ConstantActivePower"];
-    //assetVar * CIq = amap["ConstantReactiveCurrent"];
-    //assetVar * CQ = amap["ConstantReactivePower"];
-    //assetVar * CCosPhi = amap["ConstantCosPhi"];
-    //assetVar * CVQ = amap["ConstantVReactivePower"];
+    // assetVar * CIq = amap["ConstantReactiveCurrent"];
+    // assetVar * CQ = amap["ConstantReactivePower"];
+    // assetVar * CCosPhi = amap["ConstantCosPhi"];
+    // assetVar * CVQ = amap["ConstantVReactivePower"];
 
     bool bCId = CId->getbVal();
     bool bCP = CP->getbVal();
     bool bCId_inv = !bCId;
     bool bCP_inv = !bCP;
 
-    if (1)FPS_ERROR_PRINT("%s >> CP_set [%d] CID_set [%d] bCP_inv[%d]  bCId_inv [%d]\n", __func__, CP_s->getbVal(), CId_s->getbVal(), bCP_inv, bCId_inv);
-    // Cases we care about are both set to true or both set to false (need 1 of them true always)
+    if (1)
+        FPS_ERROR_PRINT("%s >> CP_set [%d] CID_set [%d] bCP_inv[%d]  bCId_inv [%d]\n", __func__, CP_s->getbVal(),
+                        CId_s->getbVal(), bCP_inv, bCId_inv);
+    // Cases we care about are both set to true or both set to false (need 1 of
+    // them true always)
     if (CP_s->getbVal() && CId_s->getbVal())
     {
         vm->setVal(vmap, CP->comp.c_str(), CP->name.c_str(), bCP_inv);
@@ -1398,11 +1400,11 @@ int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manage
         CId_s->setVal(bCId);
     }
 
-
-    //bval3 = false;
-    //bval2 =  false;
+    // bval3 = false;
+    // bval2 =  false;
     if (CId->valueChangedReset())
-        FPS_ERROR_PRINT("%s >>> CC [%d] CP [%d] --- Last CC [%d] Last CP [%d]\n", __func__, CId->getbVal(), CP->getbVal(), CId->getbLVal(), CP->getbLVal());
+        FPS_ERROR_PRINT("%s >>> CC [%d] CP [%d] --- Last CC [%d] Last CP [%d]\n", __func__, CId->getbVal(),
+                        CP->getbVal(), CId->getbLVal(), CP->getbLVal());
     // if (CId->getbLVal())
     // {
     //     vm->setVal(vmap, CP->comp.c_str(), CP->name.c_str(), fval);
@@ -1415,59 +1417,59 @@ int PowerModeSelect(varsmap& vmap, varmap& amap, const char* aname, asset_manage
     //     CP->setLVal(tval);
     //     CId->setLVal(fval);
     // }
-// }
-// else if (!CP->getbVal() && !CId->getbVal())
-// {
-//     if (CId->getbLVal())
-//     {
-//         vm->setVal(vmap, CP->comp.c_str(), CP->name.c_str(), fval);
-//         CP->setLVal(fval);
-//         CId->setLVal(tval);
-//     }
-//     else
-//     {
-//         vm->setVal(vmap, CId->comp.c_str(), CId->name.c_str(), fval);
-//         CP->setLVal(tval);
-//         CId->setLVal(fval);
-//     }
-// }
+    // }
+    // else if (!CP->getbVal() && !CId->getbVal())
+    // {
+    //     if (CId->getbLVal())
+    //     {
+    //         vm->setVal(vmap, CP->comp.c_str(), CP->name.c_str(), fval);
+    //         CP->setLVal(fval);
+    //         CId->setLVal(tval);
+    //     }
+    //     else
+    //     {
+    //         vm->setVal(vmap, CId->comp.c_str(), CId->name.c_str(), fval);
+    //         CP->setLVal(tval);
+    //         CId->setLVal(fval);
+    //     }
+    // }
 
-// if (!CP->getbLVal())
-// {
-//     if (CP->getbVal())
-//     {
-//         vm->setVal(vmap, CId->comp.c_str(), CId->name.c_str(), fval);
-//         CP->setLVal(tval);
-//         CId->setLVal(fval);
-//     }
-// }
-// else if (!CP->getbVal() && !CId->getbVal())
-//     vm->setVal(vmap, CP->comp.c_str(), CP->name.c_str(), tval);
+    // if (!CP->getbLVal())
+    // {
+    //     if (CP->getbVal())
+    //     {
+    //         vm->setVal(vmap, CId->comp.c_str(), CId->name.c_str(), fval);
+    //         CP->setLVal(tval);
+    //         CId->setLVal(fval);
+    //     }
+    // }
+    // else if (!CP->getbVal() && !CId->getbVal())
+    //     vm->setVal(vmap, CP->comp.c_str(), CP->name.c_str(), tval);
 
-// if (!CId->getbLVal())
-// {
-//     if (CId->getbVal())
-//     {
-//         vm->setVal(vmap, CP->comp.c_str(), CP->name.c_str(), fval);
-//         CId->setLVal(tval);
-//         CP->setLVal(fval);
-//     }
-// }
-// else if (!CP->getbVal() && !CId->getbVal())
-//     vm->setVal(vmap, CId->comp.c_str(), CId->name.c_str(), tval);
+    // if (!CId->getbLVal())
+    // {
+    //     if (CId->getbVal())
+    //     {
+    //         vm->setVal(vmap, CP->comp.c_str(), CP->name.c_str(), fval);
+    //         CId->setLVal(tval);
+    //         CP->setLVal(fval);
+    //     }
+    // }
+    // else if (!CP->getbVal() && !CId->getbVal())
+    //     vm->setVal(vmap, CId->comp.c_str(), CId->name.c_str(), tval);
 
     return rc;
-
 }
-
 
 /**
  * Example script... will be moved
  *
  * This runs every time set /componments/xxx/PCRCmd is run
  *
- * void setupRamFunc(int (*_runFunc)(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset_manager *am),varsmap *_vmap, varmap *_amap,const char* _aname, fims* _p_fims, asset_manager *_am)
- * This only runs when we get a set or Pub  PCRCmd ( Default /components/pcr/PCRCmd)
+ * void setupRamFunc(int (*_runFunc)(varsmap &vmap, varmap &amap, const char*
+ * aname, fims* p_fims, asset_manager *am),varsmap *_vmap, varmap *_amap,const
+ * char* _aname, fims* _p_fims, asset_manager *_am) This only runs when we get a
+ * set or Pub  PCRCmd ( Default /components/pcr/PCRCmd)
  *
  * Review 10/21/2020
  *
@@ -1489,42 +1491,47 @@ int HandlePCRCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
         if (reload < 1)
         {
             // do init stiff here
-            amap["PCRCmdStatus"]->setVal(tVal); //       = vm->setLinkVal(vmap, aname, "/status",    "PCRCmdStatus",     tVal);
-            amap["PCRCmd"]->setVal(ival); //       = vm->setLinkVal(vmap, aname, "/status",    "PCRCmdStatus",     tVal);
-
+            amap["PCRCmdStatus"]->setVal(tVal);  //       = vm->setLinkVal(vmap, aname,
+                                                 //       "/status",    "PCRCmdStatus",
+                                                 //       tVal);
+            amap["PCRCmd"]->setVal(ival);        //       = vm->setLinkVal(vmap, aname,
+                                                 //       "/status",    "PCRCmdStatus",
+                                                 //       tVal);
         }
         reload = 2;
         amap["HandlePCRCmd"]->setVal(reload);
     }
     char* cval;
     double cmdTime = vm->get_time_dbl();
-    ival = amap["PCRCmd"]->getiVal(); //       = vm->setLinkVal(vmap, aname, "/status",    "PCRCmdStatus",     tVal);
+    ival = amap["PCRCmd"]->getiVal();  //       = vm->setLinkVal(vmap, aname,
+                                       //       "/status",    "PCRCmdStatus",
+                                       //       tVal);
 
     asprintf(&cval, "%s >> Set PCRCmd Status to %d at %f", __func__, ival, cmdTime);
     if (cval)
     {
-        amap["PCRCmdStatus"]->setVal(cval); //       = vm->setLinkVal(vmap, aname, "/status",    "PCRCmdStatus",     tVal);
+        amap["PCRCmdStatus"]->setVal(cval);  //       = vm->setLinkVal(vmap, aname,
+                                             //       "/status",    "PCRCmdStatus",
+                                             //       tVal);
         free((void*)cval);
     }
-    // Now do stuff to handle change in PCSCmd 
+    // Now do stuff to handle change in PCSCmd
     return 0;
 }
-
 
 /**
  * Example code
  *
- * this sets up the PCRCmd to run the HandlePCRCmd function every time the PCRCmd is "set"
- * this instance must be set up by the asset manager
- * this really should be an init function.
- * to test set a value in /components/ess/PCRCmd  and check /ess/status/ess/PCRCmdStatus
+ * this sets up the PCRCmd to run the HandlePCRCmd function every time the
+ * PCRCmd is "set" this instance must be set up by the asset manager this really
+ * should be an init function. to test set a value in /components/ess/PCRCmd
+ * and check /ess/status/ess/PCRCmdStatus
  *
  * Used in:
  * Test Script:
  */
 int SetupRunPCRCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am)
 {
-
     FPS_ERROR_PRINT(">>>>>>>>>ESS>>>>>>>>>>>%s running for ESS Manager\n", __func__);
 
     assetFunc* RunPCRCmd;
@@ -1540,11 +1547,11 @@ int SetupRunPCRCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
 
         if (reload < 1)
         {
-            RunPCRCmd = (assetFunc*) new assetFunc(aname);
+            RunPCRCmd = (assetFunc*)new assetFunc(aname);
             amap["RunPCRCmdFunc"] = (assetVar*)RunPCRCmd;
             RunPCRCmd->setupRamFunc(HandlePCRCmd, vmap, amap, aname, p_fims, am);
-            // the following causes HandlePCRCmd to be run on eery Set or Pub on PCRCmd
-            // may need to use VarMapUtils to runit
+            // the following causes HandlePCRCmd to be run on eery Set or Pub on
+            // PCRCmd may need to use VarMapUtils to runit
             amap["PCRCmd"]->SetFunc((assetVar*)RunPCRCmd);
             amap["PCRCmd"]->PubFunc((assetVar*)RunPCRCmd);
         }
@@ -1566,22 +1573,27 @@ int SetupRunPCRCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
 int HandleLoadRequest(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am)
 {
     double dval;
-    bool  bval;
+    bool bval;
     char* cval = (char*)"Dummy";
     int reload;
 
-    // setLinkVal 
-    // 1/ looks for /links/<aname> and if so picks up the assetVar by reference to the link valuestring
-    // for example /links/bms:maxLoadRequest -> /params/bms:maxLoadRequest this is a global for all bms units
-    //             /links/bms_1:LoadSetpoint -> /controls/bms_1:LoadSetpoint this is a setpoint for unit bms_1 
-    //             /links/ess:EStop -> /controls/ess:EStop this is a global command
+    // setLinkVal
+    // 1/ looks for /links/<aname> and if so picks up the assetVar by reference to
+    // the link valuestring for example /links/bms:maxLoadRequest ->
+    // /params/bms:maxLoadRequest this is a global for all bms units
+    //             /links/bms_1:LoadSetpoint -> /controls/bms_1:LoadSetpoint this
+    //             is a setpoint for unit bms_1 /links/ess:EStop ->
+    //             /controls/ess:EStop this is a global command
     // setLinkval will look for an established link from the config file
-    // if not found it will create a link called /links/<aname>  to the default agroup (/params/<aname>:<aval> etc)
-    //   it will then look for the "linked to" variable for example /components/catl_bms_ess_01:bms_soc
+    // if not found it will create a link called /links/<aname>  to the default
+    // agroup (/params/<aname>:<aval> etc)
+    //   it will then look for the "linked to" variable for example
+    //   /components/catl_bms_ess_01:bms_soc
     //     it will create  this variable ( with the given type) if needed
-    //  thus the loop is closed we have a link and an associated variable. creates for us or predefined.
-    // to force the links to be reevaluated then /controls/<anmae>:FunName should be set to 1
-    // to cause a complete reset set reload to 0;
+    //  thus the loop is closed we have a link and an associated variable. creates
+    //  for us or predefined.
+    // to force the links to be reevaluated then /controls/<anmae>:FunName should
+    // be set to 1 to cause a complete reset set reload to 0;
     //
     assetVar* HandleLoadRequest = amap["HandleLoadRequest"];
     if (!HandleLoadRequest || (reload = HandleLoadRequest->getiVal()) == 0)
@@ -1591,7 +1603,7 @@ int HandleLoadRequest(varsmap& vmap, varmap& amap, const char* aname, fims* p_fi
 
     if (reload < 2)
     {
-        //reload = 0;
+        // reload = 0;
         amap["HandleLoadRequest"] = am->vm->setLinkVal(vmap, aname, "/config", "HandleLoadRequest", reload);
         amap["maxLoadRequest"] = am->vm->setLinkVal(vmap, "bms", "/params", "maxLoadRequest", dval);
         amap["LoadRequest"] = am->vm->setLinkVal(vmap, "bms", "/controls", "LoadRequest", dval);
@@ -1604,7 +1616,7 @@ int HandleLoadRequest(varsmap& vmap, varmap& amap, const char* aname, fims* p_fi
         amap["EStop"] = am->vm->setLinkVal(vmap, "ess", "/controls", "EStop", bval);
 
         amap["HandleLoadRequest"]->setVal(2);  // revert reload
-        if (reload == 0) // complete restart 
+        if (reload == 0)                       // complete restart
         {
             amap["LoadRequestDeadband"]->setVal(25.0);
             amap["lastLoadRequest"]->setVal(25.0);
@@ -1616,7 +1628,9 @@ int HandleLoadRequest(varsmap& vmap, varmap& amap, const char* aname, fims* p_fi
         }
     }
 
-    assetVar* maxLoadRequest = amap["maxLoadRequest"];  // all these will crash if the link vars are not set up correctly
+    assetVar* maxLoadRequest = amap["maxLoadRequest"];  // all these will crash if
+                                                        // the link vars are not
+                                                        // set up correctly
     assetVar* LoadRequest = amap["LoadRequest"];
     assetVar* LoadRequestDeadband = amap["LoadRequestDeadband"];
     assetVar* lastLoadRequest = amap["lastLoadRequest"];
@@ -1624,46 +1638,39 @@ int HandleLoadRequest(varsmap& vmap, varmap& amap, const char* aname, fims* p_fi
     assetVar* LoadState = amap["LoadState"];
     assetVar* StateResetCmd = amap["StateResetCmd"];
     assetVar* lastStateResetCmd = amap["lastStateResetCmd"];
-    //assetVar* EStop               = amap["EStop"];
+    // assetVar* EStop               = amap["EStop"];
 
-    if (0)printf("%s >>>>> STATUS %s  (comp %s) %f to %f (deadband %f)\n"
-        , __func__
-        , LoadRequest->name.c_str()
-        , LoadRequest->comp.c_str()
-        , lastLoadRequest->getdVal()
-        , LoadRequest->getdVal()
-        , LoadRequestDeadband->getdVal()
-    );
+    if (0)
+        printf("%s >>>>> STATUS %s  (comp %s) %f to %f (deadband %f)\n", __func__, LoadRequest->name.c_str(),
+               LoadRequest->comp.c_str(), lastLoadRequest->getdVal(), LoadRequest->getdVal(),
+               LoadRequestDeadband->getdVal());
 
     if (am->vm->valueChanged(LoadRequest, lastLoadRequest, LoadRequestDeadband, dval, 0.0))
     {
-        printf("%s >>>>> load value changed from %f to %f (deadband %f)\n"
-            , __func__
-            , lastLoadRequest->getdVal()
-            , LoadRequest->getdVal()
-            , LoadRequestDeadband->getdVal()
-        );
+        printf("%s >>>>> load value changed from %f to %f (deadband %f)\n", __func__, lastLoadRequest->getdVal(),
+               LoadRequest->getdVal(), LoadRequestDeadband->getdVal());
         lastLoadRequest->setVal(LoadRequest->getdVal());
         if (LoadRequest->getdVal() < maxLoadRequest->getdVal())
         {
             LoadSetpoint->setVal(LoadRequest->getdVal());
-            cval = (char*)"Running";LoadState->setVal(cval);
+            cval = (char*)"Running";
+            LoadState->setVal(cval);
         }
         else
         {
             LoadSetpoint->setVal(maxLoadRequest->getdVal());
-            cval = (char*)"Limit"; LoadState->setVal(cval);
+            cval = (char*)"Limit";
+            LoadState->setVal(cval);
         }
-
     }
 
     if (am->vm->valueChangednodb(LoadRequest, lastLoadRequest, dval, 0.0))
     {
-
         if (abs(LoadRequest->getdVal()) < 2.0)
         {
             LoadSetpoint->setVal(LoadRequest->getdVal());
-            cval = (char*)"Standby";LoadState->setVal(cval);
+            cval = (char*)"Standby";
+            LoadState->setVal(cval);
         }
     }
 
@@ -1673,20 +1680,21 @@ int HandleLoadRequest(varsmap& vmap, varmap& amap, const char* aname, fims* p_fi
         if (StateResetCmd->getbVal())
         {
             LoadSetpoint->setVal(0.0);
-            cval = (char*)"Reset";LoadState->setVal(cval);
+            cval = (char*)"Reset";
+            LoadState->setVal(cval);
         }
         else
         {
-            cval = (char*)"Standby";LoadState->setVal(cval);
+            cval = (char*)"Standby";
+            LoadState->setVal(cval);
         }
-
     }
     return 0;
 }
 
 /**
- * Checks if the current setpoint (active and reactive) has changed and sends the results
- * to /components/pcs
+ * Checks if the current setpoint (active and reactive) has changed and sends
+ * the results to /components/pcs
  *
  * Review 10/21/2020
  *
@@ -1696,7 +1704,7 @@ int HandleLoadRequest(varsmap& vmap, varmap& amap, const char* aname, fims* p_fi
 int HandleCurrent(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am)
 {
     double dval = 0.0;  // may need to convert to int, unless val in map is already an int
-    //double dval2 = 0.0;
+    // double dval2 = 0.0;
     int reload = -1;
     assetVar* HandleCurrent = amap["HandleCurrent"];
 
@@ -1708,35 +1716,40 @@ int HandleCurrent(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, 
     if (reload < 2)
     {
         amap["ActiveCurrentSetpoint"] = am->vm->setLinkVal(vmap, "ess", "/controls", "ActiveCurrentSetpoint", dval);
-        amap["lastActiveCurrentSetpoint"] = am->vm->setLinkVal(vmap, "ess", "/variables", "lastActiveCurrentSetpoint", dval);
+        amap["lastActiveCurrentSetpoint"] = am->vm->setLinkVal(vmap, "ess", "/variables", "lastActiveCurrentSetpoint",
+                                                               dval);
         amap["ReactiveCurrentSetpoint"] = am->vm->setLinkVal(vmap, "ess", "/controls", "ReactiveCurrentSetpoint", dval);
-        amap["lastReactiveCurrentSetpoint"] = am->vm->setLinkVal(vmap, "ess", "/variables", "lastReactiveCurrentSetpoint", dval);
+        amap["lastReactiveCurrentSetpoint"] = am->vm->setLinkVal(vmap, "ess", "/variables",
+                                                                 "lastReactiveCurrentSetpoint", dval);
 
         amap["pcs_ActiveCurrent"] = am->vm->setLinkVal(vmap, "pcs", "/components", "ActiveCurrent", dval);
         amap["pcs_ReactiveCurrent"] = am->vm->setLinkVal(vmap, "pcs", "/components", "ReactiveCurrent", dval);
 
         amap["HandleCurrent"] = am->vm->setLinkVal(vmap, aname, "/reload", "HandleCurrent", reload);
 
-        // if(reload == 0) // complete restart 
+        // if(reload == 0) // complete restart
         // {
         // }
         reload = 2;
         amap["HandleCurrent"]->setVal(reload);  // revert reload
     }
 
-    // this stuff collects a bunch of assetVars and send them out to their default locations.
-    // the link will determine where that location is.
-    // if the link is defined in the config file then that destination will be maintained.
+    // this stuff collects a bunch of assetVars and send them out to their default
+    // locations. the link will determine where that location is. if the link is
+    // defined in the config file then that destination will be maintained.
 
     varsmap vlist;
     bool setpointApplied = false;
-    if (0) FPS_ERROR_PRINT("%s >> Checking current changes... \n", __func__);
+    if (0)
+        FPS_ERROR_PRINT("%s >> Checking current changes... \n", __func__);
 
     // Check for any changes to active current setpoint
     if (amap["ActiveCurrentSetpoint"]->getdVal() != amap["lastActiveCurrentSetpoint"]->getdVal())
     {
         // TODO - fix debug msg
-        //std::cout << "Active current has changed." << "\nActive Current Setpoint: " << amap["ActiveCurrentSetpoint"]->getdVal() << "\nLast Active Current Setpoint: " << amap["lastActiveCurrentSetpoint"]->getdVal() << std::endl; 
+        // std::cout << "Active current has changed." << "\nActive Current Setpoint:
+        // " << amap["ActiveCurrentSetpoint"]->getdVal() << "\nLast Active Current
+        // Setpoint: " << amap["lastActiveCurrentSetpoint"]->getdVal() << std::endl;
         amap["lastActiveCurrentSetpoint"]->setVal(amap["ActiveCurrentSetpoint"]->getdVal());
         amap["pcs_ActiveCurrent"]->setVal(amap["ActiveCurrentSetpoint"]->getdVal());
 
@@ -1750,7 +1763,10 @@ int HandleCurrent(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, 
     if (amap["ReactiveCurrentSetpoint"]->getdVal() != amap["lastReactiveCurrentSetpoint"]->getdVal())
     {
         // TODO - fix debug msg
-        //std::cout << "Reactive current has changed." << "\nReactive Current Setpoint: " << amap["ReactiveCurrentSetpoint"]->getdVal() << "\nLast Reactive Current Setpoint: " << amap["lastReactiveCurrentSetpoint"]->getdVal() << std::endl;
+        // std::cout << "Reactive current has changed." << "\nReactive Current
+        // Setpoint: " << amap["ReactiveCurrentSetpoint"]->getdVal() << "\nLast
+        // Reactive Current Setpoint: " <<
+        // amap["lastReactiveCurrentSetpoint"]->getdVal() << std::endl;
         amap["lastReactiveCurrentSetpoint"]->setVal(amap["ReactiveCurrentSetpoint"]->getdVal());
         amap["pcs_ReactiveCurrent"]->setVal(amap["ReactiveCurrentSetpoint"]->getdVal());
 
@@ -1763,7 +1779,7 @@ int HandleCurrent(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, 
     if (setpointApplied)
     {
         am->vm->sendVlist(p_fims, "set", &vlist);
-        //am->vm->clearVlist(&vlist);
+        // am->vm->clearVlist(&vlist);
     }
 
     return 0;
@@ -1791,7 +1807,7 @@ int HandleCurrent(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, 
 //        1: Stay status
 //        2: Power on cmd
 //        3: Power off cmd
-// 0x0010 2 System status 
+// 0x0010 2 System status
 //       000 Initialize
 //       001 Normal
 //       010 Full charge
@@ -1799,8 +1815,8 @@ int HandleCurrent(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, 
 //       100 Warning status
 //       101 Fault status
 /**
- * Checks if the current setpoint (active and reactive) has changed and sends the results
- * to /components/pcs
+ * Checks if the current setpoint (active and reactive) has changed and sends
+ * the results to /components/pcs
  *
  * Review 11/06/2020
  *
@@ -1848,10 +1864,9 @@ int HandleAssetCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
         }
         reload = 2;
         amap["HandleAssetCmd"]->setVal(reload);
-
     }
-    assetVar* asv;    // send var
-    assetVar* acv;    // command var
+    assetVar* asv;  // send var
+    assetVar* acv;  // command var
     char* fval;
     asprintf(&fval, " %s Asset State %d", aname, sstate);
     if (fval)
@@ -1861,24 +1876,24 @@ int HandleAssetCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
     }
     switch (sstate)
     {
-    case SystemInit:
-        asv = amap["AssetCmd"];
-        acv = amap["AssetInit"];
-        break;
-    case SystemOn:
-        asv = amap["AssetCmd"];
-        acv = amap["AssetOn"];
-        break;
-    case SystemOff:
-        asv = amap["AssetCmd"];
-        acv = amap["AssetOff"];
-        break;
-    case SystemStandby:
-        asv = amap["AssetCmd"];
-        acv = amap["AssetStandby"];
-        break;
-    default:
-        asv = nullptr;
+        case SystemInit:
+            asv = amap["AssetCmd"];
+            acv = amap["AssetInit"];
+            break;
+        case SystemOn:
+            asv = amap["AssetCmd"];
+            acv = amap["AssetOn"];
+            break;
+        case SystemOff:
+            asv = amap["AssetCmd"];
+            acv = amap["AssetOff"];
+            break;
+        case SystemStandby:
+            asv = amap["AssetCmd"];
+            acv = amap["AssetStandby"];
+            break;
+        default:
+            asv = nullptr;
     }
 
     if (asv)
@@ -1889,8 +1904,8 @@ int HandleAssetCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
     return 0;
 }
 /**
- * Checks if the current setpoint (active and reactive) has changed and sends the results
- * to /components/pcs
+ * Checks if the current setpoint (active and reactive) has changed and sends
+ * the results to /components/pcs
  *
  * Review 11/06/2020
  *
@@ -1938,12 +1953,13 @@ int HandleManagerCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
         amap["CommsOk"] = vm->setLinkVal(vmap, aname, "/status", "CommsOk", bval);
         amap["HBOk"] = vm->setLinkVal(vmap, aname, "/status", "HBOk", bval);
-        // amap["BMSOk"]             = vm->setLinkVal(vmap, "bms", "/status",    "BMSOk", bval);
-        // amap["PCROk"]             = vm->setLinkVal(vmap, "pcr", "/status",    "PCROk", bval);
-        // amap["DRCOk"]             = vm->setLinkVal(vmap, "drc", "/status",    "DRCOk", bval);
-        // amap["EMMOk"]             = vm->setLinkVal(vmap, "emm", "/status",    "EMMOk", bval);
+        // amap["BMSOk"]             = vm->setLinkVal(vmap, "bms", "/status",
+        // "BMSOk", bval); amap["PCROk"]             = vm->setLinkVal(vmap, "pcr",
+        // "/status",    "PCROk", bval); amap["DRCOk"]             =
+        // vm->setLinkVal(vmap, "drc", "/status",    "DRCOk", bval); amap["EMMOk"]
+        // = vm->setLinkVal(vmap, "emm", "/status",    "EMMOk", bval);
 
-        if (reload == 0) // complete restart 
+        if (reload == 0)  // complete restart
         {
             amap["SystemState"]->setVal(tVal);
             amap["On"]->setVal(false);
@@ -1957,8 +1973,7 @@ int HandleManagerCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             amap["GridForming"]->setVal(false);
             amap["GridFollowing"]->setVal(false);
             amap["SystemState"]->setVal(tVal);
-            amap["SystemStateNum"]->setVal((int)System_Init); // starts init timeout
-
+            amap["SystemStateNum"]->setVal((int)System_Init);  // starts init timeout
 
             amap["CommsOk"]->setVal(true);
             amap["HBOk"]->setVal(true);
@@ -1966,7 +1981,7 @@ int HandleManagerCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             // amap["PCROk"]->setVal(true);
             // amap["DRCOk"]->setVal(true);
             // amap["EMMOk"]->setVal(true);
-             // DO any setup here    
+            // DO any setup here
         }
         reload = 2;
         HandleManCmd = amap["HandleManCmd"];
@@ -1985,7 +2000,9 @@ int HandleManagerCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
     {
         asset_manager* amm = ix.second;
         HandleManagerCmd(vmap, amm->amap, amm->name.c_str(), p_fims, amm, sstate);
-        if (0)FPS_ERROR_PRINT(" %s >> manager child [%s]  with %d kids \n", __func__, ix.first.c_str(), (int)amm->assetMap.size());
+        if (0)
+            FPS_ERROR_PRINT(" %s >> manager child [%s]  with %d kids \n", __func__, ix.first.c_str(),
+                            (int)amm->assetMap.size());
         // send each manager a wake up
     }
     for (auto ix : am->assetMap)
@@ -1993,7 +2010,8 @@ int HandleManagerCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         asset* ami = ix.second;
         HandleAssetCmd(vmap, ami->amap, ami->name.c_str(), p_fims, ami, sstate);
 
-        if (0)FPS_ERROR_PRINT(" %s >> asset child [%s]  \n", __func__, ix.first.c_str());
+        if (0)
+            FPS_ERROR_PRINT(" %s >> asset child [%s]  \n", __func__, ix.first.c_str());
     }
     // after assets have been done wake up for set manager
     for (auto ix : am->assetManMap)
@@ -2001,8 +2019,11 @@ int HandleManagerCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         asset_manager* amm = ix.second;
 
         amm->run_wakeup(amm, WAKE_LEVEL_MANAGE);
-        //HandleManagerCmd(vmap, amm->amap, amm->name.c_str(), p_fims, amm, sstate);
-        if (0)FPS_ERROR_PRINT(" %s >> manager child [%s]  with %d kids \n", __func__, ix.first.c_str(), (int)amm->assetMap.size());
+        // HandleManagerCmd(vmap, amm->amap, amm->name.c_str(), p_fims, amm,
+        // sstate);
+        if (0)
+            FPS_ERROR_PRINT(" %s >> manager child [%s]  with %d kids \n", __func__, ix.first.c_str(),
+                            (int)amm->assetMap.size());
         // send each manager a wake up
     }
     return 0;
@@ -2016,7 +2037,8 @@ int HandleManagerCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 //  * Used in:
 //  * Test Script: test_sim_hb.sh
 //  */
-// int SimHandleHeartBeat(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am)
+// int SimHandleHeartBeat(varsmap& vmap, varmap& amap, const char* aname, fims*
+// p_fims, asset_manager* am)
 // {
 //     int reload;
 //     double dval = 0.0;
@@ -2027,34 +2049,43 @@ int HandleManagerCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 //     assetVar* SimHandleHeartBeat = amap["SimHandleHeartBeat"];
 //     if (!SimHandleHeartBeat || (reload = SimHandleHeartBeat->getiVal()) == 0)
 //     {
-//         reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
+//         reload = 0;  // complete reset  reload = 1 for remap ( links may have
+//         changed)
 //     }
 
 //     if (reload < 2)
 //     {
 //         //reload = 0;
-//         amap["SimHandleHeartBeat"] = vm->setLinkVal(vmap, aname,         "/reload",    "SimHandleHeartBeat", reload);
-//         amap["HeartBeat"]          = vm->setLinkVal(vmap, aname,         "/status",    "HeartBeat", dval);
-//         amap["Timestamp"]          = vm->setLinkVal(vmap, aname,         "/status",    "Timestamp", tVal);
-//         amap["CommsDummy"]         = vm->setLinkVal(vmap, aname,         "/status",    "CommsDummy", dval);
-//         amap["SimPcsComms"]        = vm->setLinkVal(vmap, aname,         "/configsim", "SimPcsComms", bval);
-//         amap["SimPcsHB"]           = vm->setLinkVal(vmap, aname,         "/configsim", "SimPcsHB", bval);
-//         amap["SimBmsComms"]        = vm->setLinkVal(vmap, aname,         "/configsim", "SimBmsComms", bval);
-//         amap["SimBmsHB"]           = vm->setLinkVal(vmap, aname,         "/configsim", "SimBmsHB", bval);
-//         amap["SimBms_1Comms"]      = vm->setLinkVal(vmap, aname,         "/configsim", "SimBms_1Comms", bval);
-//         amap["SimBms_1HB"]         = vm->setLinkVal(vmap, aname,         "/configsim", "SimBms_1HB", bval);
-//         amap["SimBms_2Comms"]      = vm->setLinkVal(vmap, aname,         "/configsim", "SimBms_2Comms", bval);
-//         amap["SimBms_2HB"]         = vm->setLinkVal(vmap, aname,         "/configsim", "SimBms_2HB", bval);
-//         amap["SimBms_3Comms"]      = vm->setLinkVal(vmap, aname,         "/configsim", "SimBms_3Comms", bval);
-//         amap["SimBms_3HB"]         = vm->setLinkVal(vmap, aname,         "/configsim", "SimBms_3HB", bval);
-//         amap["SimBms_4Comms"]      = vm->setLinkVal(vmap, aname,         "/configsim", "SimBms_4Comms", bval);
-//         amap["SimBms_4HB"]         = vm->setLinkVal(vmap, aname,         "/configsim", "SimBms_4HB", bval);
-//         dval = 1.0;
-//         amap["HeartBeatPeriod"] = vm->setLinkVal(vmap, aname, "/config", "HeartBeatPeriod", dval);
-//         dval = 255.0;
-//         amap["HeartBeatMax"] = vm->setLinkVal(vmap, aname, "/config", "HeartBeatMax", dval);
+//         amap["SimHandleHeartBeat"] = vm->setLinkVal(vmap, aname,
+//         "/reload",    "SimHandleHeartBeat", reload); amap["HeartBeat"]
+//         = vm->setLinkVal(vmap, aname,         "/status",    "HeartBeat",
+//         dval); amap["Timestamp"]          = vm->setLinkVal(vmap, aname,
+//         "/status",    "Timestamp", tVal); amap["CommsDummy"]         =
+//         vm->setLinkVal(vmap, aname,         "/status",    "CommsDummy",
+//         dval); amap["SimPcsComms"]        = vm->setLinkVal(vmap, aname,
+//         "/configsim", "SimPcsComms", bval); amap["SimPcsHB"]           =
+//         vm->setLinkVal(vmap, aname,         "/configsim", "SimPcsHB", bval);
+//         amap["SimBmsComms"]        = vm->setLinkVal(vmap, aname,
+//         "/configsim", "SimBmsComms", bval); amap["SimBmsHB"]           =
+//         vm->setLinkVal(vmap, aname,         "/configsim", "SimBmsHB", bval);
+//         amap["SimBms_1Comms"]      = vm->setLinkVal(vmap, aname,
+//         "/configsim", "SimBms_1Comms", bval); amap["SimBms_1HB"]         =
+//         vm->setLinkVal(vmap, aname,         "/configsim", "SimBms_1HB",
+//         bval); amap["SimBms_2Comms"]      = vm->setLinkVal(vmap, aname,
+//         "/configsim", "SimBms_2Comms", bval); amap["SimBms_2HB"]         =
+//         vm->setLinkVal(vmap, aname,         "/configsim", "SimBms_2HB",
+//         bval); amap["SimBms_3Comms"]      = vm->setLinkVal(vmap, aname,
+//         "/configsim", "SimBms_3Comms", bval); amap["SimBms_3HB"]         =
+//         vm->setLinkVal(vmap, aname,         "/configsim", "SimBms_3HB",
+//         bval); amap["SimBms_4Comms"]      = vm->setLinkVal(vmap, aname,
+//         "/configsim", "SimBms_4Comms", bval); amap["SimBms_4HB"]         =
+//         vm->setLinkVal(vmap, aname,         "/configsim", "SimBms_4HB",
+//         bval); dval = 1.0; amap["HeartBeatPeriod"] = vm->setLinkVal(vmap,
+//         aname, "/config", "HeartBeatPeriod", dval); dval = 255.0;
+//         amap["HeartBeatMax"] = vm->setLinkVal(vmap, aname, "/config",
+//         "HeartBeatMax", dval);
 //         // amap["HandleHeartBeat"]->setVal(2);  // revert reload
-//         if (reload == 0) // complete restart 
+//         if (reload == 0) // complete restart
 //         {
 //             amap["HeartBeat"]->setVal(0);
 //         }
@@ -2066,7 +2097,7 @@ int HandleManagerCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 //     free((void*)tVal);
 //     if (amap["HeartBeat"]->getLastSetDiff(dval) > 1.0)
 //     {
-//         // get the reference to the variable 
+//         // get the reference to the variable
 //         assetVar* hb = amap["HeartBeat"];
 //         assetVar* cd = amap["Timestamp"];
 //         assetVar* hbmax = amap["HeartBeatMax"];
@@ -2101,23 +2132,24 @@ int HandleManagerCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 //         //"/components/catl_mbmu_stat_r:bms_heartbeat"
 
 //         if (SimBmsComms)  vm->sendAssetVar(cd, p_fims, "/components/");
-//         if (SimBmsHB)     vm->sendAssetVar(hb, p_fims, "/components/catl_mbmu_stat_r", "bms_heartbeat");
-//         if (SimBms_1Comms)vm->sendAssetVar(cd, p_fims, "/components/sbmu_1");
-//         if (SimBms_1HB)   vm->sendAssetVar(hb, p_fims, "/components/sbmu_1");
-//         if (SimBms_2Comms)vm->sendAssetVar(cd, p_fims, "/components/sbmu_2");
-//         if (SimBms_2HB)   vm->sendAssetVar(hb, p_fims, "/components/sbmu_2");
-//         if (SimBms_3Comms)vm->sendAssetVar(cd, p_fims, "/components/sbmu_3");
-//         if (SimBms_3HB)   vm->sendAssetVar(hb, p_fims, "/components/sbmu_3");
-//         if (SimBms_4Comms)vm->sendAssetVar(cd, p_fims, "/components/sbmu_4");
-//         if (SimBms_4HB)   vm->sendAssetVar(hb, p_fims, "/components/sbmu_4");
+//         if (SimBmsHB)     vm->sendAssetVar(hb, p_fims,
+//         "/components/catl_mbmu_stat_r", "bms_heartbeat"); if
+//         (SimBms_1Comms)vm->sendAssetVar(cd, p_fims, "/components/sbmu_1"); if
+//         (SimBms_1HB)   vm->sendAssetVar(hb, p_fims, "/components/sbmu_1"); if
+//         (SimBms_2Comms)vm->sendAssetVar(cd, p_fims, "/components/sbmu_2"); if
+//         (SimBms_2HB)   vm->sendAssetVar(hb, p_fims, "/components/sbmu_2"); if
+//         (SimBms_3Comms)vm->sendAssetVar(cd, p_fims, "/components/sbmu_3"); if
+//         (SimBms_3HB)   vm->sendAssetVar(hb, p_fims, "/components/sbmu_3"); if
+//         (SimBms_4Comms)vm->sendAssetVar(cd, p_fims, "/components/sbmu_4"); if
+//         (SimBms_4HB)   vm->sendAssetVar(hb, p_fims, "/components/sbmu_4");
 //     }
 //     return dval;
 // }
 // inline input andler , one of our nice little features
 // makes sure that later commands overwrite earlier ones
 /**
- * Checks if the current input commands and selects the last one to arrive in the case of conflicts
- * to /components/pcs
+ * Checks if the current input commands and selects the last one to arrive in
+ * the case of conflicts to /components/pcs
  *
  * Review 11/06/2020
  *
@@ -2127,8 +2159,8 @@ int HandleManagerCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 int HandleESSInput(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am)
 {
     // Turn on if conditions allow it
-    //bool AcContactor     = amap["AcContactor"]->getbVal();
-    //bool DcContactor     = amap["DcContactor"]->getbVal();
+    // bool AcContactor     = amap["AcContactor"]->getbVal();
+    // bool DcContactor     = amap["DcContactor"]->getbVal();
     bool AcContactorOpenCmd = amap["AcContactorOpenCmd"]->getbVal();
     bool DcContactorOpenCmd = amap["DcContactorOpenCmd"]->getbVal();
     bool AcContactorCloseCmd = amap["AcContactorCloseCmd"]->getbVal();
@@ -2136,32 +2168,24 @@ int HandleESSInput(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
     bool OnCmd = amap["OnCmd"]->getbVal();
     bool OffCmd = amap["OffCmd"]->getbVal();
     bool StandbyCmd = amap["StandbyCmd"]->getbVal();
-    //bool ResetCmd        = amap["ResetCmd"]->getbVal();
-    //bool ResetFaultCmd   = amap["ResetFaultCmd"]->getbVal();
+    // bool ResetCmd        = amap["ResetCmd"]->getbVal();
+    // bool ResetFaultCmd   = amap["ResetFaultCmd"]->getbVal();
     bool readyOkSetCmd = amap["readyOkSetCmd"]->getbVal();
     bool readyOkClearCmd = amap["readyOkClearCmd"]->getbVal();
     // only allow one
     bool fval = false;
     if (0)
     {
-        FPS_ERROR_PRINT("%s >> %s --- at Start AcContactorOpenCmd [%s] AcContactorCloseCmd [%s] DcContactorOpenCmd [%s] DcContactorCloseCmd [%s] \n"
-            , __func__, aname
-            , AcContactorOpenCmd ? "true" : "false"
-            , AcContactorCloseCmd ? "true" : "false"
-            , DcContactorOpenCmd ? "true" : "false"
-            , DcContactorCloseCmd ? "true" : "false"
-        );
-        FPS_ERROR_PRINT("%s >> %s ---          OffCmd [%s] OnCmd [%s] StandbyCmd [%s] \n"
-            , __func__, aname
-            , OffCmd ? "true" : "false"
-            , OnCmd ? "true" : "false"
-            , StandbyCmd ? "true" : "false"
-        );
-        FPS_ERROR_PRINT("%s >> %s ---         readyOkSetCmd [%s] readyOkClearCmd [%s]\n"
-            , __func__, aname
-            , readyOkSetCmd ? "true" : "false"
-            , readyOkClearCmd ? "true" : "false"
-        );
+        FPS_ERROR_PRINT(
+            "%s >> %s --- at Start AcContactorOpenCmd [%s] "
+            "AcContactorCloseCmd [%s] DcContactorOpenCmd [%s] "
+            "DcContactorCloseCmd [%s] \n",
+            __func__, aname, AcContactorOpenCmd ? "true" : "false", AcContactorCloseCmd ? "true" : "false",
+            DcContactorOpenCmd ? "true" : "false", DcContactorCloseCmd ? "true" : "false");
+        FPS_ERROR_PRINT("%s >> %s ---          OffCmd [%s] OnCmd [%s] StandbyCmd [%s] \n", __func__, aname,
+                        OffCmd ? "true" : "false", OnCmd ? "true" : "false", StandbyCmd ? "true" : "false");
+        FPS_ERROR_PRINT("%s >> %s ---         readyOkSetCmd [%s] readyOkClearCmd [%s]\n", __func__, aname,
+                        readyOkSetCmd ? "true" : "false", readyOkClearCmd ? "true" : "false");
     }
 
     if (AcContactorCloseCmd)
@@ -2184,7 +2208,7 @@ int HandleESSInput(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
     }
     if (OnCmd)
     {
-        //amap["OnCmd"]->setVal(fval);
+        // amap["OnCmd"]->setVal(fval);
         amap["OffCmd"]->setVal(fval);
         amap["StandbyCmd"]->setVal(fval);
         OffCmd = false;
@@ -2193,27 +2217,26 @@ int HandleESSInput(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
     if (OffCmd)
     {
         amap["OnCmd"]->setVal(fval);
-        //amap["OffCmd"]->setVal(fval);
+        // amap["OffCmd"]->setVal(fval);
         amap["StandbyCmd"]->setVal(fval);
         StandbyCmd = false;
-
     }
     if (StandbyCmd)
     {
         amap["OnCmd"]->setVal(fval);
         amap["OffCmd"]->setVal(fval);
-        //amap["StandbyCmd"]->setVal(fval)
+        // amap["StandbyCmd"]->setVal(fval)
     }
     if (readyOkSetCmd)
     {
         amap["readyOkClearCmd"]->setVal(fval);
-        //amap["StandbyCmd"]->setVal(fval)
+        // amap["StandbyCmd"]->setVal(fval)
         readyOkClearCmd = false;
     }
     if (readyOkClearCmd)
     {
         amap["readyOkSetCmd"]->setVal(fval);
-        //amap["StandbyCmd"]->setVal(fval)
+        // amap["StandbyCmd"]->setVal(fval)
     }
     if (0)
     {
@@ -2224,34 +2247,26 @@ int HandleESSInput(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
         OnCmd = amap["OnCmd"]->getbVal();
         OffCmd = amap["OffCmd"]->getbVal();
         StandbyCmd = amap["StandbyCmd"]->getbVal();
-        //ResetCmd        = amap["ResetCmd"]->getbVal();
-    //bool ResetFaultCmd   = amap["ResetFaultCmd"]->getbVal(ResetFaultCmd);
+        // ResetCmd        = amap["ResetCmd"]->getbVal();
+        // bool ResetFaultCmd   = amap["ResetFaultCmd"]->getbVal(ResetFaultCmd);
         readyOkSetCmd = amap["readyOkSetCmd"]->getbVal();
         readyOkClearCmd = amap["readyOkClearCmd"]->getbVal();
 
-        FPS_ERROR_PRINT("%s >> %s --- at End AcContactorOpenCmd [%s] AcContactorCloseCmd [%s] DcContactorOpenCmd [%s] DcContactorCloseCmd [%s] \n"
-            , __func__, aname
-            , AcContactorOpenCmd ? "true" : "false"
-            , AcContactorCloseCmd ? "true" : "false"
-            , DcContactorOpenCmd ? "true" : "false"
-            , DcContactorCloseCmd ? "true" : "false"
-        );
-        FPS_ERROR_PRINT("%s >> %s ---          OffCmd [%s] OnCmd [%s] StandbyCmd [%s] \n"
-            , __func__, aname
-            , OffCmd ? "true" : "false"
-            , OnCmd ? "true" : "false"
-            , StandbyCmd ? "true" : "false"
-        );
-        FPS_ERROR_PRINT("%s >> %s ---         readyOkSetCmd [%s] readyOkClearCmd [%s]\n"
-            , __func__, aname
-            , readyOkSetCmd ? "true" : "false"
-            , readyOkClearCmd ? "true" : "false"
-        );
+        FPS_ERROR_PRINT(
+            "%s >> %s --- at End AcContactorOpenCmd [%s] "
+            "AcContactorCloseCmd [%s] DcContactorOpenCmd [%s] "
+            "DcContactorCloseCmd [%s] \n",
+            __func__, aname, AcContactorOpenCmd ? "true" : "false", AcContactorCloseCmd ? "true" : "false",
+            DcContactorOpenCmd ? "true" : "false", DcContactorCloseCmd ? "true" : "false");
+        FPS_ERROR_PRINT("%s >> %s ---          OffCmd [%s] OnCmd [%s] StandbyCmd [%s] \n", __func__, aname,
+                        OffCmd ? "true" : "false", OnCmd ? "true" : "false", StandbyCmd ? "true" : "false");
+        FPS_ERROR_PRINT("%s >> %s ---         readyOkSetCmd [%s] readyOkClearCmd [%s]\n", __func__, aname,
+                        readyOkSetCmd ? "true" : "false", readyOkClearCmd ? "true" : "false");
     }
 
     return 0;
 }
-//To come out of init
+// To come out of init
 // PCS comms must be OK
 // Bms comms must have at least bms min connetions.
 // Pcs Heatbeat must be OK
@@ -2260,8 +2275,8 @@ int HandleESSInput(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
 // same for hearbeat
 // then we need to see good status from the PCS system and BMS sysems
 /**
- * Checks if the current setpoint (active and reactive) has changed and sends the results
- * to /components/pcs
+ * Checks if the current setpoint (active and reactive) has changed and sends
+ * the results to /components/pcs
  *
  * Review 11/06/2020
  *
@@ -2273,7 +2288,8 @@ int CheckSystemState(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
     VarMapUtils* vm = am->vm;
     vm->setTime();
 
-    if (0)FPS_ERROR_PRINT("%s >> %s --- Running\n", __func__, aname);
+    if (0)
+        FPS_ERROR_PRINT("%s >> %s --- Running\n", __func__, aname);
     // char* fval;
     // asprintf(&fval,"Ess Init");
     // if(fval)
@@ -2291,41 +2307,36 @@ int CheckSystemState(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
     bool CommsOk = amap["CommsOk"]->getbVal();
     // TODO maybe just use SysOK in each subsystem...
     bool HBOk = amap["HBOk"]->getbVal();
-    //bool BMSOk     = amap["BMSOk"]->getbVal();
-    //bool PCROk     = amap["PCROk"]->getbVal();
-    //bool DRCOk     = amap["DRCOk"]->getbVal();
-    //bool EMMOk     = amap["EMMOk"]->getbVal();
+    // bool BMSOk     = amap["BMSOk"]->getbVal();
+    // bool PCROk     = amap["PCROk"]->getbVal();
+    // bool DRCOk     = amap["DRCOk"]->getbVal();
+    // bool EMMOk     = amap["EMMOk"]->getbVal();
 
-    int  sState = amap["SystemStateNum"]->getiVal();
+    int sState = amap["SystemStateNum"]->getiVal();
     int rc = 0;
     // TODO only do this after Setup
-    // TODO process by AssetManager 
-    if (
-        (sState != System_Init)
-        && (sState != System_Alarm)
-        && (sState != System_Fault)
-        )
+    // TODO process by AssetManager
+    if ((sState != System_Init) && (sState != System_Alarm) && (sState != System_Fault))
     {
         double dval = vm->get_time_dbl();
 
         if ((DcContactor != DcContactorFbk) && ((dval - amap["DcContactor"]->getSetTime()) > respTime))
         {
             dval = vm->get_time_dbl();
-            if (0)FPS_ERROR_PRINT("%s >> %s --- Running  statenum %d Dc [%s] DcFbk [%s] settime %f lastset %f\n"
-                , __func__, aname, sState
-                , DcContactor ? "true" : "false"
-                , DcContactorFbk ? "true" : "false"
-                , dval - amap["DcContactor"]->getSetTime()
-                , amap["DcContactor"]->getLastSetDiff(dval)
-            );
+            if (0)
+                FPS_ERROR_PRINT(
+                    "%s >> %s --- Running  statenum %d Dc [%s] DcFbk [%s] "
+                    "settime %f lastset %f\n",
+                    __func__, aname, sState, DcContactor ? "true" : "false", DcContactorFbk ? "true" : "false",
+                    dval - amap["DcContactor"]->getSetTime(), amap["DcContactor"]->getLastSetDiff(dval));
 
             sState = System_Fault;
             amap["SystemStateNum"]->setVal(sState);
 
-            //TODO generate a alarm or error here 
-            // char* fval; 
-            // asprintf(&fval,"%s  DcContactor Did not respond in %f seconds", aname, dval);
-            // if(fval)
+            // TODO generate a alarm or error here
+            // char* fval;
+            // asprintf(&fval,"%s  DcContactor Did not respond in %f seconds", aname,
+            // dval); if(fval)
             // {
             //     amap["SystemState"]->setVal(fval);
             //     free((void*)fval);
@@ -2336,21 +2347,20 @@ int CheckSystemState(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         if ((AcContactor != AcContactorFbk) && ((dval - amap["AcContactor"]->getSetTime()) > respTime))
         {
             dval = vm->get_time_dbl();
-            FPS_ERROR_PRINT("%s >> %s --- Running  statenum %d Ac [%s] AcFbk [%s] settime %f lastset %f\n"
-                , __func__, aname, sState
-                , AcContactor ? "true" : "false"
-                , AcContactorFbk ? "true" : "false"
-                , dval - amap["AcContactor"]->getSetTime()
-                , amap["DcContactor"]->getLastSetDiff(dval)
+            FPS_ERROR_PRINT(
+                "%s >> %s --- Running  statenum %d Ac [%s] AcFbk [%s] "
+                "settime %f lastset %f\n",
+                __func__, aname, sState, AcContactor ? "true" : "false", AcContactorFbk ? "true" : "false",
+                dval - amap["AcContactor"]->getSetTime(), amap["DcContactor"]->getLastSetDiff(dval)
 
             );
 
             sState = System_Fault;
             amap["SystemStateNum"]->setVal(sState);
 
-            // char* fval; 
-            // asprintf(&fval,"%s  AcContactor Did not respond in %f seconds", aname, dval);
-            // if(fval)
+            // char* fval;
+            // asprintf(&fval,"%s  AcContactor Did not respond in %f seconds", aname,
+            // dval); if(fval)
             // {
             //     amap["SystemState"]->setVal(fval);
             //     free((void*)fval);
@@ -2363,7 +2373,7 @@ int CheckSystemState(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
     {
         if (!CommsOk)
         {
-            // char* fval; 
+            // char* fval;
             // asprintf(&fval," Ess Comms Failure");
             // if(fval)
             // {
@@ -2374,7 +2384,7 @@ int CheckSystemState(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         }
         if (!HBOk)
         {
-            // char* fval; 
+            // char* fval;
             // asprintf(&fval," Ess HeartBeat Failure");
             // if(fval)
             // {
@@ -2383,9 +2393,9 @@ int CheckSystemState(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             // }
             rc++;
         }
-        // if(!BMSOk) 
+        // if(!BMSOk)
         // {
-        //     char* fval; 
+        //     char* fval;
         //     asprintf(&fval," Ess BMS Failure");
         //     if(fval)
         //     {
@@ -2395,9 +2405,9 @@ int CheckSystemState(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         //     rc++;
         // }
 
-        // if(!PCROk) 
+        // if(!PCROk)
         // {
-        //     char* fval; 
+        //     char* fval;
         //     asprintf(&fval," Ess BMS Failure");
         //     if(fval)
         //     {
@@ -2407,9 +2417,9 @@ int CheckSystemState(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         //     rc++;
         // }
 
-        // if(!DRCOk) 
+        // if(!DRCOk)
         // {
-        //     char* fval; 
+        //     char* fval;
         //     asprintf(&fval," Ess BMS Failure");
         //     if(fval)
         //     {
@@ -2419,9 +2429,9 @@ int CheckSystemState(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         //     rc++;
         // }
 
-        // if(!EMMOk) 
+        // if(!EMMOk)
         // {
-        //     char* fval; 
+        //     char* fval;
         //     asprintf(&fval," Ess EMM Failure");
         //     if(fval)
         //     {
@@ -2438,7 +2448,7 @@ int CheckSystemState(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         // if we are in init or Fault transition to ready
         if ((ival == System_Init) || (ival == System_Fault))
         {
-            // char* fval; 
+            // char* fval;
             // asprintf(&fval,"Ess Init OK , Ready");
             // if(fval)
             // {
@@ -2452,7 +2462,8 @@ int CheckSystemState(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             }
         }
     }
-    if (rc != 0)FPS_ERROR_PRINT("%s >> %s --- Done rc %d \n", __func__, aname, rc);
+    if (rc != 0)
+        FPS_ERROR_PRINT("%s >> %s --- Done rc %d \n", __func__, aname, rc);
 
     return rc;
 }
@@ -2497,28 +2508,26 @@ int HandleFaultShutdown(varsmap& vmap, varmap& amap, const char* aname, fims* p_
  */
 int HandleSystemOn(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am)
 {
-    //char* sVal2     =   amap["SystemState"]->getcVal();
+    // char* sVal2     =   amap["SystemState"]->getcVal();
     char* sValStep2 = amap["SystemStateStep"]->getcVal();
     double tNow = am->vm->get_time_dbl();
     // allow fall through
     if (strcmp(sValStep2, "Waiting for DcContactorClosed") == 0)
     {
-        //TODO Need Timeout here
+        // TODO Need Timeout here
         // Head off to a Fault condition after 5 attempts perhaps
         bool DcContactor = amap["DcContactor"]->getbVal();
 
         if (DcContactor)
         {
-            FPS_ERROR_PRINT("%s >> [%s] DCContactor closed at time %f Check Current Setpoint and SOC etc\n"
-                , __func__
-                , aname
-                , tNow
-            );
+            FPS_ERROR_PRINT(
+                "%s >> [%s] DCContactor closed at time %f Check Current "
+                "Setpoint and SOC etc\n",
+                __func__, aname, tNow);
 
             sValStep2 = (char*)"Waiting for Current Setpoint";
             amap["SystemStateStep"]->setVal(sValStep2);
         }
-
     }
     // allow fall through
     if (strcmp(sValStep2, "Waiting for Current Setpoint") == 0)
@@ -2526,12 +2535,10 @@ int HandleSystemOn(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
         double currentSetpoint = amap["CurrentSetpoint"]->getdVal();
         if (currentSetpoint > 0.0)
         {
-            FPS_ERROR_PRINT("%s >> [%s] currentSetpoint set at %f at time %f Check Pcstatus feedback and SOC etc\n"
-                , __func__
-                , aname
-                , currentSetpoint
-                , tNow
-            );
+            FPS_ERROR_PRINT(
+                "%s >> [%s] currentSetpoint set at %f at time %f Check "
+                "Pcstatus feedback and SOC etc\n",
+                __func__, aname, currentSetpoint, tNow);
 
             // Send currentSetpoint command
 
@@ -2539,34 +2546,31 @@ int HandleSystemOn(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
             // TODO check limits soc etc
             amap["PcsCurrentSetpoint"]->setVal(currentSetpoint);
 
-            // TODO this is a HACK 
+            // TODO this is a HACK
             am->vm->sendAssetVar(amap["PcsCurrentSetpoint"], p_fims);
-            // TODO this is a HACK 
-            int ival = 21; //PcsOn;
+            // TODO this is a HACK
+            int ival = 21;  // PcsOn;
             amap["PcsCmd"]->setVal(ival);
             am->vm->sendAssetVar(amap["PcsCmd"], p_fims);
             sValStep2 = (char*)"Waiting for BMSStatus";
             amap["SystemStateStep"]->setVal(sValStep2);
-
         }
     }
     // allow fall through
     if (strcmp(sValStep2, "Waiting for BMSStatus") == 0)
     {
-        int bmsStatus = amap["BmsStatus"]->getiVal();            // we can get faults
-            // TODO this is a HACK 
+        int bmsStatus = amap["BmsStatus"]->getiVal();  // we can get faults
+                                                       // TODO this is a HACK
         int bmsOkStatus = 1;
-        // TODO this is a HACK 
+        // TODO this is a HACK
         if (bmsStatus == bmsOkStatus)
         {
-            FPS_ERROR_PRINT("%s >> [%s] BmsStatus %d at time %f move to check PCS Status, check SOC etc\n"
-                , __func__
-                , aname
-                , bmsStatus
-                , tNow
-            );
-            //TODO proper startp shutdow
-            int ival = 41; //BmsOn;
+            FPS_ERROR_PRINT(
+                "%s >> [%s] BmsStatus %d at time %f move to check PCS "
+                "Status, check SOC etc\n",
+                __func__, aname, bmsStatus, tNow);
+            // TODO proper startp shutdow
+            int ival = 41;  // BmsOn;
             amap["BmsCmd"]->setVal(ival);
             am->vm->sendAssetVar(amap["BmsCmd"], p_fims);
 
@@ -2577,48 +2581,40 @@ int HandleSystemOn(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
     // allow fall through
     if (strcmp(sValStep2, "Waiting for PCSStatus") == 0)
     {
-
-        int pcsStatus = amap["PcsStatus"]->getiVal();            // we can get faults
-            // TODO this is a HACK 
+        int pcsStatus = amap["PcsStatus"]->getiVal();  // we can get faults
+                                                       // TODO this is a HACK
         int pcsOkStatus = 1;
-        // TODO this is a HACK 
+        // TODO this is a HACK
         if (pcsStatus == pcsOkStatus)
         {
-            FPS_ERROR_PRINT("%s >> [%s] PcsStatus %d at time %f move to GridFollowing, check SOC etc\n"
-                , __func__
-                , aname
-                , pcsStatus
-                , tNow
-            );
+            FPS_ERROR_PRINT(
+                "%s >> [%s] PcsStatus %d at time %f move to "
+                "GridFollowing, check SOC etc\n",
+                __func__, aname, pcsStatus, tNow);
 
             sValStep2 = (char*)"Running GridFollowing";
             amap["SystemStateStep"]->setVal(sValStep2);
-
         }
         // we can get other commands
         // or we can stay here for ever
-
     }
     if (strcmp(sValStep2, "Running GridFollowing") == 0)
     {
-        //CHECKESSSTATE should monitor
-        int pcsStatus = amap["PcsStatus"]->getiVal();            // we can get faults
+        // CHECKESSSTATE should monitor
+        int pcsStatus = amap["PcsStatus"]->getiVal();  // we can get faults
         int pcsOkStatus = 1;
         // TODO check SOC and capacity
         if (pcsStatus != pcsOkStatus)
         {
-            FPS_ERROR_PRINT("%s >> [%s] PcsStatus %d at time %f move to System Fault, check SOC etc\n"
-                , __func__
-                , aname
-                , pcsStatus
-                , tNow
-            );
+            FPS_ERROR_PRINT(
+                "%s >> [%s] PcsStatus %d at time %f move to System "
+                "Fault, check SOC etc\n",
+                __func__, aname, pcsStatus, tNow);
 
             sValStep2 = (char*)"PCS Fault";
             amap["SystemStateStep"]->setVal(sValStep2);
             char* sVal2 = (char*)"System Fault";
             amap["SystemState"]->setVal(sVal2);
-
         }
     }
     return 0;
@@ -2628,20 +2624,17 @@ int HandleSystemOn(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
 // or we can stay here for eve
 
 // just run this and the commands should all fall into place ( ie crash)
-// this waits  for coms and hartbeat  and then waits for the assets to get into a ready mode.
-// only works for a cold start.
-// for a woarm sart you dont want to impose a state on the assets.
-// they may  have restarted.
-// If it is a warm start look at the current state of the systems.
-// tru to keep on trucking if it all looks good.
-// we'll have the last requested sate and power command but that is for a different sprint.
-// this guy only handles the cold start.
-// so we force the assets into subordination.
-// then wait for a command.
+// this waits  for coms and hartbeat  and then waits for the assets to get into
+// a ready mode. only works for a cold start. for a woarm sart you dont want to
+// impose a state on the assets. they may  have restarted. If it is a warm start
+// look at the current state of the systems. tru to keep on trucking if it all
+// looks good. we'll have the last requested sate and power command but that is
+// for a different sprint. this guy only handles the cold start. so we force the
+// assets into subordination. then wait for a command.
 //
 /**
- * Checks if the current setpoint (active and reactive) has changed and sends the results
- * to /components/pcs
+ * Checks if the current setpoint (active and reactive) has changed and sends
+ * the results to /components/pcs
  *
  * Review 11/06/2020
  *
@@ -2653,27 +2646,25 @@ int HandleSystemReady(varsmap& vmap, varmap& amap, const char* aname, fims* p_fi
     char* sVal2 = amap["SystemState"]->getcVal();
     char* sValStep2 = amap["SystemStateStep"]->getcVal();
     double tNow = am->vm->get_time_dbl();
-    //PowerModeSelect(vmap, amap, "pcs", am);
+    // PowerModeSelect(vmap, amap, "pcs", am);
     if (strcmp(sValStep2, "Waiting for Command") == 0)
     {
         // from here we can go to "System On" or "System Standby" or "System Fault'"
         bool OnCmd = amap["OnCmd"]->getbVal();
-        //On              = amap["On"]->getbVal();
+        // On              = amap["On"]->getbVal();
         if (OnCmd)
         {
-            FPS_ERROR_PRINT("%s >> [%s]Got On Cmd at time %f Check DcContactor and SOC etc\n"
-                , __func__
-                , aname
-                , tNow
-            );
-            OnCmd = false;; amap["OnCmd"]->setVal(OnCmd);
+            FPS_ERROR_PRINT("%s >> [%s]Got On Cmd at time %f Check DcContactor and SOC etc\n", __func__, aname, tNow);
+            OnCmd = false;
+            ;
+            amap["OnCmd"]->setVal(OnCmd);
 
             sValStep2 = (char*)"Waiting for DcContactorClosed";
             amap["SystemStateStep"]->setVal(sValStep2);
             sVal2 = (char*)"System On";
             amap["SystemState"]->setVal(sVal2);
-            //sValStep2 =  (char *)"System On";
-            //amap["SystemState"]->setVal(sValStep2);
+            // sValStep2 =  (char *)"System On";
+            // amap["SystemState"]->setVal(sValStep2);
             // Send the contactor Close command
             bool bval = true;
             amap["DcContactorCloseCmd"]->setVal(bval);
@@ -2688,8 +2679,8 @@ int HandleSystemReady(varsmap& vmap, varmap& amap, const char* aname, fims* p_fi
 }
 
 /**
- * Checks if the current setpoint (active and reactive) has changed and sends the results
- * to /components/pcs
+ * Checks if the current setpoint (active and reactive) has changed and sends
+ * the results to /components/pcs
  *
  * Review 11/06/2020
  *
@@ -2708,39 +2699,31 @@ int HandleSystemStartup(varsmap& vmap, varmap& amap, const char* aname, fims* p_
     char* sVal6 = amap["AssetState"]->getcVal();
     char* sVal4 = amap["HeartBeatState"]->getcVal();
 
-    if (0)FPS_ERROR_PRINT("%s >> [%s] Looking for System Startup got [%s] Step [%s] CommsState [%s]  time %f\n"
-        , __func__
-        , aname
-        , sVal2
-        , sValStep2
-        , sVal5 ? sVal5 : "No value in CommsState"
-        // , ival5
-        , tNow
-    );
+    if (0)
+        FPS_ERROR_PRINT(
+            "%s >> [%s] Looking for System Startup got [%s] Step [%s] "
+            "CommsState [%s]  time %f\n",
+            __func__, aname, sVal2, sValStep2,
+            sVal5 ? sVal5 : "No value in CommsState"
+            // , ival5
+            ,
+            tNow);
 
-    if (0)FPS_ERROR_PRINT("  %s >> [%s] Found System Startup [%s]  Step [%s] CommsState [%s] HeartBeatState [%s] AssetState [%s] time %f\n"
-        , __func__
-        , aname
-        , sVal2
-        , sValStep2
-        , sVal5 ? sVal5 : "No value in CommsState"
-        , sVal4
-        , sVal6
-        , tNow
-    );
+    if (0)
+        FPS_ERROR_PRINT(
+            "  %s >> [%s] Found System Startup [%s]  Step [%s] CommsState [%s] "
+            "HeartBeatState [%s] AssetState [%s] time %f\n",
+            __func__, aname, sVal2, sValStep2, sVal5 ? sVal5 : "No value in CommsState", sVal4, sVal6, tNow);
 
     if (strcmp(sValStep2, "Waiting for Comms") == 0)
     {
-        if (0)FPS_ERROR_PRINT("    %s >> [%s] Looking for CommsOK got %d at time %f\n"
-            , __func__
-            , aname
-            , ival5
-            , tNow
-        );
+        if (0)
+            FPS_ERROR_PRINT("    %s >> [%s] Looking for CommsOK got %d at time %f\n", __func__, aname, ival5, tNow);
 
         // if (ival5 == Asset_Ok)
         // {
-        //     FPS_ERROR_PRINT("%s >> [%s] CommsOK looking for HeartBeat at time %f\n"
+        //     FPS_ERROR_PRINT("%s >> [%s] CommsOK looking for HeartBeat at time
+        //     %f\n"
         //         , __func__
         //         , aname
         //         , tNow
@@ -2755,19 +2738,11 @@ int HandleSystemStartup(varsmap& vmap, varmap& amap, const char* aname, fims* p_
         int ival5 = amap["HeartBeatStateNum"]->getiVal();
         if (ival5 == Asset_Ok)
         {
-            FPS_ERROR_PRINT("%s >> [%s] HeartBeat OK Reset Assets at time %f\n"
-                , __func__
-                , aname
-                , tNow
-            );
-            FPS_ERROR_PRINT("%s >> send \"Assets Ready\" to /status/%s/AssetState to continue\n"
-                , __func__
-                , aname
-            );
+            FPS_ERROR_PRINT("%s >> [%s] HeartBeat OK Reset Assets at time %f\n", __func__, aname, tNow);
+            FPS_ERROR_PRINT("%s >> send \"Assets Ready\" to /status/%s/AssetState to continue\n", __func__, aname);
             sValStep2 = (char*)"Reset Assets";
             amap["SystemStateStep"]->setVal(sValStep2);
             return 0;
-
         }
     }
     if (strcmp(sValStep2, "Reset Assets") == 0)
@@ -2775,25 +2750,23 @@ int HandleSystemStartup(varsmap& vmap, varmap& amap, const char* aname, fims* p_
         char* sval5 = amap["AssetState"]->getcVal();
         if (strcmp(sval5, "Assets Ready") == 0)
         {
-            FPS_ERROR_PRINT("%s >> [%s] Reset Assets State Moving to [System Ready]  at time %f\n"
-                , __func__
-                , aname
-                , tNow
-            );
+            FPS_ERROR_PRINT(
+                "%s >> [%s] Reset Assets State Moving to [System Ready]  "
+                "at time %f\n",
+                __func__, aname, tNow);
 
             sVal2 = (char*)"System Ready";
             amap["SystemState"]->setVal(sVal2);
             sValStep2 = (char*)"Waiting for Command";
             amap["SystemStateStep"]->setVal(sValStep2);
             return 0;
-
         }
     }
     return 0;
 }
 /**
- * Checks if the current setpoint (active and reactive) has changed and sends the results
- * to /components/pcs
+ * Checks if the current setpoint (active and reactive) has changed and sends
+ * the results to /components/pcs
  *
  * Review 11/06/2020
  *
@@ -2815,28 +2788,34 @@ int HandleESSCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
     {
         reload = 0;
     }
-    if (0)FPS_ERROR_PRINT("%s >> %s --- Running reload %d\n", __func__, aname, reload);
+    if (0)
+        FPS_ERROR_PRINT("%s >> %s --- Running reload %d\n", __func__, aname, reload);
 
     if (reload < 2)
     {
-        //if(1)FPS_ERROR_PRINT("%s >> %s --- Reload\n", __func__, aname);
+        // if(1)FPS_ERROR_PRINT("%s >> %s --- Reload\n",
+        // __func__, aname);
 
         amap["HandleCmd"] = vm->setLinkVal(vmap, aname, "/reload", "HandleCmd", reload);
         amap["On"] = vm->setLinkVal(vmap, aname, "/status", "On", bval);
-        // amap["On2"]                = vm->setLinkVal(vmap, aname, "/status",   "On2",               bval);
+        // amap["On2"]                = vm->setLinkVal(vmap, aname, "/status",
+        // "On2",               bval);
         amap["Off"] = vm->setLinkVal(vmap, aname, "/status", "Off", bval);
         amap["Standby"] = vm->setLinkVal(vmap, aname, "/status", "Standby", bval);
         amap["Fault"] = vm->setLinkVal(vmap, aname, "/status", "Fault", bval);
         amap["ResetFaultCmd"] = vm->setLinkVal(vmap, aname, "/controls", "ResetFaultCmd", bval);
         // amap["OnCmd"] = vm->setLinkVal(vmap, aname, "/controls", "OnCmd", bval);
-        // amap["OffCmd"] = vm->setLinkVal(vmap, aname, "/controls", "OffCmd", bval);
-        // amap["StandbyCmd"] = vm->setLinkVal(vmap, aname, "/controls", "StandbyCmd", bval);
-        // amap["ResetFaultCmd"] = vm->setLinkVal(vmap, aname, "/controls", "ResetFaultCmd", bval);
+        // amap["OffCmd"] = vm->setLinkVal(vmap, aname, "/controls", "OffCmd",
+        // bval); amap["StandbyCmd"] = vm->setLinkVal(vmap, aname, "/controls",
+        // "StandbyCmd", bval); amap["ResetFaultCmd"] = vm->setLinkVal(vmap, aname,
+        // "/controls", "ResetFaultCmd", bval);
         linkVals(*vm, vmap, amap, aname, "/controls", bval, "OnCmd", "OffCmd", "StandbyCmd", "ResetFaultCmd");
-        // amap["PMode"]             = vm->setLinkVal(vmap, "pcs", "/controls",  "ResetFaultCmd",     ival);
-        // amap["ResetCmd"]          = vm->setLinkVal(vmap, aname, "/controls",  "ResetCmd",          bval);
-        // amap["GridForming"]       = vm->setLinkVal(vmap, aname,   "/status",  "GridForming",     bval);
-        // amap["GridFollowing"]     = vm->setLinkVal(vmap, aname,   "/status",  "GridFollowing",   bval);
+        // amap["PMode"]             = vm->setLinkVal(vmap, "pcs", "/controls",
+        // "ResetFaultCmd",     ival); amap["ResetCmd"]          =
+        // vm->setLinkVal(vmap, aname, "/controls",  "ResetCmd",          bval);
+        // amap["GridForming"]       = vm->setLinkVal(vmap, aname,   "/status",
+        // "GridForming",     bval); amap["GridFollowing"]     =
+        // vm->setLinkVal(vmap, aname,   "/status",  "GridFollowing",   bval);
         amap["SystemState"] = vm->setLinkVal(vmap, aname, "/status", "SystemState", tVal);
         amap["SystemStateNum"] = vm->setLinkVal(vmap, aname, "/status", "SystemStateNum", ival);
         amap["lastSystemStateNum"] = vm->setLinkVal(vmap, aname, "/status", "lastSystemStateNum", ival);
@@ -2858,13 +2837,15 @@ int HandleESSCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
         amap["AcContactorOpenCmd"] = vm->setLinkVal(vmap, aname, "/controls", "AcContactorOpenCmd", bval);
         amap["DcContactorOpenCmd"] = vm->setLinkVal(vmap, aname, "/controls", "DcContactorOpenCmd", bval);
 
-        // amap["CommsOk"]           = vm->setLinkVal(vmap, aname, "/status",    "CommsOk", bval);
-        // amap["HBOk"]              = vm->setLinkVal(vmap, aname, "/status",    "HBOk", bval);
-        // amap["BMSOk"]             = vm->setLinkVal(vmap, "bms", "/status",    "BMSOk", bval);
-        // amap["PCROk"]             = vm->setLinkVal(vmap, "pcr", "/status",    "PCROk", bval);
-        // amap["DRCOk"]             = vm->setLinkVal(vmap, "drc", "/status",    "DRCOk", bval);
-        // amap["EMMOk"]             = vm->setLinkVal(vmap, "emm", "/status",    "EMMOk", bval);
-        // amap["readyOk"]           = vm->setLinkVal(vmap, aname, "/status",    "readyOk", bval);
+        // amap["CommsOk"]           = vm->setLinkVal(vmap, aname, "/status",
+        // "CommsOk", bval); amap["HBOk"]              = vm->setLinkVal(vmap, aname,
+        // "/status",    "HBOk", bval); amap["BMSOk"]             =
+        // vm->setLinkVal(vmap, "bms", "/status",    "BMSOk", bval); amap["PCROk"]
+        // = vm->setLinkVal(vmap, "pcr", "/status",    "PCROk", bval); amap["DRCOk"]
+        // = vm->setLinkVal(vmap, "drc", "/status",    "DRCOk", bval); amap["EMMOk"]
+        // = vm->setLinkVal(vmap, "emm", "/status",    "EMMOk", bval);
+        // amap["readyOk"]           = vm->setLinkVal(vmap, aname, "/status",
+        // "readyOk", bval);
         amap["readyOkSetCmd"] = vm->setLinkVal(vmap, aname, "/controls", "readyOkSetCmd", bval);
         amap["readyOkClearCmd"] = vm->setLinkVal(vmap, aname, "/controls", "readyOkClearCmd", bval);
         amap["SimPCSCommsCmd"] = vm->setLinkVal(vmap, aname, "/controls", "SimPCSCommsCmd", bval);
@@ -2876,22 +2857,21 @@ int HandleESSCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
 
         if (!amap["RunESSInputFunc"])
         {
-
             assetFunc* runEssInputFunc = new assetFunc(aname);
             amap["RunESSInputFunc"] = (assetVar*)runEssInputFunc;
             runEssInputFunc->setupRamFunc(HandleESSInput, vmap, amap, aname, p_fims, am);
-            amap["readyOkSetCmd"]        ->SetPubFunc((assetVar*)runEssInputFunc);
-            amap["readyOkClearCmd"]      ->SetPubFunc((assetVar*)runEssInputFunc);
-            amap["AcContactorCloseCmd"]  ->SetPubFunc((assetVar*)runEssInputFunc);
-            amap["AcContactorOpenCmd"]   ->SetPubFunc((assetVar*)runEssInputFunc);
-            amap["DcContactorCloseCmd"]  ->SetPubFunc((assetVar*)runEssInputFunc);
-            amap["DcContactorOpenCmd"]   ->SetPubFunc((assetVar*)runEssInputFunc);
-            amap["OnCmd"]                ->SetPubFunc((assetVar*)runEssInputFunc);
-            amap["OffCmd"]               ->SetPubFunc((assetVar*)runEssInputFunc);
-            amap["StandbyCmd"]           ->SetPubFunc((assetVar*)runEssInputFunc);
+            amap["readyOkSetCmd"]->SetPubFunc((assetVar*)runEssInputFunc);
+            amap["readyOkClearCmd"]->SetPubFunc((assetVar*)runEssInputFunc);
+            amap["AcContactorCloseCmd"]->SetPubFunc((assetVar*)runEssInputFunc);
+            amap["AcContactorOpenCmd"]->SetPubFunc((assetVar*)runEssInputFunc);
+            amap["DcContactorCloseCmd"]->SetPubFunc((assetVar*)runEssInputFunc);
+            amap["DcContactorOpenCmd"]->SetPubFunc((assetVar*)runEssInputFunc);
+            amap["OnCmd"]->SetPubFunc((assetVar*)runEssInputFunc);
+            amap["OffCmd"]->SetPubFunc((assetVar*)runEssInputFunc);
+            amap["StandbyCmd"]->SetPubFunc((assetVar*)runEssInputFunc);
         }
 
-        if (reload == 0) // complete restart 
+        if (reload == 0)  // complete restart
         {
             amap["SystemState"]->setVal(tVal);
             amap["On"]->setVal(false);
@@ -2902,20 +2882,19 @@ int HandleESSCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
             amap["StandbyCmd"]->setVal(false);
             amap["Fault"]->setVal(false);
             amap["ResetFaultCmd"]->setVal(false);
-            //amap["GridForming"]->setVal(false);
-            //amap["GridFollowing"]->setVal(false);
+            // amap["GridForming"]->setVal(false);
+            // amap["GridFollowing"]->setVal(false);
             amap["SystemState"]->setVal(tVal);
-            amap["SystemStateNum"]->setVal((int)System_Init); // starts init timeout
-            amap["lastSystemStateNum"]->setVal((int)System_Startup); // starts init timeout
-
+            amap["SystemStateNum"]->setVal((int)System_Init);         // starts init timeout
+            amap["lastSystemStateNum"]->setVal((int)System_Startup);  // starts init timeout
 
             // amap["CommsOk"]->setVal(true);
             // amap["HBOk"]->setVal(true);
-            //amap["BMSOk"]->setVal(true);
-            //amap["PCROk"]->setVal(true);
-            //amap["DRCOk"]->setVal(true);
-            //amap["EMMOk"]->setVal(true);
-            //amap["readyOk"]->setVal(false);
+            // amap["BMSOk"]->setVal(true);
+            // amap["PCROk"]->setVal(true);
+            // amap["DRCOk"]->setVal(true);
+            // amap["EMMOk"]->setVal(true);
+            // amap["readyOk"]->setVal(false);
             HandleManagerCmd(vmap, amap, aname, p_fims, am, SystemInit);
             const char* cVal = "System Startup";
             amap["SystemState"]->setVal(cVal);
@@ -2933,64 +2912,59 @@ int HandleESSCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
         HandleCmd = amap["HandleCmd"];
         HandleCmd->setVal(reload);
     }
-    // CommsState and HeartBeatState must be set 
+    // CommsState and HeartBeatState must be set
 
     bool OnCmd = amap["OnCmd"]->getbVal();
-    //bool OffCmd          = amap["OffCmd"]->getbVal();
-    //bool StandbyCmd      = amap["StandbyCmd"]->getbVal();
-    //bool ResetCmd        = amap["ResetCmd"]->getbVal();
-    //bool ResetFaultCmd   = amap["ResetFaultCmd"]->getbVal();
-    //bool Offval = amap["Off"]->getbVal();
+    // bool OffCmd          = amap["OffCmd"]->getbVal();
+    // bool StandbyCmd      = amap["StandbyCmd"]->getbVal();
+    // bool ResetCmd        = amap["ResetCmd"]->getbVal();
+    // bool ResetFaultCmd   = amap["ResetFaultCmd"]->getbVal();
+    // bool Offval = amap["Off"]->getbVal();
 
     bool On = amap["On"]->getbVal();
 
-    //bool Off        = amap["Off"]->getbVal();
+    // bool Off        = amap["Off"]->getbVal();
     bool Standby = amap["Standby"]->getbVal();
-    //bool Fault      = amap["Fault"]->getbVal();
+    // bool Fault      = amap["Fault"]->getbVal();
 
     bool AcContactor = amap["AcContactor"]->getbVal();
     bool DcContactor = amap["DcContactor"]->getbVal();
-    //bool AcContactorOpenCmd   = amap["AcContactorOpenCmd"]->getbVal();
-    //bool DcContactorOpenCmd   = amap["DcContactorOpenCmd"]->getbVal();
-    //bool AcContactorCloseCmd  = amap["AcContactorCloseCmd"]->getbVal();
-    //bool DcContactorCloseCmd  = amap["DcContactorCloseCmd"]->getbVal();
+    // bool AcContactorOpenCmd   = amap["AcContactorOpenCmd"]->getbVal();
+    // bool DcContactorOpenCmd   = amap["DcContactorOpenCmd"]->getbVal();
+    // bool AcContactorCloseCmd  = amap["AcContactorCloseCmd"]->getbVal();
+    // bool DcContactorCloseCmd  = amap["DcContactorCloseCmd"]->getbVal();
 
-    //bool readyOk              = amap["readyOk"]->getbVal();
-    //bool readyOkSetCmd        = amap["readyOkSetCmd"]->getbVal();
-    //bool readyOkClearCmd      = amap["readyOkClearCmd"]->getbVal();
+    // bool readyOk              = amap["readyOk"]->getbVal();
+    // bool readyOkSetCmd        = amap["readyOkSetCmd"]->getbVal();
+    // bool readyOkClearCmd      = amap["readyOkClearCmd"]->getbVal();
 
     rc = 0;
 
     dval = vm->get_time_dbl();
 
     char* cState = amap["SystemState"]->getcVal();
-    int  sState = amap["SystemStateNum"]->getiVal();
-    int  lastState = amap["lastSystemStateNum"]->getiVal();
+    int sState = amap["SystemStateNum"]->getiVal();
+    int lastState = amap["lastSystemStateNum"]->getiVal();
 
     if (lastState != sState)
     {
-        FPS_ERROR_PRINT("%s >> %s ---ssnum %d --> %d  [%s] OnCmd [%s] On [%s] last set time %f\n"
-            , __func__
-            , aname
-            , lastState
-            , sState
-            , cState ? cState : "Undefined"
-            , OnCmd ? "true" : "false"
-            , On ? "true" : "false"
-            , amap["SystemStateNum"]->getLastSetDiff(dval)
-        );
+        FPS_ERROR_PRINT(
+            "%s >> %s ---ssnum %d --> %d  [%s] OnCmd [%s] On [%s] last "
+            "set time %f\n",
+            __func__, aname, lastState, sState, cState ? cState : "Undefined", OnCmd ? "true" : "false",
+            On ? "true" : "false", amap["SystemStateNum"]->getLastSetDiff(dval));
         amap["lastSystemStateNum"]->setVal(sState);
     }
 
     // So if we are in System
-    //amap["SystemState"]->setVal(cVal);
-    //cVal = "Waiting For Comms";
-    //amap["SystemStateStep"]->setVal(cVal);
+    // amap["SystemState"]->setVal(cVal);
+    // cVal = "Waiting For Comms";
+    // amap["SystemStateStep"]->setVal(cVal);
     // TODO only do this after Setup
-    // TODO process by AssetManager 
+    // TODO process by AssetManager
     // this will also set Ess:readyOK
 
-    //SimHandleHeartComms(vmap, amap, aname, p_fims, am);
+    // SimHandleHeartComms(vmap, amap, aname, p_fims, am);
     SimHandleHeartbeat(vmap, amap, aname, p_fims, am);
 
     // int rcerr = CheckSystemState(vmap, amap, aname, p_fims, am);
@@ -2999,19 +2973,16 @@ int HandleESSCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
     char* sValStep2 = amap["SystemStateStep"]->getcVal();
     int ival5 = amap["CommsStateNum"]->getiVal();
     char* sVal5 = amap["CommsState"]->getcVal();
-    //char *sVal6 = amap["AssetState"]->getcVal();
-    //char *sVal4 = amap["HeartBeatState"]->getcVal();
+    // char *sVal6 = amap["AssetState"]->getcVal();
+    // char *sVal4 = amap["HeartBeatState"]->getcVal();
 
-    if (0)FPS_ERROR_PRINT("%s >> [%s] Looking for System Startup got [%s] Step [%s] CommsState [%s] num %d time %f \n"
-        , __func__
-        , aname
-        , sVal2
-        , sValStep2
-        , sVal5 ? sVal5 : "No value in CommsState"
-        , ival5
-        , dval
-        // , rcerr
-    );
+    if (0)
+        FPS_ERROR_PRINT(
+            "%s >> [%s] Looking for System Startup got [%s] Step [%s] "
+            "CommsState [%s] num %d time %f \n",
+            __func__, aname, sVal2, sValStep2, sVal5 ? sVal5 : "No value in CommsState", ival5, dval
+            // , rcerr
+        );
 
     if (0 && strcmp(sVal2, "System Startup") == 0)
     {
@@ -3034,16 +3005,18 @@ int HandleESSCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
 
     if (strcmp(sVal2, "System Fault") == 0)
     {
-
         sValStep2 = (char*)"Waiting for Fault Reset";
         amap["SystemStateStep"]->setVal(sValStep2);
-        // from here we can go to "System On" or "System Standby" but we have to get the Fault Reset Command
-        // from here we can go to "System On" or "System Standby" or "System Fault'"
+        // from here we can go to "System On" or "System Standby" but we have to get
+        // the Fault Reset Command from here we can go to "System On" or "System
+        // Standby" or "System Fault'"
         bool resetFaultCmd = amap["ResetFaultCmd"]->getbVal();
 
         if (resetFaultCmd)
         {
-            resetFaultCmd = false;; amap["resetFaultCmd"]->setVal(resetFaultCmd);
+            resetFaultCmd = false;
+            ;
+            amap["resetFaultCmd"]->setVal(resetFaultCmd);
             sValStep2 = (char*)"Waiting for Command";
             amap["SystemStateStep"]->setVal(sValStep2);
             sValStep2 = (char*)"System Ready";
@@ -3052,51 +3025,37 @@ int HandleESSCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
     }
     else
     {
-
-        if (0)FPS_ERROR_PRINT("  %s >> [%s] State  [%s]  Step [%s] time %f\n"
-            , __func__
-            , aname
-            , sVal2
-            , sValStep2
-            , dval
-        );
+        if (0)
+            FPS_ERROR_PRINT("  %s >> [%s] State  [%s]  Step [%s] time %f\n", __func__, aname, sVal2, sValStep2, dval);
     }
 
     AcContactor = amap["AcContactor"]->getbVal();
     DcContactor = amap["DcContactor"]->getbVal();
-    //AcContactorOpenCmd  = amap["AcContactorOpenCmd"]->getbVal();
-    //DcContactorOpenCmd  = amap["DcContactorOpenCmd"]->getbVal();
-    //AcContactorCloseCmd  = amap["AcContactorCloseCmd"]->getbVal();
-    //DcContactorCloseCmd  = amap["DcContactorCloseCmd"]->getbVal();
+    // AcContactorOpenCmd  = amap["AcContactorOpenCmd"]->getbVal();
+    // DcContactorOpenCmd  = amap["DcContactorOpenCmd"]->getbVal();
+    // AcContactorCloseCmd  = amap["AcContactorCloseCmd"]->getbVal();
+    // DcContactorCloseCmd  = amap["DcContactorCloseCmd"]->getbVal();
     OnCmd = amap["OnCmd"]->getbVal();
     On = amap["On"]->getbVal();
-    bool readyOk = true;//         = amap["readyOk"]->getbVal();
+    bool readyOk = true;  //         = amap["readyOk"]->getbVal();
     char* sVal = amap["SystemState"]->getcVal();
-    if (0)FPS_ERROR_PRINT("%s >> %s -After Check  -- SystemState [%s] rc %d nCmd [%s] On [%s] Standby [%s] readyOk [%s] AcContactor [%s] DcContactor [%s] go  [%s] go2  [%s]\n"
-        , __func__
-        , aname
-        , sVal ? sVal : "NotSet"
-        , rc
-        , OnCmd ? "true" : "false"
-        , On ? "true" : "false"
-        , Standby ? "true" : "false"
-        , readyOk ? "true" : "false"
-        , AcContactor ? "true" : "false"
-        , DcContactor ? "true" : "false"
-        , (OnCmd && !On) ? "Go" : "NoGo"
-        , (OnCmd && (!On || Standby) && AcContactor && DcContactor) ? "Go" : "NoGo"
-    );
-    //if (rc != 0)
-    if (0)   // Not Yet
+    if (0)
+        FPS_ERROR_PRINT(
+            "%s >> %s -After Check  -- SystemState [%s] rc %d nCmd [%s] On [%s] "
+            "Standby [%s] readyOk [%s] AcContactor [%s] DcContactor [%s] go  [%s] "
+            "go2  [%s]\n",
+            __func__, aname, sVal ? sVal : "NotSet", rc, OnCmd ? "true" : "false", On ? "true" : "false",
+            Standby ? "true" : "false", readyOk ? "true" : "false", AcContactor ? "true" : "false",
+            DcContactor ? "true" : "false", (OnCmd && !On) ? "Go" : "NoGo",
+            (OnCmd && (!On || Standby) && AcContactor && DcContactor) ? "Go" : "NoGo");
+    // if (rc != 0)
+    if (0)  // Not Yet
     {
-        if (1)FPS_ERROR_PRINT("%s >> %s -Running Fault Shutdown rc %d -- OnCmd [%s] On [%s] readyOk [%s] \n"
-            , __func__
-            , aname
-            , rc
-            , OnCmd ? "true" : "false"
-            , On ? "true" : "false"
-            , readyOk ? "true" : "false"
-        );
+        if (1)
+            FPS_ERROR_PRINT(
+                "%s >> %s -Running Fault Shutdown rc %d -- OnCmd [%s] On "
+                "[%s] readyOk [%s] \n",
+                __func__, aname, rc, OnCmd ? "true" : "false", On ? "true" : "false", readyOk ? "true" : "false");
         HandleFaultShutdown(vmap, amap, aname, p_fims, am);
         return 0;
     }
@@ -3134,7 +3093,8 @@ int InitPCSLinks(varsmap& vmap, varmap& amap, const char* aname, asset_manager* 
     initav = vm->setLinkVal(vmap, aname, "/controls", "EnQStopGradient", ival);
     initav = vm->setLinkVal(vmap, aname, "/controls", "EnQRiseGradient", ival);
     initav = vm->setLinkVal(vmap, aname, "/controls", "EnQDropGradient", ival);
-    if (0)FPS_ERROR_PRINT(" %s >> dummy initav %p\n", __func__, (void*)initav);
+    if (0)
+        FPS_ERROR_PRINT(" %s >> dummy initav %p\n", __func__, (void*)initav);
 
     return rc;
 }

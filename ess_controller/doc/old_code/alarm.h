@@ -1,8 +1,8 @@
 #ifndef ALARM_HPP
 #define ALARM_HPP
 /*
-* alarms etc
-*/
+ * alarms etc
+ */
 // "alarms":{
 //     "name": "Alarm_Group_1",
 //     "value": 1,
@@ -26,7 +26,7 @@
 //     "id": "test_alarm_1"
 // }
 
-// set an alarm 
+// set an alarm
 // "alarms":{
 //     "options": [
 //     {
@@ -36,56 +36,50 @@
 //     ]
 // }
 
-
-#include <iostream>
-#include <map>
-#include <vector>
-#include <queue>
-#include <string>
-#include <cstring>
-#include <malloc.h>
 #include <cjson/cJSON.h>
-#include <poll.h>
-#include <signal.h>
 #include <cstring>
-#include <pthread.h>
-#include <thread>
-#include <fims/libfims.h>
 #include <fims/fps_utils.h>
-
+#include <fims/libfims.h>
+#include <iostream>
+#include <malloc.h>
+#include <map>
+#include <poll.h>
+#include <pthread.h>
+#include <queue>
+#include <signal.h>
+#include <string>
+#include <thread>
+#include <vector>
 
 #include "asset.h"
 #include "varMapUtils.h"
 
-
-// alarms/faults belong to asset or asset_manager ( candidate for merging into the base class)
-//fix showvarcj to detect an alarm type
+// alarms/faults belong to asset or asset_manager ( candidate for merging into
+// the base class)
+// fix showvarcj to detect an alarm type
 // setold
 
 // alarmType .. not predefined, make them up as we go....
-class alarmType {
+class alarmType
+{
 public:
     alarmType(const char* _name) { name = _name; };
-    ~alarmType() {};
+    ~alarmType(){};
 
     std::string name;
     std::string desc;
 
-    std::vector <double> instances;
-
+    std::vector<double> instances;
 };
 
 // the alarm class
-class alarmObject {
-
+class alarmObject
+{
 public:
-    alarmObject() {};
-    ~alarmObject() {};
+    alarmObject(){};
+    ~alarmObject(){};
 
-    void showParams()
-    {
-        params->showFeat();
-    }
+    void showParams() { params->showFeat(); }
     void showAlarm()
     {
         char* tmp = nullptr;
@@ -94,38 +88,33 @@ public:
         {
             tmp = cJSON_PrintUnformatted(cjv);
 
-            printf(" Alarm type [%s] occured at %f from %s  value [%s] -> %s\n"
-                , atype->name.c_str()
-                , time
-                , assetname.c_str()
-                , tmp
-                , details.c_str()
-            );
-            if (tmp)free((void*)tmp);
+            printf(" Alarm type [%s] occured at %f from %s  value [%s] -> %s\n", atype->name.c_str(), time,
+                   assetname.c_str(), tmp, details.c_str());
+            if (tmp)
+                free((void*)tmp);
         }
     }
-
 
     double time;
     std::string name;
     std::string details;
     alarmType* atype;
-    std::string assetname; // "/asset/bms/bms_1/rack3/battery21:CellTemp
+    std::string assetname;  // "/asset/bms/bms_1/rack3/battery21:CellTemp
     int depth;
     assetVal* aVal;
-    assetFeatDict* params;  // copy
-    std::vector<assetVal*> aVals;// ( copy)
-
+    assetFeatDict* params;         // copy
+    std::vector<assetVal*> aVals;  // ( copy)
 };
 
-typedef std::map<double, std::vector<alarmObject*>> alarmMap;// give us a list of alarm objects at this time. 
+typedef std::map<double, std::vector<alarmObject*>> alarmMap;  // give us a list of alarm objects at this time.
 typedef std::map<std::string, alarmType*> atypeMap;
 
 // class for manipulating alarms
-class alarmUtils {
+class alarmUtils
+{
 public:
-    alarmUtils() {};
-    ~alarmUtils() {};
+    alarmUtils(){};
+    ~alarmUtils(){};
 
     alarmType* getaType(atypeMap& atmap, const char* atype, alarmObject* ao)
     {
@@ -144,10 +133,10 @@ public:
         return at;
     }
 
-
-    alarmObject* createAlarm(VarMapUtils* vm, atypeMap& atmap, alarmMap& almap, assetVar* av, const char* atype, const char* details, double tNow)
+    alarmObject* createAlarm(VarMapUtils* vm, atypeMap& atmap, alarmMap& almap, assetVar* av, const char* atype,
+                             const char* details, double tNow)
     {
-        //double tNow = vm->get_time_dbl();
+        // double tNow = vm->get_time_dbl();
         alarmObject* ao = new alarmObject;
         ao->time = tNow;
         ao->params = std::move(av->featDict);
@@ -169,8 +158,6 @@ public:
         almap[tNow].push_back(ao);
         return ao;
     };
-
 };
-
 
 #endif

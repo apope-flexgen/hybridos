@@ -1,15 +1,17 @@
 
 #include "dataMap.h"
 
-// problem: assetVars can be used by the ess at any time, but we expect our assetVars to have particular paramters while we are using them in the thread
+// problem: assetVars can be used by the ess at any time, but we expect our
+// assetVars to have particular paramters while we are using them in the thread
 // the thread has access to assetVars that might go away in the vmap at any time
 // replace the dictionary ref in the main vmap to sever the link
-// todo for after mvp: we need to discuss how to handle the sharing of data between the core and the thread on assetVars
-// should we isolate assetVars so they cant be altered by other things? should we expand the datamap class to contain the data?
-
+// todo for after mvp: we need to discuss how to handle the sharing of data
+// between the core and the thread on assetVars should we isolate assetVars so
+// they cant be altered by other things? should we expand the datamap class to
+// contain the data?
 
 // send this signal to this assetVar
-void signalThread(assetVar *targAv, int signal)
+void signalThread(assetVar* targAv, int signal)
 {
     if (!targAv->gotParam("debug"))
     {
@@ -17,12 +19,15 @@ void signalThread(assetVar *targAv, int signal)
     }
     bool debug = targAv->getbParam("debug");
 
-    // the params of the aV have already been checked when the aV was first run in RunThread
+    // the params of the aV have already been checked when the aV was first run in
+    // RunThread
     std::string name(targAv->getcParam("threadName"));
-    if (debug) FPS_PRINT_INFO("   signaling Thread [{}] with aV [{}] (am [{}]) and signal [{}]", name, targAv->name, targAv->am->name, signal);
+    if (debug)
+        FPS_PRINT_INFO("   signaling Thread [{}] with aV [{}] (am [{}]) and signal [{}]", name, targAv->name,
+                       targAv->am->name, signal);
 
-    ess_thread *ess = threadMaps[name];
-    if(ess)
+    ess_thread* ess = threadMaps[name];
+    if (ess)
     {
         std::pair<int, assetVar*> avPair(signal, targAv);
         ess->wakeChan.put(avPair);
@@ -34,7 +39,7 @@ void signalThread(assetVar *targAv, int signal)
 }
 
 // starts a new thread and gives it a thread assetVar
-void startThread(assetVar *aV, varsmap& vmap, char *tname)
+void startThread(assetVar* aV, varsmap& vmap, char* tname)
 {
     if (!aV->gotParam("debug"))
     {
@@ -42,29 +47,30 @@ void startThread(assetVar *aV, varsmap& vmap, char *tname)
     }
     bool debug = aV->getbParam("debug");
 
-    ess_thread *ess = threadMaps[tname];
+    ess_thread* ess = threadMaps[tname];
     if (!ess)
     {
-        if (debug) FPS_PRINT_INFO("creating thread [{}]", tname);
+        if (debug)
+            FPS_PRINT_INFO("creating thread [{}]", tname);
         ess = new ess_thread(tname);
 
         // create a new assetVar as a manager for the thread
-        assetVar *tav = getOrMakeThreadAV(vmap, aV->am->vm, std::string(tname));
+        assetVar* tav = getOrMakeThreadAV(vmap, aV->am->vm, std::string(tname));
         ess->threadAV = tav;
 
-        tav->setVal(true);                                  // thread is running, value is true
+        tav->setVal(true);  // thread is running, value is true
         ess->running = 1;
         ess->id = std::thread(EssThread, ess);
-        
-        if (debug) FPS_PRINT_INFO(" thread [{}] started", tname);
-        threadMaps[tname]=ess;
+
+        if (debug)
+            FPS_PRINT_INFO(" thread [{}] started", tname);
+        threadMaps[tname] = ess;
 
         // add this new thread to the Heartbeat singleton
         Heartbeat& heart = Heartbeat::getInstance();
         heart.threads.push_back(ess);
-
     }
-    else 
+    else
     {
         FPS_PRINT_INFO(" thread [{}] is already running", tname);
     }
@@ -73,8 +79,8 @@ void startThread(assetVar *aV, varsmap& vmap, char *tname)
 // triggers all the setup functions to run for a given aV
 void setupFunctions(assetVar* aV)
 {
-    asset_manager *am = aV->am;
-	VarMapUtils *vm = aV->am->vm;
+    asset_manager* am = aV->am;
+    VarMapUtils* vm = aV->am->vm;
 
     bool logging_enabled = aV->getbParam("logging_enabled");
     char* LogDir = aV->getcParam("LogDir");
@@ -85,10 +91,14 @@ void setupFunctions(assetVar* aV)
         // use our asset managers amap to get the transfer AV that we need
         std::string dmName = aV->getcParam("datamapName");
         std::string transferName = dmName + "_transfer";
-        assetVar *transferAV = vm->getVar(am->amap, (char*)transferName.c_str());
+        assetVar* transferAV = vm->getVar(am->amap, (char*)transferName.c_str());
         if (!transferAV)
         {
-            FPS_PRINT_ERROR("assetVar [{}] cannot find an assetVar with name [{}] on asset manager [{}] to run our setup functions on. Check RunThread SETUP_STATE", aV->name, transferName, am->name);
+            FPS_PRINT_ERROR(
+                "assetVar [{}] cannot find an assetVar with name [{}] on "
+                "asset manager [{}] to run our setup functions on. Check "
+                "RunThread SETUP_STATE",
+                aV->name, transferName, am->name);
             std::string transError = "Could not find transfer aV for [" + aV->name + "]";
             throw std::invalid_argument(transError);
         }
@@ -101,40 +111,60 @@ void setupFunctions(assetVar* aV)
             std::string funcNum = "func" + numStr;
             if (!aV->gotParam((char*)funcNum.c_str()))
             {
-                // we have set up all the funcs listed on our av and now we have found a func# that doesnt exist, break out of loop
-                if (debug) FPS_PRINT_INFO("Could not find [{}] param. Exiting setup loop", funcNum);
+                // we have set up all the funcs listed on our av and now we have found a
+                // func# that doesnt exist, break out of loop
+                if (debug)
+                    FPS_PRINT_INFO("Could not find [{}] param. Exiting setup loop", funcNum);
                 break;
-            } 
+            }
 
-            // separate the function name from the full funcNum parameter (set up to be funcName.instance# in reConfigure)
-            std::string reconfiguredFunc = aV->getcParam((char*)funcNum.c_str());   // this variable is the function after it has been reConfigured
-            std::string setupID = reconfiguredFunc + "_setup";                      // this is only used as an ID for our schedItem
+            // separate the function name from the full funcNum parameter (set up to
+            // be funcName.instance# in reConfigure)
+            std::string reconfiguredFunc = aV->getcParam((char*)funcNum.c_str());  // this variable is the
+                                                                                   // function after it has been
+                                                                                   // reConfigured
+            std::string setupID = reconfiguredFunc + "_setup";  // this is only used as an ID for our schedItem
 
-            size_t underscore_index = reconfiguredFunc.find_last_of('_');                  // gets the index of the last '_'  |  the '_' separates the func name and the instance
-            std::string setupFunc = reconfiguredFunc.substr(0, underscore_index);          // get just the function name
+            size_t underscore_index = reconfiguredFunc.find_last_of('_');          // gets the index of the last '_'
+                                                                                   // |  the '_' separates the func
+                                                                                   // name and the instance
+            std::string setupFunc = reconfiguredFunc.substr(0, underscore_index);  // get just the function name
 
             // get the instance
             std::string instanceStr = reconfiguredFunc.substr(underscore_index + 1);
 
-            if (debug) FPS_PRINT_INFO("{} got param [\"{}\": \"{}\"] and is setting up [{}] instance [{}]", __func__, funcNum, reconfiguredFunc, setupFunc, reconfiguredFunc.substr(underscore_index + 1));
+            if (debug)
+                FPS_PRINT_INFO(
+                    "{} got param [\"{}\": \"{}\"] and is setting up [{}] "
+                    "instance [{}]",
+                    __func__, funcNum, reconfiguredFunc, setupFunc, reconfiguredFunc.substr(underscore_index + 1));
 
             // now schedule our setup function with the AV we just made
             auto schItem = new schedItem();
 
             // set up fields for new schedItem
-            char *myid = (char*)setupID.c_str();                                // schedItem ID is the name of the function we are setting up + "_setup"
-            char *schedFcn = (char*)setupFunc.c_str();                          // this is our setup function defined in config and linked to the function itself in SetupDatamapSched (at the top of this file)
+            char* myid = (char*)setupID.c_str();        // schedItem ID is the name of the
+                                                        // function we are setting up +
+                                                        // "_setup"
+            char* schedFcn = (char*)setupFunc.c_str();  // this is our setup function
+                                                        // defined in config and
+                                                        // linked to the function
+                                                        // itself in SetupDatamapSched
+                                                        // (at the top of this file)
 
             std::string comp = "/control/transfer:" + dmName;
-            char *aname = (char*)am->name.c_str();                              // uses the same asset manager as this aV ( the datamaps asset manager )
-            char *schedUri = (char*)comp.c_str();                               // set to be the same as the schItem assetVar's comp
-            char *schedTarg = (char*)comp.c_str();                              // same as our uri
-            
+            char* aname = (char*)am->name.c_str();  // uses the same asset manager as
+                                                    // this aV ( the datamaps asset
+                                                    // manager )
+            char* schedUri = (char*)comp.c_str();   // set to be the same as the schItem assetVar's comp
+            char* schedTarg = (char*)comp.c_str();  // same as our uri
+
             // create new schedItem
             schItem->setUp(myid, aname, schedUri, schedFcn, 0, vm->get_time_dbl(), 0, 0, schedTarg);
 
-            schItem->av = transferAV;                                           // our schItem should run on transferAV
-            schItem->av->setParam("runTime", vm->get_time_dbl());               // tell scheduler to run asap
+            schItem->av = transferAV;  // our schItem should run on transferAV
+            schItem->av->setParam("runTime",
+                                  vm->get_time_dbl());  // tell scheduler to run asap
 
             // use a schItem->av param to initialize our instance setup counter
             std::string funcName_instance = setupFunc + "_instance";
@@ -145,12 +175,13 @@ void setupFunctions(assetVar* aV)
 
             if (debug)  // prints new schedItem
             {
-                FPS_PRINT_INFO(" Set up new schedItem [{}] to run [{}] on aV [{}]", schItem->id, schItem->func, schItem->av->name);
+                FPS_PRINT_INFO(" Set up new schedItem [{}] to run [{}] on aV [{}]", schItem->id, schItem->func,
+                               schItem->av->name);
                 schItem->show();
             }
 
             // put our new schedItem on the scheduler
-            auto reqChan = (channel <schedItem*>*)am->reqChan;
+            auto reqChan = (channel<schedItem*>*)am->reqChan;
             reqChan->put(schItem);
 
             // create a flag to know when this setup function is done
@@ -167,30 +198,34 @@ void setupFunctions(assetVar* aV)
         // tell RunThread to start checking if all setup functions are done
         aV->setParam("setup", SETUP_CHECK);
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
-        if (debug) FPS_PRINT_ERROR("Tried to run set up functions for aV [{}] and failed: {}", aV->name, e.what());
+        if (debug)
+            FPS_PRINT_ERROR("Tried to run set up functions for aV [{}] and failed: {}", aV->name, e.what());
 
         std::string errorMsg = e.what();
         aV->setParam("errorType", (char*)"fault");
         aV->setParam("errorMsg", (char*)errorMsg.c_str());
 
-        ESSLogger::get().critical("While trying to setup the functions on assetVar [{}], we got this error: [{}] ", aV->name, e.what());
+        ESSLogger::get().critical(
+            "While trying to setup the functions on assetVar "
+            "[{}], we got this error: [{}] ",
+            aV->name, e.what());
         if (logging_enabled)
         {
             std::string dirAndFile = fmt::format("{}/{}.{}", LogDir, "datamap_errors", "txt");
             ESSLogger::get().logIt(dirAndFile);
         }
-        
+
         signalThread(aV, ERROR);
     }
 }
 
 // schedules getFromAmap or sendToAmap to run on the core thread
-void scheduleDMfunc(assetVar *aV, std::string operation)
+void scheduleDMfunc(assetVar* aV, std::string operation)
 {
-    asset_manager *am = aV->am;
-	VarMapUtils *vm = aV->am->vm;
+    asset_manager* am = aV->am;
+    VarMapUtils* vm = aV->am->vm;
 
     bool logging_enabled = aV->getbParam("logging_enabled");
     char* LogDir = aV->getcParam("LogDir");
@@ -199,10 +234,11 @@ void scheduleDMfunc(assetVar *aV, std::string operation)
     try
     {
         std::string name = aV->getcParam("datamapName");
-        DataMap *dm = dataMaps[name];
+        DataMap* dm = dataMaps[name];
         if (!dm)
         {
-            // we could not find that datamap name in our global map of all datamaps, signal error
+            // we could not find that datamap name in our global map of all datamaps,
+            // signal error
             FPS_PRINT_ERROR("Datamap name [{}] not found in global list of dataMaps", name);
             std::string nameError = "Could not find datamap with name  [" + name + "]";
             throw std::invalid_argument(nameError);
@@ -210,20 +246,28 @@ void scheduleDMfunc(assetVar *aV, std::string operation)
 
         // use our asset managers amap to get the transfer AV that we need
         std::string transferName = name + "_transfer";
-        assetVar *transferAV = vm->getVar(am->amap, (char*)transferName.c_str());
+        assetVar* transferAV = vm->getVar(am->amap, (char*)transferName.c_str());
         if (!transferAV)
         {
-            FPS_PRINT_ERROR("assetVar [{}] cannot find an assetVar with name [{}] on asset manager [{}] to run our setup functions on. Check RunThread SETUP_STATE", aV->name, transferName, am->name);
+            FPS_PRINT_ERROR(
+                "assetVar [{}] cannot find an assetVar with name [{}] on "
+                "asset manager [{}] to run our setup functions on. Check "
+                "RunThread SETUP_STATE",
+                aV->name, transferName, am->name);
             std::string transError = "Could not find transfer aV for [" + aV->name + "]";
             throw std::invalid_argument(transError);
         }
-        
-        if (debug) FPS_PRINT_INFO("   got transferAV [{}] from am [{}]'s amap", transferAV->name, am->name);
+
+        if (debug)
+            FPS_PRINT_INFO("   got transferAV [{}] from am [{}]'s amap", transferAV->name, am->name);
 
         // set transferAV's params
-        transferAV->setParam("operation", (char*)operation.c_str());        // tell this AV if we are getting or setting (gotten from function parameter)
+        transferAV->setParam("operation", (char*)operation.c_str());  // tell this AV if we are
+                                                                      // getting or setting (gotten
+                                                                      // from function parameter)
 
-        // tell our transferAV which function we are running (used for input/outputBlocks)
+        // tell our transferAV which function we are running (used for
+        // input/outputBlocks)
         if (!aV->gotParam("runningFunction"))
         {
             // default to running function 1
@@ -244,51 +288,61 @@ void scheduleDMfunc(assetVar *aV, std::string operation)
         transferAV->setParam("function", (char*)funcName_i.c_str());
 
         // set up fields for new schedItem
-        std::string compStr = "/control/transfer:" + dm->name;              // this matches the uri used to make our transferAV
-        char *myid = (char*)transferAV->name.c_str();                       // schedItem ID is the same as the schedItem assetVar name
-        char *aname = (char*)instanceAM.c_str();                            // sets schItem am to the instance's asset manager
-        char *schedUri = (char*)compStr.c_str();                            // set to be the same as the schItem assetVar's comp
-        char *schedFcn = (char*)"CoreAmapAccess";                           // function is defined in dataMap_core.cpp
-        char *schedTarg = (char*)compStr.c_str();                           // same as our uri
-        
+        std::string compStr = "/control/transfer:" + dm->name;  // this matches the uri used to make our transferAV
+        char* myid = (char*)transferAV->name.c_str();  // schedItem ID is the same as the schedItem assetVar name
+        char* aname = (char*)instanceAM.c_str();       // sets schItem am to the instance's asset manager
+        char* schedUri = (char*)compStr.c_str();       // set to be the same as the schItem assetVar's comp
+        char* schedFcn = (char*)"CoreAmapAccess";      // function is defined in dataMap_core.cpp
+        char* schedTarg = (char*)compStr.c_str();      // same as our uri
+
         // create new schedItem
         auto schItem = new schedItem();
         schItem->setUp(myid, aname, schedUri, schedFcn, 0, vm->get_time_dbl(), 0, 0, schedTarg);
 
-        schItem->av = transferAV;                                           // our schItem should run on transferAV
-        schItem->av->setParam("runTime", vm->get_time_dbl());               // tell scheduler to run asap
+        schItem->av = transferAV;  // our schItem should run on transferAV
+        schItem->av->setParam("runTime",
+                              vm->get_time_dbl());  // tell scheduler to run asap
 
         if (debug)  // prints new schedItem
         {
-            FPS_PRINT_INFO(" Set up new schedItem [{}] to run [{}] on aV [{}]", schItem->id, schItem->func, schItem->av->name);
+            FPS_PRINT_INFO(" Set up new schedItem [{}] to run [{}] on aV [{}]", schItem->id, schItem->func,
+                           schItem->av->name);
             schItem->show();
         }
 
         // put our new schedItem on the scheduler
-        auto reqChan = (channel <schedItem*>*)am->reqChan;
+        auto reqChan = (channel<schedItem*>*)am->reqChan;
         reqChan->put(schItem);
         if (am->wakeChan)
         {
             am->wakeChan->put(0);
         }
-        if (debug) FPS_PRINT_INFO(" just scheduled \"CoreAmapAccess\" function to run [{}] on datamap [{}]", operation, name);
-
+        if (debug)
+            FPS_PRINT_INFO(
+                " just scheduled \"CoreAmapAccess\" function to run [{}] "
+                "on datamap [{}]",
+                operation, name);
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
-        if (debug) FPS_PRINT_ERROR("Tried to run datamap function [{}] with aV [{}] and failed: {}", operation, aV->name, e.what());
+        if (debug)
+            FPS_PRINT_ERROR("Tried to run datamap function [{}] with aV [{}] and failed: {}", operation, aV->name,
+                            e.what());
 
         std::string errorMsg = e.what();
         aV->setParam("errorType", (char*)"fault");
         aV->setParam("errorMsg", (char*)errorMsg.c_str());
 
-        ESSLogger::get().critical("While trying to run the [{}] function on assetVar [{}], we got this error: [{}] ", operation, aV->name, e.what());
+        ESSLogger::get().critical(
+            "While trying to run the [{}] function on "
+            "assetVar [{}], we got this error: [{}] ",
+            operation, aV->name, e.what());
         if (logging_enabled)
         {
             std::string dirAndFile = fmt::format("{}/{}.{}", LogDir, "datamap_errors", "txt");
             ESSLogger::get().logIt(dirAndFile);
         }
-        
+
         signalThread(aV, ERROR);
     }
 }
@@ -305,7 +359,11 @@ void stepDMfunc(assetVar* aV)
         if (!aV->gotParam("runningFunction"))
         {
             // default to func1 if no runningFunction param
-            if (debug) FPS_PRINT_INFO("AV [{}] has no \"runningFunction\" parameter. Defaulting to run func1");
+            if (debug)
+                FPS_PRINT_INFO(
+                    "AV [{}] has no \"runningFunction\" parameter. "
+                    "Defaulting to run func1",
+                    NULL);
             aV->setParam("runningFunction", 1);
         }
         int funcNum = aV->getiParam("runningFunction");
@@ -317,24 +375,31 @@ void stepDMfunc(assetVar* aV)
             std::string funcError = "Could not find [" + usingFunc + "] as a parameter in assetVar " + aV->name;
             throw std::invalid_argument(funcError);
         }
-        std::string reconfiguredFunc = aV->getcParam((char*)usingFunc.c_str());      // name of function assoc with our func#
+        std::string reconfiguredFunc = aV->getcParam(
+            (char*)usingFunc.c_str());  // name of function assoc with our func#
 
         // get the function name
-        size_t underscore_index = reconfiguredFunc.find_last_of('_');                  // gets the index of the last '_' -> the '_' separates the func name and the instance
+        size_t underscore_index = reconfiguredFunc.find_last_of('_');  // gets the index of the last '_' ->
+                                                                       // the '_' separates the func name
+                                                                       // and the instance
         std::string name = reconfiguredFunc.substr(0, underscore_index);
 
         // get the instance number
         std::string instanceStr = reconfiguredFunc.substr(underscore_index + 1);
         int instance = std::stoi(instanceStr);
 
-        if (debug) FPS_PRINT_INFO("Using param [{}] to run instance [{}] of function [{}]", usingFunc, instance, name);
+        if (debug)
+            FPS_PRINT_INFO("Using param [{}] to run instance [{}] of function [{}]", usingFunc, instance, name);
 
         // get the run function pointer from our global map
-        void *funcRef = modelFcnRef[name];
+        void* funcRef = modelFcnRef[name];
         if (!funcRef)
         {
             // our datamap name does not have an associated ModelObjectRun function
-            FPS_PRINT_ERROR("Function name [{}] does not have an entry in the global run function map. Check function interface setup", name);
+            FPS_PRINT_ERROR(
+                "Function name [{}] does not have an entry in the global "
+                "run function map. Check function interface setup",
+                name);
             std::string funcError = "Could not find [" + name + "] in global map of model functions";
             throw std::invalid_argument(funcError);
         }
@@ -348,33 +413,39 @@ void stepDMfunc(assetVar* aV)
         runFunc(uri, instance);
         if (debug) FPS_PRINT_INFO("<<<<< step function returned at time [{}]\n", aV->am->vm->get_time_dbl());
 
-
-        // tell state machine to kick off scheduler function to run sendToAmap on the core scheduler asap and then notify core when its finshed
+        // tell state machine to kick off scheduler function to run sendToAmap on
+        // the core scheduler asap and then notify core when its finshed
         signalThread(aV, SEND);
-
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
-        if (debug) FPS_PRINT_ERROR("Tried to run model object function associated with aV [{}] and failed: {}", aV->name, e.what());
+        if (debug)
+            FPS_PRINT_ERROR(
+                "Tried to run model object function associated with aV "
+                "[{}] and failed: {}",
+                aV->name, e.what());
 
         std::string errorMsg = e.what();
         aV->setParam("errorType", (char*)"fault");
         aV->setParam("errorMsg", (char*)errorMsg.c_str());
 
-        ESSLogger::get().critical("While trying to run the function on assetVar [{}], we got this error: [{}] ", aV->name, e.what());
+        ESSLogger::get().critical(
+            "While trying to run the function on assetVar "
+            "[{}], we got this error: [{}] ",
+            aV->name, e.what());
         if (logging_enabled)
         {
             std::string dirAndFile = fmt::format("{}/{}.{}", LogDir, "datamap_errors", "txt");
             ESSLogger::get().logIt(dirAndFile);
         }
-        
+
         signalThread(aV, ERROR);
         return;
-
     }
 }
 
-// checks if all the functions on our aV have run and runs the next one or signals to the core that we are done
+// checks if all the functions on our aV have run and runs the next one or
+// signals to the core that we are done
 void nextOrDone(assetVar* aV)
 {
     bool logging_enabled = aV->getbParam("logging_enabled");
@@ -386,7 +457,10 @@ void nextOrDone(assetVar* aV)
         // get our active function (the one we just ran)
         if (!aV->gotParam("runningFunction"))
         {
-            FPS_PRINT_ERROR("We do not have a \"runningFunction\" parameter and do not know what function just ran");
+            FPS_PRINT_ERROR(
+                "We do not have a \"runningFunction\" parameter and do "
+                "not know what function just ran",
+                NULL);
             std::string funcError = "Could not find [runningFunction] as a parameter in aV [" + aV->name + "]";
             throw std::invalid_argument(funcError);
         }
@@ -395,19 +469,27 @@ void nextOrDone(assetVar* aV)
         // how many total functions are on this aV?
         if (!aV->gotParam("numberOfFunctions"))
         {
-            FPS_PRINT_ERROR("AssetVar [{}] does not have a \"numberOfFunctions\" param. This should be set in RunThread reload");
+            FPS_PRINT_ERROR(
+                "AssetVar [{}] does not have a \"numberOfFunctions\" "
+                "param. This should be set in RunThread reload",
+                NULL);
             std::string funcError = "Could not find [numberOfFunctions] as a parameter in aV [" + aV->name + "]";
             throw std::invalid_argument(funcError);
-
         }
         int totalNumOfFunctions = aV->getiParam("numberOfFunctions");
 
-        if (debug) FPS_PRINT_INFO("    we just ran active function [{}] and we have a total of [{}] functions on this aV [{}]", activeFcnNum, totalNumOfFunctions, aV->name);
+        if (debug)
+            FPS_PRINT_INFO(
+                "    we just ran active function [{}] and we have a total "
+                "of [{}] functions on this aV [{}]",
+                activeFcnNum, totalNumOfFunctions, aV->name);
 
         if (activeFcnNum + 1 > totalNumOfFunctions)
         {
-            // we have run a number of functions equal to our total number of functions; we do not need to run again
-            if (debug) FPS_PRINT_INFO("We do not need to run again. setting 'done' to be RUN_SUCCESS");
+            // we have run a number of functions equal to our total number of
+            // functions; we do not need to run again
+            if (debug)
+                FPS_PRINT_INFO("We do not need to run again. setting 'done' to be RUN_SUCCESS", NULL);
 
             // reset our active function
             aV->setParam("runningFunction", 1);
@@ -415,13 +497,18 @@ void nextOrDone(assetVar* aV)
             // tell RunThread we are done by setting flag high
             aV->setParam("done", true);
 
-            // set our heartbeat as soon as all functions in our function group are done running
+            // set our heartbeat as soon as all functions in our function group are
+            // done running
             aV->setParam("lastHeartbeat", aV->am->vm->get_time_dbl());
         }
         else
         {
             // we have not run all the functions on this aV, we do need to run again
-            if (debug) FPS_PRINT_INFO("we DO need to run again. Rerunning get-run-send with active function #[{}]", activeFcnNum+1);
+            if (debug)
+                FPS_PRINT_INFO(
+                    "we DO need to run again. Rerunning get-run-send with "
+                    "active function #[{}]",
+                    activeFcnNum + 1);
 
             // set active function to next one
             aV->setParam("runningFunction", activeFcnNum + 1);
@@ -430,26 +517,34 @@ void nextOrDone(assetVar* aV)
             signalThread(aV, GET);
         }
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
-        if (debug) FPS_PRINT_ERROR("Tried to run model object function associated with aV [{}] and failed: {}", aV->name, e.what());
+        if (debug)
+            FPS_PRINT_ERROR(
+                "Tried to run model object function associated with aV "
+                "[{}] and failed: {}",
+                aV->name, e.what());
 
         std::string errorMsg = e.what();
         aV->setParam("errorType", (char*)"fault");
         aV->setParam("errorMsg", (char*)errorMsg.c_str());
 
-        ESSLogger::get().critical("While trying to run the function on assetVar [{}], we got this error: [{}] ", aV->name, e.what());
+        ESSLogger::get().critical(
+            "While trying to run the function on assetVar "
+            "[{}], we got this error: [{}] ",
+            aV->name, e.what());
         if (logging_enabled)
         {
             std::string dirAndFile = fmt::format("{}/{}.{}", LogDir, "datamap_errors", "txt");
             ESSLogger::get().logIt(dirAndFile);
         }
-        
+
         signalThread(aV, ERROR);
     }
 }
 
-// define other functions that we would want to run in our state machine here and add them to the thread controller below
+// define other functions that we would want to run in our state machine here
+// and add them to the thread controller below
 
 // handles the ess thread state machine
 void EssThread(ess_thread* ess)
@@ -457,50 +552,55 @@ void EssThread(ess_thread* ess)
     FPS_PRINT_INFO("Essthread {} started", ess->name);
 
     std::pair<int, assetVar*> wakeChanPair;
-    assetVar *thisContext = nullptr;
+    assetVar* thisContext = nullptr;
     bool debug = false;
 
     double delay = 1.0;
     // thread controller
     while (ess->running)
     {
-        bool awake = ess->wakeChan.timedGet(wakeChanPair, delay);                // get a signal/aV pair off the thread wakeup channel
-        if(awake)  // get signal, do thing, wait for next signal
+        bool awake = ess->wakeChan.timedGet(wakeChanPair,
+                                            delay);  // get a signal/aV pair off the thread wakeup channel
+        if (awake)                                   // get signal, do thing, wait for next signal
         {
             ess->wakeup = wakeChanPair.first;
             thisContext = wakeChanPair.second;
-            
+
             debug = thisContext->getbParam("debug");
-            if (debug) FPS_PRINT_INFO("ESSThread: wakeup[{}] | thisContext[{}] | thisContext's am[{}] | datamap[{}]", ess->wakeup, thisContext->name, thisContext->am->name, thisContext->getcParam("datamapName"));
-            
-            if(ess->wakeup == SETUP)        // 100
+            if (debug)
+                FPS_PRINT_INFO(
+                    "ESSThread: wakeup[{}] | thisContext[{}] | "
+                    "thisContext's am[{}] | datamap[{}]",
+                    ess->wakeup, thisContext->name, thisContext->am->name, thisContext->getcParam("datamapName"));
+
+            if (ess->wakeup == SETUP)  // 100
             {
                 setupFunctions(thisContext);
             }
-            if(ess->wakeup == GET)          // 101
+            if (ess->wakeup == GET)  // 101
             {
                 scheduleDMfunc(thisContext, "get");
             }
-            if(ess->wakeup == RUN)          // 102
+            if (ess->wakeup == RUN)  // 102
             {
                 stepDMfunc(thisContext);
             }
-            if(ess->wakeup == SEND)         // 103
+            if (ess->wakeup == SEND)  // 103
             {
                 scheduleDMfunc(thisContext, "send");
             }
-            if(ess->wakeup == DONE)      // 104
+            if (ess->wakeup == DONE)  // 104
             {
                 nextOrDone(thisContext);
             }
-            if(ess->wakeup == ERROR)    // 109
+            if (ess->wakeup == ERROR)  // 109
             {
                 // tell the core controller that we have an error
                 thisContext->setParam("runStatus", ERROR_ON_CONTEXT);
                 thisContext->setParam("error", true);
-                if (debug) FPS_PRINT_ERROR("Signaling to the core thread that we have an error", NULL);
+                if (debug)
+                    FPS_PRINT_ERROR("Signaling to the core thread that we have an error", NULL);
             }
-            
         }
     }
 
@@ -510,7 +610,7 @@ void EssThread(ess_thread* ess)
 
 void dataMapThreadCleanup()
 {
-    FPS_PRINT_INFO("Deleting remaining DataMaps and Threads");
+    FPS_PRINT_INFO("Deleting remaining DataMaps and Threads", NULL);
     // delete all datamaps
     for (const auto& dm_pair : dataMaps)
     {
@@ -527,7 +627,7 @@ void dataMapThreadCleanup()
         {
             ess->id.join();
         }
-        
+
         delete ess;
     }
 }

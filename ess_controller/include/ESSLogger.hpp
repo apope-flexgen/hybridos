@@ -7,7 +7,6 @@
 #include "EventLogger.hpp"
 #include "chrono_utils.hpp"
 
-
 class elapsed_time_formatter : public spdlog::custom_flag_formatter
 {
 public:
@@ -25,10 +24,10 @@ public:
 // an eventLogger Singleton for the system, the default EventLogger
 class ESSLogger final
 {
-    EventLogger mLogger{"ESS Logger", 64}; // stores 64 messags by default
+    EventLogger mLogger{ "ESS Logger", 64 };  // stores 64 messags by default
 
-    // sets the default format for our logger and have get_time_dbl() implicitly there
-    // now we can remove the extra get_time_dbl calls for our log calls
+    // sets the default format for our logger and have get_time_dbl() implicitly
+    // there now we can remove the extra get_time_dbl calls for our log calls
     ESSLogger()
     {
         auto formatter = spdlog::details::make_unique<spdlog::pattern_formatter>();
@@ -50,20 +49,14 @@ public:
     }
 
     // NOTE: it is your responsibility to set the size > 0.
-    void setBacktrace(std::size_t size)
-    {
-        mLogger.setBacktrace(size);
-    }
+    void setBacktrace(std::size_t size) { mLogger.setBacktrace(size); }
 
     // NOTE: it is your responsibility to set the size > 0.
     // flushes the previous logs and starts with a fresh buffer of size
-    void resetBacktrace(std::size_t size)
-    {
-        mLogger.resetBacktrace(size);
-    }
+    void resetBacktrace(std::size_t size) { mLogger.resetBacktrace(size); }
 
-    // todo: check efficiency? Don't know if all the moves are necessary, but should be fine.
-    // might want template parameters for this though, we'll see.
+    // todo: check efficiency? Don't know if all the moves are necessary, but
+    // should be fine. might want template parameters for this though, we'll see.
     // https://github.com/gabime/spdlog/wiki/3.-Custom-formatting
     void setPattern(std::string pattern, spdlog::pattern_time_type time_type = spdlog::pattern_time_type::local)
     {
@@ -71,40 +64,42 @@ public:
     }
 
     // call this function yourself to log the stored messages when needed.
-    // maybe todo: just call critical with a message and then call logIt from here.
-    // that way we just say logIt(fileAndDir, fmt, args...); Less manual calls that way
+    // maybe todo: just call critical with a message and then call logIt from
+    // here. that way we just say logIt(fileAndDir, fmt, args...); Less manual
+    // calls that way
     void logIt(const spdlog::filename_t& fileName, bool add_timestamp = false)
     {
         mLogger.logIt(fileName, add_timestamp);
     }
 
-    // NOTE: there is no "trace" because we are always tracing, thus it is unecessary
+    // NOTE: there is no "trace" because we are always tracing, thus it is
+    // unecessary
 
-    template<typename... Args>
+    template <typename... Args>
     void info(spdlog::format_string_t<Args...> fmt, Args&&... args)
     {
         mLogger.info(fmt, std::forward<Args>(args)...);
     }
 
-    template<typename... Args>
+    template <typename... Args>
     void debug(spdlog::format_string_t<Args...> fmt, Args&&... args)
     {
         mLogger.debug(fmt, std::forward<Args>(args)...);
     }
 
-    template<typename... Args>
+    template <typename... Args>
     void warn(spdlog::format_string_t<Args...> fmt, Args&&... args)
     {
         mLogger.warn(fmt, std::forward<Args>(args)...);
     }
 
-    template<typename... Args>
+    template <typename... Args>
     void error(spdlog::format_string_t<Args...> fmt, Args&&... args)
     {
         mLogger.error(fmt, std::forward<Args>(args)...);
     }
 
-    template<typename... Args>
+    template <typename... Args>
     void critical(spdlog::format_string_t<Args...> fmt, Args&&... args)
     {
         mLogger.critical(fmt, std::forward<Args>(args)...);
@@ -115,8 +110,9 @@ public:
 // example #define LOGGER_INFO(...) ESSLogger::get().info(__VA_ARGS__);
 // etc.
 // a lot less typing in the long run.
-// also: might possibly need to implement a .cpp for this if we run into multiple definition errors?
-// will have to test this and make sure ess_controller runs fine and dandy.
+// also: might possibly need to implement a .cpp for this if we run into
+// multiple definition errors? will have to test this and make sure
+// ess_controller runs fine and dandy.
 
 // new macros, working on it.
 // todo: get resize in here, but am reluctant to do so
@@ -126,6 +122,5 @@ public:
 #define LOGGER_ERROR(...) ESSLogger::get().error(__VA_ARGS__);
 #define LOGGER_CRITICAL(...) ESSLogger::get().critical(__VA_ARGS__);
 #define LOGGER_LOGIT(fileName) ESSLogger::get().logIt(fileName);
-
 
 #endif

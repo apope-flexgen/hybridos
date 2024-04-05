@@ -1,23 +1,21 @@
 #ifndef ASSET_HPP
 #define ASSET_HPP
 /*
-* asset and asset manager
-*/
+ * asset and asset manager
+ */
 
-
-#include <iostream>
-#include <map>
-#include <vector>
-#include <queue>
-#include <string>
-#include <cstring>
-#include <malloc.h>
 #include <cjson/cJSON.h>
-#include <poll.h>
-#include <signal.h>
 #include <cstring>
-#include <pthread.h>
 #include <fims/libfims.h>
+#include <iostream>
+#include <malloc.h>
+#include <map>
+#include <poll.h>
+#include <pthread.h>
+#include <queue>
+#include <signal.h>
+#include <string>
+#include <vector>
 
 #include "assetVarTest.h"
 
@@ -29,15 +27,13 @@
 // an asset will have variables, states and parameters
 // an asset can also have alarms and warnings
 
-
-class asset {
-
+class asset
+{
 protected:
     double side_length_;
 
 public:
-    asset()
-        : side_length_(0)
+    asset() : side_length_(0)
     {
         // // somehow these stay around
         // std::map<std::string,assetVar*> m1;
@@ -49,22 +45,17 @@ public:
         // allVars.insert(std::make_pair("cmd", m3));
     }
 
-    virtual ~asset() 
-    {
-        std::cout << "asset_delete :" << name << "\n"; 
-    }
+    virtual ~asset() { std::cout << "asset_delete :" << name << "\n"; }
 
-    void setName(const char* _name) {
-        name = _name;
-    }
+    void setName(const char* _name) { name = _name; }
 
-    virtual assetVar* getMVar(std::map<std::string,assetVar*>&map, const char* name)
+    virtual assetVar* getMVar(std::map<std::string, assetVar*>& map, const char* name)
     {
         auto it = map.find(name);
-        return (it != map.end())?it->second:nullptr;
+        return (it != map.end()) ? it->second : nullptr;
     }
     template <class T>
-    assetVar* setMVar(std::map<std::string,assetVar*>&map, const char* name, T val)
+    assetVar* setMVar(std::map<std::string, assetVar*>& map, const char* name, T val)
     {
         auto it = map.find(name);
         if (it == map.end())
@@ -72,13 +63,14 @@ public:
         return map[name];
     }
 
-    // virtual assetVar* setMVar(std::map<std::string,assetVar*>&map, const char* name, int val)
+    // virtual assetVar* setMVar(std::map<std::string,assetVar*>&map, const char*
+    // name, int val)
     // {
     //     std::map<std::string,assetVar*>::iterator it=map.find(name);
     //     if (it == map.end())
     //         map[name] = new assetVar(name, val);
     //     return map[name];
-//   }
+    //   }
     // template < class T>
     // assetVar* addStatusVar(const char *vname, T val)
     // {
@@ -125,10 +117,10 @@ public:
     //     if(av) av->setVal(val);
     // }
 
-    //void configure(const char* fname);
-    //void configure2(const char* fname);
+    // void configure(const char* fname);
+    // void configure2(const char* fname);
 
-    virtual const char* get_command(const char*dest, const char* cmd)
+    virtual const char* get_command(const char* dest, const char* cmd)
     {
         std::string rstr = "{\"asset_name\":";
         std::cout << "asset_dest :" << dest << " got  command:\n" << cmd << "\n";
@@ -140,11 +132,11 @@ public:
         return strdup(rstr.c_str());
     }
 
-// cJSON* cjbm = bm->getConfig();
-//     char* res = cJSON_Print(cjbm);
-//     printf("Maps at beginning \n%s\n", res);
-//     free((void *)res) ;
-//     cJSON_Delete(cjbm);
+        // cJSON* cjbm = bm->getConfig();
+        //     char* res = cJSON_Print(cjbm);
+        //     printf("Maps at beginning \n%s\n", res);
+        //     free((void *)res) ;
+        //     cJSON_Delete(cjbm);
 
 #if 0
     // todo clean up the fims message thrashing
@@ -199,27 +191,28 @@ public:
         return nullptr;
     }
 #endif
-    
 
     bool free_message(fims_message* message)
     {
         // TODO manage memory better
-        if(message == nullptr)
+        if (message == nullptr)
             return false;
-        delete(message);
+        delete (message);
         return true;
     }
 
     // component. var name, idname , assetvar
-    //virtual bool setRegisterId(const char* cname, const char *rname, const char*idname, assetVar* avar);
-    //virtual assetVar* getRegisterId(const char* cname, const char*idname);
-
+    // virtual bool setRegisterId(const char* cname, const char *rname, const
+    // char*idname, assetVar* avar);  virtual assetVar* getRegisterId(const char*
+    // cname, const char*idname);
 
     // //virtual void showCompMap(void);
-    // virtual bool setRegisterId(const char* cname, const char *vname,const char*idname, assetVar* avar)
+    // virtual bool setRegisterId(const char* cname, const char *vname,const
+    // char*idname, assetVar* avar)
     // {
     //     bool ok = true;
-    //     FPS_ERROR_PRINT( "     >>>   component_id [%s] var name [%s] , id name [%s] \n", cname, vname, idname);
+    //     FPS_ERROR_PRINT( "     >>>   component_id [%s] var name [%s] , id name
+    //     [%s] \n", cname, vname, idname);
     //     //add this idname to the asset component map
     //     //               component        reg_id
     //     // std::map<std::string,std::map<std:string, assetVar *>>
@@ -244,7 +237,6 @@ public:
     //     return iv->second;
     // }
 
-
     // void showCompMap(void)
     // {
     //     for (auto &m : compMap)
@@ -252,56 +244,49 @@ public:
     //         FPS_ERROR_PRINT(" comp_name [%s] \n", m.first.c_str());
     //         for (auto &r : m.second)
     //         {
-    //             FPS_ERROR_PRINT("    >>>var_reg_id [%s] \tavar [%s]\n", r.first.c_str(), r.second->getName());
+    //             FPS_ERROR_PRINT("    >>>var_reg_id [%s] \tavar [%s]\n",
+    //             r.first.c_str(), r.second->getName());
     //         }
     //     }
     // }
-
 
     // void set_side_length(double side_length) {
     //     side_length_ = side_length;
     // }
 
-    //virtual const char * showAssetCj(void);
+    // virtual const char * showAssetCj(void);
 
-    void setVmap(varsmap *_vmap)
-    {
-        vmap = _vmap;
-    }
+    void setVmap(varsmap* _vmap) { vmap = _vmap; }
 
     std::string id;
     std::string name;
     varsmap compMap;
     varsmap allVars;
     // context for asset
-    varsmap *vmap;
+    varsmap* vmap;
 
     varsmap vmaps;
     VarMapUtils vm;
-    //std::map<std::string, std::map<std::string, assetVar*>>compMap;
-    //std::map<std::string, std::map<std::string, assetVar*>>allVars;
-
+    // std::map<std::string, std::map<std::string, assetVar*>>compMap;
+    // std::map<std::string, std::map<std::string, assetVar*>>allVars;
 };
 
-class asset_manager {
+class asset_manager
+{
 protected:
     double side_length_;
 
 public:
-    asset_manager()
-        : side_length_(0) {};
+    asset_manager() : side_length_(0){};
 
-    virtual ~asset_manager() 
+    virtual ~asset_manager()
     {
         FPS_ERROR_PRINT(" asset manager running cleanup\n");
         cleanup();
     };
-    void setVmap(varsmap *_vmap)
-    {
-        vmap = _vmap;
-    }
+    void setVmap(varsmap* _vmap) { vmap = _vmap; }
 //  "/assets/bms":        {
-//                 "bms_1":   { 
+//                 "bms_1":   {
 //                                    "template":"bms_catl_template.json".
 //                                    "subs":[
 //                                       {"replace":"@@BMS_ID@@","with":"bms_1"},
@@ -363,63 +348,67 @@ public:
     }
 #endif
 
-// junk to be removed
+    // junk to be removed
     // void set_side_length(double side_length) {
     //     side_length_ = side_length;
     // }
 
     // send a command to one or all the assets.
-    const char* send_command(const char*dest, const char* cmd)
+    const char* send_command(const char* dest, const char* cmd)
     {
         const char* res;
         std::string rstr = "";
-        if (strcmp(dest, "all")== 0)
+        if (strcmp(dest, "all") == 0)
         {
-            rstr.append("["); // its a list
-            for (auto it = assetMap.begin() ; it != assetMap.end(); ++it)
+            rstr.append("[");  // its a list
+            for (auto it = assetMap.begin(); it != assetMap.end(); ++it)
             {
-                if(it != assetMap.begin())
+                if (it != assetMap.begin())
                     rstr.append(",");
                 res = (it->second)->get_command(it->first.c_str(), cmd);
                 rstr.append(res);
 
-                std::cout << " Manager sent command  " << cmd << " to : " << it->first.c_str() << " res: ["<<res<<"] rstr: [" << rstr << "]\n";
-                free((void *)res);
+                std::cout << " Manager sent command  " << cmd << " to : " << it->first.c_str() << " res: [" << res
+                          << "] rstr: [" << rstr << "]\n";
+                free((void*)res);
             }
             rstr.append("]");
-
         }
         else
         {
             auto it = assetMap.find(dest);
-            if(it != assetMap.end()) {
-                res = assetMap[dest]->get_command(dest,cmd);
+            if (it != assetMap.end())
+            {
+                res = assetMap[dest]->get_command(dest, cmd);
                 rstr.append(res);
-                std::cout << " Manager sent command  " << cmd << " to : " << dest << " res: ["<<res<<"] rstr: [" << rstr.c_str() << "]\n";
-                free((void *)res);
+                std::cout << " Manager sent command  " << cmd << " to : " << dest << " res: [" << res << "] rstr: ["
+                          << rstr.c_str() << "]\n";
+                free((void*)res);
             }
             else
             {
                 std::cout << " Manager dest  [" << dest << "] not in asset map\n";
-                for (auto const &x :assetMap) {
-                    std::cout << "Item Name :[" << x.first <<"]\n";
+                for (auto const& x : assetMap)
+                {
+                    std::cout << "Item Name :[" << x.first << "]\n";
                 }
             }
         }
         return rstr.c_str();
     }
     // this has to be done in the target class to get the full asset type
-    virtual asset* addInstance(const char * name) = 0;
+    virtual asset* addInstance(const char* name) = 0;
 
-    void configInstance(asset *item);
+    void configInstance(asset* item);
 
     // add the asset instance to the asset map
-    virtual void mapInstance(asset *item, const char* _name= nullptr)
+    virtual void mapInstance(asset* item, const char* _name = nullptr)
     {
-        if(_name)
+        if (_name)
             item->setName(_name);
         auto it = assetMap.find(item->name);
-        if(it == assetMap.end()) {
+        if (it == assetMap.end())
+        {
             std::cout << " mapped instance " << item->name << " OK\n";
             assetMap[item->name] = item;
         }
@@ -432,7 +421,8 @@ public:
     virtual asset* getInstance(const char* _name)
     {
         auto it = assetMap.find(_name);
-        if(it != assetMap.end()) {
+        if (it != assetMap.end())
+        {
             return assetMap[_name];
         }
         return nullptr;
@@ -440,26 +430,25 @@ public:
 
     void cleanup(void)
     {
-        for (auto &x : assetMap)
+        for (auto& x : assetMap)
         {
             delete x.second;
         }
         assetMap.clear();
     }
     // this will contain a list of names assets
-    //virtual double area() const = 0;
+    // virtual double area() const = 0;
 
     std::string name;
-    //varmap assetMap;
-    std::map<std::string, asset*>assetMap;
+    // varmap assetMap;
+    std::map<std::string, asset*> assetMap;
     // context for asset manager
-    varsmap *vmap;
-//    VarMapUtils vm;
-
+    varsmap* vmap;
+    //    VarMapUtils vm;
 };
 
 // the types of the manage class factories
-typedef asset_manager* createm_t(const char *name);
+typedef asset_manager* createm_t(const char* name);
 typedef void destroym_t(asset_manager*);
 
 // the types of the class factories
@@ -467,6 +456,6 @@ typedef asset* create_t();
 typedef void destroy_t(asset*);
 // This function will create a  FIMS message buffer
 char* fimsToBuffer(const char* method, const char* uri, const char* replyto, const char* body);
-fims_message* bufferToFims(const char *buffer);
+fims_message* bufferToFims(const char* buffer);
 
 #endif

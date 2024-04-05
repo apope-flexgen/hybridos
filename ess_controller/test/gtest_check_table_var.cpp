@@ -1,29 +1,34 @@
-#include "gtest/gtest.h"
 #include "../funcs/CheckTableVar.cpp"
 #include "scheduler.h"
+#include "gtest/gtest.h"
 
 // Need this in order to compile
 namespace flex
 {
-    const std::chrono::steady_clock::time_point base_time = std::chrono::steady_clock::now();
+const std::chrono::steady_clock::time_point base_time = std::chrono::steady_clock::now();
 }
 
 // Need this in order to compile
-typedef std::vector<schedItem*>schlist;
+typedef std::vector<schedItem*> schlist;
 schlist schreqs;
-cJSON*getSchListcJ(schlist&schreqs);
+cJSON* getSchListcJ(schlist& schreqs);
 
-cJSON*getSchList()
+cJSON* getSchList()
 {
     return getSchListcJ(schreqs);
 }
 
-// Test fixture for creating assetVars and other shared objects for each test case
-class CheckTableVarTest : public ::testing::Test {
+// Test fixture for creating assetVars and other shared objects for each test
+// case
+class CheckTableVarTest : public ::testing::Test
+{
 protected:
-    virtual void SetUp() {
-        // Set up assetVars (including the table data structure and the table vars) for the table assetVar
-        const char* tableVar = R"({"value": 0.0, "tableName": "p_charge_tbl.csv", "tableVar1": "mbmu_soc", "tableVar2": "mbmu_avg_cell_temperature"})";
+    virtual void SetUp()
+    {
+        // Set up assetVars (including the table data structure and the table vars)
+        // for the table assetVar
+        const char* tableVar =
+            R"({"value": 0.0, "tableName": "p_charge_tbl.csv", "tableVar1": "mbmu_soc", "tableVar2": "mbmu_avg_cell_temperature"})";
         cJSON* cjval = cJSON_Parse(tableVar);
         tableAv = vm.setValfromCj(vmap, "/status/bms", "pChargeLimit", cjval);
 
@@ -36,9 +41,7 @@ protected:
         CheckTableVar(vmap, amap, "bms", nullptr, tableAv);
     }
 
-    virtual void TearDown() {
-        delete tableAv->am;
-    }
+    virtual void TearDown() { delete tableAv->am; }
 
     varsmap vmap;       // main data map
     varmap amap;        // map of local variables for asset
@@ -47,13 +50,14 @@ protected:
 };
 
 // Test if the table and the table variables exist in the table assetVar
-TEST_F(CheckTableVarTest, table_var_params_valid) {
+TEST_F(CheckTableVarTest, table_var_params_valid)
+{
     EXPECT_STREQ("p_charge_tbl.csv", tableAv->getcParam("tableName"));
     EXPECT_STREQ("mbmu_soc", tableAv->getcParam("tableVar1"));
     EXPECT_STREQ("mbmu_avg_cell_temperature", tableAv->getcParam("tableVar2"));
 
     // Check to see if the table ptr and table vars exist in the table assetVar
-    //ASSERT_TRUE(tableAv->getvParam("tbl"));
+    // ASSERT_TRUE(tableAv->getvParam("tbl"));
     ASSERT_TRUE(vm.tblMap.find("p_charge_tbl.csv") != vm.tblMap.end());
 
     assetVar* tblVar1 = amap["mbmu_soc"];
@@ -66,9 +70,10 @@ TEST_F(CheckTableVarTest, table_var_params_valid) {
     EXPECT_EQ(0, tblVar2->getdVal());
 }
 
-// Test valid case - both vars are within the range of key-pair values in the table
-TEST_F(CheckTableVarTest, table_var_within_range) {
-
+// Test valid case - both vars are within the range of key-pair values in the
+// table
+TEST_F(CheckTableVarTest, table_var_within_range)
+{
     std::shared_ptr<two_way_tbl> tbl = vm.tblMap.find("p_charge_tbl.csv")->second;
 
     // Both vars == key-pair values
@@ -77,7 +82,7 @@ TEST_F(CheckTableVarTest, table_var_within_range) {
     EXPECT_EQ(0.12, getTableValue(tblVal1, tblVal2, tbl));
 
     // One var between key value ranges (ex.: 35 between 30 and 40)
-    tblVal1= 35;
+    tblVal1 = 35;
     EXPECT_EQ(0.12, getTableValue(tblVal1, tblVal2, tbl));
 
     assetVar* tblVar1 = amap["mbmu_soc"];
@@ -90,10 +95,11 @@ TEST_F(CheckTableVarTest, table_var_within_range) {
     EXPECT_EQ(0.12, tableAv->getdVal());
 }
 
-// Test valid case - both vars are within the range of key-pair values in the table (edge case)
-TEST_F(CheckTableVarTest, table_var_within_range_edge_case) {
-
-    //two_way_tbl* tbl = (two_way_tbl*)tableAv->getvParam("tbl");
+// Test valid case - both vars are within the range of key-pair values in the
+// table (edge case)
+TEST_F(CheckTableVarTest, table_var_within_range_edge_case)
+{
+    // two_way_tbl* tbl = (two_way_tbl*)tableAv->getvParam("tbl");
     std::shared_ptr<two_way_tbl> tbl = vm.tblMap.find("p_charge_tbl.csv")->second;
 
     // Both vars == lower-bound key-pair values
@@ -133,10 +139,11 @@ TEST_F(CheckTableVarTest, table_var_within_range_edge_case) {
     EXPECT_EQ(1, tableAv->getdVal());
 }
 
-// Test invalid case - one var is outside the range of key-pair values in the table
-TEST_F(CheckTableVarTest, table_var_outside_range) {
-
-    //two_way_tbl* tbl = (two_way_tbl*)tableAv->getvParam("tbl");
+// Test invalid case - one var is outside the range of key-pair values in the
+// table
+TEST_F(CheckTableVarTest, table_var_outside_range)
+{
+    // two_way_tbl* tbl = (two_way_tbl*)tableAv->getvParam("tbl");
     std::shared_ptr<two_way_tbl> tbl = vm.tblMap.find("p_charge_tbl.csv")->second;
 
     // Var one and var two are less than the lower bound
@@ -176,7 +183,8 @@ TEST_F(CheckTableVarTest, table_var_outside_range) {
     EXPECT_EQ(0, tableAv->getdVal());
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
     ::testing::InitGoogleTest(&argc, argv);
 
     return RUN_ALL_TESTS();

@@ -19,85 +19,87 @@
 //
 #ifndef RTW_HEADER_Reference_h_
 #define RTW_HEADER_Reference_h_
-#include "rtwtypes.h"
 #include "func1.h"
 #include "func2.h"
 #include "func3.h"
+#include "rtwtypes.h"
 
 // Class declaration for model Reference
 class Reference_class final
 {
-  // public data and function members
- public:
-  // Block signals and states (default storage) for system '<Root>'
-  struct DW_Reference_T {
-    int32_T Delay_DSTATE;              // '<Root>/Delay'
-  };
+    // public data and function members
+public:
+    // Block signals and states (default storage) for system '<Root>'
+    struct DW_Reference_T
+    {
+        int32_T Delay_DSTATE;  // '<Root>/Delay'
+    };
 
-  // External inputs (root inport signals), for system '<Root>'
-  struct ExtUPointer_Reference_T {
-    boolean_T DMTestDirection;         // '<Root>/DMTestDirection'
-  };
+    // External inputs (root inport signals), for system '<Root>'
+    struct ExtUPointer_Reference_T
+    {
+        boolean_T DMTestDirection;  // '<Root>/DMTestDirection'
+    };
 
-  // External outputs (root outport signals), for system '<Root>'
-  struct ExtYPointer_Reference_T {
-    real_T DMTestOutDblNoise;          // '<Root>/DMTestOutDblNoise'
-    int32_T DMTestOut;                 // '<Root>/DMTestOut'
-    int32_T AdderResult;               // '<Root>/AdderResult'
-    int32_T GainResult;                // '<Root>/GainResult'
-    boolean_T DirectionFeedback;       // '<Root>/DirectionFeedback'
-  };
+    // External outputs (root outport signals), for system '<Root>'
+    struct ExtYPointer_Reference_T
+    {
+        real_T DMTestOutDblNoise;     // '<Root>/DMTestOutDblNoise'
+        int32_T DMTestOut;            // '<Root>/DMTestOut'
+        int32_T AdderResult;          // '<Root>/AdderResult'
+        int32_T GainResult;           // '<Root>/GainResult'
+        boolean_T DirectionFeedback;  // '<Root>/DirectionFeedback'
+    };
 
-  // Copy Constructor
-  Reference_class(Reference_class const&) = delete;
+    // Copy Constructor
+    Reference_class(Reference_class const&) = delete;
 
-  // Assignment Operator
-  Reference_class& operator= (Reference_class const&) & = delete;
+    // Assignment Operator
+    Reference_class& operator=(Reference_class const&) & = delete;
 
-  // Move Constructor
-  Reference_class(Reference_class &&) = delete;
+    // Move Constructor
+    Reference_class(Reference_class&&) = delete;
 
-  // Move Assignment Operator
-  Reference_class& operator= (Reference_class &&) = delete;
+    // Move Assignment Operator
+    Reference_class& operator=(Reference_class&&) = delete;
 
-  // Constructor
-  Reference_class(ExtUPointer_Reference_T *Reference_ExtUPointer_g,
-                  ExtYPointer_Reference_T *Reference_ExtYPointer_i);
+    // Constructor
+    Reference_class(ExtUPointer_Reference_T* Reference_ExtUPointer_g, ExtYPointer_Reference_T* Reference_ExtYPointer_i);
 
-  // External inputs (root inport signals)
-  ExtUPointer_Reference_T *ExtUPointer_ref_U;
+    // External inputs (root inport signals)
+    ExtUPointer_Reference_T* ExtUPointer_ref_U;
 
-  // External outputs (root outport signals)
-  ExtYPointer_Reference_T *ExtYPointer_ref_Y;
+    // External outputs (root outport signals)
+    ExtYPointer_Reference_T* ExtYPointer_ref_Y;
 
-  // set method for External inputs (root inport signals)
-  void setExternalInputs(const ExtUPointer_Reference_T &ExtUPointer_U);
+    // set method for External inputs (root inport signals)
+    void setExternalInputs(const ExtUPointer_Reference_T& ExtUPointer_U);
 
-  // get method for External outputs (root outport signals)
-  const ExtYPointer_Reference_T &getExternalOutputs() const;
+    // get method for External outputs (root outport signals)
+    const ExtYPointer_Reference_T& getExternalOutputs() const;
 
-  // model initialize function
-  static void initialize();
+    // model initialize function
+    static void initialize();
 
-  // model step function
-  void step();
+    // model step function
+    void step();
 
-  // Destructor
-  ~Reference_class();
+    // Destructor
+    ~Reference_class();
 
-  // private data and function members
- private:
-  // Block states
-  DW_Reference_T Reference_DW;
+    // private data and function members
+private:
+    // Block states
+    DW_Reference_T Reference_DW;
 
-  // model instance variable for '<Root>/Model'
-  func1 ModelMDLOBJ1;
+    // model instance variable for '<Root>/Model'
+    func1 ModelMDLOBJ1;
 
-  // model instance variable for '<Root>/Model1'
-  func2 Model1MDLOBJ2;
+    // model instance variable for '<Root>/Model1'
+    func2 Model1MDLOBJ2;
 
-  // model instance variable for '<Root>/Model2'
-  func3 Model2MDLOBJ3;
+    // model instance variable for '<Root>/Model2'
+    func3 Model2MDLOBJ3;
 };
 
 //-
@@ -116,7 +118,7 @@ class Reference_class final
 //
 //  '<Root>' : 'Reference'
 
-#endif                                 // RTW_HEADER_Reference_h_
+#endif  // RTW_HEADER_Reference_h_
 
 //
 // File trailer for generated code.

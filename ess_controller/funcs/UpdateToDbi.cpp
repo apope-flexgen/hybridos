@@ -2,17 +2,16 @@
 #define UPDATETODBI_CPP
 
 #include "asset.h"
-#include "formatters.hpp"
 #include "ess_utils.hpp"
+#include "formatters.hpp"
 
-extern "C++"
-{
-    int UpdateToDbi(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*av);
+extern "C++" {
+int UpdateToDbi(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
 }
 
 /**
  * @brief Initializes the parameters to be used for running system command
- * 
+ *
  * @param vmap the global data map shared by all assets/asset managers
  * @param amap the local data map used by an asset/asset manager
  * @param aname the name of the asset/asset manager
@@ -20,6 +19,8 @@ extern "C++"
  */
 void setupUpdateDbiParams(varsmap& vmap, varmap& amap, const char* aname, assetVar* av)
 {
+    UNUSED(vmap);
+    UNUSED(amap);
     FPS_PRINT_DEBUG("Setting up params for [{}]", av->getfName());
 
     // Amount of time to wait before sending update request to dbi
@@ -43,12 +44,13 @@ void setupUpdateDbiParams(varsmap& vmap, varmap& amap, const char* aname, assetV
 
 /**
  * @brief Sends an update request to the dbi
- * 
+ *
  * @param vmap the global data map shared by all assets/asset managers
  * @param amap the local data map used by an asset/asset manager
  * @param aname the name of the asset/asset manager
  * @param p_fims the fims object for data interchange
- * @param av the assetVar containing the collection of other assetVars targeted for dbi updates
+ * @param av the assetVar containing the collection of other assetVars targeted
+ * for dbi updates
  */
 int UpdateToDbi(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av)
 {
@@ -57,43 +59,48 @@ int UpdateToDbi(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, as
 
     if (!p_fims)
     {
-        FPS_PRINT_WARN("p_fims is null");
+        FPS_PRINT_WARN("p_fims is null", NULL);
         return -1;
     }
 
-    FPS_PRINT_DEBUG("av [{}] av->am [{}] aname [{}]", av->getfName(), av->am ? av->am->name : "null", cstr{aname});
+    FPS_PRINT_DEBUG("av [{}] av->am [{}] aname [{}]", av->getfName(), av->am ? av->am->name : "null", cstr{ aname });
     VarMapUtils* vm = av->am->vm;
 
     // Setup parameters needed for updating dbi function
     setupUpdateDbiParams(vmap, amap, aname, av);
 
-
-    double tNow           = vm->get_time_dbl();
-    double tDiff          = tNow - av->getdParam("tLast");
-    double updateTimeout  = av->getdParam("updateTimeout");
+    double tNow = vm->get_time_dbl();
+    double tDiff = tNow - av->getdParam("tLast");
+    double updateTimeout = av->getdParam("updateTimeout");
     double currUpdateTime = av->getdParam("currUpdateTime");
-    bool includeMetaData  = av->getbParam("includeMetaData");
-    const auto document   = fmt::format("{}", av->getcParam("document"));
+    bool includeMetaData = av->getbParam("includeMetaData");
+    const auto document = fmt::format("{}", av->getcParam("document"));
 
-    // Wait until current update time reaches 0 before sending an update request to dbi
+    // Wait until current update time reaches 0 before sending an update request
+    // to dbi
     if (currUpdateTime > 0)
         ESSUtils::decrementTime(av, currUpdateTime, tDiff, "currUpdateTime");
-    
+
     if (currUpdateTime <= 0)
     {
-        FPS_PRINT_DEBUG("Update time reached 0. Now attempting to send update request to dbi for asset [{}] with [{}]"
-                        , cstr{aname}, av->getfName());
-        
+        FPS_PRINT_DEBUG(
+            "Update time reached 0. Now attempting to send update "
+            "request to dbi for asset [{}] with [{}]",
+            cstr{ aname }, av->getfName());
+
         // Reset the current update time to the configured update time
         av->setParam("currUpdateTime", updateTimeout);
-        
+
         // The list of variables to update to the dbi
         std::vector<assetVar*> dbiVars;
 
         // If we are unable to retrieve the list of operands, skip update to dbi
         if (!ESSUtils::getAvList(vmap, amap, av, dbiVars))
         {
-            FPS_PRINT_WARN("Unable to retrieve list of assetVars for [{}]. Skipping update to dbi", av->getfName());
+            FPS_PRINT_WARN(
+                "Unable to retrieve list of assetVars for [{}]. Skipping "
+                "update to dbi",
+                av->getfName());
             return -1;
         }
         if (dbiVars.size() <= 0)
@@ -101,23 +108,21 @@ int UpdateToDbi(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, as
             FPS_PRINT_WARN("The list of assetVars for [{}] is empty. Skipping update to dbi", av->getfName());
             return -1;
         }
-        
-        // The collection of variables to update to the dbi, where the key is the uri of the variable and the value is
-        // the variable name and contents
-        // Ex.:
-        //     key = uriKey + assetVar name (/components/bms_1/charge_energy -> #components#bms_1/charge_energy)
-        //     value = assetVar's metadata
+
+        // The collection of variables to update to the dbi, where the key is the
+        // uri of the variable and the value is the variable name and contents Ex.:
+        //     key = uriKey + assetVar name (/components/bms_1/charge_energy ->
+        //     #components#bms_1/charge_energy) value = assetVar's metadata
         std::vector<std::pair<std::string, std::string>> varsToUpdate;
 
         // Add the variables to the collection of variables to update to the dbi
         for (auto it = dbiVars.begin(); it != dbiVars.end(); it++)
         {
-            FPS_PRINT_DEBUG("Got dbiAv [{}] from assetVar [{}] >> dbiAv->comp: [{}]", (*it)->getfName(), (*it)->getfName(), (*it)->comp);
-            const std::string msg = includeMetaData 
-                                        ? fmt::format("{:f}", *it)
-                                        : fmt::format("{:c}", *it);
+            FPS_PRINT_DEBUG("Got dbiAv [{}] from assetVar [{}] >> dbiAv->comp: [{}]", (*it)->getfName(),
+                            (*it)->getfName(), (*it)->comp);
+            const std::string msg = includeMetaData ? fmt::format("{:f}", *it) : fmt::format("{:c}", *it);
 
-            const std::string key = fmt::format("{}/{}",  vm->run_replace((*it)->comp, "/", "#"), (*it)->name);
+            const std::string key = fmt::format("{}/{}", vm->run_replace((*it)->comp, "/", "#"), (*it)->name);
             FPS_PRINT_DEBUG("dbiAv->comp: [{}]  key: [{}]  msg: [{}]", (*it)->comp, key, msg);
 
             varsToUpdate.emplace_back(std::make_pair(key, msg));

@@ -32,7 +32,7 @@ THREADS = -pthread
 #CPPFLAGS += -g 
 CPPFLAGS += -std=c++17
 
-CPPFLAGS += -Wall -Wno-format-security -Wno-format-truncation -Werror
+CPPFLAGS += -Wall -Wno-format-security -Wno-format-truncation -Werror -Wextra -Wpedantic
 GITBRANCH  = $(shell git branch | grep \* | cut -d ' ' -f2)
 GITCOMMIT  = $(shell git log --pretty=format:'%h' -n 1)
 GITVERSION = $(shell git rev-list --count $(GITCOMMIT))

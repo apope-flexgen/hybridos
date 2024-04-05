@@ -13,10 +13,10 @@
 class Version
 {
 public:
-    Version ();
-    virtual ~Version ();
-    
-    void init(void); // initialization, call after object creation
+    Version();
+    virtual ~Version();
+
+    void init(void);  // initialization, call after object creation
 
     char* get_build(void);
     char* get_commit(void);
@@ -27,7 +27,7 @@ private:
     char* commit;
     char* tag;
 
-    char* extract(char* info, char* start, char* end);
+    char* extract(char* info, char* start, const char* end);
 };
 
 #endif /* VERSION_H_ */

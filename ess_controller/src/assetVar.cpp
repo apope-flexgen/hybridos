@@ -1,11 +1,12 @@
 #ifndef ASSETVAR_CPP
 #define ASSETVAR_CPP
 
-#include "asset.h"
 #include "assetVar.h"
+#include "asset.h"
 #include "assetFunc.h"
-#include "varMapUtils.h"
+#include "ess_utils.h"
 #include "formatters.hpp"
+#include "varMapUtils.h"
 
 #define MAX_ALARM_SIZE 32
 extern int setvar_debug;
@@ -24,10 +25,10 @@ extern int setvar_debug_asset;
 /***********************************************
  *                 asset_log
  ***********************************************/
- static int log1count;
- static int log2count;
- 
-asset_log::asset_log() 
+static int log1count;
+static int log2count;
+
+asset_log::asset_log()
 {
     srcAv = nullptr;
     destAv = nullptr;
@@ -36,14 +37,14 @@ asset_log::asset_log()
     log_time = 0.0;
     aVal = nullptr;
     log1count++;
-
 }
 
 asset_log::asset_log(void* src, void* dest, const char* atype, const char* msg, int sev, double ltime)
 {
     srcAv = src;
     destAv = dest;
-    if (atype)altype = atype;
+    if (atype)
+        altype = atype;
     almsg = msg;
     severity = sev;
     log_time = ltime;
@@ -63,16 +64,18 @@ void asset_log::setDestIdx(int idx)
 
 asset_log::~asset_log()
 {
-    if (aVal) delete (assetVal*)aVal;
-    //FPS_PRINT_INFO
-    // auto xx = fmt::format(" asset alarm cleanup log_time [{:2.3f}] log1 {} log2"
+    if (aVal)
+        delete (assetVal*)aVal;
+    // FPS_PRINT_INFO
+    // auto xx = fmt::format(" asset alarm cleanup log_time [{:2.3f}] log1 {}
+    // log2"
     //     , log_time
     //     , log1count
     //     , --log2count
     //     );
     // printf("%s\n",xx.c_str());
 
-    //FPS_PRINT_INFO("asset alarm cleanup");
+    // FPS_PRINT_INFO("asset alarm cleanup");
 }
 
 /***********************************************
@@ -129,7 +132,7 @@ assFeat::assFeat(const char* _name, bool val)
 
 assFeat::assFeat(const char* _name, const char* val)
 {
-    if(val)
+    if (val)
     {
         valuestring = strdup(val);
     }
@@ -137,7 +140,6 @@ assFeat::assFeat(const char* _name, const char* val)
     {
         valuestring = strdup("unknown");
         FPS_PRINT_ERROR(" Feat [{}] value unknown ", _name);
-
     }
     type = ASTRING;
     name = _name;
@@ -164,7 +166,7 @@ assFeat::assFeat(const char* _name, void* val)
 }
 assFeat::assFeat(const char* _name, assetVar* val)
 {
-    valuestring = nullptr;//strdup(val);
+    valuestring = nullptr;  // strdup(val);
     valuevoid = nullptr;
     type = AAVAR;
     name = _name;
@@ -178,13 +180,20 @@ assFeat::assFeat(const char* _name, assetVar* val)
 
 assFeat::~assFeat()
 {
-    if (valuestring)free((void*)valuestring);
+    if (valuestring)
+        free((void*)valuestring);
     // this may not work ...we may need to know the type
-    if (valuevoid)free((void*)valuevoid);
-
+    if (valuevoid)
+        free((void*)valuevoid);
 }
 assFeat::assFeat(const assFeat& other)
-    : name(other.name), type(other.type), valuedouble(other.valuedouble), valueint(other.valueint), valuebool(other.valuebool), av(other.av), valuevoid(other.valuevoid)
+    : name(other.name),
+      type(other.type),
+      valuedouble(other.valuedouble),
+      valueint(other.valueint),
+      valuebool(other.valuebool),
+      av(other.av),
+      valuevoid(other.valuevoid)
 {
     // if (valuestring)
     // {
@@ -285,20 +294,16 @@ int assetFeatDict::addCj(cJSON* cj, int uiObject, bool skipName)
         if (0)
         {
             char* stmp2 = cJSON_PrintUnformatted(cjic);
-            FPS_PRINT_INFO("stmp2 >>{}<< name [{}] child {} next {}"
-                , stmp2
-                , cstr{ cjic->string }
-                , fmt::ptr(cjic->child)
-                , fmt::ptr(cjic->next)
-            );
+            FPS_PRINT_INFO("stmp2 >>{}<< name [{}] child {} next {}", stmp2, cstr{ cjic->string },
+                           fmt::ptr(cjic->child), fmt::ptr(cjic->next));
             free((void*)stmp2);
         }
-        //addFeat(cjic);
-        if (uiObject
-            && ((strcmp(cjic->string, "value") == 0)
-                || (/*uiObject &&*/ (skipName && strcmp(cjic->string, "name") == 0))))
+        // addFeat(cjic);
+        if (uiObject &&
+            ((strcmp(cjic->string, "value") == 0) || (/*uiObject &&*/ (skipName && strcmp(cjic->string, "name") == 0))))
         {
-            if (0) FPS_PRINT_INFO("skipping [{}] as a base param  its special", cstr{ cjic->string });
+            if (0)
+                FPS_PRINT_INFO("skipping [{}] as a base param  its special", cstr{ cjic->string });
         }
         else
         {
@@ -319,16 +324,15 @@ int assetFeatDict::addCj(cJSON* cj, int uiObject, bool skipName)
     }
     if (0)
     {
-        FPS_PRINT_INFO("Features added");
+        FPS_PRINT_INFO("Features added", NULL);
         showFeat();
-        FPS_PRINT_INFO("Features done");
+        FPS_PRINT_INFO("Features done", NULL);
     }
     return 0;
 }
 
-
 // test if we have a feature
-//bool assetFeatDict::gotFeat(const char* name);
+// bool assetFeatDict::gotFeat(const char* name);
 assFeat* assetFeatDict::getFeat(const char* name)
 {
     if (featMap.find(name) != featMap.end())
@@ -423,41 +427,40 @@ cJSON* assetFeatDict::getFeat(const char* name, cJSON** cj)
         assFeat* af = featMap[name];
         switch (af->type)
         {
-        case assFeat::AINT:
-            cJSON_AddNumberToObject(cjf, "value", af->valueint);
-            break;
-        case assFeat::AFLOAT:
-            cJSON_AddNumberToObject(cjf, "value", af->valuedouble);
-            break;
-        case assFeat::ASTRING:
-            cJSON_AddStringToObject(cjf, "value", af->valuestring);
+            case assFeat::AINT:
+                cJSON_AddNumberToObject(cjf, "value", af->valueint);
+                break;
+            case assFeat::AFLOAT:
+                cJSON_AddNumberToObject(cjf, "value", af->valuedouble);
+                break;
+            case assFeat::ASTRING:
+                cJSON_AddStringToObject(cjf, "value", af->valuestring);
+                [[fallthrough]];
+            case assFeat::AAVAR:
+                // TODO after MVP get full data from an AAVAR Param not just the name
+                if (af->av)
+                {
+                    cJSON_AddStringToObject(cjf, "avar", af->av->name.c_str());
+                }
+                break;
 
-        case assFeat::AAVAR:
-            // TODO after MVP get full data from an AAVAR Param not just the name
-            if (af->av)
-            {
-                cJSON_AddStringToObject(cjf, "avar", af->av->name.c_str());
-            }
-            break;
-
-        case assFeat::ABOOL:
-            if (af->valuebool)
-            {
-                cJSON_AddTrueToObject(cjf, "value");
-            }
-            else
-            {
-                cJSON_AddFalseToObject(cjf, "value");
-            }
-            break;
-        default:
-            cJSON_AddStringToObject(cjf, "value", "FeatValNotKnown");
-
+            case assFeat::ABOOL:
+                if (af->valuebool)
+                {
+                    cJSON_AddTrueToObject(cjf, "value");
+                }
+                else
+                {
+                    cJSON_AddFalseToObject(cjf, "value");
+                }
+                break;
+            default:
+                cJSON_AddStringToObject(cjf, "value", "FeatValNotKnown");
         }
         *cj = cjf;
         return cjf;
     }
-    //enum AFTypes {AINT, AFLOAT, ASTRING, ABOOL, AEND}
+    // enum AFTypes {AINT, AFLOAT, ASTRING, ABOOL, AEND}
     return nullptr;
 }
 
@@ -469,36 +472,35 @@ int assetFeatDict::getFeatType(const char* name)
         assFeat* af = featMap[name];
         switch (af->type)
         {
-        case assFeat::AINT:
-            featType = assFeat::AINT;
-            break;
-        case assFeat::AFLOAT:
-            featType = assFeat::AFLOAT;
-            break;
-        case assFeat::ASTRING:
-            featType = assFeat::ASTRING;
-            break;
-        case assFeat::AAVAR:
-            featType = assFeat::AAVAR;
-            break;
-        case assFeat::ABOOL:
-            featType = assFeat::ABOOL;
-            break;
-        default:
-            featType = -1;
+            case assFeat::AINT:
+                featType = assFeat::AINT;
+                break;
+            case assFeat::AFLOAT:
+                featType = assFeat::AFLOAT;
+                break;
+            case assFeat::ASTRING:
+                featType = assFeat::ASTRING;
+                break;
+            case assFeat::AAVAR:
+                featType = assFeat::AAVAR;
+                break;
+            case assFeat::ABOOL:
+                featType = assFeat::ABOOL;
+                break;
+            default:
+                featType = -1;
         }
     }
     return featType;
 }
 
-//assetFeatDict
+// assetFeatDict
 // moved to assetFunc.cpp
-//cJSON* assetFeatDict::getFeat(const char* name, cJSON** cj);
+// cJSON* assetFeatDict::getFeat(const char* name, cJSON** cj);
 
 // test if we have a feature
 bool assetFeatDict::gotFeat(const char* name)
 {
-
     if (featMap.find(name) != featMap.end())
     {
         return true;
@@ -508,22 +510,24 @@ bool assetFeatDict::gotFeat(const char* name)
 
 void assetFeatDict::setFeat(const char* name, int idx, bool bval, assetVar* av)
 {
-    if (0) FPS_PRINT_INFO("name [{}] idx [{}] ", name, idx);
+    if (0)
+        FPS_PRINT_INFO("name [{}] idx [{}] ", name, idx);
     if (featMap.find(name) == featMap.end())
     {
         int foo = 0;
         assFeat* af = nullptr;
         af = new assFeat(name, foo);
-        if (af) featMap[name] = af;
+        if (af)
+            featMap[name] = af;
     }
-    if(av)
+    if (av)
     {
-        if(av->lock && !featMap[name]->unlock)
+        if (av->lock && !featMap[name]->unlock)
         {
             return;
         }
     }
-    if(featMap[name]->lock) 
+    if (featMap[name]->lock)
     {
         return;
     }
@@ -537,19 +541,16 @@ void assetFeatDict::setFeat(const char* name, int idx, bool bval, assetVar* av)
         featMap[name]->valueint &= ~(1 << idx);
     }
 
-    if (0) FPS_PRINT_INFO("after name [{}] idx [{}] bval [{}] val {:#08x}"
-        , name
-        , idx
-        , bval
-        , featMap[name]->valueint
-    );
+    if (0)
+        FPS_PRINT_INFO("after name [{}] idx [{}] bval [{}] val {:#08x}", name, idx, bval, featMap[name]->valueint);
 }
 void assetFeatDict::setFeat(const char* name, cJSON* cj, assetVar* av)
 {
     if (featMap.find(name) == featMap.end())
     {
         assFeat* af = nullptr;
-        if (cj->child) cj = cj->child;
+        if (cj->child)
+            cj = cj->child;
         if (cJSON_IsTrue(cj) || cJSON_IsFalse(cj))
         {
             bool bval = cJSON_IsTrue(cj);
@@ -572,26 +573,30 @@ void assetFeatDict::setFeat(const char* name, cJSON* cj, assetVar* av)
         }
         else
         {
-            FPS_PRINT_INFO("unmanaged cJSON string {} type {} child {}", cstr{ cj->string }, cj->type, fmt::ptr(cj->child));
+            FPS_PRINT_INFO("unmanaged cJSON string {} type {} child {}", cstr{ cj->string }, cj->type,
+                           fmt::ptr(cj->child));
         }
 
-        if (af) featMap[name] = af;
+        if (af)
+            featMap[name] = af;
     }
     else
     {
-        if(av)
+        if (av)
         {
-            if(av->lock && !featMap[name]->unlock)
+            if (av->lock && !featMap[name]->unlock)
             {
                 return;
             }
-        }        
-        if(featMap[name]->lock) 
+        }
+        if (featMap[name]->lock)
         {
             return;
         }
-        if (0) FPS_PRINT_INFO("name [{}] cJSON type {} child {}", name, cj->type, fmt::ptr(cj->child));
-        if (cj->child) cj = cj->child;
+        if (0)
+            FPS_PRINT_INFO("name [{}] cJSON type {} child {}", name, cj->type, fmt::ptr(cj->child));
+        if (cj->child)
+            cj = cj->child;
 
         featMap[name]->valuedouble = cj->valuedouble;
         featMap[name]->valueint = cj->valueint;
@@ -610,37 +615,36 @@ void assetFeatDict::setFeat(const char* name, cJSON* cj, assetVar* av)
 
 void assetFeatDict::setFeat(const char* name, int idx, cJSON* cj, assetVar* av)
 {
-    if (0) FPS_PRINT_INFO("name [{}] idx [{}] cJSON type {}", name, idx, cj->type);
+    if (0)
+        FPS_PRINT_INFO("name [{}] idx [{}] cJSON type {}", name, idx, cj->type);
     if (featMap.find(name) == featMap.end())
     {
         int foo = 0;
         assFeat* af = nullptr;
         af = new assFeat(name, foo);
-        if (af) featMap[name] = af;
+        if (af)
+            featMap[name] = af;
     }
-    if(av)
+    if (av)
     {
-        if(av->lock && !featMap[name]->unlock)
+        if (av->lock && !featMap[name]->unlock)
         {
             return;
         }
     }
-    if(featMap[name]->lock) 
+    if (featMap[name]->lock)
     {
         return;
     }
 
-    if (cj->child) cj = cj->child;
+    if (cj->child)
+        cj = cj->child;
     bool bval = false;
     if (cJSON_IsTrue(cj) || cJSON_IsFalse(cj))
     {
         bval = cJSON_IsTrue(cj);
-        if (0) FPS_PRINT_INFO("before name [{}] idx [{}] bval [{}] val {:#08x}"
-            , name
-            , idx
-            , bval
-            , featMap[name]->valueint
-        );
+        if (0)
+            FPS_PRINT_INFO("before name [{}] idx [{}] bval [{}] val {:#08x}", name, idx, bval, featMap[name]->valueint);
 
         if (bval)
         {
@@ -651,12 +655,8 @@ void assetFeatDict::setFeat(const char* name, int idx, cJSON* cj, assetVar* av)
             featMap[name]->valueint &= ~(1 << idx);
         }
 
-        if (0) FPS_PRINT_INFO("after name [{}] idx [{}] bval [{}] val {:#08x}"
-            , name
-            , idx
-            , bval
-            , featMap[name]->valueint
-        );
+        if (0)
+            FPS_PRINT_INFO("after name [{}] idx [{}] bval [{}] val {:#08x}", name, idx, bval, featMap[name]->valueint);
     }
 }
 
@@ -669,14 +669,14 @@ void assetFeatDict::setFeat(const char* name, assetVar* val, assetVar* av)
     }
     else
     {
-        if(av)
+        if (av)
         {
-            if(av->lock && !featMap[name]->unlock)
+            if (av->lock && !featMap[name]->unlock)
             {
                 return;
             }
         }
-        if(featMap[name]->lock) 
+        if (featMap[name]->lock)
         {
             return;
         }
@@ -687,41 +687,41 @@ void assetFeatDict::setFeat(const char* name, assetVar* val, assetVar* av)
     return;
 }
 
-
 void assetFeatDict::setFeatfromAv(const char* name, assetVar* av, const char* param)
 {
-    if(!av)
+    if (!av)
     {
-        FPS_PRINT_ERROR("{}"," we need an av");
+        FPS_PRINT_ERROR("{}", " we need an av");
         return;
-
     }
-    assetVar*realav =av->linkVar?av->linkVar:av;
+    assetVar* realav = av->linkVar ? av->linkVar : av;
 
     assetVal* aVal = realav->aVal;
 
-    if(param)
+    if (param)
     {
-        if(0)FPS_PRINT_INFO("need to use the param [{}]",param);
-        if(realav->extras->baseDict)
+        if (0)
+            FPS_PRINT_INFO("need to use the param [{}]", param);
+        if (realav->extras->baseDict)
         {
             double dval = 0;
             assFeat* af = realav->extras->baseDict->getFeat(param);
-            if(0)FPS_PRINT_INFO(" seeking param [{}] , got [{}]", param, fmt::ptr(af));
-            if(af)
+            if (0)
+                FPS_PRINT_INFO(" seeking param [{}] , got [{}]", param, fmt::ptr(af));
+            if (af)
             {
-                if(af->lock)
+                if (af->lock)
                 {
                     return;
                 }
-                switch(af->type)
+                switch (af->type)
                 {
                     case assFeat::AINT:
-                        dval = (double) af->valueint;
+                        dval = (double)af->valueint;
                         setFeat(name, dval);
                         break;
                     case assFeat::AFLOAT:
-                        dval = (double) af->valuedouble;
+                        dval = (double)af->valuedouble;
                         setFeat(name, dval);
                         break;
                     case assFeat::ABOOL:
@@ -732,47 +732,49 @@ void assetFeatDict::setFeatfromAv(const char* name, assetVar* av, const char* pa
                         break;
                     default:
                         FPS_PRINT_ERROR("DEFAULT Type  param [{}] name [{}] done", param, name);
-                    break;
+                        break;
                 }
-                if(0)FPS_PRINT_INFO("Set name  [{}] from param  [{}] done", name, param);
+                if (0)
+                    FPS_PRINT_INFO("Set name  [{}] from param  [{}] done", name, param);
             }
         }
         return;
     }
 
-    //assFeat* af = nullptr;// new assFeat(name, aVal->valuedouble);
+    // assFeat* af = nullptr;// new assFeat(name, aVal->valuedouble);
     double dval = 0;
-    //int ival = 0;
+    // int ival = 0;
     switch (aVal->type)
     {
-    case assetVar::AINT:
-        dval = (double) aVal->valueint;
-        setFeat(name, dval);
-        //setFeat(name, aVal->valueint);
-        if(0)FPS_PRINT_INFO(" av [{}] INT value [{}]", av->getfName(), aVal->valueint);
-        break;
-    case assetVar::AFLOAT:
-        //ival = (int)aVal->valuedouble;
-        //setFeat(name, ival);
-        setFeat(name, aVal->valuedouble);
-        if(0)FPS_PRINT_INFO(" av [{}] FLOAT value [{}]", av->getfName(), aVal->valuedouble);
-        break;
-    case assetVar::ABOOL:
-        setFeat(name, aVal->valuebool);
-        //ival = (aVal->valuebool == true);
-        //dval = (double)ival;
-        //setFeat(name, dval);
-        break;
-    case assetVar::ASTRING:
-        setFeat(name, aVal->valuestring);
-        break;
-    default:
-        FPS_PRINT_ERROR("DEFAULT Type  name [{}]", name);
-        break;
+        case assetVar::AINT:
+            dval = (double)aVal->valueint;
+            setFeat(name, dval);
+            // setFeat(name, aVal->valueint);
+            if (0)
+                FPS_PRINT_INFO(" av [{}] INT value [{}]", av->getfName(), aVal->valueint);
+            break;
+        case assetVar::AFLOAT:
+            // ival = (int)aVal->valuedouble;
+            // setFeat(name, ival);
+            setFeat(name, aVal->valuedouble);
+            if (0)
+                FPS_PRINT_INFO(" av [{}] FLOAT value [{}]", av->getfName(), aVal->valuedouble);
+            break;
+        case assetVar::ABOOL:
+            setFeat(name, aVal->valuebool);
+            // ival = (aVal->valuebool == true);
+            // dval = (double)ival;
+            // setFeat(name, dval);
+            break;
+        case assetVar::ASTRING:
+            setFeat(name, aVal->valuestring);
+            break;
+        default:
+            FPS_PRINT_ERROR("DEFAULT Type  name [{}]", name);
+            break;
     }
     return;
 }
-
 
 void assetFeatDict::setFeat(const char* name, double val, assetVar* av)
 {
@@ -781,14 +783,14 @@ void assetFeatDict::setFeat(const char* name, double val, assetVar* av)
         assFeat* af = new assFeat(name, val);
         featMap[name] = af;
     }
-    if(av)
+    if (av)
     {
-        if(av->lock && !featMap[name]->unlock)
+        if (av->lock && !featMap[name]->unlock)
         {
             return;
         }
     }
-    if(featMap[name]->lock) 
+    if (featMap[name]->lock)
     {
         return;
     }
@@ -802,25 +804,26 @@ void assetFeatDict::setFeat(const char* name, int val, assetVar* av)
 {
     if (featMap.find(name) == featMap.end())
     {
-        if (0) FPS_PRINT_INFO("set new int Feat [{}] value {}", name, val);
+        if (0)
+            FPS_PRINT_INFO("set new int Feat [{}] value {}", name, val);
         assFeat* af = new assFeat(name, val);
         featMap[name] = af;
     }
-    if(av)
+    if (av)
     {
-        if(av->lock && !featMap[name]->unlock)
+        if (av->lock && !featMap[name]->unlock)
         {
             return;
         }
     }
-    if(featMap[name]->lock) 
+    if (featMap[name]->lock)
     {
         return;
     }
 
     featMap[name]->valuedouble = val;
     featMap[name]->valueint = val;
- 
+
     return;
 }
 
@@ -832,14 +835,14 @@ void assetFeatDict::setFeat(const char* name, bool val, assetVar* av)
         featMap[name] = af;
     }
 
-    if(av)
+    if (av)
     {
-        if(av->lock && !featMap[name]->unlock)
+        if (av->lock && !featMap[name]->unlock)
         {
             return;
         }
     }
-    if(featMap[name]->lock) 
+    if (featMap[name]->lock)
     {
         return;
     }
@@ -858,24 +861,22 @@ void assetFeatDict::setFeat(const char* name, const char* val, assetVar* av)
     {
         assFeat* af = new assFeat(name, val);
         featMap[name] = af;
-        if (0) FPS_PRINT_INFO("set up af >> {} valuestring {} [{}] for [{}] val [{}]"
-            , fmt::ptr(af)
-            , fmt::ptr(featMap[name]->valuestring)
-            , featMap[name]->valuestring ? featMap[name]->valuestring : "No String"
-            , name
-            , val ? val : "no Val"
-        );
+        if (0)
+            FPS_PRINT_INFO("set up af >> {} valuestring {} [{}] for [{}] val [{}]", fmt::ptr(af),
+                           fmt::ptr(featMap[name]->valuestring),
+                           featMap[name]->valuestring ? featMap[name]->valuestring : "No String", name,
+                           val ? val : "no Val");
     }
     else
     {
-        if(av)
+        if (av)
         {
-            if(av->lock && !featMap[name]->unlock)
+            if (av->lock && !featMap[name]->unlock)
             {
                 return;
             }
         }
-        if(featMap[name]->lock) 
+        if (featMap[name]->lock)
         {
             return;
         }
@@ -884,20 +885,17 @@ void assetFeatDict::setFeat(const char* name, const char* val, assetVar* av)
         char* nval = nullptr;
         if (featMap[name]->valuestring == val)
         {
-            nval= strdup(val);
+            nval = strdup(val);
             val = nval;
         }
 
-
         if (featMap[name]->valuestring)
         {
-            if (0) FPS_PRINT_INFO("clear up af >> {} valuestring {} [{}] for [{}] val [{}]"
-                , fmt::ptr(featMap[name])
-                , fmt::ptr(featMap[name]->valuestring)
-                , featMap[name]->valuestring ? featMap[name]->valuestring : "No String"
-                , name
-                , val ? val : "no Val"
-            );
+            if (0)
+                FPS_PRINT_INFO("clear up af >> {} valuestring {} [{}] for [{}] val [{}]", fmt::ptr(featMap[name]),
+                               fmt::ptr(featMap[name]->valuestring),
+                               featMap[name]->valuestring ? featMap[name]->valuestring : "No String", name,
+                               val ? val : "no Val");
 
             free((void*)featMap[name]->valuestring);
         }
@@ -906,16 +904,14 @@ void assetFeatDict::setFeat(const char* name, const char* val, assetVar* av)
         if (val)
         {
             featMap[name]->valuestring = strdup(val);
-            if (0) FPS_PRINT_INFO("reset af >> {} valuestring {} [{}] for [{}] val [{}]"
-                , fmt::ptr(featMap[name])
-                , fmt::ptr(featMap[name]->valuestring)
-                , featMap[name]->valuestring ? featMap[name]->valuestring : "No String"
-                , name
-                , val ? val : "no Val"
-            );
-
+            if (0)
+                FPS_PRINT_INFO("reset af >> {} valuestring {} [{}] for [{}] val [{}]", fmt::ptr(featMap[name]),
+                               fmt::ptr(featMap[name]->valuestring),
+                               featMap[name]->valuestring ? featMap[name]->valuestring : "No String", name,
+                               val ? val : "no Val");
         }
-        if(nval) free(nval);
+        if (nval)
+            free(nval);
     }
 
     return;
@@ -928,72 +924,65 @@ void assetFeatDict::setFeat(const char* name, void* val, assetVar* av)
         assFeat* af = new assFeat(name, val);
         featMap[name] = af;
     }
-    if(av)
+    if (av)
     {
-        if(av->lock && !featMap[name]->unlock)
+        if (av->lock && !featMap[name]->unlock)
         {
             return;
         }
     }
-    if(featMap[name]->lock) 
-        {
-            return;
-        }
+    if (featMap[name]->lock)
+    {
+        return;
+    }
 
     featMap[name]->valuevoid = val;
 
     return;
 }
 
-template<class T>
+template <class T>
 void assetFeatDict::addFeat(const char* name, T val)
 {
     if (featMap.find(name) != featMap.end())
     {
         if (featMap[name] != nullptr)
         {
-            if (0) FPS_PRINT_INFO("note we are replacing param [{}] featmap {} valuestring {} [{}]"
-                , name
-                , fmt::ptr(featMap[name])
-                , fmt::ptr(featMap[name]->valuestring)
-                , featMap[name]->valuestring ? featMap[name]->valuestring : "no Val"
-            );
+            if (0)
+                FPS_PRINT_INFO("note we are replacing param [{}] featmap {} valuestring {} [{}]", name,
+                               fmt::ptr(featMap[name]), fmt::ptr(featMap[name]->valuestring),
+                               featMap[name]->valuestring ? featMap[name]->valuestring : "no Val");
             delete featMap[name];
         }
     }
 
     featMap[name] = new assFeat(name, val);
-    if (0)FPS_PRINT_INFO("added  Feat [{}]  featmap {} valuestring {} [{}]"
-        , name
-        , fmt::ptr(featMap[name])
-        , fmt::ptr(featMap[name]->valuestring)
-        , featMap[name]->valuestring ? featMap[name]->valuestring : "no Val"
-    );
-
+    if (0)
+        FPS_PRINT_INFO("added  Feat [{}]  featmap {} valuestring {} [{}]", name, fmt::ptr(featMap[name]),
+                       fmt::ptr(featMap[name]->valuestring),
+                       featMap[name]->valuestring ? featMap[name]->valuestring : "no Val");
 }
-
 
 void assetFeatDict::addFeat(cJSON* cj)
 {
     switch (cj->type)
     {
-    case cJSON_Number:
-        addFeat(cj->string, cj->valuedouble);
-        break;
-    case cJSON_String:
-        addFeat(cj->string, cj->valuestring);
-        break;
-    case cJSON_True:
-        addFeat(cj->string, true);
-        break;
-    case cJSON_False:
-        addFeat(cj->string, false);
-        break;
-    default:
-        //asprintf(&stmp,"Unknown");
-        break;
+        case cJSON_Number:
+            addFeat(cj->string, cj->valuedouble);
+            break;
+        case cJSON_String:
+            addFeat(cj->string, cj->valuestring);
+            break;
+        case cJSON_True:
+            addFeat(cj->string, true);
+            break;
+        case cJSON_False:
+            addFeat(cj->string, false);
+            break;
+        default:
+            // asprintf(&stmp,"Unknown");
+            break;
     }
-
 }
 
 void assetFeatDict::showFeat()
@@ -1005,29 +994,32 @@ void assetFeatDict::showFeat()
         assFeat* af = x.second;
         switch (af->type)
         {
-        case assFeat::AFLOAT:
-            len = asprintf(&stmp, "%s->[%f]", af->name.c_str(), af->valuedouble);
-            break;
-        case assFeat::AINT:
-            len = asprintf(&stmp, "%s->[%d]", af->name.c_str(), af->valueint);
-            break;
-        case assFeat::ASTRING:
-            len = asprintf(&stmp, "%s->[%s]", af->name.c_str(), af->valuestring);
-            break;
-        case assFeat::ABOOL:
-            if (af->valuebool)
-                len = asprintf(&stmp, "%s->[true]", af->name.c_str());
-            else
-                len = asprintf(&stmp, "%s->[true]", af->name.c_str());
-            break;
-        default:
-            len = asprintf(&stmp, "Unknown");
-            break;
+            case assFeat::AFLOAT:
+                len = asprintf(&stmp, "%s->[%f]", af->name.c_str(), af->valuedouble);
+                break;
+            case assFeat::AINT:
+                len = asprintf(&stmp, "%s->[%d]", af->name.c_str(), af->valueint);
+                break;
+            case assFeat::ASTRING:
+                len = asprintf(&stmp, "%s->[%s]", af->name.c_str(), af->valuestring);
+                break;
+            case assFeat::ABOOL:
+                if (af->valuebool)
+                    len = asprintf(&stmp, "%s->[true]", af->name.c_str());
+                else
+                    len = asprintf(&stmp, "%s->[true]", af->name.c_str());
+                break;
+            default:
+                len = asprintf(&stmp, "Unknown");
+                break;
         }
-        if (len > 0) FPS_DEBUG_PRINT(" Feature>>%s\n", stmp);
-        if (stmp)free(stmp);
+        if (len > 0)
+        {
+            FPS_DEBUG_PRINT(" Feature>>%s\n", stmp);
+        }
+        if (stmp)
+            free(stmp);
     }
-
 }
 
 void assetFeatDict::showCj(cJSON* cjix)
@@ -1039,38 +1031,39 @@ void assetFeatDict::showCj(cJSON* cjix)
         assFeat* af = x.second;
         switch (af->type)
         {
-        case assFeat::AFLOAT:
-            cJSON_AddNumberToObject(cjix, af->name.c_str(), af->valuedouble);
-            break;
-        case assFeat::AINT:
-            cJSON_AddNumberToObject(cjix, af->name.c_str(), af->valueint);
-            break;
-        case assFeat::ASTRING:
-            cJSON_AddStringToObject(cjix, af->name.c_str(), af->valuestring);
-            break;
-        case assFeat::AAVAR:
-            len = asprintf(&tmp, "av::%s/%s", af->av->comp.c_str(), af->av->name.c_str());
-            cJSON_AddStringToObject(cjix, af->name.c_str(), tmp);
-            if (len && tmp) free(tmp);
-            break;
-        case assFeat::ABOOL:
-            if (af->valuebool)
-                cJSON_AddTrueToObject(cjix, af->name.c_str());
-            else
-                cJSON_AddFalseToObject(cjix, af->name.c_str());
-            break;
-        default:
-            cJSON_AddStringToObject(cjix, af->name.c_str(), "TypeNotDefined");
-            break;
+            case assFeat::AFLOAT:
+                cJSON_AddNumberToObject(cjix, af->name.c_str(), af->valuedouble);
+                break;
+            case assFeat::AINT:
+                cJSON_AddNumberToObject(cjix, af->name.c_str(), af->valueint);
+                break;
+            case assFeat::ASTRING:
+                cJSON_AddStringToObject(cjix, af->name.c_str(), af->valuestring);
+                break;
+            case assFeat::AAVAR:
+                len = asprintf(&tmp, "av::%s/%s", af->av->comp.c_str(), af->av->name.c_str());
+                cJSON_AddStringToObject(cjix, af->name.c_str(), tmp);
+                if (len && tmp)
+                    free(tmp);
+                break;
+            case assFeat::ABOOL:
+                if (af->valuebool)
+                    cJSON_AddTrueToObject(cjix, af->name.c_str());
+                else
+                    cJSON_AddFalseToObject(cjix, af->name.c_str());
+                break;
+            default:
+                cJSON_AddStringToObject(cjix, af->name.c_str(), "TypeNotDefined");
+                break;
         }
     }
-
 }
 
 /***********************************************
  *                 assetBitField
  ***********************************************/
-// assetBitField::assetBitField(int _mask, int _bit, const char* _uri, const char* _var, char* tmp)
+// assetBitField::assetBitField(int _mask, int _bit, const char* _uri, const
+// char* _var, char* tmp)
 // {
 //     mask = _mask;
 //     bit = _bit;
@@ -1090,54 +1083,54 @@ assetBitField::assetBitField(cJSON* cj)
     bit = 0;
     uri = nullptr;
     var = nullptr;
-    
+
     enAv = nullptr;
     inAv = nullptr;
     inParam = nullptr;
-    inAvOK = false;  // if we have an inaV and we can find it 
+    inAvOK = false;  // if we have an inaV and we can find it
     ignAv = nullptr;
     outAv = nullptr;
     outParam = nullptr;
     invAv = nullptr;
     invParam = nullptr;
     varAv = nullptr;
-    useAv =  false;
-    
+    useAv = false;
+
     avaf = nullptr;
     scale = 1.0;
-    offset =  0.0;
+    offset = 0.0;
     useSet = false;
     setup = false;
-    //tmpval = nullptr;
+    // tmpval = nullptr;
     featDict = new assetFeatDict();
-    if(cj)featDict->addCj(cj);
+    if (cj)
+        featDict->addCj(cj);
     amapptr = nullptr;
     fptr = nullptr;
-
 }
 
 assetBitField::~assetBitField()
 {
-    //if (uri)free((void*)uri);
-    //if (var)free((void*)var);
-    if(inParam) free((void*)inParam);
-    if(invParam) free((void*)invParam);
-    if(outParam) free((void*)outParam);
+    // if (uri)free((void*)uri);
+    // if (var)free((void*)var);
+    if (inParam)
+        free((void*)inParam);
+    if (invParam)
+        free((void*)invParam);
+    if (outParam)
+        free((void*)outParam);
     delete featDict;
-
 }
 
-//template<class T>
+// template<class T>
 int assetBitField::getFeat(const char* name, int* val)
 {
     return featDict->getFeat(name, val);
-
 }
 
 double assetBitField::getFeat(const char* name, double* val)
 {
     return featDict->getFeat(name, val);
-
 }
 
 bool assetBitField::getFeat(const char* name, bool* val)
@@ -1180,7 +1173,7 @@ int assetBitField::getFeatType(const char* name)
     return featDict->getFeatType(name);
 }
 
-void assetBitField::setFeatfromAv(const char* name, assetVar* Av, const char*param)
+void assetBitField::setFeatfromAv(const char* name, assetVar* Av, const char* param)
 {
     return featDict->setFeatfromAv(name, Av, param);
 }
@@ -1204,7 +1197,7 @@ void assetBitField::setFeat(const char* name, const char* dval)
 {
     return featDict->setFeat(name, dval);
 }
-template<class T>
+template <class T>
 void assetBitField::addFeat(const char* name, T val)
 {
     featDict->addFeat(name, val);
@@ -1226,7 +1219,7 @@ char* assetBitField::getTmpval()
 assetAction::assetAction(const char* aname)
 {
     // 0817 stop loadconfig crash
-    if(aname)
+    if (aname)
     {
         name = aname;
     }
@@ -1264,19 +1257,14 @@ void assetAction::showBitField(int show)
 {
     for (auto& x : Abitmap)
     {
-        if (show)FPS_PRINT_INFO("Bitfield [{}] name [{}]"
-            , x.first
-            , name
-        );
+        if (show)
+            FPS_PRINT_INFO("Bitfield [{}] name [{}]", x.first, name);
         assetBitField* abf = x.second;
         for (auto& y : abf->featDict->featMap)
         {
-            if (show)FPS_PRINT_INFO("Bitfield [{}] feature[{}]"
-                , x.first
-                , y.first
-            );
+            if (show)
+                FPS_PRINT_INFO("Bitfield [{}] feature[{}]", x.first, y.first);
         }
-
     }
 }
 
@@ -1303,7 +1291,6 @@ assFeat* assetAction::getFeat(int num, const char* aname)
         {
             af = abf->featDict->featMap[aname];
         }
-
     }
 
     return af;
@@ -1324,7 +1311,8 @@ assetList::assetList(const char* _name)
 
 assetList::~assetList()
 {
-    if (0)FPS_PRINT_INFO("3 delete aList {} {}", fmt::ptr(&aList), name);
+    if (0)
+        FPS_PRINT_INFO("3 delete aList {} {}", fmt::ptr(&aList), name);
 }
 
 const char* assetList::getName()
@@ -1358,11 +1346,9 @@ void assetOptVec::showCj(cJSON* cj)
 // we may need to get the child object
 void assetOptVec::addCj(cJSON* cj)
 {
-    if (0)FPS_PRINT_INFO("adding options array [{}] child {} type {}"
-        , cj->string ? cj->string : " no String"
-        , fmt::ptr(cj->child)
-        , cj->type
-    );
+    if (0)
+        FPS_PRINT_INFO("adding options array [{}] child {} type {}", cj->string ? cj->string : " no String",
+                       fmt::ptr(cj->child), cj->type);
 
     if (cj->string)
     {
@@ -1379,9 +1365,7 @@ void assetOptVec::addCj(cJSON* cj)
                 cJSON_AddItemToArray(cjopts, cja);
             }
         }
-
     }
-
 }
 
 /***********************************************
@@ -1397,27 +1381,28 @@ assetVal::assetVal()
     av = nullptr;
 }
 
-assetVal::assetVal(int val) :assetVal()
+assetVal::assetVal(int val) : assetVal()
 {
     valuedouble = val;
     valueint = val;
 }
 
-assetVal::assetVal(double val) :assetVal()
+assetVal::assetVal(double val) : assetVal()
 {
     valuedouble = val;
     valueint = (int)val;
     type = AFLOAT;
 }
 
-assetVal::assetVal(const char* val) :assetVal()
+assetVal::assetVal(const char* val) : assetVal()
 {
+    UNUSED(val);
     valuedouble = 0;
     valueint = 0;
     type = ASTRING;
 }
 
-assetVal::assetVal(bool val) :assetVal()
+assetVal::assetVal(bool val) : assetVal()
 {
     valueint = (val == true);
     valuedouble = valueint;
@@ -1425,7 +1410,7 @@ assetVal::assetVal(bool val) :assetVal()
     type = ABOOL;
 }
 
-assetVal::assetVal(assetVar* val) :assetVal()
+assetVal::assetVal(assetVar* val) : assetVal()
 {
     av = val;
     type = AAVAR;
@@ -1437,7 +1422,6 @@ assetVal::~assetVal()
     {
         free((void*)valuestring);
     }
-
 }
 
 bool assetVal::getVal(bool val)
@@ -1502,13 +1486,12 @@ void assetVal::setVal(double val)
     valuedouble = val;
     valueint = (int)val;
     setTime = g_setTime;
-
 }
 
 void assetVal::setVal(bool val)
 {
-    if (0)FPS_PRINT_INFO("setVal bool called"
-    );
+    if (0)
+        FPS_PRINT_INFO("setVal bool called", NULL);
     valueint = val;
     valuebool = val;
     setTime = g_setTime;
@@ -1516,10 +1499,11 @@ void assetVal::setVal(bool val)
 
 void assetVal::setVal(const char* val)
 {
-    const char* sval=nullptr;
+    const char* sval = nullptr;
     if (valuestring == val)
     {
-        if (1)FPS_PRINT_INFO("setVal char  called same value  [{}]", val);
+        if (1)
+            FPS_PRINT_INFO("setVal char  called same value  [{}]", val);
         sval = val;
         valuestring = nullptr;
     }
@@ -1534,13 +1518,12 @@ void assetVal::setVal(const char* val)
     {
         valuestring = strdup(val);
     }
-    if(sval)
+    if (sval)
     {
         free((void*)sval);
     }
     setTime = g_setTime;
 }
-
 
 void assetVal::setVal(char* val)
 {
@@ -1558,28 +1541,33 @@ void assetVal::setVal(char* val)
 
 bool assetVal::setVal(cJSON* cj)
 {
-    if (0)FPS_PRINT_INFO("running, cjson type {}", cj->type);
+    if (0)
+        FPS_PRINT_INFO("running, cjson type {}", cj->type);
     if (cJSON_IsBool(cj))
     {
-        if (setvar_debug_asset)FPS_PRINT_INFO("body is a cjson bool value [{}]", cJSON_IsTrue(cj));
+        if (setvar_debug_asset)
+            FPS_PRINT_INFO("body is a cjson bool value [{}]", cJSON_IsTrue(cj));
         setVal((bool)cJSON_IsTrue(cj));
         return true;
     }
     else if (cJSON_IsNumber(cj))
     {
-        if (setvar_debug_asset)FPS_PRINT_INFO("body is a cjson numerical value [{}]", cj->valuedouble);
+        if (setvar_debug_asset)
+            FPS_PRINT_INFO("body is a cjson numerical value [{}]", cj->valuedouble);
         setVal(cj->valuedouble);
         return true;
     }
     else if (cJSON_IsString(cj))
     {
-        if (setvar_debug_asset)FPS_PRINT_INFO("body is a cjson string value [{}]", cstr{ cj->valuestring });
+        if (setvar_debug_asset)
+            FPS_PRINT_INFO("body is a cjson string value [{}]", cstr{ cj->valuestring });
         setVal(cj->valuestring);
         return true;
     }
     else if (cJSON_IsObject(cj))
     {
-        if (setvar_debug_asset)FPS_PRINT_INFO("body is a cjson Object try child [{}]", fmt::ptr(cj->child));
+        if (setvar_debug_asset)
+            FPS_PRINT_INFO("body is a cjson Object try child [{}]", fmt::ptr(cj->child));
         return setVal(cj->child);
         return true;
     }
@@ -1588,18 +1576,17 @@ bool assetVal::setVal(cJSON* cj)
         FPS_PRINT_INFO("body [{}] type {} cannot be simply decoded", cstr{ cj->string }, cj->type);
     }
     return false;
-
 }
 // gets an indexed bit as a bool
 bool assetVal::getbVal(int index)
 {
     bool ret = false;
-    if (0)FPS_PRINT_INFO("getbVal index {} {:#08x} called"
-        , index
-        , 1 << index
-    );
-    if (index < 0) return ret;
-    if (index > 31) return ret;
+    if (0)
+        FPS_PRINT_INFO("getbVal index {} {:#08x} called", index, 1 << index);
+    if (index < 0)
+        return ret;
+    if (index > 31)
+        return ret;
 
     unsigned int nval = (1 << index);
     ret = ((unsigned int)valueint & nval) > 0;
@@ -1609,13 +1596,12 @@ bool assetVal::getbVal(int index)
 // set a bool as an indexed bit
 bool assetVal::setVal(int index, bool val)
 {
-    if (0)FPS_PRINT_INFO("setVal index {} {:#08x} bool [{}] called"
-        , index
-        , 1 << index
-        , val
-    );
-    if (index < 0) return false;
-    if (index > 31) return false;
+    if (0)
+        FPS_PRINT_INFO("setVal index {} {:#08x} bool [{}] called", index, 1 << index, val);
+    if (index < 0)
+        return false;
+    if (index > 31)
+        return false;
     unsigned int nval = (1 << index);
     if (val)
     {
@@ -1647,7 +1633,11 @@ double assetVal::getcTime()
 }
 
 assetVal::assetVal(const assetVal& other)
-    : type(other.type), valuedouble(other.valuedouble), valueint(other.valueint), valuebool(other.valuebool), setTime(other.setTime)
+    : type(other.type),
+      valuedouble(other.valuedouble),
+      valueint(other.valueint),
+      valuebool(other.valuebool),
+      setTime(other.setTime)
 {
     if (other.valuestring)
     {
@@ -1668,7 +1658,6 @@ assetVal& assetVal::operator=(const assetVal& other)
         {
             free((void*)valuestring);
             valuestring = nullptr;
-
         }
         if (other.valuestring)
         {
@@ -1763,17 +1752,15 @@ assetVar::assetVar()
     IsDiff = false;
     valChanged = false;
     ui_type = 0;
-    // removed for MVP 
-    //users = 0;
+    // removed for MVP
+    // users = 0;
     fname = nullptr;
     linkVar = nullptr;
     depth = 0;
-    lock = false; //PSW
-
+    lock = false;  // PSW
 }
 
-
-assetVar::assetVar(const char* _name, int val) :assetVar()
+assetVar::assetVar(const char* _name, int val) : assetVar()
 {
     name = _name;
     type = AINT;
@@ -1782,27 +1769,26 @@ assetVar::assetVar(const char* _name, int val) :assetVar()
     extras = nullptr;
 }
 
-assetVar::assetVar(const char* _name, double val) :assetVar()
+assetVar::assetVar(const char* _name, double val) : assetVar()
 {
-    if (_name) name = _name;
+    if (_name)
+        name = _name;
     aVal = new assetVal(val);
     lVal = new assetVal(val);
     type = AFLOAT;
     extras = nullptr;
-
 }
 
-assetVar::assetVar(const char* _name, const char* val) :assetVar()
+assetVar::assetVar(const char* _name, const char* val) : assetVar()
 {
     name = _name;
     aVal = new assetVal(val);
     lVal = new assetVal(val);
     type = ASTRING;
     extras = nullptr;
-
 }
 
-assetVar::assetVar(const char* _name, bool val) :assetVar()
+assetVar::assetVar(const char* _name, bool val) : assetVar()
 {
     name = _name;
     aVal = new assetVal(val);
@@ -1811,7 +1797,7 @@ assetVar::assetVar(const char* _name, bool val) :assetVar()
     extras = nullptr;
 }
 
-assetVar::assetVar(const char* _name, cJSON* cjval) :assetVar()
+assetVar::assetVar(const char* _name, cJSON* cjval) : assetVar()
 {
     if (cJSON_IsNumber(cjval))
     {
@@ -1835,9 +1821,8 @@ assetVar::assetVar(const char* _name, cJSON* cjval) :assetVar()
     }
 }
 
-
 // used for jamming in our special objects
-assetVar::assetVar(const char* _name, assetList* val) :assetVar()
+assetVar::assetVar(const char* _name, assetList* val) : assetVar()
 {
     name = _name;
     bool tval = true;
@@ -1848,7 +1833,6 @@ assetVar::assetVar(const char* _name, assetList* val) :assetVar()
     extras = nullptr;
     depth = 0;
 }
-
 
 const char* assetVar::getName(void)
 {
@@ -1861,7 +1845,8 @@ char* assetVar::getfName()
     {
         int len = 0;
         len = asprintf(&fname, "%s:%s", comp.c_str(), name.c_str());
-        if (len) len = 0; // compiler      
+        if (len)
+            len = 0;  // compiler
     }
     return fname;
 }
@@ -1954,7 +1939,8 @@ char* assetVar::getcLVal()
 
 bool assetVar::getbVal(int index)
 {
-    if (0)FPS_PRINT_INFO("getVal called here");
+    if (0)
+        FPS_PRINT_INFO("getVal called here", NULL);
     if (linkVar)
     {
         return linkVar->getbVal(index);
@@ -1972,12 +1958,12 @@ T assetVar::getVal(T val)
     T nVal;
     if (!aVal)
     {
-        FPS_PRINT_ERROR("-- missing aVal !!!!");
+        FPS_PRINT_ERROR("-- missing aVal !!!!", NULL);
         aVal = new assetVal(val);
     }
     if (!lVal)
     {
-        FPS_PRINT_ERROR("-- missing lVal !!!!");
+        FPS_PRINT_ERROR("-- missing lVal !!!!", NULL);
         lVal = new assetVal(val);
     }
 
@@ -1987,13 +1973,13 @@ T assetVar::getVal(T val)
     }
     else
     {
-        // lock it here if we need to 
+        // lock it here if we need to
         nVal = aVal->getVal(val);
     }
     return nVal;
 }
 
-//template <class T>
+// template <class T>
 int assetVar::addVal(int val)
 {
     int nval;
@@ -2060,34 +2046,33 @@ T assetVar::getLVal(T val)
     }
     else
     {
-        // lock it here if we need to 
+        // lock it here if we need to
         nVal = lVal->getVal(val);
     }
     return nVal;
 }
 
-//template <class T>
+// template <class T>
 bool assetVar::setVal(bool val)
 {
-    if (0)FPS_PRINT_INFO("setVal called here"
-    );
+    if (0)
+        FPS_PRINT_INFO("setVal called here", NULL);
     if (linkVar)
     {
         return linkVar->setVal(val);
     }
-    if(lock)
+    if (lock)
     {
         return false;
     }
     bool mydiff = false;
     mydiff = valueIsDiff(val);
-    if (0)FPS_PRINT_INFO("setVal called here diff {}"
-        , mydiff
-    );
+    if (0)
+        FPS_PRINT_INFO("setVal called here diff {}", mydiff);
 
     if (mydiff)
     {
-        // bugfix 08162021   maintain type 
+        // bugfix 08162021   maintain type
         lVal->type = aVal->type;
         assetVal* tv = lVal;
         lVal = aVal;
@@ -2103,40 +2088,40 @@ bool assetVar::setVal(bool val)
 
 bool assetVar::setVal(int index, bool val)
 {
-    if (0)FPS_PRINT_INFO("setVal called here"
-    );
+    if (0)
+        FPS_PRINT_INFO("setVal called here", NULL);
     if (linkVar)
     {
         return linkVar->setVal(index, val);
     }
-    if(lock)
+    if (lock)
     {
         return false;
     }
-    if (aVal)aVal->setVal(index, val);
+    if (aVal)
+        aVal->setVal(index, val);
 
     return val;
 }
 
 bool assetVar::setVal(int val)
 {
-    if (0)FPS_PRINT_INFO("setVal called here"
-    );
+    if (0)
+        FPS_PRINT_INFO("setVal called here", NULL);
     if (linkVar)
     {
         return linkVar->setVal(val);
     }
-    if(lock)
+    if (lock)
     {
         return false;
     }
     bool diff = valueIsDiff(val);
-    if (0)FPS_PRINT_INFO("setVal called here diff {}"
-        , diff
-    );
+    if (0)
+        FPS_PRINT_INFO("setVal called here diff {}", diff);
     if (diff)
     {
-        // bugfix 08162021   maintain type 
+        // bugfix 08162021   maintain type
         lVal->type = aVal->type;
         assetVal* tv = lVal;
         lVal = aVal;
@@ -2152,28 +2137,27 @@ bool assetVar::setVal(int val)
 
 bool assetVar::setVal(double val)
 {
-    if (0)FPS_PRINT_INFO("setVal double called here"
-    );
+    if (0)
+        FPS_PRINT_INFO("setVal double called here", NULL);
     if (linkVar)
     {
         return linkVar->setVal(val);
     }
-    if(lock)
+    if (lock)
     {
         return false;
     }
     if (depth)
     {
         setVecVal(val, depth);
-        //vdepth
+        // vdepth
     }
     bool diff = valueIsDiff(val);
-    if (0)FPS_PRINT_INFO("setVal diff {}"
-        , diff
-    );
+    if (0)
+        FPS_PRINT_INFO("setVal diff {}", diff);
     if (diff)
     {
-        // bugfix 08162021   maintain type 
+        // bugfix 08162021   maintain type
         lVal->type = aVal->type;
         assetVal* tv = lVal;
         lVal = aVal;
@@ -2189,46 +2173,47 @@ bool assetVar::setVal(double val)
 
 bool assetVar::setVal(const char* val)
 {
-    if(!lVal->valuestring)
+    if (!lVal->valuestring)
     {
-        if (1)FPS_PRINT_INFO("setVal setting lVal->valuestring to  [{}]", val);
-        lVal->valuestring = strdup (val);
+        if (1)
+            FPS_PRINT_INFO("setVal setting lVal->valuestring to  [{}]", val);
+        lVal->valuestring = strdup(val);
     }
-    if(!aVal->valuestring)
+    if (!aVal->valuestring)
     {
-        if (1)FPS_PRINT_INFO("setVal setting aVal->valuestring to  [{}]", val);
-        aVal->valuestring = strdup (val);
+        if (1)
+            FPS_PRINT_INFO("setVal setting aVal->valuestring to  [{}]", val);
+        aVal->valuestring = strdup(val);
     }
 
-    if (0)FPS_PRINT_INFO("setVal called here  ; av [{}] val [{}] aval [{}] lastval [{}]"
-                , getfName()
-                , val
-                , aVal->valuestring?aVal->valuestring:"no aval" 
-                , lVal->valuestring?lVal->valuestring:"no lval" 
-                );
+    if (0)
+        FPS_PRINT_INFO("setVal called here  ; av [{}] val [{}] aval [{}] lastval [{}]", getfName(), val,
+                       aVal->valuestring ? aVal->valuestring : "no aval",
+                       lVal->valuestring ? lVal->valuestring : "no lval");
     if (linkVar)
     {
         return linkVar->setVal(val);
     }
-    if(lock)
+    if (lock)
     {
         return false;
     }
     bool diff = valueIsDiff(val);
-    if (0)FPS_PRINT_INFO("setVal av [{}] called here diff {}", getfName(), diff);
+    if (0)
+        FPS_PRINT_INFO("setVal av [{}] called here diff {}", getfName(), diff);
     if (diff)
     {
         // fix for same value pointer update.
         char* nval = nullptr;
-        if(lVal->valuestring == val)
+        if (lVal->valuestring == val)
         {
-            if (1)FPS_PRINT_INFO("setVal av [{}] called here val [{}] lval [{}] "
-                , getfName(), val, lVal->valuestring);
+            if (1)
+                FPS_PRINT_INFO("setVal av [{}] called here val [{}] lval [{}] ", getfName(), val, lVal->valuestring);
             nval = strdup(val);
             val = nval;
         }
 
-        // bugfix 08162021   maintain type 
+        // bugfix 08162021   maintain type
         lVal->type = aVal->type;
         assetVal* tv = lVal;
         lVal = aVal;
@@ -2237,8 +2222,8 @@ bool assetVar::setVal(const char* val)
         valChanged = true;
         IsDiff = true;
         aVal->chgTime = aVal->setTime;
-        if(nval) free(nval);
-
+        if (nval)
+            free(nval);
     }
 
     return diff;
@@ -2259,7 +2244,7 @@ void assetVar::setFimsVal(T val, fims* p_fims, const char* acomp)
             acomp = comp.c_str();
         if (acomp != nullptr && strlen(acomp) > 0)
         {
-            auto rc  = p_fims->Send("pub", acomp, nullptr, res);
+            auto rc = p_fims->Send("pub", acomp, nullptr, res);
             if (rc <= 0)
             {
                 FPS_PRINT_ERROR("send event failed rc = {}", rc);
@@ -2269,12 +2254,11 @@ void assetVar::setFimsVal(T val, fims* p_fims, const char* acomp)
         free(res);
     }
     return;
-
 }
-// we dont test against the lval and val we simple see if we have had a setval since last reset
-// this tests if we have had a value change since the last value reset.
-// this is done at the assetVar level now
-//template < class T>
+// we dont test against the lval and val we simple see if we have had a setval
+// since last reset this tests if we have had a value change since the last
+// value reset. this is done at the assetVar level now
+// template < class T>
 bool assetVar::valueChanged(int reset)
 {
     if (linkVar)
@@ -2299,8 +2283,7 @@ bool assetVar::valueChangedReset()
     return ret;
 }
 
-
-template < class T>
+template <class T>
 void assetVar::resetChanged(T val)
 {
     if (linkVar)
@@ -2310,8 +2293,7 @@ void assetVar::resetChanged(T val)
     valChanged = false;
 }
 
-
-//template <class T>
+// template <class T>
 bool assetVar::valueIsDiff(bool val)
 {
     if (linkVar)
@@ -2359,18 +2341,19 @@ bool assetVar::valueIsDiff(double db, const char* val)
         return linkVar->valueIsDiff(db, val);
     }
 
-    if (!aVal->valuestring && !val) return false;
-    if (aVal->valuestring && !val) return true;
-    if (!aVal->valuestring && val) return true;
-    if (0) FPS_PRINT_INFO("assetVar.h old [{}] aVal [{}] aValvs [{}]"
-        , val, fmt::ptr(aVal), fmt::ptr(aVal->valuestring)
-    );
-    if (0) FPS_PRINT_INFO("assetVar.h old [{}] new [{}] strcmp [{}] diff [{}]"
-        , val, aVal->valuestring
-        , strcmp(aVal->valuestring, val)
-        , strcmp(aVal->valuestring, val) != 0
+    if (!aVal->valuestring && !val)
+        return false;
+    if (aVal->valuestring && !val)
+        return true;
+    if (!aVal->valuestring && val)
+        return true;
+    if (0)
+        FPS_PRINT_INFO("assetVar.h old [{}] aVal [{}] aValvs [{}]", val, fmt::ptr(aVal), fmt::ptr(aVal->valuestring));
+    if (0)
+        FPS_PRINT_INFO("assetVar.h old [{}] new [{}] strcmp [{}] diff [{}]", val, aVal->valuestring,
+                       strcmp(aVal->valuestring, val), strcmp(aVal->valuestring, val) != 0
 
-    );
+        );
     return (strcmp(aVal->valuestring, val));
 }
 
@@ -2380,7 +2363,7 @@ bool assetVar::valueIsDiff(double db, bool val)
     {
         return linkVar->valueIsDiff(db, val);
     }
-    return(aVal->valuebool != val);
+    return (aVal->valuebool != val);
 }
 
 bool assetVar::valueIsDiff(double db, int val)
@@ -2407,7 +2390,7 @@ bool assetVar::valueIsDiff(double db, double val)
     if (!aVal)
     {
         FPS_PRINT_INFO("Hmm no Aval for [{}] maybe we need one", name);
-        //return true;
+        // return true;
     }
     if (std::abs(aVal->valuedouble - val) > db)
     {
@@ -2430,7 +2413,7 @@ T assetVar::valueDiff(T val)
     return nval;
 }
 
-//Set a deadband for floats
+// Set a deadband for floats
 void assetVar::setDbVal(double val)
 {
     if (linkVar)
@@ -2440,8 +2423,9 @@ void assetVar::setDbVal(double val)
     dbV = val;
 }
 
-double assetVar::getDbVal() {
-    if(linkVar)
+double assetVar::getDbVal()
+{
+    if (linkVar)
     {
         return linkVar->getDbVal();
     }
@@ -2472,58 +2456,64 @@ void assetVar::setLVal(T val)
     IsDiff = true;
 }
 
-
-void assetVar::setVal(assFeat*af, bool force)
+void assetVar::setVal(assFeat* af, bool force)
 {
-    assetVal*lval = linkVar?linkVar->aVal:aVal;
-    if(lock)
+    assetVal* lval = linkVar ? linkVar->aVal : aVal;
+    if (lock)
     {
         return;
     }
     switch (af->type)
     {
         case assFeat::AINT:
-            if(force)lval->type=assetVal::AINT;
+            if (force)
+                lval->type = assetVal::AINT;
             setVal(af->valueint);
             break;
         case assFeat::AFLOAT:
-            if(force)lval->type=assetVal::AFLOAT;
+            if (force)
+                lval->type = assetVal::AFLOAT;
             setVal(af->valuedouble);
             break;
         case assFeat::ABOOL:
-            if(force)lval->type=assetVal::ABOOL;
+            if (force)
+                lval->type = assetVal::ABOOL;
             setVal(af->valuebool);
             break;
         case assFeat::ASTRING:
-            if(force)lval->type=assetVal::ASTRING;
+            if (force)
+                lval->type = assetVal::ASTRING;
             setVal(af->valuestring);
             break;
         default:
             setVal(af->valuedouble);
             break;
-    }    
+    }
 }
 
 bool assetVar::setCjVal(cJSON* cj, bool forceType)
 {
     // these are all good for linkVars
-    if (0) FPS_PRINT_INFO("setCjVal called for av [{}]", getfName());
+    UNUSED(forceType);
+    if (0)
+        FPS_PRINT_INFO("setCjVal called for av [{}]", getfName());
     if (cJSON_IsBool(cj))
     {
-        if (setvar_debug_asset)FPS_PRINT_INFO(
-            "body child is a cjson bool value [{}]"
-            , cJSON_IsTrue(cj));
-        //if(forceType) 
+        if (setvar_debug_asset)
+            FPS_PRINT_INFO("body child is a cjson bool value [{}]", cJSON_IsTrue(cj));
+        // if(forceType)
         return setVal((bool)cJSON_IsTrue(cj));
     }
     else if (cJSON_IsNumber(cj))
     {
-        if (setvar_debug_asset)FPS_PRINT_INFO("body child is a cjson numerical value [{}]", cj->valuedouble);
+        if (setvar_debug_asset)
+            FPS_PRINT_INFO("body child is a cjson numerical value [{}]", cj->valuedouble);
         return setVal(cj->valuedouble);
     }
     else if (cJSON_IsString(cj))
     {
-        if (setvar_debug_asset)FPS_PRINT_INFO("body child is a cjson string value [{}]", cstr{ cj->valuestring });
+        if (setvar_debug_asset)
+            FPS_PRINT_INFO("body child is a cjson string value [{}]", cstr{ cj->valuestring });
         return setVal(cj->valuestring);
     }
     else
@@ -2540,22 +2530,26 @@ bool assetVar::setCjVal(cJSON* cj, bool forceType)
 //     );
 //     if (cJSON_IsBool(cj))
 //     {
-//         if (setvar_debug_asset)FPS_PRINT_INFO("%s >>   body child is a cjson bool value [%s]\n", __func__, cJSON_IsTrue(cj) ? "true" : "false");
-//         return setVal((bool)cJSON_IsTrue(cj));
+//         if (setvar_debug_asset)FPS_PRINT_INFO("%s >>   body child is a cjson
+//         bool value [%s]\n", __func__, cJSON_IsTrue(cj) ?
+//         "true" : "false"); return setVal((bool)cJSON_IsTrue(cj));
 //     }
 //     else if (cJSON_IsNumber(cj))
 //     {
-//         if (setvar_debug_asset)FPS_PRINT_INFO("%s >> body child is a cjson numerical value [%f]\n", __func__, cj->valuedouble);
-//         return setVal(cj->valuedouble);
+//         if (setvar_debug_asset)FPS_PRINT_INFO("%s >> body child is a cjson
+//         numerical value [%f]\n", __func__,
+//         cj->valuedouble); return setVal(cj->valuedouble);
 //     }
 //     else if (cJSON_IsString(cj))
 //     {
-//         if (setvar_debug_asset)FPS_PRINT_INFO("%s >> body child is a cjson string value [%s]\n", __func__, cj->valuestring);
-//         return setVal(cj->valuestring);
+//         if (setvar_debug_asset)FPS_PRINT_INFO("%s >> body child is a cjson
+//         string value [%s]\n", __func__,
+//         cj->valuestring); return setVal(cj->valuestring);
 //     }
 //     else
 //     {
-//         FPS_PRINT_INFO("%s >> body child [%s] cannot be simply decoded\n", __func__, cj->string);
+//         FPS_PRINT_INFO("%s >> body child [%s] cannot be simply decoded\n",
+//         __func__, cj->string);
 //     }
 //     return false;
 // }
@@ -2573,81 +2567,73 @@ void assetVar::getCjVal(cJSON** cj)
 
     switch (aVal->type)
     {
-    case AINT:
-        cJSON_AddItemToObject(cjv, name.c_str(), cJSON_CreateNumber(aVal->valueint));
-        break;
-    case AFLOAT:
-        cJSON_AddItemToObject(cjv, name.c_str(), cJSON_CreateNumber(aVal->valuedouble));
-        break;
-    case ABOOL:
-        if (aVal->valuebool)
-            cJSON_AddTrueToObject(cjv, name.c_str());
-        else
-            cJSON_AddFalseToObject(cjv, name.c_str());
-        break;
-    case ASTRING:
-        if (0)
-        {
-            FPS_PRINT_INFO("ASTRING name [{}] type {} atype {} valstr [{}]"
-                , name
-                , type
-                , aVal->type
-                , cstr{ aVal->valuestring }
-            );
-        }
-        cJSON_AddStringToObject(cjv, name.c_str(), aVal->valuestring ? aVal->valuestring : "No VAL");
-        if (0)
-        {
-            FPS_PRINT_INFO("ASTRING name [{}] done", name);
-        }
-        break;
+        case AINT:
+            cJSON_AddItemToObject(cjv, name.c_str(), cJSON_CreateNumber(aVal->valueint));
+            break;
+        case AFLOAT:
+            cJSON_AddItemToObject(cjv, name.c_str(), cJSON_CreateNumber(aVal->valuedouble));
+            break;
+        case ABOOL:
+            if (aVal->valuebool)
+                cJSON_AddTrueToObject(cjv, name.c_str());
+            else
+                cJSON_AddFalseToObject(cjv, name.c_str());
+            break;
+        case ASTRING:
+            if (0)
+            {
+                FPS_PRINT_INFO("ASTRING name [{}] type {} atype {} valstr [{}]", name, type, aVal->type,
+                               cstr{ aVal->valuestring });
+            }
+            cJSON_AddStringToObject(cjv, name.c_str(), aVal->valuestring ? aVal->valuestring : "No VAL");
+            if (0)
+            {
+                FPS_PRINT_INFO("ASTRING name [{}] done", name);
+            }
+            break;
 
-    default:
-        if (1)
-        {
-            FPS_PRINT_INFO("DEFAULT name [{}] done", name);
-        }
-        break;
+        default:
+            if (1)
+            {
+                FPS_PRINT_INFO("DEFAULT name [{}] done", name);
+            }
+            break;
     }
 }
 
 // TODO after MVP Rework single and options for showVarcJ  to make more sense
-//0x0000  full
-//0x0001 naked
-//0x0010 full but sep tables as per /assets/bms
-//0x0011 naked but sep tables as per /assets/bms
-//0x01xx full dump  /comp tables
+// 0x0000  full
+// 0x0001 naked
+// 0x0010 full but sep tables as per /assets/bms
+// 0x0011 naked but sep tables as per /assets/bms
+// 0x01xx full dump  /comp tables
 
-//possibly use _format in the table to select ,naked, full, dump 
+// possibly use _format in the table to select ,naked, full, dump
 // options are 1/ show value (default)
 //             2/ show naked value (0x0001)
 //             3/ show baseparams and options (0x0100)
 //             4/ show baseparams, options and actions (0x0010)
-// split tables 5/ show baseparams, options and actions (0x1000)  // not in this part
+// split tables 5/ show baseparams, options and actions (0x1000)  // not in this
+// part
 
 // naked overrides
 // this gets complex with linkVar
 
 void assetVar::showvarCJ(cJSON* cj, int opts, const char* showas)
 {
-    if (0) FPS_PRINT_INFO(">>>>>>> name [{}] comp [{}] av {} extras {} linkvar {} type {} atype {} opts {:#04x} ui_type {} naked [{}]"
-        , name.c_str()
-        , comp.c_str()
-        , fmt::ptr(this)
-        , fmt::ptr(extras)
-        , fmt::ptr(linkVar)
-        , type
-        , aVal->type
-        , opts
-        , ui_type
-        , setNaked
-    );
-    if(!showas)
+    if (0)
+        FPS_PRINT_INFO(
+            ">>>>>>> name [{}] comp [{}] av {} extras {} linkvar {} "
+            "type {} atype {} opts {:#04x} ui_type {} naked [{}]",
+            name.c_str(), comp.c_str(), fmt::ptr(this), fmt::ptr(extras), fmt::ptr(linkVar), type, aVal->type, opts,
+            ui_type, setNaked);
+    if (!showas)
     {
         showas = name.c_str();
     }
     cJSON* cjv = cJSON_CreateObject();
-    if (setNaked) opts |= 0x0001;
+    if (setNaked)
+        opts |= 0x0001;
     if (linkVar)
     {
         showvarValueCJ(cjv, opts);
@@ -2659,19 +2645,20 @@ void assetVar::showvarCJ(cJSON* cj, int opts, const char* showas)
     // its broken before here
     if ((opts & 0x0110) == 0x0110)  // Hack
     {
-        //showvarAlarmsCJ(cjv, opts);
-        if (0) FPS_PRINT_INFO(">>>>> showvarExtras");
+        // showvarAlarmsCJ(cjv, opts);
+        if (0)
+            FPS_PRINT_INFO(">>>>> showvarExtras", NULL);
         showvarExtrasCJ(cjv, opts);
     }
     else if (opts & 0x0010)  // Dump
     {
         showvarExtrasCJ(cjv, opts);
     }
-    else if ((opts & 0x0100) || (ui_type == 2)) // assets
+    else if ((opts & 0x0100) || (ui_type == 2))  // assets
     {
         showvarAlarmsCJ(cjv, opts);
     }
-    else if (opts & 0x10000) // assets
+    else if (opts & 0x10000)  // assets
     {
         showvarAlarmsCJ(cjv, opts);
     }
@@ -2692,64 +2679,67 @@ void assetVar::showvarCJ(cJSON* cj, int opts, const char* showas)
 
 cJSON* assetVar::getAction(assetAction* aact)
 {
-    if (debug_action) FPS_PRINT_INFO(">>>>> get action start, name >>{}<<--", aact->name);
+    if (debug_action)
+        FPS_PRINT_INFO(">>>>> get action start, name >>{}<<--", aact->name);
 
     cJSON* cj = cJSON_CreateObject();
     cJSON* cja = cJSON_CreateArray();
     for (auto& x : aact->Abitmap)
     {
         cJSON* cjix = cJSON_CreateObject();
-        if (debug_action)FPS_PRINT_INFO(">>>>> get action bitfield start abf [{}]<<--", x.first);
+        if (debug_action)
+            FPS_PRINT_INFO(">>>>> get action bitfield start abf [{}]<<--", x.first);
 
         assetBitField* abf = x.second;
         char* uri = abf->getcFeat("uri");
         char* var = abf->getcFeat("var");
 
-        if (debug_action)FPS_PRINT_INFO(">>>>> get action bitfield uri {} var {}<<--"
-            , cstr{ uri }
-            , cstr{ var }
-        );
-        //int fm = 0;
+        if (debug_action)
+            FPS_PRINT_INFO(">>>>> get action bitfield uri {} var {}<<--", cstr{ uri }, cstr{ var });
+        // int fm = 0;
         // use featmap
         abf->featDict->showCj(cjix);
 
         cJSON_AddItemToArray(cja, cjix);
-        if (debug_action)FPS_PRINT_INFO("<<<<<<< get action var [{}] bitfield done <<--", cstr{ abf->var });
+        if (debug_action)
+            FPS_PRINT_INFO("<<<<<<< get action var [{}] bitfield done <<--", cstr{ abf->var });
     }
 
     cJSON_AddItemToObject(cj, aact->name.c_str(), cja);
 
-    if (0) FPS_PRINT_INFO("<<<<<<< get action done <<--");
+    if (0)
+        FPS_PRINT_INFO("<<<<<<< get action done <<--", NULL);
     return cj;
-
 }
 
 assetVar::~assetVar()
 {
-    if (0)FPS_PRINT_INFO("DELETING av [{}:{}]"
-        , comp
-        , name
-    );
+    if (0)
+        FPS_PRINT_INFO("DELETING av [{}:{}]", comp, name);
 
-    if (aVal) delete aVal;
-    if (lVal) delete lVal;
+    if (aVal)
+        delete aVal;
+    if (lVal)
+        delete lVal;
     if (extras)
         delete extras;
-    if (fname)free(fname);
+    if (fname)
+        free(fname);
 }
 
 // still need to split this up
 void assetVar::showvarExtrasCJ(cJSON* cjv, int opts)
 {
-    if (0) if (1 || debug_action) FPS_PRINT_INFO(">>>>> looking for extras {} av {} [{}] opts {:#04x} link {}"
-        , fmt::ptr(extras), fmt::ptr(this), name.c_str(), opts, fmt::ptr(linkVar));
+    if (0)
+        if (1 || debug_action)
+            FPS_PRINT_INFO(">>>>> looking for extras {} av {} [{}] opts {:#04x} link {}", fmt::ptr(extras),
+                           fmt::ptr(this), name.c_str(), opts, fmt::ptr(linkVar));
 
     if (extras)
     {
-        if (0) FPS_PRINT_INFO("<<<<< OpeVec {} name [{}]"
-            , fmt::ptr(extras->optVec)
-            , extras->optVec ? extras->optVec->name : "No Optvec name"
-        );
+        if (0)
+            FPS_PRINT_INFO("<<<<< OpeVec {} name [{}]", fmt::ptr(extras->optVec),
+                           extras->optVec ? extras->optVec->name : "No Optvec name");
 
         if (!extras->actVec.empty())
         {
@@ -2761,27 +2751,29 @@ void assetVar::showvarExtrasCJ(cJSON* cjv, int opts)
                 for (auto& y : x.second)
                 {
                     cJSON* cja = getAction(y);
-                    if (0 || debug_action) FPS_PRINT_INFO("<<<<< action Vec got cj  -->{}<-- cja {}", x.first, fmt::ptr(cja));
+                    if (0 || debug_action)
+                        FPS_PRINT_INFO("<<<<< action Vec got cj  -->{}<-- cja {}", x.first, fmt::ptr(cja));
 
                     if (cja)
                     {
-                        if (debug_action) FPS_PRINT_INFO(">>>>> OK action found");
+                        if (debug_action)
+                            FPS_PRINT_INFO(">>>>> OK action found", NULL);
 
                         char* tmp = cJSON_PrintUnformatted(cja);
                         if (tmp)
                         {
-                            if (0) FPS_PRINT_INFO(">>>>> show action found -->{}<<--", fmt::ptr(tmp));
+                            if (0)
+                                FPS_PRINT_INFO(">>>>> show action found -->{}<<--", fmt::ptr(tmp));
                             free((void*)tmp);
                         }
                         cJSON_AddItemToArray(cjactar, cja);
                     }
                     else
                     {
-                        FPS_PRINT_INFO(">>>>> HMMM no action found");
+                        FPS_PRINT_INFO(">>>>> HMMM no action found", NULL);
                     }
                 }
                 cJSON_AddItemToObject(cjact, x.first.c_str(), cjactar);
-
             }
             cJSON_AddItemToObject(cjv, "actions", cjact);
         }
@@ -2791,7 +2783,6 @@ void assetVar::showvarExtrasCJ(cJSON* cjv, int opts)
             cJSON* cjfeat = cJSON_CreateObject();
             extras->featDict->showCj(cjfeat);
             cJSON_AddItemToObject(cjv, "params", cjfeat);
-
         }
         // add display of options
         if (extras->optVec && extras->optVec->cjopts)
@@ -2805,7 +2796,6 @@ void assetVar::showvarExtrasCJ(cJSON* cjv, int opts)
             cJSON* cjfeat = cJSON_CreateObject();
             extras->optDict->showCj(cjfeat);
             cJSON_AddItemToObject(cjv, extras->optName.c_str(), cjfeat);
-
         }
         if (extras->useAlarms)
         {
@@ -2822,7 +2812,8 @@ void assetVar::showvarExtrasCJ(cJSON* cjv, int opts)
                     {
                         cJSON* cjai = cJSON_CreateObject();
                         cJSON_AddStringToObject(cjai, "name", aa->almsg.c_str());
-                        cJSON_AddNumberToObject(cjai, "return_value", aa->severity); ;
+                        cJSON_AddNumberToObject(cjai, "return_value", aa->severity);
+                        ;
                         cJSON_AddItemToArray(cja, cjai);
                     }
                 }
@@ -2834,6 +2825,7 @@ void assetVar::showvarExtrasCJ(cJSON* cjv, int opts)
 // still need to split this up
 void assetVar::showvarAlarmsCJ(cJSON* cjv, int opts)
 {
+    UNUSED(opts);
     // this becomes a class
     if (extras)
     {
@@ -2865,7 +2857,8 @@ void assetVar::showvarAlarmsCJ(cJSON* cjv, int opts)
                 {
                     cJSON* cjai = cJSON_CreateObject();
                     cJSON_AddStringToObject(cjai, "name", aa->almsg.c_str());
-                    cJSON_AddNumberToObject(cjai, "return_value", aa->severity); ;
+                    cJSON_AddNumberToObject(cjai, "return_value", aa->severity);
+                    ;
                     cJSON_AddItemToArray(cja, cjai);
                 }
             }
@@ -2873,12 +2866,11 @@ void assetVar::showvarAlarmsCJ(cJSON* cjv, int opts)
         }
         if (extras->baseDict)
         {
-            // This should take care of adding all the name:values in base dict to the existing cjson object
+            // This should take care of adding all the name:values in base dict to the
+            // existing cjson object
             extras->baseDict->showCj(cjv);
         }
-
     }
-
 }
 
 // runs on alarm dest
@@ -2888,22 +2880,21 @@ void assetVar::setAlarm(asset_log* avAlarm)
     {
         extras = new assetExtras;
     }
-    if (0) FPS_PRINT_INFO("setting alarm in [{}] msg [{}]"
-                , getfName()
-                , avAlarm->almsg
-                );
-// TODO after MVP possibly search for alarm already posted
+    if (0)
+        FPS_PRINT_INFO("setting alarm in [{}] msg [{}]", getfName(), avAlarm->almsg);
+    // TODO after MVP possibly search for alarm already posted
     int alsize = (int)extras->alarmVec.size();
     // TODO getParam alarmsize
     int alsizeMax = MAX_ALARM_SIZE;
-    if(gotParam("MaxAlarmSize"))
+    if (gotParam("MaxAlarmSize"))
     {
         alsizeMax = getiParam("MaxAlarmSize");
     }
     if (alsize > alsizeMax)
     {
-        //setvecval
-        if(1) FPS_PRINT_INFO("limiting alarm size");
+        // setvecval
+        if (1)
+            FPS_PRINT_INFO("limiting alarm size", NULL);
         auto aval = extras->alarmVec.front();
         extras->alarmVec.erase(extras->alarmVec.begin());
         delete aval;
@@ -2932,7 +2923,6 @@ asset_log* assetVar::getAlarm(assetVar* srcAv, const char* atype, int num)
                     }
                 }
             }
-
         }
     }
     return nullptr;
@@ -2983,7 +2973,7 @@ int assetVar::clearAlarm(asset_log* avAlarm)
 
 int assetVar::clearAlarm(assetVar* destAv, const char* atype)
 {
-    //asset_log* avAlarm = alarmMaps[atype];
+    // asset_log* avAlarm = alarmMaps[atype];
     asset_log* avAlarm = destAv->getAlarm(this, atype);
     if (!avAlarm)
     {
@@ -3013,7 +3003,7 @@ int assetVar::clearAlarms()
     return 1;
 }
 
-// opts 0 :normal 1: naked 2:value only 
+// opts 0 :normal 1: naked 2:value only
 void assetVar::showvarValueCJ(cJSON* cj, int opts)
 {
     if (linkVar)
@@ -3027,107 +3017,85 @@ void assetVar::showvarValueCJ(cJSON* cj, int opts)
 
     if (opts & 0x0010)  // extras
     {
-        if (0) FPS_PRINT_INFO(">>>>>>> opts {:#04x} name [{}] type {} atype {}"
-            , opts
-            , name
-            , type
-            , aVal->type
-        );
+        if (0)
+            FPS_PRINT_INFO(">>>>>>> opts {:#04x} name [{}] type {} atype {}", opts, name, type, aVal->type);
         // just add the basedict for now
         if (extras)
         {
             if (extras->baseDict)
             {
-                // This should take care of adding all the name:values in base dict to the existing cjson object
+                // This should take care of adding all the name:values in base dict to
+                // the existing cjson object
                 extras->baseDict->showCj(cj);
             }
         }
     }
 }
 
-// opts 0 :normal 1: naked 2:value only 
+// opts 0 :normal 1: naked 2:value only
 void assetVar::showvarValueOnlyCJ(cJSON* cj, int opts)
 {
     if (0)
     {
-        FPS_PRINT_INFO(">>>>>>> name [{}] comp [{}] type {} aval {} opts {}"
-            , name
-            , comp
-            , type
-            , fmt::ptr(aVal)
-            , opts
-        );
-        FPS_PRINT_INFO(">>>>>>> name [{}] type {} atype {}"
-            , name
-            , type
-            , aVal->type
-        );
+        FPS_PRINT_INFO(">>>>>>> name [{}] comp [{}] type {} aval {} opts {}", name, comp, type, fmt::ptr(aVal), opts);
+        FPS_PRINT_INFO(">>>>>>> name [{}] type {} atype {}", name, type, aVal->type);
     }
 
-    //if ((opts == 0)||(opts==3))
+    // if ((opts == 0)||(opts==3))
     if (opts & 0x0001)  // naked
     {
         getCjVal(&cj);
     }
     else
     {
-        cJSON* cjv = cj;//cJSON_CreateObject();
-        
+        cJSON* cjv = cj;  // cJSON_CreateObject();
+
         switch (aVal->type)
         {
-        case AINT:
-            cJSON_AddItemToObject(cjv, "value", cJSON_CreateNumber(aVal->valueint));
-            break;
-        case AFLOAT:
-            cJSON_AddItemToObject(cjv, "value", cJSON_CreateNumber(aVal->valuedouble));
-            break;
-        case ABOOL:
-            if (aVal->valuebool)
-                cJSON_AddTrueToObject(cjv, "value");
-            else
-                cJSON_AddFalseToObject(cjv, "value");
-            break;
-        case ASTRING:
-            if (0)
-            {
-                FPS_PRINT_INFO("ASTRING name [{}] type {} atype {} valstr [{}]"
-                    , name
-                    , type
-                    , aVal->type
-                    , cstr{ aVal->valuestring }
-                );
-            }
-            cJSON_AddStringToObject(cjv, "value", aVal->valuestring ? aVal->valuestring : "No VAL");
-            if (0)
-            {
-                FPS_PRINT_INFO("ASTRING name [{}] done", name);
-            }
-            break;
-        default:
-            if (1)
-            {
-                FPS_PRINT_INFO("<<<<<< DEFAULT name [{}] done", name);
-            }
-            break;
+            case AINT:
+                cJSON_AddItemToObject(cjv, "value", cJSON_CreateNumber(aVal->valueint));
+                break;
+            case AFLOAT:
+                cJSON_AddItemToObject(cjv, "value", cJSON_CreateNumber(aVal->valuedouble));
+                break;
+            case ABOOL:
+                if (aVal->valuebool)
+                    cJSON_AddTrueToObject(cjv, "value");
+                else
+                    cJSON_AddFalseToObject(cjv, "value");
+                break;
+            case ASTRING:
+                if (0)
+                {
+                    FPS_PRINT_INFO("ASTRING name [{}] type {} atype {} valstr [{}]", name, type, aVal->type,
+                                   cstr{ aVal->valuestring });
+                }
+                cJSON_AddStringToObject(cjv, "value", aVal->valuestring ? aVal->valuestring : "No VAL");
+                if (0)
+                {
+                    FPS_PRINT_INFO("ASTRING name [{}] done", name);
+                }
+                break;
+            default:
+                if (1)
+                {
+                    FPS_PRINT_INFO("<<<<<< DEFAULT name [{}] done", name);
+                }
+                break;
         }
     }
 }
 
 void assetVar::setcParam(const char* pname, const char* val)
 {
-    if (0) FPS_PRINT_INFO("called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}]", pname);
     if (!extras)
     {
         extras = new assetExtras;
-        if (0) FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}"
-            , pname
-            , fmt::ptr(this)
-            , comp
-            , name
-            , fmt::ptr(extras)
-        );
+        if (0)
+            FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}", pname, fmt::ptr(this), comp,
+                           name, fmt::ptr(extras));
     }
     if (!extras->baseDict)
         extras->baseDict = new assetFeatDict;
@@ -3136,20 +3104,14 @@ void assetVar::setcParam(const char* pname, const char* val)
 
 void assetVar::setParam(const char* pname, bool val)
 {
-    if (0) FPS_PRINT_INFO("called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}]", pname);
     if (!extras)
     {
         extras = new assetExtras;
-        if (0)FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}"
-            , pname
-            , fmt::ptr(this)
-            , comp
-            , name
-            , fmt::ptr(extras)
-        );
-
+        if (0)
+            FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}", pname, fmt::ptr(this), comp,
+                           name, fmt::ptr(extras));
     }
     if (!extras->baseDict)
         extras->baseDict = new assetFeatDict;
@@ -3158,19 +3120,14 @@ void assetVar::setParam(const char* pname, bool val)
 
 void assetVar::setParam(const char* pname, int val)
 {
-    if (0)FPS_PRINT_INFO("called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}]", pname);
     if (!extras)
     {
         extras = new assetExtras;
-        if (0)FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}"
-            , pname
-            , fmt::ptr(this)
-            , comp.c_str()
-            , name.c_str()
-            , fmt::ptr(extras)
-        );
+        if (0)
+            FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}", pname, fmt::ptr(this),
+                           comp.c_str(), name.c_str(), fmt::ptr(extras));
     }
     if (!extras->baseDict)
         extras->baseDict = new assetFeatDict;
@@ -3179,19 +3136,14 @@ void assetVar::setParam(const char* pname, int val)
 
 void assetVar::setParam(const char* pname, double val)
 {
-    if (0) FPS_PRINT_INFO("called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}]", pname);
     if (!extras)
     {
         extras = new assetExtras;
-        if (0) FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}"
-            , pname
-            , fmt::ptr(this)
-            , comp.c_str()
-            , name.c_str()
-            , fmt::ptr(extras)
-        );
+        if (0)
+            FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}", pname, fmt::ptr(this),
+                           comp.c_str(), name.c_str(), fmt::ptr(extras));
     }
     if (!extras->baseDict)
         extras->baseDict = new assetFeatDict;
@@ -3200,41 +3152,31 @@ void assetVar::setParam(const char* pname, double val)
 
 void assetVar::setParam(const char* pname, char* val)
 {
-    if (0) FPS_PRINT_INFO("called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}]", pname);
     if (!extras)
     {
         extras = new assetExtras;
-        if (0) FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}"
-            , pname
-            , fmt::ptr(this)
-            , comp
-            , name
-            , fmt::ptr(extras)
-        );
+        if (0)
+            FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}", pname, fmt::ptr(this), comp,
+                           name, fmt::ptr(extras));
     }
     if (!extras->baseDict)
         extras->baseDict = new assetFeatDict;
     extras->baseDict->setFeat(pname, val);
 }
 
-//sadly void* also services cJSON
+// sadly void* also services cJSON
 void assetVar::setParam(const char* pname, void* val)
 {
-    if (0) FPS_PRINT_INFO("void* called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("void* called here name [{}]", pname);
     if (!extras)
     {
         extras = new assetExtras;
-        if (0) FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}"
-            , pname
-            , fmt::ptr(this)
-            , comp.c_str()
-            , name.c_str()
-            , fmt::ptr(extras)
-        );
+        if (0)
+            FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}", pname, fmt::ptr(this),
+                           comp.c_str(), name.c_str(), fmt::ptr(extras));
     }
     if (!extras->baseDict)
         extras->baseDict = new assetFeatDict;
@@ -3243,35 +3185,34 @@ void assetVar::setParam(const char* pname, void* val)
 
 void assetVar::setParamfromCj(const char* pname, cJSON* val)
 {
-    if (0) FPS_PRINT_INFO("cj called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("cj called here name [{}]", pname);
     if (!extras)
     {
         extras = new assetExtras;
-        if (0) FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}"
-            , pname
-            , fmt::ptr(this)
-            , comp.c_str()
-            , name.c_str()
-            , fmt::ptr(extras)
-        );
+        if (0)
+            FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}", pname, fmt::ptr(this),
+                           comp.c_str(), name.c_str(), fmt::ptr(extras));
     }
     if (!extras->baseDict)
         extras->baseDict = new assetFeatDict;
     assetFeatDict* afd = extras->baseDict;
     assFeat* af = afd->getFeat(pname);
-    if(af)
+    if (af)
     {
-        if((lock && !af->unlock) || af->lock) //if assetVar is locked but parameter is unlocked, should still allow parameter to set. 
+        if ((lock && !af->unlock) || af->lock)  // if assetVar is locked but
+                                                // parameter is unlocked, should still
+                                                // allow parameter to set.
         {
-            if(1)FPS_PRINT_INFO("Parameter [{}] not set, assetvar is locked\n",pname);
+            if (1)
+                FPS_PRINT_INFO("Parameter [{}] not set, assetvar is locked\n", pname);
             return;
         }
     }
-    else if(lock)
+    else if (lock)
     {
-        if(1)FPS_PRINT_INFO("Parameter [{}] not set, assetvar is locked\n",pname);
+        if (1)
+            FPS_PRINT_INFO("Parameter [{}] not set, assetvar is locked\n", pname);
         return;
     }
     afd->setFeat(pname, val);
@@ -3279,19 +3220,14 @@ void assetVar::setParamfromCj(const char* pname, cJSON* val)
 
 void assetVar::setParamfromAv(const char* pname, assetVar* av)
 {
-    if (0) FPS_PRINT_INFO("called here pname [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here pname [{}]", pname);
     if (!extras)
     {
         extras = new assetExtras;
-        if (0) FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}"
-            , pname
-            , fmt::ptr(this)
-            , comp.c_str()
-            , name.c_str()
-            , fmt::ptr(extras)
-        );
+        if (0)
+            FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}", pname, fmt::ptr(this),
+                           comp.c_str(), name.c_str(), fmt::ptr(extras));
     }
     if (!extras->baseDict)
         extras->baseDict = new assetFeatDict;
@@ -3300,19 +3236,14 @@ void assetVar::setParamfromAv(const char* pname, assetVar* av)
 
 void assetVar::setParamIdxfromCj(const char* pname, int idx, cJSON* val)
 {
-    if (0) FPS_PRINT_INFO("cj called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("cj called here name [{}]", pname);
     if (!extras)
     {
         extras = new assetExtras;
-        if (0) FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}"
-            , pname
-            , fmt::ptr(this)
-            , comp
-            , name
-            , fmt::ptr(extras)
-        );
+        if (0)
+            FPS_PRINT_INFO("called here pname [{}] av {} comp [{}] name [{}] extras {}", pname, fmt::ptr(this), comp,
+                           name, fmt::ptr(extras));
     }
     if (!extras->baseDict)
         extras->baseDict = new assetFeatDict;
@@ -3329,9 +3260,8 @@ void assetVar::setParamIdxfromCj(const char* pname, int idx, cJSON* val)
 int assetVar::getiParam(const char* pname) const
 {
     int val = 0;
-    if (0)FPS_PRINT_INFO("called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}]", pname);
 
     if (extras && extras->baseDict)
         extras->baseDict->getFeat(pname, &val);
@@ -3341,13 +3271,9 @@ int assetVar::getiParam(const char* pname) const
 double assetVar::getdParam(const char* pname) const
 {
     double val = 0.0;
-    //char* fname = (char *)((assetVar*)this->getfName());
-    if (0) FPS_PRINT_INFO("av name [{}:{}] param [{}] extras {}"
-        , comp
-        , name
-        , pname
-        , fmt::ptr(extras)
-    );
+    // char* fname = (char *)((assetVar*)this->getfName());
+    if (0)
+        FPS_PRINT_INFO("av name [{}:{}] param [{}] extras {}", comp, name, pname, fmt::ptr(extras));
     if (extras && extras->baseDict)
         extras->baseDict->getFeat(pname, &val);
     return val;
@@ -3356,9 +3282,8 @@ double assetVar::getdParam(const char* pname) const
 bool assetVar::getbParam(const char* pname) const
 {
     bool val = false;
-    if (0) FPS_PRINT_INFO("called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}]", pname);
     if (extras && extras->baseDict)
         extras->baseDict->getFeat(pname, &val);
     return val;
@@ -3367,9 +3292,8 @@ bool assetVar::getbParam(const char* pname) const
 char* assetVar::getcParam(const char* pname) const
 {
     char* val = nullptr;
-    if (0) FPS_PRINT_INFO("called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}]", pname);
     if (extras && extras->baseDict)
         extras->baseDict->getFeat(pname, &val);
 
@@ -3401,9 +3325,8 @@ cJSON* assetVar::getCjParam(const char* pname, int options)
 void* assetVar::getvParam(const char* pname)
 {
     void* val;
-    if (0) FPS_PRINT_INFO("called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}]", pname);
     if (extras && extras->baseDict)
         extras->baseDict->getFeat(pname, &val);
     return val;
@@ -3413,9 +3336,8 @@ char* assetVar::getcAParam(const char* pname)
 {
     char* val = nullptr;
     assetVar* av;
-    if (0) FPS_PRINT_INFO("called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}]", pname);
     if (extras && extras->baseDict)
     {
         extras->baseDict->getFeat(pname, &av);
@@ -3430,9 +3352,8 @@ char* assetVar::getcAParam(const char* pname)
 bool assetVar::gotParam(const char* pname)
 {
     bool val = false;
-    if (0) FPS_PRINT_INFO("called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}]", pname);
 
     if (extras && extras->baseDict)
         val = extras->baseDict->gotFeat(pname);
@@ -3444,7 +3365,7 @@ int assetVar::setVecDepth(int vdepth)
     double adval = 0.0;
     if (!extras)
     {
-        extras = new  assetExtras;
+        extras = new assetExtras;
     }
 
     // clear it all out
@@ -3454,12 +3375,8 @@ int assetVar::setVecDepth(int vdepth)
         extras->valVec.erase(extras->valVec.begin());
         if ((int)extras->valVec.size() >= extras->valDepth)
         {
-            FPS_PRINT_INFO(" changing vec size  [{}] vec size {} valDepth {} adval {:2.3f}"
-            , cstr{getfName()}
-            , extras->valVec.size()
-            , extras->valDepth
-            , adval
-            );
+            FPS_PRINT_INFO(" changing vec size  [{}] vec size {} valDepth {} adval {:2.3f}", cstr{ getfName() },
+                           extras->valVec.size(), extras->valDepth, adval);
         }
     }
 
@@ -3467,7 +3384,7 @@ int assetVar::setVecDepth(int vdepth)
     {
         extras->valDepth = vdepth;
         depth = vdepth;
-        setParam("depth",depth);
+        setParam("depth", depth);
     }
     return depth;
 }
@@ -3482,53 +3399,40 @@ double assetVar::setVecVal(double dval, int vdepth)
     double adval = 0.0;
     if (!extras)
     {
-        extras = new  assetExtras;
+        extras = new assetExtras;
     }
-    if(0)FPS_PRINT_INFO(" before testing vec size  [{}] vec size {} vdepth {} valDepth {} dval {:2.3f}"
-            , cstr{getfName()}
-            , extras->valVec.size()
-            , vdepth
-            , extras->valDepth
-            , dval
-            );
+    if (0)
+        FPS_PRINT_INFO(
+            " before testing vec size  [{}] vec size {} vdepth {} "
+            "valDepth {} dval {:2.3f}",
+            cstr{ getfName() }, extras->valVec.size(), vdepth, extras->valDepth, dval);
     if (gotParam("hold") && getbParam("hold"))
     {
         return dval;
     }
 
-    while (depth > 0 && extras->valDepth> 0 && ((int)extras->valVec.size() >= extras->valDepth))
+    while (depth > 0 && extras->valDepth > 0 && ((int)extras->valVec.size() >= extras->valDepth))
     {
         adval = extras->valVec.front();
         extras->valVec.erase(extras->valVec.begin());
         if ((int)extras->valVec.size() > extras->valDepth)
         {
-            FPS_PRINT_INFO(" reducing vec size  [{}] vec size {} valDepth {} adval {:2.3f}"
-            , cstr{getfName()}
-            , extras->valVec.size()
-            , extras->valDepth
-            , adval
-            );
+            FPS_PRINT_INFO(" reducing vec size  [{}] vec size {} valDepth {} adval {:2.3f}", cstr{ getfName() },
+                           extras->valVec.size(), extras->valDepth, adval);
         }
     }
 
-   
     extras->valVec.push_back(dval);
     if (vdepth > 0)
     {
         extras->valDepth = vdepth;
         depth = vdepth;
     }
-    if(0)FPS_PRINT_INFO(" after reducing vec size  [{}] vec size {} valDepth {} dval {:2.3f}"
-            , cstr{getfName()}
-            , extras->valVec.size()
-            , extras->valDepth
-            , dval
-            );
-    if (0) FPS_PRINT_INFO("called here name [{}] size {} adval {:2.3f}"
-        , cstr{getfName()}
-        , extras->valVec.size()
-        , dval
-    );
+    if (0)
+        FPS_PRINT_INFO(" after reducing vec size  [{}] vec size {} valDepth {} dval {:2.3f}", cstr{ getfName() },
+                       extras->valVec.size(), extras->valDepth, dval);
+    if (0)
+        FPS_PRINT_INFO("called here name [{}] size {} adval {:2.3f}", cstr{ getfName() }, extras->valVec.size(), dval);
     return adval;
 }
 
@@ -3553,26 +3457,18 @@ double assetVar::getVecdVal(int vdepth)
         return 0.0;
     }
 
-    if (0) FPS_PRINT_INFO("called here name [{}] size {} depth {} vdepth {} adval {:2.3f}"
-        , cstr{getfName()}
-        , extras->valVec.size()
-        , depth
-        , vdepth
-        , adval
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}] size {} depth {} vdepth {} adval {:2.3f}", cstr{ getfName() },
+                       extras->valVec.size(), depth, vdepth, adval);
     return adval;
 }
 
-int assetVar::getVecVals(int depth, double& avval, double& minval,
-    double& maxval, double& spval, bool debug)
+int assetVar::getVecVals(int depth, double& avval, double& minval, double& maxval, double& spval, bool debug)
 {
-    if (0) FPS_PRINT_INFO("called here name [{}] extras {} depth {} size {}"
-        , cstr{getfName()}
-        , fmt::ptr(extras)
-        , depth
-        , extras?extras->valVec.size():0
-    );
-    //debug = true;
+    if (0)
+        FPS_PRINT_INFO("called here name [{}] extras {} depth {} size {}", cstr{ getfName() }, fmt::ptr(extras), depth,
+                       extras ? extras->valVec.size() : 0);
+    // debug = true;
     int rc = 0;
     if (extras)
     {
@@ -3581,12 +3477,10 @@ int assetVar::getVecVals(int depth, double& avval, double& minval,
         minval = extras->valVec.front();
         maxval = extras->valVec.front();
         int idx = 0;
-        if (debug)FPS_PRINT_INFO("####################");
-        if (debug)FPS_PRINT_INFO("running  name [{}] depth {} x [{:2.3f}]"
-            , cstr{getfName()}
-            , depth
-            , minval
-        );
+        if (debug)
+            FPS_PRINT_INFO("####################", NULL);
+        if (debug)
+            FPS_PRINT_INFO("running  name [{}] depth {} x [{:2.3f}]", cstr{ getfName() }, depth, minval);
 
         for (auto x : extras->valVec)
         {
@@ -3595,27 +3489,22 @@ int assetVar::getVecVals(int depth, double& avval, double& minval,
             {
                 rc++;
                 avval += x;
-                if (x < minval) minval = x;
-                if (x > maxval) maxval = x;
-                if (debug) FPS_PRINT_INFO(" var [{}] idx [{}] depth [{}] val(x) [{:2.3f}] avval [{:2.3f}]"
-                    , cstr{getfName()}
-                    , idx
-                    , depth
-                    , x
-                    , avval / idx
-                    );
+                if (x < minval)
+                    minval = x;
+                if (x > maxval)
+                    maxval = x;
+                if (debug)
+                    FPS_PRINT_INFO(" var [{}] idx [{}] depth [{}] val(x) [{:2.3f}] avval [{:2.3f}]", cstr{ getfName() },
+                                   idx, depth, x, avval / idx);
             }
         }
         spval = maxval - minval;
-        if (debug)FPS_PRINT_INFO("called here name [{}] size {} avval {:2.3f}"
-            , cstr{getfName()}
-            , rc
-            , avval
-        );
+        if (debug)
+            FPS_PRINT_INFO("called here name [{}] size {} avval {:2.3f}", cstr{ getfName() }, rc, avval);
 
-        if (depth > 0 && idx > 0 && extras->valVec.size()>0)
+        if (depth > 0 && idx > 0 && extras->valVec.size() > 0)
         {
-            if(idx <= depth)
+            if (idx <= depth)
             {
                 avval /= idx;
             }
@@ -3631,9 +3520,8 @@ int assetVar::getVecVals(int depth, double& avval, double& minval,
 assetVar* assetVar::getaParam(const char* pname)
 {
     assetVar* av = nullptr;
-    if (0) FPS_PRINT_INFO("called here name [{}]"
-        , pname
-    );
+    if (0)
+        FPS_PRINT_INFO("called here name [{}]", pname);
     if (extras && extras->baseDict)
     {
         extras->baseDict->getFeat(pname, &av);
@@ -3670,13 +3558,13 @@ void assetVar::SetFunc(assetVar* av)
 
 namespace flex
 {
-    template<typename E>
-    constexpr auto getEnumVal(E anEnum) -> typename std::underlying_type<E>::type
-    {
-        static_assert(std::is_enum<E>::value, "requires an enum to use this function.");
-        return static_cast<typename std::underlying_type<E>::type>(anEnum);
-    }
+template <typename E>
+constexpr auto getEnumVal(E anEnum) -> typename std::underlying_type<E>::type
+{
+    static_assert(std::is_enum<E>::value, "requires an enum to use this function.");
+    return static_cast<typename std::underlying_type<E>::type>(anEnum);
 }
+}  // namespace flex
 
 int assetVar::sendEvent(const char* source, fims* p_fims, Severity severity, const char* msg, ...)
 {
@@ -3695,7 +3583,7 @@ int assetVar::sendEvent(const char* source, fims* p_fims, Severity severity, con
             rc++;
             buffer = (char*)malloc(rc);
             memset(buffer, 0, rc);
-            //buffer[0] =0;
+            // buffer[0] =0;
             va_start(args2, msg);
             vsnprintf(buffer, rc, msg, args2);
             va_end(args2);
@@ -3709,18 +3597,14 @@ int assetVar::sendEvent(const char* source, fims* p_fims, Severity severity, con
                 char* body = cJSON_PrintUnformatted(cj);
                 if (body)
                 {
-                    FPS_PRINT_INFO("sending event  xxx >>>>>>>>>>>>>>>> [{}]"
-                                , cstr{body});
+                    FPS_PRINT_INFO("sending event  xxx >>>>>>>>>>>>>>>> [{}]", cstr{ body });
 
-                    //p_fims->Send("set", "/events", nullptr, body);
+                    // p_fims->Send("set", "/events", nullptr, body);
                     rc = p_fims->Send("post", "/events", nullptr, body);
                     free(body);
                     if (rc < 0)
                     {
-                        FPS_PRINT_INFO("send event failed rc = {} size = {}"
-                        , rc
-                        , strlen(body)
-                        );
+                        FPS_PRINT_INFO("send event failed rc = {} size = {}", rc, strlen(body));
                         exit(0);
                     }
                 }
@@ -3744,21 +3628,21 @@ int assetVar::sendEvent(const char* source, fims* p_fims, Severity severity, con
 //         // skip if not enabled
 //         if (!getbParam("enablePerf"))
 //         {
-//             FPS_PRINT_INFO("%s>> log not enabled for %s\n",__func__, name.c_str());
-//             return rc;
+//             FPS_PRINT_INFO("%s>> log not enabled for
+//             %s\n",__func__, name.c_str()); return rc;
 //         }
 
 //         char* buffer=nullptr;
 //         va_list args;
 //         va_start (args, msg);
 //         rc = vsnprintf (buffer, 0, msg, args);
-//         va_end (args);   
+//         va_end (args);
 //         if (rc > 0)
-//         { 
+//         {
 //             va_list args2;
 
 //             rc++;
-//             buffer = (char *)malloc(rc); 
+//             buffer = (char *)malloc(rc);
 //             memset(buffer,0,rc);
 //             //buffer[0] =0;
 //             va_start (args2, msg);
@@ -3778,7 +3662,8 @@ int assetVar::sendEvent(const char* source, fims* p_fims, Severity severity, con
 //     }
 //     else
 //     {
-//         FPS_PRINT_INFO("%s>> no extras for %s\n",__func__, name.c_str());
+//         FPS_PRINT_INFO("%s>> no extras for
+//         %s\n",__func__, name.c_str());
 
 //     }
 //     return rc;
@@ -3849,7 +3734,7 @@ int assetVar::sendEvent(const char* source, fims* p_fims, Severity severity, con
 //             , __func__
 //             , sp);
 //     }
-//     if(sp)extras->logfd  = open(sp, O_RDWR | O_CREAT | O_APPEND, 0644);  
+//     if(sp)extras->logfd  = open(sp, O_RDWR | O_CREAT | O_APPEND, 0644);
 //     if(tmpsp)free(tmpsp);
 //     return 0;
 // }
@@ -3858,7 +3743,7 @@ int assetVar::sendEvent(const char* source, fims* p_fims, Severity severity, con
 // {
 //     if(extras && (extras->logfd>0))
 //     {
-//         close(extras->logfd); 
+//         close(extras->logfd);
 //         extras->logfd = -1;
 //     }
 //     return 0;
@@ -3872,9 +3757,7 @@ int assetVar::addSchedReq(schAvlist& rreq)
 {
     if (!gotParam("RunTime"))
     {
-        FPS_PRINT_INFO("assetVar [{}] does not have a RunTime param"
-            , name
-        );
+        FPS_PRINT_INFO("assetVar [{}] does not have a RunTime param", name);
         return 0;
     }
     double tshot = getdParam("RunTime");
@@ -3898,15 +3781,12 @@ int assetVar::addSchedReq(schAvlist& rreq, double tshot, double trep)
     setParam("RunTime", tshot);
     setParam("RepTime", trep);
     return addSchedReq(rreq);
-
 }
-
-
 
 /***********************************************
  *                 VarsMap
  ***********************************************/
- // VarsMap is this used ??
+// VarsMap is this used ??
 VarsMap::VarsMap()
 {
     pthread_mutex_init(&map_lock, nullptr);
@@ -3918,7 +3798,7 @@ VarsMap::~VarsMap()
     nvarsmap::iterator x;
     std::map<std::string, assetVar*> vm;
 
-    for (x = vmap.begin(); x != vmap.end();++x)
+    for (x = vmap.begin(); x != vmap.end(); ++x)
     {
         // for each var
         varmap* vm = vmap[x->first];
@@ -3939,9 +3819,8 @@ VarsMap::~VarsMap()
     int cval;
     ATypes type;
 
-    std::map<std::string, std::vector<assetAction*>>actVec;   //list of actions for each category
-    assetFeatDict* featDict;
-    assetFeatDict* optDict;
+    std::map<std::string, std::vector<assetAction*>>actVec;   //list of actions
+for each category assetFeatDict* featDict; assetFeatDict* optDict;
     assetFeatDict* baseDict;
     assetOptVec* optVec;
     assetVar* SetPubFunc;
@@ -3974,7 +3853,7 @@ VarsMap::~VarsMap()
  ***********************************************/
 assetExtras::assetExtras()
 {
-    //depth = 0; 
+    // depth = 0;
     cval = 0;
     type = AEND;
     featDict = nullptr;
@@ -4007,7 +3886,6 @@ assetExtras::assetExtras()
     // logFile = nullptr;
     // logDepth = 0;
     // logAlways = false;
-
 }
 
 assetExtras::~assetExtras()
@@ -4034,7 +3912,7 @@ assetExtras::~assetExtras()
     // {
     //     close(logfd);
     // }
-    //alarmVec
+    // alarmVec
     auto asize = alarmVec.size();
 
     if (asize > 0)
@@ -4048,22 +3926,29 @@ assetExtras::~assetExtras()
         }
         alarmVec.clear();
     }
-    if (featDict) delete featDict;
-    if (optDict) delete optDict;
-    // we also have to keep the order of the list intact. use a control vector as a base assetvar.. Uck but needs must.
-    // we may need to load up a derived class called a ui class. to do this...
-    if (baseDict) delete baseDict;
-    if (optVec) delete optVec;
-    if (SetFunc) delete (assetFunc*)SetFunc;
-    //if (pubFunc) delete pubFunc;
-    //if (getFunc) delete getFunc;
+    if (featDict)
+        delete featDict;
+    if (optDict)
+        delete optDict;
+    // we also have to keep the order of the list intact. use a control vector as
+    // a base assetvar.. Uck but needs must. we may need to load up a derived
+    // class called a ui class. to do this...
+    if (baseDict)
+        delete baseDict;
+    if (optVec)
+        delete optVec;
+    if (SetFunc)
+        delete (assetFunc*)SetFunc;
+    // if (pubFunc) delete pubFunc;
+    // if (getFunc) delete getFunc;
 
     // we need  named map of arrays for things like ui options
     // actually the list below will also work for keeping the order list.
-    //std::map<std::string,std::vector<assetVar *>> optVec;
+    // std::map<std::string,std::vector<assetVar *>> optVec;
 }
 
-// How do we designate a alarm/fault object  We see ui_type as an alarm in loadmap 
+// How do we designate a alarm/fault object  We see ui_type as an alarm in
+// loadmap
 asset_log* assetVar::sendAlarm(assetVar* destAv, const char* atype, const char* msg, int severity)
 {
     asset_log* avAlarm = nullptr;
@@ -4088,11 +3973,12 @@ asset_log* assetVar::sendAlarm(assetVar* destAv, const char* atype, const char* 
     avAlarm->name = name;
     avAlarm->comp = comp;
 
-    //alarmMaps[atype] = avAlarm;
+    // alarmMaps[atype] = avAlarm;
 
-    if (1) FPS_PRINT_INFO("calling setAlarm [{}:{}] in destAv [{}]", comp, name, destAv->getfName());
+    if (1)
+        FPS_PRINT_INFO("calling setAlarm [{}:{}] in destAv [{}]", comp, name, destAv->getfName());
     destAv->setAlarm(avAlarm);
-    return nullptr;//avAlarm;
+    return nullptr;  // avAlarm;
 }
 
 #include <chrono>
@@ -4104,7 +3990,7 @@ int forceAvTemplates()
 {
     using namespace std::chrono;
 
-    //ess_man = new asset_manager("ess_controller");
+    // ess_man = new asset_manager("ess_controller");
     varsmap vmap;
     VarMapUtils vm;
     asset_manager* am = new asset_manager("test");
@@ -4112,7 +3998,7 @@ int forceAvTemplates()
     am->am = nullptr;
     am->running = 1;
     char* cval = (char*)"1234";
-    //vm->sysVec = &sysVec;
+    // vm->sysVec = &sysVec;
 
     am->vmap = &vmap;
     am->vm = &vm;
@@ -4127,7 +4013,6 @@ int forceAvTemplates()
     am->amap["cval"] = am->vm->setLinkVal(*am->vmap, am->name.c_str(), "/params", "cval", cval);
     av = am->amap["dval"];
     am->amap["Av"] = am->vm->setLinkVal(*am->vmap, am->name.c_str(), "/params", "Av", av);
-
 
     av->addVal(dval);
     av->addVal(ival);
@@ -4162,19 +4047,19 @@ int forceAvTemplates()
     dval = av->getdParam("d1");
     cval = av->getcParam("c1");
 
-    //bval = av->valueChanged(dval,ival);
+    // bval = av->valueChanged(dval,ival);
     bval = av->valueChanged();
     bval = am->vm->valueChanged(dval, dval);
-    //bval = am->vm->valueChanged(dval,ival);
+    // bval = am->vm->valueChanged(dval,ival);
     bval = am->vm->valueChanged(av, av, av, dval, dval);
     bval = am->vm->valueChangednodb(av, av, dval, dval);
     bval = am->vm->valueChangednodb(av, av, bval, dval);
-    //bval = am->av->valueChangednodb(dval,dval);
-    //bval = am->av->valueChangednodb(dval,bval);
+    // bval = am->av->valueChangednodb(dval,dval);
+    // bval = am->av->valueChangednodb(dval,bval);
     // av->setParam("d1",dval);
     // av->setParam("b1",bval);
     // av->setParam("c1",tval);
-    //assetBitField bf(1, 2, nullptr, nullptr, nullptr);
+    // assetBitField bf(1, 2, nullptr, nullptr, nullptr);
     assetBitField bf2(nullptr);
     ival = bf2.getFeat("d", &ival);
     cval = bf2.getFeat("d", &cval);

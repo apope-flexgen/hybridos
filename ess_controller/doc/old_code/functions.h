@@ -22,7 +22,8 @@
             if(o0 && o3) o3 = o0/n
 
      }
-  this is cool stuff , all the processing maths can be configured at run time in the text config file.
+  this is cool stuff , all the processing maths can be configured at run time in
+the text config file.
 
    functions are organised in groups for specific operations
    start at the init group and head of to the standby group
@@ -30,34 +31,36 @@ start with some simple ones
    collect the average voltage from n bms units
 */
 
-#include <iostream>
-#include <map>
-#include <cstring>
-#include <malloc.h>
-#include <fims/libfims.h>
 #include "assetVar.h"
+#include <cstring>
+#include <fims/libfims.h>
+#include <iostream>
+#include <malloc.h>
+#include <map>
 
 #ifndef FPS_ERROR_PRINT
 #define FPS_ERROR_PRINT printf
 #define FPS_DEBUG_PRINT printf
 #endif
 
-// ths interface is a vector of ins , outs , ( alerts and warning etc to be added)
-struct Interface {
-
-    Interface() {};
-    ~Interface() {
+// ths interface is a vector of ins , outs , ( alerts and warning etc to be
+// added)
+struct Interface
+{
+    Interface(){};
+    ~Interface()
+    {
         ins.clear();
-        //outs.clear();
+        // outs.clear();
     };
-    int addIn(assetVar*av)
+    int addIn(assetVar* av)
     {
         int rc = ins.size();
         ins.push_back(av);
         return rc;
     }
 
-    int addOut(const char *op, assetVar*av)
+    int addOut(const char* op, assetVar* av)
     {
         printf(" adding interface out var for [%s] \n", op);
         int rc = 0;
@@ -71,10 +74,10 @@ struct Interface {
             return ins[idx];
         return nullptr;
     }
-    assetVar* outAt(const char *op)
+    assetVar* outAt(const char* op)
     {
         auto it = outs.find(op);
-        if(it != outs.end())
+        if (it != outs.end())
         {
             printf(" ### found out var for [%s]\n", op);
             return outs[op];
@@ -83,48 +86,45 @@ struct Interface {
         return nullptr;
     }
 
-    std::vector<assetVar *>ins;
-    std::map<std::string,assetVar *>outs;
-
+    std::vector<assetVar*> ins;
+    std::map<std::string, assetVar*> outs;
 };
 
-struct funVec {
-    funVec(const char *fname) {
+struct funVec
+{
+    funVec(const char* fname)
+    {
         id = fname;
         iface = new Interface;
     }
-    ~funVec() {
-        delete iface;
-    };
+    ~funVec() { delete iface; };
 
-    void setFname(const char *_fname) {
-        fname = _fname;
-    }
+    void setFname(const char* _fname) { fname = _fname; }
 
     Interface* iface;
     std::string id;
     std::string fname;
-
 };
 // possibly not going to use this
 template <typename T>
-class make_vector {
+class make_vector
+{
 public:
     typedef make_vector<T> my_type;
-    my_type& operator<< (const T& val) {
+    my_type& operator<<(const T& val)
+    {
         data_.push_back(val);
         return *this;
     }
-    operator std::vector<T>() const {
-        return data_;
-    }
+    operator std::vector<T>() const { return data_; }
+
 private:
     std::vector<T> data_;
 };
 
 // here is the function type
-typedef bool (*boolFunType)(Interface *);
+typedef bool (*boolFunType)(Interface*);
 
-funVec* parse_funItem(cJSON*cj, varsmap &varMaps);
+funVec* parse_funItem(cJSON* cj, varsmap& varMaps);
 
 #endif

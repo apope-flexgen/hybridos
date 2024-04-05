@@ -1,32 +1,35 @@
 #include "dbi_funcs.hpp"
 
-// this function sends the dbi vars out if they have timed out then resets their timers
+// this function sends the dbi vars out if they have timed out then resets their
+// timers
 bool check_dbi_var_timeouts(dbi_var_list& var_list, fims* fims_gateway)
 {
-    std::vector<const assetVar*> update_list; // list of vars to update
-    update_list.reserve(var_list.size()/2); // about half the size of dbi_var_list by default
-    const auto now = std::chrono::steady_clock::now(); // base time to check when we need to update variables
+    std::vector<const assetVar*> update_list;           // list of vars to update
+    update_list.reserve(var_list.size() / 2);           // about half the size of dbi_var_list by default
+    const auto now = std::chrono::steady_clock::now();  // base time to check when
+                                                        // we need to update
+                                                        // variables
 
     // loop over var_list to see if something needs to be updated in dbi
     for (auto& var : var_list)
     {
         if (!var.dbi_var.getbParam("EnableDbiUpdate"))
         {
-            continue; // don't update var if it isn't allowed to be updated
+            continue;  // don't update var if it isn't allowed to be updated
         }
 
         const auto elapsed = now - var.update_timeout_start;
         const auto update_time = var.dbi_var.getiParam("UpdateTimeCfg");
-        if (update_time <= 0) // it is a double
+        if (update_time <= 0)  // it is a double
         {
             const auto dbl_update_time = var.dbi_var.getdParam("UpdateTimeCfg");
-            if (elapsed >= flex::dbl_sec{dbl_update_time}) // time to update the var in dbi
+            if (elapsed >= flex::dbl_sec{ dbl_update_time })  // time to update the var in dbi
             {
-                update_list.emplace_back(&var.dbi_var); // put it onto the update list to be sent out
-                var.update_timeout_start = now; // reset its update start_time for checking the next time
+                update_list.emplace_back(&var.dbi_var);  // put it onto the update list to be sent out
+                var.update_timeout_start = now;          // reset its update start_time for checking the next time
             }
         }
-        else if (elapsed >= std::chrono::seconds{update_time}) // it is an int
+        else if (elapsed >= std::chrono::seconds{ update_time })  // it is an int
         {
             update_list.emplace_back(&var.dbi_var);
             var.update_timeout_start = now;
@@ -40,8 +43,10 @@ bool check_dbi_var_timeouts(dbi_var_list& var_list, fims* fims_gateway)
     {
         fmt::format_to(std::back_inserter(uri_buf), "/dbi/ess_controller{}/{}", var->comp, var->name);
         fmt::format_to(std::back_inserter(msg_buf), "{:f}", *var);
-        *uri_buf.end() = '\0'; // gets rid of final "junk" character at the end due to name for some reason
-        *msg_buf.end() = '\0'; // for some reason this needs this - I don't know why we have a 'B' at the end
+        *uri_buf.end() = '\0';  // gets rid of final "junk" character at the end due
+                                // to name for some reason
+        *msg_buf.end() = '\0';  // for some reason this needs this - I don't know why
+                                // we have a 'B' at the end
 
         if (!fims_gateway->Send("set", uri_buf.data(), nullptr, msg_buf.data()))
         {
@@ -62,19 +67,23 @@ bool add_dbi_var(dbi_var_list& var_list, assetVar& to_add)
 {
     if (!to_add.gotParam("EnableDbiUpdate"))
     {
-        to_add.setParam("EnableDbiUpdate", true); // set this variable up to update as a dbi_var
+        to_add.setParam("EnableDbiUpdate",
+                        true);  // set this variable up to update as a dbi_var
     }
     if (!to_add.gotParam("UpdateTimeCfg"))
     {
-        to_add.setParam("UpdateTimeCfg", 5); // default to five second update time
+        to_add.setParam("UpdateTimeCfg", 5);  // default to five second update time
     }
-    if (!to_add.gotParam("dbiStatus")) // todo: handle init case once we get it from the configs, might be tricky
+    if (!to_add.gotParam("dbiStatus"))  // todo: handle init case once we get it
+                                        // from the configs, might be tricky
     {
-        to_add.setParam("dbiStatus", (char*)"ok"); // default to saying "ok" to dbi being on update list? - should be correct
+        to_add.setParam("dbiStatus", (char*)"ok");  // default to saying "ok" to dbi
+                                                    // being on update list? -
+                                                    // should be correct
     }
 
     // might need to add update time call again
-    var_list.emplace_back(dbi_var_ref{to_add, std::chrono::steady_clock::now()});
+    var_list.emplace_back(dbi_var_ref{ to_add, std::chrono::steady_clock::now() });
     return true;
 }
 
@@ -89,8 +98,9 @@ bool init_dbi_var_list_timeouts(dbi_var_list& var_list)
     return true;
 }
 
-// this tells dbi to send the data to /ess/dbi/comp:name for processing so it gets back into our database
-// we "check" it there for some reason - I have no idea
+// this tells dbi to send the data to /ess/dbi/comp:name for processing so it
+// gets back into our database we "check" it there for some reason - I have no
+// idea
 bool get_dbi_var(const assetVar& to_get, fims* p_fims)
 {
     fmt::basic_memory_buffer<char, 100> uri_buf;
@@ -158,7 +168,7 @@ bool get_config_from_dbi(const char* filename_no_ext, fims* p_fims)
     *reply_buf.end() = '\0';
 
     // tell dbi to send config back to us appropriately
-    if(!p_fims->Send("get", uri_buf.data(), reply_buf.data(), nullptr))
+    if (!p_fims->Send("get", uri_buf.data(), reply_buf.data(), nullptr))
     {
         return false;
     }

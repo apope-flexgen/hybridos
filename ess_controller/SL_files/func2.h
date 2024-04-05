@@ -23,28 +23,28 @@
 // Class declaration for model func2
 class func2 final
 {
-  // public data and function members
- public:
-  // model step function
-  void step(int32_T arg_In1, int32_T *arg_Out1);
+    // public data and function members
+public:
+    // model step function
+    void step(int32_T arg_In1, int32_T* arg_Out1);
 
-  // Copy Constructor
-  func2(func2 const&) = delete;
+    // Copy Constructor
+    func2(func2 const&) = delete;
 
-  // Assignment Operator
-  func2& operator= (func2 const&) & = delete;
+    // Assignment Operator
+    func2& operator=(func2 const&) & = delete;
 
-  // Move Constructor
-  func2(func2 &&) = delete;
+    // Move Constructor
+    func2(func2&&) = delete;
 
-  // Move Assignment Operator
-  func2& operator= (func2 &&) = delete;
+    // Move Assignment Operator
+    func2& operator=(func2&&) = delete;
 
-  // Constructor
-  func2();
+    // Constructor
+    func2();
 
-  // Destructor
-  ~func2();
+    // Destructor
+    ~func2();
 };
 
 //-
@@ -63,7 +63,7 @@ class func2 final
 //
 //  '<Root>' : 'func2'
 
-#endif                                 // RTW_HEADER_func2_h_
+#endif  // RTW_HEADER_func2_h_
 
 //
 // File trailer for generated code.

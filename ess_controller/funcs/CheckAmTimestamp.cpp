@@ -2,11 +2,12 @@
 #define CHECKAMTIMESTAMP_CPP
 #include "asset.h"
 
-//CheckAmTimestamp
+// CheckAmTimestamp
 
 /*
  * the timestamp is part of the pub message
- *    After init we must get a continual Timestamp changes otherwise we alarm and then fault.
+ *    After init we must get a continual Timestamp changes otherwise we alarm
+ and then fault.
  *    the bms Timestamp arrives on /components/catl_ems_bms_01_rw:ems_heartbeat,
  *    linked to /status/bms/Heartbeat  in bms_manager.json
  * Lets try again
@@ -15,7 +16,8 @@
  * if we see a change and !seenHB then set HBseenTime and set seenHBS
  * if HBseenTime == 0 we never have seen a HB  dont set faults or alarms yet
  * if seenHB and (tNow - HBSeenTime) > toHold reset seenHB
- * if seenHB and rdReset <=0.0  then set HBok clear errors else decrement rdReset
+ * if seenHB and rdReset <=0.0  then set HBok clear errors else decrement
+ rdReset
  * if HBOk inc rdAlarm and rdFault to ther max
  * if !seenHB  and tNow - HBseenTime > rdAlarm then set Alarm
  * if !seenHB  and tNow - HBseenTime > rdFault then set Fault
@@ -23,12 +25,13 @@
  * toHold time to allow between Timestamp changes before worrying about it
  * toAlarm time after a stalled Heatbeat causes an Alarm
  * toFault time after a stalled Heatbeat causes a Fault
- *  toReset time after changes start being seen again before resetting faults and Alarms
+ *  toReset time after changes start being seen again before resetting faults
+ and Alarms
  *
  */
 int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am)
 {
-    //double dval = 0.0;
+    // double dval = 0.0;
     int ival = 0;
     bool bval = false;
     int dval = 0.0;
@@ -37,7 +40,7 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
     int reload = 0;
     // this loads up the Faultors in the asset manager
     reload = vm->CheckReload(vmap, amap, aname, "CheckAmTimestamp");
-    //assetVar* CheckAssetComms = amap["CheckAmComms"];
+    // assetVar* CheckAssetComms = amap["CheckAmComms"];
     double toHold = 1.5;  // Seconds between TS changes
     double toAlarm = 2.5;
     double toFault = 6.0;
@@ -45,22 +48,21 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
     char* initTimestamp = (char*)" Initial Timestamp";
     char* essName = vm->getSysName(vmap);
 
-    //if(1)FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
+    // if(1)FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n",
+    // __func__, aname, reload);
     if (reload < 2)
     {
         ival = 0;
-        //dval = 1.0;
-        //bool bval = false;
-        //Link This to an incoming component
-        if (1)FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
+        // dval = 1.0;
+        // bool bval = false;
+        // Link This to an incoming component
+        if (1)
+            FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
 
         amap["Timestamp"] = vm->setLinkVal(vmap, aname, "/status", "Timestamp", initTimestamp);
-        if (1)FPS_ERROR_PRINT("%s >>  aname TimeStamp %p comp [%s] name [%s] \n"
-            , __func__
-            , aname
-            , amap["Timestamp"]->comp.c_str()
-            , amap["Timestamp"]->name.c_str()
-        );
+        if (1)
+            FPS_ERROR_PRINT("%s >>  aname TimeStamp %p comp [%s] name [%s] \n", __func__, aname,
+                            amap["Timestamp"]->comp.c_str(), amap["Timestamp"]->name.c_str());
 
         amap["essTsFaults"] = vm->setLinkVal(vmap, essName, "/status", "essTsFaults", ival);
         amap["essTsAlarms"] = vm->setLinkVal(vmap, essName, "/status", "essTsAlarms", ival);
@@ -85,11 +87,10 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         amap["AssetState"] = vm->setLinkVal(vmap, aname, "/status", "AssetState", ival);
         amap["TsStateNum"] = vm->setLinkVal(vmap, aname, "/status", "TsStateNum", ival);
 
-
-        if (reload == 0) // complete restart 
+        if (reload == 0)  // complete restart
         {
             amap["Timestamp"]->setVal(initTimestamp);
-            //lastTimestamp=strdup(tsInit);//state"]->setVal(cval);
+            // lastTimestamp=strdup(tsInit);//state"]->setVal(cval);
             amap["Timestamp"]->setParam("lastTimestamp", initTimestamp);
             amap["Timestamp"]->setParam("totalTsFaults", 0);
             amap["Timestamp"]->setParam("totalTsAlarms", 0);
@@ -105,22 +106,30 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             amap["Timestamp"]->setParam("seenInit", false);
             amap["Timestamp"]->setParam("initCnt", -1);
 
-            amap["Timestamp"]->setParam("rdFault", toFault);                      // time remaining before fault
-            amap["Timestamp"]->setParam("rdAlarm", toAlarm);                      // time reamining before alarm
-            amap["Timestamp"]->setParam("rdReset", toReset);                      // time remaining before reset
-            //amap["Timestamp"]     ->setParam("rdHold", toHold);                        // time to wait before no change test
-            amap["Timestamp"]->setParam("tLast", dval);                         // time when last to event was seen
+            amap["Timestamp"]->setParam("rdFault",
+                                        toFault);  // time remaining before fault
+            amap["Timestamp"]->setParam("rdAlarm",
+                                        toAlarm);  // time reamining before alarm
+            amap["Timestamp"]->setParam("rdReset",
+                                        toReset);  // time remaining before reset
+            // amap["Timestamp"]     ->setParam("rdHold", toHold);
+            // // time to wait before no change test
+            amap["Timestamp"]->setParam("tLast",
+                                        dval);  // time when last to event was seen
 
             amap["TsState"]->setVal(cval);
-            ival = Asset_Init; amap["TsStateNum"]->setVal(ival);
-            ival = -1; amap["TsInit"]->setVal(ival);
+            ival = Asset_Init;
+            amap["TsStateNum"]->setVal(ival);
+            ival = -1;
+            amap["TsInit"]->setVal(ival);
             amap["BypassTs"]->setVal(false);
 
             amap["essTsFaults"]->setParam("lastTsFaults", 0);
             amap["essTsAlarms"]->setParam("lastTsAlarms", 0);
         }
         // reset reload
-        ival = 2; amap["CheckAmTimestamp"]->setVal(ival);
+        ival = 2;
+        amap["CheckAmTimestamp"]->setVal(ival);
     }
 
     double tNow = am->vm->get_time_dbl();
@@ -138,11 +147,11 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
     toHold = amap["essTsTimeoutHold"]->getdVal();
 
     char* currentTimestamp = amap["Timestamp"]->getcVal();
-    char* lastTimestamp = amap["Timestamp"]->getcParam("lastTimestamp");//amap["lastTimestamp"]->getiVal();
-    // are we the ess_controller 
+    char* lastTimestamp = amap["Timestamp"]->getcParam("lastTimestamp");  // amap["lastTimestamp"]->getiVal();
+    // are we the ess_controller
     if (!am->am)
     {
-        //bool initSeen =             amap["Timestamp"]     ->getbParam("initSeen");
+        // bool initSeen =             amap["Timestamp"] ->getbParam("initSeen");
 
         amap["essTsFaults"]->setVal(0);
         amap["essTsAlarms"]->setVal(0);
@@ -162,7 +171,7 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         int lastTsAlarms = amap["essTsAlarms"]->getiParam("lastTsAlarms");
         int lastTsFaults = amap["essTsFaults"]->getiParam("lastTsFaults");
 
-        //int essTsInit = amap["essTsInit"]->getiVal();
+        // int essTsInit = amap["essTsInit"]->getiVal();
         if (essTsFaults != lastTsFaults)
         {
             amap["essTsFaults"]->setParam("lastTsFaults", essTsFaults);
@@ -199,7 +208,6 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         return 0;
     }
 
-
     // this is the Asset Manager under the ess_controller instance
     if (BypassTs)
     {
@@ -228,9 +236,10 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             return 0;
         }
 
-        if (!seenInit)   // Ts_Setup
+        if (!seenInit)  // Ts_Setup
         {
-            if (1)FPS_ERROR_PRINT("%s >> %s  NO Timestamp,  bypass [%s]\n", __func__, aname, BypassTs ? "true" : "false");
+            if (1)
+                FPS_ERROR_PRINT("%s >> %s  NO Timestamp,  bypass [%s]\n", __func__, aname, BypassTs ? "true" : "false");
 
             amap["Timestamp"]->setParam("seenInit", true);
 
@@ -239,33 +248,37 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
             ival = 1;
             amap["essTsInit"]->addVal(ival);
-            amap["TsInit"]->setVal(0);      //Ts_Init  
+            amap["TsInit"]->setVal(0);  // Ts_Init
         }
-
     }
-    else  // wait for comms to go past reset then set active or wait to alarm and then fault
+    else  // wait for comms to go past reset then set active or wait to alarm and
+          // then fault
     {
-        //if(0)FPS_ERROR_PRINT("%s >>  ts  change for %s from [%s] to [%s] \n", __func__, aname, lastTimestamp?lastTimestamp:"no last Value", tval1)
+        // if(0)FPS_ERROR_PRINT("%s >>  ts  change for %s from [%s] to [%s] \n",
+        // __func__, aname, lastTimestamp?lastTimestamp:"no
+        // last Value", tval1)
         if (strcmp(currentTimestamp, lastTimestamp) != 0)
         {
-
-            if (0)FPS_ERROR_PRINT("%s >> %s Timestamp change detected,  from [%s] to [%s] tNow %2.3f seenTS [%s]\n"
-                , __func__, aname, currentTimestamp, lastTimestamp, tNow, seenTS ? "true" : "false");
+            if (0)
+                FPS_ERROR_PRINT(
+                    "%s >> %s Timestamp change detected,  from [%s] to "
+                    "[%s] tNow %2.3f seenTS [%s]\n",
+                    __func__, aname, currentTimestamp, lastTimestamp, tNow, seenTS ? "true" : "false");
 
             amap["Timestamp"]->setParam("lastTimestamp", currentTimestamp);
 
-            //if(!seenTS)
+            // if(!seenTS)
             {
-                if (0)FPS_ERROR_PRINT("%s >> %s Timestamp set TSseenTime %2.3f \n"
-                    , __func__, aname, tNow);
+                if (0)
+                    FPS_ERROR_PRINT("%s >> %s Timestamp set TSseenTime %2.3f \n", __func__, aname, tNow);
                 amap["Timestamp"]->setParam("seenTS", true);
                 amap["Timestamp"]->setParam("TSseenTime", tNow);
                 TSseenTime = tNow;
                 seenTS = true;
             }
-
         }
-        else   // No Change , start tracking faults and alarms  but wait for hold time
+        else  // No Change , start tracking faults and alarms  but wait for hold
+              // time
         {
             TSseenTime = amap["Timestamp"]->getdParam("TSseenTime");
             // allow holdoff between testing for change
@@ -273,8 +286,11 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             {
                 if ((tNow - TSseenTime) > toHold)
                 {
-                    if (0)FPS_ERROR_PRINT("%s >> %s Timestamp stall detected  tNow %2.3f seebTime %2.3f .stalll time %2.3f toHold %2.3f \n"
-                        , __func__, aname, tNow, TSseenTime, (tNow - TSseenTime), toHold);
+                    if (0)
+                        FPS_ERROR_PRINT(
+                            "%s >> %s Timestamp stall detected  tNow %2.3f "
+                            "seebTime %2.3f .stalll time %2.3f toHold %2.3f \n",
+                            __func__, aname, tNow, TSseenTime, (tNow - TSseenTime), toHold);
 
                     amap["Timestamp"]->setParam("seenTS", false);
                     seenTS = false;
@@ -283,15 +299,16 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
                     if (rdFault < 0.0)
                     {
-                        rdFault = 0.0;;
+                        rdFault = 0.0;
+                        ;
                     }
                     if (rdAlarm < 0.0)
                     {
-                        rdAlarm = 0.0;;
+                        rdAlarm = 0.0;
+                        ;
                     }
                     amap["Timestamp"]->setParam("rdAlarm", rdAlarm);
                     amap["Timestamp"]->setParam("rdFault", rdFault);
-
                 }
             }
         }
@@ -311,13 +328,15 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             {
                 if (seenFault)
                 {
-                    if (1)FPS_ERROR_PRINT("%s >>  Timestamp fault for  %s cleared at %2.3f\n", __func__, aname, tNow);
+                    if (1)
+                        FPS_ERROR_PRINT("%s >>  Timestamp fault for  %s cleared at %2.3f\n", __func__, aname, tNow);
                     amap["Timestamp"]->setParam("seenFault", false);
                     seenFault = false;
                 }
                 if (seenAlarm)
                 {
-                    if (1)FPS_ERROR_PRINT("%s >>  Timestamp Alarm for  %s cleared at %2.3f\n", __func__, aname, tNow);
+                    if (1)
+                        FPS_ERROR_PRINT("%s >>  Timestamp Alarm for  %s cleared at %2.3f\n", __func__, aname, tNow);
                     amap["Timestamp"]->setParam("seenAlarm", false);
                     seenAlarm = false;
                 }
@@ -326,8 +345,9 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                 amap["Timestamp"]->setParam("TSOk", true);
                 TSOk = true;
 
-                if (1)FPS_ERROR_PRINT("%s >>  Timestamp OK for  %s at %2.3f\n", __func__, aname, tNow);
-                ival = Asset_Ok; // seen Timestamp change
+                if (1)
+                    FPS_ERROR_PRINT("%s >>  Timestamp OK for  %s at %2.3f\n", __func__, aname, tNow);
+                ival = Asset_Ok;  // seen Timestamp change
                 amap["TsStateNum"]->setVal(ival);
                 ival = 0;
                 amap["TsInit"]->setVal(ival);
@@ -336,7 +356,8 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                 if (tval)
                 {
                     amap["TsState"]->setVal(tval);
-                    free(tval); tval = nullptr;
+                    free(tval);
+                    tval = nullptr;
                 }
                 amap["Timestamp"]->setParam("rdReset", toReset);
             }
@@ -348,8 +369,11 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             rdAlarm = amap["Timestamp"]->getdParam("rdAlarm");
             seenFault = amap["Timestamp"]->getbParam("seenFault");
             seenAlarm = amap["Timestamp"]->getbParam("seenAlarm");
-            if (0)FPS_ERROR_PRINT("%s >>  Timestamp stall for  %s at %2.3f rdFault %2.3f rdAlarm %2.3f TSOk [%s] seenTS [%s] tDiff %2.3f \n"
-                , __func__, aname, tNow, rdFault, rdAlarm, TSOk ? "true" : "false", seenTS ? "true" : "false", tDiff);
+            if (0)
+                FPS_ERROR_PRINT(
+                    "%s >>  Timestamp stall for  %s at %2.3f rdFault %2.3f "
+                    "rdAlarm %2.3f TSOk [%s] seenTS [%s] tDiff %2.3f \n",
+                    __func__, aname, tNow, rdFault, rdAlarm, TSOk ? "true" : "false", seenTS ? "true" : "false", tDiff);
             if (rdFault > 0.0)
             {
                 rdFault -= tDiff;
@@ -368,17 +392,19 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                 amap["Timestamp"]->setParam("seenOk", false);
                 amap["Timestamp"]->setParam("seenAlarm", true);
 
-                if (1)FPS_ERROR_PRINT("%s >>  Timestamp  Fault  for %s at %2.3f \n", __func__, aname, tNow);
+                if (1)
+                    FPS_ERROR_PRINT("%s >>  Timestamp  Fault  for %s at %2.3f \n", __func__, aname, tNow);
                 char* tval = nullptr;
                 asprintf(&tval, " Ts Fault last set Alarm %3.2f max %3.2f", toAlarm, toFault);
                 if (tval)
                 {
                     amap["TsState"]->setVal(tval);
-                    free(tval); tval = nullptr;
+                    free(tval);
+                    tval = nullptr;
                 }
-                ival = Asset_Fault; //Timestamp Fault
+                ival = Asset_Fault;  // Timestamp Fault
                 amap["TsStateNum"]->setVal(ival);
-                //seenOk = false;
+                // seenOk = false;
                 seenAlarm = true;
 
                 int totalTsFaults = amap["Timestamp"]->getiParam("totalTsFaults");
@@ -393,21 +419,22 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                     ival = 1;
                     amap["amTsFaults"]->addVal(ival);
                 }
-
             }
             else if ((rdAlarm < 0.0) && !seenAlarm)
             {
-                if (1)FPS_ERROR_PRINT("%s >> Timestamp  Alarm  for %s at %2.3f \n", __func__, aname, tNow);
+                if (1)
+                    FPS_ERROR_PRINT("%s >> Timestamp  Alarm  for %s at %2.3f \n", __func__, aname, tNow);
 
                 char* tval = nullptr;
                 asprintf(&tval, "Ts Alarm last set Alarm %3.2f max %3.2f", toAlarm, toFault);
                 if (tval)
                 {
                     amap["TsState"]->setVal(tval);
-                    free(tval); tval = nullptr;
+                    free(tval);
+                    tval = nullptr;
                 }
                 // Just test code right now
-                ival = Asset_Alarm; //Timestamp Alarm
+                ival = Asset_Alarm;  // Timestamp Alarm
                 amap["TsStateNum"]->setVal(ival);
 
                 amap["Timestamp"]->setParam("seenAlarm", true);
@@ -427,13 +454,11 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             }
             else
             {
-                if (0)FPS_ERROR_PRINT("%s >> Ts for [%s] [%s] Stalled at %2.3f  Fault %2.3f Alarm %2.3f \n"
-                    , __func__
-                    , aname
-                    , amap["Timestamp"]->getcVal()
-                    , tNow
-                    , rdFault, rdAlarm);
-
+                if (0)
+                    FPS_ERROR_PRINT(
+                        "%s >> Ts for [%s] [%s] Stalled at %2.3f  Fault "
+                        "%2.3f Alarm %2.3f \n",
+                        __func__, aname, amap["Timestamp"]->getcVal(), tNow, rdFault, rdAlarm);
             }
         }
         if (seenFault)
@@ -473,8 +498,10 @@ int CheckAmTimestamp(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         }
     }
     //
-    //int ival1, ival2;
-    //if(1)FPS_Fault_PRINT("%s >>  result for  %s , Alarms %d, errs %d \n", __func__, aname, amap["CommsAlarms"]->getiVal(),amap["CommsFaults"]->getiVal());
+    // int ival1, ival2;
+    // if(1)FPS_Fault_PRINT("%s >>  result for  %s , Alarms %d, errs %d \n",
+    // __func__, aname,
+    // amap["CommsAlarms"]->getiVal(),amap["CommsFaults"]->getiVal());
     return 0;
-};
+}
 #endif

@@ -1,4 +1,4 @@
-/* ======================================================================= 
+/* =======================================================================
  * @Component			OMAPCONF
  * @Filename			i2cbusses.h
  * @Description			Part of the i2c-tools package
@@ -26,21 +26,22 @@
 
 #include <unistd.h>
 
-struct i2c_adap {
-	int nr;
-	char *name;
-	const char *funcs;
-	const char *algo;
+struct i2c_adap
+{
+    int nr;
+    char* name;
+    const char* funcs;
+    const char* algo;
 };
 
-struct i2c_adap *gather_i2c_busses(void);
-void free_adapters(struct i2c_adap *adapters);
+struct i2c_adap* gather_i2c_busses(void);
+void free_adapters(struct i2c_adap* adapters);
 
-int lookup_i2c_bus(const char *i2cbus_arg);
-int parse_i2c_address(const char *address_arg);
-int open_i2c_dev(int i2cbus, char *filename, size_t size, int quiet);
+int lookup_i2c_bus(const char* i2cbus_arg);
+int parse_i2c_address(const char* address_arg);
+int open_i2c_dev(int i2cbus, char* filename, size_t size, int quiet);
 int set_slave_addr(int file, int address, int force);
 
-#define MISSING_FUNC_FMT	"Error: Adapter does not have %s capability\n"
+#define MISSING_FUNC_FMT "Error: Adapter does not have %s capability\n"
 
 #endif

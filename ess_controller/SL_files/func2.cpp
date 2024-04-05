@@ -19,22 +19,22 @@
 #include "rtwtypes.h"
 
 // Output and update for referenced model: 'func2'
-void func2::step(int32_T arg_In1, int32_T *arg_Out1)
+void func2::step(int32_T arg_In1, int32_T* arg_Out1)
 {
-  // Gain: '<Root>/Multiply'
-  *arg_Out1 = arg_In1 << 1;
+    // Gain: '<Root>/Multiply'
+    *arg_Out1 = arg_In1 << 1;
 }
 
 // Constructor
 func2::func2()
 {
-  // Currently there is no constructor body generated.
+    // Currently there is no constructor body generated.
 }
 
 // Destructor
 func2::~func2()
 {
-  // Currently there is no destructor body generated.
+    // Currently there is no destructor body generated.
 }
 
 //

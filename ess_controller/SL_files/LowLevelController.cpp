@@ -19,39 +19,36 @@
 // Model step function
 void LowLevelController::step()
 {
-  // Outport: '<Root>/LowLevelOut' incorporates:
-  //   Inport: '<Root>/Common_IN'
-  //   Inport: '<Root>/Unique_IN'
-  //   Sum: '<Root>/Sum'
+    // Outport: '<Root>/LowLevelOut' incorporates:
+    //   Inport: '<Root>/Common_IN'
+    //   Inport: '<Root>/Unique_IN'
+    //   Sum: '<Root>/Sum'
 
-  rtY.LowLevelOut = rtU.Common_IN + rtU.Unique_IN;
+    rtY.LowLevelOut = rtU.Common_IN + rtU.Unique_IN;
 }
 
 // Model initialize function
 void LowLevelController::initialize()
 {
-  // (no initialization code required)
+    // (no initialization code required)
 }
 
 // Constructor
-LowLevelController::LowLevelController() :
-  rtU(),
-  rtY(),
-  rtM()
+LowLevelController::LowLevelController() : rtU(), rtY(), rtM()
 {
-  // Currently there is no constructor body generated.
+    // Currently there is no constructor body generated.
 }
 
 // Destructor
 LowLevelController::~LowLevelController()
 {
-  // Currently there is no destructor body generated.
+    // Currently there is no destructor body generated.
 }
 
 // Real-Time Model get method
-LowLevelController::RT_MODEL * LowLevelController::getRTM()
+LowLevelController::RT_MODEL* LowLevelController::getRTM()
 {
-  return (&rtM);
+    return (&rtM);
 }
 
 //

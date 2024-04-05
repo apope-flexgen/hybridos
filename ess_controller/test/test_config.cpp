@@ -1,9 +1,8 @@
 /*
  * configure test
- * test for the site config.. we'll also add the assetmanager config in here as well as the ess_manager
- * config
+ * test for the site config.. we'll also add the assetmanager config in here as
+ * well as the ess_manager config
  */
-
 
 #include "asset.h"
 //#include "channel.h"
@@ -18,63 +17,66 @@ int bms_debug = 0;
 volatile int running = 1;
 asset_manager* ess_man = nullptr;
 
-void signal_handler (int sig)
+void signal_handler(int sig)
 {
     running = 0;
-    if(ess_man)
+    if (ess_man)
         ess_man->running = 0;
     FPS_ERROR_PRINT("signal of type %d caught.\n", sig);
     signal(sig, SIG_DFL);
 }
 
-
-
 VarMapUtils vm;
 
-// this is a map of local variables as known to the asset 
-varmap *amap;
+// this is a map of local variables as known to the asset
+varmap* amap;
 
 // this will load a config into the varsmap!!!!
-int HandleLoadRequest(varsmap &vmap, varmap &amap, const char *aname, fims* p_fims, asset_manager* am)
+int HandleLoadRequest(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am)
 {
     double dval;
-    bool  bval;
-    char* cval = (char *) "Dummy"; 
+    bool bval;
+    char* cval = (char*)"Dummy";
     int reload;
 
-    // setLinkVal 
-    // 1/ looks for /links/<aname> and if so picks up the assetVar by reference to the link valuestring
-    // for example /links/bms:maxLoadRequest -> /params/bms:maxLoadRequest this is a global for all bms units
-    //             /links/bms_1:LoadSetpoint -> /controls/bms_1:LoadSetpoint this is a setpoint for unit bms_1 
-    //             /links/ess:EStop -> /controls/ess:EStop this is a global command
+    // setLinkVal
+    // 1/ looks for /links/<aname> and if so picks up the assetVar by reference to
+    // the link valuestring for example /links/bms:maxLoadRequest ->
+    // /params/bms:maxLoadRequest this is a global for all bms units
+    //             /links/bms_1:LoadSetpoint -> /controls/bms_1:LoadSetpoint this
+    //             is a setpoint for unit bms_1 /links/ess:EStop ->
+    //             /controls/ess:EStop this is a global command
     // setLinkval will look for an established link from the config file
-    // if not found it will create a link called /links/<aname>  to the default agroup (/params/<aname>:<aval> etc)
-    //   it will then look for the "linked to" variable for example /components/catl_bms_ess_01:bms_soc
+    // if not found it will create a link called /links/<aname>  to the default
+    // agroup (/params/<aname>:<aval> etc)
+    //   it will then look for the "linked to" variable for example
+    //   /components/catl_bms_ess_01:bms_soc
     //     it will create  this variable ( with the given type) if needed
-    //  thus the loop is closed we have a link and an associated variable. creates for us or predefined.
-    // to force the links to be reevaluated then /controls/<anmae>:FunName should be set to 1
-    // to cause a complete reset set reload to 0;
+    //  thus the loop is closed we have a link and an associated variable. creates
+    //  for us or predefined.
+    // to force the links to be reevaluated then /controls/<anmae>:FunName should
+    // be set to 1 to cause a complete reset set reload to 0;
     //
-    VarMapUtils * vm = am ->vm;
+    VarMapUtils* vm = am->vm;
     reload = vm->CheckReload(vmap, amap, aname, __func__);
-    //assetVar* HandleLoadRequest      = amap[__func__];  
+    // assetVar* HandleLoadRequest      = amap[__func__];
 
-    
-    if(reload < 2)
+    if (reload < 2)
     {
-        //reload = 0;
-        amap["maxLoadRequest"]         = vm->setLinkVal(vmap, "bms", "/params",    "maxLoadRequest",               dval);
-        amap["LoadRequest"]            = vm->setLinkVal(vmap, "bms", "/controls",  "LoadRequest",                  dval);
-        amap["LoadRequestDeadband"]    = vm->setLinkVal(vmap, "bms", "/params",    "LoadRequestDeadband",          dval);
-        amap["lastLoadRequest"]        = vm->setLinkVal(vmap, "bms", "/controls",  "lastLoadRequest",              dval);
-        amap["LoadSetpoint"]           = vm->setLinkVal(vmap, aname, "/controls",  "LoadSetpoint",                 dval);
-        amap["LoadState"]              = vm->setLinkVal(vmap, aname, "/status",    "LoadState",                    cval);
-        amap["StateResetCmd"]          = vm->setLinkVal(vmap, "bms", "/controls",  "StateResetCmd",                bval);
-        amap["lastStateResetCmd"]      = vm->setLinkVal(vmap, "bms", "/status",    "lastStateResetCmd",            bval);
-        //amap["EStop"]                  = vm->setLinkVal(vmap, "ess", "/controls",  "EStop",                        bval);
+        // reload = 0;
+        amap["maxLoadRequest"] = vm->setLinkVal(vmap, "bms", "/params", "maxLoadRequest", dval);
+        amap["LoadRequest"] = vm->setLinkVal(vmap, "bms", "/controls", "LoadRequest", dval);
+        amap["LoadRequestDeadband"] = vm->setLinkVal(vmap, "bms", "/params", "LoadRequestDeadband", dval);
+        amap["lastLoadRequest"] = vm->setLinkVal(vmap, "bms", "/controls", "lastLoadRequest", dval);
+        amap["LoadSetpoint"] = vm->setLinkVal(vmap, aname, "/controls", "LoadSetpoint", dval);
+        amap["LoadState"] = vm->setLinkVal(vmap, aname, "/status", "LoadState", cval);
+        amap["StateResetCmd"] = vm->setLinkVal(vmap, "bms", "/controls", "StateResetCmd", bval);
+        amap["lastStateResetCmd"] = vm->setLinkVal(vmap, "bms", "/status", "lastStateResetCmd", bval);
+        // amap["EStop"]                  = vm->setLinkVal(vmap, "ess", "/controls",
+        // "EStop",                        bval);
 
         amap[__func__]->setVal(2);  // revert reload
-        if(reload == 0) // complete restart 
+        if (reload == 0)            // complete restart
         {
             amap["LoadRequestDeadband"]->setVal(25.0);
             amap["lastLoadRequest"]->setVal(25.0);
@@ -86,118 +88,120 @@ int HandleLoadRequest(varsmap &vmap, varmap &amap, const char *aname, fims* p_fi
         }
     }
 
-    assetVar* maxLoadRequest      = amap["maxLoadRequest"];  // all these will crash if the link vars are not set up correctly
-    assetVar* LoadRequest         = amap["LoadRequest"];
+    assetVar* maxLoadRequest = amap["maxLoadRequest"];  // all these will crash if
+                                                        // the link vars are not
+                                                        // set up correctly
+    assetVar* LoadRequest = amap["LoadRequest"];
     assetVar* LoadRequestDeadband = amap["LoadRequestDeadband"];
-    assetVar* lastLoadRequest     = amap["lastLoadRequest"];
-    assetVar* LoadSetpoint        = amap["LoadSetpoint"];
-    assetVar* LoadState           = amap["LoadState"];
-    assetVar* StateResetCmd       = amap["StateResetCmd"];
-    assetVar* lastStateResetCmd   = amap["lastStateResetCmd"];
-    //assetVar* EStop               = amap["EStop"];
+    assetVar* lastLoadRequest = amap["lastLoadRequest"];
+    assetVar* LoadSetpoint = amap["LoadSetpoint"];
+    assetVar* LoadState = amap["LoadState"];
+    assetVar* StateResetCmd = amap["StateResetCmd"];
+    assetVar* lastStateResetCmd = amap["lastStateResetCmd"];
+    // assetVar* EStop               = amap["EStop"];
 
-    if(0)printf("%s >>>>> STATUS %s  (comp %s) %f to %f (deadband %f)\n"
-                , __func__
-                , LoadRequest->name.c_str()
-                , LoadRequest->comp.c_str()
-                , lastLoadRequest->getdVal()
-                , LoadRequest->getdVal()
-                , LoadRequestDeadband->getdVal()
-                );
+    if (0)
+        printf("%s >>>>> STATUS %s  (comp %s) %f to %f (deadband %f)\n", __func__, LoadRequest->name.c_str(),
+               LoadRequest->comp.c_str(), lastLoadRequest->getdVal(), LoadRequest->getdVal(),
+               LoadRequestDeadband->getdVal());
 
-    if ( vm->valueChanged(LoadRequest, lastLoadRequest, LoadRequestDeadband ,dval, 0.0))
+    if (vm->valueChanged(LoadRequest, lastLoadRequest, LoadRequestDeadband, dval, 0.0))
     {
-        printf("%s >>>>> load value changed from %f to %f (deadband %f)\n"
-                , __func__
-                , lastLoadRequest->getdVal()
-                , LoadRequest->getdVal()
-                , LoadRequestDeadband->getdVal()
-                );
+        printf("%s >>>>> load value changed from %f to %f (deadband %f)\n", __func__, lastLoadRequest->getdVal(),
+               LoadRequest->getdVal(), LoadRequestDeadband->getdVal());
         lastLoadRequest->setVal(LoadRequest->getdVal());
         if (LoadRequest->getdVal() < maxLoadRequest->getdVal())
         {
             LoadSetpoint->setVal(LoadRequest->getdVal());
-            cval =  (char *)"Running" ;LoadState->setVal(cval);
+            cval = (char*)"Running";
+            LoadState->setVal(cval);
         }
         else
         {
             LoadSetpoint->setVal(maxLoadRequest->getdVal());
-            cval = (char *)"Limit"; LoadState->setVal(cval);
+            cval = (char*)"Limit";
+            LoadState->setVal(cval);
         }
-        
     }
 
-    if ( vm->valueChangednodb(LoadRequest, lastLoadRequest ,dval, 0.0))
+    if (vm->valueChangednodb(LoadRequest, lastLoadRequest, dval, 0.0))
     {
- 
         if (abs(LoadRequest->getdVal()) < 2.0)
         {
             LoadSetpoint->setVal(LoadRequest->getdVal());
-            cval =  (char *)"Standby" ;LoadState->setVal(cval);
+            cval = (char*)"Standby";
+            LoadState->setVal(cval);
         }
     }
 
-    if ( vm->valueChangednodb(StateResetCmd, lastStateResetCmd, bval, 0.0))
+    if (vm->valueChangednodb(StateResetCmd, lastStateResetCmd, bval, 0.0))
     {
         lastStateResetCmd->setVal(StateResetCmd->getbVal());
-        if(StateResetCmd->getbVal())
+        if (StateResetCmd->getbVal())
         {
             LoadSetpoint->setVal(0.0);
-            cval =  (char *)"Reset" ;LoadState->setVal(cval);
+            cval = (char*)"Reset";
+            LoadState->setVal(cval);
         }
         else
         {
-            cval =  (char *)"Standby" ;LoadState->setVal(cval);
+            cval = (char*)"Standby";
+            LoadState->setVal(cval);
         }
-        
     }
     return 0;
 }
 
-// possibly handle an incoming command 
-int HandleCmd(varsmap &vmap, varmap &amap, const char *aname, fims* p_fims, asset_manager* am)
+// possibly handle an incoming command
+int HandleCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am)
 {
     int rc = 0;
     // Turn on if conditions allow it
     bool fval = false;
-    //int ival;
-    //double dval;
-    //bool  bval;
-    //char* cval = (char *) "Dummy"; 
+    // int ival;
+    // double dval;
+    // bool  bval;
+    // char* cval = (char *) "Dummy";
     int reload;
-    VarMapUtils * vm = am ->vm;
+    VarMapUtils* vm = am->vm;
     reload = vm->CheckReload(vmap, amap, aname, __func__);
-    assetVar* HandleCmd      = amap[__func__];  
+    assetVar* HandleCmd = amap[__func__];
 
-    // setLinkVal 
-    // 1/ looks for /links/<aname> and if so picks up the assetVar by reference to the link valuestring
-    // for example /links/bms:maxLoadRequest -> /params/bms:maxLoadRequest this is a global for all bms units
-    //             /links/bms_1:LoadSetpoint -> /controls/bms_1:LoadSetpoint this is a setpoint for unit bms_1 
-    //             /links/ess:EStop -> /controls/ess:EStop this is a global command
+    // setLinkVal
+    // 1/ looks for /links/<aname> and if so picks up the assetVar by reference to
+    // the link valuestring for example /links/bms:maxLoadRequest ->
+    // /params/bms:maxLoadRequest this is a global for all bms units
+    //             /links/bms_1:LoadSetpoint -> /controls/bms_1:LoadSetpoint this
+    //             is a setpoint for unit bms_1 /links/ess:EStop ->
+    //             /controls/ess:EStop this is a global command
     // setLinkval will look for an established link from the config file
-    // if not found it will create a link called /links/<aname>  to the default agroup (/params/<aname>:<aval> etc)
-    //   it will then look for the "linked to" variable for example /components/catl_bms_ess_01:bms_soc
+    // if not found it will create a link called /links/<aname>  to the default
+    // agroup (/params/<aname>:<aval> etc)
+    //   it will then look for the "linked to" variable for example
+    //   /components/catl_bms_ess_01:bms_soc
     //     it will create  this variable ( with the given type) if needed
-    //  thus the loop is closed we have a link and an associated variable. creates for us or predefined.
-    // to force the links to be reevaluated then /controls/<anmae>:FunName should be set to 1
-    // to cause a complete reset set reload to 0;
+    //  thus the loop is closed we have a link and an associated variable. creates
+    //  for us or predefined.
+    // to force the links to be reevaluated then /controls/<anmae>:FunName should
+    // be set to 1 to cause a complete reset set reload to 0;
     //
-    
-    if(reload < 2)
+
+    if (reload < 2)
     {
-        //reload = 0;
-        amap["On"]                 = vm->setLinkVal(vmap, "bms", "/controls",   "On",               fval);
-        amap["OnCmd"]              = vm->setLinkVal(vmap, "bms", "/controls",   "OnCmd",            fval);
-        amap["Off"]                = vm->setLinkVal(vmap, "bms", "/controls",   "Off",              fval);
-        amap["OffCmd"]             = vm->setLinkVal(vmap, "bms", "/controls",   "OffCmd",           fval);
-        amap["Standby"]            = vm->setLinkVal(vmap, "bms", "/controls",   "Standby",          fval);
-        amap["StandbyCmd"]         = vm->setLinkVal(vmap, "bms", "/controls",   "StandbyCmd",       fval);
-        amap["AcContactor"]        = vm->setLinkVal(vmap, "bms", "/controls",   "AcContactor",      fval);
-        amap["DcContactor"]        = vm->setLinkVal(vmap, "bms", "/controls",   "DcContactor",      fval);
-        //amap["EStop"]              = vm->setLinkVal(vmap, "ess", "/controls",   "EStop",            bval);
+        // reload = 0;
+        amap["On"] = vm->setLinkVal(vmap, "bms", "/controls", "On", fval);
+        amap["OnCmd"] = vm->setLinkVal(vmap, "bms", "/controls", "OnCmd", fval);
+        amap["Off"] = vm->setLinkVal(vmap, "bms", "/controls", "Off", fval);
+        amap["OffCmd"] = vm->setLinkVal(vmap, "bms", "/controls", "OffCmd", fval);
+        amap["Standby"] = vm->setLinkVal(vmap, "bms", "/controls", "Standby", fval);
+        amap["StandbyCmd"] = vm->setLinkVal(vmap, "bms", "/controls", "StandbyCmd", fval);
+        amap["AcContactor"] = vm->setLinkVal(vmap, "bms", "/controls", "AcContactor", fval);
+        amap["DcContactor"] = vm->setLinkVal(vmap, "bms", "/controls", "DcContactor", fval);
+        // amap["EStop"]              = vm->setLinkVal(vmap, "ess", "/controls",
+        // "EStop",            bval);
 
         HandleCmd->setVal(2);  // revert reload
-        if(reload == 0) // complete restart 
+        if (reload == 0)       // complete restart
         {
             amap["On"]->setVal(true);
             amap["OnCmd"]->setVal(false);
@@ -210,40 +214,41 @@ int HandleCmd(varsmap &vmap, varmap &amap, const char *aname, fims* p_fims, asse
         }
     }
 
-    assetVar* Off                   = amap["Off"];
-    assetVar* OffCmd                = amap["OffCmd"];  // all these will crash if the link vars are not set up correctly
-    assetVar* On                    = amap["On"];
-    assetVar* OnCmd                 = amap["OnCmd"];
-    assetVar* Standby               = amap["Standby"];
-    assetVar* StandbyCmd            = amap["StandbyCmd"];
-    assetVar* AcContactor           = amap["AcContactor"];
-    assetVar* DcContactor           = amap["DcContactor"];
-    //assetVar* EStop                 = amap["EStop"];
+    assetVar* Off = amap["Off"];
+    assetVar* OffCmd = amap["OffCmd"];  // all these will crash if the link vars
+                                        // are not set up correctly
+    assetVar* On = amap["On"];
+    assetVar* OnCmd = amap["OnCmd"];
+    assetVar* Standby = amap["Standby"];
+    assetVar* StandbyCmd = amap["StandbyCmd"];
+    assetVar* AcContactor = amap["AcContactor"];
+    assetVar* DcContactor = amap["DcContactor"];
+    // assetVar* EStop                 = amap["EStop"];
 
-	// if e.Oncmd && (!e.On || e.Standby) && e.AcContactor && e.DcContactor {
-	// 	e.On = true
-	// 	e.Oncmd = false
-	// 	e.Standby = false
-	// } else if e.On && e.Offcmd {
-	// 	e.On = false
-	// 	e.Offcmd = false
-	// 	e.Standby = false
-	// }
-	// if e.On && e.StandbyCmd {
-	// 	e.Standby = true
-	// 	e.StandbyCmd = false
-	// }
+    // if e.Oncmd && (!e.On || e.Standby) && e.AcContactor && e.DcContactor {
+    // 	e.On = true
+    // 	e.Oncmd = false
+    // 	e.Standby = false
+    // } else if e.On && e.Offcmd {
+    // 	e.On = false
+    // 	e.Offcmd = false
+    // 	e.Standby = false
+    // }
+    // if e.On && e.StandbyCmd {
+    // 	e.Standby = true
+    // 	e.StandbyCmd = false
+    // }
     bool OffCmdval = OffCmd->getbVal();
-    //bool Offval    = Off->getbVal();
+    // bool Offval    = Off->getbVal();
 
-    bool OnCmdval  = OnCmd->getbVal();
-    bool Onval     = On->getbVal();
+    bool OnCmdval = OnCmd->getbVal();
+    bool Onval = On->getbVal();
     bool Standbyval = Standby->getbVal();
 
     bool AcContactorval = AcContactor->getbVal();
     bool DcContactorval = DcContactor->getbVal();
 
-    if( OnCmdval && (!Onval || Standbyval) && AcContactorval && DcContactorval)
+    if (OnCmdval && (!Onval || Standbyval) && AcContactorval && DcContactorval)
     {
         rc++;
         On->setVal(true);
@@ -268,47 +273,47 @@ int HandleCmd(varsmap &vmap, varmap &amap, const char *aname, fims* p_fims, asse
         // send standby to device
         StandbyCmd->setVal(false);
     }
-    //TODO send stuff to FIMS
+    // TODO send stuff to FIMS
     return rc;
 }
 
-
 /*
- * // links will be to modbus client on the vmap (/status/modbus_client/mod_1? - don't know what this is)
- *  amap["CurrentFault"]               = vm->linkVal(vmap, link, "CurrentFault",            fval);
- *  amap["ActivePowerSetpoint"]        = vm->linkVal(vmap, link, "ActivePowerSetpoint",    fval);
+ * // links will be to modbus client on the vmap (/status/modbus_client/mod_1? -
+ * don't know what this is) amap["CurrentFault"]               =
+ * vm->linkVal(vmap, link, "CurrentFault",            fval);
+ *  amap["ActivePowerSetpoint"]        = vm->linkVal(vmap, link,
+ * "ActivePowerSetpoint",    fval);
  * }
- * 
+ *
  * assetVar * CF = amap["CurrentFault"];
  * assetVar * APSP = amap["ActivePowerSetpoint"];
- * 
+ *
  * read input {
  *  if(CF->getdVal()) {
  *      bool faultMode = true;
  *  }
- *  
+ *
  * }
- * 
+ *
  * output logic {
  *  if(faultMode) {
  *     // Do faultMode logic here:
  *      APSP->setVal(False); // Turn off active power set point
- *  } 
+ *  }
  * }
- * 
+ *
  */
 
-
-
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     // chan_data t_data;  // time channel
     // chan_data m_data;  // message channel
-    // chan_data f_data;  // fims channel 
+    // chan_data f_data;  // fims channel
 
     // channel <int> wakechan;         // this is for wakeups
-    // channel <char *>msgchan;       // this is for messages ( will probably be fims sort of messages)
-    // channel <fims_message *>fimschan;  // this is for real (external) fims messages
+    // channel <char *>msgchan;       // this is for messages ( will probably be
+    // fims sort of messages) channel <fims_message *>fimschan;  // this is for
+    // real (external) fims messages
 
     // this is our main data map
     varsmap vmap;
@@ -324,7 +329,7 @@ int main(int argc, char *argv[])
     cJSON* cj = vm.get_cjson(cfgname);
     // pop out all hte first level objects
 
-    cJSON* cji =  cj->child;
+    cJSON* cji = cj->child;
     cJSON* cjss = nullptr;
     cJSON* cjfile = nullptr;
     cJSON* cjinput = nullptr;
@@ -337,19 +342,19 @@ int main(int argc, char *argv[])
         FPS_ERROR_PRINT("%s >> found item [%s]\n", __func__, cji->string);
         cji = cji->next;
     }
-    //cj = vm.getVmapCJ(vmap[newuri]);
-//cji = cJSON_GetO //
+    // cj = vm.getVmapCJ(vmap[newuri]);
+    // cji = cJSON_GetO //
     cJSON* cjsite = cJSON_GetObjectItem(cj, "/site/ess");
-    if(cjsite)
+    if (cjsite)
     {
         cjfile = cJSON_GetObjectItem(cjsite, "ess");
-        if(cjfile)
+        if (cjfile)
         {
             FPS_ERROR_PRINT("%s >> /site/ess  file [%s]\n", __func__, cjfile->valuestring);
             cjss = vm.get_cjson(cjfile->valuestring);
         }
     }
-    if(cjss)
+    if (cjss)
     {
         FPS_ERROR_PRINT("%s >> /site/ess  cJSON OK\n", __func__);
         cji = cjss->child;
@@ -359,7 +364,7 @@ int main(int argc, char *argv[])
             cji = cji->next;
         }
         cJSON* cjregs = cJSON_GetObjectItem(cjss, "registers");
-        if(cjregs)
+        if (cjregs)
         {
             FPS_ERROR_PRINT("%s >> found registers in  [%s]\n", __func__, cjfile->valuestring);
             cji = cjregs->child;
@@ -371,57 +376,62 @@ int main(int argc, char *argv[])
         }
         cjinput = cJSON_GetObjectItem(cjregs, "input_registers");
         cjhold = cJSON_GetObjectItem(cjregs, "holding_registers");
-        if(cjinput)
+        if (cjinput)
         {
-
-            FPS_ERROR_PRINT("%s >> found input registers in  [%s] type %d child %p\n", __func__, cjfile->valuestring, cjinput->type, cjinput->child);
+            FPS_ERROR_PRINT("%s >> found input registers in  [%s] type %d child %p\n", __func__, cjfile->valuestring,
+                            cjinput->type, cjinput->child);
             cji = cjinput->child;
             while (cji)
             {
-                char*tmp = nullptr;
+                char* tmp = nullptr;
                 tmp = cJSON_PrintUnformatted(cji);
-                //FPS_ERROR_PRINT("%s >> found input register [%s]\n", __func__, tmp);
+                // FPS_ERROR_PRINT("%s >> found input register [%s]\n",
+                // __func__, tmp);
                 cjid = cJSON_GetObjectItem(cji, "id");
                 cjuri = cJSON_GetObjectItem(cji, "uri");
-                FPS_ERROR_PRINT("%s >> found input register id [%s] uri [%s]\n", __func__, cjid->valuestring, cjuri->valuestring);
+                FPS_ERROR_PRINT("%s >> found input register id [%s] uri [%s]\n", __func__, cjid->valuestring,
+                                cjuri->valuestring);
                 int ival = 0;
-                vm.setVal(vmap,cjuri->valuestring, cjid->valuestring, ival);
+                vm.setVal(vmap, cjuri->valuestring, cjid->valuestring, ival);
 
-                if(tmp)free(tmp);
+                if (tmp)
+                    free(tmp);
                 cji = cji->next;
             }
         }
-        if(cjhold)
+        if (cjhold)
         {
-
-            FPS_ERROR_PRINT("%s >> found holding registers in  [%s] type %d child %p\n", __func__, cjfile->valuestring, cjinput->type, cjinput->child);
+            FPS_ERROR_PRINT("%s >> found holding registers in  [%s] type %d child %p\n", __func__, cjfile->valuestring,
+                            cjinput->type, cjinput->child);
             cji = cjhold->child;
             while (cji)
             {
-                char*tmp = nullptr;
+                char* tmp = nullptr;
                 tmp = cJSON_PrintUnformatted(cji);
-                //FPS_ERROR_PRINT("%s >> found input register [%s]\n", __func__, tmp);
+                // FPS_ERROR_PRINT("%s >> found input register [%s]\n",
+                // __func__, tmp);
                 cjid = cJSON_GetObjectItem(cji, "id");
                 cjuri = cJSON_GetObjectItem(cji, "uri");
-                FPS_ERROR_PRINT("%s >> found holding register id [%s] uri [%s]\n", __func__, cjid->valuestring, cjuri->valuestring);
+                FPS_ERROR_PRINT("%s >> found holding register id [%s] uri [%s]\n", __func__, cjid->valuestring,
+                                cjuri->valuestring);
                 int ival = 0;
-                vm.setVal(vmap,cjuri->valuestring, cjid->valuestring, ival);
+                vm.setVal(vmap, cjuri->valuestring, cjid->valuestring, ival);
 
-                if(tmp)free(tmp);
+                if (tmp)
+                    free(tmp);
                 cji = cji->next;
             }
         }
-
     }
 
-    //vm->configure_vmap(vmap, cfgname, nullptr, ess_man);
+    // vm->configure_vmap(vmap, cfgname, nullptr, ess_man);
 
     // dump this to a file
-    //cj = vm.getVmapCJ(vmap);
+    // cj = vm.getVmapCJ(vmap);
     cJSON* cjmap = vm.getMapsCj(vmap);
-        // const char* fname = "run_configs/ess_1_at_start.json";
-        // vm->write_cjson(fname, cjbm);
-        // //cJSON* cjbm = ess_man->getConfig();
+    // const char* fname = "run_configs/ess_1_at_start.json";
+    // vm->write_cjson(fname, cjbm);
+    // //cJSON* cjbm = ess_man->getConfig();
     char* res = cJSON_Print(cjmap);
     printf("Maps (possibly) with links at beginning  >>%s<<<\n done\n", res);
     free((void*)res);
@@ -672,11 +682,10 @@ int main(int argc, char *argv[])
     free((void *)res) ;
     cJSON_Delete(cj);
 #endif
-    //monitor M;
-    //M.configure("configs/monitor.json");
-    
+    // monitor M;
+    // M.configure("configs/monitor.json");
+
     delete ess_man;
 
     return 0;
-
 }

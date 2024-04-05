@@ -1,15 +1,15 @@
+#include <chrono>
+#include <condition_variable>
 #include <deque>
 #include <mutex>
 #include <thread>
-#include <condition_variable>
-#include <chrono>
 
-#include "testUtils.h"
 #include "chrono_utils.hpp"
+#include "testUtils.h"
 
 using namespace testUtils;
 
-template<typename T>
+template <typename T>
 class channel_list
 {
 private:
@@ -42,9 +42,7 @@ public:
     {
         std::unique_lock<std::mutex> lock(m);
         if (wait)
-            cv.wait(lock, [&]() {
-            return closed || !queue.empty();
-                });
+            cv.wait(lock, [&]() { return closed || !queue.empty(); });
         if (queue.empty())
             return false;
         out = queue.front();
@@ -56,7 +54,7 @@ public:
     {
         std::unique_lock<std::mutex> lock(m);
         auto now = std::chrono::system_clock::now();
-        if (cv.wait_until(lock, now + std::chrono::milliseconds(timeMs), [&]() {return closed || !queue.empty(); }))
+        if (cv.wait_until(lock, now + std::chrono::milliseconds(timeMs), [&]() { return closed || !queue.empty(); }))
         {
         }
         else
@@ -72,7 +70,7 @@ public:
     }
 };
 
-template<class T>
+template <class T>
 class channel_deque
 {
 private:
@@ -94,7 +92,7 @@ public:
         return closed;
     }
 
-    // what we want is put@time 
+    // what we want is put@time
     void put(const T& in)
     {
         std::unique_lock<std::mutex> lock(m);
@@ -103,14 +101,12 @@ public:
         queue.emplace_back(in);
         cv.notify_one();
     }
-    
+
     bool get(T& out, bool wait = true)
     {
         std::unique_lock<std::mutex> lock(m);
         if (wait)
-            cv.wait(lock, [&]() {
-            return closed || !queue.empty();
-                });
+            cv.wait(lock, [&]() { return closed || !queue.empty(); });
         if (queue.empty())
             return false;
         out = queue.front();
@@ -122,7 +118,7 @@ public:
     {
         std::unique_lock<std::mutex> lock(m);
         auto now = std::chrono::system_clock::now();
-        if (cv.wait_until(lock, now + std::chrono::milliseconds(timeMs), [&]() {return closed || !queue.empty(); }))
+        if (cv.wait_until(lock, now + std::chrono::milliseconds(timeMs), [&]() { return closed || !queue.empty(); }))
         {
         }
         else

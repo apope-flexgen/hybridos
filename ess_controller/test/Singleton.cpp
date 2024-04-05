@@ -1,20 +1,19 @@
 #include <iostream>
-//g++ -std=c++11 -o s Singleton.cpp
+// g++ -std=c++11 -o s Singleton.cpp
 
 class System
 {
 private:
-    System() { value=23;}
+    System() { value = 23; }
 
 public:
-    static System& getInstance(){
+    static System& getInstance()
+    {
         static System theInstance;
         return theInstance;
     }
 
-    void prn(){
-        std::cout<<"this works! value =" << value << " addr : " << &value <<"\n";
-    }
+    void prn() { std::cout << "this works! value =" << value << " addr : " << &value << "\n"; }
     int value;
 };
 
@@ -25,12 +24,12 @@ int main()
     System& sys = System::getInstance();
     sys.prn();
     sys.value = 25;
-    sys.prn();    
+    sys.prn();
 
     sysp = &sys;
 
     System& sys2 = System::getInstance();
-    sys2.prn();    
+    sys2.prn();
     sysp->value = 45;
 
     sys2.prn();
@@ -44,7 +43,7 @@ int main()
 // class Singleton {
 //    static Singleton *instance;
 //    int data;
- 
+
 //    // Private constructor so that no objects can be created.
 //    Singleton() {
 //       data = 0;
@@ -66,8 +65,8 @@ int main()
 //    }
 // };
 
-// //Initialize pointer to zero so that it can be initialized in first call to getInstance
-// Singleton *Singleton::instance = 0;
+// //Initialize pointer to zero so that it can be initialized in first call to
+// getInstance Singleton *Singleton::instance = 0;
 
 // int main(){
 //    Singleton *s = s->getInstance();

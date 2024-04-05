@@ -19,35 +19,38 @@
 #include "rtwtypes.h"
 
 // Output and update for referenced model: 'func3'
-void func3::step(int32_T arg_In1, int32_T *arg_Out1)
+void func3::step(int32_T arg_In1, int32_T* arg_Out1)
 {
-  // Switch: '<Root>/Switch' incorporates:
-  //   Constant: '<Root>/Constant'
-  //   Constant: '<Root>/Constant1'
-  //   Constant: '<Root>/Constant2'
-  //   Logic: '<Root>/OR'
-  //   RelationalOperator: '<Root>/GreaterThan'
-  //   RelationalOperator: '<Root>/LessThanOrEqual'
+    // Switch: '<Root>/Switch' incorporates:
+    //   Constant: '<Root>/Constant'
+    //   Constant: '<Root>/Constant1'
+    //   Constant: '<Root>/Constant2'
+    //   Logic: '<Root>/OR'
+    //   RelationalOperator: '<Root>/GreaterThan'
+    //   RelationalOperator: '<Root>/LessThanOrEqual'
 
-  if ((arg_In1 >= 100) || (arg_In1 <= -100)) {
-    *arg_Out1 = 0;
-  } else {
-    *arg_Out1 = arg_In1;
-  }
+    if ((arg_In1 >= 100) || (arg_In1 <= -100))
+    {
+        *arg_Out1 = 0;
+    }
+    else
+    {
+        *arg_Out1 = arg_In1;
+    }
 
-  // End of Switch: '<Root>/Switch'
+    // End of Switch: '<Root>/Switch'
 }
 
 // Constructor
 func3::func3()
 {
-  // Currently there is no constructor body generated.
+    // Currently there is no constructor body generated.
 }
 
 // Destructor
 func3::~func3()
 {
-  // Currently there is no destructor body generated.
+    // Currently there is no destructor body generated.
 }
 
 //

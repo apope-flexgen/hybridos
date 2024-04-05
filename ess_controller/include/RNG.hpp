@@ -1,9 +1,9 @@
 #ifndef RNG_HPP
 #define RNG_HPP
 
-#include <random>
-#include "pcg_random.hpp"
 #include "pcg_extras.hpp"
+#include "pcg_random.hpp"
+#include <random>
 
 // installation, super easy
 // git clone git@github.com:imneme/pcg-cpp.git
@@ -24,6 +24,7 @@ class RNG
         pcg_extras::seed_seq_from<std::random_device> seed_source;
         rng.seed(seed_source);
     }
+
 public:
     static RNG& get()
     {
@@ -33,28 +34,29 @@ public:
 
     // return a random whole number (Int = integral, NOT integer)
     // this is inclusive to the upper bound [lower, upper]
-    template<typename T = int>
+    template <typename T = int>
     T randInt(T lower, T upper)
     {
-        std::uniform_int_distribution<T> dist{lower, upper};
+        std::uniform_int_distribution<T> dist{ lower, upper };
         return dist(rng);
     }
 
     // return a random floating point number (double, long double, or float)
     // this is exclusive to the upper bound [lower, upper)
-    template<typename T = double>
+    template <typename T = double>
     T randReal(T lower, T upper)
     {
-        std::uniform_real_distribution<T> dist{lower, upper};
+        std::uniform_real_distribution<T> dist{ lower, upper };
         return dist(rng);
     }
 
-    // generates a random floating point number around the mean by some std deviation (double, long double, float)
-    // NOTE: If std deviation is < 0 produced undefined behaviour.
-    template<typename T = double>
+    // generates a random floating point number around the mean by some std
+    // deviation (double, long double, float) NOTE: If std deviation is < 0
+    // produced undefined behaviour.
+    template <typename T = double>
     T randNormal(T mean, T stddev = 1.0)
     {
-        std::normal_distribution<T> dist{mean, stddev};
+        std::normal_distribution<T> dist{ mean, stddev };
         return dist(rng);
     }
 

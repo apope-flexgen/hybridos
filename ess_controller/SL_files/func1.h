@@ -25,38 +25,39 @@
 // Class declaration for model func1
 class func1 final
 {
-  // public data and function members
- public:
-  // Block signals and states (default storage) for model 'func1'
-  struct DW_func1_T {
-    boolean_T Delay_DSTATE;            // '<S1>/Delay'
-  };
+    // public data and function members
+public:
+    // Block signals and states (default storage) for model 'func1'
+    struct DW_func1_T
+    {
+        boolean_T Delay_DSTATE;  // '<S1>/Delay'
+    };
 
-  // model step function
-  void step(int32_T arg_In1, boolean_T arg_In2, int32_T *arg_Out1);
+    // model step function
+    void step(int32_T arg_In1, boolean_T arg_In2, int32_T* arg_Out1);
 
-  // Copy Constructor
-  func1(func1 const&) = delete;
+    // Copy Constructor
+    func1(func1 const&) = delete;
 
-  // Assignment Operator
-  func1& operator= (func1 const&) & = delete;
+    // Assignment Operator
+    func1& operator=(func1 const&) & = delete;
 
-  // Move Constructor
-  func1(func1 &&) = delete;
+    // Move Constructor
+    func1(func1&&) = delete;
 
-  // Move Assignment Operator
-  func1& operator= (func1 &&) = delete;
+    // Move Assignment Operator
+    func1& operator=(func1&&) = delete;
 
-  // Constructor
-  func1();
+    // Constructor
+    func1();
 
-  // Destructor
-  ~func1();
+    // Destructor
+    ~func1();
 
-  // private data and function members
- private:
-  // Block states
-  DW_func1_T func1_DW;
+    // private data and function members
+private:
+    // Block states
+    DW_func1_T func1_DW;
 };
 
 //-
@@ -76,7 +77,7 @@ class func1 final
 //  '<Root>' : 'func1'
 //  '<S1>'   : 'func1/Subsystem'
 
-#endif                                 // RTW_HEADER_func1_h_
+#endif  // RTW_HEADER_func1_h_
 
 //
 // File trailer for generated code.

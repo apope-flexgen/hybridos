@@ -5,16 +5,16 @@
 #include "asset.h"
 #include "assetFunc.cpp"
 #include "chrono_utils.hpp"
- //  "alarms": {
- //       "name": "Alarms",
- //       "value": 0,
- //       "options": [],
- //       "unit": "",
- //       "scaler": 0,
- //       "enabled": true,
- //       "ui_type": "alarm",
- //       "type": "number"
- //     },
+//  "alarms": {
+//       "name": "Alarms",
+//       "value": 0,
+//       "options": [],
+//       "unit": "",
+//       "scaler": 0,
+//       "enabled": true,
+//       "ui_type": "alarm",
+//       "type": "number"
+//     },
 
 int main(int argc, char* argv[])
 {
@@ -24,28 +24,32 @@ int main(int argc, char* argv[])
     // this is our map utils factory
     VarMapUtils vm;
     int rc;
-    const char* var1 = "{\"alarms\":{\"value\":0,"
+    const char* var1 =
+        "{\"alarms\":{\"value\":0,"
         "\"name\":\"Test Alarm\","
         "\"ui_type\":\"alarm\","
         "\"options\":[]"
         "}"
         "}";
 
-    const char* rep1 = "{\"alarms\":{"
+    const char* rep1 =
+        "{\"alarms\":{"
         "\"value\":0,"
         "\"name\":\"Test Alarm\","
         "\"ui_type\":\"alarm\","
         "\"options\":[]"
         "}}";
 
-    const char* var2 = "{\"faults\":{\"value\":0,"
+    const char* var2 =
+        "{\"faults\":{\"value\":0,"
         "\"name\":\"Test Faults\","
         "\"ui_type\":\"alarm\","
         "\"options\":[]"
         "}"
         "}";
 
-    const char* rep2 = "{\"faults\":{"
+    const char* rep2 =
+        "{\"faults\":{"
         "\"value\":0,"
         "\"name\":\"Test Faults\","
         "\"ui_type\":\"alarm\","
@@ -58,20 +62,10 @@ int main(int argc, char* argv[])
     //                         "{\"inValue\":8,\"outValue\":true,\"uri\":\"/system/new_controls\",\"var\":\"offcmd\"},"
     //                         "{\"inValue\":9,\"outValue\":true,\"uri\":\"/system/new_controls\",\"var\":\"kacopencmd\"}"
     //                     "]}}}}}";
-//printf(" var1 >>\n%s\n", var1);
+    // printf(" var1 >>\n%s\n", var1);
 
-    rc = vm.testRes(" Test 1", vmap
-        , "set"
-        , "/components/bms_1"
-        , var1
-        , rep1
-    );
-    rc = vm.testRes(" Test 2", vmap
-        , "set"
-        , "/components/bms_1"
-        , var2
-        , rep2
-    );
+    rc = vm.testRes(" Test 1", vmap, "set", "/components/bms_1", var1, rep1);
+    rc = vm.testRes(" Test 2", vmap, "set", "/components/bms_1", var2, rep2);
 
     {
         cJSON* cj = vm.getMapsCj(vmap);
@@ -79,7 +73,7 @@ int main(int argc, char* argv[])
         printf("vmap after test 1 \n%s\n", res);
         free((void*)res);
         cJSON_Delete(cj);
-        //return 0;
+        // return 0;
     }
     vm.sendAlarm(vmap, "/status/ess:test_alarm_one", "/components/bms_1:alarms", "test1", "test Alarm", 1);
     vm.sendAlarm(vmap, "/status/ess:test_alarm_one", "/components/bms_1:alarms", "test2", "another test Alarm", 2);
@@ -120,7 +114,6 @@ int main(int argc, char* argv[])
     //          ,"{\"value\":\"nice\"}"
     //      );
 
-
     // rc = vm.testRes(" Test 4", vmap
     //         , "get"
     //         , "/system/status/soc"
@@ -132,31 +125,35 @@ int main(int argc, char* argv[])
         char* res = cJSON_Print(cj);
 
         printf("vmap at end default options \n%s\n", res);
-        rc = 0; // -Wall
-        if (rc == 0) free((void*)res);
+        rc = 0;  // -Wall
+        if (rc == 0)
+            free((void*)res);
         cJSON_Delete(cj);
     }
 
     vm.clearAlarm(vmap, "/status/ess:test_alarm_one", "/components/bms_1:alarms", "test1", "test Alarm Cleared ", 1);
-    //vm.sendAlarm(vmap, "/status/ess:test_alarm_one", "/components/bms_1:alarms", "test2", "another test Alarm", 2);
+    // vm.sendAlarm(vmap, "/status/ess:test_alarm_one",
+    // "/components/bms_1:alarms", "test2", "another test Alarm", 2);
     vm.setParam(vmap, "/components", "bms_1", "battery1", "MaxVoltage", 4.2);
     vm.setParam(vmap, "/components", "bms_1", "battery1", "MinVoltage", 2.2);
     double minv = vm.getdParam(vmap, "/components", "bms_1", "battery1", "MinVoltage");
     double sval = 23.45;
-    assetVar* battery2Av   =  vm.setVal(vmap,"/components/bms_1:battery2", nullptr, sval);//vmap["/system/status"]["socloss"];
+    assetVar* battery2Av = vm.setVal(vmap, "/components/bms_1:battery2", nullptr,
+                                     sval);  // vmap["/system/status"]["socloss"];
     battery2Av->setParam("MaxCurrent", 123.0);
     battery2Av->setParam("MaxVolts", 4.6);
     battery2Av->setParam("MinVolts", 3.5);
     battery2Av->setParam("MaxTemp", 45.0);
     battery2Av->setParam("MinTemp", 3.0);
-    
+
     {
         cJSON* cj = vm.getMapsCj(vmap, nullptr, nullptr, 0x0010);
         char* res = cJSON_Print(cj);
 
         printf("after clear bms_1:alarms test1 \n%s\n", res);
-        rc = 0; // -Wall
-        if (rc == 0) free((void*)res);
+        rc = 0;  // -Wall
+        if (rc == 0)
+            free((void*)res);
         cJSON_Delete(cj);
     }
 
@@ -166,8 +163,9 @@ int main(int argc, char* argv[])
         char* res = cJSON_Print(cj);
 
         printf("after clear all bms_1:alarms\n%s\n", res);
-        rc = 0; // -Wall
-        if (rc == 0) free((void*)res);
+        rc = 0;  // -Wall
+        if (rc == 0)
+            free((void*)res);
         cJSON_Delete(cj);
     }
 
@@ -190,15 +188,18 @@ int main(int argc, char* argv[])
         char* res = cJSON_Print(cj);
         printf("components  (should trigger a search)  reduced comp at end \n%s\n", res);
         free((void*)res);
-        //unstable 
+        // unstable
         cJSON_Delete(cj);
     }
     {
         cJSON* cj = vm.getMapsCj(vmap, "/components", nullptr, 0x0101);
         char* res = cJSON_Print(cj);
-        printf("components  (should trigger a search) naked ,  reduced comp at end \n%s\n", res);
+        printf(
+            "components  (should trigger a search) naked ,  reduced comp at end "
+            "\n%s\n",
+            res);
         free((void*)res);
-        //unstable 
+        // unstable
         cJSON_Delete(cj);
     }
     // monitor M;

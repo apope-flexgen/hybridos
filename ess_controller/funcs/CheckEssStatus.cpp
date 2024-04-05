@@ -1,16 +1,17 @@
-#ifndef CHECKESSSTATUS_CPP 
-#define CHECKESSSTATUS_CPP 
+#ifndef CHECKESSSTATUS_CPP
+#define CHECKESSSTATUS_CPP
 
 #include "asset.h"
 
 extern "C++" {
-    int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
+int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
 }
-// test status against ExpStatus 
+// test status against ExpStatus
 // logs any changes
 int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av)
 {
-    //double dval = 0.0;
+    UNUSED(p_fims);
+    // double dval = 0.0;
     int ival = 0;
     bool bval = false;
     int dval = 0.0;
@@ -18,42 +19,43 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
     asset_manager* am = av->am;
 
     VarMapUtils* vm = am->vm;
-    char* essName  = vm->getSysName(vmap);
+    char* essName = vm->getSysName(vmap);
 
     int reload = 0;
     // this loads up the Faultors in the asset manager
     reload = vm->CheckReload(vmap, amap, aname, "CheckAmPcsStatus");
-    //assetVar* CheckAssetComms = amap["CheckAmComms"];
+    // assetVar* CheckAssetComms = amap["CheckAmComms"];
     double toAlarm = 2.5;
     double toFault = 10.0;
     double toReset = 2.5;
-    int initPcsStatus = -1;//(char *)" Initial PcsStatus";
+    int initPcsStatus = -1;  //(char *)" Initial PcsStatus";
 
-
-    //if(1)FPS_FaultOR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
+    // if(1)FPS_FaultOR_PRINT("%s >>  reload first for  %s , is  %d \n",
+    // __func__, aname, reload);
     if (reload < 2)
     {
         ival = 0;
-        //dval = 1.0;
-        //bool bval = false;
-        //Link This to an incoming component
-        if (1)FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
+        // dval = 1.0;
+        // bool bval = false;
+        // Link This to an incoming component
+        if (1)
+            FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
 
         amap["PcsStatus"] = vm->setLinkVal(vmap, aname, "/status", "PcsStatus", initPcsStatus);
         amap["PcsExpStatus"] = vm->setLinkVal(vmap, aname, "/status", "PcsExpStatus", initPcsStatus);
-        if (1)FPS_ERROR_PRINT("%s >>  aname TimeStamp %p comp [%s] name [%s] \n"
-            , __func__
-            , aname
-            , amap["PcsStatus"]->comp.c_str()
-            , amap["PcsStatus"]->name.c_str()
-        );
+        if (1)
+            FPS_ERROR_PRINT("%s >>  aname TimeStamp %p comp [%s] name [%s] \n", __func__, aname,
+                            amap["PcsStatus"]->comp.c_str(), amap["PcsStatus"]->name.c_str());
 
         amap["essPcsStatusFaults"] = vm->setLinkVal(vmap, essName, "/status", "essPcsStatusFaults", ival);
         amap["essPcsStatusAlarms"] = vm->setLinkVal(vmap, essName, "/status", "essPcsStatusAlarms", ival);
         amap["essPcsStatusInit"] = vm->setLinkVal(vmap, essName, "/status", "essPcsStatusInit", ival);
-        amap["essPcsStatusTimeoutFault"] = vm->setLinkVal(vmap, essName, "/config", "essPcsStatusTimeoutFault", toFault);
-        amap["essPcsStatusTimeoutAlarm"] = vm->setLinkVal(vmap, essName, "/config", "essPcsStatusTimeoutAlarm", toAlarm);
-        amap["essPcsStatusTimeoutReset"] = vm->setLinkVal(vmap, essName, "/config", "essPcsStatusTimeoutReset", toReset);
+        amap["essPcsStatusTimeoutFault"] = vm->setLinkVal(vmap, essName, "/config", "essPcsStatusTimeoutFault",
+                                                          toFault);
+        amap["essPcsStatusTimeoutAlarm"] = vm->setLinkVal(vmap, essName, "/config", "essPcsStatusTimeoutAlarm",
+                                                          toAlarm);
+        amap["essPcsStatusTimeoutReset"] = vm->setLinkVal(vmap, essName, "/config", "essPcsStatusTimeoutReset",
+                                                          toReset);
 
         if (am->am)
         {
@@ -70,11 +72,10 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         amap["AssetState"] = vm->setLinkVal(vmap, aname, "/status", "AssetState", ival);
         amap["PcsStatusStateNum"] = vm->setLinkVal(vmap, aname, "/status", "PcsStatusStateNum", ival);
 
-
-        if (reload == 0) // complete restart 
+        if (reload == 0)  // complete restart
         {
             amap["PcsStatus"]->setVal(initPcsStatus);
-            //lastPcsStatus=strdup(tsInit);//state"]->setVal(cval);
+            // lastPcsStatus=strdup(tsInit);//state"]->setVal(cval);
             amap["PcsStatus"]->setParam("lastPcsStatus", initPcsStatus);
             amap["PcsStatus"]->setParam("totalPcsStatusFaults", 0);
             amap["PcsStatus"]->setParam("totalPcsStatusAlarms", 0);
@@ -84,19 +85,25 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             amap["PcsStatus"]->setParam("seenInit", false);
             amap["PcsStatus"]->setParam("initCnt", -1);
 
-            amap["PcsStatus"]->setParam("rdFault", toFault);                      // time remaining before fault
-            amap["PcsStatus"]->setParam("rdAlarm", toAlarm);                      // time reamining before alarm
-            amap["PcsStatus"]->setParam("rdReset", toReset);                      // time remaining before reset
-            amap["PcsStatus"]->setParam("rdLast", dval);                         // time when last to event was seen
+            amap["PcsStatus"]->setParam("rdFault",
+                                        toFault);  // time remaining before fault
+            amap["PcsStatus"]->setParam("rdAlarm",
+                                        toAlarm);  // time reamining before alarm
+            amap["PcsStatus"]->setParam("rdReset",
+                                        toReset);  // time remaining before reset
+            amap["PcsStatus"]->setParam("rdLast",
+                                        dval);  // time when last to event was seen
 
             amap["PcsStatusState"]->setVal(cval);
-            ival = Asset_Init; amap["PcsStatusStateNum"]->setVal(ival);
-            ival = -1; amap["PcsStatusInit"]->setVal(ival);
+            ival = Asset_Init;
+            amap["PcsStatusStateNum"]->setVal(ival);
+            ival = -1;
+            amap["PcsStatusInit"]->setVal(ival);
             amap["BypassPcsStatus"]->setVal(false);
-
         }
         // reset reload
-        ival = 2; amap["CheckAmPcsStatus"]->setVal(ival);
+        ival = 2;
+        amap["CheckAmPcsStatus"]->setVal(ival);
     }
 
     double tNow = am->vm->get_time_dbl();
@@ -109,23 +116,24 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
     int currentPcsStatus = amap["PcsStatus"]->getiVal();
     int expectedPcsStatus = amap["PcsExpStatus"]->getiVal();
-    int lastPcsStatus = amap["PcsStatus"]->getiParam("lastPcsStatus");//amap["lastHeartBeat"]->getiVal();
+    int lastPcsStatus = amap["PcsStatus"]->getiParam("lastPcsStatus");  // amap["lastHeartBeat"]->getiVal();
 
     if (BypassPcsStatus)
     {
         ival = 1;
         amap["essPcsStatusInit"]->addVal(ival);
         return 0;
-
     }
     // If we are in the init state wait for comms to start count down reset time
     if (currentPcsStatus == initPcsStatus)
     {
         bool seenInit = amap["PcsStatus"]->getbParam("seenInit");
 
-        //ival = 1; amap["CheckAssetComs"]->setVal(ival);
-        //ival = 1; amap["CheckAssetComs"]->setVal(ival);
-        if (0)FPS_ERROR_PRINT("%s >> %s  NO PcsStatus,  bypass [%s]\n", __func__, aname, BypassPcsStatus ? "true" : "false");
+        // ival = 1; amap["CheckAssetComs"]->setVal(ival);
+        // ival = 1; amap["CheckAssetComs"]->setVal(ival);
+        if (0)
+            FPS_ERROR_PRINT("%s >> %s  NO PcsStatus,  bypass [%s]\n", __func__, aname,
+                            BypassPcsStatus ? "true" : "false");
 
         // if not toally set up yet then quit this pass
         if (!amap["amPcsStatusInit"])
@@ -133,7 +141,7 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             return 0;
         }
 
-        if (!seenInit)   // PcsStatus_Setup
+        if (!seenInit)  // PcsStatus_Setup
         {
             amap["PcsStatus"]->setParam("seenInit", true);
 
@@ -142,14 +150,16 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
             ival = 1;
             amap["essPcsStatusInit"]->addVal(ival);
-            amap["PcsStatusInit"]->setVal(0);      //PcsStatus_Init  
+            amap["PcsStatusInit"]->setVal(0);  // PcsStatus_Init
         }
         amap["PcsStatus"]->setParam("rdLast", tNow);
-
     }
-    else  // wait for comms to go past reset then set active or wait to alarm and then fault
+    else  // wait for comms to go past reset then set active or wait to alarm and
+          // then fault
     {
-        //if(0)FPS_ERROR_PRINT("%s >>  ts  change for %s from [%s] to [%s] \n", __func__, aname, lastPcsStatus?lastPcsStatus:"no last Value", tval1);
+        // if(0)FPS_ERROR_PRINT("%s >>  ts  change for %s from [%s] to [%s] \n",
+        // __func__, aname, lastPcsStatus?lastPcsStatus:"no
+        // last Value", tval1);
         double rdLast = amap["PcsStatus"]->getdParam("rdLast");
         double rdFault = amap["PcsStatus"]->getdParam("rdFault");
         double rdAlarm = amap["PcsStatus"]->getdParam("rdAlarm");
@@ -158,14 +168,15 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
         double toVal = amap["PcsStatus"]->getLastSetDiff(tNow);
 
-        // Has value changed ? If yes then count down rdReset to zero based on tNow - rdLast
+        // Has value changed ? If yes then count down rdReset to zero based on tNow
+        // - rdLast
         if (currentPcsStatus != lastPcsStatus)
         {
             amap["PcsStatus"]->setParam("lastPcsStatus", currentPcsStatus);
-// TODO PCSStatus / BmsStatus .. log changes After MVP
+            // TODO PCSStatus / BmsStatus .. log changes After MVP
         }
         if (currentPcsStatus == expectedPcsStatus)
-            //if(amap["PcsStatus"]->valueChangedReset())
+        // if(amap["PcsStatus"]->valueChangedReset())
         {
             amap["PcsStatus"]->setParam("lastPcsStatus", currentPcsStatus);
 
@@ -175,9 +186,10 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                 rdReset -= (tNow - rdLast);
                 amap["PcsStatus"]->setParam("rdReset", rdReset);
             }
-            //else
+            // else
             {
-// TODO  review after MVP rdAlsrm rdFault after reset increment these up to toAlarm , toFault 
+                // TODO  review after MVP rdAlsrm rdFault after reset increment these up
+                // to toAlarm , toFault
                 if (rdAlarm < toAlarm)
                 {
                     rdAlarm += tNow - rdLast;
@@ -190,34 +202,40 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                 }
             }
 
-            if (0)FPS_ERROR_PRINT("%s >>  PcsStatus change for %s from [%d] to [%d]  rdReset now %2.3f diff %2.3f rdAlarm %2.3f rdFault %2.3f\n"
-                , __func__, aname, lastPcsStatus, currentPcsStatus, rdReset, (tNow - rdLast), rdAlarm, rdFault);
+            if (0)
+                FPS_ERROR_PRINT(
+                    "%s >>  PcsStatus change for %s from [%d] to [%d]  "
+                    "rdReset now %2.3f diff %2.3f rdAlarm %2.3f rdFault "
+                    "%2.3f\n",
+                    __func__, aname, lastPcsStatus, currentPcsStatus, rdReset, (tNow - rdLast), rdAlarm, rdFault);
 
             ival = amap["PcsStatusStateNum"]->getiVal();
             // reset time passed , still changing , time to switch to PcsStatus_Ready
             if ((rdReset <= 0.0) && (ival != seenOk))
             {
-
                 bool seenFault = amap["PcsStatus"]->getbParam("seenFault");
-                //bool seenOk  = amap["PcsStatus"]->getbParam("seenOk");
+                // bool seenOk  = amap["PcsStatus"]->getbParam("seenOk");
                 bool seenAlarm = amap["PcsStatus"]->getbParam("seenAlarm");
                 amap["PcsStatus"]->setParam("seenOk", true);
 
-                if (0)FPS_ERROR_PRINT("%s >>  PcsStatus  change for %s from [%d] to [%d] \n", __func__, aname, lastPcsStatus, currentPcsStatus);
+                if (0)
+                    FPS_ERROR_PRINT("%s >>  PcsStatus  change for %s from [%d] to [%d] \n", __func__, aname,
+                                    lastPcsStatus, currentPcsStatus);
                 if (seenFault)
                 {
-                    if (1)FPS_ERROR_PRINT("%s >>  PcsStatus fault for  %s cleared at %2.3f\n", __func__, aname, tNow);
+                    if (1)
+                        FPS_ERROR_PRINT("%s >>  PcsStatus fault for  %s cleared at %2.3f\n", __func__, aname, tNow);
                     amap["PcsStatus"]->setParam("seenFault", false);
-
                 }
                 if (seenAlarm)
                 {
-                    if (1)FPS_ERROR_PRINT("%s >>  PcsStatus Alarm for  %s cleared at %2.3f\n", __func__, aname, tNow);
+                    if (1)
+                        FPS_ERROR_PRINT("%s >>  PcsStatus Alarm for  %s cleared at %2.3f\n", __func__, aname, tNow);
                     amap["PcsStatus"]->setParam("seenAlarm", false);
-
                 }
-                if (1)FPS_ERROR_PRINT("%s >>  PcsStatus OK for  %s at %2.3f\n", __func__, aname, tNow);
-                ival = Asset_Ok; // seen PcsStatus change
+                if (1)
+                    FPS_ERROR_PRINT("%s >>  PcsStatus OK for  %s at %2.3f\n", __func__, aname, tNow);
+                ival = Asset_Ok;  // seen PcsStatus change
                 amap["PcsStatusStateNum"]->setVal(ival);
                 ival = 0;
                 amap["PcsStatusInit"]->setVal(ival);
@@ -226,7 +244,8 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                 if (tval)
                 {
                     amap["PcsStatusState"]->setVal(tval);
-                    free(tval); tval = nullptr;
+                    free(tval);
+                    tval = nullptr;
                 }
             }
 
@@ -242,15 +261,16 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                 amap["PcsStatus"]->setParam("rdAlarm", rdAlarm);
             }
 
-            //if(1)FPS_Fault_PRINT("%s >>  ts  change for %s from [%s] to [%s] \n", __func__, aname, lastTs?lastTs:"no last Value", Ts);
+            // if(1)FPS_Fault_PRINT("%s >>  ts  change for %s from [%s] to [%s] \n",
+            // __func__, aname, lastTs?lastTs:"no last Value",
+            // Ts);
             amap["PcsStatus"]->setParam("lastPcsStatus", currentPcsStatus);
-            //if ((toVal > toFault)  && !bokFault && !bypass)
-
+            // if ((toVal > toFault)  && !bokFault && !bypass)
         }
-        else   // No Change , start tracking faults and alarms
+        else  // No Change , start tracking faults and alarms
         {
             bool seenFault = amap["PcsStatus"]->getbParam("seenFault");
-            //bool seenOk  = amap["PcsStatus"]->getbParam("seenOk");
+            // bool seenOk  = amap["PcsStatus"]->getbParam("seenOk");
             bool seenAlarm = amap["PcsStatus"]->getbParam("seenAlarm");
             if (rdFault > 0.0)
             {
@@ -270,14 +290,15 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
             if ((rdFault <= 0.0) && !seenFault)
             {
-
-                if (1)FPS_ERROR_PRINT("%s >>  PcsStatus  Fault  for %s at %2.3f \n", __func__, aname, tNow);
+                if (1)
+                    FPS_ERROR_PRINT("%s >>  PcsStatus  Fault  for %s at %2.3f \n", __func__, aname, tNow);
                 char* tval = nullptr;
                 asprintf(&tval, " PcsStatus Fault last set %2.3f Alarm %3.2f max %3.2f", toVal, toAlarm, toFault);
                 if (tval)
                 {
                     amap["PcsStatusState"]->setVal(tval);
-                    free(tval); tval = nullptr;
+                    free(tval);
+                    tval = nullptr;
                 }
                 int ival = 1;
                 amap["PcsStatusFaults"]->addVal(ival);
@@ -288,31 +309,32 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                     amap["amPcsStatusFaults"]->addVal(ival);
                 }
 
-                ival = Asset_Fault; //PcsStatus Fault
+                ival = Asset_Fault;  // PcsStatus Fault
                 amap["PcsStatusStateNum"]->setVal(ival);
 
                 seenFault = true;
                 amap["PcsStatus"]->setParam("seenFault", true);
                 amap["PcsStatus"]->setParam("seenOk", false);
                 amap["PcsStatus"]->setParam("seenAlarm", true);
-                //seenOk = false;
+                // seenOk = false;
                 seenAlarm = false;
 
                 int totalPcsStatusFaults = amap["PcsStatus"]->getiParam("totalPcsStatusFaults");
                 totalPcsStatusFaults++;
                 amap["PcsStatus"]->setParam("totalPcsStatusFaults", totalPcsStatusFaults);
-
             }
             else if ((rdAlarm <= 0.0) && !seenAlarm)
             {
-                if (1)FPS_ERROR_PRINT("%s >>  ts  Alarm  for %s at %2.3f \n", __func__, aname, tNow);
+                if (1)
+                    FPS_ERROR_PRINT("%s >>  ts  Alarm  for %s at %2.3f \n", __func__, aname, tNow);
 
                 char* tval = nullptr;
                 asprintf(&tval, "PcsStatus Alarm last set %2.3f Alarm %3.2f max %3.2f", toVal, toAlarm, toFault);
                 if (tval)
                 {
                     amap["PcsStatusState"]->setVal(tval);
-                    free(tval); tval = nullptr;
+                    free(tval);
+                    tval = nullptr;
                 }
 
                 int ival = 1;
@@ -323,11 +345,11 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                 {
                     amap["amPcsStatusAlarms"]->addVal(ival);
                 }
-                ival = Asset_Alarm; //PcsStatus Alarm
+                ival = Asset_Alarm;  // PcsStatus Alarm
                 amap["PcsStatusStateNum"]->setVal(ival);
 
                 amap["PcsStatus"]->setParam("seenAlarm", true);
-                //amap["PcsStatus"]->setParam("seenFault", false);
+                // amap["PcsStatus"]->setParam("seenFault", false);
                 amap["PcsStatus"]->setParam("seenOk", false);
                 int totalPcsStatusAlarms = amap["PcsStatus"]->getiParam("totalPcsStatusAlarms");
                 totalPcsStatusAlarms++;
@@ -335,46 +357,46 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             }
             else
             {
-                if (0)FPS_ERROR_PRINT("%s >> PcsStatus for [%s] [%s] Stalled at %2.3f  Reset %2.3f Fault %2.3f Alarm %2.3f \n"
-                    , __func__
-                    , aname
-                    , amap["PcsStatus"]->getcVal()
-                    , tNow
-                    , rdReset, rdFault, rdAlarm);
-
+                if (0)
+                    FPS_ERROR_PRINT(
+                        "%s >> PcsStatus for [%s] [%s] Stalled at %2.3f  "
+                        "Reset %2.3f Fault %2.3f Alarm %2.3f \n",
+                        __func__, aname, amap["PcsStatus"]->getcVal(), tNow, rdReset, rdFault, rdAlarm);
             }
         }
     }
     //
-    //int ival1, ival2;
-    //if(1)FPS_Fault_PRINT("%s >>  result for  %s , Alarms %d, errs %d \n", __func__, aname, amap["CommsAlarms"]->getiVal(),amap["CommsFaults"]->getiVal());
+    // int ival1, ival2;
+    // if(1)FPS_Fault_PRINT("%s >>  result for  %s , Alarms %d, errs %d \n",
+    // __func__, aname,
+    // amap["CommsAlarms"]->getiVal(),amap["CommsFaults"]->getiVal());
     return 0;
-};
+}
 
 // check against expected BMS status log changes
 // We get two status vars from the BMS and we send one back
 // outputs
 // output "id": "catl_ems_bms_rw",
-            //   "id": "ems_status",
-            //   "offset": 898,
-            //   "name": "EMS_status"
-            // },
-            //  "id": "catl_mbmu_stat_r",
-            //  {
-            //   "id": "mbmu_status",
-            //   "offset": 16,
-            //   "name": "System status",
-            //   "enum": true,
-            //   "bit_strings": [
-            //     "Initialize",
-            //     "Normal",
-            //     "Full Charge",
-            //     "Full Discharge",
-            //     "Warning Status",
-            //     "Fault Status"
-            //    ]
-            // }
-            // inputs
+//   "id": "ems_status",
+//   "offset": 898,
+//   "name": "EMS_status"
+// },
+//  "id": "catl_mbmu_stat_r",
+//  {
+//   "id": "mbmu_status",
+//   "offset": 16,
+//   "name": "System status",
+//   "enum": true,
+//   "bit_strings": [
+//     "Initialize",
+//     "Normal",
+//     "Full Charge",
+//     "Full Discharge",
+//     "Warning Status",
+//     "Fault Status"
+//    ]
+// }
+// inputs
 //            "id": "catl_bms_ems_r",
 // {
 //               "id": "bms_status",
@@ -393,12 +415,12 @@ int CheckAmPcsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
 int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av)
 {
-    //double dval = 0.0;
+    // double dval = 0.0;
     int ival = 0;
     bool bval = false;
     int dval = 0.0;
     char* cval = (char*)"BmsStatus Init";
-    if(!checkAv(vmap, amap, aname, p_fims, av))
+    if (!checkAv(vmap, amap, aname, p_fims, av))
     {
         FPS_PRINT_ERROR(">> ERROR unable to continue aname [{}]", aname);
         return -1;
@@ -413,20 +435,22 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
     int reload = 0;
     // this loads up the Faultors in the asset manager
     reload = vm->CheckReload(vmap, amap, aname, "CheckAmBmsStatus", (void*)&CheckAmBmsStatus);
-    //assetVar* CheckAssetComms = amap["CheckAmComms"];
+    // assetVar* CheckAssetComms = amap["CheckAmComms"];
     double toAlarm = 2.5;
     double toFault = 10.0;
     double toReset = 2.5;
-    int initBmsStatus = -1;//(char *)" Initial BmsStatus";
+    int initBmsStatus = -1;  //(char *)" Initial BmsStatus";
 
-    if(1)FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
+    if (1)
+        FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
     if (reload < 2)
     {
         ival = 0;
-        //dval = 1.0;
-        //bool bval = false;
-        //Link This to an incoming component
-        if (1)FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
+        // dval = 1.0;
+        // bool bval = false;
+        // Link This to an incoming component
+        if (1)
+            FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
 
         amap["BmsStatus"] = vm->setLinkVal(vmap, aname, "/status", "BmsStatus", initBmsStatus);
         amap["MbmuStatus"] = vm->setLinkVal(vmap, aname, "/status", "MbmuStatus", initBmsStatus);
@@ -438,12 +462,9 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         amap["MbmuExpStatus"] = vm->setLinkVal(vmap, aname, "/status", "MbmuExpStatus", cval);
         amap["BmsTestToAlarm"] = vm->setLinkVal(vmap, aname, "/status", "BmsTestToAlarm", toAlarm);
 
-        if (1)FPS_ERROR_PRINT("%s >>  aname TimeStamp %p comp [%s] name [%s] \n"
-            , __func__
-            , aname
-            , amap["BmsStatus"]->comp.c_str()
-            , amap["BmsStatus"]->name.c_str()
-        );
+        if (1)
+            FPS_ERROR_PRINT("%s >>  aname TimeStamp %p comp [%s] name [%s] \n", __func__, aname,
+                            amap["BmsStatus"]->comp.c_str(), amap["BmsStatus"]->name.c_str());
         if (reload < 1)
         {
             vm->setAvFunc(vmap, amap, aname, p_fims, amap["BmsStatusString"], "BmsStatusString", CheckAmBmsStatus);
@@ -453,16 +474,21 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         amap["essBmsStatusFaults"] = vm->setLinkVal(vmap, essName, "/status", "essBmsStatusFaults", ival);
         amap["essBmsStatusAlarms"] = vm->setLinkVal(vmap, essName, "/status", "essBmsStatusAlarms", ival);
         amap["essBmsStatusInit"] = vm->setLinkVal(vmap, essName, "/status", "essBmsStatusInit", ival);
-        amap["essBmsStatusTimeoutFault"] = vm->setLinkVal(vmap, essName, "/config", "essBmsStatusTimeoutFault", toFault);
-        amap["essBmsStatusTimeoutAlarm"] = vm->setLinkVal(vmap, essName, "/config", "essBmsStatusTimeoutAlarm", toAlarm);
-        amap["essBmsStatusTimeoutReset"] = vm->setLinkVal(vmap, essName, "/config", "essBmsStatusTimeoutReset", toReset);
-
+        amap["essBmsStatusTimeoutFault"] = vm->setLinkVal(vmap, essName, "/config", "essBmsStatusTimeoutFault",
+                                                          toFault);
+        amap["essBmsStatusTimeoutAlarm"] = vm->setLinkVal(vmap, essName, "/config", "essBmsStatusTimeoutAlarm",
+                                                          toAlarm);
+        amap["essBmsStatusTimeoutReset"] = vm->setLinkVal(vmap, essName, "/config", "essBmsStatusTimeoutReset",
+                                                          toReset);
 
         // if(am->am)
         // {
-        //     amap["amBmsStatusFaults"]  = vm->setLinkVal(vmap, am->am->name.c_str(), "/status",    "BmsStatusFaults",         ival);
-        //     amap["amBmsStatusAlarms"]  = vm->setLinkVal(vmap, am->am->name.c_str(), "/status",    "BmsStatusAlarms",         ival);
-        //     amap["amBmsStatusInit"]    = vm->setLinkVal(vmap, am->am->name.c_str(), "/status",    "BmsStatusInit",           ival);
+        //     amap["amBmsStatusFaults"]  = vm->setLinkVal(vmap,
+        //     am->am->name.c_str(), "/status",    "BmsStatusFaults",         ival);
+        //     amap["amBmsStatusAlarms"]  = vm->setLinkVal(vmap,
+        //     am->am->name.c_str(), "/status",    "BmsStatusAlarms",         ival);
+        //     amap["amBmsStatusInit"]    = vm->setLinkVal(vmap,
+        //     am->am->name.c_str(), "/status",    "BmsStatusInit",           ival);
         // }
 
         amap["BmsStatusFaults"] = vm->setLinkVal(vmap, aname, "/status", "BmsStatusFaults", ival);
@@ -480,13 +506,12 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         amap["MbmuBypassStatus"] = vm->setLinkVal(vmap, aname, "/config", "MbmuBypassStatus", bval);
         amap["MbmuStatusStateNum"] = vm->setLinkVal(vmap, aname, "/status", "MbmuStatusStateNum", ival);
 
-
-        if (reload == 0) // complete restart 
+        if (reload == 0)  // complete restart
         {
             amap["BmsStatus"]->setVal(initBmsStatus);
             amap["BmsExpStatus"]->setVal(cval);
             amap["MbmuExpStatus"]->setVal(cval);
-            //lastBmsStatus=strdup(tsInit);//state"]->setVal(cval);
+            // lastBmsStatus=strdup(tsInit);//state"]->setVal(cval);
             amap["BmsStatus"]->setParam("lastBmsStatus", initBmsStatus);
             amap["BmsStatusString"]->setVal(cval);
             amap["BmsStatusString"]->setParam("lastStatusString", cval);
@@ -504,12 +529,15 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             amap["BmsStatus"]->setParam("seenInit", false);
             amap["BmsStatus"]->setParam("initCnt", -1);
 
-            amap["BmsStatus"]->setParam("rdFault", toFault);                      // time remaining before fault
-            amap["BmsStatus"]->setParam("rdAlarm", toAlarm);                      // time reamining before alarm
-            amap["BmsStatus"]->setParam("rdReset", toReset);                      // time remaining before reset
-            amap["BmsStatus"]->setParam("rdLast", dval);                         // time when last to event was seen
+            amap["BmsStatus"]->setParam("rdFault",
+                                        toFault);  // time remaining before fault
+            amap["BmsStatus"]->setParam("rdAlarm",
+                                        toAlarm);  // time reamining before alarm
+            amap["BmsStatus"]->setParam("rdReset",
+                                        toReset);  // time remaining before reset
+            amap["BmsStatus"]->setParam("rdLast",
+                                        dval);                                    // time when last to event was seen
             amap["BmsStatus"]->setParam("ParamtoAlarm", amap["BmsTestToAlarm"]);  // Set an Av as a param
-
 
             amap["BmsStatusState"]->setVal(cval);
 
@@ -521,15 +549,21 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             amap["MbmuStatus"]->setParam("seenInit", false);
             amap["MbmuStatus"]->setParam("initCnt", -1);
 
-            amap["MbmuStatus"]->setParam("rdFault", toFault);                      // time remaining before fault
-            amap["MbmuStatus"]->setParam("rdAlarm", toAlarm);                      // time reamining before alarm
-            amap["MbmuStatus"]->setParam("rdReset", toReset);                      // time remaining before reset
-            amap["MbmuStatus"]->setParam("rdLast", dval);                         // time when last to event was seen
+            amap["MbmuStatus"]->setParam("rdFault",
+                                         toFault);  // time remaining before fault
+            amap["MbmuStatus"]->setParam("rdAlarm",
+                                         toAlarm);  // time reamining before alarm
+            amap["MbmuStatus"]->setParam("rdReset",
+                                         toReset);  // time remaining before reset
+            amap["MbmuStatus"]->setParam("rdLast",
+                                         dval);  // time when last to event was seen
 
             amap["MbmuStatusState"]->setVal(cval);
 
-            ival = Asset_Init; amap["MbmuStatusStateNum"]->setVal(ival);
-            ival = -1; amap["MbmuStatusInit"]->setVal(ival);
+            ival = Asset_Init;
+            amap["MbmuStatusStateNum"]->setVal(ival);
+            ival = -1;
+            amap["MbmuStatusInit"]->setVal(ival);
             amap["BmsBypassStatus"]->setVal(false);
             amap["MbmuBypassStatus"]->setVal(false);
 
@@ -542,13 +576,14 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
             // }
         }
         // reset reload
-        ival = 2; amap["CheckAmBmsStatus"]->setVal(ival);
+        ival = 2;
+        amap["CheckAmBmsStatus"]->setVal(ival);
     }
 
     double tNow = am->vm->get_time_dbl();
 
     bool BmsBypassStatus = amap["BmsBypassStatus"]->getbVal();
-    //bool MbmuBypassStatus = amap["BmsBypassStatus"]->getbVal();
+    // bool MbmuBypassStatus = amap["BmsBypassStatus"]->getbVal();
 
     toFault = amap["essBmsStatusTimeoutFault"]->getdVal();
     toAlarm = amap["essBmsStatusTimeoutAlarm"]->getdVal();
@@ -570,7 +605,6 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
         ival = 1;
         amap["essBmsStatusInit"]->addVal(ival);
         return 0;
-
     }
     else
     {
@@ -580,14 +614,12 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
         if (strcmp(currentBmsStatusString, lastBmsStatusString) != 0)
         {
-            if (1) FPS_ERROR_PRINT(" %s >> BmsStatusString comp [%s:%s] Changed from [%s] to [%s] at %2.6f\n"
-                , __func__
-                , amap["BmsStatusString"]->comp.c_str()
-                , amap["BmsStatusString"]->name.c_str()
-                , lastBmsStatusString
-                , currentBmsStatusString
-                , tNow
-            );
+            if (1)
+                FPS_ERROR_PRINT(
+                    " %s >> BmsStatusString comp [%s:%s] Changed from [%s] "
+                    "to [%s] at %2.6f\n",
+                    __func__, amap["BmsStatusString"]->comp.c_str(), amap["BmsStatusString"]->name.c_str(),
+                    lastBmsStatusString, currentBmsStatusString, tNow);
 
             amap["BmsStatusString"]->setParam("lastStatusString", currentBmsStatusString);
             if (strcmp(currentBmsStatusString, "Warning status") == 0)
@@ -599,21 +631,21 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
                     const auto now = flex::get_time_dbl();
 
-                    ESSLogger::get().warn("BMS alarm, status is [{}]",
-                        currentBmsStatusString);
+                    ESSLogger::get().warn("BMS alarm, status is [{}]", currentBmsStatusString);
 
-                    av->sendEvent("BMS", am->p_fims, Severity::Alarm, "BMS alarm, status is: [%s] at time %2.3f"
-                        , currentBmsStatusString
-                        , now.count()
-                        );
+                    av->sendEvent("BMS", am->p_fims, Severity::Alarm, "BMS alarm, status is: [%s] at time %2.3f",
+                                  currentBmsStatusString, now.count());
                 }
                 amap["essBmsStatusAlarms"]->addVal(1);
 
-                //av->am->vm->sendAlarm(vmap, "smbu", dest, nullptr, msg, 2);
-                if (1)FPS_ERROR_PRINT(" %s ALARM >>>>>> dest [%s] msg [%s]\n", __func__, dest, msg);
-                if (dest)free(dest); 
+                // av->am->vm->sendAlarm(vmap, "smbu", dest, nullptr, msg, 2);
+                if (1)
+                    FPS_ERROR_PRINT(" %s ALARM >>>>>> dest [%s] msg [%s]\n", __func__, dest, msg);
+                if (dest)
+                    free(dest);
                 dest = nullptr;
-                if (msg)free(msg);   
+                if (msg)
+                    free(msg);
                 msg = nullptr;
             }
             if (strcmp(currentBmsStatusString, "Fault status") == 0)
@@ -625,44 +657,41 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
                     const auto now = flex::get_time_dbl();
 
-                    ESSLogger::get().critical("BMS faulted with status [{}]",
-                        currentBmsStatusString);
+                    ESSLogger::get().critical("BMS faulted with status [{}]", currentBmsStatusString);
                     if (logging_enabled)
                     {
-                        std::string dirAndFile = fmt::format("{}/{}.{}", LogDir, "BMSFault", "txt"); // might just hard code the file name itself instead.
-                        ESSLogger::get().logIt(dirAndFile); // todo: change the directory where this log file is sent to.
+                        std::string dirAndFile = fmt::format(
+                            "{}/{}.{}", LogDir, "BMSFault",
+                            "txt");                          // might just hard code the file name itself instead.
+                        ESSLogger::get().logIt(dirAndFile);  // todo: change the directory
+                                                             // where this log file is sent
+                                                             // to.
                     }
 
-                    av->sendEvent("BMS", am->p_fims, Severity::Fault, "BMS faulted with status [%s] at time %2.3f"
-                        , currentBmsStatusString
-                        , now.count()
-                        );
+                    av->sendEvent("BMS", am->p_fims, Severity::Fault, "BMS faulted with status [%s] at time %2.3f",
+                                  currentBmsStatusString, now.count());
                 }
                 amap["essBmsStatusFaults"]->addVal(1);
-                //av->am->vm->sendAlarm(vmap, "smbu", dest, nullptr, msg, 2);
-                if (1)FPS_ERROR_PRINT(" %s FAULT >>>>>> dest [%s] msg [%s]\n", __func__, dest, msg);
-                if (dest)free(dest); 
+                // av->am->vm->sendAlarm(vmap, "smbu", dest, nullptr, msg, 2);
+                if (1)
+                    FPS_ERROR_PRINT(" %s FAULT >>>>>> dest [%s] msg [%s]\n", __func__, dest, msg);
+                if (dest)
+                    free(dest);
                 dest = nullptr;
-                if (msg)free(msg);    
+                if (msg)
+                    free(msg);
                 msg = nullptr;
             }
-
         }
-        if (0) FPS_ERROR_PRINT(" %s >> Testing MbmuStatusString  [%s] to [%s] at %2.6f\n"
-            , __func__
-            , lastMbmuStatusString
-            , currentMbmuStatusString
-            , tNow
-        );
+        if (0)
+            FPS_ERROR_PRINT(" %s >> Testing MbmuStatusString  [%s] to [%s] at %2.6f\n", __func__, lastMbmuStatusString,
+                            currentMbmuStatusString, tNow);
 
         if (strcmp(currentMbmuStatusString, lastMbmuStatusString) != 0)
         {
-            if (1) FPS_ERROR_PRINT(" %s >> MbmuStatusString Changed from [%s] to [%s] at %2.6f\n"
-                , __func__
-                , lastMbmuStatusString
-                , currentMbmuStatusString
-                , tNow
-            );
+            if (1)
+                FPS_ERROR_PRINT(" %s >> MbmuStatusString Changed from [%s] to [%s] at %2.6f\n", __func__,
+                                lastMbmuStatusString, currentMbmuStatusString, tNow);
 
             amap["MbmuStatusString"]->setParam("lastStatusString", currentMbmuStatusString);
             if (strcmp(currentMbmuStatusString, "Warning") == 0)
@@ -674,21 +703,21 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
                     const auto now = flex::get_time_dbl();
 
-                    ESSLogger::get().warn("MBMU alarm with status of [{}]",
-                        currentBmsStatusString);
+                    ESSLogger::get().warn("MBMU alarm with status of [{}]", currentBmsStatusString);
 
-                    av->sendEvent("MBMU", am->p_fims, Severity::Alarm, "MBMU alarm with status of [%s] at time %2.3f"
-                        , currentMbmuStatusString
-                        , now.count()
-                        );
+                    av->sendEvent("MBMU", am->p_fims, Severity::Alarm, "MBMU alarm with status of [%s] at time %2.3f",
+                                  currentMbmuStatusString, now.count());
                 }
                 amap["essBmsStatusAlarms"]->addVal(1);
 
-                //av->am->vm->sendAlarm(vmap, "smbu", dest, nullptr, msg, 2);
-                if (1)FPS_ERROR_PRINT(" %s ALARM >>>>>> dest [%s] msg [%s]\n", __func__, dest, msg);
-                if (dest)free(dest); 
+                // av->am->vm->sendAlarm(vmap, "smbu", dest, nullptr, msg, 2);
+                if (1)
+                    FPS_ERROR_PRINT(" %s ALARM >>>>>> dest [%s] msg [%s]\n", __func__, dest, msg);
+                if (dest)
+                    free(dest);
                 dest = nullptr;
-                if (msg)free(msg);    
+                if (msg)
+                    free(msg);
                 msg = nullptr;
             }
             if (strcmp(currentMbmuStatusString, "Fault") == 0)
@@ -700,8 +729,7 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
                     const auto now = flex::get_time_dbl();
 
-                    ESSLogger::get().critical("MBMU faulted with a status of [{}]",
-                        currentBmsStatusString);
+                    ESSLogger::get().critical("MBMU faulted with a status of [{}]", currentBmsStatusString);
                     if (logging_enabled)
                     {
                         std::string dirAndFile = fmt::format("{}/{}.{}", LogDir, "MBMUFault", "txt");
@@ -709,58 +737,60 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                     }
 
                     assetVar* temp_av = amap["MbmuStatusString"];
-                    temp_av->sendEvent("MBMU", am->p_fims, Severity::Fault, "MBMU faulted with a status of [%s] at time %2.3f"
-                        , currentMbmuStatusString
-                        , now.count()
-                        );
+                    temp_av->sendEvent("MBMU", am->p_fims, Severity::Fault,
+                                       "MBMU faulted with a status of [%s] at time %2.3f", currentMbmuStatusString,
+                                       now.count());
                 }
 
                 amap["essBmsStatusFaults"]->addVal(1);
 
-                //av->am->vm->sendAlarm(vmap, "smbu", dest, nullptr, msg, 2);
-                if (1)FPS_ERROR_PRINT(" %s FAULT >>>>>> dest [%s] msg [%s]\n", __func__, dest, msg);
-                if (dest)free(dest); 
+                // av->am->vm->sendAlarm(vmap, "smbu", dest, nullptr, msg, 2);
+                if (1)
+                    FPS_ERROR_PRINT(" %s FAULT >>>>>> dest [%s] msg [%s]\n", __func__, dest, msg);
+                if (dest)
+                    free(dest);
                 dest = nullptr;
-                if (msg)free(msg);    
+                if (msg)
+                    free(msg);
                 msg = nullptr;
             }
-
         }
 
         if (strcmp(currentBmsStatusString2, lastBmsStatusString2) != 0)
         {
-            if (1) FPS_ERROR_PRINT(" %s >> BmsStatusString2 Changed from [%s] to [%s] at %2.3f\n"
-                , __func__
-                , lastBmsStatusString2
-                , currentBmsStatusString2
-                , tNow
-            );
+            if (1)
+                FPS_ERROR_PRINT(" %s >> BmsStatusString2 Changed from [%s] to [%s] at %2.3f\n", __func__,
+                                lastBmsStatusString2, currentBmsStatusString2, tNow);
 
             amap["BmsStatusString2"]->setParam("lastBmsStatusString", currentBmsStatusString2);
-
         }
         // If we are in the init state wait for comms to start count down reset time
         if (currentBmsStatus == initBmsStatus)
         {
             bool seenInit = amap["BmsStatus"]->getbParam("seenInit");
 
-            //ival = 1; amap["CheckAssetComs"]->setVal(ival);
-            //ival = 1; amap["CheckAssetComs"]->setVal(ival);
-            if (0)FPS_ERROR_PRINT("%s >> %s  NO BmsStatus,  bypass [%s]\n", __func__, aname, BmsBypassStatus ? "true" : "false");
+            // ival = 1; amap["CheckAssetComs"]->setVal(ival);
+            // ival = 1; amap["CheckAssetComs"]->setVal(ival);
+            if (0)
+                FPS_ERROR_PRINT("%s >> %s  NO BmsStatus,  bypass [%s]\n", __func__, aname,
+                                BmsBypassStatus ? "true" : "false");
 
             // if not toally set up yet then quit this pass
             if (!amap["amBmsStatusInit"])
             {
-                if (1)FPS_ERROR_PRINT("%s >> %s  no VAR amBmsStatusInit Yet...\n", __func__, aname);
+                if (1)
+                    FPS_ERROR_PRINT("%s >> %s  no VAR amBmsStatusInit Yet...\n", __func__, aname);
                 amap["amBmsStatusInit"] = vm->setLinkVal(vmap, aname, "/status", "amBmsStatusInit", ival);
                 return 0;
             }
 
-            if (!seenInit)   // BmsStatus_Setup
+            if (!seenInit)  // BmsStatus_Setup
             {
-                if (1)FPS_ERROR_PRINT("%s >> %s  amBmsStatusInit  SEEN ...\n", __func__, aname);
+                if (1)
+                    FPS_ERROR_PRINT("%s >> %s  amBmsStatusInit  SEEN ...\n", __func__, aname);
                 assetVar* toav = amap["BmsStatus"]->getaParam("ParamtoAlarm");  // Get an Av as a param
-                if (1)FPS_ERROR_PRINT("%s >> %s  ParamtoAlarm %f  \n", __func__, aname, toav->getdVal());
+                if (1)
+                    FPS_ERROR_PRINT("%s >> %s  ParamtoAlarm %f  \n", __func__, aname, toav->getdVal());
 
                 amap["BmsStatus"]->setParam("seenInit", true);
 
@@ -769,14 +799,16 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
                 ival = 1;
                 amap["essBmsStatusInit"]->addVal(ival);
-                amap["BmsStatusInit"]->setVal(0);      //BmsStatus_Init  
+                amap["BmsStatusInit"]->setVal(0);  // BmsStatus_Init
             }
             amap["BmsStatus"]->setParam("rdLast", tNow);
-
         }
-        else  // wait for comms to go past reset then set active or wait to alarm and then fault
+        else  // wait for comms to go past reset then set active or wait to alarm
+              // and then fault
         {
-            //if(0)FPS_ERROR_PRINT("%s >>  ts  change for %s from [%s] to [%s] \n", __func__, aname, lastBmsStatus?lastBmsStatus:"no last Value", tval1);
+            // if(0)FPS_ERROR_PRINT("%s >>  ts  change for %s from [%s] to [%s] \n",
+            // __func__, aname, lastBmsStatus?lastBmsStatus:"no
+            // last Value", tval1);
             double rdLast = amap["BmsStatus"]->getdParam("rdLast");
             double rdFault = amap["BmsStatus"]->getdParam("rdFault");
             double rdAlarm = amap["BmsStatus"]->getdParam("rdAlarm");
@@ -785,12 +817,16 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
             double toVal = amap["BmsStatus"]->getLastSetDiff(tNow);
 
-            // Has value changed ? If yes then count down rdReset to zero based on tNow - rdLast
+            // Has value changed ? If yes then count down rdReset to zero based on
+            // tNow - rdLast
             if (currentBmsStatus != lastBmsStatus)
-                //if(amap["BmsStatus"]->valueChangedReset())
+            // if(amap["BmsStatus"]->valueChangedReset())
             {
-                if (1)FPS_ERROR_PRINT("%s >> %s  amBmsStatus Changed from  %d to %d  (expected %d) at time %2.3f  SEEN ...\n"
-                    , __func__, aname, lastBmsStatus, currentBmsStatus, expectedBmsStatus, tNow);
+                if (1)
+                    FPS_ERROR_PRINT(
+                        "%s >> %s  amBmsStatus Changed from  %d to %d  "
+                        "(expected %d) at time %2.3f  SEEN ...\n",
+                        __func__, aname, lastBmsStatus, currentBmsStatus, expectedBmsStatus, tNow);
 
                 amap["BmsStatus"]->setParam("lastBmsStatus", currentBmsStatus);
             }
@@ -803,7 +839,7 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                     rdReset -= (tNow - rdLast);
                     amap["BmsStatus"]->setParam("rdReset", rdReset);
                 }
-                //else
+                // else
                 {
                     if (rdAlarm < toAlarm)
                     {
@@ -817,34 +853,41 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                     }
                 }
 
-                if (0)FPS_ERROR_PRINT("%s >>  BmsStatus change for %s from [%d] to [%d]  rdReset now %2.3f diff %2.3f rdAlarm %2.3f rdFault %2.3f\n"
-                    , __func__, aname, lastBmsStatus, currentBmsStatus, rdReset, (tNow - rdLast), rdAlarm, rdFault);
+                if (0)
+                    FPS_ERROR_PRINT(
+                        "%s >>  BmsStatus change for %s from [%d] to [%d]  "
+                        "rdReset now %2.3f diff %2.3f rdAlarm %2.3f rdFault "
+                        "%2.3f\n",
+                        __func__, aname, lastBmsStatus, currentBmsStatus, rdReset, (tNow - rdLast), rdAlarm, rdFault);
 
                 ival = amap["BmsStatusStateNum"]->getiVal();
-                // reset time passed , still changing , time to switch to BmsStatus_Ready
+                // reset time passed , still changing , time to switch to
+                // BmsStatus_Ready
                 if ((rdReset <= 0.0) && (ival != seenOk))
                 {
-
                     bool seenFault = amap["BmsStatus"]->getbParam("seenFault");
-                    //bool seenOk  = amap["BmsStatus"]->getbParam("seenOk");
+                    // bool seenOk  = amap["BmsStatus"]->getbParam("seenOk");
                     bool seenAlarm = amap["BmsStatus"]->getbParam("seenAlarm");
                     amap["BmsStatus"]->setParam("seenOk", true);
 
-                    if (0)FPS_ERROR_PRINT("%s >>  BmsStatus  change for %s from [%d] to [%d] \n", __func__, aname, lastBmsStatus, currentBmsStatus);
+                    if (0)
+                        FPS_ERROR_PRINT("%s >>  BmsStatus  change for %s from [%d] to [%d] \n", __func__, aname,
+                                        lastBmsStatus, currentBmsStatus);
                     if (seenFault)
                     {
-                        if (1)FPS_ERROR_PRINT("%s >>  BmsStatus fault for  %s cleared at %2.3f\n", __func__, aname, tNow);
+                        if (1)
+                            FPS_ERROR_PRINT("%s >>  BmsStatus fault for  %s cleared at %2.3f\n", __func__, aname, tNow);
                         amap["BmsStatus"]->setParam("seenFault", false);
-
                     }
                     if (seenAlarm)
                     {
-                        if (1)FPS_ERROR_PRINT("%s >>  BmsStatus Alarm for  %s cleared at %2.3f\n", __func__, aname, tNow);
+                        if (1)
+                            FPS_ERROR_PRINT("%s >>  BmsStatus Alarm for  %s cleared at %2.3f\n", __func__, aname, tNow);
                         amap["BmsStatus"]->setParam("seenAlarm", false);
-
                     }
-                    if (1)FPS_ERROR_PRINT("%s >>  BmsStatus OK for  %s at %2.3f\n", __func__, aname, tNow);
-                    ival = Asset_Ok; // seen BmsStatus change
+                    if (1)
+                        FPS_ERROR_PRINT("%s >>  BmsStatus OK for  %s at %2.3f\n", __func__, aname, tNow);
+                    ival = Asset_Ok;  // seen BmsStatus change
                     amap["BmsStatusStateNum"]->setVal(ival);
                     ival = 0;
                     amap["BmsStatusInit"]->setVal(ival);
@@ -853,7 +896,8 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                     if (tval)
                     {
                         amap["BmsStatusState"]->setVal(tval);
-                        free(tval); tval = nullptr;
+                        free(tval);
+                        tval = nullptr;
                     }
                 }
 
@@ -869,15 +913,16 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                     amap["BmsStatus"]->setParam("rdAlarm", rdAlarm);
                 }
 
-                //if(1)FPS_Fault_PRINT("%s >>  ts  change for %s from [%s] to [%s] \n", __func__, aname, lastTs?lastTs:"no last Value", Ts);
+                // if(1)FPS_Fault_PRINT("%s >>  ts  change for %s from [%s] to [%s] \n",
+                // __func__, aname, lastTs?lastTs:"no last Value",
+                // Ts);
                 amap["BmsStatus"]->setParam("lastBmsStatus", currentBmsStatus);
-                //if ((toVal > toFault)  && !bokFault && !bypass)
-
+                // if ((toVal > toFault)  && !bokFault && !bypass)
             }
-            else   // No Change , start tracking faults and alarms
+            else  // No Change , start tracking faults and alarms
             {
                 bool seenFault = amap["BmsStatus"]->getbParam("seenFault");
-                //bool seenOk  = amap["BmsStatus"]->getbParam("seenOk");
+                // bool seenOk  = amap["BmsStatus"]->getbParam("seenOk");
                 bool seenAlarm = amap["BmsStatus"]->getbParam("seenAlarm");
                 if (rdFault > 0.0)
                 {
@@ -897,14 +942,15 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
 
                 if ((rdFault <= 0.0) && !seenFault)
                 {
-
-                    if (1)FPS_ERROR_PRINT("%s >>  BmsStatus  Fault  for %s at %2.3f \n", __func__, aname, tNow);
+                    if (1)
+                        FPS_ERROR_PRINT("%s >>  BmsStatus  Fault  for %s at %2.3f \n", __func__, aname, tNow);
                     char* tval = nullptr;
                     asprintf(&tval, " BmsStatus Fault last set %2.3f Alarm %3.2f max %3.2f", toVal, toAlarm, toFault);
                     if (tval)
                     {
                         amap["BmsStatusState"]->setVal(tval);
-                        free(tval); tval = nullptr;
+                        free(tval);
+                        tval = nullptr;
                     }
                     int ival = 1;
                     amap["BmsStatusFaults"]->addVal(ival);
@@ -915,31 +961,32 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                     //     amap["amBmsStatusFaults"]->addVal(ival);
                     // }
 
-                    ival = Asset_Fault; //BmsStatus Fault
+                    ival = Asset_Fault;  // BmsStatus Fault
                     amap["BmsStatusStateNum"]->setVal(ival);
 
                     seenFault = true;
                     amap["BmsStatus"]->setParam("seenFault", true);
                     amap["BmsStatus"]->setParam("seenOk", false);
                     amap["BmsStatus"]->setParam("seenAlarm", true);
-                    //seenOk = false;
+                    // seenOk = false;
                     seenAlarm = false;
 
                     int totalBmsStatusFaults = amap["BmsStatus"]->getiParam("totalStatusFaults");
                     totalBmsStatusFaults++;
                     amap["BmsStatus"]->setParam("totalStatusFaults", totalBmsStatusFaults);
-
                 }
                 else if ((rdAlarm <= 0.0) && !seenAlarm)
                 {
-                    if (1)FPS_ERROR_PRINT("%s >>  ts  Alarm  for %s at %2.3f \n", __func__, aname, tNow);
+                    if (1)
+                        FPS_ERROR_PRINT("%s >>  ts  Alarm  for %s at %2.3f \n", __func__, aname, tNow);
 
                     char* tval = nullptr;
                     asprintf(&tval, "BmsStatus Alarm last set %2.3f Alarm %3.2f max %3.2f", toVal, toAlarm, toFault);
                     if (tval)
                     {
                         amap["BmsStatusState"]->setVal(tval);
-                        free(tval); tval = nullptr;
+                        free(tval);
+                        tval = nullptr;
                     }
 
                     int ival = 1;
@@ -950,11 +997,11 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                     // {
                     //     amap["amBmsStatusAlarms"]->addVal(ival);
                     // }
-                    ival = Asset_Alarm; //BmsStatus Alarm
+                    ival = Asset_Alarm;  // BmsStatus Alarm
                     amap["BmsStatusStateNum"]->setVal(ival);
 
                     amap["BmsStatus"]->setParam("seenAlarm", true);
-                    //amap["BmsStatus"]->setParam("seenFault", false);
+                    // amap["BmsStatus"]->setParam("seenFault", false);
                     amap["BmsStatus"]->setParam("seenOk", false);
                     int totalBmsStatusAlarms = amap["BmsStatus"]->getiParam("totalBmsStatusAlarms");
                     totalBmsStatusAlarms++;
@@ -962,31 +1009,31 @@ int CheckAmBmsStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fim
                 }
                 else
                 {
-                    if (0)FPS_ERROR_PRINT("%s >> BmsStatus for [%s] [%s] Stalled at %2.3f  Reset %2.3f Fault %2.3f Alarm %2.3f \n"
-                        , __func__
-                        , aname
-                        , amap["BmsStatus"]->getcVal()
-                        , tNow
-                        , rdReset, rdFault, rdAlarm);
-
+                    if (0)
+                        FPS_ERROR_PRINT(
+                            "%s >> BmsStatus for [%s] [%s] Stalled at %2.3f  "
+                            "Reset %2.3f Fault %2.3f Alarm %2.3f \n",
+                            __func__, aname, amap["BmsStatus"]->getcVal(), tNow, rdReset, rdFault, rdAlarm);
                 }
             }
         }
     }
     //
-    //int ival1, ival2;
-    //if(1)FPS_Fault_PRINT("%s >>  result for  %s , Alarms %d, errs %d \n", __func__, aname, amap["CommsAlarms"]->getiVal(),amap["CommsFaults"]->getiVal());
+    // int ival1, ival2;
+    // if(1)FPS_Fault_PRINT("%s >>  result for  %s , Alarms %d, errs %d \n",
+    // __func__, aname,
+    // amap["CommsAlarms"]->getiVal(),amap["CommsFaults"]->getiVal());
     return 0;
-};
+}
 
-// ess_controller test asset status  
+// ess_controller test asset status
 // logs any changes
 int CheckEssStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am)
 {
-    //double dval = 0.0;
+    // double dval = 0.0;
     int ival = 0;
-    //bool bval = false;
-    //int dval = 0.0;
+    // bool bval = false;
+    // int dval = 0.0;
     char* cval = (char*)"Ess Status Init";
     char* pcval = (char*)"Pcs Status Init";
     char* bmval = (char*)"Bms Status Init";
@@ -994,23 +1041,24 @@ int CheckEssStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
     int reload = 0;
     // this loads up the Faultors in the asset manager
     reload = vm->CheckReload(vmap, amap, aname, "CheckEssStatus");
-    //assetVar* CheckAssetComms = amap["CheckAmComms"];
-    //double toAlarm = 2.5;
-    //double toFault = 10.0;
-    //double toReset = 2.5;
-    int initPcsStatus = -1;//(char *)" Initial PcsStatus";
-    int initBmsStatus = -1;//(char *)" Initial PcsStatus";
-    int initEssStatus = -1;//(char *)" Initial PcsStatus";
+    // assetVar* CheckAssetComms = amap["CheckAmComms"];
+    // double toAlarm = 2.5;
+    // double toFault = 10.0;
+    // double toReset = 2.5;
+    int initPcsStatus = -1;  //(char *)" Initial PcsStatus";
+    int initBmsStatus = -1;  //(char *)" Initial PcsStatus";
+    int initEssStatus = -1;  //(char *)" Initial PcsStatus";
 
-
-    //if(1)FPS_FaultOR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
+    // if(1)FPS_FaultOR_PRINT("%s >>  reload first for  %s , is  %d \n",
+    // __func__, aname, reload);
     if (reload < 2)
     {
         ival = 0;
-        //dval = 1.0;
-        //bool bval = false;
-        //Link This to an incoming component
-        if (1)FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
+        // dval = 1.0;
+        // bool bval = false;
+        // Link This to an incoming component
+        if (1)
+            FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
 
         amap["EssStatus"] = vm->setLinkVal(vmap, aname, "/status", "EssStatus", initEssStatus);
         amap["PcsStatus"] = vm->setLinkVal(vmap, aname, "/status", "PcsStatus", initPcsStatus);
@@ -1018,7 +1066,6 @@ int CheckEssStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
 
         amap["PcsStatusState"] = vm->setLinkVal(vmap, aname, "/status", "PcsStatusState", pcval);
         amap["BmsStatusState"] = vm->setLinkVal(vmap, aname, "/status", "BmsStatusState", bmval);
-
 
         amap["essPcsStatusFaults"] = vm->setLinkVal(vmap, aname, "/status", "essPcsStatusFaults", ival);
         amap["essPcsStatusAlarms"] = vm->setLinkVal(vmap, aname, "/status", "essPcsStatusAlarms", ival);
@@ -1029,12 +1076,11 @@ int CheckEssStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
         amap["essBmsStatusInit"] = vm->setLinkVal(vmap, aname, "/status", "essBmsStatusAlarms", ival);
         amap["essBmsStatusState"] = vm->setLinkVal(vmap, aname, "/status", "essBmsStatusState", cval);
 
-
-        if (reload == 0) // complete restart 
+        if (reload == 0)  // complete restart
         {
             amap["PcsStatus"]->setVal(initPcsStatus);
             amap["BmsStatus"]->setVal(initBmsStatus);
-            //lastPcsStatus=strdup(tsInit);//state"]->setVal(cval);
+            // lastPcsStatus=strdup(tsInit);//state"]->setVal(cval);
             amap["PcsStatus"]->setParam("lastPcsStatus", initPcsStatus);
             amap["PcsStatus"]->setParam("totalPcsStatusFaults", 0);
             amap["PcsStatus"]->setParam("totalPcsStatusAlarms", 0);
@@ -1043,21 +1089,20 @@ int CheckEssStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
             amap["BmsStatus"]->setParam("totalBmsStatusFaults", 0);
             amap["BmsStatus"]->setParam("totalBmsStatusAlarms", 0);
 
-
             amap["PcsStatusState"]->setVal(pcval);
             amap["BmsStatusState"]->setVal(bmval);
-
         }
         // reset reload
-        ival = 2; amap["CheckEssStatus"]->setVal(ival);
+        ival = 2;
+        amap["CheckEssStatus"]->setVal(ival);
     }
 
-    //double tNow = am->vm->get_time_dbl();
+    // double tNow = am->vm->get_time_dbl();
 
-    // are we the ess_controller 
+    // are we the ess_controller
     if (!am->am)
     {
-        //bool initSeen =             amap["PcsStatus"]     ->getbParam("initSeen");
+        // bool initSeen =             amap["PcsStatus"] ->getbParam("initSeen");
 
         amap["essPcsStatusFaults"]->setVal(0);
         amap["essPcsStatusAlarms"]->setVal(0);
@@ -1084,7 +1129,7 @@ int CheckEssStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
 
             int essPcsStatusFaults = amap["essPcsStatusFaults"]->getiVal();
             int essPcsStatusAlarms = amap["essPcsStatusAlarms"]->getiVal();
-            //int essPcsStatusInit = amap["essPcsStatusInit"]->getiVal();
+            // int essPcsStatusInit = amap["essPcsStatusInit"]->getiVal();
             if (essPcsStatusFaults > 0)
             {
                 FPS_ERROR_PRINT("%s >> %d essPcsStatusFaults detected\n", __func__, essPcsStatusFaults);
@@ -1095,7 +1140,7 @@ int CheckEssStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
             }
             int essBmsStatusFaults = amap["essBmsStatusFaults"]->getiVal();
             int essBmsStatusAlarms = amap["essBmsStatusAlarms"]->getiVal();
-            //int essBmsStatusInit = amap["essBmsStatusInit"]->getiVal();
+            // int essBmsStatusInit = amap["essBmsStatusInit"]->getiVal();
             if (essBmsStatusFaults > 0)
             {
                 FPS_ERROR_PRINT("%s >> %d essBmsStatusFaults detected\n", __func__, essBmsStatusFaults);
@@ -1107,5 +1152,5 @@ int CheckEssStatus(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
         }
     }
     return 0;
-};
+}
 #endif

@@ -21,71 +21,74 @@
 
 // Macros for accessing real-time model data structure
 #ifndef rtmGetErrorStatus
-#define rtmGetErrorStatus(rtm)         ((rtm)->errorStatus)
+#define rtmGetErrorStatus(rtm) ((rtm)->errorStatus)
 #endif
 
 #ifndef rtmSetErrorStatus
-#define rtmSetErrorStatus(rtm, val)    ((rtm)->errorStatus = (val))
+#define rtmSetErrorStatus(rtm, val) ((rtm)->errorStatus = (val))
 #endif
 
 // Class declaration for model LowLevelController
 class LowLevelController final
 {
-  // public data and function members
- public:
-  // External inputs (root inport signals with default storage)
-  struct ExtU {
-    int32_T Common_IN;                 // '<Root>/Common_IN'
-    int32_T Unique_IN;                 // '<Root>/Unique_IN'
-  };
+    // public data and function members
+public:
+    // External inputs (root inport signals with default storage)
+    struct ExtU
+    {
+        int32_T Common_IN;  // '<Root>/Common_IN'
+        int32_T Unique_IN;  // '<Root>/Unique_IN'
+    };
 
-  // External outputs (root outports fed by signals with default storage)
-  struct ExtY {
-    int32_T LowLevelOut;               // '<Root>/LowLevelOut'
-  };
+    // External outputs (root outports fed by signals with default storage)
+    struct ExtY
+    {
+        int32_T LowLevelOut;  // '<Root>/LowLevelOut'
+    };
 
-  // Real-time Model Data Structure
-  struct RT_MODEL {
-    const char_T * volatile errorStatus;
-  };
+    // Real-time Model Data Structure
+    struct RT_MODEL
+    {
+        const char_T* volatile errorStatus;
+    };
 
-  // Copy Constructor
-  LowLevelController(LowLevelController const&) = delete;
+    // Copy Constructor
+    LowLevelController(LowLevelController const&) = delete;
 
-  // Assignment Operator
-  LowLevelController& operator= (LowLevelController const&) & = delete;
+    // Assignment Operator
+    LowLevelController& operator=(LowLevelController const&) & = delete;
 
-  // Move Constructor
-  LowLevelController(LowLevelController &&) = delete;
+    // Move Constructor
+    LowLevelController(LowLevelController&&) = delete;
 
-  // Move Assignment Operator
-  LowLevelController& operator= (LowLevelController &&) = delete;
+    // Move Assignment Operator
+    LowLevelController& operator=(LowLevelController&&) = delete;
 
-  // Real-Time Model get method
-  LowLevelController::RT_MODEL * getRTM();
+    // Real-Time Model get method
+    LowLevelController::RT_MODEL* getRTM();
 
-  // External inputs
-  ExtU rtU;
+    // External inputs
+    ExtU rtU;
 
-  // External outputs
-  ExtY rtY;
+    // External outputs
+    ExtY rtY;
 
-  // model initialize function
-  static void initialize();
+    // model initialize function
+    static void initialize();
 
-  // model step function
-  void step();
+    // model step function
+    void step();
 
-  // Constructor
-  LowLevelController();
+    // Constructor
+    LowLevelController();
 
-  // Destructor
-  ~LowLevelController();
+    // Destructor
+    ~LowLevelController();
 
-  // private data and function members
- private:
-  // Real-Time Model
-  RT_MODEL rtM;
+    // private data and function members
+private:
+    // Real-Time Model
+    RT_MODEL rtM;
 };
 
 //-
@@ -104,7 +107,7 @@ class LowLevelController final
 //
 //  '<Root>' : 'LowLevelController'
 
-#endif                                 // RTW_HEADER_LowLevelController_h_
+#endif  // RTW_HEADER_LowLevelController_h_
 
 //
 // File trailer for generated code.

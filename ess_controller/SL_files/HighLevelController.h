@@ -19,86 +19,85 @@
 
 // Macros for accessing real-time model data structure
 #ifndef rtmGetErrorStatus
-#define rtmGetErrorStatus(rtm)         ((rtm)->errorStatus)
+#define rtmGetErrorStatus(rtm) ((rtm)->errorStatus)
 #endif
 
 #ifndef rtmSetErrorStatus
-#define rtmSetErrorStatus(rtm, val)    ((rtm)->errorStatus = (val))
+#define rtmSetErrorStatus(rtm, val) ((rtm)->errorStatus = (val))
 #endif
 
 // Class declaration for model HighLevelController
 class HighLevelController final
 {
-  // public data and function members
- public:
-  // External inputs (root inport signals with default storage)
-  struct ExtU_HighLevelController_T {
-    boolean_T In1;                     // '<Root>/In1'
-  };
+    // public data and function members
+public:
+    // External inputs (root inport signals with default storage)
+    struct ExtU_HighLevelController_T
+    {
+        boolean_T In1;  // '<Root>/In1'
+    };
 
-  // External outputs (root outports fed by signals with default storage)
-  struct ExtY_HighLevelController_T {
-    int32_T Out1;                      // '<Root>/Out1'
-  };
+    // External outputs (root outports fed by signals with default storage)
+    struct ExtY_HighLevelController_T
+    {
+        int32_T Out1;  // '<Root>/Out1'
+    };
 
-  // Real-time Model Data Structure
-  struct RT_MODEL_HighLevelController_T {
-    const char_T * volatile errorStatus;
-  };
+    // Real-time Model Data Structure
+    struct RT_MODEL_HighLevelController_T
+    {
+        const char_T* volatile errorStatus;
+    };
 
-  // Copy Constructor
-  HighLevelController(HighLevelController const&) = delete;
+    // Copy Constructor
+    HighLevelController(HighLevelController const&) = delete;
 
-  // Assignment Operator
-  HighLevelController& operator= (HighLevelController const&) & = delete;
+    // Assignment Operator
+    HighLevelController& operator=(HighLevelController const&) & = delete;
 
-  // Move Constructor
-  HighLevelController(HighLevelController &&) = delete;
+    // Move Constructor
+    HighLevelController(HighLevelController&&) = delete;
 
-  // Move Assignment Operator
-  HighLevelController& operator= (HighLevelController &&) = delete;
+    // Move Assignment Operator
+    HighLevelController& operator=(HighLevelController&&) = delete;
 
-  // Real-Time Model get method
-  HighLevelController::RT_MODEL_HighLevelController_T * getRTM();
+    // Real-Time Model get method
+    HighLevelController::RT_MODEL_HighLevelController_T* getRTM();
 
-  // External inputs
-  ExtU_HighLevelController_T HighLevelController_U;
+    // External inputs
+    ExtU_HighLevelController_T HighLevelController_U;
 
-  // External outputs
-  ExtY_HighLevelController_T HighLevelController_Y;
+    // External outputs
+    ExtY_HighLevelController_T HighLevelController_Y;
 
-  // Root inports set method
-  void setExternalInputs(const ExtU_HighLevelController_T
-    *pExtU_HighLevelController_T)
-  {
-    HighLevelController_U = *pExtU_HighLevelController_T;
-  }
+    // Root inports set method
+    void setExternalInputs(const ExtU_HighLevelController_T* pExtU_HighLevelController_T)
+    {
+        HighLevelController_U = *pExtU_HighLevelController_T;
+    }
 
-  // Root outports get method
-  const ExtY_HighLevelController_T &getExternalOutputs() const
-  {
-    return HighLevelController_Y;
-  }
+    // Root outports get method
+    const ExtY_HighLevelController_T& getExternalOutputs() const { return HighLevelController_Y; }
 
-  // model initialize function
-  static void initialize();
+    // model initialize function
+    static void initialize();
 
-  // model step function
-  void step();
+    // model step function
+    void step();
 
-  // model terminate function
-  static void terminate();
+    // model terminate function
+    static void terminate();
 
-  // Constructor
-  HighLevelController();
+    // Constructor
+    HighLevelController();
 
-  // Destructor
-  ~HighLevelController();
+    // Destructor
+    ~HighLevelController();
 
-  // private data and function members
- private:
-  // Real-Time Model
-  RT_MODEL_HighLevelController_T HighLevelController_M;
+    // private data and function members
+private:
+    // Real-Time Model
+    RT_MODEL_HighLevelController_T HighLevelController_M;
 };
 
 //-
@@ -117,7 +116,7 @@ class HighLevelController final
 //
 //  '<Root>' : 'HighLevelController'
 
-#endif                                 // RTW_HEADER_HighLevelController_h_
+#endif  // RTW_HEADER_HighLevelController_h_
 
 //
 // File trailer for generated code.

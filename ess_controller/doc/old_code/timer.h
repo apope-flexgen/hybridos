@@ -1,6 +1,6 @@
 /*
-*  timer.h
-*/
+ *  timer.h
+ */
 
 /*
   this is an abstract timer.

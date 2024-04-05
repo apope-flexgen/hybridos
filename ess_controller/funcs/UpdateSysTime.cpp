@@ -7,18 +7,18 @@
 #include "asset.h"
 #include "formatters.hpp"
 
-extern "C++"
-{
-    int UpdateSysTime(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*av);
+extern "C++" {
+int UpdateSysTime(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
 }
 
 /**
- * @brief Converts the tm struct to string without new line. Referenced from http://www.cplusplus.com/reference/ctime/asctime/
- * 
+ * @brief Converts the tm struct to string without new line. Referenced from
+ * http://www.cplusplus.com/reference/ctime/asctime/
+ *
  * @param timeptr the pointer to time struct
  * @return char* the string representation of date and time
  */
-//char* mystrtime(const struct tm *timeptr);
+// char* mystrtime(const struct tm *timeptr);
 
 // {
 //     static const char wday_name[][4] = {
@@ -41,8 +41,9 @@ extern "C++"
 // }
 
 /**
- * @brief Updates the system's TOD (year, month, day, hour, min, sec) every second
- * 
+ * @brief Updates the system's TOD (year, month, day, hour, min, sec) every
+ * second
+ *
  * @param vmap the global data map
  * @param amap the local data map
  * @param aname the name of the asset/asset manager
@@ -51,15 +52,16 @@ extern "C++"
  */
 
 #define TBUFFER_SIZE 80
-int UpdateSysTime(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar* av)
+int UpdateSysTime(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av)
 {
+    UNUSED(p_fims);
     using namespace std::chrono;
-    asset_manager* am = av->am; 
+    asset_manager* am = av->am;
     VarMapUtils* vm = am->vm;
 
-    //essLogger eLog(am, essName, "UpdateSysTime");
+    // essLogger eLog(am, essName, "UpdateSysTime");
 
-    tm *local_tm = vm->get_local_time_now();
+    tm* local_tm = vm->get_local_time_now();
 
     int year = local_tm->tm_year + 1900;
     int month = 1 + local_tm->tm_mon;
@@ -80,38 +82,40 @@ int UpdateSysTime(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, 
 
     int ival = 0;
     int reload = vm->CheckReload(vmap, amap, aname, "UpdateSysTime");
-    if (reload < 2) 
+    if (reload < 2)
     {
         ival = 0;
-        //dval = 1.0;
-        //bool bval = false;
-        //Link This to an incoming component
-        if(1) FPS_PRINT_INFO("{} reload first run {}", aname, reload);
-        amap["Year"]                 = vm->setLinkVal(vmap, aname, "/status", "Year", year);
-        amap["Month"]                = vm->setLinkVal(vmap, aname, "/status", "Month", month);
-        amap["Day"]                  = vm->setLinkVal(vmap, aname, "/status", "Day", day);
-        amap["Hour"]                 = vm->setLinkVal(vmap, aname, "/status", "Hour", hour);
-        amap["Min"]                  = vm->setLinkVal(vmap, aname, "/status", "Min", min);
-        amap["Sec"]                  = vm->setLinkVal(vmap, aname, "/status", "Sec", sec);
-        amap["Heartbeat"]            = vm->setLinkVal(vmap, aname, "/status", "Heartbeat", ival);
-        if (!amap["Heartbeat"]->gotParam("MaxHeartbeat"))  amap["Heartbeat"]->setParam("MaxHeartbeat", 60);
+        // dval = 1.0;
+        // bool bval = false;
+        // Link This to an incoming component
+        if (1)
+            FPS_PRINT_INFO("{} reload first run {}", aname, reload);
+        amap["Year"] = vm->setLinkVal(vmap, aname, "/status", "Year", year);
+        amap["Month"] = vm->setLinkVal(vmap, aname, "/status", "Month", month);
+        amap["Day"] = vm->setLinkVal(vmap, aname, "/status", "Day", day);
+        amap["Hour"] = vm->setLinkVal(vmap, aname, "/status", "Hour", hour);
+        amap["Min"] = vm->setLinkVal(vmap, aname, "/status", "Min", min);
+        amap["Sec"] = vm->setLinkVal(vmap, aname, "/status", "Sec", sec);
+        amap["Heartbeat"] = vm->setLinkVal(vmap, aname, "/status", "Heartbeat", ival);
+        if (!amap["Heartbeat"]->gotParam("MaxHeartbeat"))
+            amap["Heartbeat"]->setParam("MaxHeartbeat", 60);
 
-        amap["Debug"]                = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeDebug", ival);
-        amap["Send"]                 = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeSend", ival);
+        amap["Debug"] = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeDebug", ival);
+        amap["Send"] = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeSend", ival);
         bval = true;
-        amap["SendAll"]              = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeSendAll", bval);
-        amap["SendAllOK"]            = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeSendAllOK", bval);
-        amap["SendHB"]               = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeSendHB", bval);
-        amap["tNow"]                 = vm->setLinkVal(vmap, aname, "/status", "tNow", tNow);
+        amap["SendAll"] = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeSendAll", bval);
+        amap["SendAllOK"] = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeSendAllOK", bval);
+        amap["SendHB"] = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeSendHB", bval);
+        amap["tNow"] = vm->setLinkVal(vmap, aname, "/status", "tNow", tNow);
 
         // If we are the ess controller
-        if(!am->am)
+        if (!am->am)
         {
-            strftime (tbuffer, TBUFFER_SIZE, "%c.",local_tm);
-            amap["timeString"]           = vm->setLinkVal(vmap, aname, "/status", "timeString", tbuffer);
+            strftime(tbuffer, TBUFFER_SIZE, "%c.", local_tm);
+            amap["timeString"] = vm->setLinkVal(vmap, aname, "/status", "timeString", tbuffer);
         }
-        
-        if(reload == 0) // complete restart 
+
+        if (reload == 0)  // complete restart
         {
             amap["tNow"]->setVal(tNow);
             amap["tNow"]->setParam("tLast", tNow);
@@ -119,45 +123,37 @@ int UpdateSysTime(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, 
             amap["SendHB"]->setVal(true);
         }
         // reset reload
-        ival = 2; amap["UpdateSysTime"]->setVal(ival);
+        ival = 2;
+        amap["UpdateSysTime"]->setVal(ival);
     }
 
     double tLast = amap["tNow"]->getdParam("tLast");
     double tDiff = tNow - tLast;
     int debug = amap["Debug"]->getiVal();
-    //debug = 1;
+    // debug = 1;
     int send = amap["Send"]->getiVal();
     bool sendAll = amap["SendAll"]->getbVal();
     bool sendHB = amap["SendHB"]->getbVal();
-    if (debug) FPS_PRINT_INFO("Time before {} / Time diff {}", tLast, tDiff);
-    if(tNow - tLast >= 1.0)
+    if (debug)
+        FPS_PRINT_INFO("Time before {} / Time diff {}", tLast, tDiff);
+    if (tNow - tLast >= 1.0)
     {
-        if(!am->am)
+        if (!am->am)
         {
-            strftime (tbuffer, TBUFFER_SIZE, "%c.", local_tm);
+            strftime(tbuffer, TBUFFER_SIZE, "%c.", local_tm);
             amap["timeString"]->setVal(tbuffer);
-            if (debug) FPS_PRINT_INFO("aname [{}] Timestring [{}]"
-                , aname
-                , tbuffer
-            );
+            if (debug)
+                FPS_PRINT_INFO("aname [{}] Timestring [{}]", aname, tbuffer);
         }
         else
         {
-            if (debug) FPS_PRINT_INFO("aname [{}] Year {}   Month {}   Day {}   Time {}:{}:{} [{}:{}]"
-                , aname
-                , year
-                , month
-                , day
-                , hour
-                , min
-                , sec
-                ,  amap["Sec"]->comp
-                ,  amap["Sec"]->name
-            );
+            if (debug)
+                FPS_PRINT_INFO("aname [{}] Year {}   Month {}   Day {}   Time {}:{}:{} [{}:{}]", aname, year, month,
+                               day, hour, min, sec, amap["Sec"]->comp, amap["Sec"]->name);
         }
 
         amap["tNow"]->setVal(tNow);
-        amap["tNow"]->setParam("tLast",tNow);
+        amap["tNow"]->setParam("tLast", tNow);
         // Update the ess sys time first, if possible
         if (!am->am)
         {
@@ -170,8 +166,10 @@ int UpdateSysTime(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, 
             int hb = amap["Heartbeat"]->getiVal();
             if (amap["Heartbeat"]->gotParam("MaxHeartbeat"))
             {
-                if (hb >= amap["Heartbeat"]->getiParam("MaxHeartbeat")) amap["Heartbeat"]->setVal(0);
-                else                                                    amap["Heartbeat"]->setVal(hb + 1);
+                if (hb >= amap["Heartbeat"]->getiParam("MaxHeartbeat"))
+                    amap["Heartbeat"]->setVal(0);
+                else
+                    amap["Heartbeat"]->setVal(hb + 1);
             }
             else
             {
@@ -181,18 +179,20 @@ int UpdateSysTime(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, 
 
             // Cascade down to other asset managers and update their system time
             assetVar Avc;
-        
+
             for (auto& ass_man : am->assetManMap)
             {
                 Avc.am = ass_man.second;
-                if (0) FPS_PRINT_INFO("I am the {} asset manager", ass_man.second->name);
+                if (0)
+                    FPS_PRINT_INFO("I am the {} asset manager", ass_man.second->name);
                 UpdateSysTime(vmap, ass_man.second->amap, ass_man.second->name.c_str(), ass_man.second->p_fims, &Avc);
             }
         }
         // Otherwise, update the sys time for the bms/pcs/other asset managers
         else
         {
-            if (0) FPS_ERROR_PRINT("%s >> I am the %s asset manager\n", __func__, aname);
+            if (0)
+                FPS_ERROR_PRINT("%s >> I am the %s asset manager\n", __func__, aname);
             amap["Year"]->setVal(year);
             amap["Month"]->setVal(month);
             amap["Day"]->setVal(day);
@@ -200,7 +200,7 @@ int UpdateSysTime(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, 
             amap["Min"]->setVal(min);
             amap["Sec"]->setVal(sec);
             // allow a sync 01:01:01
-            if((hour == 1) && (min == 1) && (sec == 1))
+            if ((hour == 1) && (min == 1) && (sec == 1))
             {
                 amap["SendAll"]->setVal(true);
             }
@@ -208,30 +208,35 @@ int UpdateSysTime(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, 
             int hb = amap["Heartbeat"]->getiVal();
             if (amap["Heartbeat"]->gotParam("MaxHeartbeat"))
             {
-                if (hb >= amap["Heartbeat"]->getiParam("MaxHeartbeat")) amap["Heartbeat"]->setVal(1);
-                else                                                    amap["Heartbeat"]->setVal(hb + 1);
+                if (hb >= amap["Heartbeat"]->getiParam("MaxHeartbeat"))
+                    amap["Heartbeat"]->setVal(1);
+                else
+                    amap["Heartbeat"]->setVal(hb + 1);
             }
             else
             {
                 FPS_PRINT_INFO("no MaxHeartbeat parameter found for {}", aname);
                 amap["Heartbeat"]->setVal(0);
             }
-            if (0)FPS_ERROR_PRINT("%s >> I am the %s sending heartbeats send %d  [%s] \n"
-                , __func__, aname, send, am->sendOK?"true":"false");
+            if (0)
+                FPS_ERROR_PRINT("%s >> I am the %s sending heartbeats send %d  [%s] \n", __func__, aname, send,
+                                am->sendOK ? "true" : "false");
 
-            //if(send > 0 && am->sendOK) 
-            if(am->sendOK)
+            // if(send > 0 && am->sendOK)
+            if (am->sendOK)
             {
-                if(sendAll||sendHB)
+                if (sendAll || sendHB)
                 {
-                    if (0)FPS_ERROR_PRINT("%s >> I am the %s sending heartbeats\n", __func__, aname);
+                    if (0)
+                        FPS_ERROR_PRINT("%s >> I am the %s sending heartbeats\n", __func__, aname);
 
                     varsmap* vlist = vm->createVlist();
-                    if(sendAll)
+                    if (sendAll)
                     {
-                        if(amap["SendAll"]) amap["SendAll"]->setVal(false);
+                        if (amap["SendAll"])
+                            amap["SendAll"]->setVal(false);
 
-                        if(amap["SendAllOK"]->getbVal())
+                        if (amap["SendAllOK"]->getbVal())
                         {
                             vm->addVlist(vlist, amap["Sec"]);
                             vm->addVlist(vlist, amap["Min"]);
@@ -241,7 +246,8 @@ int UpdateSysTime(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, 
                             vm->addVlist(vlist, amap["Day"]);
                         }
                     }
-                    if(sendHB)vm->addVlist(vlist, amap["Heartbeat"]);
+                    if (sendHB)
+                        vm->addVlist(vlist, amap["Heartbeat"]);
                     vm->sendVlist(vm->p_fims, "set", vlist);
                     vm->clearVlist(vlist);
                 }

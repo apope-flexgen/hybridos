@@ -6,28 +6,28 @@
 #include "asset.h"
 #include "assetFunc.cpp"
 #include "chrono_utils.hpp"
- //"alarms":{
- //     "name": "Alarm_Group_1",
- //     "value": 1,
- //     "unit": "",
- //     "scaler": 0,
- //     "enabled": true,
- //     "ui_type": "alarm",
- //     "type": "number",
- //     "options": [
- //     {
- //         "name": "HVAC Alarm - NO",
- //         "return_value": 1
- //     },
- //     {
- //         "name": "HVAC Alarm - YES?",
- //         "return_value": 1
- //     }
- //     ],
- //     "displayValue": 1,
- //     "unitPrefix": "",
- //     "id": "test_alarm_1"
- // }
+//"alarms":{
+//     "name": "Alarm_Group_1",
+//     "value": 1,
+//     "unit": "",
+//     "scaler": 0,
+//     "enabled": true,
+//     "ui_type": "alarm",
+//     "type": "number",
+//     "options": [
+//     {
+//         "name": "HVAC Alarm - NO",
+//         "return_value": 1
+//     },
+//     {
+//         "name": "HVAC Alarm - YES?",
+//         "return_value": 1
+//     }
+//     ],
+//     "displayValue": 1,
+//     "unitPrefix": "",
+//     "id": "test_alarm_1"
+// }
 int main(int argc, char* argv[])
 {
     // this is our main data map
@@ -38,7 +38,8 @@ int main(int argc, char* argv[])
     int rc;
     vm.setTime();
 
-    const char* var1 = "{\"alarms_1\":{\"value\":0,"
+    const char* var1 =
+        "{\"alarms_1\":{\"value\":0,"
         "\"name\":\"Alarm Group_1\","
         "\"unit\": \"\","
         "\"scaler\": 0,"
@@ -49,7 +50,8 @@ int main(int argc, char* argv[])
         "]"
         "}}";
 
-    const char* rep1 = "{\"alarms_1\":{\"value\":0,"
+    const char* rep1 =
+        "{\"alarms_1\":{\"value\":0,"
         "\"name\":\"Alarm Group_1\","
         "\"unit\":\"\","
         "\"scaler\":0,"
@@ -60,7 +62,8 @@ int main(int argc, char* argv[])
         "]"
         "}}";
 
-    const char* var2 = "{\"alarms_1\":{"
+    const char* var2 =
+        "{\"alarms_1\":{"
         "\"value\":1,"
         "\"ui_type\":\"alarm\","
         "\"options\":[{"
@@ -69,7 +72,8 @@ int main(int argc, char* argv[])
         "}]"
         "}}";
 
-    const char* rep2 = "{\"alarms_1\":{"
+    const char* rep2 =
+        "{\"alarms_1\":{"
         "\"value\":1,"
         "\"ui_type\":\"alarm\","
         "\"options\":[{"
@@ -78,7 +82,8 @@ int main(int argc, char* argv[])
         "}]"
         "}}";
 
-    const char* var3 = "{\"alarms_1\":{"
+    const char* var3 =
+        "{\"alarms_1\":{"
         "\"value\":1,"
         "\"ui_type\":\"alarm\","
         "\"options\":[{"
@@ -87,7 +92,8 @@ int main(int argc, char* argv[])
         "}]"
         "}}";
 
-    const char* rep3 = "{\"alarms_1\":{"
+    const char* rep3 =
+        "{\"alarms_1\":{"
         "\"value\":1,"
         "\"ui_type\":\"alarm\","
         "\"options\":[{"
@@ -96,28 +102,13 @@ int main(int argc, char* argv[])
         "}]"
         "}}";
 
-
-    // const char* rep3 = "{\"/assets/bms_1\":{\"start_stop\":{\"value\":0,\"actions\":{\"onSet\":{\"remap\":"
+    // const char* rep3 =
+    // "{\"/assets/bms_1\":{\"start_stop\":{\"value\":0,\"actions\":{\"onSet\":{\"remap\":"
     //     "[{\"bit\":0,\"offset\":200,\"scale\":10,\"uri\":\"/system/remap_controls\",\"var\":\"rm_start_stop\"}]}}}}}";
 
-    rc = vm.testRes(" Test 1", vmap
-        , "set"
-        , "/assets/bms_1"
-        , var1
-        , rep1
-    );
-    rc = vm.testRes(" Test 2", vmap
-        , "set"
-        , "/assets/bms_1"
-        , var2
-        , rep2
-    );
-    rc = vm.testRes(" Test 3", vmap
-        , "set"
-        , "/assets/bms_1"
-        , var3
-        , rep3
-    );
+    rc = vm.testRes(" Test 1", vmap, "set", "/assets/bms_1", var1, rep1);
+    rc = vm.testRes(" Test 2", vmap, "set", "/assets/bms_1", var2, rep2);
+    rc = vm.testRes(" Test 3", vmap, "set", "/assets/bms_1", var3, rep3);
 
     vm.setAlarm(vmap, "assets", "bms_1", "alarms_1", "Battery Voltage Alarm  -Yes", 2);
     vm.setAlarm(vmap, "assets", "bms_1", "alarms_1", "BatteryTemp Alarm  -Yes", 2);
@@ -170,7 +161,6 @@ int main(int argc, char* argv[])
     //          ,"{\"value\":3100}"
     //      );
 
-
     // rc = vm.testRes(" Test 4", vmap
     //         , "get"
     //         , "/system/status/soc"
@@ -178,11 +168,11 @@ int main(int argc, char* argv[])
     //         , "{\"value\":100}"
     //     );
 
-
     cJSON* cj = vm.getMapsCj(vmap, "/assets", nullptr, 0x0100);
     char* res = cJSON_Print(cj);
-    rc = 0; // -Wall
-    if (rc == 0)    printf("#########vmap at end \n%s\n", res);
+    rc = 0;  // -Wall
+    if (rc == 0)
+        printf("#########vmap at end \n%s\n", res);
     free((void*)res);
     cJSON_Delete(cj);
 
@@ -193,5 +183,4 @@ int main(int argc, char* argv[])
     vm.clearVmap(vmap);
 
     return 0;
-
 }

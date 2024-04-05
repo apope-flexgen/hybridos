@@ -21,7 +21,8 @@
             if(o0 && o3) o3 = o0/n
 
      }
-  this is cool stuff , all the processing maths can be configured at run time in the text config file.
+  this is cool stuff , all the processing maths can be configured at run time in
+the text config file.
                 {
                     "id": "dc_volts_summary",
                     "inputs": [
@@ -44,7 +45,6 @@
 #include "assetTest.h"
 #include "chrono_utils.hpp"
 
-
 // struct funVec {
 //     funVec(const char *fname) {
 //         id = fname;
@@ -65,7 +65,6 @@
 
 // };
 
-
 //#ifdef  1 //FUNCTION_TEST
 int main()
 {
@@ -83,28 +82,26 @@ int main()
     // // 184 bytes per assetVar
     // varMap2["d21"]  = new assetVar("d21",true);
     // double sval = 0.0;
-    
-//     vmap->clearVm(varMap2);
-//     vmap->setVal(varMaps2, "/components/bss_1", "dc_volts", sval);
-//     vmap->clearVmap(varMaps2);
 
+    //     vmap->clearVm(varMap2);
+    //     vmap->setVal(varMaps2, "/components/bss_1", "dc_volts", sval);
+    //     vmap->clearVmap(varMaps2);
 
-//     //delete vmap;
-//     //return 0;
+    //     //delete vmap;
+    //     //return 0;
 
-//     varmap varMap;
+    //     varmap varMap;
 
-//     //std::map<std::string,assetVar*>
-//     //std::map<std::string,std::map<std::string,assetVar*>>
-//     varsmap varMaps;
+    //     //std::map<std::string,assetVar*>
+    //     //std::map<std::string,std::map<std::string,assetVar*>>
+    //     varsmap varMaps;
 
-// // first we create a list of vars
+    // // first we create a list of vars
 
-//     varMap["d1"]  = new assetVar("d1",true);
-    
+    //     varMap["d1"]  = new assetVar("d1",true);
+
     // delete funItem;
     // delete iface;
-    
 
     // delete vmap;
     return 0;

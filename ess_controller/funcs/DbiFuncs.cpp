@@ -1,18 +1,22 @@
 #include "asset.h"
-#include "dbi_funcs.hpp" // so we can run the check_dbi_list_loop
+#include "dbi_funcs.hpp"  // so we can run the check_dbi_list_loop
 
 extern "C++" {
-    int UpdateDbiVar(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*Av);
-    int GetDbiVar(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*Av);
-    int InitDbiList(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*Av);
+int UpdateDbiVar(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* Av);
+int GetDbiVar(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* Av);
+int InitDbiList(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* Av);
 }
 
-// call this function inside of onSet for configs if you want the dbi var to be updated constantly
-// regular function conditions apply in the configs
-// does NOT check if config time etc. are there, this is purely reactive like any other func
-// to just put the variable and params into the dbi like normal upon set, nothing special
-int UpdateDbiVar(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*Av)
+// call this function inside of onSet for configs if you want the dbi var to be
+// updated constantly regular function conditions apply in the configs does NOT
+// check if config time etc. are there, this is purely reactive like any other
+// func to just put the variable and params into the dbi like normal upon set,
+// nothing special
+int UpdateDbiVar(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* Av)
 {
+    UNUSED(vmap);
+    UNUSED(amap);
+    UNUSED(aname);
     // msg bufs should be ok, if they overflow we can check stuff to be sure.
     // if that happens then just switch to fmt::format (with std::string)
     fmt::basic_memory_buffer<char, 75> uri_buf;
@@ -20,17 +24,18 @@ int UpdateDbiVar(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, a
 
     fmt::format_to(std::back_inserter(uri_buf), "/dbi/ess_controller{}", Av->comp);
     fmt::format_to(std::back_inserter(msg_buf), "{{{:c}}}", *Av);
-    msg_buf.push_back('\0'); 
+    msg_buf.push_back('\0');
 
-    if(!p_fims->Send("set", uri_buf.data(), nullptr, msg_buf.data()))
+    if (!p_fims->Send("set", uri_buf.data(), nullptr, msg_buf.data()))
     {
-        return -1; // couldn't send fims_msg
+        return -1;  // couldn't send fims_msg
     }
-    return 0; // no error
+    return 0;  // no error
 }
 
 // cheating for now - remove this later (just for testing purposes)
-// int GetDbiVar(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*Av)
+// int GetDbiVar(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims,
+// assetVar*Av)
 // {
 //     VarMapUtils* vm = nullptr;
 //     if (Av && Av->am)
@@ -52,19 +57,28 @@ int UpdateDbiVar(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, a
 //     return -1;
 // }
 
-// todo: use this to get a sample config back to load back into the ess controller
-int GetDbiConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*Av)
+// todo: use this to get a sample config back to load back into the ess
+// controller
+int GetDbiConfig(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* Av)
 {
-    if(!get_config_from_dbi("temp", p_fims))
+    UNUSED(vmap);
+    UNUSED(amap);
+    UNUSED(aname);
+    UNUSED(Av);
+    if (!get_config_from_dbi("temp", p_fims))
     {
         return -1;
     }
     return 0;
 }
 
-int InitDbiList(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*Av)
+int InitDbiList(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* Av)
 {
-    if (Av->am->vm->dbi_update_list.size() > 0) // after list is non-empty will refuse to run again
+    UNUSED(vmap);
+    UNUSED(amap);
+    UNUSED(aname);
+    UNUSED(p_fims);
+    if (Av->am->vm->dbi_update_list.size() > 0)  // after list is non-empty will refuse to run again
     {
         return -1;
     }
@@ -81,10 +95,9 @@ int InitDbiList(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, as
         cJSON_ArrayForEach(uri, dbi_uris)
         {
             auto some_uri = uri->valuestring;
-            if (!some_uri) 
+            if (!some_uri)
             {
-
-                FPS_PRINT_CRIT("{}","no uri in dbi list, weird");
+                FPS_PRINT_CRIT("{}", "no uri in dbi list, weird");
                 continue;
             }
             FPS_PRINT_CRIT("some_uri = {}, type = {}", some_uri, uri->type);
@@ -98,6 +111,6 @@ int InitDbiList(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, as
     // Av->am->vm->dbi_update_list.shrink_to_fit();
 
     // init list timeouts for synchronization
-    // init_dbi_var_list_timeouts(Av->am->vm->dbi_update_list);   
+    // init_dbi_var_list_timeouts(Av->am->vm->dbi_update_list);
     return 0;
 }

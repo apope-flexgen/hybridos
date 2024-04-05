@@ -1,35 +1,39 @@
-#include "gtest/gtest.h"
 #include "../funcs/AlarmFaultHandler.cpp"
 #include "../funcs/CheckMonitorVar.cpp"
 #include "scheduler.h"
+#include "gtest/gtest.h"
 
 // Need this in order to compile
 namespace flex
 {
-    const std::chrono::steady_clock::time_point base_time = std::chrono::steady_clock::now();
+const std::chrono::steady_clock::time_point base_time = std::chrono::steady_clock::now();
 }
 
 // Need this in order to compile
-typedef std::vector<schedItem*>schlist;
+typedef std::vector<schedItem*> schlist;
 schlist schreqs;
-cJSON*getSchListcJ(schlist&schreqs);
+cJSON* getSchListcJ(schlist& schreqs);
 
-cJSON*getSchList()
+cJSON* getSchList()
 {
     return getSchListcJ(schreqs);
 }
 
-// Test fixture for creating assetVars and other shared objects for each test case
-class AlarmFaultHandlerTest : public ::testing::Test {
+// Test fixture for creating assetVars and other shared objects for each test
+// case
+class AlarmFaultHandlerTest : public ::testing::Test
+{
 protected:
-    virtual void SetUp() {
-
+    virtual void SetUp()
+    {
         // Configure fims object and connection
-        if (!(p_fims = new fims())) {
+        if (!(p_fims = new fims()))
+        {
             FPS_ERROR_PRINT("Failed to initialize fims class.\n");
             FAIL();
         }
-        if (!p_fims->Connect((char *)"AlarmFaultHandlerTest")) {
+        if (!p_fims->Connect((char*)"AlarmFaultHandlerTest"))
+        {
             FPS_ERROR_PRINT("Failed to connect to fims server.\n");
             FAIL();
         }
@@ -43,16 +47,20 @@ protected:
         assetVar* fltAv = vm.setValfromCj(vmap, "/faults/bms", "OverVoltage", cjFltVal);
 
         // Set up clear faults variables
-        const char* clearAlrmVal = R"({"value": "Normal", "type": "alarm", "numVars": 1, "variable1": "bms_heartbeat"})";
-        const char* clearFltVal = R"({"value": "Normal", "type": "fault", "numVars": 1, "variable1": "bms_heartbeat"})";
+        const char* clearAlrmVal =
+            R"({"value": "Normal", "type": "alarm", "numVars": 1, "variable1": "bms_heartbeat"})";
+        const char* clearFltVal =
+            R"({"value": "Normal", "type": "fault", "numVars": 1, "variable1": "bms_heartbeat"})";
         cJSON* cjClearAlrmVal = cJSON_Parse(clearAlrmVal);
         cJSON* cjClearFltVal = cJSON_Parse(clearFltVal);
         assetVar* clearAlrmAv = vm.setValfromCj(vmap, "/alarms/bms", "clear_alarms", cjClearAlrmVal);
         assetVar* clearFltAv = vm.setValfromCj(vmap, "/faults/bms", "clear_faults", cjClearFltVal);
 
         // Set up fault/alarm UI variables
-        const char* alrmUiConfig = R"({"name": "Alarms", "value": 0, "unit": "", "scaler": 0, "enabled": true, "ui_type": "alarm", "type": "number", "options": []})";
-        const char* fltUiConfig = R"({"name": "Alarms", "value": 0, "unit": "", "scaler": 0, "enabled": true, "ui_type": "alarm", "type": "number", "options": []})";
+        const char* alrmUiConfig =
+            R"({"name": "Alarms", "value": 0, "unit": "", "scaler": 0, "enabled": true, "ui_type": "alarm", "type": "number", "options": []})";
+        const char* fltUiConfig =
+            R"({"name": "Alarms", "value": 0, "unit": "", "scaler": 0, "enabled": true, "ui_type": "alarm", "type": "number", "options": []})";
         cJSON* cjAlrmUiVal = cJSON_Parse(alrmUiConfig);
         cJSON* cjFltUiVal = cJSON_Parse(fltUiConfig);
         vm.setValfromCj(vmap, "/assets/bms/summary", "alarms", cjAlrmUiVal);
@@ -71,7 +79,8 @@ protected:
         vm.setValfromCj(vmap, "/config/bms", "NoAlarmMsg", cjNormalVal);
 
         // Add monitor var parameters
-        const char* ival = R"({"value": 0, "EnableStateCheck": false, "AlarmTimeout": 5, "FaultTimeout": 7, "RecoverTimeout": 4})";
+        const char* ival =
+            R"({"value": 0, "EnableStateCheck": false, "AlarmTimeout": 5, "FaultTimeout": 7, "RecoverTimeout": 4})";
         cJSON* cjival = cJSON_Parse(ival);
         assetVar* monitorAv = vm.setValfromCj(vmap, "/components/bms", "bms_heartbeat", cjival);
 
@@ -98,20 +107,21 @@ protected:
         cJSON_Delete(cjNormalVal);
     }
 
-    virtual void TearDown() {
+    virtual void TearDown()
+    {
         p_fims->Close();
         delete p_fims;
     }
 
-    varsmap vmap;       // main data map
-    varmap amap;        // map of local variables for asset
-    fims* p_fims;       // fims object
-    VarMapUtils vm;     // map utils factory
+    varsmap vmap;    // main data map
+    varmap amap;     // map of local variables for asset
+    fims* p_fims;    // fims object
+    VarMapUtils vm;  // map utils factory
 };
 
 // Test if parameters and other variables exist and contain the right values
-TEST_F(AlarmFaultHandlerTest, valid_params_and_vars) {
-
+TEST_F(AlarmFaultHandlerTest, valid_params_and_vars)
+{
     // Check alarm/fault variables
     EXPECT_STREQ("Normal", vmap["/faults/bms"]["OverVoltage"]->getcVal());
     EXPECT_STREQ("Normal", vmap["/alarms/bms"]["OverVoltage"]->getcVal());
@@ -125,7 +135,7 @@ TEST_F(AlarmFaultHandlerTest, valid_params_and_vars) {
     // Check alarm/fault UI variables
     EXPECT_EQ(0, vmap["/assets/bms/summary"]["faults"]->getdVal());
     EXPECT_EQ(0, vmap["/assets/bms/summary"]["alarms"]->getdVal());
-    
+
     // Check clear faults variables
     EXPECT_EQ(1, vmap["/faults/bms"]["clear_faults"]->getiParam("numVars"));
     EXPECT_EQ(1, vmap["/alarms/bms"]["clear_alarms"]->getiParam("numVars"));
@@ -141,7 +151,8 @@ TEST_F(AlarmFaultHandlerTest, valid_params_and_vars) {
     EXPECT_EQ(5, var1->getdParam("AlarmTimeout"));
     EXPECT_EQ(7, var1->getdParam("FaultTimeout"));
     EXPECT_EQ(4, var1->getdParam("RecoverTimeout"));
-    EXPECT_STREQ("int", var1->getcParam("Type"));    // Default type is int if not defined in config
+    EXPECT_STREQ("int",
+                 var1->getcParam("Type"));  // Default type is int if not defined in config
     EXPECT_EQ(5, var1->getdParam("AlarmTime"));
     EXPECT_EQ(7, var1->getdParam("FaultTime"));
     EXPECT_EQ(4, var1->getdParam("RecoverTime"));
@@ -151,8 +162,8 @@ TEST_F(AlarmFaultHandlerTest, valid_params_and_vars) {
 }
 
 // Tests alarm/fault reporting
-TEST_F(AlarmFaultHandlerTest, alarm_fault_report) {
-    
+TEST_F(AlarmFaultHandlerTest, alarm_fault_report)
+{
     // Set the alarm variable to a value other than Normal. Check results
 
     // Set the alarm variable to a different value. Check results
@@ -162,31 +173,34 @@ TEST_F(AlarmFaultHandlerTest, alarm_fault_report) {
     // Set the fault variable to a value other than Normal. Check Results
 }
 
-// Tests alarm/fault clearing (without latched alarm/fault from a monitor variable)
-TEST_F(AlarmFaultHandlerTest, clear_alarms_faults) {
-
+// Tests alarm/fault clearing (without latched alarm/fault from a monitor
+// variable)
+TEST_F(AlarmFaultHandlerTest, clear_alarms_faults)
+{
     // Set the clear_alarms variable to "Clear". Check results
 
     // Set the clear_faults variable to "Clear". Check results
 }
 
 // Tests alarm/fault clearing (with latch alarm/fault from a monitor variable)
-TEST_F(AlarmFaultHandlerTest, clear_alarms_faults_latched_monitor_var_states) {
-
+TEST_F(AlarmFaultHandlerTest, clear_alarms_faults_latched_monitor_var_states)
+{
     // Set the clear_alarms variable to "Clear". Check results
 
     // Set the clear_faults variable to "Clear". Check results
 }
 
-// Tests alarm/fault clearing (including asset instances managed by an asset manager)
-TEST_F(AlarmFaultHandlerTest, clear_alarms_faults_with_asset_instances) {
-
+// Tests alarm/fault clearing (including asset instances managed by an asset
+// manager)
+TEST_F(AlarmFaultHandlerTest, clear_alarms_faults_with_asset_instances)
+{
     // Set the clear_alarms variable to "Clear". Check results
 
     // Set the clear_faults variable to "Clear". Check results
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
     ::testing::InitGoogleTest(&argc, argv);
 
     return RUN_ALL_TESTS();

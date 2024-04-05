@@ -1,37 +1,37 @@
 #ifndef ASSETVAR_HPP
 #define ASSETVAR_HPP
-/* 
- * this contains most of the data manipulation code for handling the internal 
+/*
+ * this contains most of the data manipulation code for handling the internal
  *  system data spaces.
- * This code is NOT ess_specific and can be used on other projects   
-*/
+ * This code is NOT ess_specific and can be used on other projects
+ */
 
-#include <iostream>
-#include <string>
-#include <map>
-#include <vector>
-#include <cstring>
-#include <malloc.h>
-#include <pthread.h>
 #include <cjson/cJSON.h>
+#include <cstring>
 #include <fims/libfims.h>
+#include <iostream>
+#include <malloc.h>
+#include <map>
+#include <pthread.h>
+#include <string>
+#include <vector>
 
 #ifndef FPS_ERROR_PRINT
 #define FPS_ERROR_PRINT printf
 #define FPS_DEBUG_PRINT printf
 #endif
 
-// DONE add double settime to asset val  ... done now have to add setval/time  done but needs to call nm.setTime()
-// DONE  but just to bitmap do the same for the assetVar for scaling etc add the Feat Dict to keep all this crap
-// DONE allow reconfig.. read the file and change key to new
-// DONE use dict for assfeat ..
-// DONE add depth vector to allow history of asset val
-// DONE scaling and offset on remap  note we can have multiple remaps with different scaling 
+// DONE add double settime to asset val  ... done now have to add setval/time
+// done but needs to call nm.setTime() DONE  but just to bitmap do the same for
+// the assetVar for scaling etc add the Feat Dict to keep all this crap DONE
+// allow reconfig.. read the file and change key to new DONE use dict for
+// assfeat .. DONE add depth vector to allow history of asset val DONE scaling
+// and offset on remap  note we can have multiple remaps with different scaling
 // DONE Fix assfeat for enum and bitmap
 // DONE use dict for assfeat display
-// DONE   more testing needed allow comp:var    for example /system/components:active_setpoint
-// DONE assetVar needs to know its component
-// DONE rework and test enum and bitmap to latest spec 
+// DONE   more testing needed allow comp:var    for example
+// /system/components:active_setpoint DONE assetVar needs to know its component
+// DONE rework and test enum and bitmap to latest spec
 // DONE load configs from a file with multiple subs
 // DONE add linkVal  only sets the value if it is not in the config
 // DONE access setTime;
@@ -40,27 +40,29 @@
 // TODO << >> operators for channel.
 // TODO fix asset config  . we can have three layers /asset/bms/bms_1
 // TODO add hos asset
-// TODO Fix comp logic  only going with two levels for no but comp:var solves some problems
-// TODO set/get AssetVar  detects 1 layer component and adds assetID  everything must now be an asset example /status:soc becomes /status/bms_4:soc 
+// TODO Fix comp logic  only going with two levels for no but comp:var solves
+// some problems
+// TODO set/get AssetVar  detects 1 layer component and adds assetID  everything
+// must now be an asset example /status:soc becomes /status/bms_4:soc
 // TODO Deadband  "actions" , add a assDict into some new Params
 // TODO Think about time
 // TODO add timer concept to VM  setvalfortime
 // TODO Assvar can hold sequences
 // TODO Max min methods
-// TODO unOrdered map 
+// TODO unOrdered map
 
 // TODO detect and use depth vector to allow history of asset val
-// TODO add auto cjson detect to find nfrags on a set or get ..... hmm how do we do get 
-// TODO add fims set and get with notification 
+// TODO add auto cjson detect to find nfrags on a set or get ..... hmm how do we
+// do get
+// TODO add fims set and get with notification
 // TODO file set and get this allows auto save and recall
 // TODO mongodb set and get ... same thing
-// TODO limit checking on set against limits in variable names.  ( do it on remap) use max/min = /table:var  onMax onMin max/minerr/time = /table:var etc to map it...
-
-
+// TODO limit checking on set against limits in variable names.  ( do it on
+// remap) use max/min = /table:var  onMax onMin max/minerr/time = /table:var etc
+// to map it...
 
 // Fix comp logic
 // the simple component mapping is like this
-
 
 // {
 // "/system/commands":{"start_stop":
@@ -68,10 +70,18 @@
 //                       "actions":
 //                         {"onSet":{"enum":
 //                                         [
-//                                           { "mask":3,  "inValue":0,   "outValue":"Start",  "uri":"/system/ess_controls:oncmd"},
-//                                           { "mask":3,  "inValue":1,   "outValue": true,     "uri":"/system/ess_controls:dccontactor"}, 
-//                                           { "mask":12,  "inValue":11,"outValue":"Stop",  "uri":"/system/ess_controls:offcmd"}, 
-//                                           { "mask":12,  "inValue":12,"outValue": false,  " uri":"/system/ess_controls:dccontactor"}
+//                                           { "mask":3,  "inValue":0,
+//                                           "outValue":"Start",
+//                                           "uri":"/system/ess_controls:oncmd"},
+//                                           { "mask":3,  "inValue":1,
+//                                           "outValue": true,
+//                                           "uri":"/system/ess_controls:dccontactor"},
+//                                           { "mask":12,
+//                                           "inValue":11,"outValue":"Stop",
+//                                           "uri":"/system/ess_controls:offcmd"},
+//                                           { "mask":12,
+//                                           "inValue":12,"outValue": false,  "
+//                                           uri":"/system/ess_controls:dccontactor"}
 //                                          ]
 //                                    }
 //                            }
@@ -81,8 +91,10 @@
 
 // active_power_setpoint - provides  a request for power generation.
 
-//    This value , from the modbus_server will have to be adjusted ( scale and possibly offset) and placed in an ess_control register. 
-//    The remap is enabled or disabled by the value of the "enable" uri. ( defaults to true if missing)
+//    This value , from the modbus_server will have to be adjusted ( scale and
+//    possibly offset) and placed in an ess_control register. The remap is
+//    enabled or disabled by the value of the "enable" uri. ( defaults to true
+//    if missing)
 
 // ```json
 // {
@@ -92,7 +104,9 @@
 //                            "actions":
 //                   {"onSet":{"remap":
 //                         [
-//                            { "enable":"/system/ess_controls:active_power_enable","offset":0,  "scale":10, 
+//                            {
+//                            "enable":"/system/ess_controls:active_power_enable","offset":0,
+//                            "scale":10,
 //                                                       "uri":"/system/ess_controls:active_power_cmd"}
 //                         ]
 //                       }
@@ -102,31 +116,32 @@
 // }
 // an asset will have variables, states and parameters
 // an asset can also have alarms and warnings
-// subclasses of this class can have a fims sender so sets and gets can also use fims
-// there can also be a a timer so that we can set a value  and then remove it after a time.
-// The timer is run via a channel somewhere.
-// we can also have a value history
+// subclasses of this class can have a fims sender so sets and gets can also use
+// fims there can also be a a timer so that we can set a value  and then remove
+// it after a time. The timer is run via a channel somewhere. we can also have a
+// value history
 
 static double g_setTime = 0.0;
 
 // something other than name, register_id, scale and unit
-class assFeat {
+class assFeat
+{
 public:
-    assFeat(const char * _name, int val)
+    assFeat(const char* _name, int val)
     {
         valueint = val;
         type = AINT;
         name = _name;
         valuestring = nullptr;
     };
-    assFeat(const char * _name, double val)
+    assFeat(const char* _name, double val)
     {
         valuedouble = val;
         type = AFLOAT;
         name = _name;
         valuestring = nullptr;
     };
-    assFeat(const char * _name, bool val)
+    assFeat(const char* _name, bool val)
     {
         valuebool = val;
         type = ABOOL;
@@ -134,7 +149,7 @@ public:
         valuestring = nullptr;
     };
 
-    assFeat(const char * _name, const char* val)
+    assFeat(const char* _name, const char* val)
     {
         valuestring = strdup(val);
         type = ASTRING;
@@ -142,11 +157,18 @@ public:
     };
     ~assFeat()
     {
-        if(valuestring)free((void*)valuestring);
+        if (valuestring)
+            free((void*)valuestring);
     };
 
-
-    enum AFTypes {AINT, AFLOAT, ASTRING, ABOOL, AEND};
+    enum AFTypes
+    {
+        AINT,
+        AFLOAT,
+        ASTRING,
+        ABOOL,
+        AEND
+    };
     std::string name;
     std::string fname;
     AFTypes type;
@@ -156,28 +178,28 @@ public:
     bool valuebool;
 };
 
-// used for the bit mapping a bit single purposed but we may add a dict 
-class assetBitField {
+// used for the bit mapping a bit single purposed but we may add a dict
+class assetBitField
+{
 public:
-    assetBitField(int _mask, int _bit,const char* _uri, const char* _var, char *tmp)
+    assetBitField(int _mask, int _bit, const char* _uri, const char* _var, char* tmp)
     {
         mask = _mask;
         bit = _bit;
         uri = strdup(_uri);
-        var = _var?strdup(_var):nullptr;
+        var = _var ? strdup(_var) : nullptr;
         tmpval = nullptr;
 
-        if(tmp)
+        if (tmp)
             tmpval = strdup(tmp);
-        //featMap["mask"] = new assFeat("mask",_mask);
-        //featMap["bit"] = new assFeat("bit",_bit);
-        //featMap["uri"] = new assFeat("uri",_uri);
+        // featMap["mask"] = new assFeat("mask",_mask);
+        // featMap["bit"] = new assFeat("bit",_bit);
+        // featMap["uri"] = new assFeat("uri",_uri);
 
-        //featMap["bvalue"] = new assFeat("bvalue",tmp);
+        // featMap["bvalue"] = new assFeat("bvalue",tmp);
 
-        //if(tmp)
+        // if(tmp)
         //    featMap["tmpval"] = new assFeat("tmpval",tmp);
-
     };
 
     assetBitField(cJSON* cj)
@@ -187,57 +209,54 @@ public:
         uri = nullptr;
         var = nullptr;
         tmpval = nullptr;
-        if(0)
+        if (0)
         {
             char* stmp = cJSON_PrintUnformatted(cj);
-            FPS_ERROR_PRINT(" %s >>  Feat       >>%s<< child %p \n", __func__, stmp,(void *) cj->child);
-            free((void *)stmp);
+            FPS_ERROR_PRINT(" %s >>  Feat       >>%s<< child %p \n", __func__, stmp, (void*)cj->child);
+            free((void*)stmp);
         }
         cJSON* cjic = cj->child;
 
-        while(cjic)
+        while (cjic)
         {
-            if(0)
+            if (0)
             {
                 char* stmp2 = cJSON_PrintUnformatted(cjic);
-                FPS_ERROR_PRINT(" %s >>   stmp2 >>%s<< string %s child %p next %p \n", __func__
-                                , stmp2
-                                ,(void *) cjic->string
-                                ,(void *) cjic->child
-                                ,(void *) cjic->next
-                                );
-                free((void *)stmp2);
+                FPS_ERROR_PRINT(" %s >>   stmp2 >>%s<< string %s child %p next %p \n", __func__, stmp2,
+                                (void*)cjic->string, (void*)cjic->child, (void*)cjic->next);
+                free((void*)stmp2);
             }
             addFeat(cjic);
-            if(strcmp(cjic->string,"outValue")==0)
+            if (strcmp(cjic->string, "outValue") == 0)
             {
-                if(tmpval)
-                    free((void *)tmpval);
+                if (tmpval)
+                    free((void*)tmpval);
                 tmpval = cJSON_PrintUnformatted(cjic);
             }
             cjic = cjic->next;
         }
-        if(0)
+        if (0)
         {
             FPS_ERROR_PRINT(" %s >>   Features added \n", __func__);
             showFeat();
 
             FPS_ERROR_PRINT(" %s >>   Features done \n", __func__);
         }
- 
     };
 
-    ~assetBitField(){
-        if(uri)free((void*)uri);
-        if(var)free((void*)var);
-        if(tmpval) free((void*)tmpval);
-        for(auto x: featMap)
+    ~assetBitField()
+    {
+        if (uri)
+            free((void*)uri);
+        if (var)
+            free((void*)var);
+        if (tmpval)
+            free((void*)tmpval);
+        for (auto x : featMap)
         {
             delete x.second;
-
         }
         featMap.clear();
-
     };
 
     int getFeat(const char* name, int* val)
@@ -262,7 +281,7 @@ public:
         return *val;
     };
 
-    char* getFeat(const char* name, char **val)
+    char* getFeat(const char* name, char** val)
     {
         *val = nullptr;
         if (featMap.find(name) != featMap.end())
@@ -273,81 +292,83 @@ public:
         return *val;
     };
 
-    void getBit(int val, cJSON **cj)
+    void getBit(int val, cJSON** cj)
     {
-        if((val & mask) == bit) 
+        if ((val & mask) == bit)
         {
         }
     };
 
-    template<class T>
-    void addFeat(const char *name, T val)
+    template <class T>
+    void addFeat(const char* name, T val)
     {
         featMap[name] = new assFeat(name, val);
     };
 
-    void addFeat(cJSON *cj)
+    void addFeat(cJSON* cj)
     {
-        switch (cj->type) {
+        switch (cj->type)
+        {
             case cJSON_Number:
-                addFeat(cj->string,cj->valuedouble);
+                addFeat(cj->string, cj->valuedouble);
                 break;
             case cJSON_String:
-                addFeat(cj->string,cj->valuestring);
+                addFeat(cj->string, cj->valuestring);
                 break;
             case cJSON_True:
-                addFeat(cj->string,true);
+                addFeat(cj->string, true);
                 break;
             case cJSON_False:
-                addFeat(cj->string,true);
+                addFeat(cj->string, true);
                 break;
             default:
-                //asprintf(&stmp,"Unknown");
+                // asprintf(&stmp,"Unknown");
                 break;
         }
     };
 
     void showFeat()
     {
-        for ( auto x : featMap)
+        for (auto x : featMap)
         {
             assFeat* af = x.second;
             char* stmp;
-            switch (af->type) {
-            case assFeat::AFLOAT:
-                asprintf(&stmp,"%s->[%f]", af->name.c_str(), af->valuedouble);
-                break;
-            case assFeat::ASTRING:
-                asprintf(&stmp,"%s->[%s]", af->name.c_str(), af->valuestring);
-                break;
-            case assFeat::ABOOL:
-                if(af->valuebool)
-                    asprintf(&stmp,"%s->[true]", af->name.c_str());
-                else
-                    asprintf(&stmp,"%s->[true]", af->name.c_str());
-                break;
-            default:
-                asprintf(&stmp,"Unknown");
-                break;
+            switch (af->type)
+            {
+                case assFeat::AFLOAT:
+                    asprintf(&stmp, "%s->[%f]", af->name.c_str(), af->valuedouble);
+                    break;
+                case assFeat::ASTRING:
+                    asprintf(&stmp, "%s->[%s]", af->name.c_str(), af->valuestring);
+                    break;
+                case assFeat::ABOOL:
+                    if (af->valuebool)
+                        asprintf(&stmp, "%s->[true]", af->name.c_str());
+                    else
+                        asprintf(&stmp, "%s->[true]", af->name.c_str());
+                    break;
+                default:
+                    asprintf(&stmp, "Unknown");
+                    break;
             }
-            FPS_ERROR_PRINT(" Feature>>%s\n",stmp);
+            FPS_ERROR_PRINT(" Feature>>%s\n", stmp);
             free((void*)stmp);
         }
     }
 
-// TODO store all these in a Feat Dict
+    // TODO store all these in a Feat Dict
     int atype;
     int mask;
     int bit;
-    char*uri;
-    char*var;
+    char* uri;
+    char* var;
     char* tmpval;
-    std::map<std::string, assFeat*>featMap;
-
+    std::map<std::string, assFeat*> featMap;
 };
 
-// TODO add fims, file, mdb, timed set  etc 
-class assetAction {
+// TODO add fims, file, mdb, timed set  etc
+class assetAction
+{
 public:
     assetAction(const char* aname)
     {
@@ -357,58 +378,63 @@ public:
 
     ~assetAction()
     {
-        for ( auto &x : Abitmap)
+        for (auto& x : Abitmap)
         {
             delete Abitmap[x.first];
         }
         Abitmap.clear();
     };
 
-// TODO add all this stuff into a Feat Dict
-    assetBitField* addBitField( int mask, int bit, const char* uri, const char *var, cJSON* cjv)
+    // TODO add all this stuff into a Feat Dict
+    assetBitField* addBitField(int mask, int bit, const char* uri, const char* var, cJSON* cjv)
     {
-        char *tmp = cJSON_PrintUnformatted(cjv);
-        if(0)FPS_ERROR_PRINT (" Added bitfield for [%s] bit %d cjv %p tmp [%s]\n", var, bit, (void *)cjv, tmp);
+        char* tmp = cJSON_PrintUnformatted(cjv);
+        if (0)
+            FPS_ERROR_PRINT(" Added bitfield for [%s] bit %d cjv %p tmp [%s]\n", var, bit, (void*)cjv, tmp);
         Abitmap[bit] = (new assetBitField(mask, bit, uri, var, tmp));
         free((void*)tmp);
         return Abitmap[bit];
-
-
     };
-    assetBitField* addBitField( cJSON* cjv)
+    assetBitField* addBitField(cJSON* cjv)
     {
         int idd = idx++;
-        if(0)
+        if (0)
         {
-            char *tmp = cJSON_PrintUnformatted(cjv);
-            FPS_ERROR_PRINT (" %s >> Adding bitfield at [%d] [%s] \n", __func__, idd, tmp);
+            char* tmp = cJSON_PrintUnformatted(cjv);
+            FPS_ERROR_PRINT(" %s >> Adding bitfield at [%d] [%s] \n", __func__, idd, tmp);
             free((void*)tmp);
         }
 
         Abitmap[idd] = (new assetBitField(cjv));
         return Abitmap[idd];
-
-
     };
     int idx;
 
-    std::map<int,assetBitField *> Abitmap;
+    std::map<int, assetBitField*> Abitmap;
     std::string name;
 };
 
 // TODO
 // the assetVal allows us to keep the lastval and a mini history if needed.
 
-class assetVal {
-    enum ATypes {AINT, AFLOAT, ASTRING, ABOOL, AEND};
-public:
+class assetVal
+{
+    enum ATypes
+    {
+        AINT,
+        AFLOAT,
+        ASTRING,
+        ABOOL,
+        AEND
+    };
 
+public:
     assetVal()
     {
-         valuedouble=0.0;
-         valueint=0;
-         type = AINT;
-         valuestring = nullptr;
+        valuedouble = 0.0;
+        valueint = 0;
+        type = AINT;
+        valuestring = nullptr;
     };
 
     // assetVal(double val)
@@ -435,75 +461,84 @@ public:
     //     type=ABOOL;
     //     valuestring = nullptr;
     // };
-    // may cause havoc with the template 
-    assetVal(int val) :assetVal()
+    // may cause havoc with the template
+    assetVal(int val) : assetVal()
     {
-        valuedouble=val;
-        valueint=val;
+        valuedouble = val;
+        valueint = val;
         type = AINT;
     };
 
-    assetVal(double val):assetVal()
+    assetVal(double val) : assetVal()
     {
-        valuedouble=val;
-        valueint=(int)val;
-        type=AFLOAT;
+        valuedouble = val;
+        valueint = (int)val;
+        type = AFLOAT;
     };
 
-    assetVal(const char* val):assetVal()
+    assetVal(const char* val) : assetVal()
     {
-        valuedouble=0;
-        valueint=0;
-        type=ASTRING;
+        valuedouble = 0;
+        valueint = 0;
+        type = ASTRING;
     };
-    assetVal(bool val):assetVal()
+    assetVal(bool val) : assetVal()
     {
-        valueint=(val==true);
-        valuedouble=valueint;
+        valueint = (val == true);
+        valuedouble = valueint;
         valuebool = val;
-        type=ABOOL;
+        type = ABOOL;
     };
 
-    ~assetVal() {
-        if(valuestring != nullptr)
-            free((void *) valuestring);
+    ~assetVal()
+    {
+        if (valuestring != nullptr)
+            free((void*)valuestring);
     }
 
-    virtual bool getVal(bool &val) {
+    virtual bool getVal(bool& val)
+    {
         val = valuebool;
         return val;
     };
-    virtual int getVal(int &val) {
+    virtual int getVal(int& val)
+    {
         val = valueint;
         return val;
     };
-    virtual double getVal(double &val) {
+    virtual double getVal(double& val)
+    {
         val = valuedouble;
         return val;
     };
-    virtual char* getVal(char* &val) {
+    virtual char* getVal(char*& val)
+    {
         val = valuestring;
         return val;
     };
 
-    virtual void setVal(int val) {
+    virtual void setVal(int val)
+    {
         valueint = val;
         setTime = g_setTime;
-
     };
 
-    virtual void setVal(double val) {
+    virtual void setVal(double val)
+    {
         valuedouble = val;
         setTime = g_setTime;
     };
 
-    virtual void setVal(bool val) {
+    virtual void setVal(bool val)
+    {
         valuebool = val;
         setTime = g_setTime;
     };
 
-    virtual void setVal(const char* val) {
-        if(valuestring) {
+    virtual void setVal(const char* val)
+    {
+        if (valuestring)
+        {
             free((void*)valuestring);
         }
         valuestring = strdup(val);
@@ -512,91 +547,89 @@ public:
 
     virtual bool setVal(cJSON* cj)
     {
-        if(cJSON_IsBool(cj))
+        if (cJSON_IsBool(cj))
         {
-            if(0)FPS_ERROR_PRINT(" body child is a cjson bool value [%s]\n", cJSON_IsTrue(cj)?"true":"false");
+            if (0)
+                FPS_ERROR_PRINT(" body child is a cjson bool value [%s]\n", cJSON_IsTrue(cj) ? "true" : "false");
             setVal(cJSON_IsTrue(cj));
             return true;
         }
-        else if(cJSON_IsNumber(cj))
+        else if (cJSON_IsNumber(cj))
         {
-            if(0)FPS_ERROR_PRINT(" body child is a cjson numerical value [%f]\n", cj->valuedouble);
+            if (0)
+                FPS_ERROR_PRINT(" body child is a cjson numerical value [%f]\n", cj->valuedouble);
             setVal(cj->valuedouble);
             return true;
         }
-        else if(cJSON_IsString(cj))
+        else if (cJSON_IsString(cj))
         {
-            if(0)FPS_ERROR_PRINT(" body child is a cjson string value [%s]\n", cj->valuestring);
+            if (0)
+                FPS_ERROR_PRINT(" body child is a cjson string value [%s]\n", cj->valuestring);
             setVal(cj->valuestring);
             return true;
         }
         else
         {
-            if(0)FPS_ERROR_PRINT(" body child [%s] cannot be simply decoded\n", cj->string);
+            if (0)
+                FPS_ERROR_PRINT(" body child [%s] cannot be simply decoded\n", cj->string);
         }
         return false;
         setTime = g_setTime;
     };
 
-    virtual void setType(ATypes t)
-    {
-        type = t;
-    }
-    virtual double getsTime()
-    {
-        return setTime;
-    }
+    virtual void setType(ATypes t) { type = t; }
+    virtual double getsTime() { return setTime; }
     virtual cJSON* getValCJ()
     {
         cJSON* cj = cJSON_CreateObject();
-        if(type == AINT)
+        if (type == AINT)
         {
-            cJSON_AddNumberToObject(cj,"value", valueint); 
+            cJSON_AddNumberToObject(cj, "value", valueint);
         }
-        else if(type == AFLOAT)
+        else if (type == AFLOAT)
         {
-            cJSON_AddNumberToObject(cj,"value", valuedouble); 
-        } 
-        else if(type == ASTRING)
+            cJSON_AddNumberToObject(cj, "value", valuedouble);
+        }
+        else if (type == ASTRING)
         {
-            cJSON_AddStringToObject(cj,"value", valuestring); 
-        } 
-        else if(type == ABOOL)
+            cJSON_AddStringToObject(cj, "value", valuestring);
+        }
+        else if (type == ABOOL)
         {
             if (valuebool)
-                cJSON_AddTrueToObject(cj,"value"); 
+                cJSON_AddTrueToObject(cj, "value");
             else
-                cJSON_AddFalseToObject(cj,"value"); 
-        } 
+                cJSON_AddFalseToObject(cj, "value");
+        }
         return cj;
-    } 
+    }
     virtual cJSON* getValCJ(double scale, double offset)
     {
         if (scale == 0.0)
             scale = 1.0;
 
         cJSON* cj = cJSON_CreateObject();
-        if(type == AINT)
+        if (type == AINT)
         {
-            cJSON_AddNumberToObject(cj,"value", (int)((valueint* scale)-offset)); 
+            cJSON_AddNumberToObject(cj, "value", (int)((valueint * scale) - offset));
         }
-        else if(type == AFLOAT)
+        else if (type == AFLOAT)
         {
-            cJSON_AddNumberToObject(cj,"value", (valuedouble*scale)-offset); 
-        } 
-        else if(type == ASTRING)
+            cJSON_AddNumberToObject(cj, "value", (valuedouble * scale) - offset);
+        }
+        else if (type == ASTRING)
         {
-            cJSON_AddStringToObject(cj,"value", valuestring); 
-        } 
-        else if(type == ABOOL)
+            cJSON_AddStringToObject(cj, "value", valuestring);
+        }
+        else if (type == ABOOL)
         {
             if (valuebool)
-                cJSON_AddTrueToObject(cj,"value"); 
+                cJSON_AddTrueToObject(cj, "value");
             else
-                cJSON_AddFalseToObject(cj,"value"); 
-        } 
+                cJSON_AddFalseToObject(cj, "value");
+        }
         return cj;
-    } 
+    }
 
     ATypes type;
     double valuedouble;
@@ -604,43 +637,49 @@ public:
     char* valuestring;
     bool valuebool;
     double setTime;
-
 };
 
 // this is the assetvar we love
-class assetVar {
+class assetVar
+{
 public:
-
-    enum ATypes {AINT, AFLOAT, ASTRING, ABOOL, AEND};
+    enum ATypes
+    {
+        AINT,
+        AFLOAT,
+        ASTRING,
+        ABOOL,
+        AEND
+    };
     assetVar()
     {
-        depth = 0; cval = 0;
+        depth = 0;
+        cval = 0;
         aVals = nullptr;
         setDepth(1);
     }
 
-    assetVar(const char* _name, int val):assetVar()
+    assetVar(const char* _name, int val) : assetVar()
     {
         name = _name;
         aVal = new assetVal(val);
         type = AINT;
-
     };
-    assetVar(const char* _name, double val):assetVar()
+    assetVar(const char* _name, double val) : assetVar()
     {
         name = _name;
         aVal = new assetVal(val);
         type = AFLOAT;
     };
 
-    assetVar(const char* _name, const char* val):assetVar()
+    assetVar(const char* _name, const char* val) : assetVar()
     {
         name = _name;
         aVal = new assetVal(val);
         type = ASTRING;
     };
 
-    assetVar(const char* _name, bool val):assetVar()
+    assetVar(const char* _name, bool val) : assetVar()
     {
         name = _name;
         aVal = new assetVal(val);
@@ -648,58 +687,58 @@ public:
     };
 
     template <class T>
-    assetVar(const char* _name, const char *_comp, T val) : assetVar(_name, val)
+    assetVar(const char* _name, const char* _comp, T val) : assetVar(_name, val)
     {
         comp = _comp;
     }
 
-    ~assetVar() {
+    ~assetVar()
+    {
         delete aVal;
         int i;
-        for (i = 0; i<depth; i++)
+        for (i = 0; i < depth; i++)
         {
-            if(aVals[i])delete aVals[i];
+            if (aVals[i])
+                delete aVals[i];
         }
         free((void*)aVals);
-        for ( auto x : actMap)
+        for (auto x : actMap)
         {
             delete x.second;
         }
         actMap.clear();
-
     }
 
-    virtual const char*getName(void)
-    {
-        return name.c_str();
-    }
+    virtual const char* getName(void) { return name.c_str(); }
 
     template <class T>
-    T getVal(T &val) {
+    T getVal(T& val)
+    {
         aVal->getVal(val);
         return val;
     };
 
     template <class T>
-    void setVal(T val) {
+    void setVal(T val)
+    {
         aVal->setVal(val);
     };
 
     virtual bool setCjVal(cJSON* cj)
     {
-        if(cJSON_IsBool(cj))
+        if (cJSON_IsBool(cj))
         {
-            FPS_ERROR_PRINT(" body child is a cjson bool value [%s]\n", cJSON_IsTrue(cj)?"true":"false");
+            FPS_ERROR_PRINT(" body child is a cjson bool value [%s]\n", cJSON_IsTrue(cj) ? "true" : "false");
             setVal(cJSON_IsTrue(cj));
             return true;
         }
-        else if(cJSON_IsNumber(cj))
+        else if (cJSON_IsNumber(cj))
         {
             FPS_ERROR_PRINT(" body child is a cjson numerical value [%f]\n", cj->valuedouble);
             setVal(cj->valuedouble);
             return true;
         }
-        else if(cJSON_IsString(cj))
+        else if (cJSON_IsString(cj))
         {
             FPS_ERROR_PRINT(" body child is a cjson string value [%s]\n", cj->valuestring);
             setVal(cj->valuestring);
@@ -715,401 +754,372 @@ public:
     void setDepth(int de)
     {
         int dummy = 0;
-        assetVal **oldv = aVals;
+        assetVal** oldv = aVals;
         aVals = (assetVal**)calloc(de, sizeof(assetVal*));
         if (depth > 0)
         {
-          if(de>depth) 
-          {
-              int i;
-              for (i = 0; i<depth; i++)
-              {
-                  aVals[i] = oldv[i];
-              }
-              for(;i<de;i++)
-              {
-                  aVals[i] = new assetVal(dummy);
-                  aVals[i]->setType(aVal->type);
-              }
-          }
-          // go smaller ??   copy from cval backwards then delete the rest
-          else
-          {
-            if (cval < de)
+            if (de > depth)
             {
                 int i;
-                 // just leave the rest they are lost for now 
-                for ( i = cval ; i > 0 ; i--)
+                for (i = 0; i < depth; i++)
                 {
                     aVals[i] = oldv[i];
                 }
-            } 
-            else
-            {
-                int i;
-                int id = de-1;
-                for ( i = cval ; i > cval-de ; i--)
+                for (; i < de; i++)
                 {
-                    aVals[i] = oldv[id--];
+                    aVals[i] = new assetVal(dummy);
+                    aVals[i]->setType(aVal->type);
                 }
-                /* code */
-            }            
-          }
-                     
-        }
-        if (oldv) free((void*) oldv);
-
-    }
-
-    virtual void showvarValueCJ(cJSON *cj)
-    {
-        if(0)
-        {
-            FPS_ERROR_PRINT( "ShowVarValueCJ  >>>>>>>name [%s] comp [%s] type %d aval %p\n"
-                , name.c_str()
-                , comp.c_str()
-                , type
-                , aVal
-              );
-            FPS_ERROR_PRINT( "ShowVarValueCJ  >>>>>>>name [%s] type %d atype %d\n"
-                ,name.c_str()
-                ,type
-                ,aVal->type
-              );
-        }
-        cJSON* cjv = cj;//cJSON_CreateObject();
-
-        switch (aVal->type) {
-        case AINT:
-            cJSON_AddItemToObject(cjv, "value", cJSON_CreateNumber(aVal->valueint));
-            break;
-        case AFLOAT:
-            cJSON_AddItemToObject(cjv, "value", cJSON_CreateNumber(aVal->valuedouble));
-            break;
-        case ABOOL:
-            if(aVal->valuebool)
-                cJSON_AddTrueToObject(cjv, "value");
+            }
+            // go smaller ??   copy from cval backwards then delete the rest
             else
-                cJSON_AddFalseToObject(cjv, "value");
-            break;
-        case ASTRING:
-            if(0)
             {
-                FPS_ERROR_PRINT( "%s >>  ASTRING name [%s] type %d atype %d valstr [%s]\n"
-                    , __func__
-                    , name.c_str()
-                    , type
-                    , aVal->type
-                    , aVal->valuestring
-                  );
+                if (cval < de)
+                {
+                    int i;
+                    // just leave the rest they are lost for now
+                    for (i = cval; i > 0; i--)
+                    {
+                        aVals[i] = oldv[i];
+                    }
+                }
+                else
+                {
+                    int i;
+                    int id = de - 1;
+                    for (i = cval; i > cval - de; i--)
+                    {
+                        aVals[i] = oldv[id--];
+                    }
+                    /* code */
+                }
             }
-            cJSON_AddStringToObject(cjv, "value", aVal->valuestring?aVal->valuestring:"No VAL");
-            if(0)
-            {
-                FPS_ERROR_PRINT( "%s >>  ASTRING name [%s] done \n" ,__func__, name.c_str());
-            }
+        }
+        if (oldv)
+            free((void*)oldv);
+    }
 
-            break;
-        default:
-            if(1)
-            {
-                FPS_ERROR_PRINT( "%s >>  %d <<<<<< DEFAULT name [%s] done \n" ,__func__, __LINE__,name.c_str());
-            }
-            break;
+    virtual void showvarValueCJ(cJSON* cj)
+    {
+        if (0)
+        {
+            FPS_ERROR_PRINT("ShowVarValueCJ  >>>>>>>name [%s] comp [%s] type %d aval %p\n", name.c_str(), comp.c_str(),
+                            type, aVal);
+            FPS_ERROR_PRINT("ShowVarValueCJ  >>>>>>>name [%s] type %d atype %d\n", name.c_str(), type, aVal->type);
+        }
+        cJSON* cjv = cj;  // cJSON_CreateObject();
 
+        switch (aVal->type)
+        {
+            case AINT:
+                cJSON_AddItemToObject(cjv, "value", cJSON_CreateNumber(aVal->valueint));
+                break;
+            case AFLOAT:
+                cJSON_AddItemToObject(cjv, "value", cJSON_CreateNumber(aVal->valuedouble));
+                break;
+            case ABOOL:
+                if (aVal->valuebool)
+                    cJSON_AddTrueToObject(cjv, "value");
+                else
+                    cJSON_AddFalseToObject(cjv, "value");
+                break;
+            case ASTRING:
+                if (0)
+                {
+                    FPS_ERROR_PRINT("%s >>  ASTRING name [%s] type %d atype %d valstr [%s]\n", __func__, name.c_str(),
+                                    type, aVal->type, aVal->valuestring);
+                }
+                cJSON_AddStringToObject(cjv, "value", aVal->valuestring ? aVal->valuestring : "No VAL");
+                if (0)
+                {
+                    FPS_ERROR_PRINT("%s >>  ASTRING name [%s] done \n", __func__, name.c_str());
+                }
+
+                break;
+            default:
+                if (1)
+                {
+                    FPS_ERROR_PRINT("%s >>  %d <<<<<< DEFAULT name [%s] done \n", __func__, __LINE__, name.c_str());
+                }
+                break;
         }
     }
-// gets '{name:value}
-    virtual void getValCJ(cJSON **cj)
+    // gets '{name:value}
+    virtual void getValCJ(cJSON** cj)
     {
-        if(*cj == nullptr)
+        if (*cj == nullptr)
             *cj = cJSON_CreateObject();
         cJSON* cjv = *cj;
 
-        switch (aVal->type) {
-        case AINT:
-            cJSON_AddItemToObject(cjv, name.c_str(), cJSON_CreateNumber(aVal->valueint));
-            break;
-        case AFLOAT:
-            cJSON_AddItemToObject(cjv, name.c_str(), cJSON_CreateNumber(aVal->valuedouble));
-            break;
-        case ABOOL:
-            if(aVal->valuebool)
-                cJSON_AddTrueToObject(cjv, name.c_str());
-            else
-                cJSON_AddFalseToObject(cjv, name.c_str());
-            break;
-        case ASTRING:
-            if(0)
-            {
-                FPS_ERROR_PRINT( "%s >>  ASTRING name [%s] type %d atype %d valstr [%s]\n"
-                    , __func__
-                    , name.c_str()
-                    , type
-                    , aVal->type
-                    , aVal->valuestring
-                  );
-            }
-            cJSON_AddStringToObject(cjv, name.c_str(), aVal->valuestring?aVal->valuestring:"No VAL");
-            if(0)
-            {
-                FPS_ERROR_PRINT( "%s >>  ASTRING name [%s] done \n" ,__func__, name.c_str());
-            }
+        switch (aVal->type)
+        {
+            case AINT:
+                cJSON_AddItemToObject(cjv, name.c_str(), cJSON_CreateNumber(aVal->valueint));
+                break;
+            case AFLOAT:
+                cJSON_AddItemToObject(cjv, name.c_str(), cJSON_CreateNumber(aVal->valuedouble));
+                break;
+            case ABOOL:
+                if (aVal->valuebool)
+                    cJSON_AddTrueToObject(cjv, name.c_str());
+                else
+                    cJSON_AddFalseToObject(cjv, name.c_str());
+                break;
+            case ASTRING:
+                if (0)
+                {
+                    FPS_ERROR_PRINT("%s >>  ASTRING name [%s] type %d atype %d valstr [%s]\n", __func__, name.c_str(),
+                                    type, aVal->type, aVal->valuestring);
+                }
+                cJSON_AddStringToObject(cjv, name.c_str(), aVal->valuestring ? aVal->valuestring : "No VAL");
+                if (0)
+                {
+                    FPS_ERROR_PRINT("%s >>  ASTRING name [%s] done \n", __func__, name.c_str());
+                }
 
-            break;
-        default:
-            if(1)
-            {
-                FPS_ERROR_PRINT( "%s >>  %d <<<<<< DEFAULT name [%s] done \n" ,__func__, __LINE__,name.c_str());
-            }
-            break;
-
+                break;
+            default:
+                if (1)
+                {
+                    FPS_ERROR_PRINT("%s >>  %d <<<<<< DEFAULT name [%s] done \n", __func__, __LINE__, name.c_str());
+                }
+                break;
         }
     }
 
-
-    virtual void showvarCJ(cJSON *cj)
+    virtual void showvarCJ(cJSON* cj)
     {
-        if(0)printf( "ShowVarCJ  >>>>>>>name [%s] type %d atype %d\n"
-                ,name.c_str()
-                ,type
-                ,aVal->type
-              );
+        if (0)
+            printf("ShowVarCJ  >>>>>>>name [%s] type %d atype %d\n", name.c_str(), type, aVal->type);
         cJSON* cjv = cJSON_CreateObject();
         showvarValueCJ(cjv);
 
         cJSON_AddItemToObject(cj, name.c_str(), cjv);
-        if(0)printf( "ShowVarCJ  <<<<<<<name [%s] type %d atype %d\n"
-                ,name.c_str()
-                ,type
-                ,aVal->type
-              );
+        if (0)
+            printf("ShowVarCJ  <<<<<<<name [%s] type %d atype %d\n", name.c_str(), type, aVal->type);
 
         if (!actMap.empty())
         {
             cJSON* cjact = cJSON_CreateObject();
-            for (auto &x : actMap)
+            for (auto& x : actMap)
             {
-
                 cJSON* cja = getAction(x.second);
-                if(0) FPS_ERROR_PRINT(" <<<<< action got cj  -->%s<--  cja %p\n", x.first.c_str(), (void*)cja);
+                if (0)
+                    FPS_ERROR_PRINT(" <<<<< action got cj  -->%s<--  cja %p\n", x.first.c_str(), (void*)cja);
 
-                if(cja) 
+                if (cja)
                 {
-                    if(0) FPS_ERROR_PRINT(" >>>>> OK  action found\n");
+                    if (0)
+                        FPS_ERROR_PRINT(" >>>>> OK  action found\n");
 
-                    char *tmp = cJSON_PrintUnformatted(cja);
-                    if(tmp)
+                    char* tmp = cJSON_PrintUnformatted(cja);
+                    if (tmp)
                     {
-                        if(0) FPS_ERROR_PRINT(" >>>>> show action found -->%s<<--\n", tmp);
+                        if (0)
+                            FPS_ERROR_PRINT(" >>>>> show action found -->%s<<--\n", tmp);
                         free((void*)tmp);
                     }
                     cJSON_AddItemToObject(cjact, x.first.c_str(), cja);
-
                 }
                 else
                 {
                     FPS_ERROR_PRINT(" >>>>> HMMM no action found\n");
-                }               
-                              
+                }
             }
             cJSON_AddItemToObject(cjv, "actions", cjact);
-
         }
         return;
-
     };
-    
-    cJSON* getAction(assetAction *aact)
-    {
 
-        if(0)FPS_ERROR_PRINT(" %s >> >>>>> get action start, name >>%s<<--\n", __func__, aact->name.c_str());
+    cJSON* getAction(assetAction* aact)
+    {
+        if (0)
+            FPS_ERROR_PRINT(" %s >> >>>>> get action start, name >>%s<<--\n", __func__, aact->name.c_str());
 
         cJSON* cj = cJSON_CreateObject();
-        cJSON* cja =  cJSON_CreateArray();
-        for (auto &x : aact->Abitmap)
+        cJSON* cja = cJSON_CreateArray();
+        for (auto& x : aact->Abitmap)
         {
             cJSON* cjix = cJSON_CreateObject();
-            if(0)FPS_ERROR_PRINT(" >>>>> get action bitfield start <<--\n");
+            if (0)
+                FPS_ERROR_PRINT(" >>>>> get action bitfield start <<--\n");
 
             assetBitField* abf = x.second;
             char* uri = abf->getFeat("uri", &uri);
             char* var = abf->getFeat("var", &var);
 
-
-            if(0)FPS_ERROR_PRINT(" %s  >>>>> get action bitfield uri %s var %s<<--\n"
-                    , __func__
-                    , uri
-                    , var
-                    );
-            //int fm = 0;
+            if (0)
+                FPS_ERROR_PRINT(" %s  >>>>> get action bitfield uri %s var %s<<--\n", __func__, uri, var);
+            // int fm = 0;
             // use featmap
-            for ( auto x : abf->featMap)
+            for (auto x : abf->featMap)
             {
-                //cJSON_AddNumberToObject(cjix,"fmIndex", fm++); 
+                // cJSON_AddNumberToObject(cjix,"fmIndex", fm++);
 
                 assFeat* af = x.second;
-                switch (af->type) {
-                   case assFeat::AFLOAT:
-                        cJSON_AddNumberToObject(cjix,af->name.c_str(), af->valuedouble); 
+                switch (af->type)
+                {
+                    case assFeat::AFLOAT:
+                        cJSON_AddNumberToObject(cjix, af->name.c_str(), af->valuedouble);
                         break;
-                   case assFeat::AINT:
-                        cJSON_AddNumberToObject(cjix,af->name.c_str(), af->valueint); 
+                    case assFeat::AINT:
+                        cJSON_AddNumberToObject(cjix, af->name.c_str(), af->valueint);
                         break;
-                   case assFeat::ASTRING:
-                        cJSON_AddStringToObject(cjix,af->name.c_str(), af->valuestring); 
+                    case assFeat::ASTRING:
+                        cJSON_AddStringToObject(cjix, af->name.c_str(), af->valuestring);
                         break;
                     case assFeat::ABOOL:
-                       if(af->valuebool)
-                            cJSON_AddTrueToObject(cjix,af->name.c_str()); 
+                        if (af->valuebool)
+                            cJSON_AddTrueToObject(cjix, af->name.c_str());
                         else
-                            cJSON_AddFalseToObject(cjix,af->name.c_str()); 
+                            cJSON_AddFalseToObject(cjix, af->name.c_str());
                         break;
-                   default:
-                        cJSON_AddStringToObject(cjix,af->name.c_str(), "TypeNotDefined"); 
+                    default:
+                        cJSON_AddStringToObject(cjix, af->name.c_str(), "TypeNotDefined");
                         break;
                 }
             }
-        
+
             cJSON_AddItemToArray(cja, cjix);
-            if(0)FPS_ERROR_PRINT(" <<<<<<< get action var[%s]  bitfield done <<--\n",abf->var);
-
+            if (0)
+                FPS_ERROR_PRINT(" <<<<<<< get action var[%s]  bitfield done <<--\n", abf->var);
         }
-        cJSON_AddItemToObject(cj, aact->name.c_str() ,cja);
+        cJSON_AddItemToObject(cj, aact->name.c_str(), cja);
 
-        if(0)FPS_ERROR_PRINT(" <<<<<<< get action done <<--\n");
+        if (0)
+            FPS_ERROR_PRINT(" <<<<<<< get action done <<--\n");
         return cj;
-
     };
 
 public:
     int depth;
     int cval;
-    std::string name; // this is really id
+    std::string name;   // this is really id
     std::string fname;  // this is the name
     std::string unit;
-    std::string register_id; //?
-    std::string comp;   // new we  set comp
-    double scale;    //?
+    std::string register_id;  //?
+    std::string comp;         // new we  set comp
+    double scale;             //?
     ATypes type;
-    assetVal *aVal;   // current assetval
-    assetVal**aVals;  // list of past vals includes this val
-    std::map<std::string,assFeat*>featMap;
-    std::map<std::string,assetAction*>actMap;   //list of actions
+    assetVal* aVal;    // current assetval
+    assetVal** aVals;  // list of past vals includes this val
+    std::map<std::string, assFeat*> featMap;
+    std::map<std::string, assetAction*> actMap;  // list of actions
 };
 
 typedef std::map<std::string, pthread_mutex_t*> locksmap;
-// this is the old varsmap  
+// this is the old varsmap
 typedef std::map<std::string, std::map<std::string, assetVar*>> varslist;
 // this now has components of "vars","links", "func" etc
-typedef std::map<std::string, varslist *> varsmap;
-
+typedef std::map<std::string, varslist*> varsmap;
 
 typedef std::map<std::string, assetVar*> varmap;
-typedef std::map<std::string, varmap*>nvarsmap;
+typedef std::map<std::string, varmap*> nvarsmap;
 
-// this is the accessor 
-class VarsMap {
-    public:
+// this is the accessor
+class VarsMap
+{
+public:
     pthread_mutex_t map_lock;
-    locksmap amap;  
+    locksmap amap;
 
-    nvarsmap vmap;  
+    nvarsmap vmap;
 
-    VarsMap(){
-        pthread_mutex_init(&map_lock, nullptr);
-    };
+    VarsMap() { pthread_mutex_init(&map_lock, nullptr); };
 
-   
-    ~VarsMap() 
+    ~VarsMap()
     {
         // find each comp
         nvarsmap::iterator x;
-        std::map<std::string,assetVar *> vm;
+        std::map<std::string, assetVar*> vm;
 
-        for (x=vmap.begin(); x!=vmap.end();++x)
+        for (x = vmap.begin(); x != vmap.end(); ++x)
         {
             // for each var
-            varmap * vm = vmap[x->first];
+            varmap* vm = vmap[x->first];
 
-            for ( auto y = vm->begin() ; y  != vm->end(); ++y)
+            for (auto y = vm->begin(); y != vm->end(); ++y)
             {
                 free((void*)y->second);
             }
             vm->clear();
             free((void*)amap[x->first]);
-
         }
         vmap.clear();
     };
 
     // find  comp with or with out the map_lock already set
-   varmap *findComp(const char* comp, bool lockit = true)
-   {
-        if(lockit)pthread_mutex_lock(&map_lock);
+    varmap* findComp(const char* comp, bool lockit = true)
+    {
+        if (lockit)
+            pthread_mutex_lock(&map_lock);
         auto iv = vmap.find(comp);
-        if(lockit)pthread_mutex_unlock(&map_lock);
+        if (lockit)
+            pthread_mutex_unlock(&map_lock);
         if (iv == vmap.end())
         {
             return nullptr;
         }
         return vmap[comp];
-   };
+    };
 
-// with lockit = false we assume that the map_lock is taken
-// we also return with amap[comp] locked
-// comp is in fact already modified to remove ':'
+    // with lockit = false we assume that the map_lock is taken
+    // we also return with amap[comp] locked
+    // comp is in fact already modified to remove ':'
 
-   varmap* findAddComp(const char* comp, bool lockit = true)
-   {
-        varmap*mvar;
+    varmap* findAddComp(const char* comp, bool lockit = true)
+    {
+        varmap* mvar;
 
-        if(lockit) pthread_mutex_lock(&map_lock);
+        if (lockit)
+            pthread_mutex_lock(&map_lock);
         auto iv = vmap.find(comp);
         if (iv == vmap.end())
         {
-            pthread_mutex_t *mylock = (pthread_mutex_t *)malloc(sizeof (pthread_mutex_t));
+            pthread_mutex_t* mylock = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
             pthread_mutex_init(mylock, nullptr);
 
-            //pthread_mutex_lock(&map_lock);
+            // pthread_mutex_lock(&map_lock);
             mvar = new varmap;
 
             vmap[comp] = mvar;
             amap[comp] = mylock;
         }
 
-        if(!lockit) pthread_mutex_lock(amap[comp]);
-        if(lockit)pthread_mutex_unlock(&map_lock);
+        if (!lockit)
+            pthread_mutex_lock(amap[comp]);
+        if (lockit)
+            pthread_mutex_unlock(&map_lock);
 
         return mvar;
-   };
-   // may not be used
-   varmap* addComp(const char* comp, bool lockit=true)
-   {
-        pthread_mutex_t *mylock = (pthread_mutex_t *)malloc(sizeof (pthread_mutex_t));
+    };
+    // may not be used
+    varmap* addComp(const char* comp, bool lockit = true)
+    {
+        pthread_mutex_t* mylock = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
         pthread_mutex_init(mylock, nullptr);
         pthread_mutex_lock(&map_lock);
-        varmap*mvar = new varmap;
+        varmap* mvar = new varmap;
 
         vmap[comp] = mvar;
         amap[comp] = mylock;
         pthread_mutex_unlock(&map_lock);
-        return mvar;        
-   };
+        return mvar;
+    };
 
-    // finds a comp / asset pair optionally returns with the component locked 
-   assetVar *findAsset(const char *comp, const char *var, bool lockit = false)
-   {
-        assetVar *avar = nullptr;
+    // finds a comp / asset pair optionally returns with the component locked
+    assetVar* findAsset(const char* comp, const char* var, bool lockit = false)
+    {
+        assetVar* avar = nullptr;
         char* mycomp = (char*)comp;
         char* myvar = (char*)var;
 
-        if(var == nullptr)
+        if (var == nullptr)
         {
             // break up uri into comp:var
             mycomp = strdup(comp);
-            myvar = strstr(mycomp,":");
-            if(myvar)
+            myvar = strstr(mycomp, ":");
+            if (myvar)
             {
                 *myvar = 0;
                 myvar++;
@@ -1119,42 +1129,43 @@ class VarsMap {
         auto nmap = findComp(mycomp);
         if (nmap != nullptr)
         {
-           pthread_mutex_lock(amap[mycomp]);
-           auto av = nmap->find(myvar);
+            pthread_mutex_lock(amap[mycomp]);
+            auto av = nmap->find(myvar);
 
-            if (av  == nmap->end())
+            if (av == nmap->end())
             {
                 pthread_mutex_unlock(amap[mycomp]);
-                if(mycomp != (char *)comp)
+                if (mycomp != (char*)comp)
                 {
-                    free((void *)mycomp);
+                    free((void*)mycomp);
                 }
 
                 return avar;
             }
-            if(!lockit) pthread_mutex_unlock(amap[mycomp]);
+            if (!lockit)
+                pthread_mutex_unlock(amap[mycomp]);
             avar = av->second;
         }
-        if(mycomp != (char *)comp)
+        if (mycomp != (char*)comp)
         {
-            free((void *)mycomp);
+            free((void*)mycomp);
         }
-       return avar;
-   };
-   template <class T>
-   assetVar *findAddAsset(const char *comp, const char *var, T val)
-   {
-        assetVar *avar;
+        return avar;
+    };
+    template <class T>
+    assetVar* findAddAsset(const char* comp, const char* var, T val)
+    {
+        assetVar* avar;
 
         char* mycomp = (char*)comp;
         char* myvar = (char*)var;
 
-        if(var == nullptr)
+        if (var == nullptr)
         {
             // break up uri into comp:var
             mycomp = strdup(comp);
-            myvar = strstr(mycomp,":");
-            if(myvar)
+            myvar = strstr(mycomp, ":");
+            if (myvar)
             {
                 *myvar = 0;
                 myvar++;
@@ -1165,48 +1176,45 @@ class VarsMap {
 
         auto nmap = findAddComp(mycomp, false);
         auto av = nmap->find(myvar);
-        if (av  == nmap->end())
+        if (av == nmap->end())
         {
             avar = new assetVar(myvar, val);
-            nmap->insert(std::make_pair(myvar,avar));
+            nmap->insert(std::make_pair(myvar, avar));
             pthread_mutex_unlock(amap[mycomp]);
-
         }
-       
+
         avar = av->second;
 
         pthread_mutex_unlock(&map_lock);
-        if(mycomp != (char *)comp)
+        if (mycomp != (char*)comp)
         {
-            free((void *)mycomp);
+            free((void*)mycomp);
         }
 
-       return avar;
-   };
-       
-
+        return avar;
+    };
 };
 
 // pull in the process fims stuff
 // accessor class for VarMapUtils
-class VarMapUtils {
+class VarMapUtils
+{
 public:
-    VarMapUtils() {
-        set_base_time();
-    };
-     VarMapUtils(varsmap& vm):VarMapUtils(){
+    VarMapUtils() { set_base_time(); };
+    VarMapUtils(varsmap& vm) : VarMapUtils()
+    {
         vm["vars"] = new varslist;
         vm["links"] = new varslist;
         vm["func"] = new varslist;
     };
 
-    ~VarMapUtils() {};
+    ~VarMapUtils(){};
 
 public:
     double g_base_time;
     void clearVm(varmap& vmap)
     {
-        for (auto &y : vmap)
+        for (auto& y : vmap)
         {
             printf(" deleteing [%s]\n", y.first.c_str());
             delete y.second;
@@ -1216,7 +1224,7 @@ public:
 
     void clearVlist(varslist& vl)
     {
-        for (auto &x : vl)
+        for (auto& x : vl)
         {
             printf(" deleting vl.first [%s]\n", x.first.c_str());
         }
@@ -1225,11 +1233,11 @@ public:
 
     void clearVmap(varsmap& vmap)
     {
-        for (auto &x : vmap)
+        for (auto& x : vmap)
         {
             printf(" deleting varlist [%s]\n", x.first.c_str());
             varslist* vl = x.second;
-            clearVlist(*vl); 
+            clearVlist(*vl);
             delete x.second;
         }
         vmap.clear();
@@ -1244,25 +1252,16 @@ public:
         return ltime_us;
     }
 
-    double get_time_dbl()
-    {
-        return  (double) get_time_us()/1000000.0 - g_base_time;
-    }
+    double get_time_dbl() { return (double)get_time_us() / 1000000.0 - g_base_time; }
 
-    void set_base_time(void)
-    {
-        g_base_time = get_time_dbl();
-    }
+    void set_base_time(void) { g_base_time = get_time_dbl(); }
 
     // do this before a var update
-    void setTime(void)
-    {
-        g_setTime = get_time_dbl();
-    }
+    void setTime(void) { g_setTime = get_time_dbl(); }
     // do this before a var update
     double getTime(void)
     {
-        return g_setTime;// = get_time_dbl();
+        return g_setTime;  // = get_time_dbl();
     }
 #if 0
     void write_cjson(const char* fname, cJSON*cj)
@@ -2420,7 +2419,6 @@ public:
         return rc;
     }
 #endif
-
 };
 
 // char *aprune_pfrag(const char *pfrag)

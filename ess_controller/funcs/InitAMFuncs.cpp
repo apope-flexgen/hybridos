@@ -4,12 +4,11 @@
 #include "asset.h"
 
 /**
- * 
+ *
  */
 extern "C++" {
 
-    int PCSInit(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar*av);
-
+int PCSInit(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
 }
 
 int PCSInit(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
@@ -18,8 +17,10 @@ int PCSInit(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetV
     varsmap* vlist = vm->createVlist();
     int ival = 1;
 
-    linkVals(*vm, vmap, amap, aname, "/controls", ival, "EnPStartGradient", "EnPStopGradient", "EnPStopGradient", "EnPDropGradient");
-    linkVals(*vm, vmap, amap, aname, "/controls", ival, "EnQStartGradient", "EnQStopGradient", "EnQStopGradient", "EnPQropGradient");
+    linkVals(*vm, vmap, amap, aname, "/controls", ival, "EnPStartGradient", "EnPStopGradient", "EnPStopGradient",
+             "EnPDropGradient");
+    linkVals(*vm, vmap, amap, aname, "/controls", ival, "EnQStartGradient", "EnQStopGradient", "EnQStopGradient",
+             "EnPQropGradient");
     linkVals(*vm, vmap, amap, aname, "/status", ival, "ActivePowerCmd");
 
     vm->addVlist(vlist, amap["EnPStartGradient"]);

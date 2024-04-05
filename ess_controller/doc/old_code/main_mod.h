@@ -3,37 +3,35 @@
 #ifndef MAIN_MOD_HPP
 #define MAIN_MOD_HPP
 
-
-#include <iostream>
 #include <dlfcn.h>
+#include <iostream>
 #ifdef __GNUC__
 __extension__
 #endif
-// isprovider_t *hasType = reinterpret_cast<isprovider_t*>(myLib->resolve("type"));
+// isprovider_t *hasType =
+// reinterpret_cast<isprovider_t*>(myLib->resolve("type"));
 #include <stdio.h>
 
-//g++ -o main_mod main_mod.cpp -ldl
+    // g++ -o main_mod main_mod.cpp -ldl
 
-using std::cout;
+    using std::cout;
 using std::cerr;
 const char* base_dir = "./libs";
 
-typedef struct module_t {
+typedef struct module_t
+{
 public:
-    module_t( const char *mname)
+    module_t(const char* mname)
     {
         name = mname;
         get_module(mname);
     }
     // unload the  library
-    ~module_t()
+    ~module_t() { dlclose(item); }
+    void get_module(const char* _name)
     {
-        dlclose(item);
-    }
-    void get_module (const char* _name)
-    {
-        char mname [1024];
-        snprintf(mname, sizeof (mname),"%s/lib%s.so", base_dir, _name);
+        char mname[1024];
+        snprintf(mname, sizeof(mname), "%s/lib%s.so", base_dir, _name);
         item = dlopen(mname, RTLD_LAZY);
         if (!item)
         {
@@ -53,7 +51,7 @@ public:
                 return;
             }
 
-            destroy = (destroy_t*) dlsym(item, "destroy");
+            destroy = (destroy_t*)dlsym(item, "destroy");
             dlsym_error = dlerror();
             if (dlsym_error)
             {
@@ -61,7 +59,7 @@ public:
                 destroy = nullptr;
                 return;
             }
-            createm = (createm_t*) dlsym(item, "createm");
+            createm = (createm_t*)dlsym(item, "createm");
             dlsym_error = dlerror();
             if (dlsym_error)
             {
@@ -70,7 +68,7 @@ public:
                 return;
             }
 
-            destroym = (destroym_t*) dlsym(item, "destroym");
+            destroym = (destroym_t*)dlsym(item, "destroym");
             dlsym_error = dlerror();
             if (dlsym_error)
             {
@@ -78,16 +76,15 @@ public:
                 destroym = nullptr;
                 return;
             }
-
         }
     }
 
-    std::string  name;
-    void *item;
-    create_t *create;
-    destroy_t *destroy;
-    createm_t *createm;
-    destroym_t *destroym;
+    std::string name;
+    void* item;
+    create_t* create;
+    destroy_t* destroy;
+    createm_t* createm;
+    destroym_t* destroym;
 
 } module;
 #endif

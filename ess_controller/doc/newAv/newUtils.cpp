@@ -6,28 +6,27 @@
 #include "newUtils.h"
 
 using namespace std;
-void NewUtils::addDelMap(AssetVar*av)
+void NewUtils::addDelMap(AssetVar* av)
 {
-        delavMap.insert(std::pair<AssetVar *, void *>(av, (void*)av));
+    delavMap.insert(std::pair<AssetVar*, void*>(av, (void*)av));
 }
 NewUtils::~NewUtils()
 {
-    for (auto x: delavMap)
+    for (auto x : delavMap)
     {
         cout << x.first;
-        if(x.second)
+        if (x.second)
         {
-            cout << " id : " << x.first->id<<" type : "<<x.first->type;
-            if(x.first->cstring)
+            cout << " id : " << x.first->id << " type : " << x.first->type;
+            if (x.first->cstring)
             {
-                cout << " cstring [" << x.first->cstring <<"]";
+                cout << " cstring [" << x.first->cstring << "]";
             }
             else
             {
-                cout << " name [" << x.first->name <<"]";
+                cout << " name [" << x.first->name << "]";
             }
-
-            }
+        }
         else
         {
             cout << " ... deleted";
@@ -36,7 +35,7 @@ NewUtils::~NewUtils()
     }
     cout << " Bye NewUtils" << endl;
 };
-// UTILS here 
+// UTILS here
 double base_time = 0.0;
 long int get_time_us()
 {
@@ -49,40 +48,40 @@ long int get_time_us()
 
 double get_time_dbl()
 {
-    if(base_time == 0.0)
+    if (base_time == 0.0)
     {
-        base_time = get_time_us()/ 1000000.0;
+        base_time = get_time_us() / 1000000.0;
     }
 
-    return  (double)get_time_us() / 1000000.0 - base_time;
+    return (double)get_time_us() / 1000000.0 - base_time;
 }
 
-int split(vector<string> &output, const string& s, char seperator)
+int split(vector<string>& output, const string& s, char seperator)
 {
     int i = 0;
     string::size_type prev_pos = 0, pos = 0;
 
-    while((pos = s.find(seperator, pos)) != string::npos)
+    while ((pos = s.find(seperator, pos)) != string::npos)
     {
-        string substring( s.substr(prev_pos, pos-prev_pos) );
-		if(substring.size()> 0)
-		{
-        	output.push_back(substring);
-			i++;
-		}
+        string substring(s.substr(prev_pos, pos - prev_pos));
+        if (substring.size() > 0)
+        {
+            output.push_back(substring);
+            i++;
+        }
         prev_pos = ++pos;
     }
 
-    output.push_back(s.substr(prev_pos, pos-prev_pos)); // Last word
+    output.push_back(s.substr(prev_pos, pos - prev_pos));  // Last word
 
     return i;
 }
 // decode options
-// '{"a":b}'   -- simple av(a) ->value = b what ever b's type is stick it in a value
+// '{"a":b}'   -- simple av(a) ->value = b what ever b's type is stick it in a
+// value
 // '{"a":{"value":c,"p1":d}}' populate params value p1 etc
-//                    
+//
 // we loose the varsmap instead root everything from a base av.
-
 
 /* securely comparison of floating-point variables */
 bool compare_double(double a, double b)
@@ -94,22 +93,24 @@ bool compare_double(double a, double b)
 unsigned char get_decimal_point(void)
 {
 #ifdef ENABLE_LOCALES
-    struct lconv *lconv = localeconv();
-    return (unsigned char) lconv->decimal_point[0];
+    struct lconv* lconv = localeconv();
+    return (unsigned char)lconv->decimal_point[0];
 #else
     return '.';
 #endif
 }
 
-// /* check if the given size is left to read in a given parse buffer (starting with 1) */
-// #define can_read(buffer, size) ((buffer != NULL) && (((buffer)->offset + size) <= (buffer)->length))
-// /* check if the buffer can be accessed at the given index (starting with 0) */
-// #define can_access_at_index(buffer, index) ((buffer != NULL) && (((buffer)->offset + index) < (buffer)->length))
-// #define cannot_access_at_index(buffer, index) (!can_access_at_index(buffer, index))
+// /* check if the given size is left to read in a given parse buffer (starting
+// with 1) */ #define can_read(buffer, size) ((buffer != NULL) &&
+// (((buffer)->offset + size) <= (buffer)->length))
+// /* check if the buffer can be accessed at the given index (starting with 0)
+// */ #define can_access_at_index(buffer, index) ((buffer != NULL) &&
+// (((buffer)->offset + index) < (buffer)->length)) #define
+// cannot_access_at_index(buffer, index) (!can_access_at_index(buffer, index))
 // /* get a pointer to the buffer at the position */
 /* parse 4 digit hexadecimal number */
-//static 
-unsigned parse_hex4(const unsigned char * const input)
+// static
+unsigned parse_hex4(const unsigned char* const input)
 {
     unsigned int h = 0;
     size_t i = 0;
@@ -119,15 +120,15 @@ unsigned parse_hex4(const unsigned char * const input)
         /* parse digit */
         if ((input[i] >= '0') && (input[i] <= '9'))
         {
-            h += (unsigned int) input[i] - '0';
+            h += (unsigned int)input[i] - '0';
         }
         else if ((input[i] >= 'A') && (input[i] <= 'F'))
         {
-            h += (unsigned int) 10 + input[i] - 'A';
+            h += (unsigned int)10 + input[i] - 'A';
         }
         else if ((input[i] >= 'a') && (input[i] <= 'f'))
         {
-            h += (unsigned int) 10 + input[i] - 'a';
+            h += (unsigned int)10 + input[i] - 'a';
         }
         else /* invalid */
         {
@@ -145,11 +146,12 @@ unsigned parse_hex4(const unsigned char * const input)
 }
 /* converts a UTF-16 literal to UTF-8
 / * A literal can be one or two sequences of the form \uXXXX */
-unsigned char utf16_literal_to_utf8(const unsigned char* const input_pointer, const unsigned char* const input_end, unsigned char** output_pointer)
+unsigned char utf16_literal_to_utf8(const unsigned char* const input_pointer, const unsigned char* const input_end,
+                                    unsigned char** output_pointer)
 {
     long unsigned int codepoint = 0;
     unsigned int first_code = 0;
-    const unsigned char *first_sequence = input_pointer;
+    const unsigned char* first_sequence = input_pointer;
     unsigned char utf8_length = 0;
     unsigned char utf8_position = 0;
     unsigned char sequence_length = 0;
@@ -173,7 +175,7 @@ unsigned char utf16_literal_to_utf8(const unsigned char* const input_pointer, co
     /* UTF16 surrogate pair */
     if ((first_code >= 0xD800) && (first_code <= 0xDBFF))
     {
-        const unsigned char *second_sequence = first_sequence + 6;
+        const unsigned char* second_sequence = first_sequence + 6;
         unsigned int second_code = 0;
         sequence_length = 12; /* \uXXXX\uXXXX */
 
@@ -197,7 +199,6 @@ unsigned char utf16_literal_to_utf8(const unsigned char* const input_pointer, co
             /* invalid second half of the surrogate pair */
             goto fail;
         }
-
 
         /* calculate the unicode codepoint from the surrogate pair */
         codepoint = 0x10000 + (((first_code & 0x3FF) << 10) | (second_code & 0x3FF));
@@ -265,7 +266,7 @@ fail:
     return 0;
 }
 /* Utility to jump whitespace and cr/lf */
-parse_buffer *buffer_skip_whitespace(parse_buffer * const buffer)
+parse_buffer* buffer_skip_whitespace(parse_buffer* const buffer)
 {
     if ((buffer == NULL) || (buffer->content == NULL))
     {
@@ -279,7 +280,7 @@ parse_buffer *buffer_skip_whitespace(parse_buffer * const buffer)
 
     while (can_access_at_index(buffer, 0) && (buffer_at_offset(buffer)[0] <= 32))
     {
-       buffer->offset++;
+        buffer->offset++;
     }
 
     if (buffer->offset == buffer->length)
@@ -291,7 +292,7 @@ parse_buffer *buffer_skip_whitespace(parse_buffer * const buffer)
 }
 
 /* skip the UTF-8 BOM (byte order mark) if it is at the beginning of a buffer */
-parse_buffer *skip_utf8_bom(parse_buffer * const buffer)
+parse_buffer* skip_utf8_bom(parse_buffer* const buffer)
 {
     if ((buffer == NULL) || (buffer->content == NULL) || (buffer->offset != 0))
     {
@@ -308,11 +309,10 @@ parse_buffer *skip_utf8_bom(parse_buffer * const buffer)
 
 // recovers /builds an AssetVar
 // "TestValues:val1@myParam45":    45
-//find the first delimeter in the string
+// find the first delimeter in the string
 string findFirstOf(string input, vector<string> del)
 {
-
-    //get a map of delimeter and position of delimeter
+    // get a map of delimeter and position of delimeter
     size_t pos;
     std::map<std::string, size_t> m;
 
@@ -323,7 +323,8 @@ string findFirstOf(string input, vector<string> del)
             m[del[i]] = pos;
     }
 
-    //find the smallest position of all delimeters i.e, find the smallest value in the map
+    // find the smallest position of all delimeters i.e, find the smallest value
+    // in the map
 
     if (m.size() == 0)
         return "";
@@ -349,7 +350,7 @@ vector<string> splitString(string input, vector<string> delimeters)
     string token;
     string delimeter = findFirstOf(input, delimeters);
 
-    while(delimeter != "")
+    while (delimeter != "")
     {
         if ((pos = input.find(delimeter)) != string::npos)
         {

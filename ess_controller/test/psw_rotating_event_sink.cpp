@@ -1,34 +1,33 @@
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/base_sink.h>
 #include <spdlog/details/file_helper.h>
 #include <spdlog/details/null_mutex.h>
 #include <spdlog/details/synchronous_factory.h>
+#include <spdlog/sinks/base_sink.h>
+#include <spdlog/spdlog.h>
 
 #include <spdlog/common.h>
-#include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/chrono.h>
+#include <spdlog/fmt/fmt.h>
 
 #include <cerrno>
 #include <chrono>
 #include <ctime>
+#include <deque>
 #include <mutex>
+#include <ratio>
 #include <string>
 #include <tuple>
 #include <vector>
-#include <deque>
-#include <ratio>
 
-template<typename T>
+template <typename T>
 class ringBuf
 {
     std::deque<T> mBuf;
     std::size_t mSize;
 
 public:
-    ringBuf(std::size_t size)
-        : mSize(size) {}
+    ringBuf(std::size_t size) : mSize(size) {}
 
-    template<typename... Args>
+    template <typename... Args>
     void emplace(Args... args)
     {
         mBuf.emplace_back(std::forward<Args>(args)...);
@@ -47,10 +46,7 @@ public:
         }
     }
 
-    std::deque<T>& getBuf()
-    {
-        return mBuf;
-    }
+    std::deque<T>& getBuf() { return mBuf; }
 
     // T& getHead()
     // {
@@ -67,7 +63,8 @@ public:
 // {
 //     namespace chrono
 //     {
-//         using days = duration<unsigned long long, ratio_multiply<std::ratio<24>, hours::period>>;
+//         using days = duration<unsigned long long,
+//         ratio_multiply<std::ratio<24>, hours::period>>;
 //     }
 // }
 
@@ -79,17 +76,17 @@ struct event_time_filename_calculator
         spdlog::filename_t basename, ext;
         std::tie(basename, ext) = spdlog::details::file_helper::split_by_extension(filename);
         auto now = spdlog::log_clock::now();
-        return fmt::format(
-            SPDLOG_FILENAME_T("{}_{:%F}-{:%H:%M:%S}{}"), basename, 
-                now, now.time_since_epoch() + std::chrono::hours(20), ext);
+        return fmt::format(SPDLOG_FILENAME_T("{}_{:%F}-{:%H:%M:%S}{}"), basename, now,
+                           now.time_since_epoch() + std::chrono::hours(20), ext);
     }
 };
 
 //
-// Rotating event sink based on date (possibly event type as well -> will look into this)
-// todo: put "bucket" (actual backtrace) here so any logger can just sink_it to here auto magically.
+// Rotating event sink based on date (possibly event type as well -> will look
+// into this) todo: put "bucket" (actual backtrace) here so any logger can just
+// sink_it to here auto magically.
 //
-template<typename Mutex, typename FileNameCalc = event_time_filename_calculator>
+template <typename Mutex, typename FileNameCalc = event_time_filename_calculator>
 class rotating_event_sink final : public spdlog::sinks::base_sink<Mutex>
 {
     // spdlog::filename_t base_filename_;
@@ -97,19 +94,11 @@ class rotating_event_sink final : public spdlog::sinks::base_sink<Mutex>
     ringBuf<spdlog::memory_buf_t> buf_;
 
 public:
-    rotating_event_sink(std::size_t bufSize)
-        : buf_(bufSize)
-    {}
+    rotating_event_sink(std::size_t bufSize) : buf_(bufSize) {}
 
-    void setBackTraceNum(std::size_t size)
-    {
-        buf_.reSize(size);
-    }
+    void setBackTraceNum(std::size_t size) { buf_.reSize(size); }
 
-    void log_it_(const spdlog::filename_t& fileName)
-    {
-        rotate_(fileName);
-    }
+    void log_it_(const spdlog::filename_t& fileName) { rotate_(fileName); }
 
 protected:
     void sink_it_(const spdlog::details::log_msg& msg) override
@@ -118,7 +107,7 @@ protected:
         spdlog::sinks::base_sink<Mutex>::formatter_->format(msg, buf_.getBuf().back());
     }
 
-    // flushing just consists of dumping the backtrace logs into the 
+    // flushing just consists of dumping the backtrace logs into the
     void flush_() override
     {
         // rotate_();
@@ -153,46 +142,40 @@ public:
     EventLogger(const char* name, std::size_t backTraceSize)
         : mSink(std::make_shared<rotating_event_sink_st>(backTraceSize))
     {
-        spdlog::sink_ptr temp{mSink};
+        spdlog::sink_ptr temp{ mSink };
         mLogger = std::make_shared<spdlog::logger>(name, temp);
     }
 
-    void enable_backtrace(std::size_t size)
-    {
-        mSink->setBackTraceNum(size);
-    }
+    void enable_backtrace(std::size_t size) { mSink->setBackTraceNum(size); }
 
     // call this function yourself to log the stored messages when needed.
-    void logIt(const spdlog::filename_t& fileName)
-    {
-        mSink->log_it_(fileName);
-    }
+    void logIt(const spdlog::filename_t& fileName) { mSink->log_it_(fileName); }
 
-    template<typename FormatString, typename... Args>
+    template <typename FormatString, typename... Args>
     void info(const FormatString& fmt, Args&&... args)
     {
         mLogger->info(fmt, std::forward<Args>(args)...);
     }
 
-    template<typename FormatString, typename... Args>
+    template <typename FormatString, typename... Args>
     void debug(const FormatString& fmt, Args&&... args)
     {
         mLogger->debug(fmt, std::forward<Args>(args)...);
     }
 
-    template<typename FormatString, typename... Args>
+    template <typename FormatString, typename... Args>
     void warn(const FormatString& fmt, Args&&... args)
     {
         mLogger->warn(fmt, std::forward<Args>(args)...);
     }
 
-    template<typename FormatString, typename... Args>
+    template <typename FormatString, typename... Args>
     void error(const FormatString& fmt, Args&&... args)
     {
         mLogger->error(fmt, std::forward<Args>(args)...);
     }
 
-    template<typename FormatString, typename... Args>
+    template <typename FormatString, typename... Args>
     void critical(const FormatString& fmt, Args&&... args)
     {
         mLogger->critical(fmt, std::forward<Args>(args)...);
@@ -202,7 +185,7 @@ public:
 auto base_time = std::chrono::steady_clock::now();
 double get_time_dbl()
 {
-    std::chrono::duration<double, std::micro> diff{std::chrono::steady_clock::now() - base_time};
+    std::chrono::duration<double, std::micro> diff{ std::chrono::steady_clock::now() - base_time };
     return diff.count();
 }
 
@@ -210,7 +193,7 @@ int main()
 {
     double tNow;
     EventLogger foo("foo", 4);
-    foo.info("hello {}","world");
+    foo.info("hello {}", "world");
     foo.warn("warning");
     foo.critical("critical");
     foo.logIt("pswtesting.txt");

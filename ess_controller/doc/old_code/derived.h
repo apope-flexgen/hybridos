@@ -1,40 +1,44 @@
-//Here is a complete working example:
+// Here is a complete working example:
 
-//Interface declaration: Interface.h
+// Interface declaration: Interface.h
 
-class Base {
+class Base
+{
 public:
     virtual ~Base() {}
     virtual void foo() const = 0;
 };
 
-//using Base_creator_t = Base *(*)();
-//Shared library content:
+// using Base_creator_t = Base *(*)();
+// Shared library content:
 
 #include "Interface.h"
 
-class Derived: public Base {
+class Derived : public Base
+{
 public:
     void foo() const override {}
 };
 
 extern "C" {
-    Base * create() {
-        return new Derived;
-    }
+Base* create()
+{
+    return new Derived;
+}
 }
 
-Dynamic shared library handler:
-Derived_factory.hpp:
-
+Dynamic shared library handler : Derived_factory.hpp :
 #include "Interface.hpp"
 #include <dlfcn.h>
 
-class Derived_factory {
+    class Derived_factory
+{
 public:
-    Derived_factory() {
+    Derived_factory()
+    {
         handler = dlopen("libderived.so", RTLD_NOW);
-        if (! handler) {
+        if (!handler)
+        {
             throw std::runtime_error(dlerror());
         }
         Reset_dlerror();
@@ -42,33 +46,32 @@ public:
         Check_dlerror();
     }
 
-    std::unique_ptr<Base> create() const {
-        return std::unique_ptr<Base>(creator());
-    }
+    std::unique_ptr<Base> create() const { return std::unique_ptr<Base>(creator()); }
 
-    ~Derived_factory() {
-        if (handler) {
+    ~Derived_factory()
+    {
+        if (handler)
+        {
             dlclose(handler);
         }
     }
 
 private:
-    void * handler = nullptr;
+    void* handler = nullptr;
     Base_creator_t creator = nullptr;
 
-    static void Reset_dlerror() {
-        dlerror();
-    }
+    static void Reset_dlerror() { dlerror(); }
 
-    static void Check_dlerror() {
-        const char * dlsym_error = dlerror();
-        if (dlsym_error) {
+    static void Check_dlerror()
+    {
+        const char* dlsym_error = dlerror();
+        if (dlsym_error)
+        {
             throw std::runtime_error(dlsym_error);
         }
     }
 };
 Client code:
-
 #include "Derived_factory.hpp"
 
 {

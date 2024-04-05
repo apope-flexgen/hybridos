@@ -1,18 +1,21 @@
 #ifndef ASSETFUNC_HPP
 #define ASSETFUNC_HPP
-#include "asset.h"
+
 #include "assetVar.h"
+
 //#include "assetFunc.h"
+#include "asset.h"
 #include "varMapUtils.h"
-extern "C" typedef int (*myAifun_t)(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset* ai);
-extern "C" typedef int (*myAmfun_t)(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset_manager* am);
-extern "C" typedef int (*myAvfun_t)(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar* av);
+extern "C" typedef int (*myAifun_t)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* ai);
+extern "C" typedef int (*myAmfun_t)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am);
+extern "C" typedef int (*myAvfun_t)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
 
- class asset;
- class asset_manager;
+class asset;
+class asset_manager;
 
-class assetFunc : public assetVar {
-    public:
+class assetFunc : public assetVar
+{
+public:
     assetFunc()
     {
         raiFunc = nullptr;
@@ -24,16 +27,14 @@ class assetFunc : public assetVar {
         p_fims = nullptr;
         aname = nullptr;
     };
-    
-    assetFunc(const char *_name) : assetFunc()
-    {
-        name = _name;
-    };
+
+    assetFunc(const char* _name) : assetFunc() { name = _name; };
 
     ~assetFunc(){};
     // this is all related to the runFunc idea
     // run asset instance
-    void xxsetupRaiFunc(int (*_runFunc)(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset *am),varsmap &_vmap, varmap &_amap,const char* _aname, fims* _p_fims, asset *_am)
+    void xxsetupRaiFunc(int (*_runFunc)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* am),
+                        varsmap& _vmap, varmap& _amap, const char* _aname, fims* _p_fims, asset* _am)
     {
         raiFunc = _runFunc;
         vmap = &_vmap;
@@ -45,8 +46,9 @@ class assetFunc : public assetVar {
 
     // this is all related to the runFunc idea
     // run assetManager
-    void xxsetupRamFunc(int (*_runFunc)(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset_manager *_am),
-            varsmap &_vmap, varmap &_amap,const char* _aname, fims* _p_fims, asset_manager *_am)
+    void xxsetupRamFunc(int (*_runFunc)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
+                                        asset_manager* _am),
+                        varsmap& _vmap, varmap& _amap, const char* _aname, fims* _p_fims, asset_manager* _am)
     {
         ramFunc = _runFunc;
         vmap = &_vmap;
@@ -57,8 +59,8 @@ class assetFunc : public assetVar {
     };
     // this is all related to the runFunc idea
     // run assetManager
-    void setupRavFunc(int (*_runFunc)(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar *_av),
-            varsmap &_vmap, varmap &_amap,const char* _aname, fims* _p_fims, assetVar *_av)
+    void setupRavFunc(int (*_runFunc)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* _av),
+                      varsmap& _vmap, varmap& _amap, const char* _aname, fims* _p_fims, assetVar* _av)
     {
         ravFunc = _runFunc;
         vmap = &_vmap;
@@ -68,11 +70,11 @@ class assetFunc : public assetVar {
         av = _av;
     };
 
-    int (*raiFunc)(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset *ai);
-    int (*ramFunc)(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset_manager *am);
-    int (*ravFunc)(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar *av);
-    varsmap *vmap; 
-    varmap *amap; 
+    int (*raiFunc)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* ai);
+    int (*ramFunc)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am);
+    int (*ravFunc)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
+    varsmap* vmap;
+    varmap* amap;
     const char* aname;
     fims* p_fims;
     asset* ai;
@@ -91,42 +93,40 @@ class assetFunc : public assetVar {
 // hbTest = (hbTestFunc*) amap["CheckAssetHBFunc"];
 
 // hbTest->runFunc(vmap, amap, aname, p_fims, am);
-class hbTestFunc : public assetFunc {
-    public:
-    hbTestFunc(){
+class hbTestFunc : public assetFunc
+{
+public:
+    hbTestFunc()
+    {
         raiFunc = nullptr;
         ramFunc = nullptr;
     };
 
-    hbTestFunc(const char *_name)
+    hbTestFunc(const char* _name)
     {
         name = _name;
         bokFault = false;
         bokAlarm = false;
         bokOK = false;
-        toFault  = 5;
+        toFault = 5;
         toAlarm = 3.5;
         hbInit = -21;
         totalHBFaults = 0;
         totalHBAlarms = 0;
-
     }
     ~hbTestFunc(){};
-    
 
-    int runFunc(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset *am);
-
+    int runFunc(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* am);
 
     int lastHeartBeat;
     int hbInit;
-    bool bokFault; 
+    bool bokFault;
     bool bokAlarm;
     bool bokOK;
     double toFault;
     double toAlarm;
     int totalHBFaults;
     int totalHBAlarms;
-
 };
 
 // commsTestFunc* commsTest;
@@ -141,32 +141,33 @@ class hbTestFunc : public assetFunc {
 
 // commsTest->runFunc(vmap, amap, aname, p_fims, am);
 
-// TODO review after MVP this is so much like the HB test. We should subclass again.
+// TODO review after MVP this is so much like the HB test. We should subclass
+// again.
 
-class commsTestFunc : public assetFunc {
-    public:
+class commsTestFunc : public assetFunc
+{
+public:
     commsTestFunc(){};
-    commsTestFunc(const char *_name)
+    commsTestFunc(const char* _name)
     {
         name = _name;
         bokFault = false;
         bokAlarm = false;
         bokOK = false;
-        toFault  = 5;
+        toFault = 5;
         toAlarm = 3.5;
         tsInit = (char*)" No Timestmp dectected";
         lastTimestamp = tsInit;
         totalCommsFaults = 0;
         totalCommsAlarms = 0;
-
     }
     ~commsTestFunc(){};
 
-    int runFunc(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset *am);
+    int runFunc(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* am);
 
     char* lastTimestamp;
     char* tsInit;
-    bool bokFault; 
+    bool bokFault;
     bool bokAlarm;
     bool bokOK;
     double toFault;
@@ -174,7 +175,5 @@ class commsTestFunc : public assetFunc {
     int totalCommsFaults;
     int totalCommsAlarms;
 };
-
-
 
 #endif

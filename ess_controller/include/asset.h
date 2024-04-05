@@ -1,34 +1,32 @@
 #ifndef ASSET_HPP
 #define ASSET_HPP
 /*
-* asset and asset manager
-*/
+ * asset and asset manager
+ */
 
 // TODO combine the  asset and asset manager after MVP
 
-#include <iostream>
-#include <map>
-#include <vector>
-#include <queue>
-#include <string>
-#include <cstring>
-#include <malloc.h>
 #include <cjson/cJSON.h>
-#include <poll.h>
-#include <signal.h>
 #include <cstring>
-#include <pthread.h>
-#include <thread>
-#include <fims/libfims.h>
 #include <fims/fps_utils.h>
+#include <fims/libfims.h>
+#include <iostream>
+#include <malloc.h>
+#include <map>
+#include <poll.h>
+#include <pthread.h>
+#include <queue>
+#include <signal.h>
+#include <string>
+#include <thread>
+#include <vector>
 
 // logging and formatting utilites, DO NOT REMOVE
-#include "spdlog/spdlog.h"
-#include "spdlog/fmt/fmt.h"
 #include "spdlog/fmt/bundled/format.h"
 #include "spdlog/fmt/bundled/ranges.h"
+#include "spdlog/fmt/fmt.h"
+#include "spdlog/spdlog.h"
 
-#include "assetVar.h"
 #include "channel.h"
 
 #include "ESSLogger.hpp"
@@ -40,8 +38,8 @@
 
 typedef void* (*vLoop)(void* args);
 
-// an asset will have variables, states and parameters and possibly methods all in the amap
-// an asset can also have alarms and warnings
+// an asset will have variables, states and parameters and possibly methods all
+// in the amap an asset can also have alarms and warnings
 
 // TODO remove old wake level stuff  after MVP
 #define WAKE_LEVEL_DEMAND 0
@@ -64,6 +62,7 @@ typedef void* (*vLoop)(void* args);
 // TODO remove default log dir
 #define DEFAULT_LOG_DIR "run_logs"
 
+class assetVar;  // forward declaration
 typedef assetVar* av_ptr;
 
 enum AssStates
@@ -125,19 +124,18 @@ typedef bool (*myAmWake_t)(asset_manager* data, int wake);
 typedef void (*myAssInit_t)(asset* data);
 typedef bool (*myAssWake_t)(asset* data, int wake);
 
-
 // split /a/b/c:var@param up into
 // uri /a/b/c
 // var var
 // param param
 // plus we'll add all the "get nparams" stuff to this as we need it.
-// 
+//
 // allow var to be name@param as well.  yup already covered
 
-class assetUri {
-
+class assetUri
+{
 public:
-    assetUri(const char* uri, const char* var= nullptr);
+    assetUri(const char* uri, const char* var = nullptr);
     ~assetUri();
     void setup();
     int setupUriVec();
@@ -150,29 +148,27 @@ public:
     char* pullUri(int idx);
     int getNfrags();
 
-
     char* Uri;
     char* origuri;
-    char *vecUri;
+    char* vecUri;
     char* origvar;
     int nfrags;
     char* Var;
     char* Param;
-    char* sUri;   // single decode /a/b/c into /a/b  c
+    char* sUri;  // single decode /a/b/c into /a/b  c
     char* sVar;
 
-    std::vector<char *> uriVec;
+    std::vector<char*> uriVec;
     int index;
     bool setValue;
-
 };
 
 #include "varMapUtils.h"
 
-class asset {
-//asset::
+class asset
+{
+    // asset::
 public:
-
     asset();
     asset(const char* _name);
     ~asset();
@@ -181,7 +177,8 @@ public:
     void setName(const char* _name);
     void cfgwrite(const char* fname, const char* aname = nullptr);
     const char* get_command(const char* dest, const char* cmd);
-    int configure(const char* fname, std::vector<std::pair<std::string, std::string>>* reps = nullptr, asset_manager* am = nullptr, asset* ai = nullptr);
+    int configure(const char* fname, std::vector<std::pair<std::string, std::string>>* reps = nullptr,
+                  asset_manager* am = nullptr, asset* ai = nullptr);
     cJSON* getConfig(const char* uri = nullptr, const char* var = nullptr);
     bool free_message(fims_message* message);
     void cleanup(void);
@@ -190,13 +187,14 @@ public:
     varmap* getVmap();
     void setVmap(varsmap* _vmap);
     void setVm(VarMapUtils* _vm);
-    //int Send(const char* method, const char*uri, const char*rep, const char* body);
-    int Send(const char* method, const char*uri=nullptr, const char*resp=nullptr, const char* body=nullptr);
-    int Send(const char* method, assetVar *av, const char*uri=nullptr, const char*resp=nullptr, const char* body=nullptr);
+    // int Send(const char* method, const char*uri, const char*rep, const char*
+    // body);
+    int Send(const char* method, const char* uri = nullptr, const char* resp = nullptr, const char* body = nullptr);
+    int Send(const char* method, assetVar* av, const char* uri = nullptr, const char* resp = nullptr,
+             const char* body = nullptr);
 
-
-    //WIP NOT TESTED YET sets up / configs amap and vars
-// TODO  run_init / run_wakeup deprecated after MVP
+    // WIP NOT TESTED YET sets up / configs amap and vars
+    // TODO  run_init / run_wakeup deprecated after MVP
     void (*run_init)(asset* ass);
     bool (*run_wakeup)(asset* ass, int wake);
 
@@ -219,13 +217,15 @@ public:
     fims* p_fims;
     vecmap* vecs;
     bool sendOK;
-    assetVar* av; // root asset (FlexPack)
+    assetVar* av;  // root asset (FlexPack)
 };
 
 // the asset manager can set up one or more assets from an asset config file.
-// the asset manager can also distribute command, status and control messages to and from assets.
-class asset_manager {
-//asset_manager::
+// the asset manager can also distribute command, status and control messages to
+// and from assets.
+class asset_manager
+{
+    // asset_manager::
 public:
     asset_manager();
     asset_manager(const char* _name);
@@ -237,17 +237,17 @@ public:
     void setAm(asset_manager* _am);
     void setName(const char* _name);
 
-// TODO after MVP find out which (debugConfig assConfigure) is now used
+    // TODO after MVP find out which (debugConfig assConfigure) is now used
     void debugConfig(asset* pc, const char* dmsg);
     void assconfigure(varsmap* vmap, const char* fname, const char* aname);
-    asset* addAsset(cJSON* cja, cJSON* cjt,
-        std::vector<std::pair<std::string, std::string>>& reps, asset_manager* am = nullptr);
+    asset* addAsset(cJSON* cja, cJSON* cjt, std::vector<std::pair<std::string, std::string>>& reps,
+                    asset_manager* am = nullptr);
     int amConfig(varsmap* vmap, cJSON* cj, asset_manager* am = nullptr);
-    int configure(varsmap* vmap, const char* fname, const char* aname, std::vector<char *>* syscVec = nullptr, bool(*assWake)(asset*, int) = nullptr, asset_manager* am = nullptr);
+    int configure(varsmap* vmap, const char* fname, const char* aname, std::vector<char*>* syscVec = nullptr,
+                  bool (*assWake)(asset*, int) = nullptr, asset_manager* am = nullptr);
 
-// TODO  send_command ... old code remove after MVP
+    // TODO  send_command ... old code remove after MVP
     const char* send_command(const char* dest, const char* cmd);
-
 
     void mapInstance(asset* item, const char* _name = nullptr);
     asset* addInstance(const char* _name);
@@ -260,15 +260,15 @@ public:
     void (*run_init)(asset_manager* am);
     bool (*run_wakeup)(asset_manager* am, int wake);
 
-// TODO runchildren . manager loop . man_timer_loop all old code remove after MVP
+    // TODO runchildren . manager loop . man_timer_loop all old code remove after
+    // MVP
     bool runChildren(int wakeup);
     void manager_loop();
     void man_timer_loop();
     void ass_timer_loop();
     void timer_loop();
-    void  message_loop();
+    void message_loop();
     void fims_loop();
-
 
     void cleanup(void);
     void run_manager(fims* _p_fims);
@@ -281,16 +281,17 @@ public:
     void cfgwrite(const char* fname, const char* aname = nullptr);
     void setVm(VarMapUtils* _vm);
 
-// TODO cascadeAI cascade AM, old Code remove after MVP
-    int cascadeAI(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* am
-        , int(*runAI)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* am));
-    int cascadeAM(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am
-        , int(*runAM)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am)
-        , int(*runAI)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* ai)
-    );
-    //int Send(const char* method, const char*uri, const char*rep, const char* body);
-    int Send(const char* method, const char*uri=nullptr, const char*resp=nullptr, const char* body=nullptr);
-    int Send(const char* method, assetVar *av, const char*uri=nullptr, const char*resp=nullptr, const char* body=nullptr);
+    // TODO cascadeAI cascade AM, old Code remove after MVP
+    int cascadeAI(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* am,
+                  int (*runAI)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* am));
+    int cascadeAM(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am,
+                  int (*runAM)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset_manager* am),
+                  int (*runAI)(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset* ai));
+    // int Send(const char* method, const char*uri, const char*rep, const char*
+    // body);
+    int Send(const char* method, const char* uri = nullptr, const char* resp = nullptr, const char* body = nullptr);
+    int Send(const char* method, assetVar* av, const char* uri = nullptr, const char* resp = nullptr,
+             const char* body = nullptr);
 
     fims* p_fims;
     // this is a list of the local asset variables
@@ -299,31 +300,31 @@ public:
     varmap lmap;
 
     std::string name;
-    //varmap assetMap;
+    // varmap assetMap;
 
     // this is a list of the managed assets
-    std::map<std::string, asset*>assetMap;
+    std::map<std::string, asset*> assetMap;
 
-    std::map<std::string, asset_manager*>assetManMap;
+    std::map<std::string, asset_manager*> assetManMap;
     // global context for asset manager
     varsmap* vmap;
 
     varsmap* pmap;
     VarMapUtils* vm;
-  
-    //typedef std::map<std::string, std::vector<std::string>*>vecmap;
+
+    // typedef std::map<std::string, std::vector<std::string>*>vecmap;
     vecmap* vecs;
 
-// TODO remove chan_data stuff after MVP
+    // TODO remove chan_data stuff after MVP
     chan_data t_data;  // time channel
     chan_data m_data;  // message channel
-    chan_data f_data;  // fims channel 
+    chan_data f_data;  // fims channel
     int tnum;
 
-    channel <int> man_wakechan;         // this is for manager wakeups
-    channel <int> wakechan;         // this is for wakeups
-    channel <char*>msgchan;       // this is for messages ( will probably be fims sort of messages)
-    channel <fims_message*>fimschan;  // this is for real (external) fims messages
+    channel<int> man_wakechan;        // this is for manager wakeups
+    channel<int> wakechan;            // this is for wakeups
+    channel<char*> msgchan;           // this is for messages ( will probably be fims sort of messages)
+    channel<fims_message*> fimschan;  // this is for real (external) fims messages
     volatile int running;
     std::thread manager_thread;
     int reload;
@@ -331,38 +332,31 @@ public:
     bool sendOK;
     // new sched uses these
 
-    channel <int>* wakeChan;
-    void* reqChan; // anyone can post run_reqs
+    channel<int>* wakeChan;
+    void* reqChan;  // anyone can post run_reqs
 
-    channel <fims_message*>*fimsChan; // anyone can post run_reqs
+    channel<fims_message*>* fimsChan;  // anyone can post run_reqs
 
     // deprecated
-    channel <int> *wakeUpChan;
+    channel<int>* wakeUpChan;
     int setup;
     int run_secs;
-    std::vector<char *>* syscVec;
-    
+    std::vector<char*>* syscVec;
+
     void setFrom(asset_manager* base);
 
-    //int addSchedReq(schAvlist& rreq, double tshot, double trep);
-
+    // int addSchedReq(schAvlist& rreq, double tshot, double trep);
 };
 extern "C++" {
-    
-    
-    int  SetupGit(varsmap& vmap, VarMapUtils* vm
-                 , const char*gbranch
-                 , const char*gcommit
-                 , const char*gtag
-                 , const char*gversion
-                 );
 
+int SetupGit(varsmap& vmap, VarMapUtils* vm, const char* gbranch, const char* gcommit, const char* gtag,
+             const char* gversion);
 }
 // the asset manager can set up one or more assets from an asset config file.
-// the asset manager can also distribute command, status and control messages to and from assets.
+// the asset manager can also distribute command, status and control messages to
+// and from assets.
 
-
-//common stuff in assets
+// common stuff in assets
 //     fims* p_fims;
 //     std::string name;
 //     asset_manager* am;
@@ -378,7 +372,7 @@ extern "C++" {
 //     void (*run_init)(asset* ass);
 //     bool (*run_wakeup)(asset* ass, int wake);
 //     std::string id;  // is this used ??
-//     VarMapUtils defvm;  // is this used 
+//     VarMapUtils defvm;  // is this used
 
 // // the types of the manage class factories
 // typedef asset_manager* createm_t(const char *name);
@@ -388,7 +382,7 @@ extern "C++" {
 // typedef asset* create_t();
 // typedef void destroy_t(asset*);
 // // This function will create a  FIMS message buffer
-// char* fimsToBuffer(const char* method, const char* uri, const char* replyto, const char* body);
-// fims_message* bufferToFims(const char *buffer);
+// char* fimsToBuffer(const char* method, const char* uri, const char* replyto,
+// const char* body); fims_message* bufferToFims(const char *buffer);
 
 #endif

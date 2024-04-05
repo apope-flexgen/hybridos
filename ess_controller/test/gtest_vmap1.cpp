@@ -1,85 +1,86 @@
-#include <math.h>
 #include "asset.h"
-#include "varMapUtils.h"
 #include "chrono_utils.hpp"
+#include "varMapUtils.h"
 #include "gtest/gtest.h"
+#include <math.h>
 
 namespace flex
 {
-    const std::chrono::system_clock::time_point epoch = please::dont::use::this_func::setEpoch();
-    const std::chrono::steady_clock::time_point base_time = std::chrono::steady_clock::now();
-}
+const std::chrono::system_clock::time_point epoch = please::dont::use::this_func::setEpoch();
+const std::chrono::steady_clock::time_point base_time = std::chrono::steady_clock::now();
+}  // namespace flex
 
 //#include "assetFunc.cpp"
-cJSON*getSchList()
+cJSON* getSchList()
 {
     return nullptr;
 }
-void printVars(VarMapUtils &vm , varsmap &vmap)
+void printVars(VarMapUtils& vm, varsmap& vmap)
 {
-    cJSON *cj = vm.getMapsCj(vmap);
+    cJSON* cj = vm.getMapsCj(vmap);
     char* res = cJSON_Print(cj);
     printf("vmap at end \n%s\n", res);
-    free((void *)res) ;
+    free((void*)res);
     cJSON_Delete(cj);
 }
 
-
-class Vmap1 : public ::testing::Test {
-    protected:
-    virtual void SetUp(){
+class Vmap1 : public ::testing::Test
+{
+protected:
+    virtual void SetUp()
+    {
         av = vm.makeVar(vmap, "/comp/ess", "myvar", nullptr);
         int ixval = 1234;
-        vm.setVal(vmap,"/system/status","StandbyTestI", ixval);
+        vm.setVal(vmap, "/system/status", "StandbyTestI", ixval);
         double dxval = 1234.5;
         vm.setVal(vmap, "/system/status", "StandbyTestD", dxval);
-        char* cxval = (char*) "some_string";
+        char* cxval = (char*)"some_string";
         vm.setVal(vmap, "/system/status", "StandbyTestS", cxval);
     }
 
-    virtual void TearDown(){
-        delete av->am;
-    }
+    virtual void TearDown() { delete av->am; }
 
     varsmap vmap;
     VarMapUtils vm;
     assetVar* av;
 };
 
-TEST_F(Vmap1, vmap1test){
-    
+TEST_F(Vmap1, vmap1test)
+{
     cJSON* cjxval = cJSON_Parse("{1235.6}");
-    vm.setValfromCj(vmap,"/system/status","StandbyTestCJD", cjxval);
-    //EXPECT_EQ(cjxval, 1235.6);
+    vm.setValfromCj(vmap, "/system/status", "StandbyTestCJD", cjxval);
+    // EXPECT_EQ(cjxval, 1235.6);
     cJSON_Delete(cjxval);
     cjxval = cJSON_Parse("{\"value\":1235}");
-    vm.setValfromCj(vmap,"/system/status","StandbyTestCJI",cjxval);
-    //EXPECT_EQ(cjxval, 1235);
+    vm.setValfromCj(vmap, "/system/status", "StandbyTestCJI", cjxval);
+    // EXPECT_EQ(cjxval, 1235);
     cJSON_Delete(cjxval);
 }
 
-TEST_F(Vmap1, testbval){
-    EXPECT_TRUE(vm.getVar(vmap,"/system/test","bvaltest")->getbVal());
-    EXPECT_FALSE(vm.getVar(vmap,"/system/test","bvalOK")->getbVal());
+TEST_F(Vmap1, testbval)
+{
+    EXPECT_TRUE(vm.getVar(vmap, "/system/test", "bvaltest")->getbVal());
+    EXPECT_FALSE(vm.getVar(vmap, "/system/test", "bvalOK")->getbVal());
 }
 
-int main(int argc, char** argv){
+int main(int argc, char** argv)
+{
     ::testing::InitGoogleTest(&argc, argv);
 
     return RUN_ALL_TESTS();
 }
 
-bool testbval(VarMapUtils &vm , varsmap &vmap)
+bool testbval(VarMapUtils& vm, varsmap& vmap)
 {
     bool OK = true;
 
-    vm.setVal(vmap,"/system/test","bvaltest",OK);
+    vm.setVal(vmap, "/system/test", "bvaltest", OK);
     OK = false;
-    vm.setVal(vmap,"/system/test","bvalOK",OK);
+    vm.setVal(vmap, "/system/test", "bvalOK", OK);
 
-    bool bvaltest  =    vm.getVar(vmap,"/system/test","bvaltest")->getbVal();
-    bool bvalOK  =      vm.getVar(vmap,"/system/test","bvalOK")->getbVal();
-    if(bvaltest)
+    bool bvaltest = vm.getVar(vmap, "/system/test", "bvaltest")->getbVal();
+    bool bvalOK = vm.getVar(vmap, "/system/test", "bvalOK")->getbVal();
+    if (bvaltest)
     {
         printf(" bvaltest OK : true\n");
     }
@@ -87,7 +88,7 @@ bool testbval(VarMapUtils &vm , varsmap &vmap)
     {
         printf(" bvaltest ERROR : false\n");
     }
-    if(bvalOK)
+    if (bvalOK)
     {
         printf(" bvalOK ERROR: true\n");
     }
@@ -97,7 +98,6 @@ bool testbval(VarMapUtils &vm , varsmap &vmap)
     }
 
     return OK;
-
 }
 
 // int main(int argc, char *argv[])
@@ -106,123 +106,130 @@ bool testbval(VarMapUtils &vm , varsmap &vmap)
 //     cJSON* cjxval = cJSON_Parse("{1235.6}");
 //     printf( "result of cJSON Parse {12345.6} %p\n", cjxval);
 //     cJSON_Delete(cjxval);
-    
+
 //     cjxval = cJSON_Parse("{\"value\":1235.6}");
 //     printf( "result of cJSON Parse {\"value\":1235.6} %p\n", cjxval);
 //     //cJSON_Delete(cjxval);
-    
+
 //     char* jxvals = cJSON_PrintUnformatted(cjxval);
 //     printf( "result of cJSON Parse {\"value\":1235.6} >>%s<<\n", jxvals);
 //     free(jxvals);
 //     //cJSON_Delete(cjxval);
 //     // OK here vm.clearVmap(vmap);return 0;
 
-//     //assetVar* StandbyTestCJD  = 
+//     //assetVar* StandbyTestCJD  =
 //     vm.setValfromCj(vmap,"/system/status","StandbyTestCJD", cjxval);
 //     cJSON_Delete(cjxval);
 //     cjxval = cJSON_Parse("{\"value\":1235}");
-//     //assetVar* StandbyTestCJI  = 
+//     //assetVar* StandbyTestCJI  =
 //     vm.setValfromCj(vmap,"/system/status","StandbyTestCJI",cjxval);
 //     cJSON_Delete(cjxval);
- 
+
 //     cjxval = cJSON_Parse("{\"value\":\"my text\"}");
-//     //assetVar* StandbyTestCJS  = 
+//     //assetVar* StandbyTestCJS  =
 //     vm.setValfromCj(vmap,"/system/status","StandbyTestCJS",cjxval);
 //     cJSON_Delete(cjxval);
 //     // OK here vm.clearVmap(vmap);return 0;
 
 //     cjxval = cJSON_Parse("{\"value\":\"my text2\"}");
-//     //assetVar* StandbyTestCJSV  = 
+//     //assetVar* StandbyTestCJSV  =
 //     vm.setValfromCj(vmap,"/system/status","StandbyTestCJS",cjxval);
 //     cJSON_Delete(cjxval);
 
 // this is all OK
-    // const char *xsp = "{\"On\": false,\"Standby\":true,\"Idleloss\":0.1,\"Idlestr\":{\"value\":\"soc0.1\"},"
-    //                     "\"Idlenum\":{\"value\":0.134},"
-    //                     "\"pesr\":34.5,\"Pcharge\":23,\"Pdischarge\":300.3,\"Pd_str\":\"300.3\","
-    //                     "\"Ploss\":45,\"Phigh\":100.0,\"Plow\":0.01,\"Soc\":0.1}";
-    // int single = 0;
-    // vm.processMsgSetPub(vmap, "set", "/big/pub", single, xsp,  nullptr);//cJSON **cjr)
-    // // OK here vm.clearVmap(vmap);return 0;
+// const char *xsp = "{\"On\":
+// false,\"Standby\":true,\"Idleloss\":0.1,\"Idlestr\":{\"value\":\"soc0.1\"},"
+//                     "\"Idlenum\":{\"value\":0.134},"
+//                     "\"pesr\":34.5,\"Pcharge\":23,\"Pdischarge\":300.3,\"Pd_str\":\"300.3\","
+//                     "\"Ploss\":45,\"Phigh\":100.0,\"Plow\":0.01,\"Soc\":0.1}";
+// int single = 0;
+// vm.processMsgSetPub(vmap, "set", "/big/pub", single, xsp,  nullptr);//cJSON
+// **cjr)
+// // OK here vm.clearVmap(vmap);return 0;
 
-    // cJSON* cjr = nullptr;
-    // vm.processMsgSetPub(vmap, "set", "/big/pub", single, xsp,  &cjr);
-    
-    // printVars(vm, vmap);
-    // if(cjr)cJSON_Delete(cjr);
-    // // OK here vm.clearVmap(vmap);return 0;
+// cJSON* cjr = nullptr;
+// vm.processMsgSetPub(vmap, "set", "/big/pub", single, xsp,  &cjr);
 
-    // //return 0;
+// printVars(vm, vmap);
+// if(cjr)cJSON_Delete(cjr);
+// // OK here vm.clearVmap(vmap);return 0;
 
-    // int rc;
+// //return 0;
 
-    // rc = vm.testRes(" Test 1", vmap
-    //         ,"set"
-    //         ,"/system/status"
-    //         ,"{\"On\": false,\"Standby\":true,\"Idleloss\":0.1,\"pesr\":34.5,\"Pcharge\":23,\"Pdischarge\":300.3,\"Ploss\":45,\"Phigh\":100.0,\"Plow\":0.01,\"Soc\":0.1}"
-    //         ,"{\"On\":false,\"Standby\":true,\"Idleloss\":0.1,\"pesr\":34.5,\"Pcharge\":23,\"Pdischarge\":300.3,\"Ploss\":45,\"Phigh\":100,\"Plow\":0.01,\"Soc\":0.1}"
-    //     );
+// int rc;
 
-    // assetVar* On       = vm.getVar(vmap,"/system/status:On", nullptr); //vmap["/system/status"]["On"];
+// rc = vm.testRes(" Test 1", vmap
+//         ,"set"
+//         ,"/system/status"
+//         ,"{\"On\":
+//         false,\"Standby\":true,\"Idleloss\":0.1,\"pesr\":34.5,\"Pcharge\":23,\"Pdischarge\":300.3,\"Ploss\":45,\"Phigh\":100.0,\"Plow\":0.01,\"Soc\":0.1}"
+//         ,"{\"On\":false,\"Standby\":true,\"Idleloss\":0.1,\"pesr\":34.5,\"Pcharge\":23,\"Pdischarge\":300.3,\"Ploss\":45,\"Phigh\":100,\"Plow\":0.01,\"Soc\":0.1}"
+//     );
 
-    // assetVar* Standby  = vm.getVar(vmap,"/system/status","Standby");
-    // assetVar* Idleloss = vm.getVar(vmap,"/system/status","Idleloss");
-    // assetVar* pesr     = vm.getVar(vmap,"/system/status","pesr");
-    
-    // // use val to force the type of the return vaue through the template class
-    // //bool val;
-    // printf(" On = %p, Standby = %p\n", (void *)On , (void *)Standby);
+// assetVar* On       = vm.getVar(vmap,"/system/status:On", nullptr);
+// //vmap["/system/status"]["On"];
 
-    // printf(" On = %s, standby = %s\n", On->getbVal()?"true":"false", Standby->getbVal()?"true":"false");
-    // //double dval;
-    // //socloss := e.Idleloss + e.pesr*math.Pow(p, 2)
-    // double socloss = Idleloss->getdVal() + pow(pesr->getdVal(),2);
+// assetVar* Standby  = vm.getVar(vmap,"/system/status","Standby");
+// assetVar* Idleloss = vm.getVar(vmap,"/system/status","Idleloss");
+// assetVar* pesr     = vm.getVar(vmap,"/system/status","pesr");
 
-    // printf(" socloss = %f, Idleloss = %f pesr = %f \n", socloss, Idleloss->getdVal(), pesr->getdVal());
-    // // if we need this back in the system 
-    // //way 1
-    // char * tmp;
-    // asprintf(&tmp, "{\"socloss\": %f}",socloss);
-    // char * rtmp;
-    // asprintf(&rtmp, "{\"socloss\":%s}","1190.35");
-    // rc = vm.testRes(" Test 2", vmap
-    //         ,"set"
-    //         ,"/system/status"
-    //         , tmp
-    //         , rtmp
-    //         );
-    // free(tmp);
-    // free(rtmp);
-    // assetVar* SocLoss   =  vm.getVar(vmap,"/system/status:socloss", nullptr);//vmap["/system/status"]["socloss"];
+// // use val to force the type of the return vaue through the template class
+// //bool val;
+// printf(" On = %p, Standby = %p\n", (void *)On , (void *)Standby);
 
-    // // giving direct access 
-    // // but note this bypasses all the clever stuff to manage the variable
-    // // way 2
-    // SocLoss->setVal(socloss+1);
+// printf(" On = %s, standby = %s\n", On->getbVal()?"true":"false",
+// Standby->getbVal()?"true":"false");
+// //double dval;
+// //socloss := e.Idleloss + e.pesr*math.Pow(p, 2)
+// double socloss = Idleloss->getdVal() + pow(pesr->getdVal(),2);
 
-    // // Way 3 will also cret the var and run through all the bells and whistles.
-    // vm.setVal(vmap,"/system/status","Socloss2", socloss);
-    // vm.setVal(vmap,"/system/status:Socloss3", nullptr, socloss);
-    
-    // cJSON *cj = vm.getMapsCj(vmap);
-    // char* res = cJSON_Print(cj);
-    // rc = 0;
-    // if(rc == 0) printf("vmap at end \n%s\n", res);
-    // free((void *)res) ;
-    // cJSON_Delete(cj);
-    
-    // testbval(vm, vmap);
-    // varmap amap;
-    // const char *aname= "ess1";
-    // asset* ass = new asset(aname);;
-    // ass->setVmap(&vmap);
-    // ass->setVm(&vm);
-    // ass->vm->set_base_time();
-    // ass->vm->setTime();
+// printf(" socloss = %f, Idleloss = %f pesr = %f \n", socloss,
+// Idleloss->getdVal(), pesr->getdVal());
+// // if we need this back in the system
+// //way 1
+// char * tmp;
+// asprintf(&tmp, "{\"socloss\": %f}",socloss);
+// char * rtmp;
+// asprintf(&rtmp, "{\"socloss\":%s}","1190.35");
+// rc = vm.testRes(" Test 2", vmap
+//         ,"set"
+//         ,"/system/status"
+//         , tmp
+//         , rtmp
+//         );
+// free(tmp);
+// free(rtmp);
+// assetVar* SocLoss   =  vm.getVar(vmap,"/system/status:socloss",
+// nullptr);//vmap["/system/status"]["socloss"];
 
-    // delete ass;
-    // vm.clearVmap(vmap);
+// // giving direct access
+// // but note this bypasses all the clever stuff to manage the variable
+// // way 2
+// SocLoss->setVal(socloss+1);
 
-    // return 0;
+// // Way 3 will also cret the var and run through all the bells and whistles.
+// vm.setVal(vmap,"/system/status","Socloss2", socloss);
+// vm.setVal(vmap,"/system/status:Socloss3", nullptr, socloss);
+
+// cJSON *cj = vm.getMapsCj(vmap);
+// char* res = cJSON_Print(cj);
+// rc = 0;
+// if(rc == 0) printf("vmap at end \n%s\n", res);
+// free((void *)res) ;
+// cJSON_Delete(cj);
+
+// testbval(vm, vmap);
+// varmap amap;
+// const char *aname= "ess1";
+// asset* ass = new asset(aname);;
+// ass->setVmap(&vmap);
+// ass->setVm(&vm);
+// ass->vm->set_base_time();
+// ass->vm->setTime();
+
+// delete ass;
+// vm.clearVmap(vmap);
+
+// return 0;
 
 //}
