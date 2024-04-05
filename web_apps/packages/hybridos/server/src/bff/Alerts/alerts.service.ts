@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { ActiveAlertsResponse } from './responses/alerts.response'
+import { ActiveAlertsResponse, ResolveAlertResponse, ResolvedAlertsResponse } from './responses/alerts.response'
 import { AlertConfiguration, AlertConfigurationsResponse, Expression } from './responses/alertConfig.response'
 import { AlertsRequest } from './dtos/alerts.dto'
 import {
@@ -34,7 +34,6 @@ export class AlertsService {
         const filters = this.parseQueryToFilters(query);
         const fimsResponse: FimsMsg = await this.fimsService.get(AlertURIs.ALERT_INSTANCES, filters)
         const { rows, count } = fimsResponse.body;
-
         return { data: rows, count }
     }
 
@@ -144,8 +143,8 @@ export class AlertsService {
         id: string,
         message: string,
         username: string
-    ): Promise<FimsMsg> {
-        return await this.fimsService.send({
+    ): Promise<ResolveAlertResponse> {
+        const fimsResponse = await this.fimsService.send({
             method: 'set',
             uri: `${AlertURIs.ALERT_INSTANCES}/${id}`,
             replyto: `/web_server/alerts/${id}`,
@@ -155,5 +154,14 @@ export class AlertsService {
             }),
             username: username,
         });
+        
+        return fimsResponse.body as ResolveAlertResponse;
+    }
+
+    async resolvedAlerts(query: AlertsRequest): Promise<ResolvedAlertsResponse> {
+        const filters = this.parseQueryToFilters(query);
+        const dataFromFims: FimsMsg = await this.fimsService.get(AlertURIs.ALERT_INSTANCES, filters);
+        const { rows, count } = dataFromFims.body;
+        return { data: rows, count };
     }
 }

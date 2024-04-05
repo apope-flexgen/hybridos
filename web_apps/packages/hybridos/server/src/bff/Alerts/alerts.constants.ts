@@ -36,7 +36,6 @@ export const AlertsDescriptions = {
     name: 'The name associated with the alert',
     message: 'An error or success message returned from the events service',
     success: 'A status of whether the request was successfully returned from the events service',
-    error_message: 'If alert could not be resolved, error message describes the issue that occurred'
 }
 
 export const mockedAlertConfigurationData: AlertConfiguration[] = [

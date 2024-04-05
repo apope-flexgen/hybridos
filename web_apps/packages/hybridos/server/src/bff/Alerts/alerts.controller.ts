@@ -15,7 +15,7 @@ import {
     ApiTags,
 } from '@nestjs/swagger'
 import { AlertsService } from './alerts.service'
-import { ActiveAlertsResponse, ResolveAlertResponse } from './responses/alerts.response'
+import { ActiveAlertsResponse, ResolveAlertResponse, ResolvedAlertsResponse } from './responses/alerts.response'
 import { AlertConfigurationsResponse } from './responses/alertConfig.response'
 import { AlertsPostResponse } from './responses/alertPost.response'
 import { DefaultApiError } from 'src/exceptions/defaultResponse.exception'
@@ -23,7 +23,6 @@ import { AlertsRequest } from './dtos/alerts.dto';
 import { AlertConfigDTO } from './dtos/alertConfig.dto';
 import { UserFromAccessToken } from 'src/decorators/userFromAccessToken.decorator';
 import { User } from 'src/users/dtos/user.dto';
-import { FimsMsg } from 'src/fims/interfaces/fims.interface'
 
 @ApiTags('alerts')
 @ApiSecurity('bearerAuth')
@@ -72,11 +71,18 @@ export class AlertsController {
         @Param('id') id: string,
         @Body() body: { message: string },
         @UserFromAccessToken() user: User,
-    ): Promise<FimsMsg> {
+    ): Promise<ResolveAlertResponse> {
         return await this.alertsService.resolveAlert(
             id,
             body.message,
             user.username,
         );
+    }
+
+    @Get('resolved')
+    @ApiOkResponse({type: ResolvedAlertsResponse})
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async resolvedAlerts(@Query() query: AlertsRequest): Promise<ResolvedAlertsResponse> {
+        return await this.alertsService.resolvedAlerts(query); 
     }
 }

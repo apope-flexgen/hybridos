@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 export interface Details {
   message: string,
   timestamp: string,
@@ -19,6 +20,7 @@ export enum LogicalOperators {
 }
 
 export type LogicalOperator = '==' | '!=' | '<' | '>=' | '>' | '<=' | '+' | '-' | '*' | '%' | '&&' | '||';
+
 export interface AlertFilters {
   resolvedFilter?: boolean,
   severityFilter?: number,
@@ -30,6 +32,7 @@ export interface AlertFilters {
   order?: number,
   orderBy?: string | number,
 }
+
 export interface ActiveAlertObject {
   id: string,
   status: string,
@@ -117,6 +120,32 @@ export interface ActiveAlertRow {
   timestamp: string,
   deadline: JSX.Element,
   resolve: JSX.Element,
+  expandRowContent: JSX.Element,
+  rowHoverColor: string,
+}
+
+export interface ResolvedAlertObject {
+  id: string,
+  severity: number,
+  organization?: string,
+  site?: string,
+  resolved: boolean,
+  resolution_time: string,
+  resolution_message: string,
+  trigger_time: string,
+  details: Details[],
+  title: string,
+}
+
+export interface ResolvedAlertRow {
+  id: string,
+  severity: JSX.Element,
+  organization?: string,
+  site?: string,
+  alert: string,
+  triggerTime: string,
+  resolutionTime: string,
+  notes: JSX.Element,
   expandRowContent: JSX.Element,
   rowHoverColor: string,
 }

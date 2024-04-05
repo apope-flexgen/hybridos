@@ -46,3 +46,5 @@ export const modalButtonsSx = {
 export const cancelButtonSx = { flex: '0 0 25%' };
 
 export const saveButtonSx = { flex: '1' };
+
+export const expandedRowSx = { display: 'flex', gap: '2px' };
