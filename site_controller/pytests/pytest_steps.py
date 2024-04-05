@@ -118,6 +118,39 @@ class Steps():
         }
 
     @staticmethod
+    def config_dev_place_ESS_in_maint():
+        return {
+            "/assets/ess/ess_1/maint_mode": True,
+            "/assets/ess/ess_2/maint_mode": True,
+        }
+
+    @staticmethod
+    def config_dev_place_solar_in_maint():
+        return {
+            "/assets/solar/solar_1/maint_mode": True,
+            "/assets/solar/solar_2/maint_mode": True,
+        }
+
+    @staticmethod
+    def config_dev_remove_solar_from_maint():
+        return {
+            "/assets/solar/solar_1/maint_mode": False,
+            "/assets/solar/solar_2/maint_mode": False,
+        }
+
+    @staticmethod
+    def config_dev_place_gen_in_maint():
+        return {
+            "/assets/generators/gen_1/maint_mode": True,
+        }
+
+    @staticmethod
+    def config_dev_remove_gen_from_maint():
+        return {
+            "/assets/generators/gen_1/maint_mode": False,
+        }
+
+    @staticmethod
     def ess_1_disable_all_maint_feats():
         return {
             "/assets/ess/ess_1/maint_active_power_setpoint": 0,

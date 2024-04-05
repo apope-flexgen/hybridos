@@ -7,6 +7,7 @@
 /* C Standard Library Dependencies */
 /* C++ Standard Library Dependencies */
 #include <algorithm>
+#include "Logger.h"
 /* External Dependencies */
 /* System Internal Dependencies */
 #include <fims/fps_utils.h>
@@ -80,22 +81,38 @@ void Freq_Resp_Component::update_state(timespec current_time, float site_frequen
         in_cooldown.value.value_bool = false;
     }
     // check if trigger event should start
-    if (!active_response_status.value.value_bool && is_beyond_trigger(site_frequency)) {
+    if (!active_response_status.value.value_bool && (is_beyond_trigger(site_frequency) || force_start.value.value_bool)) {
         start_active_response();
     }
     // if there is no trigger event currently active, there is nothing left to do
     if (!active_response_status.value.value_bool) {
         return;
     }
-    // if instant recovery or maxed out trigger time, event can be immediately ended
-    if (check_expired_time(current_time, trigger_over_time) || is_within_instant_recovery(site_frequency)) {
-        end_active_response();
-        return;
+
+    // force_start only obeys the max_duration bit
+    if(force_start.value.value_bool) {
+        // if maxed out trigger time, event can be immediately ended
+        if (check_expired_time(current_time, trigger_over_time)) {
+            end_active_response();
+            return;
+        }
+    } else {
+        // if instant recovery or maxed out trigger time, event can be immediately ended
+        if (check_expired_time(current_time, trigger_over_time) || is_within_instant_recovery(site_frequency)) {
+            end_active_response();
+            return;
+        }
     }
+
     // standard recovery states are only relevant if not using the droop response
     if (!droop_bypass_flag.value.value_bool) {
+        // are we trying to use force_start because that would be strange
+        if (force_start.value.value_bool) {
+            FPS_WARNING_LOG("Trying to use droop when force starting a FR. Is this intended?");
+        }
         return;
-    }
+    } 
+
     // if not in recovery, reset the recovery timer and check if recovery state should be entered
     if (!in_recovery.value.value_bool) {
         clock_gettime(CLOCK_MONOTONIC, &recovery_over_time);
@@ -103,14 +120,18 @@ void Freq_Resp_Component::update_state(timespec current_time, float site_frequen
         in_recovery.value.value_bool = is_within_recovery(site_frequency);
         return;
     }
+
     // if we are in a recovery state and option is allowed for discarding recovery state, check if it can be discarded
     if (!recovery_latch.value.value_bool && is_beyond_recovery(site_frequency)) {
         in_recovery.value.value_bool = false;
         clock_gettime(CLOCK_MONOTONIC, &recovery_over_time);
         recovery_over_time.tv_sec += recovery_duration_sec.value.value_int;
     }
+
     // end event if recovery has lasted long enough
-    if (in_recovery.value.value_bool && check_expired_time(current_time, recovery_over_time)) {
+    // IMPORTANT force_start will prevent the event from ending, BUT the second it goes false the 
+    // response should end if you've been in recovery for a sufficient amount of time. 
+    if (in_recovery.value.value_bool && check_expired_time(current_time, recovery_over_time) && !force_start.value.value_bool) {
         end_active_response();
     }
 }
@@ -143,6 +164,7 @@ float Freq_Resp_Component::calculate_kw_output(float current_frequency) {
 void Freq_Resp_Component::start_active_response() {
     active_response_status.value.value_bool = true;
     clock_gettime(CLOCK_MONOTONIC, &trigger_over_time);
+    // trigger_over_time also applies to a force_start event
     trigger_over_time.tv_sec += trigger_duration_sec.value.value_int;
     if (droop_bypass_flag.value.value_bool) {
 #ifndef FPS_TEST_MODE  // bypass emit event when running gtest as emit_event() will cause seg fault.
@@ -281,10 +303,12 @@ bool Freq_Resp_Component::parse_json_config(cJSON* JSON_config, bool* p_flag, In
  */
 void Freq_Resp_Component::handle_fims_set(const cJSON* JSON_body, const char* variable_id) {
     // extract value
-    int body_type = JSON_body->type;
     float body_float = JSON_body->valuedouble;
     int body_int = JSON_body->valueint;
-    bool body_bool = (body_type == cJSON_False) ? false : true;
+    bool body_bool = false;
+    if (static_cast<bool>(cJSON_IsBool(JSON_body))) {
+        body_bool = static_cast<bool>(cJSON_IsTrue(JSON_body));
+    }
 
     // Use fuzzy matching by only checking against the length of the variable id
     // This will allow multiple inputs variables to come through and be checked by set_fims_float()
@@ -298,26 +322,39 @@ void Freq_Resp_Component::handle_fims_set(const cJSON* JSON_body, const char* va
         return;
     }
 
-    if (trigger_duration_sec.set_fims_int(variable_id, body_int))
+    if (trigger_duration_sec.set_fims_int(variable_id, body_int)) {
         return;
-    if (droop_limit_flag.set_fims_bool(variable_id, body_bool))
+    }
+    if (droop_limit_flag.set_fims_bool(variable_id, body_bool)) {
         return;
-    if (droop_bypass_flag.set_fims_bool(variable_id, body_bool))
+    }
+    if (droop_bypass_flag.set_fims_bool(variable_id, body_bool)) {
         return;
-    if (inactive_cmd_kw.set_fims_float(variable_id, body_float))
+    }
+    if (inactive_cmd_kw.set_fims_float(variable_id, body_float)) {
         return;
-    if (slew_rate_kw.set_fims_int(variable_id, body_int))
+    }
+    if (slew_rate_kw.set_fims_int(variable_id, body_int)) {
         return;
-    if (ess_slew_override.set_fims_bool(variable_id, body_bool))
+    }
+    if (ess_slew_override.set_fims_bool(variable_id, body_bool)) {
         return;
-    if (cooldown_duration_sec.set_fims_int(variable_id, body_int))
+    }
+    if (cooldown_duration_sec.set_fims_int(variable_id, body_int)) {
         return;
-    if (recovery_duration_sec.set_fims_int(variable_id, body_int))
+    }
+    if (recovery_duration_sec.set_fims_int(variable_id, body_int)) {
         return;
-    if (recovery_latch.set_fims_bool(variable_id, body_bool))
+    }
+    if (recovery_latch.set_fims_bool(variable_id, body_bool)) {
         return;
-    if (freeze_active_cmd_flag.set_fims_bool(variable_id, body_bool))
+    }
+    if (freeze_active_cmd_flag.set_fims_bool(variable_id, body_bool)) {
         return;
+    }
+    if (force_start.set_fims_bool(variable_id, body_bool)) {
+        return;
+    }
 
     FPS_ERROR_LOG("FIMS SET with endpoint %s did not match any frequency response component endpoints.", variable_id);
 }
@@ -360,6 +397,10 @@ bool Freq_Resp_Component::initialize_state(float grid_target_freq_hz) {
     prev_active_cmd_kw = active_cmd_kw.value.value_float;
     prev_droop_limit_flag = droop_limit_flag.value.value_bool;
     prev_slew_rate_kw = slew_rate_kw.value.value_int;
+    // set the latest to be whatever was in configuration
+    // prevents a bug if you use the bool to enable a feat, but the freq
+    // is at an instant recovery
+    latest_active_cmd_kw_received = active_cmd_kw.value.value_float;
     return true;
 }
 
@@ -370,22 +411,22 @@ bool Freq_Resp_Component::initialize_state(float grid_target_freq_hz) {
  * under-frequency or over-frequency response component.
  */
 void Freq_Resp_Component::sync_active_cmd_kw(void) {
-    active_cmd_kw.value.set(active_cmd_kw.value.value_float < 0.0 ? float(-1.0) * active_cmd_kw.value.value_float : active_cmd_kw.value.value_float);
-    signed_active_cmd_kw = is_underfrequency_component ? active_cmd_kw.value.value_float : float(-1.0) * active_cmd_kw.value.value_float;
+    active_cmd_kw.value.set(active_cmd_kw.value.value_float < 0.0 ? static_cast<float>(-1.0) * active_cmd_kw.value.value_float : active_cmd_kw.value.value_float);
+    signed_active_cmd_kw = is_underfrequency_component ? active_cmd_kw.value.value_float : static_cast<float>(-1.0) * active_cmd_kw.value.value_float;
 }
 
-bool Freq_Resp_Component::is_beyond_trigger(float freq) {
+bool Freq_Resp_Component::is_beyond_trigger(float freq) const {
     return is_underfrequency_component ? freq < trigger_freq_hz.value.value_float : freq > trigger_freq_hz.value.value_float;
 }
 
-bool Freq_Resp_Component::is_beyond_recovery(float freq) {
+bool Freq_Resp_Component::is_beyond_recovery(float freq) const {
     return is_underfrequency_component ? freq < recovery_freq_hz.value.value_float : freq > recovery_freq_hz.value.value_float;
 }
 
-bool Freq_Resp_Component::is_within_recovery(float freq) {
+bool Freq_Resp_Component::is_within_recovery(float freq) const {
     return is_underfrequency_component ? freq > recovery_freq_hz.value.value_float : freq < recovery_freq_hz.value.value_float;
 }
 
-bool Freq_Resp_Component::is_within_instant_recovery(float freq) {
+bool Freq_Resp_Component::is_within_instant_recovery(float freq) const {
     return is_underfrequency_component ? freq > instant_recovery_freq_hz.value.value_float : freq < instant_recovery_freq_hz.value.value_float;
 }

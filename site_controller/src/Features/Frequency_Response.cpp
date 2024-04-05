@@ -40,7 +40,8 @@ features::Frequency_Response::Frequency_Response() {
  * if any of Frequency Response's inputs are configured to be Multiple Input Command Variables.
  * @returns Result detailing whether or not the config is valid
  */
-Config_Validation_Result features::Frequency_Response::parse_json_config(cJSON* JSON_config, bool* p_flag, Input_Source_List* inputs, const Fims_Object& defaults, std::vector<Fims_Object*>& multiple_inputs) {
+Config_Validation_Result features::Frequency_Response::parse_json_config(cJSON* JSON_config, bool* p_flag, Input_Source_List* inputs, const Fims_Object& defaults,
+                                                                         std::vector<Fims_Object*>& multiple_inputs) {
     Config_Validation_Result result;
 
     cJSON* JSON_frequency_response = cJSON_GetObjectItem(JSON_config, "frequency_response");
@@ -54,10 +55,12 @@ Config_Validation_Result features::Frequency_Response::parse_json_config(cJSON* 
     for (auto& variable_id_pair : variable_ids) {
         cJSON* JSON_variable = NULL;
         // the enable flag is a top-level variable, all others are members of the frequency response object
-        JSON_variable = variable_id_pair.first == &enable_flag ? cJSON_GetObjectItem(JSON_config, variable_id_pair.second.c_str()) : cJSON_GetObjectItem(JSON_frequency_response, variable_id_pair.second.c_str());
+        JSON_variable = variable_id_pair.first == &enable_flag ? cJSON_GetObjectItem(JSON_config, variable_id_pair.second.c_str())
+                                                               : cJSON_GetObjectItem(JSON_frequency_response, variable_id_pair.second.c_str());
 
         if (JSON_variable == NULL) {
-            result.ERROR_details.push_back(Result_Details(fmt::format("Could not find variable \"{}\" in frequency_response object in variables.json.", variable_id_pair.second.c_str())));
+            result.ERROR_details.push_back(
+                Result_Details(fmt::format("Could not find variable \"{}\" in frequency_response object in variables.json.", variable_id_pair.second.c_str())));
             result.is_valid_config = false;
             return result;
         }
@@ -129,13 +132,25 @@ void features::Frequency_Response::get_feature_vars(std::vector<Fims_Object*>& v
 
 void features::Frequency_Response::execute(Asset_Cmd_Object& asset_cmd, float ess_total_rated_active_power, float site_frequency, timespec current_time) {
     // get inputs
-    Frequency_Response_Inputs ins{ asset_cmd.site_kW_demand, asset_cmd.ess_data.max_potential_kW, asset_cmd.ess_data.min_potential_kW, ess_total_rated_active_power, site_frequency, current_time };
+    Frequency_Response_Inputs ins{
+        asset_cmd.site_kW_demand, asset_cmd.ess_data.max_potential_kW, asset_cmd.ess_data.min_potential_kW, ess_total_rated_active_power, site_frequency, current_time
+    };
     // call frequency response algorithm
     Frequency_Response_Outputs outs = aggregate_response_components(ins);
     // set outputs
     asset_cmd.ess_data.max_potential_kW = outs.ess_max_potential;
     asset_cmd.ess_data.min_potential_kW = outs.ess_min_potential;
     asset_cmd.site_kW_demand = outs.output_kw;
+}
+
+/**
+ * @breif calls clear_outputs() on every single FR component.
+ * see Freq_Resp_Component::clear_outputs(void)
+ */
+void features::Frequency_Response::clear_all_component_outputs() {
+    for (auto curr_freq_obj : response_components) {
+        curr_freq_obj->clear_outputs();
+    }
 }
 
 /**
@@ -187,10 +202,12 @@ Frequency_Response_Outputs features::Frequency_Response::aggregate_response_comp
  */
 void features::Frequency_Response::handle_fims_set(std::string uri_endpoint, const cJSON& msg_value) {
     // check if target endpoint matches any Frequency Response high-level endpoints and handle the SET if so
-    if (enable_mask.set_fims_int(uri_endpoint.c_str(), msg_value.valueint))
+    if (enable_mask.set_fims_int(uri_endpoint.c_str(), msg_value.valueint)) {
         return;
-    if (freq_offset_hz.set_fims_float(uri_endpoint.c_str(), msg_value.valueint))
+    }
+    if (freq_offset_hz.set_fims_float(uri_endpoint.c_str(), msg_value.valueint)) {
         return;
+    }
 
     // check if target endpoint is prefixed with any response component IDs. if so, pass it to that response component for it to handle the SET
     // take the longest match in the case of two matches e.g. uf_ffr and uf_ffrs
@@ -205,8 +222,9 @@ void features::Frequency_Response::handle_fims_set(std::string uri_endpoint, con
         }
     }
     // If a frequency endpoint was matched, check its component variables
-    if (matched_comp)
+    if (matched_comp) {
         matched_comp->handle_fims_set(&msg_value, uri_endpoint.c_str());
+    }
 
     if (msg_value.type == cJSON_True || msg_value.type == cJSON_False) {
         bool value_bool = msg_value.type != cJSON_False;

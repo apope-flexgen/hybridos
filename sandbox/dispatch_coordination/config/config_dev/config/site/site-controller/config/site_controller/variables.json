@@ -1121,6 +1121,13 @@
                                 "value": 0,
                                 "var_type": "Int"
                             },
+                            "force_start": {
+                                "name": "Force Start",
+                                "type": "enum_slider",
+                                "ui_type": "control",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
                             "droop_bypass_flag": {
                                 "name": "Droop Bypass",
                                 "type": "enum_slider",
@@ -1231,6 +1238,13 @@
                                 "ui_type": "control",
                                 "unit": "kW",
                                 "value": 100.0
+                            },
+                            "force_start": {
+                                "name": "Force Start",
+                                "type": "enum_slider",
+                                "ui_type": "control",
+                                "value": false,
+                                "var_type": "Bool"
                             },
                             "active_response_status": {
                                 "name": "Active Response Status",
@@ -1357,6 +1371,13 @@
                                 "ui_type": "control",
                                 "unit": "kW",
                                 "value": 100.0
+                            },
+                            "force_start": {
+                                "name": "Force Start",
+                                "type": "enum_slider",
+                                "ui_type": "control",
+                                "value": false,
+                                "var_type": "Bool"
                             },
                             "active_response_status": {
                                 "name": "Active Response Status",

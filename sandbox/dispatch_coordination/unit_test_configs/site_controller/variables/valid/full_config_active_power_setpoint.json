@@ -1223,6 +1223,13 @@
                                 "ui_type": "none",
                                 "unit": "Hz",
                                 "value": 59.0
+                            },
+                            "force_start": {
+                                "name": "Force Start",
+                                "type": "enum_slider",
+                                "ui_type": "control",
+                                "value": false,
+                                "var_type": "Bool"
                             }
                         },
                         {
@@ -1349,6 +1356,13 @@
                                 "ui_type": "none",
                                 "unit": "Hz",
                                 "value": 61.0
+                            },
+                            "force_start": {
+                                "name": "Force Start",
+                                "type": "enum_slider",
+                                "ui_type": "control",
+                                "value": false,
+                                "var_type": "Bool"
                             }
                         },
                         {
@@ -1475,6 +1489,13 @@
                                 "ui_type": "none",
                                 "unit": "Hz",
                                 "value": 59.0
+                            },
+                            "force_start": {
+                                "name": "Force Start",
+                                "type": "enum_slider",
+                                "ui_type": "control",
+                                "value": false,
+                                "var_type": "Bool"
                             }
                         }
                     ],

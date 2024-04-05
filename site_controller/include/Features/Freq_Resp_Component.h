@@ -50,6 +50,7 @@ protected:
     float prev_active_cmd_kw;
     Fims_Object inactive_cmd_kw;
     Fims_Object trigger_freq_hz;
+    Fims_Object force_start; // a boolean input that a user can use to manually start the response
     Fims_Object trigger_duration_sec;
     Fims_Object droop_freq_hz;
     Fims_Object droop_limit_flag;
@@ -74,6 +75,7 @@ protected:
         { &active_cmd_kw, "active_cmd_kw" },
         { &inactive_cmd_kw, "inactive_cmd_kw" },
         { &trigger_freq_hz, "trigger_freq_hz" },
+        { &force_start, "force_start" },
         { &trigger_duration_sec, "trigger_duration_sec" },
         { &droop_freq_hz, "droop_freq_hz" },
         { &droop_limit_flag, "droop_limit_flag" },
@@ -109,10 +111,10 @@ protected:
     void end_active_response();
     float calculate_kw_output(float current_frequency);
     // frequency boundary checkers
-    bool is_beyond_trigger(float freq);
-    bool is_beyond_recovery(float freq);
-    bool is_within_recovery(float freq);
-    bool is_within_instant_recovery(float freq);
+    bool is_beyond_trigger(float freq) const;
+    bool is_beyond_recovery(float freq) const;
+    bool is_within_recovery(float freq) const;
+    bool is_within_instant_recovery(float freq) const;
 };
 
 #endif /* FEATURES_FREQUENCY_OBJECT_H_ */

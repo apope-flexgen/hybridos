@@ -1,4 +1,4 @@
-Checks: 'clang-diagnostic-*,clang-analyzer-*,readability-*,google-readability-*,-clang-analyzer-optin.performance.Padding,-clang-analyzer-core.UndefinedBinaryOperatorResult,-clang-diagnostic-unused-const-variable,-readability-uppercase-literal-suffix'
+Checks: 'clang-diagnostic-*,clang-analyzer-*,readability-*,google-readability-*,-clang-analyzer-optin.performance.Padding,-clang-analyzer-core.UndefinedBinaryOperatorResult,-clang-diagnostic-unused-const-variable,-readability-uppercase-literal-suffix,-readability-identifier-length'
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 FormatStyle: file

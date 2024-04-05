@@ -22,7 +22,7 @@ from pytests.cases.templating_revamp import test_ranged, test_traditional
 from pytests.cases.persistent_settings import test_persistent_contactors, test_persistent_autobalancing, test_persistent_setpoint
 from pytests.cases.assets_state import test_default_local_mode, test_asset_bit_field_local_mode, test_local_bit_field_local_mode, test_bit_field_status_override, test_random_enum_status_override
 from pytests.cases.avr import test_avr_overvoltage_symmetric, test_avr_undervoltage_symmetric, test_avr_overvoltage_asymmetric, test_avr_undervoltage_asymmetric, test_avr_positive_poi_limits, test_avr_negative_poi_limits, test_avr_voltage_setpoint_limits, test_avr_overvoltage_slew, test_avr_undervoltage_slew
-from pytests.cases.standalone_fr import test_pfr_untracked_load, test_pfr_offset_load, test_pfr_minimum_load, test_pfr_untracked_load_poi_lim, test_pfr_offset_load_poi_lim, test_pfr_minimum_load_poi_lim, test_pfr_asymmetric_configs
+from pytests.cases.standalone_fr import test_pfr_untracked_load, test_pfr_offset_load, test_pfr_minimum_load, test_pfr_untracked_load_poi_lim, test_pfr_offset_load_poi_lim, test_pfr_minimum_load_poi_lim, test_pfr_asymmetric_configs, test_pfr_force_start, test_pfr_force_start_pulse, test_pfr_force_start_graph_1, test_pfr_force_start_graph_2
 from pytests.cases.maint_mode import test_min_charge_discharge, test_maint_soc_limits, test_maint_cell_volt_limits, test_maint_rack_volt_limits
 from pytests.cases.ess_calibration import test_ess_cali
 from pytests.cases.enable_flags import test_enable_flags
@@ -87,6 +87,10 @@ from pytests.cases.fims_api import test_fr_multiple_inputs
     test_pfr_offset_load_poi_lim,
     test_pfr_minimum_load_poi_lim,
     test_pfr_asymmetric_configs,
+    test_pfr_force_start,
+    test_pfr_force_start_pulse,
+    test_pfr_force_start_graph_1,
+    test_pfr_force_start_graph_2,
     test_active_power_setpoint_ess_solar_poi_lims,
     test_min_charge_discharge,
     test_maint_soc_limits,
