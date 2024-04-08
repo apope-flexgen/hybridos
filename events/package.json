@@ -5,22 +5,29 @@
     "main": "src/events.js",
     "license": "UNLICENSED",
     "scripts": {
-        "test": "make test",
+        "test": "JEST_DIFF=jest-diff jest . --detectOpenHandles",
         "start-db": "sudo mongod --config /etc/mongod.conf",
         "start-fims": "../FIMS/fims_server",
         "lint:js": "eslint . --fix",
-        "doc": "jsdoc -c jsdoc.json"
+        "doc": "jsdoc -c jsdoc.json",
+        "watch": "nodemon -w src src/events.js /usr/local/etc/config/events",
+        "loadData": "node src/loadDatabase.js /usr/local/etc/config/events",
+        "clearData": "node src/clearDatabase.js standalone_storage"
     },
     "author": "Tony Olivo",
     "dependencies": {
         "@flexgen/fims": "^1.4.0",
         "mongoose": "^5.13.14",
-        "pkg": "^5.7.0"
+        "nodemon": "^3.1.0",
+        "pkg": "^5.7.0",
+        "uuid": "^9.0.1"
     },
     "devDependencies": {
         "eslint": "^6.8.0",
         "eslint-config-airbnb-base": "^14.0.0",
         "eslint-plugin-import": "^2.20.1",
+        "jest": "^29.7.0",
+        "jest-diff": "^29.7.0",
         "jsdoc": "^3.6.6"
     }
 }

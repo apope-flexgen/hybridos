@@ -2,6 +2,15 @@
 // eslint-disable-next-line import/no-unresolved
 const fims = require('@flexgen/fims');
 const { Event, eventsQuery, clearActiveEventQuery } = require('./eventsDb.js');
+const {
+    handleGetAlertsManagement,
+    handlePostAlertsManagement,
+    handleGetAlerts,
+    handlePostAlerts,
+    handleSetAlerts
+} = require('./alerts/alertHandlers.js');
+const { initializeAlerts } = require('./alerts/alertsDb.js');
+
 
 fims.connect('events');
 
@@ -12,12 +21,42 @@ fims.subscribeTo('/events');
  * @param {object} msg message to process
  */
 function processEvent(msg) {
-    if (msg) {
-        const { body } = msg;
-        const { eventsQueryID } = body;
+    // schedule next invocation, every 20ms
+    if (process.env.NODE_ENV !== "test") {
+        setTimeout(() => {
+            fims.receiveWithTimeout(500, processEvent);
+        }, 20);
+    }
+
+    if (!msg) { return; }
+
+    const { body } = msg;
+    const segments = msg.uri.split("/");
+
+    // /events/alerts endpoints
+    if (segments?.[2] == "alerts") {
+        if (segments?.[3] == "management") {
+            if (msg.method === 'get') {
+                handleGetAlertsManagement(msg);
+            } else if (msg.method === 'post') {
+                handlePostAlertsManagement(msg);
+            }
+        } else {
+            if (msg.method === 'get') {
+                handleGetAlerts(msg);
+            } else if (msg.method === 'post') {
+                handlePostAlerts(msg);
+            } else if (msg.method === 'set') {
+                handleSetAlerts(msg);
+            }
+        }
+    } else {
         // On GET, process time range, severity level.
         // Make request to Mongo, spit the result back to FIMS in reply.
         if (msg.method === 'get') {
+            // GET /events
+            // UI is retrieving events
+            const { eventsQueryID } = body;
             eventsQuery(body, (evt) => {
                 if (eventsQueryID > '') {
                     // if there is an eventsQueryID then we add the eventsQueryID
@@ -43,13 +82,14 @@ function processEvent(msg) {
                     username: null
                 });
             });
-
+    
             // On POST, timestamp it (if not present), enter it into the database.
             // If 'assert' flag is true, also set 'active' flag
             // If 'clear' flag is true, go find and update the referenced event,
             // and add this event to the database
             // In the future, this will call external notification systems.
         } else if (msg.method === 'post') {
+            // POST /events
             if (!body.timestamp) body.timestamp = Date.now();
             if (body.assert) {
                 body.active = true;
@@ -83,9 +123,13 @@ function processEvent(msg) {
             });
         }
     }
-    setTimeout(() => {
-        fims.receiveWithTimeout(500, processEvent);
-    }, 20);
 }
 
-fims.receiveWithTimeout(500, processEvent);
+if (process.env.NODE_ENV !== "test") {
+    initializeAlerts();
+    fims.receiveWithTimeout(500, processEvent);
+}
+
+module.exports = {
+    processEvent,
+}

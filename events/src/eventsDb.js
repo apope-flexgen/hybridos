@@ -5,10 +5,7 @@ const mongoose = require('mongoose');
 
 const { ObjectId } = mongoose.Schema.Types;
 
-const pathArg = process.argv[2];
-if (!pathArg) {
-    throw new Error('Please supply a path to events.json file. Usage: node events.js path/to/config/');
-}
+pathArg = "/usr/local/etc/config/events"
 const configPath = path.resolve(pathArg);
 const configPathAndFile = path.join(configPath, 'events.json');
 if (!fs.existsSync(configPathAndFile)) {
@@ -19,13 +16,13 @@ if (!fs.existsSync(configPathAndFile)) {
 const fimsConfig = require(`${configPathAndFile}`);
 const dbName = fimsConfig.dbName ? fimsConfig.dbName : 'hybridos';
 const ipName = fimsConfig.mongo_ip ? fimsConfig.mongo_ip : 'localhost';
-const portName = fimsConfig.monog_port ? fimsConfig.monog_port : '27017';
+const portName = fimsConfig.mongo_port ? fimsConfig.mongo_port : '27017';
 
 // Set up Mongo document schema
-mongoose.connect(`mongodb://${ipName}:${portName}/${dbName}`, { useNewUrlParser: true });
+mongoose.connect(`mongodb://${ipName}:${portName}/${dbName}`, { useNewUrlParser: true, useUnifiedTopology: true });
 
 /**
- * Schema definition for events database
+ * Schema definition for events table
  * @type {object}
  * @property {string} source where the event was emitted from, different from replyto
  * @property {Date} timestamp time when event was emitted

@@ -1,5 +1,8 @@
 /* eslint-disable no-console */
+const alertExamples = require('./alerts/alertExamples.js');
+const { Alert } = require('./alerts/alertsDb.js');
 const { Event } = require('./eventsDb.js');
+const mongoose = require('mongoose');
 
 function loadEmUp(body) {
     const evt = Event(body);
@@ -60,4 +63,34 @@ const entries = [
     },
 ];
 
-entries.map(loadEmUp);
+async function loadAlerts() {
+    await mongoose.connect(`mongodb://localhost:27017/standalone_storage`, { useNewUrlParser: true, useUnifiedTopology: true });
+    const alertEntries = [
+        ...alertExamples.databaseEntries
+    ];
+
+    await Promise.all(alertEntries.map(async (entry) => {
+        const alert = Alert(entry);
+        alert.save((err) => {
+            if (err) {
+                console.log('problem ', err);
+            } else {
+                if (process.env.NODE_ENV !== "test") {
+                    console.log('yay');
+                }
+            }
+            return true;
+        });
+        return true;
+    }));
+}
+
+// if we're not running a test we want this stuff to just happen
+if (process.env.NODE_ENV !== "test") {
+    entries.map(loadEmUp);
+    loadAlerts();
+}
+
+module.exports = {
+    loadAlerts,
+}
