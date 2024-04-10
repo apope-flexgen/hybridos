@@ -12,20 +12,41 @@ import (
 
 // structure to store config file
 type Config struct {
-	RetentionPolicyDuration        string  `json:"retention"`                          // Retention period to set while creating database  -- optional (defaults to no retention policy created)
-	RetentionPolicyName            string  `json:"retention_name"`                     // Name of the retention policy created for the database -- optional (defaults to "DTS Retention Policy")
-	InputPath                      string  `json:"input_path"`                         // Path at which dts looks for archives
-	FailedValidatePath             string  `json:"failed_validate_path"`               // Path to which dts saves failed archives
-	FailedWritePath                string  `json:"failed_write_path"`                  // Path to which archives that failed a write are moved
-	FwdPath                        string  `json:"forward"`                            // Path to which dts saves successful archives
-	NumValidateWorkers             int     `json:"num_validate_workers"`               // Number of validation workers running in parallel
-	NumInfluxPrepareBatchesWorkers int     `json:"num_influx_prepare_batches_workers"` // Number of workers preparing batch points in parallel in the influx writer
-	NumInfluxSendBatchesWorkers    int     `json:"num_influx_send_batches_workers"`    // Number of workers sending batches in parallel to influx
-	DbHealthCheckDelayS            float64 `json:"db_health_check_delay_seconds"`      // Delay in seconds between db client health checks when trying to write
-	Extension                      string  `json:"ext"`                                // Extension of archives to look for
-	InfluxAddr                     string  `json:"influx_address"`                     // External IP:Port for influx -- optional (defaults to localhost:8086)
-	MongoAddr                      string  `json:"mongo_address"`                      // External IP:Port for mongo -- optional (defaults to localhost:27017)
-	RetryConnectPeriodSeconds      float64 `json:"retry_connect_period_seconds"`       // Period with which we retry connecting to databases
+	InputPath                      string                  `json:"input_path"`                         // Path at which dts looks for archives
+	FailedValidatePath             string                  `json:"failed_validate_path"`               // Path to which dts saves failed archives
+	FailedWritePath                string                  `json:"failed_write_path"`                  // Path to which archives that failed a write are moved
+	FwdPath                        string                  `json:"forward"`                            // Path to which dts saves successful archives
+	NumValidateWorkers             int                     `json:"num_validate_workers"`               // Number of validation workers running in parallel
+	NumInfluxPrepareBatchesWorkers int                     `json:"num_influx_prepare_batches_workers"` // Number of workers preparing batch points in parallel in the influx writer
+	NumInfluxSendBatchesWorkers    int                     `json:"num_influx_send_batches_workers"`    // Number of workers sending batches in parallel to influx
+	DbHealthCheckDelayS            float64                 `json:"db_health_check_delay_seconds"`      // Delay in seconds between db client health checks when trying to write
+	Extension                      string                  `json:"ext"`                                // Extension of archives to look for
+	InfluxAddr                     string                  `json:"influx_address"`                     // External IP:Port for influx -- optional (defaults to localhost:8086)
+	MongoAddr                      string                  `json:"mongo_address"`                      // External IP:Port for mongo -- optional (defaults to localhost:27017)
+	RetryConnectPeriodSeconds      float64                 `json:"retry_connect_period_seconds"`       // Period with which we retry connecting to databases
+	RetentionPolicies              []RetentionPolicyConfig `json:"retention_policies"`                 // Retention policies to create for Influx databases
+	ContinuousQueries              []ContinuousQueryConfig `json:"continuous_queries"`                 // Continuous queries to create for Influx databases
+}
+
+// config for Influx retention policies
+type RetentionPolicyConfig struct {
+	Name     string `json:"name"`     // Name of the RP
+	Duration string `json:"duration"` // Influx duration string for the RP duration
+	Default  bool   `json:"default"`  // True if this RP is the default RP
+}
+
+// config for Influx continuous queries
+type ContinuousQueryConfig struct {
+	Name     string `json:"name"`     // Name of CQ
+	GroupBy  string `json:"group_by"` // String passed to GROUP BY phrase of CQ, defines grouping used by aggregations
+	Resample string `json:"resample"` // String passed to RESAMPLE phrase of CQ if it should be included, defines how to do recalculations used to account for batching period
+	RP       string `json:"rp"`       // Name of RP to store the CQ into
+	Select   string `json:"select"`   // String passed to SELECT phrase of CQ, defines query which becomes the CQ's result
+
+	// Fields with default values that usually shouldn't be overwritten
+	Measurement string `json:"measurement"` // Destination measurement in which the CQ results are stored
+	From        string `json:"from"`        // Measurement on which the CQ is applied
+	Into        string `json:"into"`        // Destination DB in which the CQ results are stored
 }
 
 var (
@@ -34,11 +55,6 @@ var (
 
 // Parses configuration from the source provided: either a filepath or "dbi"
 func ParseConfig(cfgSource string) error {
-	// default config values
-	GlobalConfig = Config{
-		RetryConnectPeriodSeconds: 1,
-	}
-
 	// extract configuration based on source
 	if len(cfgSource) == 0 || strings.EqualFold(cfgSource, "dbi") {
 		log.MsgInfo("Config source set to read from dbi")
@@ -71,8 +87,48 @@ func ParseConfig(cfgSource string) error {
 	return validateConfig()
 }
 
+// Unmarshal a root config with default values
+func (cfg *Config) UnmarshalJSON(data []byte) error {
+	type MethodlessConfigAlias Config // type alias with no methods is needed to prevent recursive calls to UnmarshalJSON
+
+	// default values
+	tmpCfg := &MethodlessConfigAlias{
+		RetryConnectPeriodSeconds: 1,
+		InfluxAddr:                "localhost:8086",
+		MongoAddr:                 "localhost:27017",
+	}
+
+	err := json.Unmarshal(data, tmpCfg)
+	if err != nil {
+		return err
+	}
+
+	*cfg = Config(*tmpCfg)
+	return nil
+}
+
+// Unmarshal a CQ config with default values
+func (cfg *ContinuousQueryConfig) UnmarshalJSON(data []byte) error {
+	type MethodlessConfigAlias ContinuousQueryConfig // type alias with no methods is needed to prevent recursive calls to UnmarshalJSON
+
+	// default values
+	tmpCfg := &MethodlessConfigAlias{
+		Measurement: ":MEASUREMENT", // uses Influx backreferencing to store the result into a measurement named according to the FROM measurement
+		From:        "/.*/",         // uses a match-everything regular expression to apply the CQ to all measurements
+		Into:        "",             // if left empty, we should later dynamically set the destination DB to the same DB the CQ is applied to
+	}
+
+	err := json.Unmarshal(data, tmpCfg)
+	if err != nil {
+		return err
+	}
+
+	*cfg = ContinuousQueryConfig(*tmpCfg)
+	return nil
+}
+
+// return an error if config is invalid
 func validateConfig() error {
-	log.Infof("configured with retention policy: %s", GlobalConfig.RetentionPolicyDuration)
 	if len(GlobalConfig.InputPath) == 0 {
 		return fmt.Errorf("input path not specified")
 	}
@@ -94,5 +150,30 @@ func validateConfig() error {
 	if GlobalConfig.RetryConnectPeriodSeconds <= 0 {
 		return fmt.Errorf("configured retry connection period is %f seconds, but it must be positive", GlobalConfig.DbHealthCheckDelayS)
 	}
+
+	// check that there is at most one default retention policy and retention policy names aren't duplicated
+	numDefaultRPs := 0
+	rpNameSet := map[string]struct{}{}
+	for _, rp := range GlobalConfig.RetentionPolicies {
+		if _, exists := rpNameSet[rp.Name]; exists {
+			return fmt.Errorf("retention policy name %s is repeated, duplicate names are not allowed", rp.Name)
+		}
+		rpNameSet[rp.Name] = struct{}{}
+
+		if rp.Default {
+			numDefaultRPs++
+		}
+	}
+	if numDefaultRPs > 1 {
+		return fmt.Errorf("number of default retentions is %d, but must be at most 1", numDefaultRPs)
+	}
+
+	// check that retention policies used by continuous queries are all included in the retention policies list
+	for _, cq := range GlobalConfig.ContinuousQueries {
+		if _, known := rpNameSet[cq.RP]; !known {
+			return fmt.Errorf("continuous query %s uses unknown retention policy %s", cq.Name, cq.RP)
+		}
+	}
+
 	return nil
 }

@@ -59,6 +59,27 @@ var contQueries = []ContQuery{
 		From:        "h2o_pH",
 		Groupby:     "time(1d)",
 	},
+	{
+		Name:        "cq_avgAll",
+		Db:          "test",
+		Select:      "MEAN(pH)",
+		Into:        "test",
+		Rp:          "autogen",
+		Measurement: ":MEASUREMENT",
+		From:        "h2o_pH",
+		Groupby:     "time(1d)",
+	},
+	{
+		Name:        "cq_avgAllResampled",
+		Db:          "test",
+		Resample:    "EVERY 1d FOR 2d",
+		Select:      "MEAN(pH)",
+		Into:        "test",
+		Rp:          "autogen",
+		Measurement: ":MEASUREMENT",
+		From:        "h2o_pH",
+		Groupby:     "time(1d)",
+	},
 }
 
 var connector = NewConnector("localhost:8086", time.Minute, time.Second/100, false)
@@ -206,10 +227,12 @@ func TestContinuousQuery(t *testing.T) {
 		t.Error(err)
 	}
 
-	query, err := connector.RunContinuousQuery(contQueries[0])
-	if err != nil {
-		t.Log("\n" + query)
-		t.Error(err)
+	for _, cq := range contQueries {
+		query, err := connector.RunContinuousQuery(cq)
+		if err != nil {
+			t.Log("\n" + query)
+			t.Error(err)
+		}
 	}
 }
 

@@ -29,15 +29,18 @@ type RetentionPolicy struct {
 	Default            bool
 }
 
+// See this link for more info on the structure of Influx continuous queries:
+// https://docs.influxdata.com/influxdb/v1/query_language/continuous_queries/
 type ContQuery struct {
-	Name        string
-	Db          string
-	Select      string
-	Into        string
-	Rp          string
-	Measurement string
-	From        string
-	Groupby     string
+	Name        string // Name of the CQ
+	Db          string // DB on which the CQ is applied
+	Resample    string // String passed to RESAMPLE phrase of CQ if it should be included, defines how to do recalculations used to account for batching period
+	Select      string // String passed to SELECT phrase of CQ, defines query which becomes the CQ's result
+	Into        string // Destination DB in which the CQ results are stored
+	Rp          string // Name of RP to store the CQ into
+	Measurement string // Destination measurement in which the CQ results are stored
+	From        string // Measurement on which the CQ is applied
+	Groupby     string // String passed to GROUP BY phrase of CQ, defines grouping used by aggregations
 }
 
 type BatchPoints struct {
@@ -242,11 +245,20 @@ func (conn *InfluxConnector) RunContinuousQuery(contQuery ContQuery) (string, er
 		return "", fmt.Errorf("error - client connection does not exist. please create one and try again")
 	}
 
-	query := fmt.Sprintf("CREATE CONTINUOUS QUERY %s ON %s\n "+
-		"BEGIN\n"+
-		"\tSELECT %s INTO %s.%s.%s FROM %s GROUP BY %s\n"+
+	// construct resampling phrase for the query if resampling parameters were given
+	resamplePhrase := ""
+	if contQuery.Resample != "" {
+		resamplePhrase = fmt.Sprintf("RESAMPLE %s", contQuery.Resample)
+	}
+
+	// form and send query
+	// note usage of quotes around identifiers so that the caller doesn't have to worry as much about Influx identifier requirements
+	// https://docs.influxdata.com/influxdb/v1/query_language/spec/#identifiers
+	query := fmt.Sprintf("CREATE CONTINUOUS QUERY \"%s\" ON \"%s\" %s "+
+		"BEGIN "+
+		"SELECT %s INTO \"%s\".\"%s\".%s FROM %s GROUP BY %s "+
 		"END",
-		contQuery.Name, contQuery.Db, contQuery.Select, contQuery.Into, contQuery.Rp, contQuery.Measurement, contQuery.From, contQuery.Groupby)
+		contQuery.Name, contQuery.Db, resamplePhrase, contQuery.Select, contQuery.Into, contQuery.Rp, contQuery.Measurement, contQuery.From, contQuery.Groupby)
 
 	q := influx.NewQuery(query, contQuery.Db, "")
 	if response, err := conn.Client.Query(q); err == nil && response.Error() == nil {
@@ -254,7 +266,7 @@ func (conn *InfluxConnector) RunContinuousQuery(contQuery ContQuery) (string, er
 	} else if err != nil {
 		return query, fmt.Errorf("query error - %w", err)
 	} else if response.Error() != nil {
-		return query, fmt.Errorf("reponse error - %w", response.Error())
+		return query, fmt.Errorf("response error - %w", response.Error())
 	}
 	return query, nil
 }

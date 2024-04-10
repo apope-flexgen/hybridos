@@ -67,15 +67,7 @@ func (writer *InfluxWriter) Start(group *errgroup.Group, groupContext context.Co
 
 func (writer *InfluxWriter) initialize() error {
 	// create connection to influxdb
-	var address string
-	switch GlobalConfig.InfluxAddr {
-	case "":
-		address = "localhost:8086"
-	default:
-		address = GlobalConfig.InfluxAddr
-	}
-
-	conn := influx.NewConnector(address, time.Minute/2, time.Duration(GlobalConfig.DbHealthCheckDelayS*float64(time.Second)), false)
+	conn := influx.NewConnector(GlobalConfig.InfluxAddr, time.Minute/2, time.Duration(GlobalConfig.DbHealthCheckDelayS*float64(time.Second)), false)
 	writer.influxConn = conn
 
 	err := writer.influxConn.Connect()
@@ -124,7 +116,7 @@ func (writer *InfluxWriter) prepareBatchesUntil(done <-chan struct{}) error {
 
 func (writer *InfluxWriter) prepareBatches(data *archiveData) (*archiveBatches, error) {
 	var batches []influx.BatchPoints
-	err := writer.ensureDB(data.db, GlobalConfig.RetentionPolicyDuration, GlobalConfig.RetentionPolicyName) // set up database if it isn't already
+	err := writer.ensureDB(data.db, GlobalConfig.RetentionPolicies, GlobalConfig.ContinuousQueries) // set up database if it isn't already
 	if err != nil {
 		return nil, fmt.Errorf("failed to setup influx database with error: %w", err)
 	}
@@ -230,29 +222,51 @@ func (writer *InfluxWriter) sendBatch(batch influx.BatchPoints) error {
 	}
 }
 
-// Ensures that the database and retention policy we want to write to exists in the destination server
-func (writer *InfluxWriter) ensureDB(dbName string, retentionDuration string, retentionName string) error {
+// Ensures that the database and associated setup (retention policies and continuous queries) we want to write to
+// exists in the destination server
+func (writer *InfluxWriter) ensureDB(dbName string, rpConfigs []RetentionPolicyConfig, cqConfigs []ContinuousQueryConfig) error {
 	if _, exists := writer.knownDbs.Load(dbName); exists {
 		return nil
 	}
 	log.Debugf("trying to create database: %s", dbName)
 
-	var retentionPolicies []influx.RetentionPolicy = nil
-	if retentionName == "" {
-		retentionName = "DTS Retention Policy"
-	}
-	// create retention policy only if a non-empty retention duration was given
-	if retentionDuration != "" {
-		retentionPolicies = []influx.RetentionPolicy{
-			{Name: retentionName,
-				Default:  true,
-				Duration: retentionDuration},
-		}
+	// create influx retention policies based on config
+	retentionPolicies := []influx.RetentionPolicy{}
+	for _, rp := range rpConfigs {
+		retentionPolicies = append(retentionPolicies, influx.RetentionPolicy{
+			Name:     rp.Name,
+			Default:  rp.Default,
+			Duration: rp.Duration,
+		})
 	}
 
 	err := writer.influxConn.CreateDatabase(dbName, retentionPolicies)
 	if err != nil {
 		return fmt.Errorf("failed to create database in Influx with error: %w", err)
+	}
+
+	// create continuous queries based on config, with Influx identifiers quoted appropriately
+	for _, cq := range cqConfigs {
+		into := cq.Into
+		if into == "" {
+			// store result in the same database if no destination database is configured
+			into = dbName
+		}
+		influxCQ := influx.ContQuery{
+			Name:        cq.Name,
+			Db:          dbName, // get data from this database
+			Resample:    cq.Resample,
+			Select:      cq.Select,
+			Into:        into,
+			Rp:          cq.RP,
+			Measurement: cq.Measurement,
+			From:        cq.From,
+			Groupby:     cq.GroupBy,
+		}
+		query, err := writer.influxConn.RunContinuousQuery(influxCQ)
+		if err != nil {
+			return fmt.Errorf("failed to create continuous query %s in Influx with error: %w", query, err)
+		}
 	}
 
 	writer.knownDbs.Store(dbName, true)

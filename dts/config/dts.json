@@ -8,7 +8,6 @@
     "num_influx_prepare_batches_workers": 3,
     "num_influx_send_batches_workers": 3,
     "db_health_check_delay_seconds": 0.05,
-    "retention_name": "autogen",
     "influx_address": "influx-container:8086",
     "mongo_address": "mongo-container:27017"
 }

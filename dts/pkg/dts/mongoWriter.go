@@ -42,15 +42,7 @@ func (writer *MongoWriter) Start(group *errgroup.Group, groupContext context.Con
 
 func (writer *MongoWriter) initialize() error {
 	// create connection to mongodb
-	var address string
-	switch GlobalConfig.MongoAddr {
-	case "":
-		address = "localhost:27017"
-	default:
-		address = GlobalConfig.MongoAddr
-	}
-
-	conn := mongo.NewConnector(address, time.Duration(GlobalConfig.DbHealthCheckDelayS), time.Minute/2)
+	conn := mongo.NewConnector(GlobalConfig.MongoAddr, time.Duration(GlobalConfig.DbHealthCheckDelayS), time.Minute/2)
 	writer.mongoConn = conn
 
 	err := writer.mongoConn.Connect()
