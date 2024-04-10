@@ -21,7 +21,7 @@ ifeq ($(config),sample)
   IoTarg_config = sample
 endif
 
-PROJECTS := DNPPeer dnp utils IoTarg
+PROJECTS := dnp utils IoTarg
 
 .PHONY: all clean help $(PROJECTS) 
 

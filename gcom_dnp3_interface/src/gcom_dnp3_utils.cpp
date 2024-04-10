@@ -1460,6 +1460,11 @@ bool parse_system(cJSON* cji, GcomSystem& sys, int who)
             {
                 sys.protocol_dependencies->conn_type = Conn_Type::TCP;
             }
+            if (strcmp(conn_str, "TLS") == 0)
+            {
+                sys.protocol_dependencies->conn_type = Conn_Type::TCP;
+                sys.protocol_dependencies->use_tls = true;
+            }
             if (strcmp(conn_str, "RTU") == 0)
             {
                 sys.protocol_dependencies->conn_type = Conn_Type::RTU;
@@ -1470,6 +1475,7 @@ bool parse_system(cJSON* cji, GcomSystem& sys, int who)
             sys.protocol_dependencies->conn_type = Conn_Type::TCP;
         }
     }
+
     // serial/RTU stuff:
     if (ret)
     {

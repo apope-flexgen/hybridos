@@ -232,7 +232,7 @@
  * is supported and/or for TLS if it is supported.
  */
 #ifndef TMWCNFG_USE_OPENSSL
-#define TMWCNFG_USE_OPENSSL              TMWDEFS_FALSE
+#define TMWCNFG_USE_OPENSSL              TMWDEFS_TRUE
 #endif
 /* Use OpenSSL version 1_0_2x instead of 1.1.1. OpenSSL library introduced a number
  * of API changes in 1.1.1 so this conditional was introduced to accomodate the 

@@ -16,7 +16,7 @@ SLIBS_DIR64 = /usr/lib64/
 INCLUDES_BUILD = -Iinclude/ -ITMW/ -ITMW/tmwscl/tmwtarg/LinIoTarg/ -ITMW/tmwscl/tmwtarg/
 INCLUDES_TEST = -Itest/unit_tests/include/
 INCLUDES = -I$(INCLUDES_DIR) -I$(SINCLUDES_DIR)
-LIBS = -LTMW/bin -L$(LIBS_DIR) -L$(LIBS_DIR64) -L$(SLIBS_DIR) -L$(SLIBS_DIR64) -Wl,-rpath=$(LIBS_DIR):$(LIBS_DIR64):$(LIBS_DIR)cpp_17:$(SLIBS_DIR):$(SLIBS_DIR64) -lfims -lmodbus
+LIBS = -LTMW/bin -L$(LIBS_DIR) -L$(LIBS_DIR64) -L$(SLIBS_DIR) -L$(SLIBS_DIR64) -Wl,-rpath=$(LIBS_DIR):$(LIBS_DIR64):$(LIBS_DIR)cpp_17:$(SLIBS_DIR):$(SLIBS_DIR64) -lfims -lmodbus -lssl -lcrypto
 
 # had to use CPPXFLAGS to prevent a conflict with TMW
 CPPXFLAGS += -std=c++17

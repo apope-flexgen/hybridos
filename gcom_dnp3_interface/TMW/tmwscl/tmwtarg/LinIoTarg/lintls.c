@@ -541,7 +541,7 @@ int lintls_read(TCP_IO_CHANNEL *pTcpChannel, TMWTYPES_UCHAR *pBuff, int maxNumCh
   case RFC_SOCKET_SUCCESS:
     break;
   case RFC_SOCKET_BLOCKED:
-    LINIODIAG_MSG("TLS(%s), lintls_read() blocked", pTcpChannel->chnlConfig.chnlName);
+    // LINIODIAG_MSG("TLS(%s), lintls_read() blocked", pTcpChannel->chnlConfig.chnlName);
     return(0);
   case RFC_SOCKET_FAILED:
   default:
@@ -549,7 +549,7 @@ int lintls_read(TCP_IO_CHANNEL *pTcpChannel, TMWTYPES_UCHAR *pBuff, int maxNumCh
     return(-1);
   }
 
-  LINIODIAG_MSG("TLS(%s), Receive, data was received", pTcpChannel->chnlConfig.chnlName);
+  // LINIODIAG_MSG("TLS(%s), Receive, data was received", pTcpChannel->chnlConfig.chnlName);
 
 
   /* This could be called from higher up the protocol stacks if you wanted to count application layer PDUs
@@ -592,7 +592,7 @@ int TLSCheckStatus(TCP_IO_CHANNEL *pTcpChannel, int status)
       return(RFC_SOCKET_FAILED);
 
     case SSL_ERROR_WANT_READ:
-      LINIODIAG_MSG("TLS(%s), CheckStatus: (want read)", pTcpChannel->chnlConfig.chnlName);
+      // LINIODIAG_MSG("TLS(%s), CheckStatus: (want read)", pTcpChannel->chnlConfig.chnlName);
       return(RFC_SOCKET_BLOCKED);
 
     case SSL_ERROR_WANT_WRITE:
@@ -637,7 +637,7 @@ int TLSCheckStatus(TCP_IO_CHANNEL *pTcpChannel, int status)
   else
   {
     /* Success */
-    LINIODIAG_MSG("TLS(%s), CheckStatus: (success)", pTcpChannel->chnlConfig.chnlName);
+    // LINIODIAG_MSG("TLS(%s), CheckStatus: (success)", pTcpChannel->chnlConfig.chnlName);
     pTcpChannel->tls.state = TMW_TLS_READY;
     return(RFC_SOCKET_SUCCESS);
   }
@@ -1116,7 +1116,7 @@ TMWTYPES_BOOL lintls_connect(TCP_IO_CHANNEL *pTcpChannel, SOCKET tempCommSocket)
 /* Transmit bytes to this TLS connection  */
 int lintls_transmit(TCP_IO_CHANNEL *pTcpChannel, const TMWTYPES_UCHAR *pBufferToSend, TMWTYPES_USHORT numCharsToSend)
 {
-  LINIODIAG_MSG("TLS(%s), transmit store %d bytes", pTcpChannel->chnlConfig.chnlName, numCharsToSend);
+  // LINIODIAG_MSG("TLS(%s), transmit store %d bytes", pTcpChannel->chnlConfig.chnlName, numCharsToSend);
   return StoreInTLSWriteBuffer(pTcpChannel, pBufferToSend, numCharsToSend);
 }
 

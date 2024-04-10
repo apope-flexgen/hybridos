@@ -1,7 +1,6 @@
 #include "gcom_dnp3_tmw_utils.h"
 
-extern "C"
-{
+extern "C" {
 #include "tmwscl/utils/tmwappl.h"
 #include "tmwscl/utils/tmwtimer.h"
 #include "tmwscl/utils/tmwtargp.h"
@@ -19,9 +18,9 @@ extern "C"
 #include "gcom_dnp3_client.h"
 #include "gcom_dnp3_server.h"
 
-bool init_tmw(GcomSystem &sys)
+bool init_tmw(GcomSystem& sys)
 {
-    DNP3Dependencies *dnp3_sys = &(sys.protocol_dependencies->dnp3);
+    DNP3Dependencies* dnp3_sys = &(sys.protocol_dependencies->dnp3);
     if (dnp3_sys->openTMWChannel == nullptr)
     {
         FPS_ERROR_LOG("Missing declaration of TMW open channel function.");
@@ -44,7 +43,7 @@ bool init_tmw(GcomSystem &sys)
         tmwtargp_registerPutDiagStringFunc(Logging::log_TMW_message);
     }
 #ifdef DNP3_TEST_MODE
-    tmwtargp_registerPutDiagStringFunc([](const TMWDIAG_ANLZ_ID *pAnlzId, const TMWTYPES_CHAR *pString) {});
+    tmwtargp_registerPutDiagStringFunc([](const TMWDIAG_ANLZ_ID* pAnlzId, const TMWTYPES_CHAR* pString) {});
 #endif
     tmwtimer_initialize();
     if (sys.protocol_dependencies->who == DNP3_MASTER)
@@ -57,7 +56,7 @@ bool init_tmw(GcomSystem &sys)
         FPS_ERROR_LOG("Could not initialize TMW application context. Try killing the application and restarting it.");
         return false;
     }
-    tmwtarg_initConfig(&dnp3_sys->targConfig); // Initialize channel configuration to defaults
+    tmwtarg_initConfig(&dnp3_sys->targConfig);  // Initialize channel configuration to defaults
     dnpchnl_initConfig(&dnp3_sys->channelConfig, &dnp3_sys->tprtConfig, &dnp3_sys->linkConfig, &dnp3_sys->physConfig);
     tmwtargio_initConfig(&dnp3_sys->IOConfig);
 
@@ -78,10 +77,10 @@ bool init_tmw(GcomSystem &sys)
     return true;
 }
 
-void setupTMWIOConfig(GcomSystem &sys)
+void setupTMWIOConfig(GcomSystem& sys)
 {
-    TMWTARGIO_CONFIG *IOConfig = &(sys.protocol_dependencies->dnp3.IOConfig);
-    DNPLINK_CONFIG *linkConfig = &(sys.protocol_dependencies->dnp3.linkConfig);
+    TMWTARGIO_CONFIG* IOConfig = &(sys.protocol_dependencies->dnp3.IOConfig);
+    DNPLINK_CONFIG* linkConfig = &(sys.protocol_dependencies->dnp3.linkConfig);
 
     // all of this will need to change based on config settings...
     if (sys.protocol_dependencies->conn_type == Conn_Type::TCP)
@@ -103,20 +102,45 @@ void setupTMWIOConfig(GcomSystem &sys)
         }
         IOConfig->targTCP.disconnectOnNewSyn = TMWDEFS_TRUE;
         IOConfig->targTCP.initUnsolUDPPort = sys.protocol_dependencies->port;
+        IOConfig->targTCP.useTLS = sys.protocol_dependencies->use_tls;
 
         if (sys.protocol_dependencies->who == DNP3_MASTER)
         {
             IOConfig->targTCP.mode = TMWTARGTCP_MODE_CLIENT;
             IOConfig->targTCP.role = TMWTARGTCP_ROLE_MASTER;
+            if (sys.protocol_dependencies->use_tls)
+            {
+                strncpy(IOConfig->targTCP.tlsRsaCertificateId, "/usr/local/etc/certs/gcom_dnp3_interface/client.pem",
+                        TMWTARG_CRYPTO_ID_LEN - 1);
+                strncpy(IOConfig->targTCP.tlsRsaPrivateKeyFile, "/usr/local/etc/certs/gcom_dnp3_interface/client.key",
+                        TMWTARG_CRYPTO_ID_LEN - 1);
+                strncpy(IOConfig->targTCP.tlsRsaPrivateKeyPassPhrase, "", TMWTARG_CRYPTO_PASSPHRASE_LEN - 1);
+            }
         }
         else
         {
             IOConfig->targTCP.mode = TMWTARGTCP_MODE_SERVER;
             IOConfig->targTCP.role = TMWTARGTCP_ROLE_OUTSTATION;
+            if (sys.protocol_dependencies->use_tls)
+            {
+                strncpy(IOConfig->targTCP.tlsRsaCertificateId, "/usr/local/etc/certs/gcom_dnp3_interface/server.pem",
+                        TMWTARG_CRYPTO_ID_LEN - 1);
+                strncpy(IOConfig->targTCP.tlsRsaPrivateKeyFile, "/usr/local/etc/certs/gcom_dnp3_interface/server.key",
+                        TMWTARG_CRYPTO_ID_LEN - 1);
+                strncpy(IOConfig->targTCP.tlsRsaPrivateKeyPassPhrase, "", TMWTARG_CRYPTO_PASSPHRASE_LEN - 1);
+            }
+        }
+
+        if (sys.protocol_dependencies->use_tls)
+        {
+            strncpy(IOConfig->targTCP.caCrlFileName, "", TMWTARG_CRYPTO_ID_LEN - 1);
+            strncpy(IOConfig->targTCP.caFileName, "/usr/local/etc/certs/gcom_dnp3_interface/chain.pem",
+                    TMWTARG_CRYPTO_ID_LEN - 1);
+            IOConfig->targTCP.nCaVerifyDepth = 2;
         }
     }
     else
-    { // RTU
+    {  // RTU
 
         IOConfig->type = TMWTARGIO_TYPE_232;
 
@@ -124,7 +148,7 @@ void setupTMWIOConfig(GcomSystem &sys)
 
         char baudString[20];
         sprintf(baudString, "%d", sys.protocol_dependencies->baud);
-        ; // Convert int to string
+        ;  // Convert int to string
         strcpy(IOConfig->targ232.baudRate, baudString);
         IOConfig->targ232.numDataBits = sys.protocol_dependencies->data_bits;
         IOConfig->targ232.numStopBits = sys.protocol_dependencies->stop_bits;
@@ -142,10 +166,10 @@ void setupTMWIOConfig(GcomSystem &sys)
     }
 }
 
-void shutdown_tmw(DNP3Dependencies *dnp3_sys)
+void shutdown_tmw(DNP3Dependencies* dnp3_sys)
 {
     bool client = false;
-    if (((TMWSESN *)dnp3_sys->pSession)->type == TMWTYPES_SESSION_TYPE_MASTER)
+    if (((TMWSESN*)dnp3_sys->pSession)->type == TMWTYPES_SESSION_TYPE_MASTER)
     {
         if (dnp3_sys->point_status_info)
         {

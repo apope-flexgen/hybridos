@@ -474,6 +474,7 @@ struct ProtocolDependencies
     ModbusDependencies modbus;
     DNP3Dependencies dnp3;
     bool connected = false;  // To tell main whether or not this workspace is up or not
+    bool use_tls = false;
 
     Conn_Type conn_type = Conn_Type::TCP;  // TCP, RTU
     Mode mode = Mode::Client;              // client, server
