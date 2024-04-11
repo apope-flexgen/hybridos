@@ -80,10 +80,11 @@ void timerSetThreadFunc() {
             std::shared_ptr<TimeObject> tObj = *timerSet.begin();
             double waitTime = tObj->runTime - tNow; 
             if(0)std::cout << " tNow " << tNow
-                            << " fOUND " << tObj->name 
+                            << " TimerName " << tObj->name 
                             << " id " << tObj->id 
                             << " users " << tObj.use_count() 
                             << " runTime " << tObj->runTime 
+                            << " repeatTime "  << tObj->repeatTime 
                             << " waitTime " << waitTime 
                             << " timerSet size " << timerSet.size() 
                             << std::endl;
@@ -96,25 +97,27 @@ void timerSetThreadFunc() {
 
                     // Run the callback
                     auto callback = tObj->callback;
+                    auto param = tObj->param;
                     auto name = tObj->name;
                     auto interval = tObj->repeatTime;
                     // reset sync if we need to 
-                    if (tObj->sync) {
-                        if (tObj->run) {
-                            if (tObj->lastRun + (tObj->repeatTime*2) <= tNow) {
-                                tObj->run = false;                
-                            }
-                        }
-                    }
+                    // if (tObj->sync) {
+                    //     if (tObj->run) {
+                    //         if (tObj->lastRun + (tObj->repeatTime*2) <= tNow) {
+                    //             tObj->run = false;                
+                    //         }
+                    //     }
+                    // }
                     //timerSet.erase(timerSet.begin());
                     timerSet.erase(tObj);
 
                     tObj->runTime += interval;
-                    if (tObj->sync)
-                        tObj->runTime += interval;
+                    // if (tObj->sync)
+                    //     tObj->runTime += interval;
 
                     lock.unlock(); // Unlock while running the callback
-                    callback(tObj, tObj->param);
+                    if(callback)
+                        callback(tObj, param);
                     lock.lock(); // Re-lock to insert back
                     //if((interval == 0.0)
 
@@ -136,20 +139,22 @@ void timerSetThreadFunc() {
 
                         //tObj->runTime += 0.0000001;
 
-                        auto insertres = timerSet.insert(tObj);
-                        if(!insertres.second)
-                        {
-                            std::cout 
-                            << " tNow " << tNow 
-                            << " After Adding back " << tObj->name 
-                            << " insertres " << insertres.second 
-                            << " users " << tObj.use_count() 
-                            << " runTime " << tObj->runTime 
-                            << " stopTime " << tObj->stopTime 
-                            << " count " << tObj->count 
-                            << " timerSet size " << timerSet.size() 
-                            << std::endl;
-                        }
+                        // auto insertres = timerSet.insert(tObj);
+                        // if(!insertres.second)
+                        // {
+                        //     std::cout 
+                        //     << " tNow " << tNow 
+                        //     << " After Adding back " << tObj->name 
+                        //     << " insertres " << insertres.second 
+                        //     << " users " << tObj.use_count() 
+                        //     << " runTime " << tObj->runTime 
+                        //     << " stopTime " << tObj->stopTime 
+                        //     << " count " << tObj->count 
+                        //     << " timerSet size " << timerSet.size() 
+                        //     << std::endl;
+                        // }
+                        timerSet.insert(tObj);
+                        
                     }
                     else
                     {
@@ -174,7 +179,7 @@ void timerSetThreadFunc() {
             timerCv.wait(lock);
         }
     }
-    FPS_INFO_LOG("%s stopping", __func__);
+    FPS_INFO_LOG("Timer Thread stopping");
 
 }
 

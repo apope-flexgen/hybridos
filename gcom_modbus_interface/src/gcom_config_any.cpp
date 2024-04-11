@@ -494,7 +494,7 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
     {
         char new_ip[HOST_NAME_MAX + 1];
         new_ip[HOST_NAME_MAX] = '\0';
-        auto ret = hostname_to_ip(myCfg.connection.ip_address, new_ip, HOST_NAME_MAX);
+        auto ret = hostname_to_ip(myCfg.connection.ip_address, new_ip, HOST_NAME_MAX-1);
         if (ret == 0)
         {
             myCfg.connection.ip_address = new_ip;
@@ -509,7 +509,8 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
     ok &= getItemFromMap(jsonMapOfConfig, "connection.name", myCfg.connection.device_name, myCfg.connection.name, true, true, false);
 
     // debug
-    ok &= getItemFromMap(jsonMapOfConfig, "connection.debug", myCfg.connection.debug, false, true, true, false);
+    //ok &= getItemFromMap(jsonMapOfConfig, "connection.debug", myCfg.connection.debug, false, true, true, false);
+    myCfg.connection.debug = false;
     // connection_timeout
     ok &= getItemFromMap(jsonMapOfConfig, "connection.connection_timeout", myCfg.connection.connection_timeout, 2.0, true, true, false);
     if (ok && (myCfg.connection.connection_timeout < 2 || myCfg.connection.connection_timeout > 30))
@@ -544,11 +545,17 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
     // auto_disable
     ok &= getItemFromMap(jsonMapOfConfig, "connection.auto_disable", myCfg.auto_disable, true, true, true, false);
 
-    // allow_multi_sets
-    ok &= getItemFromMap(jsonMapOfConfig, "connection.allow_multi_sets", myCfg.allow_multi_sets, false, true, true, false);
+    // allow_multi_sets turn off to limit sets to just one register
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.allow_multi_sets", myCfg.allow_multi_sets, true, true, true, false);
 
-    // force_multi_sets
+    // allow_multi_gets
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.allow_multi_gets", myCfg.allow_multi_gets, true, true, true, false);
+
+    // force_multi_sets ; use multi even for just one register
     ok &= getItemFromMap(jsonMapOfConfig, "connection.force_multi_sets", myCfg.force_multi_sets, false, true, true, false);
+
+    // force_multi_gets ; use multi even for just one register
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.force_multi_gets", myCfg.force_multi_gets, false, true, true, false);
 
     // max_register_group_size
     ok &= getItemFromMap(jsonMapOfConfig, "connection.max_register_group_size", myCfg.max_register_group_size, 124, true, true, false);
@@ -636,7 +643,7 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
         myCfg.connection.stop_bits = 1;
     }
 
-    ok &= getItemFromMap(jsonMapOfConfig, "connection.stats_pub_uri", myCfg.connection.stats_uri, std::string("/stats/modbus_client"), true, true, false);
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.stats_pub_uri", myCfg.connection.stats_uri, std::string(""), true, true, false);
     if (myCfg.connection.stats_uri.length() > 0)
     {
         error_message = check_str_for_error(myCfg.connection.stats_uri, R"({}\ "%)");
@@ -646,6 +653,10 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
             myCfg.connection.stats_uri = "";
             error_message = "";
         }
+    }
+    else
+    {
+        myCfg.connection.stats_uri = "";
     }
 
     ok &= getItemFromMap(jsonMapOfConfig, "connection.stats_pub_frequency", myCfg.connection.stats_frequency_ms, 1000, true, true, false);
@@ -2871,7 +2882,7 @@ bool gcom_parse_data(std::any &anyFimsMessageBody, const char *data, size_t leng
     if (result.error())
     {
         //std::string cjerr = 
-        FPS_ERROR_LOG("input body [%s] ", data);
+        //FPS_ERROR_LOG("input body [%s] ", data);
         FPS_ERROR_LOG("parser error [%s] ", simdjson::error_message(result.error()));
 
         //std::cout << "parser error ....\n";

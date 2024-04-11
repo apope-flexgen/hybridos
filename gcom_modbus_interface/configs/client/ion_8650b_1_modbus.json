@@ -1,0 +1,165 @@
+{
+	"system":
+	{
+		"id": "pv_ion_8650b",
+		"sxerial_device":"/dev/ttySNX0",
+		"serial_device":"/dev/ttyUSB0",
+		"baud_rate":9600,
+		"parity":"none",
+		"data_bits":8,
+		"stop_bits":1,
+		"device_id": 2,
+		"frequency": 9500,
+		"off_by_one": true
+	},
+	"registers": 
+	[
+		{
+			"type": "Holding Registers",
+			"starting_offset": 28,
+			"number_of_registers": 23,
+			"map":
+			[
+				{
+					"id": "voltage_ab",
+					"offset": 28,
+					"signed": true,
+					"scale": 1,
+					"size": 2
+				},
+				{
+					"id": "voltage_bc",
+					"offset": 30,
+					"signed": true,
+					"scale": 1,
+					"size": 2
+				},
+				{
+					"id": "voltage_ca",
+					"offset": 32,
+					"signed": true,
+					"scale": 1,
+					"size": 2
+				},
+				{
+					"id": "current_a",
+					"offset": 34,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "current_b",
+					"offset": 36,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "current_c",
+					"offset": 38,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "frequency",
+					"offset": 40,
+					"signed": true,
+					"scale": 100,
+					"size": 2
+				},
+				{
+					"id": "active_power",
+					"offset": 42,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "reactive_power",
+					"offset": 44,
+					"signed": true,
+					"scale": 10,
+					"size": 2
+				},
+				{
+					"id": "power_factor",
+					"offset": 46,
+					"signed": true,
+					"scale": 100,
+					"size": 2
+				},
+				{
+					"id": "apparent_power",
+					"offset": 49,
+					"scale": 10,
+					"size": 2
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			"starting_offset": 91,
+			"number_of_registers": 30,
+			"map":
+			[
+				{
+					"id": "kwh_delivered",
+					"offset": 91,
+					"signed": true,
+					"size": 2
+				},
+				{
+					"id": "kwh_received",
+					"offset": 93,
+					"signed": true,
+					"scale": 1,
+					"size": 2
+				},
+				{
+					"id": "thd_v_l1",
+					"offset": 109,
+					"signed": true,
+					"scale": 100,
+					"size": 2
+				},
+				{
+					"id": "thd_v_l2",
+					"offset": 111,
+					"signed": true,
+					"scale": 100,
+					"size": 2
+				},
+				{
+					"id": "thd_v_l3",
+					"offset": 113,
+					"signed": true,
+					"scale": 100,
+					"size": 2
+				},
+				{
+					"id": "thd_i_l1",
+					"offset": 115,
+					"signed": true,
+					"scale": 100,
+					"size": 2
+				},
+				{
+					"id": "thd_i_l2",
+					"offset": 117,
+					"signed": true,
+					"scale": 100,
+					"size": 2
+				},
+				{
+					"id": "thd_i_l3",
+					"offset": 119,
+					"signed": true,
+					"scale": 100,
+					"size": 2
+				}
+			]
+		}
+	]
+}

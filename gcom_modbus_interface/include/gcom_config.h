@@ -10,6 +10,7 @@
 #include <atomic>
 #include <any>
 #include <map>
+#include <unordered_map>
 #include <vector>
 #include <optional>
 #include <iostream>
@@ -182,6 +183,7 @@ struct cfg
         bool is_random_enum = false;
         bool is_forced = false;
         bool is_enabled = true;
+        bool is_local = false;          // this is set when we want to inspect the local values
         bool is_disconnected = false;  // this is set when we cant find the point on the server
         double reconnect = 0.0;
 
@@ -409,7 +411,13 @@ struct cfg
         std::string id;
         Stats pubStats;
         double tLate;    // when is it late
+        double comp_time = 0.0;
+        double start_time = 0.0;
+        int num_missed = 0;
+        int num_pubs = 0;
+
         std::mutex pmtx;
+        std::mutex tmtx;
         int frequency;
         int offset_time;
         struct component_struct* component;
@@ -419,14 +427,18 @@ struct cfg
         int pending = 0;
         double pend_timeout = 0.0;
         double kill_timeout = 0.0;
-        int pub_threads = 0;
+        int pub_threads = 0;       
+    };
 
-        std::mutex tmtx; // comp time mutex
-        int num_pubs = 0;
-        int num_missed = 0;
-        double start_time = 0.0;
-        double comp_time = 0.0;
-        
+
+    struct request {
+        std::string name;
+        std::string help;
+        // Update the function signature as per your layout
+        std::function<bool(struct cfg&, std::shared_ptr<cfg::request>)> reqfun;
+
+        request(const std::string& name, const std::string& help, std::function<bool(struct cfg&, std::shared_ptr<cfg::request>)> reqfun)
+            : name(name), help(help), reqfun(std::move(reqfun)) {}
     };
 
 
@@ -436,6 +448,7 @@ struct cfg
     std::map<std::string, std::shared_ptr<struct heartbeat_struct>> heartbeat_points;
     std::map<std::string, std::shared_ptr<struct watchdog_struct>> watchdog_points;
     std::map<std::string, std::shared_ptr<struct pub_struct>> pubs;
+    std::unordered_map<std::string, std::shared_ptr<struct request>> requests;
 
     bool debug_connection;
     bool debug_response;
@@ -486,11 +499,13 @@ struct cfg
     bool keep_running = true ; // TODO temp for gcom_fims
     bool keep_fims_running = true ; // TODO temp for gcom_fims
     bool auto_disable     =  false;
-    bool allow_multi_sets =  false;
+    bool allow_multi_sets =  true;
+    bool allow_multi_gets =  true;
     bool force_multi_sets =  false;
+    bool force_multi_gets =  false;
     bool test_fims = false;
-    int max_register_group_size = 125;
-    int max_bit_size = 125;
+    int max_register_group_size = 124;
+    int max_bit_size = 124;
     int max_io_tries = 10;
     bool debug_decode = false;
     bool debug_hb = false;
@@ -537,21 +552,24 @@ struct type_map
 
 struct Uri_req
 {
-    static constexpr auto Raw_Request_Suffix = "_raw";
-    static constexpr auto Timings_Request_Suffix = "_timings";
+    static constexpr auto Raw_Request_Suffix           = "_raw";
+    static constexpr auto Timings_Request_Suffix       = "_timings";
     static constexpr auto Reset_Timings_Request_Suffix = "_reset_timings";
-    static constexpr auto Reload_Request_Suffix = "_reload";
-    static constexpr auto Disable_Suffix = "_disable";
-    static constexpr auto Enable_Suffix = "_enable";
-    static constexpr auto Force_Suffix = "_force";
-    static constexpr auto Unforce_Suffix = "_unforce";
-    static constexpr auto Local_Suffix = "_local";
-    static constexpr auto Remote_Suffix = "_remote";
-    static constexpr auto Full_Suffix = "_full";
-    static constexpr auto Stats_Suffix = "_stats";
-    static constexpr auto Server_Suffix = "_server";
-    static constexpr auto Connection_Suffix = "_debug_connection";
-    static constexpr auto Response_Suffix = "_debug_response";
+    static constexpr auto Reload_Request_Suffix        = "_reload";
+    static constexpr auto Disable_Suffix               = "_disable";
+    static constexpr auto Enable_Suffix                = "_enable";
+    static constexpr auto Connect_Suffix               = "_connect";
+    static constexpr auto Disconnect_Suffix            = "_disconnect";
+    static constexpr auto Force_Suffix                 = "_force";
+    static constexpr auto Unforce_Suffix               = "_unforce";
+    static constexpr auto Local_Suffix                 = "_local";
+    static constexpr auto Remote_Suffix                = "_remote";
+    static constexpr auto Full_Suffix                  = "_full";
+    static constexpr auto Stats_Suffix                 = "_stats";
+    static constexpr auto Server_Suffix                = "_server";
+    static constexpr auto Connection_Suffix            = "_debug_connection";
+    static constexpr auto Response_Suffix              = "_debug_response";
+    static constexpr auto Help_Suffix                  = "_help";
 
     Uri_req()
     {
@@ -581,6 +599,8 @@ struct Uri_req
                 else if (uri_vec[idx] == Reload_Request_Suffix)            is_reload_request        =  true;
                 else if (uri_vec[idx] == Enable_Suffix)                    is_enable_request        =  true;
                 else if (uri_vec[idx] == Disable_Suffix)                   is_disable_request       =  true;
+                else if (uri_vec[idx] == Connect_Suffix)                   is_connect_request       =  true;
+                else if (uri_vec[idx] == Disconnect_Suffix)                is_disconnect_request    =  true;
                 else if (uri_vec[idx] == Force_Suffix)                     is_force_request         =  true;
                 else if (uri_vec[idx] == Unforce_Suffix)                   is_unforce_request       =  true;
                 else if (uri_vec[idx] == Local_Suffix)                     is_local_request         =  true;
@@ -590,6 +610,7 @@ struct Uri_req
                 else if (uri_vec[idx] == Server_Suffix)                    is_server_request        =  true;
                 else if (uri_vec[idx] == Connection_Suffix)                is_debug_connection_request =  true;
                 else if (uri_vec[idx] == Response_Suffix)                  is_debug_response_request   =  true;
+                else if (uri_vec[idx] == Help_Suffix)                      is_help_request             =  true;
             }
         }
     };
@@ -612,6 +633,7 @@ struct Uri_req
         is_server_request = false;
         is_debug_connection_request =  false;
         is_debug_response_request =  false;
+        is_help_request =  false;
         uri_vec.clear();
     }
 
@@ -642,6 +664,8 @@ struct Uri_req
     bool is_reset_request;
     bool is_reload_request;
     bool is_enable_request;
+    bool is_connect_request;
+    bool is_disconnect_request;
     bool is_disable_request;
     bool is_force_request;
     bool is_unforce_request;
@@ -652,6 +676,7 @@ struct Uri_req
     bool is_debug_connection_request;
     bool is_debug_response_request;
     bool is_server_request;
+    bool is_help_request;
     bool is_request = false;
     int num_uris;
     

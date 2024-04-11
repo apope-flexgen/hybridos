@@ -58,14 +58,16 @@ u8 get_io_point_bit_val(std::shared_ptr<cfg::io_point_struct> io_point);
 std::string hex_to_str(u16 *raw16, int size);
 
 
-void gcom_modbus_decode(std::shared_ptr<IO_Work> io_work, std::stringstream &ss, struct cfg &myCfg)
+bool gcom_modbus_decode(std::shared_ptr<IO_Work> io_work, std::stringstream &ss, struct cfg &myCfg)
 {
-    gcom_modbus_decode_debug(io_work, ss, myCfg, true, myCfg.debug_decode);
+    return gcom_modbus_decode_debug(io_work, ss, myCfg, true, myCfg.debug_decode);
 }
 
 
-void gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstream &ss, struct cfg &myCfg, bool include_key, bool debug)
+bool gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstream &ss, struct cfg &myCfg, bool include_key, bool debug)
 {
+    bool found = false;
+    debug = false;
     #ifdef FPS_DEBUG_MODE
     debug = false;
     if (debug)
@@ -117,7 +119,18 @@ void gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstrea
 
         for (auto io_point : io_work->io_points)
         {
+            if (io_point->is_disconnected && !io_point->is_local)
+            {
+               if(debug)
+                    std::cout   <<" 0 .. skipping decode point " << io_point->id 
+                            << " ss :[" << ss.str()<<"]" 
+                            << " found " << found
+                            << std::endl;
+                continue;
+            }
+            found =  true;
             u64 forced_val = get_io_point_forced_val(io_point.get());
+
             if (!firstItem)
             {
                 ss << ",";
@@ -159,7 +172,12 @@ void gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstrea
             }
             else
             {
-                decode_bval(bval, io_point, ss, myCfg, include_key);
+                //std::cout<<" 1 .. decode_bval  point " << io_point->id << " ss :[" << ss.str()<<"]" << std::endl;
+                auto first = decode_bval(bval, io_point, ss, myCfg, include_key);
+                //std::cout<<" 2 .. decode_bval  point " << io_point->id << " ss :[" << ss.str()<<"]" << std::endl;
+                if (!first)
+                    firstItem = true;
+
             }
         }
     }
@@ -168,7 +186,27 @@ void gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstrea
         bool firstItem = true;
         for (auto io_point : io_work->io_points)
         {
+            if (io_work->local)
+            {
+                if(1|| debug)
+                    std::cout   <<" 0 .. local  " << io_point->id 
+                            << " ss :[" << ss.str()<<"]" 
+                            << " found " << found
+                            << std::endl;
+            }
+
             u64 forced_val = get_io_point_forced_val(io_point.get());
+
+            if (io_point->is_disconnected && !io_work->local)
+            {
+               if(debug)
+                    std::cout   <<" 1 .. skipping decode point " << io_point->id 
+                            << " ss :[" << ss.str()<<"]" 
+                            << " found " << found
+                            << std::endl;
+                continue;
+            }
+
             if (!firstItem)
             {
                 ss << ",";
@@ -190,7 +228,7 @@ void gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstrea
                           << " size : " << io_point->size
                           << std::endl;
             }
-            #endif
+#endif
 
             std::any output;
 
@@ -200,10 +238,17 @@ void gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstrea
                 //bvar = (u16 *)get_forced_value(io_point);
                 //bvar = (u16 *)&io_point->forced_val;
                 bvar = (u16 *)&forced_val; //io_point->forced_val;
+                if(0)std::cout << " point  : " << io_point->id
+                          << " forced var   : " << forced_val
+                          << " forced point var   : " << io_point->forced_val
+                          << std::endl;
+
             }
+            found = true;
             // gcom_decode_any(&io_work->buf16[index], nullptr, io_point, output, myCfg);
             // modbus_decode(&io_work->buf16[index], io_point, output, ss, myCfg);
             gcom_decode_any(bvar, nullptr, io_point, output, myCfg);
+            io_point->is_local = io_work->local;
             if (io_work->full)
             {
                 if (include_key)
@@ -214,8 +259,12 @@ void gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstrea
             }
             else
             {
+                // BUG point is being disconnected between line 212 and here
+                // we still need to decode since we have output the ','
                 //modbus_decode(bvar, io_point, output, ss, myCfg, include_key);
-                modbus_decode(io_point, output, ss, myCfg, include_key);
+                auto first = modbus_decode(io_point, output, ss, myCfg, include_key);
+                if (!first)
+                    firstItem = true;
             }
         }
     }
@@ -229,6 +278,7 @@ void gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstrea
         std::cout << " decode output : [" << ss.str() << "]" << std::endl;
     }
     #endif
+    return found;
 }
 
 // std::string addQuote(const std::string &si)
@@ -366,9 +416,9 @@ T getAnyVal(const std::any &anyVal, const T &defaultValue) {
 /// @return
 u64 gcom_decode_any(u16 *raw16, u8 *raw8, std::shared_ptr<cfg::io_point_struct> io_point, std::any &output, struct cfg &myCfg)
 {
-    #ifdef FPS_DEBUG_MODE
+    //#ifdef FPS_DEBUG_MODE
     bool debug = false;
-    #endif
+    //#endif
     u64 raw_data = 0UL;
 
     u64 current_unsigned_val = 0UL;
@@ -380,10 +430,8 @@ u64 gcom_decode_any(u16 *raw16, u8 *raw8, std::shared_ptr<cfg::io_point_struct> 
         raw_data = *(u16 *)raw16;
 
         current_unsigned_val = raw_data;
-        #ifdef FPS_DEBUG_MODE
-        if(debug)
-            std::cout << " io_point raw_data " << raw_data <<" current_unsigned_val "<<  current_unsigned_val<< std::endl;
-        #endif
+
+
         if (io_point->uses_masks)
         {
             // invert mask stuff:
@@ -391,6 +439,10 @@ u64 gcom_decode_any(u16 *raw16, u8 *raw8, std::shared_ptr<cfg::io_point_struct> 
             // care mask stuff:
             current_unsigned_val &= io_point->care_mask;
         }
+
+        if (io_point->is_forced)
+            current_unsigned_val = io_point->forced_val;
+
         // do signed stuff (size 1 cannot be float):
         if (io_point->is_signed)
         {
@@ -425,10 +477,6 @@ u64 gcom_decode_any(u16 *raw16, u8 *raw8, std::shared_ptr<cfg::io_point_struct> 
                    (static_cast<u64>(raw16[1]) << 0);
 
         current_unsigned_val = raw_data;
-        #ifdef FPS_DEBUG_MODE
-        if(debug)
-            std::cout << " io_point raw_data " << raw_data <<" current_unsigned_val "<<  current_unsigned_val<< std::endl;
-        #endif
         if (!io_point->is_byte_swap) // normal:
         {
             current_unsigned_val = raw_data;
@@ -438,6 +486,14 @@ u64 gcom_decode_any(u16 *raw16, u8 *raw8, std::shared_ptr<cfg::io_point_struct> 
             current_unsigned_val = (static_cast<u64>(raw16[0]) << 0) +
                                    (static_cast<u64>(raw16[1]) << 16);
         }
+
+        if (io_point->is_forced)
+            current_unsigned_val = io_point->forced_val;
+        //#ifdef FPS_DEBUG_MODE
+        if(debug)
+            if (io_point->is_forced)
+                std::cout << " forced io_point size 2 raw_data " << raw_data <<" current_unsigned_val "<<  current_unsigned_val<< std::endl;
+        //#endif
         if (io_point->uses_masks)
         {
             // invert mask stuff:
@@ -528,6 +584,10 @@ u64 gcom_decode_any(u16 *raw16, u8 *raw8, std::shared_ptr<cfg::io_point_struct> 
             // care mask stuff:
             current_unsigned_val &= io_point->care_mask;
         }
+
+        if (io_point->is_forced)
+            current_unsigned_val = io_point->forced_val;
+
         // do signed/float stuff:
         if (io_point->is_signed) // this is only for whole numbers really (signed but not really float):
         {
@@ -632,13 +692,36 @@ u64 gcom_decode_any(u16 *raw16, u8 *raw8, std::shared_ptr<cfg::io_point_struct> 
     return raw_data;
 }
 
-void decode_bval(bool bval, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg)
+bool decode_bval(bool bval, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg)
 {
-    decode_bval(bval, io_point, ss, cfg, true);
+    return decode_bval(bval, io_point, ss, cfg, true);
 }
 
-void decode_bval(bool bval, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg, bool include_key)
+bool decode_bval(bool bval, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg, bool include_key)
 {
+    bool debug =  false;
+    if (io_point->is_disconnected && !io_point->is_local)
+    {
+        // obscure bug but clear last comma if needed
+        std::string str = ss.str();
+        char lastChar;
+        if (!str.empty()) 
+        {
+            lastChar = str.back();
+            if (lastChar == ',')
+            {
+                str.pop_back();
+                ss.str("");
+                ss.clear();
+                ss << str;
+            }
+        }
+
+        if(debug)std::cout << __func__ << " Point id :" <<io_point->id << " disconnected " << std::endl;
+
+        return false;
+    }
+
     if (include_key)
     {
         ss << addQuote(io_point->id) << ":";
@@ -699,6 +782,7 @@ void decode_bval(bool bval, std::shared_ptr<cfg::io_point_struct> io_point, std:
             }
         }
     }
+    return true;
 }
 
 // decode_individual_bits
@@ -753,16 +837,16 @@ void decode_individual_bits(std::any &value, std::shared_ptr<cfg::io_point_struc
     }
 }
 
-void decode_bval_from_value(std::any &value, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg)
+bool decode_bval_from_value(std::any &value, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg)
 {
-    decode_bval_from_value(value, io_point, ss, cfg, true);
+    return decode_bval_from_value(value, io_point, ss, cfg, true);
 }
 
-void decode_bval_from_value(std::any &value, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg, bool include_key)
+bool decode_bval_from_value(std::any &value, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg, bool include_key)
 {
     u64 val = getAnyVal(value, (u64)0);
     auto bval = (val != 0);
-    decode_bval(bval, io_point, ss, cfg, include_key);
+    return decode_bval(bval, io_point, ss, cfg, include_key);
 }
 
 // TODO add ignored bits
@@ -904,7 +988,9 @@ void decode_packed( std::any &value, std::shared_ptr<cfg::io_point_struct> io_po
         std::any bvalue = (val >> bitem->starting_bit_pos & bitem->bit_mask);
 
 
-        modbus_decode( bitem, bvalue, bss, cfg, true);
+        bool first = modbus_decode( bitem, bvalue, bss, cfg, true);
+        if (!first)
+            firstOne = true;
     }
     if (!include_key)
     {
@@ -929,10 +1015,30 @@ bool modbus_decode(std::shared_ptr<cfg::io_point_struct> io_point, std::any &val
 bool modbus_decode(std::shared_ptr<cfg::io_point_struct> io_point, std::any &value, std::stringstream &ss, struct cfg &cfg, bool include_key = true)
 {
     //std::cout << __func__ << " Point id :" <<io_point->id << std::endl;
+    bool debug = false;
+    if (io_point->is_disconnected && !io_point->is_local)
+    {
+        // obscure bug but clear last comma if needed
+        std::string str = ss.str();
+        char lastChar;
+        if (!str.empty()) 
+        {
+            lastChar = str.back();
+            if (lastChar == ',')
+            {
+                str.pop_back();
+                ss.str("");
+                ss.clear();
+                ss << str;
+            }
+        }
 
+        if(debug)std::cout << __func__ << " Point id :" <<io_point->id << " disconnected " << std::endl;
+        return false;
+    }
     if (io_point->is_bit)
     {
-        decode_bval_from_value(value, io_point, ss, cfg, include_key);
+        return decode_bval_from_value(value, io_point, ss, cfg, include_key);
     }
     else if (io_point->use_raw)
     {
@@ -1601,26 +1707,49 @@ void get_io_point_full(std::shared_ptr<cfg::io_point_struct> io_point, std::stri
 
     double float_val = get_io_point_float_val(io_point.get(), raw_val);
     ss << "{";
-    ss << "\"name\": \"" << io_point->name << "\", ";
-    ss << "\"id\": \"" << io_point->id << "\", ";
-    ss << "\"raw_val\": " << raw_val << ", ";
-    ss << "\"device_id\": \"" << io_point->device_id << "\", ";
-    ss << "\"offset\": " << io_point->offset << ", ";
-    ss << "\"size\": " << io_point->size << ", ";
-    ss << "\"enabled\": " << (io_point->is_enabled ? "true" : "false") << ", ";
-    ss << "\"process_name\": \"" << process_name << "\", ";
-    ss << "\"username\": \"" << username << "\", ";
+    ss << "\"name\": \""                         << io_point->name << "\", ";
+    ss << "\"id\": \""                           << io_point->id << "\", ";
+    ss << "\"raw_val\": "                        << raw_val << ", ";
+    ss << "\"device_id\": \""                    << io_point->device_id << "\", ";
+    ss << "\"offset\": "                         << io_point->offset << ", ";
+    ss << "\"size\": "                           << io_point->size << ", ";
+    ss << "\"enabled\": "                        << (io_point->is_enabled ? "true" : "false") << ", ";
+    ss << "\"disconnected\": "                   << (io_point->is_disconnected ? "true" : "false") << ", ";
+    ss << "\"process_name\": \""                 << process_name << "\", ";
+    ss << "\"username\": \""                     << username << "\", ";
 
     //ss << "\"forced\": " << (io_point->is_forced ? "true" : "false") << ", ";
-    ss << "\"is_forced\": " << (io_point->is_forced ? "true" : "false") << ", ";
-    ss << "\"forced_val\": " << forced_val << ", ";
-    ss << "\"float_val\": " << float_val << ", ";
+    ss << "\"is_forced\": "                     << (io_point->is_forced ? "true" : "false") << ", ";
+    //static_cast
+    if(io_point->is_signed)
+    {
+        if(io_point->size == 1)
+        {
+            s16 ifval = 0;
+            memcpy(&ifval, &forced_val, sizeof(ifval));        
+            ss << "\"forced_val\": "                    <<  ifval << ", ";
+        }
+        else if(io_point->size == 2)
+        {
+            s32 ifval = 0;
+            memcpy(&ifval, &forced_val, sizeof(ifval));        
+            ss << "\"forced_val\": "                    <<  ifval << ", ";
+        }
+        else 
+        {
+            s64 ifval = 0;
+            memcpy(&ifval, &forced_val, sizeof(ifval));
+            ss << "\"forced_val\": "                    <<  ifval << ", ";
+        }
+    }
+    else
+        ss << "\"forced_val\": "                    << forced_val << ", ";
 
-    ss << "\"update_time\": " << tUpdate << ", ";
-    ss << "\"last_update_time\": " << tlastUpdate << ", ";
+    ss << "\"float_val\": "                     << float_val << ", ";
 
-    //ss << "\"enabled\": " << (io_point->is_enabled ? "true" : "false") << ", ";
-    ss << "\"register_type\": \"" << io_point->register_type_str << "\", ";
+    ss << "\"update_time\": "                   << tUpdate << ", ";
+    ss << "\"last_update_time\": "              << tlastUpdate << ", ";
+    ss << "\"register_type\": \""               << io_point->register_type_str << "\", ";
     if ((io_point->register_type == cfg::Register_Types::Input) || (io_point->register_type == cfg::Register_Types::Holding))
     {
         ss << "\"value\": ";
@@ -1648,34 +1777,34 @@ void get_io_point_full(std::shared_ptr<cfg::io_point_struct> io_point, std::stri
         // decode_bval(reg8, io_point, ss, myCfg, false);
         // ss << ", ";
         // if (io_point)
-        ss << "\"raw_hex\": \"" << hex_to_str(reg8) << "\", ";
+        ss << "\"raw_hex\": \""                   << hex_to_str(reg8) << "\", ";
     }
 
-    ss << "\"starting_bit_pos\": " << io_point->starting_bit_pos << ", ";
-    ss << "\"number_of_bits\": " << io_point->number_of_bits << ", ";
-    ss << "\"bit_mask\": \"" << hex_to_str(io_point->bit_mask) << "\", ";
-    ss << "\"shift\": " << io_point->shift << ", ";
-    ss << "\"scale\": " << io_point->scale << ", ";
-    ss << "\"normal_set\": " << (io_point->normal_set ? "true" : "false") << ", ";
-    ss << "\"invert_mask\": \"" << hex_to_str(io_point->invert_mask) << "\", ";
-    ss << "\"care_mask\": \"" << hex_to_str(io_point->care_mask) << "\", ";
-    ss << "\"uses_mask\": " << (io_point->uses_masks ? "true" : "false") << ", ";
+    ss << "\"starting_bit_pos\": "                << io_point->starting_bit_pos                    << ", ";
+    ss << "\"number_of_bits\": "                  << io_point->number_of_bits                      << ", ";
+    ss << "\"bit_mask\": \""                      << hex_to_str(io_point->bit_mask)                << "\", ";
+    ss << "\"shift\": "                           << io_point->shift                               << ", ";
+    ss << "\"scale\": "                           << io_point->scale                               << ", ";
+    ss << "\"normal_set\": "                      << (io_point->normal_set ? "true" : "false")     << ", ";
+    ss << "\"invert_mask\": \""                   << hex_to_str(io_point->invert_mask)             << "\", ";
+    ss << "\"care_mask\": \""                     << hex_to_str(io_point->care_mask)               << "\", ";
+    ss << "\"uses_mask\": "                       << (io_point->uses_masks ? "true" : "false")     << ", ";
 
-    ss << "\"off_by_one\": " << (io_point->off_by_one ? "true" : "false") << ", ";
-    ss << "\"is_byte_swap\": " << (io_point->is_byte_swap ? "true" : "false") << ", ";
-    ss << "\"word_order\": " << io_point->word_order << ", ";
-    ss << "\"is_float\": " << (io_point->is_float ? "true" : "false") << ", ";
-    ss << "\"is_signed\": " << (io_point->is_signed ? "true" : "false") << ", ";
-    ss << "\"is_bit_string_type\": " << (io_point->is_bit_string_type ? "true" : "false") << ", ";
-    ss << "\"is_individual_bits\": " << (io_point->is_individual_bits ? "true" : "false") << ", ";
-    ss << "\"is_bit_field\": " << (io_point->is_bit_field ? "true" : "false") << ", ";
-    ss << "\"packed_register\": " << (io_point->packed_register ? "true" : "false") << ", ";
+    ss << "\"off_by_one\": "                      << (io_point->off_by_one ? "true" : "false")     << ", ";
+    ss << "\"is_byte_swap\": "                    << (io_point->is_byte_swap ? "true" : "false")   << ", ";
+    ss << "\"word_order\": "                      << io_point->word_order                          << ", ";
+    ss << "\"is_float\": "                        << (io_point->is_float ? "true" : "false")       << ", ";
+    ss << "\"is_signed\": "                       << (io_point->is_signed ? "true" : "false")           << ", ";
+    ss << "\"is_bit_string_type\": "              << (io_point->is_bit_string_type ? "true" : "false")  << ", ";
+    ss << "\"is_individual_bits\": "              << (io_point->is_individual_bits ? "true" : "false")  << ", ";
+    ss << "\"is_bit_field\": "                    << (io_point->is_bit_field ? "true" : "false")        << ", ";
+    ss << "\"packed_register\": "                 << (io_point->packed_register ? "true" : "false")     << ", ";
     if (io_point->is_bit)
     {
-        ss << "\"bit_index\": " << io_point->bit_index << ", ";
+        ss << "\"bit_index\": "                   << io_point->bit_index                                << ", ";
     }
-    ss << "\"bits_known\": " << io_point->bits_known << ", ";
-    ss << "\"bits_unknown\": " << io_point->bits_unknown << ", ";
+    ss << "\"bits_known\": "                      << io_point->bits_known                               << ", ";
+    ss << "\"bits_unknown\": "                    << io_point->bits_unknown                             << ", ";
     ss << "\"bit_strings\": [";
     bool is_first = true;
     for (const std::string &bit_str : io_point->bit_str)
@@ -1733,24 +1862,24 @@ void get_io_point_full(std::shared_ptr<cfg::io_point_struct> io_point, std::stri
 
     // ss << "], ";
 
-    ss << "\"is_enum\": " << (io_point->is_enum ? "true" : "false") << ", ";
-    ss << "\"is_random_enum\": " << (io_point->is_random_enum ? "true" : "false") << ", ";
-    ss << "\"use_debounce\": " << (io_point->use_debounce ? "true" : "false") << ", ";
-    ss << "\"use_deadband\": " << (io_point->use_deadband ? "true" : "false") << ", ";
+    ss << "\"is_enum\": "                                      << (io_point->is_enum ? "true" : "false") << ", ";
+    ss << "\"is_random_enum\": "                               << (io_point->is_random_enum ? "true" : "false") << ", ";
+    ss << "\"use_debounce\": "                                 << (io_point->use_debounce ? "true" : "false") << ", ";
+    ss << "\"use_deadband\": "                                 << (io_point->use_deadband ? "true" : "false") << ", ";
     //ss << "\"last_float_val\": " << io_point->last_float_val << ", ";
     //ss << "\"last_raw_val\": " << io_point->last_raw_val << ", ";
-    ss << "\"use_bool\": " << (io_point->use_bool ? "true" : "false") << ", ";
-    ss << "\"use_hex\": " << (io_point->use_hex ? "true" : "false") << ", ";
-    ss << "\"use_raw\": " << (io_point->use_raw ? "true" : "false") << ", ";
-    ss << "\"is_bit\": " << (io_point->is_bit ? "true" : "false") << ", ";
-    ss << "\"is_watchdog\": " << (io_point->is_watchdog ? "true" : "false") << ", ";
+    ss << "\"use_bool\": "                                     << (io_point->use_bool ? "true" : "false") << ", ";
+    ss << "\"use_hex\": "                                      << (io_point->use_hex ? "true" : "false") << ", ";
+    ss << "\"use_raw\": "                                      << (io_point->use_raw ? "true" : "false") << ", ";
+    ss << "\"is_bit\": "                                       << (io_point->is_bit ? "true" : "false") << ", ";
+    ss << "\"is_watchdog\": "                                  << (io_point->is_watchdog ? "true" : "false") << ", ";
     // ss << "\"watchdog_name\": \"" << io_point->watchdog_name << "\", ";
-    ss << "\"multi_write_op_code\": " << (io_point->multi_write_op_code ? "true" : "false");
+    ss << "\"multi_write_op_code\": "                          << (io_point->multi_write_op_code ? "true" : "false");
     ss << "}";
 }
 
 // duplicate of write_work in io_threads but that's OK
-//io_work->tRun = tRun;
+//io_work->tRun = tRun;qq
 void store_raw_data(std::shared_ptr<IO_Work> io_work, bool debug)
 {
     if ((io_work->register_type == cfg::Register_Types::Discrete_Input) || (io_work->register_type == cfg::Register_Types::Coil))

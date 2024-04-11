@@ -1,0 +1,242 @@
+{
+        "connection":
+        {
+                "id": "pv_ion_8650b",
+                "xserial_device":"/dev/ttySNX0",
+                "xxserial_device":"/dev/ttyUSB0",
+                "ip_address":"172.10.0.3",
+                "baud_rate":115200,
+                "connection_timeout":5.0,
+                "transfer_timeout":1.3,
+                "parity":"none",
+                "data_bits":8,
+                "stop_bits":1,
+                "device_id": 2,
+                "sxtats_pub_frequency":10000,
+                "frequency": 5000,
+                "auto_disable":true,
+		"allow_multi_sets":true,
+                "pub_sync":false,
+                "sync_percent":50,
+                "off_by_one": false
+        },
+        "components":
+        [
+            {
+            "id": "pv_ion_8650b",
+            "frequency": 1000,
+            "offset_time": 0,
+            "sync_percent":70,
+            "add_timings":false,
+                        "registers":
+                        [
+                                {
+                                        "type": "Holding Registers",
+                                        "starting_offset": 28,
+                                        "number_of_registers": 27,
+                                        "map":
+                                        [
+                                                {
+                                                        "id": "voltage_ab",
+                                                        "offset": 28,
+                                                        "signed": true,
+                                                        "scale": 1,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "voltage_bc",
+                                                        "offset": 30,
+                                                        "signed": true,
+                                                        "scale": 1,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "voltage_ca",
+                                                        "offset": 32,
+                                                        "signed": true,
+                                                        "scale": 1,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "current_a",
+                                                        "offset": 34,
+                                                        "signed": true,
+                                                        "scale": 10,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "current_b",
+                                                        "offset": 36,
+                                                        "signed": true,
+                                                        "scale": 10,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "current_c",
+                                                        "offset": 38,
+                                                        "signed": true,
+                                                        "scale": 10,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "frequency",
+                                                        "offset": 40,
+                                                        "signed": true,
+                                                        "scale": 100,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "active_power",
+                                                        "offset": 42,
+                                                        "signed": true,
+                                                        "scale": 10,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "reactive_power",
+                                                        "offset": 44,
+                                                        "signed": true,
+                                                        "scale": 10,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "power_factor",
+                                                        "offset": 46,
+                                                        "signed": true,
+                                                        "scale": 100,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "apparent_power",
+                                                        "offset": 49,
+                                                        "scale": 10,
+                                                        "size": 2
+                                                },
+                                                {
+                                                    "id": "bad_power_1",
+                                                    "offset": 24,
+                                                    "scale": 10,
+                                                    "size": 2
+                                                },
+                                                {
+                                                    "id": "bad_power_2",
+                                                    "offset": 26,
+                                                    "scale": 10,
+                                                    "size": 2
+                                                }
+
+                                        ]
+                                },
+                                {
+                                        "type": "Holding Registers",
+                                        "starting_offset": 91,
+                                        "number_of_registers": 30,
+                                        "map":
+                                        [
+                                                {
+                                                        "id": "kwh_delivered",
+                                                        "offset": 91,
+                                                        "signed": true,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "kwh_received",
+                                                        "offset": 93,
+                                                        "signed": true,
+                                                        "scale": 1,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "thd_v_l1",
+                                                        "offset": 109,
+                                                        "signed": true,
+                                                        "scale": 100,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "thd_v_l2",
+                                                        "offset": 111,
+                                                        "signed": true,
+                                                        "scale": 100,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "thd_v_l3",
+                                                        "offset": 113,
+                                                        "signed": true,
+                                                        "scale": 100,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "thd_i_l1",
+                                                        "offset": 115,
+                                                        "signed": true,
+                                                        "scale": 100,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "thd_i_l2",
+                                                        "offset": 117,
+                                                        "signed": true,
+                                                        "scale": 100,
+                                                        "size": 2
+                                                },
+                                                {
+                                                        "id": "thd_i_l3",
+                                                        "offset": 119,
+                                                        "signed": true,
+                                                        "scale": 100,
+                                                        "size": 2
+                                                }
+                                        ]
+                                },
+                                {
+                                "type": "Coil", "starting_offset": 1150, "number_of_registers": 10,
+                                    "map": [ 
+                                        { "id": "coil_0",         "offset": 1150, "name": "coil_0"                             },
+                                        { "id": "coil_1",         "offset": 1151, "name": "coil_1"                             },
+                                        { "id": "coil_2",         "offset": 1152, "name": "coil_2"                             },
+                                        { "id": "coil_3",         "offset": 1153, "name": "coil_3"                                             },
+                                        { "id": "coil_4",         "offset": 1154, "name": "coil_4"                                             },
+                                        { "id": "coil_5",         "offset": 1155, "name": "coil_5"                                             },
+                                        { "id": "coil_6",         "offset": 1156, "name": "coil_6"                                             },
+                                        { "id": "coil_7",         "offset": 1157, "name": "coil_7"                                             },
+                                        { "id": "coil_bad_8",         "offset": 1158, "name": "coil_bad_8"                                     },
+                                        { "id": "coil_bad_9",         "offset": 1159, "name": "coil_bad_9"                                     }
+                                    ]
+                                },
+                                {
+                                    "type": "Input", "starting_offset": 2150, "number_of_registers": 10,
+                                        "map": [ 
+                                            { "id": "input_0",         "offset": 2150, "name": "input_0"                             },
+                                            { "id": "input_1",         "offset": 2151, "name": "input_1"                             },
+                                            { "id": "input_2",         "offset": 2152, "name": "input_2"                             },
+                                            { "id": "input_3",         "offset": 2153, "name": "input_3"                                             },
+                                            { "id": "input_4",         "offset": 2154, "name": "input_4",           "signed":true                    },
+                                            { "id": "input_5",         "offset": 2155, "name": "input_5",           "signed":true                    },
+                                            { "id": "input_6",         "offset": 2156, "name": "input_6",           "signed":true                    },
+                                            { "id": "input_7",         "offset": 2157, "name": "input_7",           "signed":true                    },
+                                            { "id": "input_bad_8",         "offset": 2158, "name": "input_bad_8"                                     },
+                                            { "id": "input_bad_9",         "offset": 2159, "name": "input_bad_9"                                     }
+                                        ]
+                                    },
+                                    {
+                                        "type": "Discrete_Input", "starting_offset": 3150, "number_of_registers": 10,
+                                            "map": [ 
+                                                { "id": "d_input_0",         "offset": 3150, "name": "d_input_0"                             },
+                                                { "id": "d_input_1",         "offset": 3151, "name": "d_input_1"                             },
+                                                { "id": "d_input_2",         "offset": 3152, "name": "d_input_2"                             },
+                                                { "id": "d_input_3",         "offset": 3153, "name": "d_input_3"                                             },
+                                                { "id": "d_input_4",         "offset": 3154, "name": "d_input_4",           "signed":true                    },
+                                                { "id": "d_input_5",         "offset": 3155, "name": "d_input_5",           "signed":true                    },
+                                                { "id": "d_input_6",         "offset": 3156, "name": "d_input_6",           "signed":true                    },
+                                                { "id": "d_input_7",         "offset": 3157, "name": "d_input_7",           "signed":true                    },
+                                                { "id": "d_input_bad_8",         "offset": 3158, "name": "d_input_bad_8"                                     },
+                                                { "id": "d_input_bad_9",         "offset": 3159, "name": "d_input_bad_9"                                     }
+                                            ]
+                                        }
+                                ]
+                }
+        ]
+}
+

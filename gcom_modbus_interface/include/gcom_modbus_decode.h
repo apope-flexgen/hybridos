@@ -30,16 +30,16 @@ void get_io_point_full(std::shared_ptr<cfg::io_point_struct> io_point, std::stri
  * @return the string with escaped quotes on either side
 */
 std::string addQuote(const std::string &si);
-void gcom_modbus_decode(std::shared_ptr<IO_Work> io_work, std::stringstream &ss, struct cfg &myCfg);
-void gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstream &ss, struct cfg &myCfg, bool include_key, bool debug);
-void decode_bval(bool bval, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg& cfg);
-void decode_bval(bool bval, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg, bool include_key);
+bool gcom_modbus_decode(std::shared_ptr<IO_Work> io_work, std::stringstream &ss, struct cfg &myCfg);
+bool gcom_modbus_decode_debug(std::shared_ptr<IO_Work> io_work, std::stringstream &ss, struct cfg &myCfg, bool include_key, bool debug);
+bool decode_bval(bool bval, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg& cfg);
+bool decode_bval(bool bval, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg, bool include_key);
 u64 gcom_decode_any(u16* raw16, u8*raw8, std::shared_ptr<cfg::io_point_struct>io_point, std::any& output, struct cfg& myCfg);
 bool modbus_decode(std::shared_ptr<cfg::io_point_struct> io_point, std::any& value, std::stringstream &ss, struct cfg& cfg);
 bool modbus_decode( std::shared_ptr<cfg::io_point_struct> io_point, std::any& value, std::stringstream &ss, struct cfg& cfg, bool include_key);
 void store_raw_data(std::shared_ptr<IO_Work> io_work, bool debug);
 void extract_raw_data(std::shared_ptr<IO_Work> io_work, bool debug);
-void decode_bval_from_value(std::any &value, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg, bool include_key);
+bool decode_bval_from_value(std::any &value, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg, bool include_key);
 void decode_packed( std::any &value, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &bss, struct cfg &cfg, bool include_key);
 void decode_packed( std::any &value, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &bss, struct cfg &cfg);
 void decode_individual_bits(std::any &value, std::shared_ptr<cfg::io_point_struct> io_point, std::stringstream &ss, struct cfg &cfg, bool include_key);

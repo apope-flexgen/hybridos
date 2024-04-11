@@ -94,23 +94,54 @@ void pubCallback(std::shared_ptr<TimeObject>tObj, void *p)
     std::shared_ptr<cfg::pub_struct> mypub = std::shared_ptr<cfg::pub_struct>(static_cast<cfg::pub_struct *>(p), [](cfg::pub_struct *) {});
     double tNow = get_time_double();
     int num_threads = GetNumThreads(mypub->cfg);
+    debug = mypub->cfg->debug_pub;
+    //debug = true;    
+    if (debug)
+    {
+        std::cout << "Callback for :" <<tObj->name
+                    << " running ;  num_threads: " << num_threads
+                    << " missed " << mypub->num_missed
+                    << std::endl;
+    }
 
     if (mypub->num_pubs > 0)
     {
+
+        // extract the time taken to complete this pub.
         double tdiff;
         {
             std::lock_guard<std::mutex> lock(mypub->tmtx);
             tdiff = mypub->comp_time - mypub->start_time;
         }
-
+        // if this is less than zero then last pub request was never completed. 
+        // mypub->comp_time == 0.0 also indicates we did not get a reply
         if (tdiff < 0.0)
         {
-            if (mypub->num_missed < 5)
+            mypub->num_missed++;
+            if(debug)
+                std::cout << "pub :" <<tObj->name
+                    << " tdiff " << tdiff
+                    << " looks like we missed one " << mypub->num_missed
+                    << std::endl;
+            if (mypub->num_missed > 5)
             {
-                mypub->num_missed++;
-                return;
+                //mypub->num_missed++;
+                if(debug)
+                    std::cout 
+                        << "pub :" <<tObj->name
+                        << " not skipping too many missed " << mypub->num_missed
+                        << std::endl;
+                //return;
             }
             // we've missed 5 pubs have to continue.
+        }
+        else
+        {
+            if(debug)
+                std::cout << "pub :" <<tObj->name
+                    << " reset num_missed " << mypub->num_missed
+                    << std::endl;
+            mypub->num_missed = 0;
         }
 
     }
@@ -123,34 +154,28 @@ void pubCallback(std::shared_ptr<TimeObject>tObj, void *p)
         mypub->comp_time = 0.0; // set to tNow when the pub aborts or completes
         if (mypub->num_pubs < INT_MAX) 
             mypub->num_pubs++;
-        mypub->num_missed = 0;
+        //mypub->num_missed = 0;
     }
     // maybe add a mutex pointer to the stats start / snap / showNum
     mypub->pubStats.start(mypub->pmtx);
     // std::string pstr = "pub_" + base + "_" + component_name;
 
-    // if (1 || mypub->cfg->pub_debug)
-    // {
-    //     std::cout << "Callback for :" <<tObj->name
-    //                 << " running ;  num_threads: " << num_threads
-    //                 << std::endl;
-    // }
 
 
     // Dont request pubs if there are no threads running.
     if(num_threads == 0)
     {
-        if (mypub->cfg->pub_debug)
+        if (debug)
         {
             std::cout << "Callback for :" <<tObj->name
-                      << " Skipped : num_threads: " << num_threads
+                      << " Skipped : num_threads == 0 : " << num_threads
                       << std::endl;
         }
         mypub->pub_threads = 0;
         //return;
     }
 
-    if (mypub->cfg->pub_debug)
+    if (debug)
         std::cout << "Callback for :" <<tObj->name
                   << " executed at : " << tNow
                   << " with sync: " <<tObj->sync
@@ -158,6 +183,36 @@ void pubCallback(std::shared_ptr<TimeObject>tObj, void *p)
                   << " and psid: " << mypub->id
                   << " num_threads: " << num_threads
                   << std::endl;
+    double tdiff  = 0.0;
+    {
+        std::lock_guard<std::mutex> lock(mypub->tmtx);
+        tdiff = mypub->comp_time - mypub->start_time;
+    }
+    if(debug)std::cout << "Callback #1 for :"   << tObj->name
+                    << " tnow : "       << tNow
+                    << " start_time : " << mypub->start_time
+                    << " comp_time : "  << mypub->comp_time
+                    << " tdiff : "      << tdiff
+                    << " num_pubs: "    << mypub->num_pubs
+                    << " num_missed: "    << mypub->num_missed
+                    << std::endl;
+ 
+    // if (tdiff < 0.0)
+    // {
+    //     if (mypub->num_missed < 20)
+    //     {
+    //         mypub->num_missed++;
+    //         // std::cout << " Obj :"   << tObj->name
+    //         //             << " num_missed: "    << mypub->num_missed
+    //         //             << " missed too many"
+    //         //             << std::endl;
+    //         // return;
+    //     }
+    //     if(debug)
+    //         std::cout << " Obj :"   << tObj->name
+    //                     << " running a new request"
+    //                     << std::endl;
+    // }
 
     // set up the pup id == tNow
     // TODO set up the timeout callback
@@ -207,11 +262,14 @@ void pubCallback(std::shared_ptr<TimeObject>tObj, void *p)
                 enabled = false;
             }
             // disconnected flag  can be reset after disconnect time 
+            // but we cannot do it here without locking the point
+            // well we can just try to enable it.
             if (io_point->is_disconnected)
             {
                 if (io_point->reconnect > 0 && tNow >io_point->reconnect)
                 {
-                    io_point->is_disconnected = false;
+                     //io_point->is_disconnected = false;
+                     // allow enabled to add it we'll see what happens
                 }
                 else
                 {
@@ -234,16 +292,23 @@ void pubCallback(std::shared_ptr<TimeObject>tObj, void *p)
         }
     }
 
-    // std::cout << "Callback for :" <<tObj->name
-    //                 << " running ;  num remote points : " << num_remote_points
-    //                 << " num local points : " << num_local_points
-    //                 << std::endl;
+    if(debug)
+        std::cout << "Callback for :" <<tObj->name
+                    << " running ;  num remote points : " << num_remote_points
+                    << " num local points : " << num_local_points
+                    << " missed " << mypub->num_missed
+                    << std::endl;
 
     // check_work_items
     check_work_items(io_work_vec, io_map_vec, *compshr->myCfg, "poll", false, false);
     io_map_vec.clear();
 
     auto work_group_size = io_work_vec.size();
+    if(debug)
+        std::cout << "Callback for :" <<tObj->name
+                    << " running ; work_group_size : " << work_group_size
+                    << std::endl;
+
     if (local_map_vec.size() > 0)
     {
         std::string oper("poll");
@@ -285,6 +350,8 @@ void pubCallback(std::shared_ptr<TimeObject>tObj, void *p)
         // reset pub_pending on num_thread transition
          mypub->pending = 0;
     }
+    // TODO check the pending operation with serial 
+    // I dont think we get into a pending state unless we have 3 pubs missed.
 
     if (mypub->pending > 3 && num_threads > 0)
     {

@@ -31,6 +31,7 @@
 using namespace std::chrono_literals;
 using namespace std::string_view_literals;
 
+bool show_pubgroup();
 
 // stick the raw (any) config in here
 std::map<std::string, std::any> gcom_map;
@@ -137,14 +138,12 @@ int main(const int argc, const char *argv[]) noexcept
         }
     }
 
-
     if (!fileOk)
     {
-        FPS_ERROR_LOG("Unable to locate or load config file, Quitting");
+        FPS_ERROR_LOG("Unable to load config file [%s], Quitting", filename);
         return -1;
     }
-
-    if (fileOk)
+    else
     {
         gcom_setup_pubs(gcom_map, myCfg, 2.0, debug);
 
@@ -185,6 +184,7 @@ int main(const int argc, const char *argv[]) noexcept
         StopThreads(myCfg, false);
         stop_process(myCfg);
         stop_fims(myCfg);
+        show_pubgroup();
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 

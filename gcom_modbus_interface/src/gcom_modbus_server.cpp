@@ -85,7 +85,7 @@ int hostname_to_ip(char *hostname , char *ip, int iplen)
    for(i = 0; addr_list[i] != NULL; i++)
    {
       //Return the first one;
-      strncpy(ip , inet_ntoa(*addr_list[i]), iplen );
+      strncpy(ip , inet_ntoa(*addr_list[i]), iplen-1 );
       return 0;
    }
 
@@ -1295,12 +1295,12 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
             }
             else
             {
-                if(reg->num_regs != 1)
-                {
-                    FPS_ERROR_PRINT("Wrote single register of Multi Register variable %s.\n", reg->reg_name);
-                    //TODO either need to set the value or return error code
-                }
-                else
+//                if(reg->num_regs != 1)
+//                {
+//                    FPS_ERROR_PRINT("Wrote register of Multi Register variable %s.\n", reg->reg_name);
+//                    //TODO either need to set the value or return error code
+//                }
+//                else
                 {
                     cJSON* send_body = cJSON_CreateObject();
                     if(send_body != NULL)

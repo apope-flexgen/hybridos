@@ -188,6 +188,10 @@ struct IO_Work {
     int mynum;
     static int wnum;
     u64 use_count  = 0;
+    static const uint16_t LOCAL            = 1 << 0;
+    static const uint16_t POINT_ERROR      = 1 << 1;
+    static const uint16_t POINT_DISCONNECT = 1 << 2;
+    static const uint16_t REMOVE_GAP       = 1 << 3;
 
     IO_Work()
     {
@@ -214,6 +218,7 @@ struct IO_Work {
     int errno_code;
     int offset;
     int errors;
+    int good;
     int start_register;
     int num_registers;
     std::vector<int> disabled_registers;
@@ -230,6 +235,7 @@ struct IO_Work {
     double connect_time;
     uint8_t buf8[256];
     uint16_t buf16[256];
+    uint16_t flags[256];
     std::string replyto;
 
     int size;
@@ -247,6 +253,8 @@ struct IO_Work {
     int thread_num = 0;
     bool data_error =  false;
     bool full = false;
+
+    std::string func;
     // IO_Work(IO_Work&& other) noexcept  {};
 
     // IO_Work& operator=(IO_Work&& other) noexcept {
@@ -276,7 +284,25 @@ struct IO_Work {
             }
         }
     };
+    // Method to set a flag
+    void set_flag(size_t ioffset, uint16_t flag) {
+        size_t myoffset = ioffset - offset;
+        if (myoffset < 256) {
+            flags[myoffset] |= flag; // Set the flag bit using bitwise OR
+        }
+    }
+
+    // Method to check if a flag is set
+    bool get_flag(size_t ioffset, uint16_t flag) const {
+        size_t myoffset = ioffset - offset;
+        if (myoffset < 256) {
+            return flags[myoffset] & flag; // Test the flag bit using bitwise AND
+        }
+        return false; // Return false if offset is out of bounds
+    }
 };
+
+
 //extern int IO_Work::wnum = 0;
 
 struct myMeta_Data_Info
@@ -427,6 +453,7 @@ struct PubGroup {
     std::vector<std::shared_ptr<IO_Work>> works;
     int work_group = 0;  // size
     double tNow = 0.0;
+    double tDone = 0.0;
     bool done=false;
     bool erase_group=false;
 
@@ -437,7 +464,10 @@ struct PubGroup {
 
     PubGroup(std::string& _key, std::shared_ptr<IO_Work> io_work, bool save)
         : key(_key) {
-            reset_group(key,io_work);
+            if (io_work != nullptr)
+            {
+                reset_group(key,io_work);
+            }
             // pub_struct =  io_work->pub_struct;
             // work_group = io_work->work_group; 
             // tNow = io_work->tNow; 
@@ -450,11 +480,15 @@ struct PubGroup {
 
     void reset_group(std::string& _key, std::shared_ptr<IO_Work> io_work)
     {
-        pub_struct =  io_work->pub_struct;
-        work_group = io_work->work_group; 
-        tNow = io_work->tNow; 
+        if (io_work != nullptr)
+        {
+            pub_struct =  io_work->pub_struct;
+            work_group = io_work->work_group; 
+            tNow = io_work->tNow; 
+            erase_group = io_work->erase_group;
+        }
+        tDone = 0.0;
         done = false; 
-        erase_group = io_work->erase_group;
 
     };
 };
@@ -512,6 +546,8 @@ struct IO_Thread {
     ThreadControl *thread_control;
     std::string ip;
     bool connected =  false;
+    bool connection_timedout =  false;
+
     double connection_timeout;
     double transfer_timeout;
     int transaction_timeout;

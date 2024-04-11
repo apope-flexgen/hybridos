@@ -29,6 +29,9 @@
 #include "logger/logger.h"
 #include "shared_utils.h"
 
+// modbus_decode
+void store_raw_data(std::shared_ptr<IO_Work> io_work, bool debug);
+
 using namespace std::chrono_literals;
 using namespace std::string_view_literals; // for sv
 
@@ -38,8 +41,12 @@ std::thread processThread2;
 std::thread processThread3;
 std::thread collectThread1;
 
-uint64_t set_any_to_uint64(struct cfg &myCfg, std::shared_ptr<cfg::io_point_struct> io_point, std::any val);
+uint64_t set_any_to_uint64(struct cfg& myCfg, std::shared_ptr<cfg::io_point_struct> io_point, std::any val);
 void get_stats(std::stringstream &ss, struct cfg &myCfg);
+void showRequestHelp(struct cfg& myCfg, std::stringstream &ss);
+
+PubGroup* get_pubgroup(std::shared_ptr<IO_Work> io_work);
+PubGroup* get_pubgroup(std::string& fstr);
 
 
 // fims helper functions:
@@ -171,7 +178,7 @@ bool gcom_recv_raw_message(fims &fims_gateway, std::shared_ptr<IO_Fims> io_fims)
 
         // TODO handle other fims errors
         if (err != 11)
-            FPS_ERROR_LOG(" read  err %d [%s]", err, strerror(err));
+            FPS_ERROR_LOG("Fims read err %d [%s]", err, strerror(err));
         // if (err == 22)
         //     close(connection);
     }
@@ -265,24 +272,30 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
     io_fims->uri_req.clear_uri();
     io_fims->uri_req.set_uri(io_fims->uri_view);
 
-    bool is_local_request = io_fims->uri_req.is_local_request;
-    bool is_enable_request = io_fims->uri_req.is_enable_request;
-    bool is_disable_request = io_fims->uri_req.is_disable_request;
-    bool is_force_request = io_fims->uri_req.is_force_request;
-    bool is_unforce_request = io_fims->uri_req.is_unforce_request;
-    bool is_full_request = io_fims->uri_req.is_full_request;
-    bool is_stats_request = io_fims->uri_req.is_stats_request;
-    bool is_server_request = io_fims->uri_req.is_server_request;
+    bool is_local_request            = io_fims->uri_req.is_local_request;
+    bool is_enable_request           = io_fims->uri_req.is_enable_request;
+    bool is_disable_request          = io_fims->uri_req.is_disable_request;
+    bool is_connect_request          = io_fims->uri_req.is_connect_request;
+    bool is_disconnect_request       = io_fims->uri_req.is_disconnect_request;
+    bool is_force_request            = io_fims->uri_req.is_force_request;
+    bool is_unforce_request          = io_fims->uri_req.is_unforce_request;
+    bool is_full_request             = io_fims->uri_req.is_full_request;
+    bool is_stats_request            = io_fims->uri_req.is_stats_request;
+    bool is_server_request           = io_fims->uri_req.is_server_request;
     bool is_debug_connection_request = io_fims->uri_req.is_debug_connection_request;
-    bool is_debug_response_request = io_fims->uri_req.is_debug_response_request;
+    bool is_debug_response_request   = io_fims->uri_req.is_debug_response_request;
+    bool is_help_request             = io_fims->uri_req.is_help_request;
 
     bool needs_body = true;
     if ( 
             is_enable_request 
         ||  is_disable_request
+        ||  is_connect_request
+        ||  is_disconnect_request
         ||  is_unforce_request
         ||  is_stats_request
         ||  is_server_request
+        ||  is_help_request
         )
     {
         needs_body = false;
@@ -403,11 +416,21 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                                   << std::endl;
                     }
 #endif
-                    // TODO take the point lock here
+                    // TODO possibly take the point lock here
                     if (is_enable_request)
                     {
                         FPS_INFO_LOG("Single var enable [%s]", io_point->id);
                         io_point->is_enabled = true;
+                    }
+                    if (is_connect_request)
+                    {
+                        FPS_INFO_LOG("Single var connect [%s]", io_point->id);
+                        io_point->is_disconnected = false;
+                    }
+                    if (is_disconnect_request)
+                    {
+                        FPS_INFO_LOG("Single var disconnect [%s]", io_point->id);
+                        io_point->is_disconnected = true;
                     }
                     if (is_disable_request)
                     {
@@ -463,6 +486,9 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                         if (is_force_request)
                         {
                             io_point->forced_val = uval;
+                            if (0) std::cout << " single forced  set  [" << io_point->id
+                                        << "] uval :" << uval
+                                        << std::endl;
                         }
 #ifdef FPS_DEBUG_MODE
                         if (debug)
@@ -529,11 +555,11 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                         }
 
                         // now we need to decide if we are to send the value on to the server
-                        // we need to be a holdin or a coil for this
+                        // we need to be a holding or a coil for this
                         bool send_to_server = ((io_point->register_type == cfg::Register_Types::Coil) || (io_point->register_type == cfg::Register_Types::Holding));
                         if (send_to_server || is_local_request)
                         {
-#ifdef FPS_DEBUG_MODE
+//#ifdef FPS_DEBUG_MODE
                             debug = true;
                             if (debug)
                             {
@@ -542,7 +568,7 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                                           << " forced val :" << io_point->forced_val
                                           << std::endl;
                             }
-#endif
+//#endif
                             std::string mode("set");
 
                             std::shared_ptr<IO_Work> io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
@@ -618,14 +644,14 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                             << "] uri [" << io_fims->uri_view
                             << "] "<< std::endl;
                         //std::cout << ss.str() << std::endl;
-                        FPS_ERROR_LOG("Fims Set  failed : %s", ss.str().c_str());
+                        FPS_ERROR_LOG("Fims Set failed : %s", ss.str().c_str());
 
                     }
                     if (io_fims->meta_data.replyto_len > 0) {
 
                         if(myCfg.fims_gateway.Connected())
                         {
-                            std::string reply_message = "{\"gcom\":\"Modbus Point Unknown\",\"status\":\"Falure\"}";
+                            std::string reply_message = "{\"gcom\":\"Modbus Point Unknown\",\"status\":\"Failure\"}";
                             myCfg.fims_gateway.Send(
                                 fims::str_view{"set", sizeof("set") - 1},
                                 fims::str_view{replyto.data(), replyto.size()},
@@ -649,7 +675,7 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
             // anyTypeString(io_fims->anyBody);
             if (io_fims->anyBody.type() == typeid(std::map<std::string, std::any>))
             {
-                //std::cout << "We got a  map of anys "<< std::endl;
+                //std::cout << "Multi Set : We got a  map of anys "<< std::endl;
                 std::map<std::string, std::any> message_body = std::any_cast<std::map<std::string, std::any>>(io_fims->anyBody);
                 std::vector<std::shared_ptr<IO_Work>> work_vec;
                 std::vector<std::shared_ptr<cfg::io_point_struct>> io_map_vec;
@@ -660,6 +686,13 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                     // have to look for _disable / _enable  / _force /_unforce
 
                     bool multi_var = ioPointExists(io_point, myCfg, io_fims->uri_req.uri_vec, io_fims->uri_req.num_uris, key.first);
+                    if(0)std::cout 
+                            << "Multi Set " 
+                            << ": point id "<< key.first 
+                            //<< " offset "<< io_point->offset 
+                            << " exists "<< multi_var 
+                            << std::endl;
+
                     if (multi_var)
                     {
                         if (is_enable_request)
@@ -691,20 +724,20 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                         io_point->set_value = key.second;
                         uint64_t uval = set_any_to_uint64(myCfg, io_point, io_point->set_value);
 
-                        //std::cout << " io_point id [" << io_point->id << " ] uval [" << uval << "]"<< std::endl;
+                        if(0)std::cout << " io_point id [" << io_point->id << "] uval [" << uval << "]"<< std::endl;
                         if (is_force_request)
                         {
                             io_point->forced_val = uval;
                         }
                         if (myCfg.allow_multi_sets)
                         {
-                            //std::cout << " io_point id [" << io_point->id << " ] allow multi sets " << std::endl;
+                            if(0)std::cout << " io_point id [" << io_point->id << " ] allow multi sets " << std::endl;
                             // note: our current modbus server does not process multi sets.
                             io_map_vec.emplace_back(io_point);
                         }
                         else
                         {
-                            //std::cout << " io_point id [" << io_point->id << " ] not doing multi sets, added to work_vec " << std::endl;
+                            if(0)std::cout << " io_point id [" << io_point->id << "] not doing multi sets, added to work_vec " << std::endl;
 
                             std::shared_ptr<IO_Work> io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset,
                                          io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType("set", false));
@@ -778,11 +811,9 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                         io_work->work_group = (int)io_work_size;
                         io_work->work_id = idx;
                         idx++;
-
                     }
                     else
                     {
-
                         io_work->work_name = single_str;
                         io_work->work_group = 1;
                         io_work->work_id = 1;
@@ -793,12 +824,15 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
 #endif
                     // pollWork (io);
                     // work_vec.erase(io_work);
+                    io_work->num_registers = 0;
 
                     if ((io_work->register_type == cfg::Register_Types::Coil) || (io_work->register_type == cfg::Register_Types::Discrete_Input))
                     {
                         int j = 0;
                         for (std::shared_ptr<cfg::io_point_struct> io_point : io_work->io_points)
                         {
+                            if (j == 0)
+                                io_work->offset = io_point->offset;
 #ifdef FPS_DEBUG_MODE
                             if (debug)
                             {
@@ -806,7 +840,7 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                             }
 #endif
                             // io_fims->uri_req;
-                            auto bval = get_any_to_bool(io_point, io_point->set_value, io_fims->uri_req, io_work->buf8);
+                            bool bval = get_any_to_bool(io_point, io_point->set_value, io_fims->uri_req, &io_work->buf8[j]);
                             // io_point->reg8[0] = bval;
                             // io_work_single->u8_buff[0] = bval;
                             // 
@@ -817,8 +851,20 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                             } else {
                                 io_point->raw_val = bval;
                             }
+                            io_work->num_registers++;
 
                             io_work->buf8[j] = bval;
+
+                            if(0)std::cout << ">>>>" << __func__ 
+                                        << " Coil >> point [" << io_point->id 
+                                        << "] offset [" << io_point->offset 
+                                        << "] j [" << j 
+                                        << "] bval [" << bval 
+                                        << "] buf8 [" << (int)io_work->buf8[j]
+
+                                        << "] " 
+                                        << std::endl;
+
                             j++;
                         }
                     }
@@ -844,10 +890,23 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                             }
                             set_reg16_from_uint64(io_point, uval, &io_work->buf16[j]);
                             j += io_point->size;
+                            io_work->num_registers = j;
+
                         }
                     }
 
-                    setWork(io_work);
+                    store_raw_data(io_work, false);
+                    if ((io_work->register_type == cfg::Register_Types::Holding) || (io_work->register_type == cfg::Register_Types::Coil))
+                    {
+                        setWork(io_work);
+                    }
+                    else
+                    {
+                        // no need to send the other types
+                        void stashWork(std::shared_ptr<IO_Work> io_work);
+                        stashWork(std::move(io_work));
+
+                    }
                 }
             }
             else if (!io_fims->anyBody.has_value())
@@ -896,7 +955,7 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
             std::cout << " uri_vec size " << io_fims->uri_req.num_uris<< std::endl;
         }
 #endif
-        if (is_stats_request || is_server_request)
+        if (is_stats_request || is_server_request || is_help_request)
         {
  
             if (io_fims->meta_data.replyto_len > 0)
@@ -927,6 +986,15 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                     ss << "\n}\n";
                     //std::cout << " got server " << ss.str() << std::endl;
                 }
+                if (is_help_request)
+                {
+                    if (first) first = false; else ss << ",";
+                    //std::stringstream ss;
+                    ss << "{\n";
+                    showRequestHelp(myCfg, ss);
+                    ss << "\n}\n";
+                    //std::cout << " got server " << ss.str() << std::endl;
+                }
 
                 if (is_stats_request && is_server_request)
                 {
@@ -950,13 +1018,13 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
             auto single_var = ioPointExists(io_point, myCfg, io_fims->uri_req.uri_vec, io_fims->uri_req.num_uris,"dummy");
             if (single_var)
             {
-//#ifdef FPS_DEBUG_MODE
+#ifdef FPS_DEBUG_MODE
                 if (debug)
                     std::cout 
                             << " single var found " << io_point->id 
                             << " local ? "<< (is_local_request?"true":"false")
                             << "\n";
-//#endif
+#endif
                 std::string replyto = "";
                 if (io_fims->meta_data.replyto_len > 0)
                 {
@@ -998,9 +1066,9 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                     {
                         if (io_point->register_type == cfg::Register_Types::Holding)
 
-                            std::cout << ">>>>" << __func__ << " regtype Holding " << std::endl;
+                            std::cout << ">>>>" << __func__ << " single regtype Holding " << std::endl;
                         else if (io_point->register_type == cfg::Register_Types::Input)
-                            std::cout << ">>>>" << __func__ << " regtype Input " << std::endl;
+                            std::cout << ">>>>" << __func__ << " single regtype Input " << std::endl;
                     }
 #endif
                     uint64_t uval = io_point->raw_val;
@@ -1027,7 +1095,7 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                         << "] uri [" << io_fims->uri_view
                         << "] ";
                     //std::cout << ss.str() << std::endl;
-                    FPS_ERROR_LOG("Fims Get  failed : %s", ss.str().c_str());
+                    FPS_ERROR_LOG("Fims Get failed : %s", ss.str().c_str());
 
 
                 }
@@ -1035,7 +1103,7 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
 
                     if(myCfg.fims_gateway.Connected())
                     {
-                        std::string reply_message = "{\"gcom\":\"Modbus Point Unknown\",\"status\":\"Falure\"}";
+                        std::string reply_message = "{\"gcom\":\"Modbus Point Unknown\",\"status\":\"Failure\"}";
                         myCfg.fims_gateway.Send(
                             fims::str_view{"set", sizeof("set") - 1},
                             fims::str_view{replyto.data(), replyto.size()},
@@ -1051,8 +1119,8 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
         }
         else
         {
-#ifdef FPS_DEBUG_MODE
             debug = false;
+#ifdef FPS_DEBUG_MODE
             if (debug)
                 std::cout << __func__ << " multi uri found [" << io_fims->uri_view << "]\n";
 #endif
@@ -1060,6 +1128,7 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
             std::vector<std::shared_ptr<cfg::io_point_struct>> io_map_vec;
             std::vector<std::shared_ptr<cfg::io_point_struct>> io_map_vec_pruned;
             add_all_component_points_to_io_vec(io_map_vec, myCfg, io_fims->uri_req.uri_vec, false);
+            auto is_local = io_fims->uri_req.is_local_request;
 
             for (std::shared_ptr<cfg::io_point_struct> io_point : io_map_vec)
             {
@@ -1069,15 +1138,37 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                 || (is_unforce_request && !io_point->is_forced) 
                 || (!is_force_request && !is_unforce_request && !is_disable_request && !is_enable_request))
                 {
-                    if (io_point->is_enabled && !io_point->is_disconnected)
+                    //get all local points
+                    if (is_local || (io_point->is_enabled && !io_point->is_disconnected))
                         io_map_vec_pruned.emplace_back(io_point);
                 }
             }
-
+            // we need to create a group based on the "get" uri.
+            // if we already have a group like that then check if it has completed 
+            // if not no point trying trying another "get"
+            // if it has been completed (check tDone) the we can reuse the group for this transaction
             check_work_items(work_vec, io_map_vec_pruned, myCfg, "get", true, false);
             int idx = 1;
             int io_work_size = (int)work_vec.size();
-            auto forced_str = fmt::format("get_group_{}_{}", (++myCfg.get_idx) % 1000, io_work_size);
+            auto forced_str = fmt::format("get_group_{}", /*(++myCfg.get_idx) % 1000,*/ io_fims->uri_view);
+            {
+                auto pg = get_pubgroup(forced_str);
+                if (pg->tNow > 0.0 && pg->tDone < pg->tNow)
+                {
+                    std::cout << " Group " << forced_str << " not completed ; dropping get request"<<std::endl;
+
+                }
+                pg->tNow = tNow;
+                pg->tDone = 0.0;
+            }
+
+            if(0)
+                std::cout << " Group " << forced_str 
+                    << " set up; processing get request; work_vec_size "
+                    << io_work_size
+                    <<std::endl;
+
+            //std::shared_ptr<cfg::pub_struct> mypub = std::shared_ptr<cfg::pub_struct>(static_cast<cfg::pub_struct *>(p), [](cfg::pub_struct *) {});
 
             for (std::shared_ptr<IO_Work> io_work : work_vec)
             {
@@ -1087,9 +1178,17 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                 io_work->full = is_full_request;
                 
                 io_work->work_name = forced_str;
-                io_work->erase_group = true;
-                io_work->work_group = (int)io_work_size;
+                io_work->erase_group = false;
+                io_work->work_group = io_work_size;
+                io_work->pub_struct = nullptr;
+
                 io_work->work_id = idx;
+                if(idx == 1){
+                    auto pg = get_pubgroup(forced_str);
+                    pg->tNow = tNow;
+                    pg->tDone = 0.0;
+                }
+
                 idx++;
 #ifdef FPS_DEBUG_MODE
                 if (debug)
@@ -1182,37 +1281,16 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
     }
     else // method not supported by gcom_client (it's not set, pub, or get)
     {
-        std::cout << "We got a mystery  method [" << io_fims->method_view << "] len :" << meta_data.method_len << std::endl;
-
-            //     FPS_ERROR_LOG("Listener for : %s, from sender: %s method %s is not supported. Message dropped",
-            //                   sys.fims_dependencies->name.c_str(),
-            //                   sys.fims_dependencies->process_name_view,
-            //                   sys.fims_dependencies->method_view);
-            //     FPS_LOG_IT("fims_method_error");
-
-            //     if (!sys.fims_dependencies->replyto_view.empty())
-            //     {
-            //         static constexpr auto err_str = "Unsupported fims method"sv;
-
-            //         if (!send_set(sys.fims_dependencies->fims_gateway, sys.fims_dependencies->replyto_view, err_str))
-            //         {
-            //             FPS_ERROR_LOG("Listener for '%s', could not send replyto fims message.",
-            //                           sys.fims_dependencies->name.c_str());
-            //             FPS_LOG_IT("fims_send_error");
-
-            //             return false;
-            //         }
-            //     }
-            //     return false;
+        FPS_ERROR_LOG("Fims method unknown  [%s]", io_fims->method_view);
     }
 
     if (meta_data.data_len > static_cast<uint32_t>(io_fims->fims_data_buf_len))
     {
         // FPS_ERROR_LOG
         FPS_ERROR_LOG("Fims receive buffer is too small. Recommend increasing data_buf_len to at least %d\n", meta_data.data_len);
-        auto orig_len = (int)io_fims->fims_data_buf_len;
-        FPS_ERROR_LOG("Extra data offset %d required  %d\n", (int)io_fims->fims_data_buf_len, meta_data.data_len - orig_len);
-        // io_fims->reset_fims_data_buf((int)(meta_data.data_len * 1.5));
+        // auto orig_len = (int)io_fims->fims_data_buf_len;
+        // FPS_ERROR_LOG("Extra data offset %d required  %d\n", (int)io_fims->fims_data_buf_len, meta_data.data_len - orig_len);
+        // // io_fims->reset_fims_data_buf((int)(meta_data.data_len * 1.5));
 
         // gcom_recv_extra_raw_message(myCfg.fims_gateway, &myCfg.fims_input_buf[orig_len], meta_data.data_len-orig_len);
 
@@ -1228,13 +1306,13 @@ bool fims_connect(struct cfg & myCfg, bool debug)
     std::string name(myCfg.connection.name);
     if(name.empty())
     {
-        FPS_ERROR_LOG(" fims_connect name string is empty\n");
+        FPS_ERROR_LOG("Fims Connect \"name\" string is empty\n");
         return false;
     }
     const auto conn_id_str = fmt::format("modbus_client_uri@{}", name);
     if (!myCfg.fims_gateway.Connect(conn_id_str.data()))
     {
-        FPS_ERROR_LOG("For client init uri \"{}\": could not connect to fims_server\n", name);
+        FPS_ERROR_LOG("Client id \"{}\": could not connect to fims_server\n", name);
         return false;
     }
 
@@ -1243,7 +1321,7 @@ bool fims_connect(struct cfg & myCfg, bool debug)
 
     if (!myCfg.fims_gateway.Subscribe(myCfg.subs))
     {
-        FPS_ERROR_LOG("For client with init uri \"{}\": failed to subscribe for uri init\n", name);
+        FPS_ERROR_LOG("Client id \"{}\": failed to subscribe to list\n", name);
         return false;
     }
 
@@ -1405,6 +1483,82 @@ static bool collect_thread(struct cfg & myCfg) noexcept
     return true;
 }
 
+// TODO add the requests map to the myCfg structure
+// add this to cfg
+// struct cfg {
+//     // Map of requests by name
+//     std::unordered_map<std::string, std::shared_ptr<request>> requests;
+// };
+
+// struct request {
+//     std::string name;
+//     std::string help;
+//     // Update the function signature as per your layout
+//     std::function<bool(cfg&, std::shared_ptr<request>)> reqfun;
+
+//     request(const std::string& name, const std::string& help, std::function<bool(cfg&, std::shared_ptr<request>)> reqfun)
+//         : name(name), help(help), reqfun(std::move(reqfun)) {}
+// };
+
+void showRequestHelp(struct cfg& myCfg, std::stringstream &ss)
+{
+    int count = 0;
+
+    ss << "\"help\":[";
+    for (const auto& req: myCfg.requests)
+    {
+        if(count>0)
+        {
+             ss<< ',';
+        }
+        count++;
+
+        ss << "{\"name\" :\"" << req.second->name <<"\","; 
+        ss << "\"desc\" :\"" << req.second->help <<"\"}"; 
+    }
+    ss << "]";
+}
+
+std::shared_ptr<cfg::request> make_shared_request(const std::string& name, const std::string& help,
+                     std::function<bool(struct cfg&, std::shared_ptr<cfg::request>)> reqfun) {
+    return std::make_shared<cfg::request>(name, help, reqfun);
+}
+// TODO define the requests structure with std::string name std::string help std::function reqfun
+void register_request(const std::string& request, const std::string& help
+            , std::function<bool(struct cfg&, std::shared_ptr<cfg::request>)> reqfun, struct cfg& myCfg)
+{
+    if ( myCfg.requests.find(request) == myCfg.requests.end())
+    {
+        myCfg.requests[request] = make_shared_request(request, help, reqfun); 
+    }
+}
+
+bool voidRequestFcn(struct cfg& myCfg,std::shared_ptr<cfg::request> req)
+{
+    std::cout << "running request :" << req->name << std::endl; 
+    return true;
+}
+
+bool register_requests(cfg& myCfg) {
+    auto reqFun = std::bind(voidRequestFcn, std::placeholders::_1, std::placeholders::_2);
+    register_request("_help",             "Show request options",                                         reqFun, myCfg);
+    register_request("_full",             "Show full data point details",                                 reqFun, myCfg);
+    register_request("_local",            "Show the local data point details",                            reqFun, myCfg);
+    register_request("_enable",           "Enable data point",                                            reqFun, myCfg);
+    register_request("_disable",          "Disable data point",                                           reqFun, myCfg);
+    register_request("_connect",          "Try to connect data point",                                    reqFun, myCfg);
+    register_request("_disconnect",       "Disconnect  data point",                                       reqFun, myCfg);
+    register_request("_force",            "Force data point values (points and values defined in body)",  reqFun, myCfg);
+    register_request("_unforce",          "Unforce data point values (points defined in body)",           reqFun, myCfg);
+    register_request("_stats",            "Get Stats",                                                    reqFun, myCfg);
+    register_request("_server",           "Get server config",                                            reqFun, myCfg);
+    register_request("_debug_connection", "(true/false) Set connection debug ",                           reqFun, myCfg);
+    register_request("_debug_response",   "(true/false) Set  response debug ",                            reqFun, myCfg);
+
+    return true;
+}
+
+
 /*
 /// @brief
     high speed fims mesage dump
@@ -1413,18 +1567,21 @@ static bool collect_thread(struct cfg & myCfg) noexcept
 /// @param myCfg
 /// @return
 */
-static bool listener_thread(std::vector<std::string> & subs, struct cfg & myCfg) noexcept
+static bool listener_thread(std::vector<std::string> & subs, struct cfg& myCfg) noexcept
 {
     bool debug = true;
     myCfg.fims_running = true;
 
     // TODO logs
     // std::cout << __func__ << " connect " << std::endl;
+    // put this here for now
+    register_requests(myCfg);
+
 
     bool fimsOk = fims_connect(myCfg, debug);
     if (!fimsOk)
     {
-        FPS_ERROR_LOG("Fims listener thread:  could not connect. Exiting");
+        FPS_ERROR_LOG("Fims listener \"{}\" could not connect. Exiting", myCfg.client_name);
         myCfg.fims_running = false;
         return false;
     }
@@ -1435,7 +1592,7 @@ static bool listener_thread(std::vector<std::string> & subs, struct cfg & myCfg)
     if (setsockopt(myCfg.fims_gateway.get_socket(), SOL_SOCKET, SO_RCVTIMEO, (const char *)&tv, sizeof(tv)) == -1)
     {
 
-        FPS_ERROR_LOG("listener for \"{}\": could not set socket timeout to 2 seconds. Exiting\n", myCfg.client_name);
+        FPS_ERROR_LOG("Fims listener \"{}\": could not set socket timeout to 2 seconds. Exiting\n", myCfg.client_name);
         myCfg.fims_running = false;
         return false;
     }
@@ -1458,9 +1615,6 @@ static bool listener_thread(std::vector<std::string> & subs, struct cfg & myCfg)
             else
             {
                 myjobs++;
-                // std::cout << "listener_thread ::  received message " << std::endl;
-                // if(myCfg.fims_gateway.Connected())
-                //     {
 
                 send_fims(io_fims, myCfg);
                 io_fims = make_fims(myCfg);
@@ -1478,7 +1632,8 @@ static bool listener_thread(std::vector<std::string> & subs, struct cfg & myCfg)
     }
     {
         // std::lock_guard<std::mutex> lock2(io_output_mutex);
-        // FPS_INFO_LOG
+        FPS_INFO_LOG("%s stopping after %d jobs", __func__, myjobs);
+
         //printf("listen thread stopping after %ld jobs\n", myjobs);
         // CloseModbusForThread(io_thread, debug);
         myCfg.fims_running = false;
@@ -1553,6 +1708,7 @@ bool test_fims_connect(struct cfg & myCfg, bool debug)
     // start fims threads
     start_process(myCfg);
 
+//    register_requests(myCfg);
     start_fims(subs, myCfg);
 
     std::cout << " Now sleeping for 2 seconds" << std::endl;
@@ -1561,7 +1717,7 @@ bool test_fims_connect(struct cfg & myCfg, bool debug)
     const auto conn_test_str = fmt::format("modbus_client_test@{}", name);
     if (!myCfg.fims_test.Connect(conn_test_str.data()))
     {
-        FPS_ERROR_LOG("For client testuri \"{}\": could not connect to fims_server\n", name);
+        FPS_ERROR_LOG("Client id \"{}\": could not connect to fims_server\n", name);
         return false;
     }
 
@@ -1588,7 +1744,7 @@ bool test_fims_connect(struct cfg & myCfg, bool debug)
                 fims::str_view{nullptr, 0},
                 fims::str_view{body.data(), body.size()}))
         {
-            FPS_ERROR_LOG("For client with inti uri \"{}\": failed to send a fims set message\n", name);
+            FPS_ERROR_LOG("Client id \"{}\": failed to send a fims set message\n", name);
             return false;
         }
         // std::cout << " message  sent [" << body << "]"<< std::endl;
@@ -1657,7 +1813,7 @@ bool test_fims_send_uri(struct cfg & myCfg, const char *uri, const char *method,
             body ? fims::str_view{body, strlen(body)} : fims::str_view{nullptr, 0}))
 
     {
-        FPS_ERROR_LOG("For client with inti uri \"{}\": failed to send a fims set message\n", name);
+        FPS_ERROR_LOG("Client id \"{}\": failed to send a fims set message\n", name);
         return false;
     }
     // std::cout << " message  sent [" << body << "]"<< std::endl;
@@ -1677,4 +1833,3 @@ bool test_fims_send_uri(struct cfg & myCfg, const char *uri, const char *method,
     return true;
 }
 
-// see the stuff on archive/src/gcom_fims.cpp it no longer lives here

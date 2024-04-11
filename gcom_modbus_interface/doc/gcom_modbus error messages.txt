@@ -1,0 +1,759 @@
+gcom_modbus error messages
+p wilshire
+4/5/2024
+
+Some Definitions
+
+fims_requests
+    Fis requestsare messages sent to the modbus_client to set or get values from the system.
+    The gcom_modbus_client has been extended to allow "requests" to extend the functionality of the fims interface.
+    the lust of request options is avaiable using  the _help request.
+
+
+pub_requsts
+    The primary modbus_client is from pubs of configured data items sent from the modbus server.
+    When the modbus_client starts up it detects the different publis groups defined in the cient config file.
+    Once communications has been established to the server the data will appear as fims "pubs"
+    The gcom_modbus_client also accepts fims "set" messages to send vlues to coils and holding registers.
+    A new feature of the gcom_modbus_client is the ability to "get" data from it io_point database.
+    This data can use the /_full request to  include all the "meta" data associated with the data point.
+
+
+io_thread 
+    This is a function that listens for io_work requests.
+    It tries to service each request with a modbus read or write to the register sets specified in the io_work object.
+    The request will normally be met with a succss status, in which case the completd work object is passed to the io_response thread.
+    This thread inspects all the completed io_work items and collects together as work groups. Once a group has completed the data collected by the modbus 
+    transaction can be applied to the local modbus data and also sent out to a fims message if required.
+
+io_work 
+    This is a work ticket used to collect groups of io_points together to pass on to an io_thread to interact with the modbus server.
+    Initially the software bundles all the io_points for a given component  , device_id, register type into one big requst.
+    this Initial requst is passed to a sorting function that divides the big object into several smaller objects grouped into the correct bin sizes.
+    ( max bin size is 125 individual registers)
+
+io_point
+    This is an individual io_point defined in the modbus data area. 
+    Use the /_full request option to see all the data collected about a data point.
+      fims_send -m get -r /$$ -u/components/ess_hs/_full 
+    io_points are sorted by device_id, register_type, offset.
+    io_points can have a siz (1,2 or 4) and a number of other characteristics.
+
+response_thread
+    The single thread that can change values in the io_point data items is the response_thread.
+    This thread is the "owner" of the io_point data and ensures thread safe access to the data items.
+    the io_work objects have special data areas to hold the data to read or write to the modbus registers these are populated either by decoding fims messages 
+    or by collection data from the modbus server.
+    io_work items are passed from the io_thread functions to a single io_response thread.
+    This thread sorts out all the io_work items associated with a pub request or a fims set / get operation and then provide fims_output to the rest of the system when the 
+    modbus transactions complete.
+
+
+
+
+errors
+
+  gcom_modbus_client
+
+    ip_address "192.168.2.114" isn't valid or can't be found from the local service file
+        we cannot fnd the ip address in the current network system
+
+    Unable to load config file [my_clinet_config.json, Quitting]
+        either the config file is missing or the dbi loader does not have the document
+
+
+    Unable to start up fims, Quitting
+        the fims_server application is not running
+
+  gcom_fims
+    Fims read err 11 [Resource Temporarily Unavailable]
+        something went wrong with the attempt to read a fims message. This is a system level problem.
+        possibly restart the fims_server ( and everything else)
+
+    Fims Set failed : [body of the fims message]
+        the fims set operation could not be performed.
+        possibly restart the fims_server ( and everything else)
+
+    Fims Get failed : [uri]
+        the fims get operation could not be performed.
+        possibly restart the fims_server ( and everything else)
+
+    Fims Pub failed : [uri]
+        the fims pub operation could not be performed.
+        possibly restart the fims_server ( and everything else)
+
+    Fims method unknown  [pull]
+        the fims operation was not allowed
+        the -m method used in the fims message is not understood.
+
+    Fims receive buffer is too small. Recommend increasing data_buf_len to at least 120000
+        this is a failure to accomodate the fims data sent to the system.
+        there is a config option that allows the buffer size to be increased.
+        note that not many applications will allow a run time buffer increase so they may be affected by this error. Try to reduce the fims message sizes.
+
+
+    Fims Connect "name" string is empty
+        config problem, the connection id has not been set
+
+    Client id "my_modbus_client": could not connect to fims_server
+        the modbus server may not be running or the "name" may have invalid characters
+
+    Client id "my_modbus_client": failed to subscribe to list
+        the fims server, for some reason, rejected the subscription list.
+        the list is published in the log output so look for errors there.
+        we may have been hit by a well known fims bug so this error may be fixed on the next attempt to run.
+
+    Fims listener "my_modbus_client"  could not connect. Exiting"
+        for some reason the fims_server rejected the connection request.
+        check that the fims_server is running and that no other process is trying to use the same name.
+
+    Fims listener "my_modbus_client": could not set socket timeout to 2 seconds. Exiting
+        for some reason this failed. may need to check the system logs to discover a reason
+
+    Client id "my_modbus_client": could not connect to fims_server
+        same message but from a different place.
+
+    Client id "my_modbus_client": failed to send a fims set message
+        may be something wrong with the uri, process name, user name or the fims body.
+        or fims_server may have stopped
+
+
+  gcom_heartbeat
+    Heartbeat [pcs_heartbeat] NO INPUT or OUTPUT POINT SPECIFIED
+        this is a config problem, you need to define the heartbeat_read data points if nothing else. 
+
+    Heartbeat [pcs_heartbeat] [pcs_hb_in] has entered the [frozen] state
+       we have failed to see a change in the pcs_hb_in input
+
+  gcom_iothreads
+    EBADF error; thread_id 1 try 1
+        Bad File Descriptor; using TCP or RTU the system will shut down then restart the connection and try again.
+        after 2 failed attempts the system imposes a 200 mS delay on repeat attempts.
+
+    ECONNRESET error; thread_id 1 try 1    
+        The remote host shut us down. The best we can do is an immediate retry. The try to reconnect again after 200mS
+
+    ETIMEOUT error; thread_id 1 try 1
+        the server we are connected to took too long to respond.
+        this could be due, in TCP connections, to network delays. 
+        you may be able to see more details if you use the debug_response:true option when running the modbus_client.
+        This may be an intermittent failure or may be due to interference or a broken wire.
+        Give a timeout error the TCP client will have to reestablish a connection. 
+        If the error still persists then we have a networking problem.
+        This errror could also be due to a slow response from the server. 
+        In any case, with TCP the connection will have to be remade.
+        There are different timeouts, one for a connection, the other for a transaction.
+        Note that systems will often respond (given a good network) quickly to a connection request.
+        The system can be connected but will refuse to service any transactions.
+        If a multi threaded operation is used (max_num_connections > 1) 
+            the extra threads that seem to connect but then dont communicate are shutdown.
+        So we are looking for either a bad network od a slow server.
+        If a timeout is set then the modbus_client will always shut the socket down and then try to create a new one.
+        RTU ( Serial) connections are different.
+        In this case the timeout does not result in a dropped or restarted connection.
+        There is no need  to attempt to reconnect but the timeout is critical to system performance.
+        With RTU , things will simply slow down. 
+        Pub frequency will be reduced to what ever the system can manage and we'll get a lot of warnings and errors.
+        A fix may be to increase the transaction timeout and accept the slower system.
+
+
+    EINPROGRESS error; thread_id 1 try 1
+        The connection was not ready to process the request to send or receive data.
+        This may be a transient error, if it happens too many times we'll need to review the system.
+        It is often seen at start up and then it goes away.
+
+    EINPROGRESS error, thread_id 1 tries 2 errno_code Some Error Code was Connected true  with Context true is now Connected false
+        This is a complex error. The system may have been running properly but now it cannot communicate.
+        The remote system or the network connection has probably disrupted the communication attempt.
+        If this condition is transient ( noise on the onnection link) it may go away. 
+        If it happens every time you start up a process like turn on power, then check the cables, 
+            make sure they are shielded, terminated , not broken.
+
+    EINVAL error, thread_id 1 tries 2 errno_code Some Error Code was Connected true  with Context true is now Connected false
+        This is due to invalid arguments being used in the attmept to read / write to the socket.
+        The system design make this very unlikely to be a coding error but some case may not be handled properly.
+
+    EPIPE error, thread_id 1 tries 2 errno_code Some Error Code was Connected true with Context true is now Connected false
+        This is due to the socket being invalid.  The system has dropped the connection but we are still trying to communicate with it.
+        The system will try to reconnect and we'll get another connection failure if that does not work.
+
+    ENOTSOCK error, thread_id 1 tries 2 errno_code Some Error Code was Connected true  with Context true is now Connected false
+        This is caused by the file descriptor number, used as the socket id, not actually being a socket.
+        Reconnect and if that works then we are good. Investigate, if you can take note that you got the error, if you ever see it again investigate some more.
+
+
+    INVALID_DATA error, thread_id 1 tries 2 Invalid Data Value in (start_offset) to (end_offset), aborting for now.
+
+    modbus data is invalid               EMBXILVAL   112345681
+        This is a modbus error. The data connection is out of sync. The modbus system could not decode the incoming package.
+        Given the nature of the connection, without remedial action, the data path will never recover.
+        The system now, correctly, will issue a modbus_flush to drain the incoming data and hopefully sync up at the start of a new packet.
+        In testing this approach worked but we hope to see more evidence in the field.
+
+    EMBBADEXC thread_id 1  tries 2 used flush
+        modbus unexpected exception code     EMBBADEXC   112345691
+        We dont know what is happening here we got this message from modbus. We'll use flush to try and reset the connection.
+        Watch out for modbus systems that use exception codes to indicate some sort of customized system state.
+
+
+    Default , thread_id 1 tries 2 errno_code 1123489 Some Error Code was Connected true with Context true is now Connected false
+        Once again, we dont know what is happening here we got this message from modbus.
+        Watch out for modbus systems that use exception codes to indicate some sort of customized system state.
+
+    Connection attempt failed, thread_id 1  connected false try 2
+        We cannot connect to the server, check ip_address, port, firewall.
+
+    Connection attempt passed, thread_id 1 connected true try 1 connect time 0.123
+        This is an INFO not an error, all is good the system connected. 
+
+    Connection context attempt failed, thread_id 1  connected false try 2
+        This is a failed connection attempt, Check the usual suspects.
+
+
+    Modbus Client [some_client_name] Thread  id 1 failed to set RTU connection timeout on [/dev/ttyS03]
+    Modbus Client [some_client_name] Thread  id 1 failed to set TCP connection timeout on [192.168.2.114] on port [502]
+        We could not set up the connection timeout for these connections
+        The system will keep attempting to connect to these remote systems.
+
+    Modbus Client [some_client_name] Thread  id 1 failed to set RTU response timeout on [/dev/ttyS03]
+    Modbus Client [some_client_name] Thread  id 1 failed to set TCP response timeout on [192.168.2.114] on port [502]
+        We could not set up the response timeout for these connections.
+
+    RTU connection timed out, serial device [/dev/ttyS02]
+    TCP connection timed out, on [192.168.1.115] port [502]
+        The connection attempt timed out.
+
+    EPIPE or EINVAL thread_id 1  errno_code EPIPE was Connected true with Context true is now Connected false
+        We got one of these errors when trying to connect.
+
+    Config error, no serial_device or ip_address ,thread_id [1]: Unable to set up modbus
+        Fix the configs
+
+    Connection context attempt failed, thread_id 1  connected false try 2
+        We could not  set up the modbus context for these connection attempts
+
+    Transfer Timeout on some_clinet_id thread id 1 , work num 2 time 34.567 elapsed (mS)  200
+        This is the one to look for with RTU (serial) connections.
+        The work_num indicates the block of data that was in progress, only of use to a developer, 
+            the time is the application time when the io attempt was started 
+            the elapsed time shows you how much time elapsed until the system decided to give up.
+
+    fims not connected for output (pub) message
+    fims not connected for output (set) message
+        Someone killed the fims server
+
+    Modbus Client [my_client_id]  Thread id 1 failed to create modbus RTU context to [/dev/ttyS01]
+    Modbus Client [my_client_id]  Thread id 1 failed to create modbus TCP context to [192.168.2.114] on port [502]
+        The system could not set up the modbus communications context.
+        Check configs.
+
+
+    Data Error thread_id 1 io_work tNow [35.456] connected but io failed for [read_registers] offset 2300  err code  [Invalid Data Address] point off_by_one false
+        The data send or read request ( io_work) failed for a read/write operation
+            at a given offset with the specified error code
+
+
+  gcom_modbus_decode
+    decode unknown register type
+        I dont  know what type of register we are tring to process.
+        Check configs
+
+  gcom_modbus_utils
+    Failed to get the second argument
+    Need to pass at least 2 arguments
+        Error in command line arguments.
+
+    error in --config: config json path not provided, or config json path was more than 8192 characters
+        Error in command line arguments, path to json config file
+    
+    error in --uri: fims json path not provided, or fims json path was more than 8192 characters
+        Error in command line arguments, path to json config file
+
+    Failed to open file config/bms/my_bms_config.json
+        We could not find the file on the system, note that the .json is optional. 
+        The system will try the given name and then append .json and try again
+
+    Memory allocation error
+        The config file was, perhaps, a little large.
+
+
+     decode  unknown register type
+        We don't recognise the register type. Check configs
+
+
+  gcom_modbus_server.cpp
+    Service [my_client_address] not found for protocol [TCP]
+      The system could not find an ip_address for the requested connection
+      This is normally in the /etc/hosts file.
+
+    signal of type 11 caught
+      the signal handler recieved a specific signal
+      these normally cause the system to shut down
+
+    Failed to create socket: <some error string>
+        The system failed to create a socket for the connection
+
+    Failed to set socket option reuse address and port: <some error string>
+        The system failed to modify the socket to allow port reuse
+
+    Failed to set socket option linger: <some error string>
+        The system failed to modify the linger option on the socket
+
+    Found service [192.168.2.114] port [502]
+        Not an error the system resolved the ip_address and the port number correctly
+
+    Failed to get port for service  <some_service_name>: using default 502
+       the port was specified as a service name, usually found in /etc/services. 
+       Check the system, if you know the port use that in the config
+    
+    Failed to get ip address for interface some_bms_server: <some_error_string>
+       the port number was supplied as a string but it could not be resolved ( in /etc/services)
+
+    Failed to bind socket: 127.0.0.1
+    If trying to use a port less than 1024 run programs as sudo
+        the system could not associate the socket with the requested port.
+        you may have to run as root to do this for port numbers below 1024
+        look in the /etc/service file to check for root.
+
+
+    Failed to listen on socket: 192.168.2.115 <some_error_message>
+        this is a system failure. should not happen.
+
+    Failed to allocate context
+        The system failed to allocate a modbus context for the connection.
+        Never seen this but it lets you know about it if it does.
+
+    Valid Unit identifiers (Device_Id) are between 1-247
+       An invalid device id was requested in the config. If no device id is provided the system will default to 255
+
+
+    set Device_Id to 123
+        The system set the device id to 123. These must match the client specified device id's.
+
+    Failed to find system 'id' in JSON
+        Config problem. The id field was missing in the system area.
+    
+    Invalid port defined
+    Invalid ip address string
+        Config problems with ip addresses , ports or service.
+
+    Allocation failed for name
+    Allocations error ip address string
+    Allocation error string for serial device
+    failed to allocate memory for server_data
+        the system could not allocate memory for the specified fields. strange something must be using up all the memory. 
+    
+    Invalid Parity value in json
+    Invalid number of data bits
+    Invalid number of stop bits
+    Invalid string for serial device
+    Failed to find either an IP_Address or Serial_Device in JSON
+        Config error, bad values specified
+
+    
+    device_id 23's mapping already exists
+        we tried to use the same device id in the server config. 
+        put all the io points for a given device id in the same array
+
+    Count 145 variables included in input_registers config object
+        Not an error more of an infomational message
+
+    No registers included in holding_registers config object
+        the area was defined but no registers were found in the config
+
+    Failed read or in invalid format:coils variable entry 12
+    Missing variable ID for coil variable entry 12
+    Missing URI for coil register entry 12: test_coil_output
+    Missing URI for coil register entry 13: test_out_2
+    Missing starting offset for coil register entry 13: test_out_2
+    failed to insert map entry for new %s: %s. Base URI and ID already used in the map
+    test_power_input is declared a float and has size 1 which is not allowed for floats
+    coil at offset 123 is defined to multiple variables test_coil_1 and test_coil_2
+    Wrote to undefined coil
+    Invalid value sent to coil
+    Modbus bytes of data does not match number of coils requested to write
+    Modbus body length less than expected, bytes read 345, header 350
+    Wrote to undefined register
+    Modbus bytes of data does not match number of holding registers requested to write
+    Write does not include all registers of Multi Register variable pcs_overall_status
+    Invalid Number of Registers defined for pcs_overall_status
+        config problems 
+
+    Failed to allocate memory for new variable ID-data map
+    Failed to insert map entry for new URI
+    Failed to insert map entry for new holding_register  test_hold
+        possibly a config problem , may be a system problem.
+        use "free" at the command prompt to see how the system memory is doing.
+
+     size 1 Old value [1234] New value [123]
+     size 2 Old value [1234.1235] New value [456734]
+     size 4 Old value [1234.1235.1236.1237] New value [456745]
+        informtional messages, normally supressed
+
+    Modbus body length less than expected
+        comms data problem.
+        note that if this occurs the modbus_flush should be called by the server (TODO)
+
+
+    A reload uri cannot contain more fragments than 3
+    A bug uri cannot contain more fragments than 3
+        we tried to send a "reload" or "debug: command but the uri was badly formed
+
+    Found a bug uri
+        we detected a debug command in the incoming message
+
+    Found a bug delay:3000
+    Found a bug cdelay:4000
+       set up single shot transaction or connection delays as requested, used for testing / debug
+
+    Fims reply for unrequested uri: /components/pcs_2
+        we got a reply during init  for a uri that we did not request.
+
+    Received invalid json object for set /component/pcs_charge_current. "<some invalid json body>"
+    Failed to find [test_out] in [/components/pcs_2]
+    Bad id [bad_test_out] for uri : [/components/pcs_status]
+        more config errors
+
+    Failed to subscribe to URI
+        the uri in the config was not a string that could be used for a fims subscribe operation
+
+    Error, failed to find value from config file in defined uri
+        again a config file consistency error.
+
+    Failed to find get response for /config/pcs_status    
+        the system sent an initialize request to get the values for /config/pcs_status but received no replies.
+    
+    Failed to initialize [/config/pcs_status]
+        the system sent an initialize request to get the values for /config/pcs_status but received no replies.
+        the echo or go_metrics processes normally servoice these requests.
+        these replies, sent to a special reply uri set up by the server, are used to set up the initial values of the data items.
+        use the "bypass" start up argument ( last one) to disable this for testing.
+    
+    perror("getSO_ERROR");
+         this is an error produced when requesting a feature (socket option) 
+         should never see it, if you do its a development engineering problem.
+
+    Failed to get System object in config file
+    Failed to get object item 'register' in JSON
+    Error creating register map for component /components/ess_hs
+    Failed to get object item 'device_id' as a number in 'devices' array object #2
+    'device_id' must be between 0 and 254, but was 345 in 'devices' object #2
+
+    Creating register map for array  some_cfg_name dev_id 23
+    Error creating register map for array  some_cfg_name;
+        these are mainly config file errors and problems.
+
+    Creating device map for device_id 23
+        not an error this is OK
+
+    Failed to allocate the server map's Modbus mapping: <some_error_message>
+    Failed to allocate new modbus context
+        memory allocation failure , System level problem.
+
+
+    Failed to initialize the mapping
+    Failed to get data for defined URI
+        The bypass flag was not set and the server did not get any data from an echo or go_metrics process after requesting it.
+
+    Failed to allocate connection to FIMS server
+        memory allocation error
+    Failed to establish connection to FIMS server
+        check that the server is running
+
+    Map configured: Initializing data
+        the system has set up its config, now trying to initialize its data. 
+        this stage can be bypassed by using the "bypass" command line option
+
+    Setup complete: Entering main loop
+    Map configured: Base Uri[/components/ess_ls]
+    Data initialized: setting up modbus connection.
+        All OK
+
+    Serial devices need a valid Device_Id between 1-247
+        config error , device_id missing
+
+    Failed to get serial file descriptor
+        config error could not decode the device_name for the serial connection
+    
+    Failed to get fims socket
+        system failure could not open the fims unix socket
+        ls -l /tmp/FlexGen_FIMS_Server.socket
+        srwxr-xr-x 1 root root 0 Apr  3 14:06 /tmp/FlexGen_FIMS_Server.socket
+
+    server select() failure: <some_error_code>
+    server select() error on fd : 2 closing it
+        some kind of system problem happened in the fims socket code
+
+
+    Error accepting new connections: <some_error_code>
+        the tcpip socket opened on the specified port could not accept incoming connections.
+
+    Fims connection closed
+    No fims message received
+        errors in the fims_listener thread
+    
+    modbus_receive, function read_registers device 2 offset 300 num regs 12 no mapping found for device_id 2 sending [Illegal Data Address] \n",
+       in debug test mode, acknowlegement that we are sending an error response 
+    
+    adding server connect delay 300 ms.
+       in debug test mode, acknowlegement that we are introducing a forced delay in the connect response 
+    
+    adding server delay 250 ms.
+       in debug test mode, acknowlegement that we are introducing a forced delay in the transaction response 
+
+    sending server exception 5
+       in debug test mode, acknowlegement that we are introducing an exception in the transaction response 
+
+    sending server exception ILLEGAL DATA.
+       in debug test mode, acknowlegement that we are introducing an illegal_data exception in the transaction response 
+
+    setting modbus mdebug  1
+       in debug test mode, acknowlegement that we are setting the mdebug flag 
+ 
+    setting modbus debug  1
+       in debug test mode, acknowlegement that we are setting the debug flag 
+    
+    Main loop complete: Entering clean up.
+    Main loop complete: Entering clean up device map.
+    Main loop complete: Entering clean up device map id 1.
+    Main loop complete: Entering clean up register map 1 id 1
+    Main loop complete: Entering clean up regs to map 1 id 2
+    Main loop complete: Entering clean up server map.
+    Main loop complete: Entering uri_to_register.
+    Main loop complete: Entering server_map->data.
+    Main loop complete: Entering server_map->data 2
+    Main loop complete: Entering clean up server uris
+    Main loop complete: Entering clean up server pfims.
+    Main loop complete: Entering delete server_map. reload 0
+        all these are normal system cleanup at exit, the reload flag indicates that the exit was in response to a reload request
+
+  gcom_modbus_utils
+    Need to pass at least 2 arguments.
+    Failed to get the second argument
+    error in --config: config json path not provided, or config json path was more than 1 characters
+    error in --uri: fims json path not provided, or fims json path was more than 8192 characters
+        command line args problem
+
+    Failed to open file config/modbus_server/my_config
+        could not find the config file
+
+    Memory allocation error
+        Os problem , check config file size, check free Memory (free)
+
+    Read error.
+        fims incoming message read error. restart may be needed.
+
+    For server with init uri "/components/pcs_data": the uri does not begin with `/`
+    For server with init uri "/components/pcs_data": could not connect to fims_server
+        command line argument problems
+
+    For server with init uri "/components/pcs_data": failed to subscribe for uri init
+    For server with inti uri "/components/pcs_data": failed to send a fims get message
+    For server with init uri "/components/pcs_data": failed to receive a message in 5 seconds
+    For server with init uri "/components/pcs_data": message was received, but body doesn't exist
+        Data init problems. The system could not get initial values for its input data points. 
+
+    Invalid JSON object for config
+        an invalid json object was found somewhere in the config file.
+        send it by hand to jq to see if you can identify the problem.
+            cat config/modbus_server/my_config.json | jq
+
+ 
+info
+  gcom_modbus_client
+    Received signal: [SSTOP]
+        the application received a system signal.
+        normally used to restart the application
+
+
+    build: "487"
+    commit: "c5918a1"
+    tag: "v12.0.0-alpha.2"
+        git source control identity
+    
+    Subs found:
+        list of Subs
+
+    Shutting down
+        start of the shutdown process
+
+  gcom_config
+    Heartbeat disabled
+        looks like we have disabled the heartbeat
+
+
+  gcom_fims
+    Single var enable [pcs_status]
+    Single var disable [pcs_status]
+    Single var connect [pcs_status]
+    Single var disconnect [pcs_status]
+    Single var forced [pcs_status]
+    Single var unforced [pcs_status]
+        io point flag manipulation
+
+
+    process_thread stopping after 3456 jobs
+    collect_thread stopping after 3456 jobs
+    listener_thread stopping after 4567 jobs
+        system shutdown information
+
+  gcom_heartbeat
+    Setting up heartbeat my_sys_heartbeat for [hb_out] every 2.5 seconds
+    Setting up heartbeat my_sys_heartbeat for [hb_in] every 2.5 seconds
+    Heartbeat [my_sys_heartbeat] id [hb_in] has entered the [normal] state.   
+
+  gcom_iothreads
+    Modbus Client RTU [my_modbus_client] Thread id 1 disconnecting from device [/dev/ttyS01]
+    Modbus Client TCP [my_modbus_client] Thread id 1 disconnecting from [192.168.1.115] on port [502]
+    Modbus Client RTU [my_modbus_client] Thread id 1 connecting to device [/dev/ttyS01]
+    Modbus Client TCP [my_modbus_client] Thread id 1 connecting to [192.168.1.115] on port [502]
+
+    Connection attempt passed #1 thread id 1 connect true try 1 , connect time 0.300
+    Connection attempt passed #2 thread id 1 connect true try 1 , connect time 0.300 
+    No  pubGroup key [my_pcs_hs] found, creating it
+                    
+    CONNECTION RESET thread_id 1  enabled connect reset now 23,for [coil_21] offset 200  err code 1234567 [INVALID_DATA]
+    
+    Point Error, thread_id 1 enabled but connect reset now 23, thread now disabled ,for [coil_21] offset 200  err code 12345657 [INVALID_DATA]
+        The nature of the error mans that, if more than one thread is trying to connect to one or more registers that 
+        there is a problem with multiple threads running on the server.
+        in these cases the additional threads are shutdown.
+
+
+    Point Error, thread_id 1 failed for [coil_21] offset 200 with gap [2] err 112345680 --> [INVALID_DATA_ADDRESS]; gap removed
+        Data maps can have spaces in between points.
+        When setting up a point, the unused space between the end of one point and the start of the next point is called a gap.
+        The config option connection.allow_gaps turns on and off the gap fill in feature.
+        Initially we try to read "across" the gaps to get as large a block of data points as possible.
+        If such an attempted read or write produces an error, these gaps are set to zero which causes the number point grouping objects 
+        (io_work) to be increased to only include specified consecutive data points.
+        This correction is testing to see if the point error was caused by trying to access the gap or space between the points.
+        THe correctine action here is to try again removing the gap. This will create more io_work groups for a given sequence of points.
+
+    
+    Point Error, thread_id 1 failed for [coil_21] offset 200 err 112345680 --> [INVALID_DATA_ADDRESS]; point disconnected", 
+        The attempted read or write produced an error even with any gaps are set to zero.
+        The point requested cannot be obtained from the server.
+        A possible addition toe the Clinet would be to check if part of the point could be retrieved indicating a point size error. 
+        When dealing with an suspected invalid point, an extra log message could be provided to indicate tat one of the group of registers was causing the problem.
+
+
+    Get/Poll: unknown register type
+    Set: unknown register type
+
+
+    thread_id 1 running retry 2 ; work type 2 (Get)  offset 200 num 2 reg_type 1  (Holding) debug 0",
+        We are trying again to get a data point possibly after regrouping to remove gaps.
+
+    IO_THREAD thread_id  1 started; enabled : true. "
+        Indicates that an io_thread has been started
+
+    IO_THREAD thread_id [1]: Loop Completed; enabled [true].
+        Indicates that an io_thread has been stopped (completed)
+
+    thread_id 1 stopping after 34567 jobs  0 fails, enabled true
+        Part of the thread shutdown message
+  
+    Show pubGroups at exit ...
+        This is debug information about the pubgroups.
+        pubgroups are collection of io_work tickets to be submitted to the io_thread as a modbus transaction.
+        once all the io_work items have been completed the result can be either published or returned in a response message.
+
+    Found  pubGroup key [pub_ess_hs]  tNow [12.034] tDone [12.055]
+    No  pubGroup key [pub_ess_hs] found, creating it
+        debug info on the pup system operation
+
+    Checking pubgroup pub_ess_hs size 345 pub time 12.034 must equal incoming time 12.044  
+        The instances of pub io_work objects are identified by the pub group name and the instanciation time.
+        If the response thread sees an io_work ticket for the wrong time it complains but discards it.
+
+    io_work 2 Pubgroup key not found [pub_ess_ls]. Discarding io_work
+        somehow an unidentified io_work object arrived at the response thread. Ok to ignore this.
+
+    Discarding stale incoming io_work; current pubgroup id  12.034 is later than incoming id 12.002
+        this discards a stale io_work item if its not synced with the current pub_group
+
+    IO Threads starting at 3.034
+    thread_id 1 starting at 3.035
+    All io_threads running at 4.123
+    All io_threads stopped
+    Response thread stopped;
+        these messages are all related to the system start up and shutdown.
+
+    Modbus Client [fakeco_modbus_client] Thread  id 1 successfully connected to [/dev/ttyS0]
+    Modbus Client [fakeco_modbus_client] Thread  id 1 successfully connected to [192.168.2.115] on port [502]
+    Modbus Client [fakeco_modbus_client] disconnected from [/dev/ttyS0]
+    Modbus Client [fakeco_modbus_client] disconnected from [192.168.2.115] on port [502]
+        thread connection / disconnection message
+
+    
+    All threads stopping
+    IO Threads stopped.
+        Shutdown messages
+
+
+  gcom_modbus_pub
+    Server stall  too many pending pubs [3],  aborting poll name: [pub_ess_hs] for 5 seconds, num_threads : 1
+        The system has found too many pending pub requests. This can be due to a slow or unconnected system
+        There is no point in continuing to issue new pub requests if the 3 prevoius requests have not been serviced.
+        We shut down fr 5 seconds but this may not be enough to prevent a large backlog of requests.
+        Need to look at this design.
+
+    Server stall poll name [pub_ess_hs], killing thread connection
+        It looks like the server is not responding , if we have more than 1 thread trying to connect to it then disable the extra threads
+        some clients will accept a connection but then do nothing with the incoming data.
+        If we have max_num_connections greater than 1 the additional threads will connect but, otherwize, they will process no data.
+        this mechanism detects that and disables the additional threads.
+        Thread id 1 is not affected by this system.
+
+
+    Pubs found:  pub_ess_hs  Frequency: 200 seconds Offset 0 seconds
+        this is a set up info message to reassure you that the pub timer has been set up.
+
+    
+
+  gcom_timer
+    Timer Thread stopping
+       this is a system shut down message
+
+
+
+  gcom_utils
+    port cannot be derived from service [my_remote_ess] for protocol [tcp] (it doesn't exist), going back to port provided in config (or default)
+        we can specify  a port as a number or by a service name. 
+        To use a service name /etc/services must contain an entry to define the relationship between the name and the port number.
+        If you specify both a port (number) and a service (name) the system will attempt to use the service entry , if not it will revert to the port number.
+
+
+    Processing Override : ip:192.168.4.113   true
+        A command line override has been processed successfully
+        use help on te end of the command line to see the possible overrides
+
+
+warnings
+  gcom_watchdog
+    std::string message = fmt::format("
+    Watchdog [ess_read_hb] has entered the [ALARM] state.
+    Watchdog [ess_read_hb] has entered the [FAULT] state.
+
+errors
+    Watchdog [ess_read_hb] has entered the [RECOVERY] state.
+    Watchdog [ess_read_hb] has entered the [NORMAL] state.
+    these come out as errors but they should be info messages.
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+

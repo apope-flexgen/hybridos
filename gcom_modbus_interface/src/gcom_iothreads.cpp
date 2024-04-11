@@ -37,27 +37,29 @@ void addTimeStamp(std::stringstream &ss);
 int check_socket_alive(std::shared_ptr<IO_Thread> io_thread, int timeout_sec, int timeout_usec);
 
 
-// function code is invalid.EMBXILFUN  112345679
-// specified address is invalid. EMBXILADD 112345680
-// data is invalid               EMBXILVAL 112345681
-// Modbus slave is stopped.      EMBXSFAIL 112345682
-// ACK response                  EMBXACK 112345683
-// Modbus slave is busy          EMBXSBUSY 112345684
-// Negative Ack response         EMBXNACK 112345685
-// Memory parity error.          EMBXMEMPAR 112345686
-// Bad gateway config            EMBXGPATH 112345687
-// No response from target       EMBXGTAR 112345688
-// CRC error.                    EMBBADCRC 112345689
-// data is invalid.              EMBBADDATA  112345690
-// unexpected exception code     EMBBADEXC 112345691
-// Reserved code                 EMBUNKEXC 112345692
-// Exceeds max data size.        EMBMDATA 112345693
+#define EMBERROR 112345600
+
+// function code is invalid      EMBXILFUN   112345679
+// specified address is invalid. EMBXILADD   112345680
+// data is invalid               EMBXILVAL   112345681
+// Modbus slave is stopped.      EMBXSFAIL   112345682
+// ACK response                  EMBXACK     112345683
+// Modbus slave is busy          EMBXSBUSY   112345684
+// Negative Ack response         EMBXNACK    112345685
+// Memory parity error.          EMBXMEMPAR  112345686
+// Bad gateway config            EMBXGPATH   112345687
+// No response from target       EMBXGTAR    112345688
+// CRC error.                    EMBBADCRC   112345689
+// data is invalid.              EMBBADEXC   112345690
+// bad data                      EMBBADDATA  112345691
+// Reserved code                 EMBUNKEXC   112345692
+// Exceeds max data size.        EMBMDATA    112345693
 // Device ID different.          EMBBADSLAVE 112345694
 
 
 
 #define BAD_DATA_ADDRESS 112345680
-#define INVALID_DATA     112345681
+#define INVALID_DATA     112345691
 
 
 // #include "oldmodbus_iothread.h"
@@ -109,13 +111,13 @@ void  DisConnect(struct cfg &myCfg, ThreadControl &tc, std::shared_ptr<IO_Thread
         char message[1024];
         if(io_thread->myCfg->connection.is_RTU)
         {
-            snprintf(message, 1024, "Modbus Client [%s] Thread id %d disconnecting from [%s]", io_thread->myCfg->connection.name.c_str()
+            snprintf(message, 1024, "Modbus Client RTU [%s] Thread id %d disconnecting from device [%s]", io_thread->myCfg->connection.name.c_str()
                                                                                             , io_thread->tid
                                                                                             , io_thread->myCfg->connection.device_name.c_str());
         } 
         else
         {
-            snprintf(message, 1024, "Modbus Client [%s] Thread id %d disconnecting from [%s] on port [%d]", myCfg.connection.name.c_str()
+            snprintf(message, 1024, "Modbus Client TCP [%s] Thread id %d disconnecting from [%s] on port [%d]", myCfg.connection.name.c_str()
             , io_thread->tid, io_thread->ip.c_str()
             , io_thread->port);
         }
@@ -137,13 +139,13 @@ void  SetConnect(struct cfg &myCfg, ThreadControl &tc,std::shared_ptr<IO_Thread>
         char message[1024];
         if(myCfg.connection.is_RTU)
         {
-            snprintf(message, 1024, "Modbus Client [%s] Thread id %d connecting to [%s]", myCfg.connection.name.c_str()
+            snprintf(message, 1024, "Modbus Client RTU  [%s] Thread id %d connecting to device [%s]", myCfg.connection.name.c_str()
                                                                                             , io_thread->tid
                                                                                             , myCfg.connection.device_name.c_str());
         }
         else
         {
-             snprintf(message, 1024, "Modbus Client [%s] Thread id %d connecting to[%s] on port [%d]",
+             snprintf(message, 1024, "Modbus Client TCP [%s] Thread id %d connecting to[%s] on port [%d]",
                 myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
         }
 
@@ -232,10 +234,7 @@ void handleEBADF(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<IO_Work>
         //int mberr = 0;
     if (io_thread->ctx)
     {
-        FPS_ERROR_LOG("thread_id %d  try %d  ctx %p  EBADF ",
-                        io_thread->tid, io_tries,
-                        (void *)io_thread->ctx
-                        );
+        FPS_ERROR_LOG("EBADF error; thread_id %d try %d", io_thread->tid, io_tries);
     }
     DisConnect(myCfg, threadControl, io_thread);
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -246,10 +245,7 @@ void handleECONNRESET(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<IO_
 {
     if (io_thread->ctx)
     {
-        FPS_ERROR_LOG("thread_id %d  try %d  ctx %p  ECONNRESET ",
-                        io_thread->tid, io_tries,
-                        (void *)io_thread->ctx
-                        );
+        FPS_ERROR_LOG("ECONNRESET error; thread_id %d  try %d", io_thread->tid, io_tries);
     }
     DisConnect(myCfg, threadControl, io_thread);
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -261,13 +257,13 @@ void handleETIMEDOUT(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<IO_W
     //int mberr = 0;
     if (io_thread->ctx)
     {
-        FPS_ERROR_LOG("thread_id %d  try %d  timeout ",
-                        io_thread->tid, io_tries
-                        //(void *)io_thread->ctx,
-                        );
+        FPS_ERROR_LOG("ETIMEOUT error; thread_id %d  try %d", io_thread->tid, io_tries);
+    }
+    if (!myCfg.connection.is_RTU) // no need to disconnect if timed out
+    {
+        DisConnect(myCfg, threadControl, io_thread);
     }
 
-    DisConnect(myCfg, threadControl, io_thread);
     // fast retry on timed out
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
@@ -279,18 +275,16 @@ void handleEINPROGRESS(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<IO
     if ( io_thread->connect_fails < 5)
     {
         io_thread->connect_fails++;
-        FPS_ERROR_LOG("thread_id %d  try %d  EINPROGRESS",
-                    io_thread->tid, io_tries
-        );
+        FPS_ERROR_LOG("EINPROGRESS error, thread_id %d  try %d", io_thread->tid, io_tries);
     }
     if(io_work->data_error == false)
     {
         io_work->data_error = true;
         if (io_thread->wasConnected || io_thread->hadContext)
         {
-            FPS_ERROR_LOG("thread_id %d  tries %d  broken pipe errno_code %d was Connected %s had Context %s isConnected %s"
+            FPS_ERROR_LOG("EINPROGRESS error, thread_id %d tries %d errno_code %s wasConnected %s with Context %s isConnected %s"
                 , io_thread->tid, io_tries
-                , io_work->errno_code
+                , modbus_strerror(io_work->errno_code)
                 , (io_thread->wasConnected?"true":"false")
                 , (io_thread->hadContext?"true":"false")
                 , (io_thread->connected?"true":"false")
@@ -308,61 +302,54 @@ void handleEINPROGRESS(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<IO
 // 88
 void handleENOTSOCK(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<IO_Work> &io_work, int &io_tries, struct cfg &myCfg)
 {
-    int mberr = 0;
     DisConnect(myCfg, threadControl, io_thread);
 
 
     if ( io_thread->connect_fails < 1)
     {
         io_thread->connect_fails++;
-        FPS_INFO_LOG("thread_id %d  tries %d ENOTSOCK %p  mberr %d",
-                        io_thread->tid, io_tries,
-                        (void *)io_thread->ctx,
-                        mberr);
+        FPS_ERROR_LOG("ENOTSOCK thread_id %d  tries %d", io_thread->tid, io_tries );
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
 }
 
-//    // INVALID_DATA 112345681
+//    // INVALID_DATA 112345691
 void handleINVALID_DATA(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<IO_Work> &io_work, int &io_tries, struct cfg &myCfg)
 {
-    FPS_INFO_LOG("thread_id %d  tries %d ; Invalid Data Value in %d to %d , aborting for now",
+    if(io_thread->ctx)modbus_flush(io_thread->ctx);
+
+    FPS_ERROR_LOG("INVALID_DATA thread_id %d  tries %d ; Invalid Data Value in %d to %d , ran flush\n",
                     io_thread->tid, io_tries,
                     io_work->offset,
                     (io_work->offset + io_work->num_registers)
 
-                    //(void *)io_thread->ctx,
     );
 }
 
 // BAD_DATA_ADDRESS)
 void handleBAD_DATA_ADDRESS(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<IO_Work> &io_work, int &io_tries, struct cfg &myCfg)
 {
-    FPS_INFO_LOG("thread_id %d  tries %d ; Bad Data Address in %d to %d , aborting for now",
+    FPS_INFO_LOG("BAD_DATA_ADDRESS thread_id %d  tries %d ; Bad Data Address in %d to %d , aborting for now\n",
                     io_thread->tid, io_tries,
                     io_work->offset,
                     (io_work->offset + io_work->num_registers)
-
-                    //(void *)io_thread->ctx,
     );
 }
 
 // EMBBADEXC 112345691
 void handleEMBBADEXC(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<IO_Work> &io_work, int &io_tries, struct cfg &myCfg)
 {
-    auto mberr = modbus_flush(io_thread->ctx);
+    //auto mberr = 
+    modbus_flush(io_thread->ctx);
     {
-        FPS_INFO_LOG("thread_id %d  tries %d flush   ctx %p mberr %d",
-                        io_thread->tid, io_tries,
-                        (void *)io_thread->ctx,
-                        mberr);
+        FPS_ERROR_LOG("EMBBADEXC thread_id %d  tries %d used flush ",
+                        io_thread->tid, io_tries );
     }
 }
 
 // 22
 void handleEINVAL(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<IO_Work> &io_work,int &io_tries, struct cfg &myCfg)
-{
-    
+{ 
     if(io_thread->ctx)
     {
         DisConnect(myCfg, threadControl, io_thread);
@@ -373,7 +360,7 @@ void handleEINVAL(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<IO_Work
     if(io_thread->wasConnected || io_thread->hadContext)
     {
 
-        FPS_ERROR_LOG("thread_id %d  tries %d  was_connected %s hadContext %s connected %s error 22 EINVAL"
+        FPS_ERROR_LOG("EINVAL thread_id %d  tries %d was Connected %s with Context %s is now Connected %s"
                     , io_thread->tid
                     , io_tries
                     , (io_thread->wasConnected?"true":"false")
@@ -397,13 +384,13 @@ void handleEPIPE(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<IO_Work>
         io_work->data_error = true;
         if (io_thread->wasConnected || io_thread->hadContext)
         {
-            FPS_ERROR_LOG("thread_id %d  tries %d  broken pipe errno_code %d was Connected %s had Context %s isConnected %s"
+            FPS_ERROR_LOG("EPIPE thread_id %d  tries %d  broken pipe errno_code %d [%s] was Connected %s with Context %s is now Connected %s"
                 , io_thread->tid, io_tries
                 , io_work->errno_code
+                , modbus_strerror(io_work->errno_code)
                 , (io_thread->wasConnected?"true":"false")
                 , (io_thread->hadContext?"true":"false")
                 , (io_thread->connected?"true":"false")
-                        //(void *)io_thread->ctx,
                 );
         }
     }
@@ -414,10 +401,11 @@ void handleDefaultError(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr<I
     if(io_thread->wasConnected || io_thread->hadContext)
     {
      
-        FPS_INFO_LOG("thread_id %d  tries %d errno_code %d wasConnected %s hadContext %s isConnected %s"
+        FPS_ERROR_LOG("Default thread_id %d  tries %d errno_code %d [%s] wasConnected %s hadContext %s isConnected %s"
                     , io_thread->tid, io_tries
                      //(void *)io_thread->ctx,
                     , io_work->errno_code
+                    , modbus_strerror(io_work->errno_code)
                     , (io_thread->wasConnected?"true":"false")
                     , (io_thread->hadContext?"true":"false")
                     , (io_thread->connected?"true":"false")
@@ -485,21 +473,16 @@ void tryReconnectIfNeeded(std::shared_ptr<IO_Thread> &io_thread, std::shared_ptr
             double ctime = SetupModbusForThread(myCfg, io_thread, debug);
             if (!io_thread->ctx)
             {
-                if(1)FPS_ERROR_LOG("thread_id %d  connect %s try %d Connection attempt failed ",
+                FPS_ERROR_LOG("Connection attempt failed, thread_id %d connected %s try %d",
                                 io_thread->tid, (io_thread->connected?"true":"false"), io_tries);
                 io_thread->connected = false;
-
-
-                //LOG_ERROR("Connection attempt failed", io_thread->tid, io_tries);
                 std::this_thread::sleep_for(std::chrono::milliseconds(200));
             }
             else
             {
-                FPS_INFO_LOG("thread_id %d  connect %s try %d Connection attempt passed, ctime %2.3f ",
+                FPS_INFO_LOG("Connection attempt passed #1, thread_id %d connect %s try %d connect time %2.3f ",
                                 io_thread->tid, (io_thread->connected?"true":"false"), io_tries, ctime);
                 io_work->cTime = ctime;
-
-                //LOG_INFO("Connection attempt passed", io_thread->tid, io_tries, ctime);
             }
         }
     }
@@ -515,12 +498,6 @@ void new_runThreadError(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread,
     {
         tryReconnectIfNeeded(io_thread, io_work, io_tries, myCfg, debug);
     }
-        // if (!io_thread->ctx && !io_work->local)
-        // {
-        //     io_work->data_error = true;
-        //     return;
-        // }
-
     handleErrorCode(io_thread, io_work, io_tries, myCfg, io_done);
 }
 
@@ -531,13 +508,13 @@ void runThreadError(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std
     io_thread->hadContext = (io_thread->ctx != nullptr);
 
     auto wasConnected = io_thread->connected;
-    //auto hadContext = (io_thread->ctx!= nullptr); 
-    // if it was connected try to reconnect
     if(wasConnected)
     {
         if(0)
-            std::cout << " was connected .. io_work " << io_work->mynum 
+            std::cout << "<"<<__func__ 
+                << "> was connected .. io_work " << io_work->mynum 
                         << " error code :" << io_work->errno_code
+                        << " data_error :" << io_work->data_error
                         << std::endl;
 
         if (io_thread->ctx == nullptr && io_thread->ip != "")
@@ -546,8 +523,6 @@ void runThreadError(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std
             {
                 double ctime;
                 {
-                    //if (debug)
-                    //    std::cout << " xxx getting modbus ctx #1 " << std::endl;
                     if (io_work->errno_code == ETIMEDOUT)
                     {
                         // if the error was a timeout we need to do a fast reconnect attempt
@@ -558,25 +533,19 @@ void runThreadError(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std
                         // else this will do
                         ctime = SetupModbusForThread(myCfg, io_thread, debug);
                     } 
-                    if (0)
-                        std::cout << " was connected .. io_work " << io_work->mynum << "   done ModbusSetup; connect_time :" << ctime << std::endl;
                 }
                 if (!io_thread->ctx)
                 {
                     {
-                        if(1)FPS_ERROR_LOG("thread_id %d  connect %s try %d Connection attempt failed ",
+                        FPS_ERROR_LOG("Connection context attempt failed, thread_id %d  connected %s try %d  ",
                                 io_thread->tid, (io_thread->connected?"true":"false"), io_tries);
                     }
                     io_thread->connected = false;
-
-                    //printf("thread_id %d  connect %s try %d Connection attempt failed ",
-                    //            io_thread->tid, (io_thread->connected?"true":"false"), io_tries);
-                    // int mberr = 0;
                     std::this_thread::sleep_for(std::chrono::milliseconds(200));
                 }
                 else
                 {
-                    FPS_INFO_LOG("thread_id %d  connect %s try %d Connection attempt passed, ctime %2.3f ",
+                    FPS_INFO_LOG("Connection attempt passed #2 ,thread id %d connect %s try %d connect time %2.3f ",
                                 io_thread->tid, (io_thread->connected?"true":"false"), io_tries, ctime);
                     io_work->cTime = ctime;
                 }
@@ -727,6 +696,25 @@ bool handle_lost_connection(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thr
     auto wasConnected = io_thread->connected;
     auto hadContext = (io_thread->ctx!= nullptr); 
 
+    if ( err == ETIMEDOUT) 
+    {
+        if (myCfg.connection.is_RTU)
+        {
+            if (io_thread->connection_timedout != true)
+            {
+                FPS_ERROR_LOG("RTU connection timed out, serial device [%s]", myCfg.connection.device_name);
+            }
+            io_work->data_error = true;
+            lost =  true;
+        }
+        io_thread->connection_timedout = true;
+    } 
+    else
+    {
+        io_thread->connection_timedout = false;
+
+    }
+
     if ( err == EPIPE || err == EINVAL)
     {
         lost = true;
@@ -739,9 +727,9 @@ bool handle_lost_connection(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thr
             io_thread->connected = false;
             {
 
-                FPS_ERROR_LOG("thread_id %d  errno_code %d wasConnected %s hadContext %s isConnected %s"
+                FPS_ERROR_LOG("EPIPE or EINVAL thread_id %d  errno_code %s wasConnected %s hadContext %s isConnected %s"
                     , io_thread->tid
-                    , io_work->errno_code
+                    , modbus_strerror(io_work->errno_code)
                     , (wasConnected?"true":"false")
                     , (hadContext?"true":"false")
                     , (io_thread->connected?"true":"false")
@@ -756,28 +744,28 @@ void handle_point_error(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread,
                         , std::shared_ptr<struct cfg::io_point_struct> io_point, const char *func_name, int err)
 {
     io_point->errno_code = err;
+    if(0)std::cout << __func__ 
+            << " point id [" << io_point->id
+            << "] error [" << modbus_strerror(err) <<"]"
+            << std::endl;
+
     // do not disable thread id 1
     if (io_point->errno_code == ECONNRESET) 
     {
         io_thread->connect_reset++;
-        if(0)FPS_INFO_LOG(
-                    "thread_id %d %s enabled connect reset now %d,for [%s] offset %d  err code %d [%s]"
-                    , io_thread->tid, func_name, io_thread->connect_reset, io_point->id.c_str()
+        FPS_INFO_LOG(
+                    "CONNECTION RESET thread_id %d  enabled connect reset now %d,for [%s] offset %d  err code %d [%s]"
+                    , io_thread->tid, io_thread->connect_reset, io_point->id.c_str()
                     , io_point->offset, io_point->errno_code,  modbus_strerror(io_point->errno_code));
 
         if((io_thread->tid > 1) && (io_thread->connect_reset> 10))
         {
             if(io_thread->is_enabled)
             {
-                if(0)FPS_INFO_LOG(
-                    "thread_id %d %s enabled but connect reset now %d, thread now disabled ,for [%s] offset %d  err code %d [%s]"
-                    , io_thread->tid, func_name, io_thread->connect_reset, io_point->id.c_str()
-                    , io_point->offset, io_point->errno_code,  modbus_strerror(io_point->errno_code));
-
                 char message[1024];
                 snprintf(message, 1024, 
-                    "thread_id %d %s enabled but connect reset now %d, thread now disabled ,for [%s] offset %d  err code %d [%s]"
-                        , io_thread->tid, func_name, io_thread->connect_reset, io_point->id.c_str()
+                    "Point Error, thread_id %d enabled but connect reset now %d, thread now disabled ,for [%s] offset %d  err code %d [%s]"
+                        , io_thread->tid, io_thread->connect_reset, io_point->id.c_str()
                         , io_point->offset, io_point->errno_code,  modbus_strerror(io_point->errno_code));
 
                 FPS_INFO_LOG("%s", message);
@@ -785,44 +773,50 @@ void handle_point_error(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread,
 
                 io_thread->is_enabled = false;
             }
-
         }
     }
-    if ((io_point->errno_code == EPIPE) 
-        || (io_point->errno_code == ECONNRESET) 
-        || (io_point->errno_code == EINVAL)
-        || (io_point->errno_code == EAGAIN)
-        || (io_point->errno_code == ETIMEDOUT)
+    if ((               io_point->errno_code == EPIPE) 
+                    || (io_point->errno_code == ECONNRESET) 
+                    || (io_point->errno_code == EINVAL)
+                    || (io_point->errno_code == EAGAIN)
+                    || (io_point->errno_code == ETIMEDOUT)
         )
     {
         // if we get one of these then the rest of the batch will fail.
-
+        // if myCfg.connection.is_RTU no need to disconnect if timed out
         if(!io_work->data_error)
         {
-            FPS_INFO_LOG("thread_id %d %s connected but io failed for [%s] offset %d  err code %d [%s] point off_by_one [%s]"
-                , io_thread->tid, func_name, io_point->id.c_str()
+            FPS_ERROR_LOG("Data Error thread_id %d  io_work tNow [%2.3f] connected but io failed for [%s] offset %d  err code %d [%s] point off_by_one [%s]"
+                , io_thread->tid, io_work->tNow, io_point->id.c_str()
                 , io_point->offset, io_point->errno_code,  modbus_strerror(io_point->errno_code)
                 , io_point->off_by_one?"true":"false");
             io_work->data_error = true;
         }
     }
 
-    if(err >= 112345600)
+    // EMBERROR 112345600
+    if(err >= EMBERROR)
     {
         // have we already failed
         if (!io_work->data_error)
         {
 
-            FPS_INFO_LOG("thread_id %d %s connected but io failed 2 for [%s] offset %d  err %d code %d [%s] point off_by_one [%s] disconnected [%s] auto disable [%s] point_gap %d"
-                , io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, err, io_point->errno_code,  modbus_strerror(io_point->errno_code)
-                                , io_point->off_by_one?"true":"false"
-                                , io_point->is_disconnected?"true":"false"
-                                , myCfg.auto_disable?"true":"false"
-                                , io_point->gap
-                                );
+            //FPS_INFO_LOG
+            if(0)printf("thread_id %d %s connected but io failed #2 for [%s] offset %d  err %d code %d [%s] point off_by_one [%s] disconnected [%s] auto disable [%s] point_gap %d\n"
+                , io_thread->tid, func_name, io_point->id.c_str()
+                , io_point->offset
+                , err
+                , io_point->errno_code
+                ,  modbus_strerror(io_point->errno_code)
+                , io_point->off_by_one?"true":"false"
+                , io_point->is_disconnected?"true":"false"
+                , myCfg.auto_disable?"true":"false"
+                , io_point->gap
+                );
 
-            io_work->data_error = true;
-            if (io_point->errno_code == 112345691)
+            //io_work->data_error = true;
+            // unexpected exception code     EMBBADEXC 112345691
+            if (io_point->errno_code == EMBBADEXC)
             {
                 int io_tries = 0;
                 handleEMBBADEXC(io_thread, io_work, io_tries, myCfg);
@@ -831,7 +825,6 @@ void handle_point_error(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread,
     }
 
     //#define EMBBADEXC 112345691  invalid data
-    //#define EMBBADEXC 112345684 busy
 
     // only disable point if not one of these errors
     if (myCfg.auto_disable && !(
@@ -840,414 +833,338 @@ void handle_point_error(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread,
                                 || (err == EAGAIN)     // unavaliable
                                 || (err == EINVAL) 
                                 || (err == ETIMEDOUT) 
-                                || (err == 112345691)  // Invalid Data
-                                || (err == 112345684)
+                                || (err == EMBBADEXC)  // Invalid Data TODO check this
+                                || (err == EMBBADDATA)  // Invalid Data TODO check this
+                                || (err == EMBXSBUSY)
                                                                 ))
     {
+        if(0)std::cout << " setting point error , offset "<< io_point->offset <<  std::endl;
+        io_work->set_flag(io_point->offset, IO_Work::POINT_ERROR);
+
         // note this may be redundant
         if(io_point->is_disconnected == false) 
         {
             if(io_point->gap > 0)
             {
-                FPS_INFO_LOG ("thread_id %d %s failed for [%s] offset %d with gap [%d] err %d -> [%s]; gap removed  ", 
-                    io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, io_point->gap, err, modbus_strerror(io_point->errno_code));
-                io_point->gap = 0;
+                io_work->set_flag(io_point->offset, IO_Work::REMOVE_GAP);
+
+                FPS_INFO_LOG ("Point Error, thread_id %d failed for [%s] offset %d with gap [%d] err %d -> [%s]; gap removed  ", 
+                    io_thread->tid, io_point->id.c_str(), io_point->offset, io_point->gap, err, modbus_strerror(io_point->errno_code));
             } 
             else
             {
-
-//            io_point->is_enabled = false;
-                io_point->is_disconnected = true;
-                double tNow = get_time_double();
-                io_point->reconnect = tNow + 5.0;
-
-
+                io_work->set_flag(io_point->offset, IO_Work::POINT_DISCONNECT);
                 FPS_INFO_LOG 
-                        ("thread_id %d %s failed for [%s] offset %d err %d -> [%s] point disconnected", 
-                        io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, err, modbus_strerror(io_point->errno_code));
+                        ("Point Error, thread_id %d failed for [%s] offset %d err %d -> [%s]; point disconnected", 
+                        io_thread->tid, io_point->id.c_str(), io_point->offset, err, modbus_strerror(io_point->errno_code));
             }
         }
+
+        io_work->data_error = true;
     }
     else
     {
+        //std::cout << " NOT ... setting point error "<< std::endl;
+
         // this will spam so dont send it
         if(0)FPS_INFO_LOG("thread_id %d %s failed for [%s]  offset %d err %d code %d [%s]", 
                 io_thread->tid, func_name, io_point->id.c_str(), io_point->offset, err, io_point->errno_code, modbus_strerror(io_point->errno_code));
     }
 }
 
+// Try to write all the modbus registers 
+// obey the 
+//     setAllowMulti ( can we use multi register sets)
+// and 
+//     setForceMulti      ( do we always have to use multi regiter sets)
+// flags
+// If we detect a write error on the whole set then scan again and disable points if we are allowed
 
-void io_write_registers(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool debug)
+int read_modbus_io_work(struct cfg &myCfg, int& io_tries, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool debug)
 {
-    if (io_work->local)
-    {
-        io_work->errors = io_work->num_registers * 2;
-        return;
-    }
+    //bool getForceMulti = myCfg.force_multi_gets; // get/setForceMulti forces the multi register instructions even for single register operations
+
+    int result = 0;
     int offset = 0;
-    bool allowMulti = myCfg.allow_multi_sets;
-    if (io_work->off_by_one)
-        offset++;
-    if (allowMulti)
-    {
-        io_work->errors = modbus_write_registers(io_thread->ctx, io_work->offset - offset, io_work->num_registers, io_work->buf16);
-    }
-    auto err = errno;
-
-    if (!handle_lost_connection(myCfg, io_thread, io_work, "write registers", err))
-    {
-
-        if (!allowMulti || io_work->errors < 0)
-        {
-            io_work->errors = 0;
-            int idx = 0;
-            int errors;
-            for (auto io_point : io_work->io_points)
-            {
-                errors = modbus_write_registers(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf16[idx]);
-                if (errors < 0)
-                {
-                    err = errno;
-                    handle_point_error(myCfg, io_thread, io_work, io_point, "write registers", err);
-                }
-                else
-                {
-                    io_work->errors += errors;
-                }
-                idx += io_point->size;
-            }
-        }
-    }
-}
-
-void io_write_register(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool debug)
-{
-    if (io_work->local)
-    {
-        io_work->errors = io_work->num_registers * 2;
-        return;
-    }
-
-    int offset = 0;
-    int idx = 0;
-    int errors = 0;
+    io_work->good = 0;
     io_work->errors = 0;
+
     if (io_work->off_by_one)
         offset++;
-    // there should only be one register
+ 
+    if (io_work->register_type == cfg::Register_Types::Holding)
+    {
+        result = modbus_read_registers(io_thread->ctx, io_work->offset - offset, io_work->num_registers, io_work->buf16);
+        io_work->func = "read_registers";
+    }
+    else if (io_work->register_type == cfg::Register_Types::Coil)
+    {
+        result = modbus_read_bits(io_thread->ctx, io_work->offset - offset, io_work->num_registers, &io_work->buf8[0]);
+        io_work->func = "read_bits";
+    }
+    else if (io_work->register_type == cfg::Register_Types::Input)
+    {
+        result = modbus_read_input_registers(io_thread->ctx, io_work->offset - offset, io_work->num_registers, io_work->buf16);
+        io_work->func = "read_input_registers";
+    }
+    else if (io_work->register_type == cfg::Register_Types::Discrete_Input)
+    {
+        result = modbus_read_input_bits(io_thread->ctx, io_work->offset - offset, io_work->num_registers, io_work->buf8);
+        io_work->func = "read_input_bits";
+    }
+    else
+    {
+        FPS_INFO_LOG("Get/Poll: unknown register type");
+    }
+
+    if (0)std::cout << __func__ 
+                        << ">>> type [" << io_work->func 
+                        <<"] offset [" << io_work->offset 
+                        <<"] result " << result 
+                        <<" errors " << io_work->errors 
+                        << std::endl; 
+
+    if(result < 0)
+    {
+        // TODO move this
+        auto err = errno;
+        if (!handle_lost_connection(myCfg, io_thread, io_work,  io_work->func.c_str(), err))
+        {
+            //handle_point_error(myCfg, io_thread, io_work, io_point, "write register", err);
+
+        }
+        if(0)std::cout << __func__ 
+                        << ">>> type [" << io_work->func 
+                        <<"] offset [" << io_work->offset 
+                        <<"] result " << result 
+                        <<"] err " << modbus_strerror(err) 
+                        << std::endl; 
+
+        io_work->errors = io_work->num_registers;
+        io_work->good = 0;
+    }
+    else
+    {
+        io_work->good = result;
+    }
+
+    return result;
+}    
+
+
+// called if we have a connection and the first one fails
+int read_modbus_io_points(struct cfg &myCfg, int& io_tries, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool& io_done, bool debug)
+{
+
+    int result = 0;
+    int offset = 0;
+    if (io_work->off_by_one)
+        offset++;
+    int idx = 0;
+    io_work->good  = 0;
+    io_work->errors  = 0;
     for (auto io_point : io_work->io_points)
     {
-        if (io_point->multi_write_op_code || io_point->size > 1)
+        if (io_work->register_type == cfg::Register_Types::Holding)
         {
-            errors = modbus_write_registers(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf16[idx]);
-            // std::cout << "write_registers errors " << errors << std::endl;
+            result = modbus_read_registers(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf16[idx]);
+        }
+
+        // for (auto io_reg = 0; io_reg < io_point->size; io_reg++)
+        // {
+        //     errors = modbus_read_register(io_thread->ctx, io_point->offset - offset + io_reg, io_work->buf16[idx]);
+
+        // }
+
+        else if (io_work->register_type == cfg::Register_Types::Coil)
+        {
+            result = modbus_read_bits(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf8[idx]);
+        }
+        else if (io_work->register_type == cfg::Register_Types::Input)
+        {
+            result = modbus_read_input_registers(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf16[idx]);
+        }
+        else if (io_work->register_type == cfg::Register_Types::Discrete_Input)
+        {
+            result = modbus_read_input_bits(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf8[idx]);
         }
         else
         {
-            errors = modbus_write_register(io_thread->ctx, io_point->offset - offset, io_work->buf16[idx]);
-            // std::cout << "io_point ["<<  io_point->id<< "] write_register error " << errors << std::endl;
+            FPS_INFO_LOG("Get/Poll: unknown register type");
         }
-        auto err = errno;
-        if (!handle_lost_connection(myCfg, io_thread, io_work, "write register", err))
+        idx += io_point->size + io_point->gap;
+        if (result < 0)
         {
+            if(0)
+                std::cout << __func__
+                      << " id [" << io_point->id
+                      << "]"
+                      << std::endl;
 
-            if (errors < 0)
+            io_work->errors++;
+            auto err = errno;
+            io_work->errno_code = err;
+            handleErrorCode(io_thread, io_work, io_tries, myCfg,  io_done);
+            if (!handle_lost_connection(myCfg, io_thread, io_work,  io_work->func.c_str(), err))
             {
-                handle_point_error(myCfg, io_thread, io_work, io_point, "write register", err);
+                if(0)std::cout << __func__
+                      << " handle point error .. id [" << io_point->id
+                      << "]"
+                      << std::endl;
+
+                handle_point_error(myCfg, io_thread, io_work, io_point, io_work->func.c_str(), err);
+            }
+
+        }
+        else
+        {
+            io_work->good+=result;
+        }
+    }
+    return io_work->good;
+}    
+
+int write_modbus_io_work(struct cfg &myCfg, int& io_tries, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool debug)
+{
+    bool setForceMulti = myCfg.force_multi_sets; // get/setForceMulti forces the multi register instructions even for single register operations
+
+    int result = 0;
+    int offset = 0;
+    io_work->good = 0;
+    io_work->errors = 0;
+
+    if (io_work->off_by_one)
+        offset++;
+ 
+    if (io_work->register_type == cfg::Register_Types::Holding)
+    {
+        result = modbus_write_registers(io_thread->ctx, io_work->offset - offset, io_work->num_registers, io_work->buf16);
+        io_work->func = "write_registers";
+    }
+    else if (io_work->register_type == cfg::Register_Types::Coil)
+    {
+        if ((io_work->num_registers == 1) && !setForceMulti)
+        {
+            result = modbus_write_bit(io_thread->ctx, io_work->offset - offset, io_work->buf8[0]);
+            io_work->func = "write_bit";
+        }
+        else
+        {
+            result = modbus_write_bits(io_thread->ctx, io_work->offset - offset, io_work->num_registers, &io_work->buf8[0]);
+            io_work->func = "write_bits";
+        }
+    }
+    else
+    {
+        FPS_INFO_LOG("Set: unknown register type");
+    }
+    if(result < 0)
+    {
+        // TODO move this
+        auto err = errno;
+        if (!handle_lost_connection(myCfg, io_thread, io_work,  io_work->func.c_str(), err))
+        {
+            //handle_point_error(myCfg, io_thread, io_work, io_point, "write register", err);
+
+        }
+        io_work->errors = io_work->num_registers;
+        io_work->good = 0;
+    }
+
+    return result;
+}    
+
+
+// called if we have a connection and the first one fails
+int write_modbus_io_points(struct cfg &myCfg, int& io_tries, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool& io_done, bool debug)
+{
+    bool setForceMulti = myCfg.force_multi_sets; // get/setForceMulti forces the multi register instructions even for single register operations
+    bool writeSingleRegisters = false;
+
+    int result = 0;
+    int offset = 0;
+    if (io_work->off_by_one)
+        offset++;
+    int idx = 0;
+    io_work->good  = 0;
+    io_work->errors  = 0;
+    for (auto io_point : io_work->io_points)
+    {
+        // if we are here we can write one point at a time and capture the status of that write attempt
+        // or we can write one register at a time and force a failure if one of the resisters assiciated with the configured
+        //      point fails
+        //   writeSingleRegisters forces us to write th data 
+        // we can also wish to write a single register but the vendor hardware does not accept single reister writes.
+        //    in that case we always use write registers but with a count of 1.
+        //         setForceMulti takes care of that operation
+        if (io_work->register_type == cfg::Register_Types::Holding)
+        {
+            if ((io_point->size == 1) && !setForceMulti)
+            {
+                result = modbus_write_register(io_thread->ctx, io_point->offset - offset, io_work->buf16[idx]);
+                io_work->func = "write_register";
             }
             else
             {
-                io_work->errors += errors;
-            }
+                if (!writeSingleRegisters)
+                {
+                    result = modbus_write_registers(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf16[idx]);
+                    io_work->func = "write_registers";
+                }
+                else
+                {
 
-            idx += io_point->size;
+                    for (auto io_reg = 0; io_reg < io_point->size; io_reg++)
+                    {
+                        result = modbus_write_register(io_thread->ctx, io_point->offset - offset + io_reg, io_work->buf16[idx+io_reg]);
+                        io_work->func = "write_single_registers";
+                        if (result < 0)
+                        {
+                            // we got a failure we'll have to disconnect this point
+                            break; 
+                        }
+                    }
+                }
+            }
+        }
+
+
+        else if (io_work->register_type == cfg::Register_Types::Coil)
+        {
+            if ((io_point->size == 1) && !setForceMulti)
+            {
+                result = modbus_write_bit(io_thread->ctx, io_point->offset - offset, io_work->buf8[idx]);
+                io_work->func = "write_bit";
+            }
+            else
+            {
+                result = modbus_write_bits(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf8[idx]);
+                io_work->func = "write_bit";
+            }
         }
         else
         {
-            break;
+            FPS_INFO_LOG("Set: unknown register type");
         }
-    }
-}
-
-void io_read_registers(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool debug)
-{
-    if (io_work->local)
-    {
-        io_work->errors = io_work->num_registers * 2;
-        return;
-    }
-    int offset = 0;
-    if (io_work->off_by_one)
-        offset++;
-
-    io_work->errors = modbus_read_registers(io_thread->ctx, io_work->offset - offset, io_work->num_registers, io_work->buf16);
-    auto err = errno;
-    if (!handle_lost_connection(myCfg, io_thread, io_work, "read registers", err))
-    {
-
-        if (io_work->errors < 0)
+        idx += io_point->size + io_point->gap;
+        if (result < 0)
         {
-            io_work->errors = 0;
-            int idx = 0;
-            int errors;
-            for (auto io_point : io_work->io_points)
+            io_work->errors++;
+            auto err = errno;
+            io_work->errno_code = err;
+            handleErrorCode(io_thread, io_work, io_tries, myCfg,  io_done);
+            if (!handle_lost_connection(myCfg, io_thread, io_work,  io_work->func.c_str(), err))
             {
-                errors = modbus_read_registers(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf16[idx]);
-
-                if (errors < 0)
-                {
-                    err = errno;
-                    handle_point_error(myCfg, io_thread, io_work, io_point, "read registers", err);
-                }
-                else
-                {
-                    io_work->errors += errors;
-                }
-                idx += io_point->size;
+                handle_point_error(myCfg, io_thread, io_work, io_point, io_work->func.c_str(), err);
             }
         }
-    }
-}
-
-
-void io_read_input_registers(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool debug)
-{
-    // if(io_work->local)
-    // {
-    //     FPS_INFO_LOG("thread_id %d Get >> Input : offset %d num %d local %s "
-    //                                 , io_thread->tid, io_work->offset, io_work->num_registers, (io_work->local?"true":"false"));
-    // }
-
-    if (io_work->local)
-    {
-        io_work->errors = io_work->num_registers * 2;
-        return;
-    }
-    int offset = 0;
-    if (io_work->off_by_one)
-        offset++;
-
-    io_work->errors = modbus_read_input_registers(io_thread->ctx, io_work->offset - offset, io_work->num_registers, io_work->buf16);
-    auto err = errno;
-    if(io_work->errors < 0)
-    {
-        if (!handle_lost_connection(myCfg, io_thread, io_work,  "read input registers", err))
+        else
         {
-            if (io_work->errors < 0)
-            {
-                io_work->errno_code = errno;
-                // FPS_INFO_LOG("thread_id %d first read input_registers failed  offset %d  num %d off_by_one %d  err %s"
-                //                 , io_thread->tid, io_work->offset, io_work->num_registers , offset, modbus_strerror(io_work->errno_code)) ;
-                io_work->errors = 0;
-                int idx = 0;
-                int errors;
-                for (auto io_point : io_work->io_points)
-                {
-                    errors = modbus_read_input_registers(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf16[idx]);
-                    if (errors < 0)
-                    {
-                        err = errno;
-                        handle_point_error(myCfg, io_thread, io_work, io_point, "read input registers", err);
-                    }
-                    else
-                    {
-                        io_work->errors += errors;
-                    }
-                    idx += io_point->size;
-                }
-            }
+            io_work->good+=result;
         }
     }
-}
-
-void io_read_bit(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool debug)
-{
-    if (io_work->local)
-    {
-        io_work->errors = io_work->num_registers;
-        return;
-    }
-    int offset = 0;
-    if (io_work->off_by_one)
-        offset++;
-    io_work->errors = modbus_read_bits(io_thread->ctx, io_work->offset - offset, io_work->num_registers, &io_work->buf8[0]);
-    auto err = errno;
-    
-    if (!handle_lost_connection(myCfg, io_thread, io_work, "read bits", err))
-    {
-
-        if (io_work->errors < 0)
-        {
-            io_work->errors = 0;
-            int idx = 0;
-            int errors;
-            for (auto io_point : io_work->io_points)
-            {
-                errors = modbus_read_bits(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf8[idx]);
-                if (errors < 0)
-                {
-                    err = errno;
-                    handle_point_error(myCfg, io_thread, io_work, io_point, "read bits", err);
-                }
-                else
-                {
-                    io_work->errors += errors;
-                }
-                idx += io_point->size;
-            }
-        }
-    }
-}
-
-void io_write_bit(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool debug)
-{
-    if (io_work->local)
-    {
-        io_work->errors = io_work->num_registers;
-        return;
-    }
-    int offset = 0;
-    if (io_work->off_by_one)
-        offset++;
-    io_work->errors = modbus_write_bit(io_thread->ctx, io_work->offset - offset, io_work->buf8[0]);
-    auto err = errno;
-    if (!handle_lost_connection(myCfg, io_thread, io_work, "write bit", err))
-    {
-        if (io_work->errors < 0)
-        {
-            io_work->errors = 0;
-            int idx = 0;
-            int errors;
-            for (auto io_point : io_work->io_points)
-            {
-                errors = modbus_write_bit(io_thread->ctx, io_point->offset - offset, io_work->buf8[idx]);
-                if (errors < 0)
-                {
-                    err = errno;
-                    handle_point_error(myCfg, io_thread, io_work, io_point, "write bit", err);
-                }
-                else
-                {
-                    io_work->errors += errors;
-                }
-                idx += io_point->size;
-            }
-        }
-    }
-}
-
-void io_write_bits(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool debug)
-{
-    if (io_work->local)
-    {
-        io_work->errors = io_work->num_registers;
-        return;
-    }
-    int offset = 0;
-    if (io_work->off_by_one)
-        offset++;
-    io_work->errors = modbus_write_bits(io_thread->ctx, io_work->offset - offset, io_work->num_registers, io_work->buf8);
-    auto err = errno;
-    if (!handle_lost_connection(myCfg, io_thread, io_work, "write bits", err))
-    {
-    
-        if (io_work->errors < 0)
-        {
-            io_work->errors = 0;
-            int idx = 0;
-            int errors;
-            for (auto io_point : io_work->io_points)
-            {
-                errors = modbus_write_bits(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf8[idx]);
-                if (errors < 0)
-                {
-                    err = errno;
-                    handle_point_error(myCfg, io_thread, io_work, io_point, "write bits", err);
-                }
-                else
-                {
-                    io_work->errors += errors;
-                }
-                idx += io_point->size;
-            }
-        }
-    }
-}
-
-void io_read_bits(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool debug)
-{
-    if (io_work->local)
-    {
-        io_work->errors = io_work->num_registers;
-        return;
-    }
-    int offset = 0;
-    if (io_work->off_by_one)
-        offset++;
-    io_work->errors = modbus_read_bits(io_thread->ctx, io_work->offset - offset, io_work->num_registers, io_work->buf8);
-    auto err = errno;
-    if (!handle_lost_connection(myCfg, io_thread, io_work, "read bits", err))
-    {
-        if (io_work->errors < 0)
-        {
-            io_work->errors = 0;
-            int idx = 0;
-            int errors;
-            for (auto io_point : io_work->io_points)
-            {
-                errors = modbus_read_bits(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf8[idx]);
-                if (errors < 0)
-                {
-                    err = errno;
-                    handle_point_error(myCfg, io_thread, io_work, io_point, "read bits", err);
-                }
-                else
-                {
-                    io_work->errors += errors;
-                }
-                idx += io_point->size;
-            }
-        }
-    }
-}
-
-void io_read_input_bits(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std::shared_ptr<IO_Work> io_work, bool debug)
-{
-    if (io_work->local)
-    {
-        io_work->errors = io_work->num_registers;
-        return;
-    }
-    int offset = 0;
-    if (io_work->off_by_one)
-        offset++;
-    io_work->errors = modbus_read_input_bits(io_thread->ctx, io_work->offset - offset, io_work->num_registers, io_work->buf8);
-    auto err = errno;
-    if (!handle_lost_connection(myCfg, io_thread, io_work, "read input bits", err))
-    {
-
-        if (io_work->errors < 0)
-        {
-            io_work->errors = 0;
-            int idx = 0;
-            int errors;
-            for (auto io_point : io_work->io_points)
-            {
-                errors = modbus_read_input_bits(io_thread->ctx, io_point->offset - offset, io_point->size, &io_work->buf8[idx]);
-                err = errno;
-                if (errors < 0)
-                {
-                    handle_point_error(myCfg, io_thread, io_work, io_point, "read input bits", err);
-                }
-                else
-                {
-                    io_work->errors += errors;
-                }
-                idx += io_point->size;
-            }
-        }
-    }
-}
+    return io_work->good;
+}    
 
 
 // this is to process an io_work object
@@ -1258,15 +1175,10 @@ void runThreadWork(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std:
     double tNow = get_time_double();
     io_work->tIo = tNow;
     int io_tries = 0;
-    // int max_io_tries = 10;
     int max_io_tries = 1;//myCfg.max_io_tries;
     bool io_done = false;
 
-    if(io_work->local)
-    {
-        //io_done = true;
-    }
-    else
+    if(!io_work->local)
     {
         if (io_thread->connected && io_thread->ctx)
         {
@@ -1279,36 +1191,6 @@ void runThreadWork(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std:
         }
     }
 
-
-    // if(!io_work->local)
-    // {
-    //     if (!io_thread->connected)
-    //     {
-    //         //runThreadError(myCfg, io_thread, io_work, io_done, io_tries, max_io_tries, debug);
-    //         io_done = true;
-    //         io_work->data_error = true;
-    //     }
-    // }
-    // if (io_thread->ctx && io_thread->connected)
-    // {
-    //     modbus_set_slave(io_thread->ctx, io_work->device_id);
-    // }
-    // else
-    // {
-    //     if(!io_work->local)
-    //          io_work->data_error = true;
-    //     io_done = true;
-    // }
-
-    // TODO check this
-    // when connected the modbus timeout is set to transfer time
-    // if the modbus transfer times out the modbus is disconnected 
-    // we can try a reconnect at the same transfer time but if that fails then we need to use the delayed 
-    // connect concept.
-    // a network glitch will be either short or longer.
-    // the timeout could also be caused by a sluggish modbus server.
-
-
     // when not connected we can try one more time at the same timeout 
     max_io_tries = 2;// myCfg.max_io_tries;
     
@@ -1318,7 +1200,6 @@ void runThreadWork(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std:
 
         if (io_work->wtype == WorkTypes::Set)
         {
-            io_thread->modbus_write_timer.start();
         }
         else
         {
@@ -1327,201 +1208,96 @@ void runThreadWork(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thread, std:
     }
     io_work->threadId = io_thread->tid;
     io_thread->jobs++;
-    if(0)printf("thread_id %d   >> offset %d num %d errors %d \n"
-                                    , io_thread->tid, io_work->offset, io_work->num_registers, io_work->errors);
-
 
     while (!io_done && (io_tries < max_io_tries))
     {
+        
         io_tries++;
-        if(io_tries > 1)
+        if(debug && io_tries > 1)
         {
-            FPS_INFO_LOG("thread_id %d running retry %d ; work type %d (%s)  offset %d num %d reg_type %d  (%s) ",
+            FPS_INFO_LOG("thread_id %d running retry %d ; work type %d (%s)  offset %d num %d reg_type %d  (%s) debug %d",
                 io_thread->tid, io_tries, (int)io_work->wtype, workTypeToStr(io_work->wtype).c_str(), io_work->offset,
-                io_work->num_registers, /*(int)setMulti,*/ (int)io_work->register_type, regTypeToStr(io_work->register_type).c_str());
+                io_work->num_registers, /*(int)setForceMulti,*/ 
+                (int)io_work->register_type, regTypeToStr(io_work->register_type).c_str(),
+                debug);
         }
 
         io_work->errors = -2; // flag a no go
-        bool setMulti = myCfg.force_multi_sets;
+        io_work->errno_code = 0; // flag a no go
+        //bool setForceMulti = myCfg.force_multi_sets; // get/setForceMulti forces the multi register instructions even for single register operations
+        //bool getForceMulti = myCfg.force_multi_gets;
+        //bool setAllowMulti = myCfg.allow_multi_sets; // get/setAllowMulti forces the single register instructions even for multi register operations
+        //bool getAllowMulti = myCfg.allow_multi_gets;
  
         if (io_work->wtype == WorkTypes::Set)
         {
-            if (0)
             {
-                FPS_INFO_LOG("thread_id %d Set >> work type %d (%s)  offset %d num %d multi %d reg_type %d  (%s) ",
-                             io_thread->tid, (int)io_work->wtype, workTypeToStr(io_work->wtype).c_str(), io_work->offset,
-                             io_work->num_registers, (int)setMulti, (int)io_work->register_type, regTypeToStr(io_work->register_type).c_str());
+                std::unique_lock<std::mutex> lock(io_thread->stat_mtx); 
+                io_thread->modbus_write_timer.start();
             }
-            if (io_work->register_type == cfg::Register_Types::Coil)
+            auto result = write_modbus_io_work(myCfg, io_tries,  io_thread, io_work, debug);
+            if (result < 0)
             {
-                if ((io_work->num_registers == 1) && !setMulti)
+                auto err = errno;
+                if (!handle_lost_connection(myCfg, io_thread, io_work,  io_work->func.c_str(), err))
                 {
-                    io_write_bit(myCfg, io_thread, io_work, debug);
-                        // io_work->errors = modbus_write_bit(io_thread->ctx, io_work->offset, io_work->buf8[0]);
-                }
-                else
-                {
-                    io_write_bits(myCfg, io_thread, io_work, debug);
-                        // io_work->errors = modbus_write_bits(io_thread->ctx, io_work->offset, io_work->num_registers, io_work->buf8);
+                    write_modbus_io_points(myCfg, io_tries,  io_thread, io_work, io_done, debug);
                 }
             }
- 
-            else if (io_work->register_type == cfg::Register_Types::Holding)
             {
-                if ((io_work->num_registers == 1) && !setMulti)
-                {
-                    io_write_register(myCfg, io_thread, io_work, debug);
-                }
-                else
-                {
-                    io_write_registers(myCfg, io_thread, io_work, debug);
-                }
-                if (0)
-                {
-                    FPS_INFO_LOG("thread_id %d Set >> Holding : offset %d errors %d ", io_thread->tid, io_work->offset, io_work->errors);
-                }
-            }
-            else
-            {
-                FPS_INFO_LOG("Set: unknown register type");
+                std::unique_lock<std::mutex> lock(io_thread->stat_mtx); 
+                io_thread->modbus_read_timer.snap();            
             }
         }
+        // read (Get) starts here
         else if ((io_work->wtype == WorkTypes::Get) || (io_work->wtype == WorkTypes::Poll))
         {
-            if (io_work->register_type == cfg::Register_Types::Holding)
+            if (io_work->local)
             {
-
-                io_read_registers(myCfg, io_thread, io_work, debug);
-                
-                // io_work->errors = modbus_read_registers(io_thread->ctx, io_work->offset, io_work->num_registers, io_work->buf16);
-                if (0)
-                {
-                    FPS_INFO_LOG("thread_id %d Get >> Holding : errors %d ", io_thread->tid, io_work->errors);
-                }
-            }
-            else if (io_work->register_type == cfg::Register_Types::Coil)
-            {
-                if (io_work->num_registers == 1)
-                {
-                    io_read_bit(myCfg, io_thread, io_work, debug);
-                }
-                else
-                {
-                    io_read_bits(myCfg, io_thread, io_work, debug);
-                }
-                // io_work->errors = modbus_read_bits(io_thread->ctx, io_work->offset, io_work->num_registers, io_work->buf8);
-            }
-            else if (io_work->register_type == cfg::Register_Types::Input)
-            {
-                io_read_input_registers(myCfg, io_thread, io_work, debug);
-                // io_work->errors = modbus_read_input_registers(io_thread->ctx, io_work->offset, io_work->num_registers, io_work->buf16);
-                if (myCfg.connection.debug)
-                {
-                    FPS_INFO_LOG("thread_id %d Get >> Input : offset %d num %d errors %d "
-                                    , io_thread->tid, io_work->offset, io_work->num_registers, io_work->errors);
-                }
-            }
-            else if (io_work->register_type == cfg::Register_Types::Discrete_Input)
-            {
-                io_read_input_bits(myCfg, io_thread, io_work, debug);
-            }
-            else
-            {
-                FPS_INFO_LOG("Get/Poll: unknown register type");
+                io_work->good = io_work->num_registers * 2;
+                io_responseChan.send(std::move(io_work));
+                return;
             }
 
-            //FPS_INFO_LOG
-            if(0)printf("thread_id %d Get/Poll >> offset %d num %d errors %d \n"
-                                    , io_thread->tid, io_work->offset, io_work->num_registers, io_work->errors);
-        }
-        // test mode random delay from 100 to 500 uSecs
-        else if (io_work->wtype == WorkTypes::Noop)
-        {
-            io_done = true;
+            {
+                std::unique_lock<std::mutex> lock(io_thread->stat_mtx); 
+                io_thread->modbus_read_timer.start();
+            }
 
-            randomDelay(100, 500);
-            io_work->errors = 1;
-        }
-        else
-        {
-            FPS_INFO_LOG("Get/Poll: unknown work type");
+            auto result = read_modbus_io_work(myCfg, io_tries,  io_thread, io_work, debug);
+            if (result < 0)
+            {
+                auto err = errno;
+                if (!handle_lost_connection(myCfg, io_thread, io_work,  io_work->func.c_str(), err))
+                {
+                    read_modbus_io_points(myCfg, io_tries,  io_thread, io_work, io_done, debug);
+                }
+            }
+            {
+                std::unique_lock<std::mutex> lock(io_thread->stat_mtx); 
+                io_thread->modbus_read_timer.snap();            
+            }
         }
 
         double tRun = get_time_double() - tNow;
-        #ifdef FPS_DEBUG_MODE
-        if ((io_work->work_name == "test_io_point_single") && (io_work->test_it))
-        {
-            // make it worse if we are testing
-            std::cout << "adding an extra 1200ms to try to make this late\n";
-            std::this_thread::sleep_for(std::chrono::milliseconds(1200));
-        }
-        #endif
-        if (io_work->errors >= 0)
-        {
-            io_done = true;
-        }
-
-        io_work->errno_code = errno;
+        
         io_work->tRun = tRun;
+        if(0)printf(">>>  errno_code thread_id %d   >> offset %d num %d errno_code %d \n"
+                                    , io_thread->tid, io_work->offset, io_work->num_registers, io_work->errno_code);
+ 
 
-        if (debug || io_work->errors < 0)
-        {
-            if(io_work->errno_code == EPIPE)
-                io_done = true;
-
-            if (io_work->errors < 0)
-            {
-                FPS_ERROR_LOG("thread_id %d  connected %s local %s try %d type %d offset %d error %d code  %d -> %s "
-                            , io_thread->tid
-                            , io_thread->connected? "true":"false"
-                            , io_work->local? "true":"false"
-                            , io_tries
-                            , (int)io_work->register_type
-                            , io_work->offset
-                              //(void *)io_thread->ctx,
-                            , io_work->errors
-                            , io_work->errno_code
-                            , modbus_strerror(io_work->errno_code));
-            }
-            else
-            {
-                if (myCfg.connection.debug)
-                    FPS_INFO_LOG("thread_id %d Success, try %d type %d offset %d num %d tRun(mS) %f inreg [%d] inbit [%d] ", io_thread->tid, io_tries, (int)io_work->register_type, io_work->offset, io_work->errors, tRun * 1000.0, io_work->buf16[0], io_work->buf8[0]);
-            }
-        }
-        if ((io_work->errors > 0) || (io_work->errors == -2))
-        { // got successful communication
-            // io_tries = max_io_tries;
+        if (io_work->good > 0)
+        { 
+            // got successful communication
             io_done = true;
         }
         else
         {
-            // if (io_work->test_range) return false
-            //std::cout << " runthreaderror for io_work num " << io_work->mynum << " "<<std::endl;
-            // this will try a reconnect
+            // this will try a reconnect if not RTU
             runThreadError(myCfg, io_thread, io_work, io_done, io_tries, max_io_tries, debug);
         }
     }
     io_work->tDone = get_time_double();
-
-    //TODO cannot use this approach .. we have the io_work timer here we'll have to send collect the results in the response thread ( single thread)
-    if(!io_work->local)
-    {
-        std::unique_lock<std::mutex> lock(io_thread->stat_mtx); 
-        if (io_work->wtype == WorkTypes::Set)
-        {
-            io_thread->modbus_write_timer.snap();
- 
-        }
-        else
-        {
-            io_thread->modbus_read_timer.snap();
-        }
-    }
-    if(0)std::cout << " io_work : " << io_work->mynum
-            << " sent to resp channel"
-            << std::endl;
-
     io_responseChan.send(std::move(io_work));
 }
 
@@ -1533,12 +1309,12 @@ void ioThreadFunc(ThreadControl &control, struct cfg &myCfg, std::shared_ptr<IO_
     std::shared_ptr<IO_Work> io_work;
     int signal;
     bool run = true;
-    bool debug = true;
+    bool debug = false;
     double delay = 0.1;
 
     if (!io_thread->is_local)
     {
-        std::cout << " thread_id " << io_thread->tid << "   loop started; enabled :"<< io_thread->is_enabled << std::endl;
+        FPS_INFO_LOG("IO_THREAD thread_id  %d started; enabled : %s ", io_thread->tid, (io_thread->is_enabled?"true":"false"));
     }
     while (run && control.ioThreadRunning && io_thread->is_enabled)
     {
@@ -1549,7 +1325,7 @@ void ioThreadFunc(ThreadControl &control, struct cfg &myCfg, std::shared_ptr<IO_
                 if ((myCfg.connection.serial_device == "") && (myCfg.connection.ip_address == ""))
                 {
 
-                    FPS_ERROR_LOG("thread_id [%d]: Config problem. Unable to set up modbus.", io_thread->tid);
+                    FPS_ERROR_LOG("Config error, no serial_device or ip_address ,thread_id [%d]: Unable to set up modbus.", io_thread->tid);
                     run = false;
                     return;
                 }
@@ -1557,11 +1333,9 @@ void ioThreadFunc(ThreadControl &control, struct cfg &myCfg, std::shared_ptr<IO_
                 for (int i = 0; i < 2 && !io_thread->connected; ++i)
                 {
                     double ctime = SetupModbusForThread(myCfg, io_thread, debug);
-                    if(0)std::cout << " thread_id " << io_thread->tid << "   done  attempt 2 ModbusSetup; connect_time :"<< ctime << std::endl;
 
                     if(ctime > 0.0)
                     {
-                        if(0)std::cout << " thread_id " << io_thread->tid << "   done ModbusSetup; connect_time :"<< ctime << std::endl;
                         io_thread->cTime = ctime; // TODO use perf
                     }
                 }
@@ -1581,7 +1355,7 @@ void ioThreadFunc(ThreadControl &control, struct cfg &myCfg, std::shared_ptr<IO_
                     // from testThread
                     if (signal == 2)
                     {
-                       if(0)printf(" >>>>>>>>>>>>>>>>%s testThread signal received \n",__func__);
+                        if(0)printf(" >>>>>>>>>>>>>>>>%s testThread signal received \n",__func__);
                         if (check_socket_alive(io_thread, /*timeout_sec*/ 0 , /* timeout_usec*/ 20) > 0)
                         {
                             if(0)printf(" >>>>>>>>>>>>>>>>%s testThread shutting socket down \n",__func__);
@@ -1601,44 +1375,34 @@ void ioThreadFunc(ThreadControl &control, struct cfg &myCfg, std::shared_ptr<IO_
                     if (signal == 1)
                     {
 
+                        double stime = get_time_double();
+                        std::string wtype = "set";
                         if (io_setChan.peekpop(io_work))
                         {
                             runThreadWork(myCfg, io_thread, io_work, debug);
                         }
                         if (io_pollChan.peekpop(io_work))
                         {
-                            double stime = get_time_double();
-                            if(0)std::cout << "Start  io_work " << io_work->mynum 
-                                << " Thread_connected " << io_thread->connected
-                                << " num_threads " << num_threads
-                                << std::endl;
+                            wtype = "get";
                             runThreadWork(myCfg, io_thread, io_work, debug);
                             
-                            double etime = get_time_double();
-                            if ((etime - stime) > io_thread->transfer_timeout)
-                            {
-                                //io_thread->transfer_timeout += 0.1;
-                                std::cout << "Done  io_work " << io_work->mynum 
-                                    << " Thread_connected: " << io_thread->connected
-                                    << " num_threads:" << num_threads
-                                    << " num_registers:" << io_work->num_registers
-                                    << " elapsed mS:" << (etime - stime) * 1000 
-                                    << " thread transfer timeout mS: " << io_thread->transfer_timeout * 1000 
-                                    << " cfg transfer timeout mS: " << myCfg.connection.transfer_timeout * 1000 
-                                    << std::endl;
-                            }
+                        }
+                        double etime = get_time_double();
+                        if ((etime - stime) > io_thread->transfer_timeout)
+                        {
+                            // TODO do not spam this
+                            FPS_ERROR_LOG("Transfer Timeout on %s thread id %d , work num %d time %2.3f elapsed (mS) %2.3f "
+                                    , wtype.c_str()
+                                    , io_thread->tid
+                                    , io_work->mynum
+                                    , io_work->tNow
+                                    , (etime - stime) * 1000
+                                    );
 
                         }
+
                     }
                 }
-                // else
-                // {
-                //     if (check_socket_alive(io_thread, /*timeout_sec*/ 0 , /* timeout_usec*/ 20) > 0)
-                //     {
-                //         CloseModbusForThread(io_thread, true);
-                //     }
-
-                // }
             }
         }
         else
@@ -1808,7 +1572,8 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
     // auto compsh = pub_group.component.lock();
     double tNow = get_time_double();
     bool debug = myCfg.connection.debug;
-    // debug = true;
+    bool found = false;
+    //debug = true;
     if (debug)
         std::cout << " processing workgroup " << pub_group.key
                   << " created at :" << pub_group.tNow
@@ -1851,8 +1616,11 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
                     mypub->pending = 0;
                 }
             }
-
-            if (io_work->data_error)
+            if(0)std::cout << " mypub completed xx 1 name: " << io_work->work_name 
+                            << " data error " << io_work->data_error 
+                            << " errno code " << io_work->errno_code 
+                            << std::endl;
+            if (io_work->good==0)
             {
                 total_errors++;
             }
@@ -1870,7 +1638,14 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
                 io_work->full = false;
 
                 store_raw_data(io_work, myCfg.debug_decode);
-                gcom_modbus_decode(io_work, string_stream, myCfg);
+                found = gcom_modbus_decode(io_work, string_stream, myCfg);
+                if(0)std::cout 
+                        << " mypub completed xx 2 name: " << io_work->work_name 
+                        << " total_errors : " << total_errors
+                        << " string_stream [" << string_stream.str()
+                        << " ]" 
+                        << std::endl;
+
             }
         }
 
@@ -1976,7 +1751,7 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
                 {
                     if (myCfg.fims_connected)
                     {
-                        FPS_ERROR_LOG(" fims not connected for pub message");
+                        FPS_ERROR_LOG("fims not connected for output (pub) message");
                         myCfg.fims_connected =  false;
                         myCfg.keep_running = false;
 
@@ -2028,12 +1803,15 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
             //if (io_work->errors > 0)
             //{
 
-                gcom_modbus_decode(io_work, string_stream, myCfg);
+                found = gcom_modbus_decode(io_work, string_stream, myCfg);
                 store_raw_data(io_work, false);
                 //gcom_modbus_decode(io_work, string_stream, myCfg);
             //}
             if (debug)
-                std::cout << __func__ << " offset :" << io_work->offset << " string so far [[" << string_stream.str() << "]]" << std::endl;
+                std::cout << __func__ << " offset :" << io_work->offset 
+                            << " string so far [" << string_stream.str() << "]"
+                            << " found [" << found << "]"
+                            << std::endl;
         }
         string_stream << "}";
 
@@ -2044,6 +1822,7 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
     }
     else if (pub_group.key.substr(0, get_key.length()) == get_key)
     {
+        //printf("\n\n get_key [%s]\n",pub_group.key.c_str());
         pub_group.done = true;
         std::stringstream ss;
         std::string uri;
@@ -2076,15 +1855,34 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
             {
                 ss << ",";
             }
-            gcom_modbus_decode_debug(io_work, ss, myCfg, true, true);
-            if (!io_work->local)
+            found = gcom_modbus_decode_debug(io_work, ss, myCfg, true, true);
+            if (found && !io_work->local)
                 local_write_work(myCfg, io_work, debug);
+        }
+        {
+            // obscure bug but clear last comma if needed
+            std::string str = ss.str();
+            char lastChar;
+            if (!str.empty()) 
+            {
+                lastChar = str.back();
+                if (lastChar == ',')
+                {
+                    str.pop_back();
+                    ss.str("");
+                    ss.clear();
+                    ss << str;
+                }
+            }
         }
         ss << "}";
         if (debug)
         {
-            std::cout << __func__ << " get string at end [[" << ss.str() << "]]" << std::endl;
-            std::cout << " uri [[" << uri << "]]" << std::endl;
+            std::cout << __func__ 
+                    << " found [" << found << "]" 
+                    << " get string at end [" << ss.str() << "]" 
+                       << " uri [" << uri << "]" 
+                       << std::endl;
         }
 
         if (send)
@@ -2100,7 +1898,7 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
             {
                 if (myCfg.fims_connected)
                 {
-                    FPS_ERROR_LOG(" fims not connected for set message");
+                    FPS_ERROR_LOG("fims not connected for output (set) message");
                     myCfg.fims_connected = false;
                     myCfg.keep_running = false;
 
@@ -2114,17 +1912,42 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
 // handles the io_work objects and puts them back in the pool
 void discardGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg, bool ok)
 {
+    bool debug =  false;
     double tNow = get_time_double();
     //std::cout << " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> dropping pubgroup " << pub_group.key 
     //            << " created at :" << pub_group.tNow << " time elapsed (ms) " << ((tNow-pub_group.tNow)* 1000.0)  << std::endl;
     int num_groups = 0;
     int num_points = 0;
+    std::shared_ptr<cfg::pub_struct> mypub=nullptr;
+
     for (auto io_work : pub_group.works)
     {
+        mypub = io_work->pub_struct;
         num_groups++;
         num_points += io_work->num_registers;
+        io_work->errno_code = 0;
+        io_work->data_error = false;
+
         io_poolChan.send(std::move(io_work));
     }
+
+    // we found a pubstruct so clear it
+    if(mypub)
+    {
+        // TODO remove
+        if(debug)
+            std::cout << " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> completed   pubgroup " << pub_group.key 
+                  << " tNow " << tNow
+                  << " start_time " << mypub->start_time
+                  << " elapsed_time " << tNow -mypub->start_time
+                  << std::endl;
+
+        std::lock_guard<std::mutex> lock(mypub->tmtx);
+
+        mypub->comp_time = tNow;
+
+    }
+
     pub_group.works.clear();
     if(myCfg.debug_pub)
     {
@@ -2148,19 +1971,54 @@ void discardGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg, bool ok
 }
 
 // creates a new pubgroup key if needed
+// since we now use pubgroups for everything we may run this when we create the io_work
+// we need to have a get_group and set_group keys to stop us sending out too many requests.
+// 
+// we'll need to find a way to look for an empty key 
+//std::string key = io_work->work_name;
 bool check_pubgroup_key(std::string key, std::shared_ptr<IO_Work> io_work)
 {
-    //if ((!io_work->local) && (!io_work->data_error)){
-    if ((!io_work->data_error)){
-        if (pubGroups.find(key) == pubGroups.end())
-        {
-            pubGroups[key] = PubGroup(key, io_work, false);
-
-            FPS_INFO_LOG("Creating new pubGroup key [%s]", key.c_str());
-        }
-        return true;
+    if (pubGroups.find(key) == pubGroups.end())
+    {
+        pubGroups[key] = PubGroup(key, io_work, false);
     }
-    return false;
+    return true;
+}
+
+bool show_pubgroup()
+{
+    FPS_INFO_LOG("Show pubGroups at exit ...");
+    for (auto pubgroup:  pubGroups)
+    {
+        FPS_INFO_LOG("Found  pubGroup key [%s]  tNow [%2.3f] tDone [%2.3f]"
+            , pubgroup.first.c_str()
+            , pubgroup.second.tNow
+            , pubgroup.second.tDone
+            );
+    }   
+    return true;
+}
+
+PubGroup* get_pubgroup(std::shared_ptr<IO_Work> io_work)
+{
+    std::string key = io_work->work_name;
+    check_pubgroup_key(key, io_work);
+    return (&pubGroups[key]);
+}
+
+PubGroup* get_pubgroup(std::string& key)
+{
+    if (pubGroups.find(key) != pubGroups.end())
+    {
+        return &pubGroups[key];
+    }
+
+    FPS_INFO_LOG("No  pubGroup key [%s] found, creating it", key.c_str());
+    pubGroups[key] = PubGroup(key, nullptr, false);
+
+    return &pubGroups[key];
+
+    //return nullptr;
 }
 
 // this is the main receiver of the io_work objects.
@@ -2169,12 +2027,69 @@ bool check_pubgroup_key(std::string key, std::shared_ptr<IO_Work> io_work)
 void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
 {
 
+
     double tNow =  get_time_double();
     std::string key = io_work->work_name; // + std::to_string(io_work->work_id);
+    if(0)
+        std::cout << __func__ 
+        << "[" << (tNow - 0.0) << "] "
+        << "\t io_work->tNow : " << io_work->tNow 
+        << "\t delay : " << (tNow - io_work->tNow) 
+        << "\ttype get , io_work->work_name : " << key 
+        << " local " << (io_work->local?"true":"false")
+        << " work_group " << io_work->work_group
+        << " work_id " << io_work->work_id
+        << std::endl;
 
     bool debug = myCfg.debug_response;
+    // we own the io_points in our io_work structures so handle all the errors and disconnects here
+    //io_point->mtx
 
-    if (io_work->wtype == WorkTypes::Set) //  || (io_work->wtype == WorkTypes::SetMulti))
+    for (auto io_point : io_work->io_points)
+    {
+        //std::unique_lock<std::mutex> lock(io_point->mtx); 
+        // the io_point would not have been sent to the get/set queues if it was disconnected and not past the reconnect time.
+        if(io_point->is_disconnected)
+        {
+            if (io_point->reconnect > 0.0 && tNow >io_point->reconnect)
+            {
+                io_point->is_disconnected = false;
+                //io_point->reconnect  = 0.0; leave this as is to let the point be included if a get/set request comes in 
+                // while all of this is going on.
+            }
+        }
+        // if we are preparing io_work queues and suddenly remove the gap we may have  an extra get/set group with a non working gap.
+        // this will be a start up condition and we can live with that I think.
+        if (io_work->get_flag(io_point->offset, IO_Work::REMOVE_GAP))
+        {
+            io_point->gap = 0;
+        }
+        if (io_work->get_flag(io_point->offset, IO_Work::POINT_DISCONNECT))
+        {
+            if (!io_point->is_disconnected)
+            {
+                io_point->is_disconnected = true;
+                io_point->reconnect = tNow + 5.0;
+            }
+        }
+        if (io_work->get_flag(io_point->offset, IO_Work::POINT_ERROR))
+        {
+            if(0)std::cout << " point error found on [" << io_point->id << "]" << std::endl;
+        }
+
+    }
+    if(0)
+        std::cout << __func__ 
+        << "[" << (tNow - 0.0) << "] "
+        << "\t io_work->tNow : " << io_work->tNow 
+        << "\t delay : " << (tNow - io_work->tNow) 
+        << "\ttype get , io_work->work_name : " << key 
+        << " is_local ? " << (io_work->local?"true":"false")
+        << " work_group " << io_work->work_group
+        << " work_id " << io_work->work_id
+        << std::endl;
+
+    if (io_work->wtype == WorkTypes::Set) //  || (io_work->wtype == WorkTypes::setForceMulti))
     {
         if (io_work->local)
         {
@@ -2188,7 +2103,7 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
             }
         }
     }
-    else if (io_work->wtype == WorkTypes::Get) //  || (io_work->wtype == WorkTypes::SetMulti))
+    else if (io_work->wtype == WorkTypes::Get) //  || (io_work->wtype == WorkTypes::setForceMulti))
     {
         if(debug)
             std::cout << __func__ 
@@ -2218,15 +2133,22 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
     // if there is no key then this operation is not part of a group so we dont have to collect all the objects
     if (key == "")
     {
+        bool found = false;
         std::string reply;
-        if (debug)
-            FPS_DEBUG_LOG("<%s> completing io_work, errors %d\ttNow: %f\treply: [%s]", __func__,
-                                       io_work->errors, io_work->tNow, io_work->replyto.c_str());
+        //if (debug)
+        //    FPS_DEBUG_LOG
+        if(0)printf("<%s> completing io_work, errors %d good %d data_error %d \ttNow: %f\treply: [%s]\n"
+                                        , __func__
+                                       , io_work->errors
+                                       , io_work->good
+                                       , io_work->data_error
+                                       , io_work->tNow
+                                       , io_work->replyto.c_str());
         // is it a set ?
-        if (io_work->wtype == WorkTypes::Set) //  || (io_work->wtype == WorkTypes::SetMulti))
+        if (io_work->wtype == WorkTypes::Set) //  || (io_work->wtype == WorkTypes::setForceMulti))
         {
 
-            if (io_work->errors < 0)
+            if (io_work->errors > 0 || io_work->data_error)
                 reply = "{\"gcom\":\"Modbus Set\",\"status\":\"Failed\"}";
             else
                 reply = "{\"gcom\":\"Modbus Set\",\"status\":\"Success\"}";
@@ -2246,8 +2168,23 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
             if (io_work->local)
             {
                 std::stringstream string_stream;
-                gcom_modbus_decode_debug(io_work, string_stream, myCfg, false, false);
-                reply = string_stream.str();
+                found = gcom_modbus_decode_debug(io_work, string_stream, myCfg, false, false);
+
+                if (debug)
+                {
+                    std::cout << __func__ 
+                        << " found [" << found << "]" 
+                        << " get string at end [" << string_stream.str() << "]" 
+                        << std::endl;
+                }
+
+                //reply = string_stream.str();
+                if (found)
+                {
+                    reply = string_stream.str();
+                } else {
+                    reply = "{\"gcom\":\"Modbus Get\",\"status\":\"Failed disconnected data point\"}";
+                }
                 // std::cout << "it was a local get" << std::endl;
             }
             else
@@ -2257,8 +2194,23 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
                 if(0)std::cout << "it was a remote get ; data_error >> " << (io_work->data_error?"true":"false")<< std::endl;
 
                 store_raw_data(io_work, false);
-                gcom_modbus_decode_debug(io_work, string_stream, myCfg, false, false);
-                reply = string_stream.str();
+                found = gcom_modbus_decode_debug(io_work, string_stream, myCfg, false, false);
+                if (debug)
+                {
+                    std::cout << __func__ 
+                        << " found [" << found << "]" 
+                        << " get string at end [" << string_stream.str() << "]" 
+                        << std::endl;
+                }
+
+
+                if (found)
+                {
+                    reply = string_stream.str();
+                } else {
+                    reply = "{\"gcom\":\"Modbus Get\",\"status\":\"Failed disconnected data point\"}";
+
+                }
                 // std::cout << "it was a remote get" << std::endl;
             }
         }
@@ -2277,16 +2229,22 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
         return;
     }
 
-    // we are woring with a pubgroup
-    if (0)std::cout << "io_work :" << io_work->mynum
-        << " error :" << io_work->errors
-        << " error_code :" << io_work->errno_code
+    // we are working with a pubgroup or a get group
+    bool pgret = check_pubgroup_key(key, io_work);
+
+    if (debug)std::cout 
+        << " >> >>>>> tNow [" << tNow
+        << " io_work tNow [" << io_work->tNow
+        << "] io_work seq:" << io_work->mynum
+        << "] io_work regs: [" << io_work->num_registers
+        << "] errors :" << io_work->errors
+        << " good :" << io_work->good
+        << " error_code :" << modbus_strerror(io_work->errno_code)
         << " received by resp channel "
-        << " key " << key
-        << " tNow " << io_work->tNow
+        << " key [" << key << "]"
+        << " pubgroup key  [" << (pgret?"true":"false") << "]"
         << std::endl;
 
-    bool pgret = check_pubgroup_key(key, io_work);
 
     if ((!pgret) || (pubGroups.find(key) == pubGroups.end()))
     {
@@ -2298,11 +2256,12 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
     {
         // if we get a new (later) tNow then discard and start again
         if (myCfg.debug_connection)
-            FPS_DEBUG_LOG("Checking pubgroup %s size %d time %f against incoming %f",  
+            FPS_DEBUG_LOG("Checking pubgroup %s size %d pub time %f must equal incoming time %f",  
                             key.c_str(), (int)pubGroups[key].works.size(), pubGroups[key].tNow, io_work->tNow);
         if (io_work->tNow < pubGroups[key].tNow)
         {
-            FPS_INFO_LOG("Discarding stale incoming io_work; current pubgroup id  %f is later than incoming id %f",pubGroups[key].tNow, io_work->tNow);
+            FPS_INFO_LOG("Discarding stale incoming io_work; current pubgroup id  %f is later than incoming id %f"
+                            ,pubGroups[key].tNow, io_work->tNow);
             auto  mypub =  io_work->pub_struct;
 
             if(mypub && mypub->pending > 1)
@@ -2319,6 +2278,8 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
                 FPS_DEBUG_LOG("Adding incoming io_work; current pubgroup id %f is the same as id %f", pubGroups[key].tNow, io_work->tNow);
             pubGroups[key].works.push_back(io_work);
             pubGroups[key].pub_struct = io_work->pub_struct;
+            pubGroups[key].work_group = io_work->work_group;
+
         }
         else
         {
@@ -2327,11 +2288,14 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
             {
                 discardGroupCallback(pubGroups[key], myCfg, false);
                 auto  mypub =  io_work->pub_struct;
-                if(0)std::cout << " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> mypub aborted name: " << io_work->work_name 
+                if(mypub)
+                {
+                    if(debug)std::cout << " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> mypub aborted name: " << io_work->work_name 
                             << "\t pending value :" << mypub->pending 
                             << " work num :" << io_work->mynum
                             << " error_code :" << io_work->errno_code
                             << std::endl;
+                }
                 if(mypub && mypub->pending > 1)
                     mypub->pending--;
             }
@@ -2356,13 +2320,14 @@ void processRespWork(std::shared_ptr<IO_Work> io_work, struct cfg &myCfg)
         }
     }
 
-    // chack if we have all the items we need for the group
+    // check if we have all the items we need for the group
     if ((int)pubGroups[key].works.size() == (int)pubGroups[key].work_group)
     {
         // Callback: Process group
         pubGroups[key].done = true;
+        pubGroups[key].tDone = tNow;
         if (myCfg.debug_connection)
-            FPS_DEBUG_LOG("Completing group %s\ttnow: %f\tsyncPct: %f"
+            FPS_DEBUG_LOG("Completing group %s\ttnow: %f\t sync %f"
                         , key.c_str(), io_work->tNow, pubGroups[key].pub_struct?pubGroups[key].pub_struct->syncPct:0.0);
         processGroupCallback(pubGroups[key], myCfg);
         if (pubGroups[key].pub_struct)
@@ -2408,9 +2373,10 @@ void responseThreadFunc(ThreadControl &control, struct cfg &myCfg)
     }
 }
 
+// put an io_work object back into the pool
 void stashWork(std::shared_ptr<IO_Work> io_work)
 {
-   // TODO use dequw
+   // possibly TODO use dequw
     io_poolChan.send(std::move(io_work));
  
 }
@@ -2558,7 +2524,7 @@ std::shared_ptr<IO_Work> make_work(cfg::Register_Types register_type, int device
         }
     }
     io_work->use_count++;
-
+    memset(io_work->flags, 0 , sizeof(io_work->flags)); 
     io_work->io_points.clear();
     // Modify io_work data if necessary here
     io_work->tStart = get_time_double();
@@ -2631,7 +2597,7 @@ bool setWork(std::shared_ptr<IO_Work> io_work)
 
 
 
-// I tink this is only used in a test mode 
+// I think this is only used in a test mode 
 bool queue_work(cfg::Register_Types register_type, int device_id, int offset, bool off_by_one, int num_regs, uint16_t *u16bufs, uint8_t *u8bufs, WorkTypes wtype)
 {
 
@@ -2732,11 +2698,8 @@ bool StartThreads(int num_threads, const char *ip, int port, double connection_t
     // threadControl.io_responseChan = &io_responseChan;
     // threadControl.io_poolChan     = &io_poolChan;
 
-    {
-        double tNow = get_time_double();
-        FPS_INFO_LOG("IO Threads starting at %f ", tNow);
-        // std::cout << " test_io_threads running  at "<< tNow << std::endl;
-    }
+    double tNow = get_time_double();
+    FPS_INFO_LOG("IO Threads starting at %f ", tNow);
 
     // Start the response thread
     startRespThread(myCfg);
@@ -2761,10 +2724,7 @@ bool StartThreads(int num_threads, const char *ip, int port, double connection_t
         // // Actually start the threads here
         io_thread->tid = i+1;
 
-        {
-            //double tNow = get_time_double();
-            FPS_INFO_LOG("thread_id %d starting at %f ", i, tNow);
-        }
+        FPS_INFO_LOG("thread_id %d starting at %f ", i, tNow);
 
         io_thread->thread = std::thread(ioThreadFunc, std::ref(threadControl), std::ref(myCfg), io_thread);
 
@@ -2782,11 +2742,9 @@ bool StartThreads(int num_threads, const char *ip, int port, double connection_t
 
     }
     // std::thread responseThread(responseThreadFunc, std::ref(*this));
-    {
-        double tNow = get_time_double();
-        FPS_INFO_LOG("All io_threads running at %f ", tNow);
-        FPS_LOG_IT("startup");
-    }
+    tNow = get_time_double();
+    FPS_INFO_LOG("All io_threads running at %f ", tNow);
+    FPS_LOG_IT("startup");
     return true;
 }
 
@@ -2841,9 +2799,7 @@ int test_io_threads(struct cfg &myCfg)
     // io_threadChan.send(0);
 
     threadControl.stopThreads();
-    {
-        FPS_INFO_LOG("All threads stopping ");
-    }
+    FPS_INFO_LOG("All threads stopping ");
 
     threadControl.responseThread.join();
     // Signal the io_thread to stop after some time
@@ -2967,8 +2923,6 @@ double FastReconnectForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_t
     {
         ctx = modbus_new_tcp(io_thread->ip.c_str(), io_thread->port);
     }
-
-
     if (!ctx)
     {
         DelayConnect(myCfg, threadControl);
@@ -2976,12 +2930,12 @@ double FastReconnectForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_t
         char message[1024];
         if(myCfg.connection.is_RTU)
         {
-            snprintf(message, 1024, "Modbus Client [%s]  Thread id %d failed to create modbus context to [%s]",
+            snprintf(message, 1024, "Modbus Client [%s]  Thread id %d failed to create modbus RTU context to [%s]",
                     myCfg.connection.name.c_str(), io_thread->tid, myCfg.connection.device_name.c_str());
         }
         else
         {
-            snprintf(message, 1024, "Modbus Client [%s]  Thread id %d failed to create modbus context to [%s] on port [%d]",
+            snprintf(message, 1024, "Modbus Client [%s]  Thread id %d failed to create modbus TCP context to [%s] on port [%d]",
                     myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
         }
         {
@@ -3090,20 +3044,16 @@ double SetupModbusForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thr
             char message[1024];
             if(myCfg.connection.is_RTU)
             {
-                snprintf(message, 1024, "Modbus Client [%s] Thread  id %d failed to create modbus context to [%s]"
+                snprintf(message, 1024, "Modbus Client [%s] Thread  id %d failed to create modbus RTU context to [%s]"
                     , myCfg.connection.name.c_str(), io_thread->tid, myCfg.connection.device_name.c_str());
             }
             else 
             {
-                snprintf(message, 1024, "Modbus Client [%s] Thread  id %d failed to create modbus context to [%s] on port [%d]"
+                snprintf(message, 1024, "Modbus Client [%s] Thread  id %d failed to create modbus TCP context to [%s] on port [%d]"
                     , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
             }
 
-            {
-                //std::lock_guard<std::mutex> lock(logger_mutex);
-
-                FPS_ERROR_LOG("%s", message);
-            }
+            FPS_ERROR_LOG("%s", message);
             emit_event(&myCfg.fims_gateway, "Modbus Client", message, 1);
             //io_thread->connected = false;
             return 0.0;
@@ -3128,13 +3078,13 @@ double SetupModbusForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thr
                 io_thread->connect_fails++;
                 char message[1024];
                 if (myCfg.connection.is_RTU) {
-                    snprintf(message, 1024, "Modbus Client [%s] Thread id %d failed to connect to [%s]. Modbus error [%s]"
+                    snprintf(message, 1024, "Modbus Client [%s] Thread id %d failed to connect RTU to [%s]. Modbus error [%s]"
                                 , myCfg.connection.name.c_str(), io_thread->tid, myCfg.connection.device_name.c_str(), modbus_strerror(err));
 
                 }
                 else
                 {
-                    snprintf(message, 1024, "Modbus Client [%s] Thread id %d failed to connect to [%s] on port [%d]. Modbus error [%s]"
+                    snprintf(message, 1024, "Modbus Client [%s] Thread id %d failed to connect TCP to [%s] on port [%d]. Modbus error [%s]"
                                 , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port, modbus_strerror(err));
                 }
                 FPS_ERROR_LOG("%s", message);
@@ -3155,15 +3105,14 @@ double SetupModbusForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thr
             char message[1024];
             if(myCfg.connection.is_RTU)
             {
-                snprintf(message, 1024, "Modbus Client [%s] Thread  id %d failed to set response timeout to [%s]"
+                snprintf(message, 1024, "Modbus Client [%s] Thread  id %d failed to set RTU response timeout as [%s]"
                     , myCfg.connection.name.c_str(), io_thread->tid, myCfg.connection.device_name.c_str());
             }
             else 
             {
-                snprintf(message, 1024, "Modbus Client [%s] Thread  id %d failed to set response timeout to [%s] on port [%d]"
+                snprintf(message, 1024, "Modbus Client [%s] Thread  id %d failed to set TCP response timeout as [%s] on port [%d]"
                     , myCfg.connection.name.c_str(), io_thread->tid, io_thread->ip.c_str(), io_thread->port);
             }
-
  
             FPS_ERROR_LOG("%s", message);
             emit_event(&myCfg.fims_gateway, "Modbus Client", message, 1);
@@ -3319,10 +3268,8 @@ void test_io_point_single(const char *ip, int port, double connection_timeout, c
     //     std::cout << " final sleep "<< tNow << std::endl;
     // }
 
-    {
-        FPS_INFO_LOG("IO Threads stopping.");
-        FPS_LOG_IT("shutdown");
-    }
+    FPS_INFO_LOG("IO Threads stopped.");
+    FPS_LOG_IT("shutdown");
 
 }
 
@@ -3376,7 +3323,7 @@ void test_io_point_multi(const char *ip, int port, int connection_timeout, const
 
     threadControl.responseThread.join();
 
-    FPS_INFO_LOG("IO Threads stopping.");
+    FPS_INFO_LOG("IO Threads stopped.");
     FPS_LOG_IT("shutdown");
 
 }
