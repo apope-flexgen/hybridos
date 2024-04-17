@@ -1,0 +1,41 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "value1":   { "uri": "/components/float1",  "type": "float",    "default": 5.3  },
+        "value2":   { "uri": "/components/float2",  "type": "float",    "default": 1.0  },
+        "value3":   { "uri": "/components/float2",  "type": "float",    "default": 3.0  }
+    },
+    "outputs": {
+        "float_output1":     {   "uri": "/some/output"   },
+        "float_output2":     {   "uri": "/some/output"   },
+        "value2_echo": {   "uri": "/some/output"   },
+        "value3_echo": {   "uri": "/some/output"   }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "float_output1",
+            "expression": "Sqrt(value1)"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "float_output2",
+            "expression": "Add(Sqrt(value1, value2, value3))",
+            "note": "take the squre root of each input individually, then add each square rooted value"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "value2_echo",
+            "expression": "value2"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "value3_echo",
+            "expression": "value3"
+        }
+    ]
+}

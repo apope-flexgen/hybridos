@@ -1,0 +1,86 @@
+{
+    "templates": [
+        {
+            "type": "sequential",
+            "from": 1,
+            "to": 12,
+            "step": 1,
+            "token": "##PCS_ID##"
+        },
+        {
+            "type": "sequential",
+            "from": 1,
+            "to": 3,
+            "step": 1,
+            "token": "!!"
+        },
+        {
+            "type": "sequential",
+            "from": 1,
+            "to": 4,
+            "step": 1,
+            "token": "@@"
+        },
+        {
+            "type": "sequential",
+            "from": 1,
+            "to": 5,
+            "step": 1,
+            "token": "$$"
+        }
+        
+    ],
+    "inputs": {
+        "pcs_##PCS_ID##_online_flag" : { "uri": "/components/ess_01/pcs_##PCS_ID##_online_flag"        , "type": "bitfield_string" },
+        "pcs_##PCS_ID##_online_int_flag" : { "uri": "/components/ess_01/pcs_##PCS_ID##_online_flag"        , "type": "bitfield_int" },
+        "random_##PCS_ID##_flag_1" : { "uri": "/components/ess_01/random_##PCS_ID##_flag_1"        , "type": "int" },
+        "random_##PCS_ID##_flag_2" : { "uri": "/components/ess_01/random_##PCS_ID##_flag_2"        , "type": "int" },
+        "random_bitfield_3_!!": { "uri": "/components/ess_01/bitfield_3_!!"        , "type": "int" },
+        "random_bitfield_4_@@": { "uri": "/components/ess_01/bitfield_4_@@"        , "type": "int" },
+        "random_bitfield_5_$$": { "uri": "/components/ess_01/bitfield_5_$$"        , "type": "int" }
+    },
+    "filters": {
+        "index_filter_flag_3": "value(index_filter_flag_2 == 3)",
+        "pcs_all_online_flag_on" : "regex(pcs_\\d+_online_flag) | value(value == \"Online\")",
+        "pcs_online_int_flag": "regex(pcs_\\d+_online_int_flag)",
+        "type_filter": "type(int)",
+        "type_filter_2": "value(type_filter == 1)",
+        "random_flag_1": "regex(random_\\d+_flag_1)",
+        "random_flag_2": "regex(random_\\d+_flag_2)",
+        "random_bitfield_length_3":"regex(random_bitfield_3_\\d+)",
+        "random_bitfield_length_4":"regex(random_bitfield_4_\\d+)",
+        "random_bitfield_length_5":"regex(random_bitfield_5_\\d+)",
+        "index_filter_flag_1": "IndexFilter(pcs_online_int_flag == 1 || pcs_online_int_flag == 2, random_flag_1, random_flag_2)",
+        "index_filter_flag_2": "IndexFilter(pcs_online_int_flag == 1 || pcs_online_int_flag == 2, random_flag_1)",
+        "index_filter_fail_3_4_5": "IndexFilter(random_bitfield_length_3 == 3, random_bitfield_length_4, random_bitfield_length_5)",
+        "index_filter_fail_5_4_3": "IndexFilter(random_bitfield_length_5 == 3, random_bitfield_length_4, random_bitfield_length_3)"
+    },
+    "outputs": {
+        "online_count": { "uri": "/components/ess_01"},
+        "online_int_count": { "uri": "/components/ess_01"},
+        "random_flag_1_count": { "uri": "/components/ess_01"},
+        "random_flag_2_count": { "uri": "/components/ess_01"},
+        "index_filter_flag_1_sum": { "uri": "/components/ess_01"},
+        "index_filter_flag_2_count": { "uri": "/components/ess_01"},
+        "index_filter_flag_2_sum": { "uri": "/components/ess_01"},
+        "index_filter_flag_3_count": { "uri": "/components/ess_01"},
+        "index_filter_flag_3_sum": { "uri": "/components/ess_01"},
+        "type_filter_2_sum": { "uri": "/components/ess_01"},
+        "index_filter_fail_3_4_5_sum": { "uri": "/components/ess_01"},
+        "index_filter_fail_5_4_3_sum": { "uri": "/components/ess_01"}
+    },
+    "metrics": [
+        { "id": "online_count" , "type": "uint" , "outputs": "online_count" , "expression": "Count(pcs_all_online_flag_on)"              },
+        { "id": "online_int_count" , "type": "uint" , "outputs": "online_int_count" , "expression": "Count(pcs_online_int_flag)"              },
+        { "id": "random_flag_1_count" , "type": "uint" , "outputs": "random_flag_1_count" , "expression": "Count(random_flag_1)"              },
+        { "id": "random_flag_2_count" , "type": "uint" , "outputs": "random_flag_2_count" , "expression": "Count(random_flag_2)"              },
+        { "id": "index_filter_flag_1_sum" , "type": "int" , "outputs": "index_filter_flag_1_sum" , "expression": "Sum(index_filter_flag_1)"              },
+        { "id": "index_filter_flag_2_count" , "type": "uint" , "outputs": "index_filter_flag_2_count" , "expression": "Count(index_filter_flag_2)"              },
+        { "id": "index_filter_flag_2_sum" , "type": "int" , "outputs": "index_filter_flag_2_sum" , "expression": "Sum(index_filter_flag_2)"              },
+        { "id": "index_filter_flag_3_count" , "type": "uint" , "outputs": "index_filter_flag_3_count" , "expression": "Count(index_filter_flag_3)"              },
+        { "id": "index_filter_flag_3_sum" , "type": "int" , "outputs": "index_filter_flag_3_sum" , "expression": "Sum(index_filter_flag_3)"              },
+        { "id": "type_filter_2_sum" , "type": "int" , "outputs": "type_filter_2_sum" , "expression": "Sum(type_filter_2)"},
+        { "note": "this should always be zero because the filter doesn't work, but this should not cause the program to crash", "id": "index_filter_fail_3_4_5_sum" , "type": "int" , "outputs": "index_filter_fail_3_4_5_sum" , "expression": "Sum(index_filter_fail_3_4_5)"              },
+        { "note": "this should always be zero because the filter doesn't work, but this should not cause the program to crash", "id": "index_filter_fail_5_4_3_sum" , "type": "int" , "outputs": "index_filter_fail_5_4_3_sum" , "expression": "Sum(index_filter_fail_5_4_3)"              }
+    ]
+}

@@ -13,13 +13,9 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
-echo
 cmd/cmd
 
 build/
-
-echo.json
-echo.sh
 
 *.sum
 *_server*
@@ -39,3 +35,5 @@ go/
 .gitconfig
 .config/
 logs/
+
+__pycache__

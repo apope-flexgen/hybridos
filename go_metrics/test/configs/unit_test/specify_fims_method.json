@@ -1,0 +1,47 @@
+{
+    "inputs": {
+        "var_name1": { "uri": "/some/input/a", "type": "int", "method":"set"            },
+        "var_name2": { "uri": "/some/input/a", "type": "int", "method":"pub"            },
+        "var_name3": { "uri": "/some/input/a", "type": "int", "method":"both"           },
+        "var_name4": { "uri": "/some/input/a", "type": "int"                            }
+    },
+    "outputs": {
+        "a": { "uri": "/some/one"},
+		"b": { "uri": "/some/one"},
+		"c": { "uri": "/some/one"},
+        "d": { "uri": "/some/one"},
+        "e": { "uri": "/some/one"}
+		    },
+    "metrics": [
+        {
+            "id":"set_only",
+            "type": "int",
+            "outputs": "a",
+            "expression": "var_name1"
+        },
+        {
+            "id":"pub_only",
+            "type": "int",
+            "outputs": "b",
+            "expression": "var_name2"
+        },
+        {
+            "id":"both",
+            "type": "int",
+            "outputs": "c",
+            "expression": "var_name3"
+        },
+        {
+            "id":"both_unspecified",
+            "type": "int",
+            "outputs": "d",
+            "expression": "var_name4"
+        },
+        {
+            "id":"all_involved",
+            "type": "int",
+            "outputs": "e",
+            "expression": "var_name1 + var_name2 + var_name3 + var_name4"
+        }
+    ]
+}

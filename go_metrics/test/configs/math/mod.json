@@ -1,0 +1,29 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "value1":   { "uri": "/components/int1",  "type": "int",    "default": 16  },
+        "value2":   { "uri": "/components/int2",  "type": "int",    "default": 3  },
+        "value3":   { "uri": "/components/int3",  "type": "int",    "default": 7  }
+    },
+    "outputs": {
+        "int_output1":     {   "uri": "/some/output"   },
+        "int_output2":     {   "uri": "/some/output"   }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "int", 
+            "outputs": "int_output1",
+            "expression": "Mod(value1, value2)",
+            "note": "the mod function only works for two values at a time",
+            "note2": "should I change that?",
+            "note3": "it also only works for integers and unsigned integers, but I CAN'T change that because of Golang"
+        },
+        {
+            "id": "dummy",
+            "type": "int", 
+            "outputs": "int_output2",
+            "expression": "value1 % value2 % value3"
+        }
+    ]
+}

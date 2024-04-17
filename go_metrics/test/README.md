@@ -1,9 +1,34 @@
-# `/test`
+# Behave Testing
 
-Additional external test apps and test data. Feel free to structure the `/test` directory anyway you want. For bigger projects it makes sense to have a data subdirectory. For example, you can have `/test/data` or `/test/testdata` if you need Go to ignore what's in that directory. Note that Go will also ignore directories or files that begin with "." or "_", so you have more flexibility in terms of how you name your test data directory.
+## Basic Setup
+In your development environment, install `behave`:
+```
+python3 -m pip install behave
+```
 
-Examples:
+## Running All Tests
 
-* https://github.com/openshift/origin/tree/master/test (test data is in the `/testdata` subdirectory)
+To run all tests simply call the `behave` command from the `go_metrics/test` directory:
+```
+behave
+```
 
+Because this might be too verbose, you can also run behave with the progress2 format, which shows dotted progress for each executed step:
+```
+behave -f progress2
+```
 
+## Running Specific Tests
+If you have a specific set of tests that you want to run, you should identify what tag pertains to those tests and then use the following command to run the tests from the `go_metrics/test` directory:
+```
+behave --tags=<tag>
+```
+For example, all tests in the `features/math` folder should be tagged with `@math`. Thus, to run all math tests, you would run:
+```
+behave --tags=math
+```
+
+## Writing New Tests
+To add a new test, you will need to develop a new `*.feature` file. See the [behave documentation](https://behave.readthedocs.io/en/stable/tutorial.html) for information about how to develop a feature file.
+
+For the most part, you shouldn't need to change the `steps.py` file to add new tests. Most steps relevant to `go_metrics` have already been implemented.

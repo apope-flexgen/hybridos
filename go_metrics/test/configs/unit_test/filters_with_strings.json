@@ -1,0 +1,24 @@
+{
+    "templates": [
+        {
+            "type": "sequential",
+            "from": 1,
+            "to": 12,
+            "step": 1,
+            "token": "##PCS_ID##"
+        }
+    ],
+    "inputs": {
+        "pcs_##PCS_ID##_online_flag" : { "uri": "/components/ess_01/pcs_##PCS_ID##_online_flag"        , "type": "bitfield_string" }
+    },
+    "filters": {
+        "pcs_all_online_flag_on" : "regex(pcs_\\d+_online_flag) | value(value == \"Online\")"
+    },
+    "outputs": {
+        "online_count": { "uri": "/components/ess_01"}
+    },
+    "metrics": [
+        { "id": "online_count" , "type": "uint" , "outputs": "online_count" , "expression": "Count(pcs_all_online_flag_on)"              }
+       
+    ]
+}

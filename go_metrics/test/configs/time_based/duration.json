@@ -1,0 +1,17 @@
+{
+    "meta": { "publishRate": 1000 },
+    "inputs": {
+        "v1": { "uri": "/example/v1", "type": "float" }
+    },
+    "outputs": {
+        "duration": { "uri": "/some/output", "flags":["clothed"] }
+	},
+    "metrics": [
+        {
+            "id": "duration",
+            "type": "bool", 
+            "outputs": "duration",
+            "expression": "Duration(v1 > 0, 5)"
+        }
+    ]
+}

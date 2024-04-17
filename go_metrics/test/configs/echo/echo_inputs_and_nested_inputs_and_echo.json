@@ -1,0 +1,61 @@
+{
+        "echo": [
+            {
+                "uri": "/some/output/uri",
+                "publishRate": 1000,
+                "null_value_default":0,
+                "inputs": [
+                    {
+                        "uri": "/some/input/uri",
+                        "registers": {
+                            "a": "accontactor",
+                            "b": "p",
+                            "c": "plim",
+                            "d": "pramprise",
+                            "e": "p"
+                        }
+                    },
+                    {
+                        "uri": "/another/input/uri",
+                        "registers": {
+                            "f": "accontactor",
+                            "g": "p",
+                            "h": "plim",
+                            "i": "pramprise",
+                            "j": "accontactor",
+                            "zz":"sub_uri"
+                        }
+                    },
+                    {
+                        "uri": "/another/input/uri/sub_uri",
+                        "registers": {
+                            "k": "alpha",
+                            "l": "beta",
+                            "m": "gamma",
+                            "n": "delta",
+                            "o": "beta"
+                        }
+                    },
+                    {
+                        "uri": "/another/input/uri/sub_uri/sub_sub",
+                        "registers": {
+                            "p": "alpha",
+                            "q": "beta",
+                            "r": "gamma",
+                            "s": "delta",
+                            "t": "beta"
+                        }
+                    }
+                ],
+                "echo": {
+                    "u":0,
+                    "v":0,
+                    "w":0,
+                    "x":0,
+                    "y":0,
+                    "z":0
+                }
+            }
+        ]
+
+}

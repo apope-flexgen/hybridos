@@ -1,0 +1,43 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "int1":   { "uri": "/components/int1",  "type": "int",    "default": 5  },
+        "int2":   { "uri": "/components/int2",  "type": "int",    "default": 7  },
+        "int3":   { "uri": "/components/int3",  "type": "int",    "default": 255},
+        "bool1":   { "uri": "/components/bool1","type": "bool"                  },
+        "bool2":  { "uri": "/components/bool2", "type": "bool"                  }
+    },
+    "outputs": {
+        "int_output1":     {   "uri": "/some/output"   },
+        "int_output2":    {   "uri": "/some/output"   },
+        "bool_output1":     {   "uri": "/some/output"   },
+        "bool_output2":    {   "uri": "/some/output"   }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "int", 
+            "outputs": "int_output1",
+            "expression": "BitwiseAnd(int1, int2, int3)"
+        },
+        {
+            "id": "dummy",
+            "type": "int", 
+            "outputs": "int_output2",
+            "expression": "int1 & int2 & int3"
+        },
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output1",
+            "expression": "BitwiseAnd(bool1, bool2)",
+            "note": "this is technically the same as standard AND when using bools"
+        },
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output2",
+            "expression": "bool1 & bool2"
+        }
+    ]
+}

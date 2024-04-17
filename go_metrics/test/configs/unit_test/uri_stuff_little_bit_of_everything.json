@@ -1,0 +1,231 @@
+{
+    "templates": [
+		{
+			"type": "sequential",
+			"from": 1,
+			"to": 2,
+			"step": 1,
+			"token": "##"
+        },
+		{
+			"type": "list",
+			"list": ["bobcat", "cheetah"],
+			"token": "qq"
+        }
+	],
+    "inputs": {
+        "var_name1": { "uri": "/some/input/uri/accontactor", "type": "float" },
+        "var_name2": { "uri": "/some/input/uri/p", "type": "int"            },
+        "var_name3": { "uri": "/some/input/uri", "type": "string"            },
+        "var_name4": { "uri": "/some/output/uri/a", "type": "int"            },
+        "var_name5": { "uri": "/some/output/uri", "type": "string", "attributes":["enabled", "scale"]          },
+		"var_name6": {"uri": "/some", "type": "string", "attributes":["enabled", "scale"]          },
+        "var_template##": {"uri": "/some/##", "type": "int"}
+    },
+    "filters": {
+        "all_vars_enabled": "regex(var_name*) | attribute(enabled == true)",
+        "all_float_vars": "regex(var_name*) | type(float)",
+        "var_name4_copy": "regex(.*4)"
+    },
+    "outputs": {
+        "naked_qq": { "uri": "/some/one", "attributes": {"scale": 1000, "units": "degC", "ui_type": "none"}},
+        "clothed_qq": { "uri": "/some/two", "flags":["clothed"], "attributes": {"scale": 1000, "units": "degC", "ui_type": "none"}},
+		"a": { "uri": "/some/one"},
+		"b": { "uri": "/some/one"},
+		"c": { "uri": "/some/one"},
+        "d": { "uri": "/some/one"},
+        "e": { "uri": "/some/one"},
+        "f": { "uri": "/some/one"},
+        "g": { "uri": "/some/one"},
+        "h": { "uri": "/some/one"},
+        "i": { "uri": "/some/one"},
+        "j": { "uri": "/some/one"},
+        "k": { "uri": "/some/one"}
+		    },
+    "metrics": [
+        {
+            "id":"var_name1",
+            "type": "float",
+            "outputs": "a",
+            "expression": "var_name1"
+        },
+        {
+            "id":"var_name2",
+            "type": "int",
+            "outputs": "b",
+            "expression": "var_name2"
+        },
+        {
+            "id":"var_name3",
+            "type": "string",
+            "outputs": "c",
+            "expression": "var_name3"
+        },
+        {
+            "id":"var_name4",
+            "type": "int",
+            "outputs": "d",
+            "expression": "var_name4"
+        },
+        {
+            "id":"var_name5",
+            "type": "string",
+            "outputs": "e",
+            "expression": "var_name5"
+        },
+        {
+            "id":"var_name6",
+            "type": "string",
+            "outputs": "f",
+            "expression": "var_name6"
+        },
+        {
+            "id":"var_template1",
+            "type": "int",
+            "outputs": "g",
+            "expression": "var_template1"
+        },
+        {
+            "id":"var_template2",
+            "type": "int",
+            "outputs": ["h","naked_qq","clothed_qq"],
+            "expression": "var_template2"
+        },
+        {
+            "id":"all_vars_enabled",
+            "type": "string",
+            "outputs": "i",
+            "expression": "all_vars_enabled"
+        },
+        {
+            "id":"all_float_vars",
+            "type": "float",
+            "outputs": "j",
+            "expression": "all_float_vars"
+        },
+        {
+            "id":"var_name4_copy",
+            "type": "int",
+            "outputs": "k",
+            "expression": "var_name4_copy"
+        }
+    ],
+    "echo": [
+        {
+            "uri": "/some/output/uri",
+            "publishRate": 1000,
+            "null_value_default":0,
+            "inputs": [
+                {
+                    "uri": "/some/input/uri",
+                    "registers": {
+                        "a": "accontactor",
+                        "b": "p",
+                        "c": "plim",
+                        "d": "pramprise",
+                        "e": "p"
+                    }
+                },
+                {
+                    "uri": "/another/input/uri",
+                    "registers": {
+                        "f": "accontactor",
+                        "g": "p",
+                        "h": "plim",
+                        "i": "pramprise",
+                        "j": "accontactor"
+                    }
+                }
+            ],
+            "echo": {
+                "k":0,
+                "l":0,
+                "m":0,
+                "n":0,
+                "o":0,
+                "p":0
+            }
+        },
+        {
+            "uri": "/another/output/uri",
+            "publishRate": 1000,
+            "null_value_default":0,
+            "inputs": [
+                {
+                    "uri": "/some/input/uri",
+                    "registers": {
+                        "a": "accontactor",
+                        "b": "p",
+                        "c": "plim",
+                        "d": "pramprise",
+                        "e": "p"
+                    }
+                },
+                {
+                    "uri": "/another/input/uri",
+                    "registers": {
+                        "f": "accontactor",
+                        "g": "p",
+                        "h": "plim",
+                        "i": "pramprise",
+                        "j": "accontactor"
+                    }
+                },
+                {
+                    "uri": "/another/input/uri/sub_uri",
+                    "registers": {
+                        "k": "accontactor",
+                        "l": "p",
+                        "m": "plim",
+                        "n": "pramprise",
+                        "o": "accontactor"
+                    }
+                }
+            ],
+            "echo": {
+                "p":0,
+                "q":0,
+                "r":0,
+                "s":0,
+                "t":0,
+                "u":0
+            }
+        },
+        {
+            "uri": "/some/output/uri/sub",
+            "publishRate": 1000,
+            "null_value_default":0,
+            "inputs": [
+                {
+                    "uri": "/new/some/input/uri",
+                    "registers": {
+                        "a": "accontactor",
+                        "b": "p",
+                        "c": "plim",
+                        "d": "pramprise",
+                        "e": "p"
+                    }
+                },
+                {
+                    "uri": "/new/another/input/uri",
+                    "registers": {
+                        "f": "accontactor",
+                        "g": "p",
+                        "h": "plim",
+                        "i": "pramprise",
+                        "j": "accontactor"
+                    }
+                }
+            ],
+            "echo": {
+                "k":0,
+                "l":0,
+                "m":0,
+                "n":0,
+                "o":0,
+                "p":0
+            }
+        }
+    ]
+
+}

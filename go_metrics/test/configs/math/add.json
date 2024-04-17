@@ -1,0 +1,42 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "value1":   { "uri": "/components/float1",  "type": "float",    "default": 5.3  },
+        "value2":   { "uri": "/components/float2",  "type": "float"                     },
+        "value3":   { "uri": "/components/float3",  "type": "float"                     },
+        "string1":  { "uri": "/components/string1", "type": "string"},
+        "string2":  { "uri": "/components/string2", "type": "string"}
+    },
+    "outputs": {
+        "float_output1":     {   "uri": "/some/output"   },
+        "string_output1":    {   "uri": "/some/output"   },
+        "float_output2":     {   "uri": "/some/output"   },
+        "string_output2":    {   "uri": "/some/output"   }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "float_output1",
+            "expression": "Add(value1, value2, value3)"
+        },
+        {
+            "id": "dummy",
+            "type": "string", 
+            "outputs": "string_output1",
+            "expression": "Add(string1, string2)"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "float_output2",
+            "expression": "value1 + value2 + value3"
+        },
+        {
+            "id": "dummy",
+            "type": "string", 
+            "outputs": "string_output2",
+            "expression": "string1 + string2"
+        }
+    ]
+}

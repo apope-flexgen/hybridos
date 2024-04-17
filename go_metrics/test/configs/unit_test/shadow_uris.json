@@ -1,0 +1,33 @@
+{
+    "meta":
+    {
+        "debug": true,
+        "debug_inputs": ["ess_kW_cmd","runmode1_kW_mode_cmd", "nested_value", "other_nested_value"]
+    },
+    "inputs": {
+        "runmode1_kVAR_mode_cmd": { "uri": "/features/reactive_power/runmode1_kVAR_mode_cmd", "type": "int" },
+        "runmode1_kW_mode_cmd": { "uri": "/features/active_power/runmode1_kW_mode_cmd", "type": "int", "default":0},
+        "nested_value": { "uri": "/features/active_power/runmode1_kW_mode_cmd/nested_value", "type": "int", "default":0},
+        "other_nested_value": { "uri": "/features/active_power/runmode1_kW_mode_cmd/nested_value/other_value", "type": "int", "default":0},
+        "ess_kW_cmd": { "uri": "/features/active_power", "type": "float" },
+        "reactive_setpoint_kVAR_cmd": { "uri": "/features/reactive_power", "type": "float", "default":0 }
+    },
+    "outputs": {
+        "active_power_operating_mode": { "uri": "/metrics/site_status" },
+        "active_power_command_mode_feedback": { "uri": "/metrics/site_status" },
+        "active_power_command_feedback": { "uri": "/metrics/site_status" },
+        "reactive_power_operating_mode": { "uri": "/metrics/site_status" },
+        "reactive_power_command_feedback": { "uri": "/metrics/site_status" },
+        "other_output": { "uri": "/metrics" },
+        "znested_value": { "uri": "/metrics/site_status" },
+        "zznested_value": { "uri": "/metrics/site_status" }
+    },
+    "metrics": [
+        { "id": "active_power_operating_mode", "type": "int", "outputs": ["active_power_operating_mode", "active_power_command_mode_feedback"], "expression": "runmode1_kW_mode_cmd" },
+        { "id": "active_power_command_feedback", "type": "float", "outputs": "active_power_command_feedback", "expression": "ess_kW_cmd" },
+        { "id": "nested_value", "type": "float", "outputs": "znested_value", "expression": "nested_value" },
+        { "id": "other_nested_value", "type": "float", "outputs": "zznested_value", "expression": "other_nested_value" },
+        { "id": "reactive_power_operating_mode", "type": "int", "outputs": "reactive_power_operating_mode", "expression": "runmode1_kVAR_mode_cmd" },
+        { "id": "reactive_power_command_feedback", "type": "float", "outputs": ["reactive_power_command_feedback","other_output"], "expression": "reactive_setpoint_kVAR_cmd" }
+    ]
+}

@@ -1,0 +1,44 @@
+{
+    "meta": { "publishRate": 1000 },
+    "inputs": {
+        "int1":   { "uri": "/components/int1",  "type": "int",    "default": 0  },
+        "int2":   { "uri": "/components/int2",  "type": "int",    "default": 1  },
+        "bool1":   { "uri": "/components/bool1","type": "bool"                  },
+        "bool2":  { "uri": "/components/bool2", "type": "bool"                  }
+    },
+    "outputs": {
+        "bool_output1":     {   "uri": "/some/output"   },
+        "bool_output2":    {   "uri": "/some/output"   },
+        "bool_output3":     {   "uri": "/some/output"   },
+        "bool_output4":    {   "uri": "/some/output"   }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output1",
+            "expression": "Not(bool1)",
+            "note": "integers, floats, and uints are 0 == false, anything else == true",
+            "note2": "strings, if \"true\" are true, if \"false\" are false, else truth value is determined by len(string) > 0"
+        },
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output2",
+            "expression": "!bool1"
+        },
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output3",
+            "expression": "And(Not(bool1, bool2, int1, int2))",
+            "note": "this negates all of the inputs before passing them to And"
+        },
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output4",
+            "expression": "!bool1 && !bool2 && !int1 && !int2"
+        }
+    ]
+}

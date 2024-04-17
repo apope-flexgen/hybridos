@@ -1,0 +1,18 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "value1":   { "uri": "/components/float1",  "type": "float",    "default": 15.3  },
+        "value2":   { "uri": "/components/float2",  "type": "float",    "default": 5.0  }
+    },
+    "outputs": {
+        "float_output1":     {   "uri": "/some/output"   }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "float_output1",
+            "expression": "FloorDiv(value1, value2)"
+        }
+    ]
+}

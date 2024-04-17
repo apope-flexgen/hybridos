@@ -1,0 +1,26 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "int1":   { "uri": "/components/int1",  "type": "int",    "default": 5  },
+        "int2":   { "uri": "/components/int2",  "type": "int",    "default": 7  }
+    },
+    "outputs": {
+        "int_output1":     {   "uri": "/some/output"   },
+        "int_output2":    {   "uri": "/some/output"   }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "int", 
+            "outputs": "int_output1",
+            "expression": "RightShift(int1, int2)",
+            "note": "only takes 2 inputs, but I think this makes sense"
+        },
+        {
+            "id": "dummy",
+            "type": "int", 
+            "outputs": "int_output2",
+            "expression": "int1 >> int2"
+        }
+    ]
+}

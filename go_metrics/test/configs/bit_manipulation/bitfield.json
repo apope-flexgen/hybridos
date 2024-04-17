@@ -1,0 +1,39 @@
+{
+    "meta": {
+		"publishRate": 1000
+    },
+    "inputs": {
+        "ess_fault_list": { "uri": "/assets/ess/fault_list", "type": "bitfield" },
+        "ess_fault_list_int": { "uri": "/assets/ess/fault_list", "type": "bitfield_int" },
+        "ess_fault_list_string": { "uri": "/assets/ess/fault_list", "type": "bitfield_string" },
+        "ess_fault_list_2": { "uri": "/assets/ess/fault_list2", "type": "bitfield_int" }
+    },
+    "outputs": {
+        "combined_bitfield": { "uri": "/metrics", "flags":["bitfield"], "bitfield": [
+            "some_string",
+            "another_string",
+            "yet_another_string",
+            "etc.",
+            "string1",
+            "string2",
+            "string3",
+            "string4"
+        ] },
+        "value_in_bitfield": { "uri": "/metrics" },
+        "some_string": { "uri": "/metrics" },
+        "another_string": { "uri": "/metrics" },
+        "yet_another_string":{ "uri": "/metrics" },
+        "etc.": { "uri": "/metrics" },
+        "bitfield_length": { "uri": "/metrics" }
+    },
+    "metrics": [
+        { "id": "combined_bitfield", "type": "uint", "outputs": "combined_bitfield", "expression": "CombineBits(ess_fault_list) + (CombineBits(ess_fault_list_2) << 4)" },
+        { "id": "value_in_bitfield", "type": "bool", "outputs": "value_in_bitfield", "expression": "In(Uint(3), ess_fault_list_int)" },
+        { "id": "some_string", "type": "bool", "outputs": "some_string", "expression": "In(\"some_string\", ess_fault_list_string)" },
+        { "id": "another_string", "type": "bool", "outputs": "another_string", "expression": "In(\"another_string\", ess_fault_list_string)" },
+        { "id": "yet_another_string", "type": "bool", "outputs": "yet_another_string", "expression": "In(\"yet_another_string\", ess_fault_list_string)" },
+        { "id": "etc.", "type": "bool", "outputs": "etc.", "expression": "In(\"etc.\", ess_fault_list_string)" },
+        { "id": "bitfield_length", "type": "uint", "outputs": "bitfield_length", "expression": "Count(ess_fault_list_int)" }
+    ]
+    
+}

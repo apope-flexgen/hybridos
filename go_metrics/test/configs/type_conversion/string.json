@@ -1,0 +1,49 @@
+{
+    "meta": { "publishRate": 1000 },
+    "inputs": {
+        "float1":   { "uri": "/components/float1",  "type": "float",    "default": 5.3  },
+        "int1":   { "uri": "/components/int1",    "type": "int",      "default": 5    },
+        "uint1":   { "uri": "/components/uint1",   "type": "uint",     "default": 6    },
+        "string1":  { "uri": "/components/string1", "type": "string",   "default": "hi" },
+        "bool1":  { "uri": "/components/bool1",   "type": "bool",     "default": true }
+    },
+    "outputs": {
+        "float_to_string":     {   "uri": "/some/output"   },
+        "int_to_string":    {   "uri": "/some/output"   },
+        "uint_to_string":     {   "uri": "/some/output"   },
+        "string_to_string":    {   "uri": "/some/output"   },
+        "bool_to_string":    {   "uri": "/some/output"   }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "string", 
+            "outputs": "float_to_string",
+            "expression": "String(float1)"
+        },
+        {
+            "id": "dummy",
+            "type": "string", 
+            "outputs": "int_to_string",
+            "expression": "String(int1)"
+        },
+        {
+            "id": "dummy",
+            "type": "string", 
+            "outputs": "uint_to_string",
+            "expression": "String(uint1)"
+        },
+        {
+            "id": "dummy",
+            "type": "string", 
+            "outputs": "string_to_string",
+            "expression": "String(string1)"
+        },
+        {
+            "id": "dummy",
+            "type": "string", 
+            "outputs": "bool_to_string",
+            "expression": "String(bool1)"
+        }
+    ]
+}

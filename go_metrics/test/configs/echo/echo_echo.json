@@ -1,0 +1,18 @@
+{
+        "echo": [
+            {
+                "uri": "/some/output/uri",
+                "publishRate": 1000,
+                "null_value_default":0,
+                "echo": {
+                    "a":0,
+                    "b":0,
+                    "c":0,
+                    "d":0,
+                    "e":0,
+                    "f":0
+                }
+            }
+        ]
+
+}
