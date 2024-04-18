@@ -1,0 +1,42 @@
+{
+    "root":{
+        "id": "grid",
+        "asset_type": "GRID",
+        "children":[
+            {
+                "id": "transmission_line",
+                "asset_type": "XFMR",
+                "children": [
+                    {
+                        "id": "psm_sel_735",
+                        "asset_type": "FEED",
+                        "children": [
+                            {
+                                "id": "tx_gsu",
+                                "asset_type": "XFMR",
+                                "children":[
+                                    {
+                                        "id": "psm_sel_351_1",
+                                        "asset_type": "FEED",
+                                        "children":[
+                                            {
+                                                "id": "pcs_1",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_1",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -52,6 +52,9 @@
             "default": 480,
             "expression": [{"max":["$parent.vcmd", ["$parent.Vn", "/", "$parent.n"], "$parent.V", "$parent.Vac", "$parent.V1"]}],
             "note": "This variable is defaulted here mostly to enable transformer Vn defaulting. feed.V1 will be overwritten at runtime in all cases"
+        },
+        "CtrlWord1" : {
+            "default": 0
         }
     },
     "ess": {
@@ -192,6 +195,18 @@
         },
         "CtrlWord4Cfg": {
             "default": []
+        },
+        "CtrlWord1" : {
+            "default": 0
+        },
+        "CtrlWord2" : {
+            "default": 0
+        },
+        "CtrlWord3" : {
+            "default": 0
+        },
+        "CtrlWord4" : {
+            "default": 0
         }
     },
     "gen": {
@@ -286,6 +301,18 @@
         },
         "CtrlWord4Cfg": {
             "default": []
+        },
+        "CtrlWord1" : {
+            "default": 0
+        },
+        "CtrlWord2" : {
+            "default": 0
+        },
+        "CtrlWord3" : {
+            "default": 0
+        },
+        "CtrlWord4" : {
+            "default": 0
         }
     },
     "solar": {
@@ -372,6 +399,12 @@
         },
         "CtrlWord2Cfg": {
             "default": []
+        },
+        "CtrlWord1" : {
+            "default": 0
+        },
+        "CtrlWord2" : {
+            "default": 0
         }
     },
     "loads": {
@@ -441,6 +474,9 @@
                     ]
                 }
             ]
+        },
+        "CtrlWord1" : {
+            "default": 0
         }
     },
     "transformers": {
@@ -534,8 +570,8 @@
             "units": "Volts",
             "note0": "Cell voltage deviation generator"
         },
-        "NumSbmus": {
-            "default": 1,
+        "NumRacks": {
+            "default": 10,
             "units": "count",
             "note0": "Number of SBMUs"
         },
@@ -545,19 +581,19 @@
                     "units": "percent SOC"
                 },
                 "faulthighthreshold": {
-                    "default": 95,
+                    "default": 101,
                     "units": "percent SOC"
                 },
                 "alarmhighthreshold": {
-                    "default": 90,
+                    "default": 98,
                     "units": "percent SOC"
                 },
                 "alarmlowthreshold": {
-                    "default": 10,
+                    "default": 2,
                     "units": "percent SOC"
                 },
                 "faultlowthreshold": {
-                    "default": 5,
+                    "default": -1,
                     "units": "percent SOC"
                 }
         },
@@ -700,7 +736,39 @@
                     ]
                 }
             ]
-        } 
+        },
+        "Tau": {
+            "default": 1500
+        },
+        "R0": {
+            "default": 0.10
+        },
+        "R1": {
+            "default": 0.02
+        },
+        "EnableVoltageDynamics": {
+            "default": true
+        },
+        "CtrlWord1" : {
+            "default": 0
+        },
+        "CtrlWord2" : {
+            "default": 0
+        },
+        "CtrlWord3" : {
+            "default": 0
+        },
+        "CtrlWord4" : {
+            "default": 0
+        },
+        "ContactorClsDeltaV": {
+            "default": 1000000,
+            "note": "This is set to an arbitrarily large value to calibrate the check off by default"
+        },
+        "ContactorClsMaxI": {
+            "default": 1000000,
+            "note": "This is set to an arbitrarily large value to calibrate the check off by default"
+        }
     },
     "pcs": {   
         "Note00": "This is the default configuration container for PCS assets",
@@ -932,6 +1000,18 @@
         "AbsRampRate": {
             "default": false,
             "note0": "Signals that ramp rates are measured in absolute value of power per second instead of percentage of maximum power per second"
+        },
+        "CtrlWord1" : {
+            "default": 0
+        },
+        "CtrlWord2" : {
+            "default": 0
+        },
+        "CtrlWord3" : {
+            "default": 0
+        },
+        "CtrlWord4" : {
+            "default": 0
         }
     },
     "dcbus": {

@@ -11,25 +11,25 @@ import (
 
 type bms struct {
 	// BMS Model Identification
-	ID      string
-	Aliases []string
+	ID                     string
+	Aliases                []string
 	// BMS physical parameters - limits, losses, etc
-	Cap        float64   // Nominal Capacity in kWh. Note this is a measure of battery ENERGY not battery CAPACITY - vendor spec sheets often list this as a 'capacity' value, so it is named such here in psm as well.
-	CapMeas    float64   // Achieved Capacity in kWh, based on capacity of individual SBMUs
-	Vnom       float64   // Battery nominal (or normal) voltage
-	Idleloss   float64   // Fixed losses across load
-	Rte        float64   // Round trip efficiency at full load
-	pesr       float64   // power normalized ESR, see Init()
-	Inom       float64   // Battery nominal current
-	Pmax       float64   // Battery max power, charge and discharge
-	VdcProfile []float64 // Used to calculate charging S-curve for bus and cell voltages. Entry at each index indicates DC bus voltage at the SOC at the same index in SOCprofile
-	SocProfile []float64 // Used to calculate charging S-curve for bus and cell voltages. Entry at each index indicates SOC at the DC bus voltage at the same index in Vdcprofile
+	Cap                    float64   // Nominal Capacity in kWh. Note this is a measure of battery ENERGY not battery CAPACITY - vendor spec sheets often list this as a 'capacity' value, so it is named such here in psm as well.
+	CapMeas                float64   // Achieved Capacity in kWh, based on capacity of individual SBMUs
+	Vnom                   float64   // Battery nominal (or normal) voltage
+	Idleloss               float64   // Fixed losses across load
+	Rte                    float64   // Round trip efficiency at full load
+	pesr                   float64   // power normalized ESR, see Init()
+	Inom                   float64   // Battery nominal current
+	Pmax                   float64   // Battery max power, charge and discharge
+	VdcProfile             []float64 // Used to calculate charging S-curve for bus and cell voltages. Entry at each index indicates DC bus voltage at the SOC at the same index in SOCprofile
+	SocProfile             []float64 // Used to calculate charging S-curve for bus and cell voltages. Entry at each index indicates SOC at the DC bus voltage at the same index in Vdcprofile
 	// Racks and cells
-	Sbmu          []rack
-	CapRange      float64 // Variance in sbmu capacity, where 0.01 = 1%. SBMU may be above or below nominal by this percentage.
-	LossRange     float64 // Variance in sbmu IdleLoss and RTE, where 0.01 = 1%. SBMU may be above or below nominal by this percentage.
-	CellVoltRange float64 // Variance in sbmu cell voltages, where 0.01 = 1%. SBMU may be above or below nominal by this percentage.
-	NumSbmus      int     // Number of sbmus in the bms system
+	Sbmu                   []rack
+	CapRange               float64 // Variance in sbmu capacity, where 0.01 = 1%. SBMU may be above or below nominal by this percentage.
+	LossRange              float64 // Variance in sbmu IdleLoss and RTE, where 0.01 = 1%. SBMU may be above or below nominal by this percentage.
+	CellVoltRange          float64 // Variance in sbmu cell voltages, where 0.01 = 1%. SBMU may be above or below nominal by this percentage.
+	NumSbmus               int     // Number of sbmus in the bms system
 	// BMS Measured Values
 	Vdc         measurement `name:"DC Voltage"` // Measured dc bus voltage
 	Idc         measurement `name:"DC Current"` // Measured dc current
@@ -57,42 +57,52 @@ type bms struct {
 	DisableLUTs     bool //flag to disable look-up-table based power limiting from BMS.
 
 	// BMS Communications - includes configurable I/O
-	Heart        hearttime
-	Status       []bitfield
-	StatusCfg    []bitfieldcfg
-	CtrlWord1    int
-	CtrlWord1Cfg []ctrlwordcfg
-	CtrlWord2    int
-	CtrlWord2Cfg []ctrlwordcfg
-	CtrlWord3    int
-	CtrlWord3Cfg []ctrlwordcfg
-	CtrlWord4    int
-	CtrlWord4Cfg []ctrlwordcfg
+	Heart                 hearttime
+	Status                []bitfield
+	StatusCfg             []bitfieldcfg
+	CtrlWord1             int
+	CtrlWord1Cfg          []ctrlwordcfg
+	CtrlWord2             int
+	CtrlWord2Cfg          []ctrlwordcfg
+	CtrlWord3             int
+	CtrlWord3Cfg          []ctrlwordcfg
+	CtrlWord4             int
+	CtrlWord4Cfg          []ctrlwordcfg
+	CtrlWord1Reset        int
+	CtrlWord2Reset        int
+	CtrlWord3Reset        int
+	CtrlWord4Reset        int
 	// On, off, and contactor controls
-	On                  bool
-	Oncmd               bool
-	Offcmd              bool
-	ContactorControl    bool // Allows independent control of contactors
-	DcContactor         bool
-	DcContactorOpenCmd  bool
-	DcContactorCloseCmd bool
-	NumRacks            int
-	NumRacksEnabled     int
+	On                    bool
+	Oncmd                 bool
+	Offcmd                bool
+	ContactorControl      bool // Allows independent control of contactors
+	DcContactor           bool
+	DcContactorOpenCmd    bool
+	DcContactorCloseCmd   bool
+	NumRacks              int
+	NumRacksEnabled       int
+	ContactorClsDeltaV    float64
+	ContactorClsMaxI	  float64
 	// Faults and fault handling
-	Fault        bool    // Indicates that a fault of any kind is present, turns off the BMS, and opens the dc contactor
-	Warning      bool    // Indicates that a warning of any kind is present. No immediate action is taken.
-	Watchdog     float64 // Checks to make sure that the connection to the higher level controller is active. If it does not change regularly, it turns off the BMS. Not implemented.
-	Reset        bool    // Resets warnings and faults
-	DisableFault bool    // Disable fault behavior
-	Faults       string
-	Alarms       string
+	Fault                 bool    // Indicates that a fault of any kind is present, turns off the BMS, and opens the dc contactor
+	Faults				  string
+	Alarms	    		  string
+	Warning               bool    // Indicates that a warning of any kind is present. No immediate action is taken.
+	Watchdog              float64 // Checks to make sure that the connection to the higher level controller is active. If it does not change regularly, it turns off the BMS. Not implemented.
+	Reset                 bool    // Resets warnings and faults
+	DisableFault          bool    // Disable fault behavior
+	EnableVoltageDynamics bool    // Enables characteristic voltage response to battery current (resistive drop and first order capacitive decay)
+	R0					  float64  // Battery internal resistance for voltage response
+	Tau					  float64  // Battery voltage response time constant. 
+	R1					  float64  // Polarization resistance (usually much smaller than R0)'
+	V1				      float64  // First time constant voltage (represents the voltage across R1||C1 in battery equivalent circuit model)
 	// Droop Parameters
-	Dvoltage  droop
-	faultskip bool // non public parameter. Skip the first fault detection instance in updateMode() to prevent nuisance faults.
+	Dvoltage              droop
+	faultskip             bool 		// non public parameter. Skip the first fault detection instance in updateMode() to prevent nuisance faults. 
 }
 
 func (b *bms) Init() {
-
 	// Initialize losses
 	if b.Rte == 0 {
 		b.pesr = 0
@@ -160,6 +170,10 @@ func (b *bms) Init() {
 
 	// Find the dc bus voltage based on the SOC of the battery
 	pro_len := len(b.SocProfile)
+	if pro_len != len(b.VdcProfile) {
+		log.Println("[", b.ID, "] Inequal lengths for SocProfile and VdcProfile vectors. Unrecoverable fault. Please check configurations.")
+		log.Fatalln("Exiting...")
+	}
 	if pro_len == 1 || b.Soc.Value < b.SocProfile[0] {
 		b.Vdc.Value = b.VdcProfile[0]
 	} else if b.Soc.Value >= b.SocProfile[pro_len-1] {
@@ -173,6 +187,11 @@ func (b *bms) Init() {
 		}
 	}
 
+	if len(b.Sbmu) == 1 && b.NumRacks != 0 {
+		for i:=0; i<b.NumRacks - 1; i++ {
+			b.Sbmu = append(b.Sbmu, rack{})
+		}
+	}
 	// Initialize the sbmus and extract overall data such as capacity and system max cell voltage
 	// If not specified, randomize capacity, losses, and cell voltages
 	b.NumSbmus = len(b.Sbmu)
@@ -377,7 +396,23 @@ func (b *bms) Init() {
 		log.Println("[", b.ID, "] zero length vector for chargeable or dischargeable power limits. Reverting to default behavior")
 		b.DisableLUTs = true
 	}
-	b.faultskip = true // skip fault detection for the first iteration.
+	if b.ContactorClsDeltaV <= 0 {
+		b.ContactorClsDeltaV = 100000000		// Calibrate off
+	}
+	if b.ContactorClsMaxI <= 0 {
+		b.ContactorClsMaxI = 100000000
+	}
+	b.faultskip = true // skip fault detection for the first iteration. 
+
+	flt1, flt2, flt3, flt4 := false, false, false, false
+	b.CtrlWord1Reset, flt1 = initCtrlWord(b.CtrlWord1Cfg, 0)
+	b.CtrlWord2Reset, flt2 = initCtrlWord(b.CtrlWord2Cfg, 0)
+	b.CtrlWord3Reset, flt3 = initCtrlWord(b.CtrlWord3Cfg, 0)
+	b.CtrlWord4Reset, flt4 = initCtrlWord(b.CtrlWord4Cfg, 0)
+
+	if flt1 || flt2 || flt3 || flt4 {
+		log.Println("[", b.ID, "] Unable to set good reset values for control words. This may cause unintended behavior")
+	}
 }
 
 // BMS UpdateMode() processes commands either through control words or direct
@@ -388,6 +423,12 @@ func (b *bms) UpdateMode(input terminal) (output terminal) {
 	processCtrlWordConfig(b, b.CtrlWord2Cfg, b.CtrlWord2)
 	processCtrlWordConfig(b, b.CtrlWord3Cfg, b.CtrlWord3)
 	processCtrlWordConfig(b, b.CtrlWord4Cfg, b.CtrlWord4)
+	// Reset control words back to default value after their action is parsed.
+	b.CtrlWord1 = b.CtrlWord1Reset
+	b.CtrlWord2 = b.CtrlWord2Reset
+	b.CtrlWord3 = b.CtrlWord3Reset
+	b.CtrlWord4 = b.CtrlWord4Reset
+	// fmt.Println(b.DcContactor, b.DcContactorOpenCmd, b.DcContactorCloseCmd, b.On, b.Oncmd, b.Offcmd)
 
 	// Update measurement fault and alarm states with the updateMeasurements function call
 	if !b.DisableFault && !b.faultskip {
@@ -424,7 +465,6 @@ func (b *bms) UpdateMode(input terminal) (output terminal) {
 			b.DcContactorOpenCmd = true
 		}
 	}
-
 	// Update each battery rack state and dc contactors
 	for i := range b.Sbmu {
 		processCtrlWordConfig(&(b.Sbmu[i]), b.Sbmu[i].CtrlWord1Cfg, b.Sbmu[i].CtrlWord1)
@@ -439,8 +479,8 @@ func (b *bms) UpdateMode(input terminal) (output terminal) {
 		}
 
 		// control the DC contactors on each SBMU
-		if b.Sbmu[i].Enabled {
-			if !b.Sbmu[i].DcContactor && b.DcContactorCloseCmd {
+		if b.Sbmu[i].Enabled && math.Abs(b.Sbmu[i].Idc.Value) <= b.ContactorClsMaxI {
+			if !b.Sbmu[i].DcContactor && b.DcContactorCloseCmd && (b.NumRacks == 0 || (b.Sbmu[i].Vdc - b.Vdc.Value) < b.ContactorClsDeltaV)  {
 				b.Sbmu[i].DcContactor, b.Sbmu[i].DcContactorCloseCmd = true, false
 				b.NumRacks++
 			} else if b.Sbmu[i].DcContactor && b.DcContactorOpenCmd {
@@ -470,7 +510,11 @@ func (b *bms) UpdateMode(input terminal) (output terminal) {
 		b.On = false
 		b.Offcmd = false
 	}
-
+	// Contactor commands may be sent to close rack contactors while mains are open
+	// In that case the command wouldn'tbe reset above so set it back to false here
+	// This prevents the bms from holding on to old contactor close commands. 
+	b.DcContactorCloseCmd = false
+	b.DcContactorOpenCmd = false
 	return output // returning zero terminal, since BMS has no assets below it
 }
 
@@ -497,9 +541,9 @@ func (b *bms) GetLoadLines(input terminal, dt float64) (output terminal) {
 		// so droop has a one tick delay
 
 		// Update the rack DC bus voltages
-		for i, _ := range b.Sbmu {
-			b.Sbmu[i].Vdc = b.Vdc.Value
-		}
+		// for i, _ := range b.Sbmu {
+		// 	b.Sbmu[i].Vdc = b.Vdc.Value
+		// }
 	}
 	return output
 }
@@ -522,23 +566,20 @@ func (b *bms) DistributeVoltage(input terminal) (output terminal) {
 	// fmt.Println("BMS STATUS", b.Status, "Val", b.Status[0].Value, "ADDRESS", &(b.Status[0].Value))
 	// fmt.Printf("Status Address: %p Val Address: %p String: %s Val: %d\n", &b.Status, &(b.Status[0].Value), b.Status[0].String, b.Status[0].Value)
 	// Find the dc bus voltage based on the SOC of the battery
-	pro_len := len(b.SocProfile)
-	if pro_len == 1 || b.Soc.Value < b.SocProfile[0] {
-		b.Vdc.Value = b.VdcProfile[0]
-	} else if b.Soc.Value >= b.SocProfile[pro_len-1] {
-		b.Vdc.Value = b.VdcProfile[pro_len-1]
-	} else {
-		for i := 0; i < (pro_len - 1); i++ {
-			if b.Soc.Value > b.SocProfile[i] && b.Soc.Value < b.SocProfile[i+1] {
-				deltaSOC := (b.Soc.Value - b.SocProfile[i]) / (b.SocProfile[i+1] - b.SocProfile[i])
-				b.Vdc.Value = ((b.VdcProfile[i+1] - b.VdcProfile[i]) * deltaSOC) + b.VdcProfile[i]
-			}
-		}
-	}
-	// Update the rack DC bus voltages
-	for i, _ := range b.Sbmu {
-		b.Sbmu[i].Vdc = b.Vdc.Value
-	}
+	// pro_len := len(b.SocProfile)
+	// if pro_len == 1 || b.Soc.Value < b.SocProfile[0] {
+	// 	b.Vdc.Value = b.VdcProfile[0]
+	// } else if b.Soc.Value >= b.SocProfile[pro_len-1] {
+	// 	b.Vdc.Value = b.VdcProfile[pro_len-1]
+	// } else {
+	// 	for i := 0; i < (pro_len - 1); i++ {
+	// 		if b.Soc.Value > b.SocProfile[i] && b.Soc.Value < b.SocProfile[i+1] {
+	// 			deltaSOC := (b.Soc.Value - b.SocProfile[i]) / (b.SocProfile[i+1] - b.SocProfile[i])
+	// 			b.Vdc.Value = ((b.VdcProfile[i+1] - b.VdcProfile[i]) * deltaSOC) + b.VdcProfile[i]
+	// 		}
+	// 	}
+	// }
+
 	return output // returning zero terminal, since BMS has no assets below it
 }
 
@@ -591,7 +632,7 @@ func (b *bms) UpdateState(input terminal, dt float64) (output terminal) {
 				b.Sbmu[i].P, b.Sbmu[i].Pdc, b.Sbmu[i].Pcharge, b.Sbmu[i].Pdischarge = 0, 0, 0, 0
 			}
 		}
-		b.Soc.Value = 100 * socsum / float64(b.NumSbmus) // bms soc value is the average of the sbmu soc values
+		b.Soc.Value = 100 * socsum / float64(b.NumRacks) // bms soc value is the average of the sbmu soc values. This will consider only the soc of the closed racks. 
 	} else {
 		b.P, b.Pdc, b.Pcharge, b.Pdischarge = 0, 0, 0, 0
 		for i, _ := range b.Sbmu {
@@ -640,6 +681,31 @@ func (b *bms) UpdateState(input terminal, dt float64) (output terminal) {
 			}
 		}
 	}
+
+	// Update the rack DC bus voltages
+	// If rack contactor is closed, then take voltage based on bms soc as closed racks necessarily have the same voltage (ignoring busbar resistance and etc)
+	// Otherwise, racks should keep track of their own voltage based on their individual SOCs
+	for i, _ := range b.Sbmu {
+		if b.Sbmu[i].DcContactor {
+			b.Sbmu[i].Vdc = b.Vdc.Value
+		} else {
+			b.Sbmu[i].Vdc,_ = interpl(b.SocProfile, b.VdcProfile, b.Sbmu[i].Soc.Value)
+		}
+	}
+	// If enabled, battery voltage should have a response to current.
+	// We only set b.Vdc.Value and not b.Sbmu[i].Vdc as a result of this logic so we avoid nuisance max/min cell voltage faults. 
+	// if b.EnableVoltageDynamics && b.Tau != 0 && b.R1 != 0 && b.R0 != 0 {
+	if b.EnableVoltageDynamics &&  b.R0 >= 0 {
+		rackcurrent := 0.0
+		if (b.NumRacks != 0) {
+			rackcurrent = b.Idc.Value / float64(b.NumRacks)
+		}
+		// expterm := math.Exp(-dt/b.Tau)
+		// b.V1 = b.V1 * expterm + rackcurrent * (b.R1 * (1 - expterm)) //this uses last step current and that's ok for now
+		b.Vdc.Value = b.Vdc.Value - rackcurrent * b.R0 
+	}
+
+	b.Idc.Value = pToI(b.P, b.Vdc.Value)
 	if b.Vdc.Value != 0 {
 		b.Icharge = b.Pcharge * 1000 / b.Vdc.Value
 		b.Idischarge = b.Pdischarge * 1000 / b.Vdc.Value
@@ -647,13 +713,13 @@ func (b *bms) UpdateState(input terminal, dt float64) (output terminal) {
 		b.Icharge = 0
 		b.Idischarge = 0
 	}
-	b.Idc.Value = pToI(b.P, b.Vdc.Value)
+
 	// Update the SBMU bus and cell voltages and the currents
 	// Prepare to find overall max and min cell voltages by setting up initial comparison to arbitrarily extreme values
 	b.MaxCellVolt.Value = -1000.0
 	b.MinCellVolt.Value = 1000.0
 	for i, _ := range b.Sbmu {
-		b.Sbmu[i].Vdc = b.Vdc.Value
+		// b.Sbmu[i].Vdc = b.Vdc.Value
 		b.Sbmu[i].AvgCellVolt = b.Sbmu[i].Vdc / float64(b.Sbmu[i].NumCells)
 		b.Sbmu[i].MaxCellVolt.Value = (1 + b.Sbmu[i].cellVoltOver) * b.Sbmu[i].AvgCellVolt
 		b.Sbmu[i].MinCellVolt.Value = (1 - b.Sbmu[i].cellVoltUnder) * b.Sbmu[i].AvgCellVolt

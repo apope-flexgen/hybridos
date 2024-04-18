@@ -1,0 +1,25 @@
+{
+    "updateRate": 100,
+    "bms": [
+        {
+            "vars": {
+                "id": "bms_##BMS_NUM##",
+                "Slim": 4000,
+                "Plim": 3000,
+                "Qlim": 3000,
+                "Cap": 100,
+                "Tau": 400,
+                "R0": 0.25,
+                "R1": 0.1,
+                "EnableVoltageDynamics": true,
+                "contactorclsdeltav": 10,
+                "contactorclsmaxI": 3
+            },
+            "reps": {
+                "from": 1,
+                "to": 1,
+                "token": "##BMS_NUM##"
+            }
+        }
+    ]
+}

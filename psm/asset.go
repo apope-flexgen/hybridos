@@ -184,6 +184,31 @@ func processCtrlWordConfig(a interface{}, ctrlwordcfg []ctrlwordcfg, ctrlword in
 	}
 }
 
+// Determine a good "non used" value to reset asset control words to after processing the control word behavior
+// essentially allows the ctrlwords to activate only once after being set through fims
+func initCtrlWord(ctrlwordcfg []ctrlwordcfg, ctrlword int) (rVal int, fault bool) {
+	// This function returns a random value from 0 to 99 NOT in the given ctrlwordcfg or the given ctrlword, for use as a reset
+	rand.Seed(time.Now().UnixNano())
+	maxTries := 15
+	fault = false
+	if len(ctrlwordcfg) == 0 {
+		return 0, false   // Unconfigured control words are not faults but will cause the loop below to hang
+	}
+	
+	Outerloop:
+	rVal = rand.Intn(100)
+	for _, cwc := range ctrlwordcfg {
+		if cwc.Value == rVal || cwc.Value == ctrlword {
+			maxTries--
+			if maxTries <= 0 {
+				return 0, true
+			}
+			goto Outerloop
+		}
+	}
+	return rVal, fault
+}
+
 type measurement struct {
 	Value              float64
 	FaultHigh          bool

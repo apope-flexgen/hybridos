@@ -24,7 +24,7 @@ folders=("ess_controller")
 for i in "${folders[@]}"; do
     echo $i
     if [ "$i" == "ess_controller" ]; then
-        FILES=$(find $path/ess-controller-37/config/ess_controller -type f -name '*.json') # ! -name '*_file.json')
+        FILES=$(find $path/ess-controller -type f -name '*.json') # ! -name '*_file.json')
         for f in $FILES
         do
             fName=$(basename ${f})
