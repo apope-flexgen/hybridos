@@ -379,8 +379,10 @@ export class AssetsPageService {
     return {} as metadataFromDBI[];
   };
 
-  private getIndividualAssetMetadata = (uri: string, dbiMetadata: metadataFromDBI[]) => {
+  private getIndividualAssetMetadata = (uri: string, dbiMetadata: metadataFromDBI[], isSummary: boolean) => {
     let indexOfMetadata = -1;
+    if (isSummary) return dbiMetadata[0];
+
     dbiMetadata.every((metadata, index) => {
       // check if the uri listed in this metadata matches the uri passed in 
       // if so, this is the correct metadata for this uri
@@ -482,7 +484,7 @@ export class AssetsPageService {
         : parseConfiguredData(
             summaryData[uri],
             this.setLockMode(uri),
-            this.getIndividualAssetMetadata(uri, dbiMetadata),
+            this.getIndividualAssetMetadata(uri, dbiMetadata, false),
             true,
             enableAssetPageControls,
             this.siteConfiguration,
@@ -553,7 +555,7 @@ export class AssetsPageService {
 
         const parsedData = isSummary
           ? parseSummaryData(
-              this.getIndividualAssetMetadata(uri, dbiMetadata),
+              this.getIndividualAssetMetadata(uri, dbiMetadata, isSummary),
               event.body,
               false,
               enableAssetPageControls,
@@ -563,7 +565,7 @@ export class AssetsPageService {
             ? parseConfiguredData(
               event.body as nakedBodyFromFims,
               this.setLockMode(uri),
-              this.getIndividualAssetMetadata(uri, dbiMetadata),
+              this.getIndividualAssetMetadata(uri, dbiMetadata, isSummary),
               false,
               enableAssetPageControls,
               this.siteConfiguration,
@@ -585,7 +587,7 @@ export class AssetsPageService {
             [uri]: {
               ...parsedData,
               displayName: name || uri,
-              tabKey: !isDefault ? this.getIndividualAssetMetadata(uri, dbiMetadata).info.tabKey : undefined
+              tabKey: !isDefault ? this.getIndividualAssetMetadata(uri, dbiMetadata, isSummary).info.tabKey : undefined
             },
           },
         };
