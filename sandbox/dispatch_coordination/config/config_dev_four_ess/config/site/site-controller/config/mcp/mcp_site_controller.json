@@ -1,0 +1,12 @@
+{
+    "processes": [
+        {
+            "args": [
+                "dbi",
+                "-logCfg=/usr/local/etc/config/logging/site_controller/site_controller_verbose.json"
+            ],
+            "max_restarts": -1,
+            "name": "/usr/local/bin/site_controller"
+        }
+    ]
+}

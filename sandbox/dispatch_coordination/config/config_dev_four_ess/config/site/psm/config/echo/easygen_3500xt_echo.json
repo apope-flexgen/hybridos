@@ -1,0 +1,31 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/easygen_3500xt",
+			"publishRate": 200,
+			"inputs": [
+				{
+					"uri": "/components/psm_easygen_3500xt",
+					"registers": {
+						"ac_current_l1": "i",
+						"ac_voltage_l1_l2": "v",
+						"active_power": "p",
+						"active_power_setpoint": "pcmd",
+						"apparent_power": "s",
+						"frequency": "f",
+						"on_off_grid_mode": "ctrlword2",
+						"reactive_power": "q",
+						"reactive_power_setpoint": "qcmd",
+						"start_stop": "ctrlword1",
+						"status": "on"
+					}
+				}
+			],
+			"echo": {
+				"fault_bits_1": 0,
+				"fault_bits_2": 0,
+				"starting_status": 0
+			}
+		}
+	]
+}

@@ -506,40 +506,64 @@ void ESS_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, cons
         bufJSON_EndObjectNoComma(buf);  // } summary
 }
 
+/*
+ * @brief Set all ESS reactive_power_setpoint 0. Will only apply to those controllable.
+ */
+void ESS_Manager::zero_all_controllable_ess_reactive_power(void) {
+    for (int i = 0; i < numParsed; i++) {
+        if (pEss[i]->is_controllable() && pEss[i]->get_reactive_power_setpoint() != 0) {
+            pEss[i]->set_reactive_power_setpoint(0);
+        }
+    }
+}
+
+/*
+ * @brief Set all ESS reactive_power_setpoint to the maximum possible output. Will only apply to those controllable.
+ */
+void ESS_Manager::all_controllable_ess_max_reactive_power(void) {
+    for (int i = 0; i < numParsed; i++) {
+        if (pEss[i]->is_controllable() && pEss[i]->get_reactive_power_setpoint() != pEss[i]->get_rated_reactive_power()) {
+            pEss[i]->set_reactive_power_setpoint(pEss[i]->get_rated_reactive_power());
+        }
+    }
+}
+
+/*
+ * @brief Set all ESS reactive_power_setpoint to the minimum possible output. Will only apply to those controllable.
+ */
+void ESS_Manager::all_controllable_ess_min_reactive_power(void) {
+    for (int i = 0; i < numParsed; i++) {
+        if (pEss[i]->is_controllable() && pEss[i]->get_reactive_power_setpoint() != -1 * pEss[i]->get_rated_reactive_power()) {
+            pEss[i]->set_reactive_power_setpoint(-1 * pEss[i]->get_rated_reactive_power());
+        }
+    }
+}
+
+/*
+ * @brief Based on the target/potential reactive power distribute reactive power commands appropriately.
+ */
 void ESS_Manager::calculate_ess_reactive_power(void) {
     // no reactive power requested
     if (essTargetReactivePowerkVAR == 0 || essTotalPotentialReactivePower == 0) {
-        for (int i = 0; i < numParsed; i++) {
-            if (pEss[i]->is_controllable() && pEss[i]->get_reactive_power_setpoint() != 0)
-                pEss[i]->set_reactive_power_setpoint(0);
-        }
+        zero_all_controllable_ess_reactive_power();
         return;
     }
 
     // full reactive power requested
     if (fabsf(essTargetReactivePowerkVAR) >= essTotalRatedReactivePower) {
-        if (essTargetReactivePowerkVAR > 0) {
-            for (int i = 0; i < numParsed; i++) {
-                if (pEss[i]->is_controllable() && pEss[i]->get_reactive_power_setpoint() != pEss[i]->get_rated_reactive_power())
-                    pEss[i]->set_reactive_power_setpoint(pEss[i]->get_rated_reactive_power());
-            }
-        } else {
-            for (int i = 0; i < numParsed; i++) {
-                if (pEss[i]->is_controllable() && pEss[i]->get_reactive_power_setpoint() != -1 * pEss[i]->get_rated_reactive_power())
-                    pEss[i]->set_reactive_power_setpoint(-1 * pEss[i]->get_rated_reactive_power());
-            }
-        }
+        essTargetReactivePowerkVAR > 0 ? all_controllable_ess_max_reactive_power() : all_controllable_ess_min_reactive_power();
         return;
     }
 
-    // TODO do something smart for requested is larger than available
+    // TODO(unknown): do something smart for requested is larger than available
     // for now do same as if the reactive power is available
     // There is reactive power that can be handled by available
     for (int i = 0; i < numParsed; i++) {
         if (pEss[i]->is_controllable()) {
             float weightedShare = (pEss[i]->get_potential_reactive_power() == 0) ? 0 : essTargetReactivePowerkVAR / (essTotalPotentialReactivePower / pEss[i]->get_potential_reactive_power());
-            if (pEss[i]->get_reactive_power_setpoint() != weightedShare)
+            if (pEss[i]->get_reactive_power_setpoint() != weightedShare) {
                 pEss[i]->set_reactive_power_setpoint(weightedShare);
+            }
         }
     }
 }
@@ -558,11 +582,14 @@ bool ESS_Manager::calculate_ess_active_power(void) {
             // calculate contribution factor: soc^b if discharging or (100-soc)^b if charging
             SOC_Balancing_Data balancingData;
             balancingData.ess = *it;
-            balancingData.powerLimit = powerToAssign > 0 ? (*it)->get_dischargeable_power() : (*it)->get_chargeable_power();
+            // use LIMITED power here as a way to account for reactive_power_priority
+            // NOTE: get_min_limited_active_power() returns negative, but we want positive flip it here no need for new func
+            balancingData.powerLimit = powerToAssign >= 0 ? (*it)->get_max_limited_active_power() : -1 * (*it)->get_min_limited_active_power();
             float socMargin = powerToAssign > 0 ? (*it)->get_soc() : (100 - (*it)->get_soc());
             // If at 0% or 100% soc but there is still (dis)chargeable power available, continue to allow the ESS to (dis)charge
-            if (socMargin == 0.0 && balancingData.powerLimit != 0.0)
+            if (socMargin == 0.0 && balancingData.powerLimit != 0.0) {
                 socMargin = 1.0f;
+            }
             balancingData.contributionFactor = powf(socMargin, socBalancingFactor);
             essAssetsToAssignPowerTo.push_back(balancingData);
         }
@@ -596,9 +623,7 @@ bool ESS_Manager::calculate_ess_active_power(void) {
                 break;
             }
             // if calculated setpoint is within ESS instance power limit, or a feature has disabled the power distribution balancing, give the setpoint to the ESS
-            else {
-                it->ess->set_active_power_setpoint(setpoint, false);
-            }
+            it->ess->set_active_power_setpoint(setpoint, false);
         }
     } while (powerLimitViolated);
 

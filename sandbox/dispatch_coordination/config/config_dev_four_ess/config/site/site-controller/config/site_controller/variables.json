@@ -1152,7 +1152,7 @@
                                 "name": "Slew Override",
                                 "type": "enum_slider",
                                 "ui_type": "control",
-                                "value": true,
+                                "value": false,
                                 "var_type": "Bool"
                             },
                             "freeze_active_cmd_flag": {
@@ -2600,7 +2600,6 @@
                     "type": "enum_slider",
                     "ui_type": "none",
                     "value": false,
-                    "value": true,
                     "var_type": "Bool"
                 },
                 "reserved_bool_1": {

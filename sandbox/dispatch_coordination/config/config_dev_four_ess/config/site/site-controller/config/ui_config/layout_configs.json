@@ -1,0 +1,33 @@
+{
+    "_doc": "layout",
+    "data": [
+        {
+            "info": {
+                "icon": "ViewModule",
+                "key": "ess_tab",
+                "name": "ESS"
+            }
+        },
+        {
+            "info": {
+                "icon": "Storage",
+                "key": "gen_tab",
+                "name": "Gen"
+            }
+        },
+        {
+            "info": {
+                "icon": "SpaceDashboard",
+                "key": "solar_tab",
+                "name": "Solar"
+            }
+        },
+        {
+            "info": {
+                "icon": "Feeders",
+                "key": "feeders_tab",
+                "name": "Feeders"
+            }
+        }
+    ]
+}

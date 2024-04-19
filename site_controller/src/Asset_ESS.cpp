@@ -7,6 +7,7 @@
 
 /* C Standard Library Dependencies */
 #include <cmath>
+#include <cstdlib>
 #include <cstring>
 #include "Types.h"
 /* C++ Standard Library Dependencies */
@@ -126,7 +127,7 @@ float Asset_ESS::get_dischargeable_energy(void) {
 }
 
 float Asset_ESS::get_min_limited_active_power(void) {
-    return -1.0f * std::min(active_power_limit, chargeable_power.value.value_float);
+    return -1.0f * std::min(active_power_limit, std::abs(chargeable_power.value.value_float));
 }
 
 float Asset_ESS::get_max_limited_active_power(void) {

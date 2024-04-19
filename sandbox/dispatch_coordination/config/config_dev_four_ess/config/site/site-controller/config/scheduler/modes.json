@@ -1,0 +1,132 @@
+{
+    "absolute_ess": {
+        "color_code": "lightGreen",
+        "constants": [
+            {
+                "id": "runmode1_kW_mode_cmd",
+                "name": "Active Power Feature",
+                "type": "Int",
+                "unit": "",
+                "uri": "/features/active_power/runmode1_kW_mode_cmd",
+                "value": 6
+            },
+            {
+                "id": "absolute_mode_flag",
+                "name": "Absolute Mode Flag",
+                "type": "Bool",
+                "unit": "",
+                "uri": "/features/active_power/active_power_setpoint_absolute_mode_flag",
+                "value": true
+            }
+        ],
+        "icon": "BatteryVert",
+        "name": "Absolute ESS",
+        "variables": [
+            {
+                "id": "charge_flag",
+                "name": "Charge Flag",
+                "type": "Bool",
+                "unit": "",
+                "uri": "/features/active_power/active_power_setpoint_direction_flag",
+                "value": false
+            },
+            {
+                "id": "kw_cmd",
+                "name": "Active Power Setpoint",
+                "type": "Float",
+                "unit": "kW",
+                "uri": "/features/active_power/active_power_setpoint_kW_cmd",
+                "value": 1000
+            }
+        ]
+    },
+    "default": {
+        "color_code": "gray",
+        "constants": [
+            {
+                "id": "charge_flag",
+                "name": "Charge Flag",
+                "type": "Bool",
+                "unit": "",
+                "uri": "/features/active_power/active_power_setpoint_direction_flag",
+                "value": false
+            },
+            {
+                "id": "kw_cmd",
+                "name": "Absolute ESS Setpoint",
+                "type": "Float",
+                "unit": "kW",
+                "uri": "/features/active_power/active_power_setpoint_kW_cmd",
+                "value": 0.0
+            },
+            {
+                "id": "soc_target",
+                "name": "Target SoC Setpoint",
+                "type": "Float",
+                "unit": "%",
+                "uri": "/features/active_power/ess_charge_control_target_soc",
+                "value": 0
+            }
+        ],
+        "icon": "Build",
+        "name": "Default",
+        "variables": []
+    },
+    "target_soc": {
+        "color_code": "lightBlue",
+        "constants": [
+            {
+                "id": "runmode1_kW_mode_cmd",
+                "name": "Active Power Feature",
+                "type": "Int",
+                "unit": "",
+                "uri": "/features/active_power/runmode1_kW_mode_cmd",
+                "value": 1
+            }
+        ],
+        "icon": "BatteryCharging",
+        "name": "Target SOC",
+        "variables": [
+            {
+                "id": "soc_target",
+                "name": "Target SoC Setpoint",
+                "type": "Float",
+                "unit": "%",
+                "uri": "/features/active_power/ess_charge_control_target_soc",
+                "value": 100
+            }
+        ]
+    },
+    "battery_balancing": {
+        "color_code": "lightBlue",
+        "constants": [],
+        "icon": "BatteryCharging",
+        "name": "Battery Balancing",
+        "variables": [
+            {
+                "id": "maint_mode",
+                "name": "Maintenance Mode",
+                "type": "Bool",
+                "unit": "",
+                "uri": "/ess_#/maint_mode",
+                "value": true,
+                "is_template": true,
+                "batch_prefix": "/assets/ess",
+                "batch_range": ["1..2"],
+                "batch_value": ["1..2"]
+            },
+            {
+                "id": "start",
+                "name": "Start Calibration",
+                "type": "Bool",
+                "unit": "",
+                "uri": "/ess_#/actions/Calibration1/start",
+                "value": true,
+                "is_template": true,
+                "batch_prefix": "/assets/ess",
+                "batch_range": ["1..2"],
+                "batch_value": ["1..2"]
+            }
+        ]
+    }
+}

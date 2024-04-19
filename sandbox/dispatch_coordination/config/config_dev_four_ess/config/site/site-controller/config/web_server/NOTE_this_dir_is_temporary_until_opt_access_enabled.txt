@@ -1,0 +1,3 @@
+Please note:
+
+This `fleet_manager/web_server` directory is for TEMPORARY USE until devops gets /opt access enabled. For now, permissions will be read from /config/web_server and then will be overwritten and deleted. In future, it will be read from /opt/web_server then overwritten and deleted. This is TEMPORARY as of 10-05-2020.

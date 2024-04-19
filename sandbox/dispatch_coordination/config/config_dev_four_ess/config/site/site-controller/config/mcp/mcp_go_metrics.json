@@ -1,0 +1,11 @@
+{
+    "processes": [
+        {
+            "args": [
+                "-c=dbi"
+            ],
+            "max_restarts": -1,
+            "name": "/usr/local/bin/go_metrics"
+        }
+    ]
+}

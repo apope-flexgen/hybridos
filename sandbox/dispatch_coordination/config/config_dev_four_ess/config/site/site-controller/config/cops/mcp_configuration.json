@@ -35,7 +35,7 @@
             "allowActions": true,
             "configRestart": true,
             "hangTimeAllowanceMS": 3000,
-            "killOnHang": false,
+            "killOnHang": true,
             "name": "scheduler",
             "requiredForHealthyStatus": true,
             "uri": "/scheduler",

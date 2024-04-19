@@ -1,0 +1,193 @@
+{
+    "listenRate": 2,
+    "metricsUri": "/metrics/kpi",
+    "publishRate": 100,
+    "publishUris": [
+        {
+            "metrics": [
+                {
+                    "id": "heartbeat2watchdog",
+                    "inputs": [
+                        {
+                            "id": "heartbeat_counter",
+                            "uri": "/site/operation"
+                        }
+                    ],
+                    "operation": "echo",
+                    "outputs": [
+                        {
+                            "id": "watchdog_pet",
+                            "uri": "/site/operation"
+                        }
+                    ]
+                }
+            ],
+            "naked": true,
+            "uri": "/metrics/watchdog"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "off_by_one",
+                    "initialInput": 1,
+                    "inputs": [
+                        {
+                            "id": "off_by_one",
+                            "uri": "/example"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "load_shed_offset_control",
+                    "inputs": [
+                        {
+                            "id": "load_shed_control",
+                            "uri": "/example"
+                        },
+                        {
+                            "id": "off_by_one",
+                            "uri": "/example"
+                        }
+                    ],
+                    "operation": "sum"
+                },
+                {
+                    "id": "load_setting_0",
+                    "initialInput": -200,
+                    "inputs": [
+                        {
+                            "id": "load_setting_0",
+                            "uri": "/example"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "load_setting_1",
+                    "initialInput": -150,
+                    "inputs": [
+                        {
+                            "id": "load_setting_1",
+                            "uri": "/example"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "load_setting_2",
+                    "initialInput": -100,
+                    "inputs": [
+                        {
+                            "id": "load_setting_2",
+                            "uri": "/example"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "load_setting_3",
+                    "initialInput": -50,
+                    "inputs": [
+                        {
+                            "id": "load_setting_3",
+                            "uri": "/example"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "load_setting_4",
+                    "initialInput": 0,
+                    "inputs": [
+                        {
+                            "id": "load_setting_4",
+                            "uri": "/example"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "load_shed_output",
+                    "initialInput": 4,
+                    "inputs": [
+                        {
+                            "id": "load_shed_offset_control",
+                            "uri": "/example"
+                        },
+                        {
+                            "id": "load_setting_0",
+                            "uri": "/example"
+                        },
+                        {
+                            "id": "load_setting_1",
+                            "uri": "/example"
+                        },
+                        {
+                            "id": "load_setting_2",
+                            "uri": "/example"
+                        },
+                        {
+                            "id": "load_setting_3",
+                            "uri": "/example"
+                        },
+                        {
+                            "id": "load_setting_4",
+                            "uri": "/example"
+                        }
+                    ],
+                    "operation": "selectn",
+                    "outputs": [
+                        {
+                            "id": "pcmd",
+                            "uri": "/components/load_fixed"
+                        }
+                    ]
+                },
+                {
+                    "id": "actual_load",
+                    "initialInput": 0,
+                    "inputs": [
+                        {
+                            "id": "pcmd",
+                            "uri": "/components/load_fixed"
+                        }
+                    ],
+                    "operation": "echo"
+                }
+            ],
+            "naked": true,
+            "uri": "/example"
+        },
+        {
+            "metrics": [
+                {
+                    "id": "FM_timestamp",
+                    "inputs": [
+                        {
+                            "id": "FM_timestamp",
+                            "uri": "/metrics/timestamp"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "comment": "Change to operation to millisecondsToRFC3339 when a newer version of metrics is deployed",
+                    "id": "FM_time_UTC",
+                    "inputs": [
+                        {
+                            "id": "FM_timestamp",
+                            "uri": "/metrics/timestamp"
+                        }
+                    ],
+                    "operation": "echo",
+                    "param": {
+                        "operation": "zulu"
+                    }
+                }
+            ],
+            "naked": true,
+            "uri": "/metrics/timestamp"
+        }
+    ]
+}

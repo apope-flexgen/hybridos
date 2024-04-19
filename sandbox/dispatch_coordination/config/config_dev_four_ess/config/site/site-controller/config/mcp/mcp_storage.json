@@ -1,0 +1,18 @@
+{
+    "processes": [
+        {
+            "args": [
+                "/usr/local/etc/config/storage/"
+            ],
+            "max_restarts": 0,
+            "name": "/usr/local/bin/setup"
+        },
+        {
+            "args": [
+                "/usr/local/etc/config/storage/"
+            ],
+            "max_restarts": -1,
+            "name": "/usr/local/bin/storage"
+        }
+    ]
+}

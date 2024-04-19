@@ -168,6 +168,10 @@ public:
 
     void generate_asset_type_summary_json(fmt::memory_buffer& buf, const char* const var = NULL) override;
 
+
+    void zero_all_controllable_ess_reactive_power(void); 
+    void all_controllable_ess_max_reactive_power(void);
+    void all_controllable_ess_min_reactive_power(void);
     void calculate_ess_reactive_power(void);
     bool calculate_ess_active_power(void);
     float charge_control(float target_soc_desired, bool charge_disable, bool discharge_disable);

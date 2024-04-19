@@ -1,9 +1,10 @@
 import logging
 import time
 import os
-from .fims import fims_set, fims_threaded_pub
+from .fims import fims_set, fims_threaded_pub, fims_get
 from .assertion_framework import Flex_Assertion
 from .pytest_report import close_report, setup_report, report_id, report_steps, report_expected
+from typing import Any
 
 
 class Steps():
@@ -96,6 +97,46 @@ class Steps():
             "/assets/ess/ess_01/maint_mode": True,
             "/assets/ess/ess_02/maint_mode": True,
         }
+
+    @staticmethod
+    def place_assets_in_maint_dynamic(solar: bool = False, gen: bool = False, ess: bool = False):
+        """Do a get to get all assets then put them in maint"""
+        if solar:
+            solar_get: dict[str, Any] = fims_get("/assets/solar")
+            del solar_get['summary']
+            for key in solar_get.keys():
+                fims_set("/assets/solar/" + key + "/maint_mode", True)
+
+        if gen:
+            gen_get: dict[str, Any] = fims_get("/assets/generators")
+            del gen_get['summary']
+            for key in gen_get.keys():
+                fims_set("/assets/generators/" + key + "/maint_mode", True)
+
+        if ess:
+            ess_get: dict[str, Any] = fims_get("/assets/ess")
+            del ess_get['summary']
+            for key in ess_get.keys():
+                fims_set("/assets/ess/" + key + "/maint_mode", True)
+
+    @staticmethod
+    def remove_all_assets_from_maint_dynamic():
+        """Do a get to get all assets then remove them from maint"""
+        solar_get: dict[str, Any] = fims_get("/assets/solar")
+        del solar_get['summary']
+        for key in solar_get.keys():
+            fims_set("/assets/solar/" + key + "/maint_mode", False)
+
+        gen_get: dict[str, Any] = fims_get("/assets/generators")
+        del gen_get['summary']
+        for key in gen_get.keys():
+            fims_set("/assets/generators/" + key + "/maint_mode", False)
+
+        ess_get: dict[str, Any] = fims_get("/assets/ess")
+        del ess_get['summary']
+        for key in ess_get.keys():
+            fims_set("/assets/ess/" + key + "/maint_mode", False)
+
 
     @staticmethod
     def remove_assets_from_maint():

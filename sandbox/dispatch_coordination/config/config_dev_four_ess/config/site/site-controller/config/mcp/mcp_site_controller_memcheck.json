@@ -1,0 +1,16 @@
+{
+    "processes": [
+        {
+            "args": [
+                "--tool=memcheck",
+                "--leak-check=yes",
+                "--track-origins=yes",
+                "--log-file=/home/hybridos/git/hybridos/site_controller/valgrind.log",
+                "/usr/local/bin/site_controller",
+                "dbi"
+            ],
+            "max_restarts": -1,
+            "name": "/usr/bin/valgrind"
+        }
+    ]
+}

@@ -1,0 +1,185 @@
+{
+    "components": [
+        {
+            "add_timings": false,
+            "frequency": 200,
+            "id": "easygen_3500xt",
+            "offset_time": 0,
+            "registers": [
+                {
+                    "map": [
+                        {
+                            "echo_id": "/components/psm_easygen_3500xt/pcmd",
+                            "float": true,
+                            "id": "active_power_setpoint",
+                            "name": "Active Power Setpoint",
+                            "offset": 10000,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_easygen_3500xt/qcmd",
+                            "float": true,
+                            "id": "reactive_power_setpoint",
+                            "name": "Reactive Power Setpoint",
+                            "offset": 10002,
+                            "size": 2
+                        },
+                        {
+                            "bit_strings": [
+                                "status_bit_0",
+                                "status_bit_1",
+                                "status_bit_2",
+                                null,
+                                null,
+                                "status_bit_5",
+                                "status_bit_6",
+                                "status_bit_7",
+                                "status_bit_8",
+                                "status_bit_9",
+                                "status_bit_10",
+                                "status_bit_11",
+                                "status_bit_12",
+                                "status_bit_13",
+                                null,
+                                "status_bit_15"
+                            ],
+                            "id": "starting_status",
+                            "individual_bits": true,
+                            "offset": 10004
+                        },
+                        {
+                            "echo_id": "/components/psm_easygen_3500xt/ctrlword1",
+                            "id": "start_stop",
+                            "name": "Start/Stop",
+                            "offset": 10006
+                        },
+                        {
+                            "bit_strings": [
+                                "Stopped",
+                                "Running"
+                            ],
+                            "bool": true,
+                            "echo_id": "/components/psm_easygen_3500xt/on",
+                            "enum": true,
+                            "id": "status",
+                            "name": "Gen Status",
+                            "offset": 10008
+                        },
+                        {
+                            "bit_strings": [
+                                null,
+                                null,
+                                "class_C_alarm",
+                                "class_D_alarm",
+                                "class_E_alarm",
+                                "class_F_alarm",
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "id": "fault_bits_1",
+                            "individual_bits": true,
+                            "offset": 10010
+                        },
+                        {
+                            "bit_strings": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                "engine_fault",
+                                null,
+                                null,
+                                null,
+                                null
+                            ],
+                            "id": "fault_bits_2",
+                            "individual_bits": true,
+                            "offset": 10011
+                        },
+                        {
+                            "echo_id": "/components/psm_easygen_3500xt/ctrlword2",
+                            "id": "on_off_grid_mode",
+                            "name": "Grid Mode",
+                            "offset": 10102
+                        }
+                    ],
+                    "type": "Holding Registers"
+                },
+                {
+                    "map": [
+                        {
+                            "echo_id": "/components/psm_easygen_3500xt/p",
+                            "id": "active_power",
+                            "offset": 20410,
+                            "scale": 1000,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_easygen_3500xt/q",
+                            "id": "reactive_power",
+                            "offset": 20412,
+                            "scale": 1000,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_easygen_3500xt/s",
+                            "id": "apparent_power",
+                            "offset": 20414,
+                            "scale": 1000,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_easygen_3500xt/f",
+                            "id": "frequency",
+                            "offset": 20416,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_easygen_3500xt/i",
+                            "id": "ac_current_l1",
+                            "offset": 20418,
+                            "scale": 1000,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/psm_easygen_3500xt/v",
+                            "id": "ac_voltage_l1_l2",
+                            "offset": 20420,
+                            "scale": 10,
+                            "signed": true,
+                            "size": 2
+                        }
+                    ],
+                    "type": "Input Registers"
+                }
+            ]
+        }
+    ],
+    "connection": {
+        "device_id": 1,
+        "ip_address": "172.3.27.2",
+        "name": "easygen_3500xt",
+        "port": 10006
+    }
+}

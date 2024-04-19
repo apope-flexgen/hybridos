@@ -1,0 +1,32 @@
+{
+    "parsingRules": [
+        {
+            "batchTypes": [
+                {
+                    "id": "5_min_dispatch",
+                    "type": 0
+                },
+                {
+                    "id": "hourly_predispatch",
+                    "type": 1
+                }
+            ],
+            "variables": [
+                {
+                    "id": "start_time",
+                    "parseUri": "/DispatchBatch/Instructions/instruction/startTime"
+                },
+                {
+                    "id": "power_cmd",
+                    "parseUri": "/DispatchBatch/Instructions/instruction/detail/instructionDetail segno=\"3\"/mw"
+                },
+                {
+                    "defaultValue": 300,
+                    "id": "duration"
+                }
+            ]
+        }
+    ],
+    "publishFrequency": 500,
+    "publishUri": "/washer"
+}
