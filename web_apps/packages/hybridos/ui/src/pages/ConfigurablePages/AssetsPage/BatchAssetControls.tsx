@@ -18,6 +18,9 @@ const BatchAssetControl = ({
   uris,
   assetKey,
 }: BatchAssetControlProps) => {
+  // remove summary URIs from list
+  const menuItems = uris.filter((uri) => !uri.includes('summary'));
+
   const theme = useTheme() as ThemeType;
   const {
     selectedAssets,
@@ -31,7 +34,7 @@ const BatchAssetControl = ({
   const handleSelectControlRecipient = (e: any) => {
     const { value } = e.target;
     if (value.includes('Select All')) {
-      setSelectedAssets(uris);
+      setSelectedAssets(menuItems);
     } else {
       setSelectedAssets(value);
     }
@@ -60,7 +63,7 @@ const BatchAssetControl = ({
       <Select
         multiSelect
         value={selectedAssets}
-        menuItems={['Select All', ...uris]}
+        menuItems={['Select All', ...menuItems]}
         fullWidth
         onChange={handleSelectControlRecipient}
         label="Control Recipients"

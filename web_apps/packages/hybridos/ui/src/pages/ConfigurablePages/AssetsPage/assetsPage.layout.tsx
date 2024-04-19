@@ -101,6 +101,7 @@ const AssetsPageLayout = (props: AssetsPageLayoutProps) => {
       )}
       draggableContent={(
         <AssetControl
+          isSummaryTab={tabValue?.toLowerCase().includes('summary') || false}
           componentFunctions={componentFunctions}
           assetState={assetState}
           batchControlsState={batchControlsState}

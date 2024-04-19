@@ -129,7 +129,7 @@
                 ],
                 "hasBatchControls": true,
                 "hasMaintenanceActions": true,
-                "hasSummary": false,
+                "hasSummary": true,
                 "itemName": "BESS Inverter Block",
                 "name": "ESS",
                 "numberOfItems": "2",
@@ -347,7 +347,44 @@
                     "uri": "/watchdog_status"
                 }
             ],
-            "summary": [],
+            "summary": [
+                {
+                    "name": "Num ESS Available",
+                    "scalar": "",
+                    "units": "",
+                    "uri": "/num_ess_available"
+                },
+                {
+                    "name": "Num ESS Running",
+                    "scalar": "",
+                    "units": "",
+                    "uri": "/num_ess_running"
+                },
+                {
+                    "name": "Num ESS Controllable",
+                    "scalar": "",
+                    "units": "",
+                    "uri": "/num_ess_controllable"
+                },
+                {
+                    "name": "ESS Total Active Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/ess_total_active_power"
+                },
+                {
+                    "name": "ESS Total Reactive Power",
+                    "scalar": "1000",
+                    "units": "MVAR",
+                    "uri": "/ess_total_reactive_power"
+                },
+                {
+                    "name": "ESS Total Apparent Power",
+                    "scalar": "1000",
+                    "units": "MVA",
+                    "uri": "/ess_total_apparent_power"
+                }
+            ],
             "summaryControls": []
         },
         {

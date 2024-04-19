@@ -19,6 +19,7 @@ type AssetControlProps = {
   assetState: ConfigurablePageStateStructure;
   batchControlsState?: boolean;
   assetKey?: string;
+  isSummaryTab: boolean;
 };
 
 const AssetControl = ({
@@ -26,6 +27,7 @@ const AssetControl = ({
   assetState,
   batchControlsState,
   assetKey,
+  isSummaryTab
 }: AssetControlProps) => {
   const theme = useTheme() as ThemeType;
   const [selectedTab, setSelectedTab] = useState<AssetTab>('asset');
@@ -49,7 +51,7 @@ const AssetControl = ({
   
   return (
     <>
-    {batchControlsState && (
+    {batchControlsState &&  !isSummaryTab && (
         <Box sx={{ paddingTop: '8px', backgroundColor: theme.fgd.text.reversed }}>
           <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)}>
               <Tab label="Asset" value={AssetTabs.asset} />
@@ -58,7 +60,7 @@ const AssetControl = ({
         </Box>
         )}
     <Box sx={getControlOuterBoxSx(theme)}>
-        {(!batchControlsState || selectedTab === AssetTabs.asset) ? 
+        {(!batchControlsState || selectedTab === AssetTabs.asset || isSummaryTab) ? 
             <IndiviudalAssetControl controlChildrenMapped={controlChildrenMapped} componentFunctions={componentFunctions} />
             : <BatchAssetControl assetKey={assetKey} uris={assetState ? Object.keys(assetState) : []} batchControlChildrenMapped={batchControlChildrenMapped} />
         }
