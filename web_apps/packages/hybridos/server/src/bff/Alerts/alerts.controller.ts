@@ -46,7 +46,7 @@ export class AlertsController {
 
     @Post('configuration/:alertId')
     @ApiOkResponse({type: AlertsPostResponse})
-    async postConfiguration(
+    async editConfiguration(
         @Body() alertConfigDTO: AlertConfigDTO,
         @Param() alertId: {alertId: string},
         @UserFromAccessToken() user: User,

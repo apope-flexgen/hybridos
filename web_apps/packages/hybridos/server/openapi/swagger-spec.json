@@ -2241,7 +2241,7 @@
 		},
 		"/api/alerts/configuration/{alertId}": {
 			"post": {
-				"operationId": "postConfiguration",
+				"operationId": "editConfiguration",
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -4383,7 +4383,7 @@
 						"description": "Trigger time of a particular alert"
 					},
 					"deadline": {
-						"type": "number",
+						"type": "object",
 						"description": "Deadline of a particular alert - how quickly the alert must be resolved, in minutes"
 					},
 					"aliases": {
@@ -4458,7 +4458,7 @@
 						"description": "The name associated with the alert"
 					},
 					"deadline": {
-						"type": "number",
+						"type": "object",
 						"description": "Deadline of a particular alert - how quickly the alert must be resolved, in minutes"
 					},
 					"severity": {

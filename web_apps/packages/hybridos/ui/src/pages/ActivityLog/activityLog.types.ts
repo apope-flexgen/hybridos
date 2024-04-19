@@ -32,7 +32,11 @@ export interface AlertFilters {
   order?: number,
   orderBy?: string | number,
 }
-
+export interface AlertInstance {
+  details: Details[],
+  site?: string,
+  resolved: boolean
+}
 export interface ActiveAlertObject {
   id: string,
   status: string,
@@ -56,7 +60,7 @@ export interface Comparator {
 
 export interface Duration {
   value: string | number,
-  unit: 'minutes' | 'seconds' | 'hours',
+  unit: 'minute' | 'hour' | 'second',
 }
 
 export interface Expression {
@@ -69,13 +73,14 @@ export interface Expression {
 }
 
 export interface Alias {
+  id: string,
   alias: string,
   uri: string,
   type: 'number' | 'boolean' | 'string',
-  isTemplate?: boolean,
 }
 
 export interface Template {
+  id: string,
   type: 'list' | 'sequential',
   list?: string[],
   from?: number,
@@ -87,12 +92,11 @@ export interface AlertConfigurationObject {
   id?: string,
   enabled: boolean,
   title: string,
-  description: string,
-  severity: number,
+  severity: number | string,
   organization: string,
   sites: string[],
   last_trigger_time?: string,
-  deadline: number,
+  deadline: { value: number | string, unit: 'minute' | 'hour' },
   aliases: Alias[],
   templates?: Template[],
   conditions: Expression[],
@@ -100,14 +104,14 @@ export interface AlertConfigurationObject {
 
 export interface AlertManagementRow {
   id: string,
-  deliver: JSX.Element,
+  deliver: JSX.Element | string,
   name: string,
-  organization: JSX.Element,
-  sites: JSX.Element,
-  severity: JSX.Element,
+  organization?: JSX.Element | string,
+  sites?: JSX.Element | string,
+  severity: JSX.Element | string,
   last_triggered: string,
-  deadline: string,
-  actions: JSX.Element,
+  actions: JSX.Element | string,
+  deadline: number | string,
 }
 
 export interface ActiveAlertRow {

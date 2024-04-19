@@ -3,6 +3,7 @@ import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString } from 'cl
 import { AlertsDescriptions } from '../alerts.constants'
 
 export interface Template {
+  id?: string,
   type: "list" | "sequential",
   list?: string[],
   to?: number,
@@ -10,6 +11,7 @@ export interface Template {
   token: string,
 }
 export interface Alias {
+  id?: string,
   alias: string,
   uri: string,
   type: string,
@@ -23,7 +25,7 @@ export interface Comparator {
   
 export interface Duration {
   value: string | number,
-  unit: "minutes" | "seconds" | "hours",
+  unit: "minute" | "hour" | "second",
 }
 
 export interface Expression {
@@ -33,6 +35,11 @@ export interface Expression {
   operator: string,
   operand2: Comparator,
   duration?: Duration
+}
+
+export interface Deadline {
+  unit: 'minute' | 'hour',
+  value: string | number
 }
 
 export class AlertConfiguration {
@@ -61,8 +68,8 @@ export class AlertConfiguration {
   @IsOptional()
   last_trigger_time?: string
   @ApiProperty({ description: AlertsDescriptions.deadline })
-  @IsNumber()
-  deadline: number
+  @IsObject()
+  deadline: Deadline
   @ApiProperty({ description: AlertsDescriptions.aliases })
   @IsArray()
   aliases: Alias[]
@@ -73,7 +80,6 @@ export class AlertConfiguration {
   @IsObject()
   conditions: Expression[]
 }
-
 
 export class AlertConfigurationsResponse {
   @ApiProperty({ description: AlertsDescriptions.data, type: AlertConfiguration, isArray: true })

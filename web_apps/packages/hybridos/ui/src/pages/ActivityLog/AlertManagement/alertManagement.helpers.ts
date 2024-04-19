@@ -1,6 +1,8 @@
 import { Column } from '@flexgen/storybook';
 import { FLEET_MANAGER } from 'src/components/BaseApp';
-import { AlertConfigurationObject } from 'src/pages/ActivityLog/activityLog.types';
+import {
+  AlertConfigurationObject, Alias, Expression, Template,
+} from 'src/pages/ActivityLog/activityLog.types';
 
 export type AlertManagementPageLayout = 'table' | 'form';
 
@@ -11,6 +13,14 @@ export const AlertManagementPageLayouts: {
   FORM: 'form',
 };
 
+export const generateInitialAliases = (aliases: Alias[]): Alias[] => [{
+  alias: '', uri: '', type: 'number', id: aliases ? `${aliases.length + 1}` : '0',
+}];
+
+export const generateInitialTemplates = (templates: Template[]): Template[] => [{
+  token: '', list: [], type: 'sequential', id: templates ? `${templates.length + 1}` : '0',
+}];
+
 export const initialAlertManagementFilters = {
   limit: 50,
   page: 0,
@@ -18,7 +28,84 @@ export const initialAlertManagementFilters = {
   orderBy: 'lastUpdated',
 };
 
-export const determineAlertManagementTable = (
+export const severities = [
+  'Critical', 'High', 'Medium', 'Low',
+];
+
+export const initialNewExpression = (conditions: Expression[]): Expression => ({
+  index: conditions?.length > 0 ? conditions.length + 1 : 0,
+  connectionOperator: conditions?.length > 0 ? 'or' : null,
+  comparator1: { value: '', type: 'alias' },
+  conditional: '==',
+  comparator2: { value: '', type: 'literal' },
+});
+
+export const initialNewAlert: AlertConfigurationObject = {
+  enabled: true,
+  title: '',
+  severity: '',
+  organization: '',
+  sites: [],
+  deadline: { value: '', unit: 'minute' },
+  aliases: [{
+    alias: '', uri: '', type: 'number', id: '0',
+  }],
+  conditions: [],
+};
+
+export const checkIfTemplateFieldsArePresent = (
+  templates?: Template[],
+) => {
+  if (templates && templates.length > 0) {
+    let fieldsMissing = false;
+    templates.forEach((template) => {
+      if (template.type === 'list') {
+        fieldsMissing = !template.token || !template.list || template.list.length < 0 || !template.list.join(',');
+      } else if (template.type === 'sequential') fieldsMissing = !template.token || !template.to || !template.from;
+    });
+    return !fieldsMissing;
+  }
+  return true;
+};
+
+export const checkIfAliasesFieldsArePresent = (
+  aliases?: Alias[],
+) => {
+  if (aliases && aliases.length > 0) {
+    let fieldsMissing = false;
+    aliases.forEach((alias) => {
+      fieldsMissing = !alias.alias || !alias.uri;
+    });
+    return !fieldsMissing;
+  }
+  return true;
+};
+
+export const checkRequiredAlertValues = (
+  alertValues: AlertConfigurationObject,
+  product: string | null,
+): boolean => (
+  alertValues.aliases.length === 0
+    || !alertValues.deadline.unit
+    || !alertValues.deadline.value
+    || !alertValues.deadline.unit
+    || !checkIfTemplateFieldsArePresent(alertValues.templates)
+    || !checkIfAliasesFieldsArePresent(alertValues.aliases)
+    || alertValues.enabled === undefined
+    || alertValues.severity === undefined
+    || !alertValues.title
+    || (
+      product === FLEET_MANAGER
+      && (
+        !alertValues.organization
+        || !alertValues.sites
+        || alertValues.sites.length === 0
+        || !alertValues.sites.join(',')
+      )
+    )
+);
+
+export const determineAlertManagementHeader = (
   alertManagementView: 'table' | 'form',
   alertFormValues?: AlertConfigurationObject | null,
 ) => {

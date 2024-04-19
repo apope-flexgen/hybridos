@@ -13,7 +13,10 @@ const useGenerateAlertManagementRows = (
   duplicateAlert: (alert: AlertConfigurationObject) => void,
 ) => {
   const [results, setResults] = useState<AlertManagementRow[]>([]);
-  const generateSeverityComponent = (severity: number) => <SeverityIndicator severity={severity} />;
+
+  const generateSeverityComponent = (
+    severity: number | string,
+  ) => <SeverityIndicator severity={Number(severity)} />;
 
   const generateSitesComponent = (sites: string[]) => (
     <Box sx={sitesBoxSx}>
@@ -46,12 +49,12 @@ const useGenerateAlertManagementRows = (
   ) => {
     const returnData: AlertManagementRow[] = alertConfigurationData.map((alert) => ({
       id: alert.id || '',
-      deliver: generateDeliverToggle(alert.enabled, alert),
-      name: alert.title,
-      organization: <Chip size="small" borderStyle="rounded" variant="filled" color="primary" label={alert.organization} />,
-      sites: generateSitesComponent(alert.sites),
-      severity: generateSeverityComponent(alert.severity),
-      deadline: `${alert.deadline} minutes`,
+      deliver: alert.enabled !== undefined ? generateDeliverToggle(alert.enabled, alert) : '-',
+      name: alert.title ? alert.title : '-',
+      organization: alert.organization ? <Chip size="small" borderStyle="rounded" variant="filled" color="primary" label={alert.organization} /> : '-',
+      sites: alert.sites?.length > 0 ? generateSitesComponent(alert.sites) : '-',
+      severity: alert.severity !== undefined ? generateSeverityComponent(alert.severity) : '-',
+      deadline: alert.deadline ? `${alert.deadline.value} ${alert.deadline.unit}${Number(alert.deadline.value) > 1 ? 's' : ''}` : '-',
       last_triggered: alert.last_trigger_time || '',
       actions: generateActions(alert),
     }));

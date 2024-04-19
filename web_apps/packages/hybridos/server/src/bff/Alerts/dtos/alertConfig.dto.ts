@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import {  IsOptional } from 'class-validator'
 import { AlertsDescriptions } from '../alerts.constants'
-import { Alias, Expression, Template } from '../responses/alertConfig.response'
+import { Alias, Deadline, Expression, Template } from '../responses/alertConfig.response'
 
 export class AlertConfigDTO {
     @ApiProperty({ description: AlertsDescriptions.alertId })
@@ -18,7 +18,7 @@ export class AlertConfigDTO {
     title?: string
     @ApiProperty({ description: AlertsDescriptions.deadline })
     @IsOptional()
-    deadline?: number
+    deadline?: Deadline
     @ApiProperty({ description: AlertsDescriptions.severity })
     @IsOptional()
     severity?: number

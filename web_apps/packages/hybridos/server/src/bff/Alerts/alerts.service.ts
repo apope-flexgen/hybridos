@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ActiveAlertsResponse, ResolveAlertResponse, ResolvedAlertsResponse } from './responses/alerts.response'
-import { AlertConfiguration, AlertConfigurationsResponse, Expression } from './responses/alertConfig.response'
+import { AlertConfiguration, AlertConfigurationsResponse, Deadline, Expression } from './responses/alertConfig.response'
 import { AlertsRequest } from './dtos/alerts.dto'
 import {
     FimsMsg,
@@ -42,14 +42,14 @@ export class AlertsService {
         return []
     }
 
-    private convertToSeconds(value: number | string, unit: 'minutes' | 'seconds' | 'hours'){
-        if (unit === 'minutes') return Number(value) * 60;
-        if (unit === 'hours') return Number(value) * 3600;
-        return Number(value)
+    private convertToSeconds(value: number | string, unit: 'minute' | 'hour' | 'second'){
+        if (unit === 'minute') return Number(value) * 60;
+        if (unit === 'hour') return Number(value) * 3600;
+        return Number(value);
     }
 
     private parseConditionsToExpression(conditions: Expression[]): string {
-        const sortedExpressions = conditions.sort((expresion1, expression2) => {return expresion1.index - expression2.index});
+        const sortedExpressions = conditions.sort((expression1, expression2) => {return expression1.index - expression2.index});
 
         let expressionString = '';
         sortedExpressions.forEach((expression) => {
@@ -65,6 +65,10 @@ export class AlertsService {
         return expressionString;
     }
 
+    private convertToProperUnit(value: string | number): Deadline {
+        if (Number(value) % 60 === 0) return {value: Number(value)/60, unit: 'hour'}
+        return {value, unit: 'minute'}
+    };
 
     private parseAlertConfigurationsFromEvents(rawData: any[]): AlertConfiguration[] {
         const alertConfigurations = rawData
@@ -73,23 +77,37 @@ export class AlertsService {
                 id: alert.id,
                 severity: alert.severity,
                 organization: alert.organization,
-                deadline: alert.deadline,
+                deadline: this.convertToProperUnit(alert.deadline),
                 conditions: this.parseExpressionToConditions(alert.expression),
                 sites: alert.sites || [],
                 title: alert.title || '',
                 enabled: alert.enabled,
                 last_trigger_time: alert.lastTriggered || '',
-                aliases: alert.aliases || [],
-                templates: alert.templates || [],
+                aliases: alert.aliases?.length > 0 
+                    ? alert.aliases.map((alias, index) => ({
+                        ...alias, 
+                        id: index, 
+                        type: alias.type === 'float' || alias.type === 'int' ? 'number' : alias.type
+                    })) 
+                    : alert.aliases,
+                templates: alert.templates?.length > 0 ? alert.templates.map((template, index) =>({...template, id: index})): alert.templates,
             }))
         return alertConfigurations;
     }
 
+    
+    private convertToMinutes(value: string | number, unit: 'minute' | 'hour'): number {
+        if (unit === 'minute') return Number(value);
+        return (Number(value) * 60);
+    };
+
     async addNewConfig(alertConfigDTO: AlertConfigDTO, username: string): Promise<AlertsPostResponse> {
-        const { title, deadline, severity, organization, sites, aliases, templates, conditions } = alertConfigDTO
+        const { title, deadline, severity, organization, sites, aliases, templates, conditions, enabled } = alertConfigDTO
+        const aliasesWithProperType = aliases.map((alias) => ({...alias, type: alias.type === 'number' ? 'float' : alias.type}))
+        const deadlineInMinutes = this.convertToMinutes(deadline.value, deadline.unit);
         const expression = this.parseConditionsToExpression(conditions);
         const newAlertConfig = {
-            title, sites, deadline, severity, organization, templates, expression, aliases
+            title, sites, deadline: deadlineInMinutes, severity, organization, templates, expression, aliases: aliasesWithProperType, enabled
         }
         const postNewAlertResponse = await this.fimsService.send({
             method: 'post',
@@ -102,10 +120,20 @@ export class AlertsService {
     }
     
     async updateConfig(id: string, alertConfigDTO: AlertConfigDTO, username: string): Promise<AlertsPostResponse> {
-        Object.keys(alertConfigDTO).forEach(key => alertConfigDTO[key] === undefined || alertConfigDTO[key] === null ? delete alertConfigDTO[key] : {});
+        const { title, deadline, severity, organization, sites, aliases, templates, conditions, enabled, deleted } = alertConfigDTO
+
+        const aliasesWithProperType = aliases ? aliases.map((alias) => ({...alias, type: alias.type === 'number' ? 'float' : alias.type})) : null
+        const deadlineInMinutes = deadline ? this.convertToMinutes(deadline.value, deadline.unit) : null;
+        const expression = conditions ? this.parseConditionsToExpression(conditions) : null;
+
+        const newAlertConfig = {
+            title, sites, deadline: deadlineInMinutes, severity, organization, templates, expression, aliases: aliasesWithProperType, enabled, deleted
+        }
+
+        Object.keys(newAlertConfig).forEach(key => newAlertConfig[key] === undefined || newAlertConfig[key] === null ? delete newAlertConfig[key] : {});
 
         const updatedConfig = {
-            ...alertConfigDTO,
+            ...newAlertConfig,
             id,
         }
 

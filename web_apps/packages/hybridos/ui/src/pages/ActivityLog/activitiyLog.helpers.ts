@@ -11,3 +11,5 @@ export const activityLogTabs = [
   { label: 'Resolved Alerts', value: ActivityLogTabs.ResolvedAlerts },
   { label: 'Alert Management', value: ActivityLogTabs.AlertManagement },
 ];
+
+export const logicalOperatorList = ['==', '!=', '<', '>=', '>', '<=', '+', '-', '*', '%', '&&', '||'];

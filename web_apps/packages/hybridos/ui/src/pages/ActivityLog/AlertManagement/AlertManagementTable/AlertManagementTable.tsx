@@ -43,7 +43,7 @@ const AlertManagementTable = ({
 
   const disableAlert = (value: boolean, alert: AlertConfigurationObject) => {
     const alertConfigurationURL = `/alerts/configuration/${alert.id}`;
-    const disableAlertMessage = { alert, enabled: value };
+    const disableAlertMessage = { ...alert, enabled: value };
 
     axiosInstance.post(alertConfigurationURL, disableAlertMessage).then((res) => {
       if (res.data.success) {
@@ -93,6 +93,7 @@ const AlertManagementTable = ({
         columns={alertManagementColumns(product || '')}
         dense
         headerColor="secondary"
+        emptyStateText="No Alerts"
         pagination
         rowsPerPage={[10, 20, 50]}
         paperSx={{ boxShadow: 'none' }}

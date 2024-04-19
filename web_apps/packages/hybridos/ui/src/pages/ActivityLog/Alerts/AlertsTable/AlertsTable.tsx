@@ -16,7 +16,7 @@ export interface AlertsTableProps {
 const AlertsTable = ({
   setIsLoading,
 }: AlertsTableProps) => {
-  const [filters] = useState<AlertFilters>(initialActiveAlertsFilters);
+  const [filters, setFilters] = useState<AlertFilters>(initialActiveAlertsFilters);
   const [activeAlertsData, setActiveAlertsData] = useState<ActiveAlertObject[]>([]);
   const [count, setCount] = useState<number>(1);
   const { product } = useAppContext();
@@ -40,6 +40,13 @@ const AlertsTable = ({
 
   const handleDataOnSocket = useCallback(() => { getInitialData(); }, []);
 
+  const handleChangePage = () => {
+    setFilters((prevState) => ({
+      ...prevState,
+      page: prevState.page ? prevState.page + 1 : 2,
+    }));
+  };
+
   // start listening to web sockets
   useEffect(() => {
     QueryService.getAlertsPage(handleDataOnSocket);
@@ -51,7 +58,7 @@ const AlertsTable = ({
   // initial GET request to populate data for page
   useEffect(() => {
     getInitialData();
-  }, []);
+  }, [filters]);
 
   useEffect(() => {
     generateRowsData(activeAlertsData);
@@ -70,7 +77,7 @@ const AlertsTable = ({
         expandable
         showExpandableRowIcons
         totalRows={count}
-        onPageChange={() => { getInitialData(); }}
+        onPageChange={handleChangePage}
         emptyStateText="No Active Alerts"
       />
     </Box>
