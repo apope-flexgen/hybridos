@@ -177,10 +177,8 @@ Config_Validation_Result Type_Configurator::create_assets() {
     validation_result.absorb(type_config_result);
 
     // Give base class functions access to asset instance pointers
+    // TODO(Jud): Research if this downcast is necessary. It seems needlessly complicated and likely unnecessary. 
     p_manager->configure_base_class_list();
-
-    // Used for testing
-    // p_manager->print_alarm_fault_map(p_asset_var_map);
 
     return validation_result;
 }

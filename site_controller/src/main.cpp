@@ -139,6 +139,7 @@ void fims_data_pump(fims* p_fims, Site_Manager* siteMgr, Asset_Manager* assetMgr
         int until_next_publish_or_update_uS = std::min(ASSET_PUBLISH_RATE_uS - int(since_last_publish_uS), STATE_MACHINE_INTERVAL_uS - int(since_last_update_uS));
 
         // process incoming fims messages in time between publishes and state updates
+        // run this on initial "frame" aka until_next_publish_or_update_uS = 0
         if (until_next_publish_or_update_uS > 0 && running == true && p_fims->Connected()) {
             pmsg = p_fims->Receive_Timeout(until_next_publish_or_update_uS);  // blocking with timeout in uSec.
             if (pmsg != NULL) {

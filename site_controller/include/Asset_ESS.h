@@ -70,7 +70,7 @@ public:
     float get_max_temp(void);
     setpoint_states get_setpoint_status(void);
 
-    gridMode get_grid_mode(void);
+    gridMode get_grid_mode(void) const;
 
     // configuration
     static void quick_config_numeric(const cJSON* json, std::string key_value, fimsCtl& control, float& float_var, std::string name_str, Config_Validation_Result& validation_result);

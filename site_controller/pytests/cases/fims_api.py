@@ -1,6 +1,6 @@
 # Fims API pytests
 from pytest_cases import parametrize, fixture
-from ..fims import fims_get
+from ..fims import fims_get, no_fims_msgs
 from ..assertion_framework import Assertion_Type, Flex_Assertion
 from ..pytest_framework import Site_Controller_Instance
 from ..pytest_steps import Setup, Steps, Teardown
@@ -119,4 +119,44 @@ def teardown_multiple_inputs():
     )
 ])
 def test_fr_multiple_inputs(test):
+    return test
+
+# Prevent grid mode spam by not allowing it to send sets until it calls appropriate sequences functions
+@ fixture
+@ parametrize("test", [
+    Setup(
+        "grid_mode_doesnt_spam",
+        {
+            "/components/ess_psm/on_off_grid_mode": 100,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq,
+                           "/components/ess_psm/on_off_grid_mode", 100),
+        ],
+        pre_lambda=[
+            # we want to go sit in the ready state. 
+            # aka not call the sequences function that will then allow the set to go out from grid_mode_setpoint.
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller(auto_restart=False),         ],
+        post_lambda=[
+            lambda: no_fims_msgs("/components/ess_psm/on_off_grid_mode"),
+        ]
+    ),
+    Steps(
+        {
+            "/site/operation/enable_flag": True,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, 
+                           "/site/operation/running_status_flag", True, wait_secs=5),
+            Flex_Assertion(Assertion_Type.approx_eq,
+                           "/components/ess_psm/on_off_grid_mode", 0), # 0 is following
+        ]
+    ),
+    # nothing to really do for teardown
+    Teardown(
+        {},
+        []
+    )
+])
+def test_grid_mode_doesnt_spam(test):
     return test

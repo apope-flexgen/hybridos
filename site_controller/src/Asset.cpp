@@ -6,7 +6,6 @@
  */
 
 /* C Standard Library Dependencies */
-#include <climits>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -26,6 +25,7 @@
 #include <Types.h>
 #include "Action.h"
 #include "Asset_Feeder.h"
+#include "Asset_Generator.h"
 #include "Fims_Object.h"
 #include "Step.h"
 
@@ -521,24 +521,53 @@ Config_Validation_Result Asset::configure(Type_Configurator* configurator) {
         if (strcmp(get_asset_type(), ESS_TYPE_ID) == 0) {
             action.sequence_type = Sequence_Type::Asset_ESS;
             action.asset_ess = dynamic_cast<Asset_ESS*>(this);
+            if (action.asset_ess == nullptr) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(
+                        Result_Details(
+                            fmt::format("Execution Error: {}: failed cast base class to derived class during configuration. Something strange has occured.", name)
+                            ));
+                return validation_result; // exit now, but this should never happen.
+            }
             for (auto& path : action.paths) {
                 path.asset_ess = dynamic_cast<Asset_ESS*>(this);  // pass the asset* to every path so it can call sequence functions
             }
         } else if (strcmp(get_asset_type(), FEEDERS_TYPE_ID) == 0) {
             action.sequence_type = Sequence_Type::Asset_Feeder;
             action.asset_feeder = dynamic_cast<Asset_Feeder*>(this);
+            if (action.asset_feeder == nullptr) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(
+                            fmt::format("Execution Error: {}: failed cast base class to derived class during configuration. Something strange has occured.", name)
+                            ));
+                return validation_result; // exit now, but this should never happen.
+            }
             for (auto& path : action.paths) {
                 path.asset_feeder = dynamic_cast<Asset_Feeder*>(this);  // pass the asset* to every path so it can call sequence functions
             }
         } else if (strcmp(get_asset_type(), GENERATORS_TYPE_ID) == 0) {
             action.sequence_type = Sequence_Type::Asset_Generator;
             action.asset_generator = dynamic_cast<Asset_Generator*>(this);
+            if (action.asset_generator == nullptr) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(
+                            fmt::format("Execution Error: {}: failed cast base class to derived class during configuration. Something strange has occured.", name)
+                            ));
+                return validation_result; // exit now, but this should never happen.
+            }
             for (auto& path : action.paths) {
                 path.asset_generator = dynamic_cast<Asset_Generator*>(this);  // pass the asset* to every path so it can call sequence functions
             }
         } else if (strcmp(get_asset_type(), SOLAR_TYPE_ID) == 0) {
             action.sequence_type = Sequence_Type::Asset_Solar;
             action.asset_solar = dynamic_cast<Asset_Solar*>(this);
+            if (action.asset_solar == nullptr) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(
+                            fmt::format("Execution Error: {}: failed cast base class to derived class during configuration. Something strange has occured.", name)
+                            ));
+                return validation_result; // exit now, but this should never happen.
+            }
             for (auto& path : action.paths) {
                 path.asset_solar = dynamic_cast<Asset_Solar*>(this);  // pass the asset* to every path so it can call sequence functions
             }
@@ -958,9 +987,11 @@ void Asset::update_fims_var(Fims_Object* fims_var, valueType type, float default
  *                                  soc_raw in component_var_map to access the input coming from the component. We take soc_raw out of
  *                                  asset_var_map and replace it with soc, using the same URI.
  */
-Config_Validation_Result Asset::configure_single_fims_var(Fims_Object* fims_var, const char* var_id, Type_Configurator* configurator, valueType type, float default_float, int default_int, bool default_bool, bool comes_from_component,
-                                                          const char* var_name, const char* var_units, int var_scaler) {
+Config_Validation_Result Asset::configure_single_fims_var(Fims_Object* fims_var, const char* var_id, Type_Configurator* configurator, valueType type, float default_float, 
+        int default_int, bool default_bool, bool comes_from_component, const char* var_name, const char* var_units, int var_scaler, bool allow_set) {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
+
+    fims_var->allow_set = allow_set;
 
     if (fims_var == NULL) {
         FPS_ERROR_LOG("%s: there is something wrong with this build. Single fims variable passed is NULL.", name);
@@ -979,14 +1010,15 @@ Config_Validation_Result Asset::configure_single_fims_var(Fims_Object* fims_var,
 
         // The variable was found in configuration and stored in the dynamic variables map
         // move ownership of the configured variable from the map to the hard-coded reference for this member variable
-        *fims_var = dynamic_variables.at(var_id);
-        dynamic_variables.erase(var_id);
+        // TODO(Jud): pointless performance, but we could use std::move here if we wanted to be spicy. We won't do that though. Copying.
+        *fims_var = dynamic_variables.at(var_id); // Copy
+        dynamic_variables.erase(var_id); // Erase from map
 
-        if (!configurator || !configurator->pCompVarMap) {
+        if (configurator == nullptr || configurator->pCompVarMap == nullptr) {
             FPS_ERROR_LOG("%s: there is something wrong with this build. Component map passed to function is NULL. Cannot insert variable.", name);
             exit(1);
         }
-        auto component_uri = fims_var->get_component_uri();
+        const auto *component_uri = fims_var->get_component_uri();
         if (component_uri == NULL) {
             validation_result.is_valid_config = false;
             validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: variable {} is misconfigured.", name, var_id)));

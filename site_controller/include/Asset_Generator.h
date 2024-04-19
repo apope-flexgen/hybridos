@@ -53,7 +53,7 @@ public:
     float get_active_power_setpoint_control(void);
     float get_reactive_power_setpoint_control(void);
 
-    gridMode get_grid_mode(void);
+    gridMode get_grid_mode(void) const;
 
     // internal functions
     void process_asset(void);

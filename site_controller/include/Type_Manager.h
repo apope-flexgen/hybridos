@@ -50,7 +50,6 @@ public:
     const char* get_asset_type_id();
 
     // configuration functions
-    void print_alarm_fault_map();
     virtual void configure_base_class_list(void) = 0;
     virtual Config_Validation_Result configure_type_manager(Type_Configurator* configurator) = 0;
     virtual Asset* build_new_asset(void) = 0;

@@ -381,7 +381,12 @@ Config_Validation_Result Asset_Generator::configure_ui_controls(Type_Configurato
 Config_Validation_Result Asset_Generator::configure_typed_asset_fims_vars(Type_Configurator* configurator) {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
 
-    validation_result.absorb(configure_single_fims_var(&grid_mode_setpoint, "grid_mode", configurator, Int, 0, FOLLOWING));
+    // FOLLOWING here is actually invalid. grid_mode_setpoint will only be allowed to send setpoints AFTER.
+    // A call to one of the grid baseds sequences functions have been called. "set_all_<asset>_form..."
+    // TODO(JUD): could rip out and redo configuration to make this not confusing, but not deemed worth the effort atm
+    validation_result.absorb(configure_single_fims_var(&grid_mode_setpoint, "grid_mode", configurator, Int, 0,
+                FOLLOWING, false, true, "", "", 1, false)); // need the last argument for grid_mode
+
     validation_result.absorb(configure_single_fims_var(&status, "status", configurator, Status));
 
     return validation_result;
@@ -426,28 +431,34 @@ bool Asset_Generator::generate_asset_ui(fmt::memory_buffer& buf, const char* con
     return (goodBody);
 }
 
-gridMode Asset_Generator::get_grid_mode(void) {
-    if (grid_mode_setpoint.value.value_int == grid_following_value)
+gridMode Asset_Generator::get_grid_mode(void) const {
+    if (grid_mode_setpoint.value.value_int == grid_following_value) {
         return gridMode::FOLLOWING;
-    else if (grid_mode_setpoint.value.value_int == grid_forming_value)
+    } 
+    if (grid_mode_setpoint.value.value_int == grid_forming_value) {
         return gridMode::FORMING;
-    else
-        return gridMode::UNDEFINED;
+    }          
+    return gridMode::UNDEFINED;
 }
 
 bool Asset_Generator::send_grid_mode(void) {
-    if (grid_mode_setpoint.component_control_value.value_int != grid_mode_setpoint.value.value_int)
+    if ((grid_mode_setpoint.component_control_value.value_int != grid_mode_setpoint.value.value_int) && grid_mode_setpoint.allow_set) {
         return grid_mode_setpoint.send_to_component();
+}
     return false;
 }
 
 void Asset_Generator::set_grid_mode(gridMode mode) {
-    if (mode == gridMode::FOLLOWING)
+    if (mode == gridMode::FOLLOWING) {
+        grid_mode_setpoint.allow_set = true;
         grid_mode_setpoint.component_control_value.value_int = grid_following_value;
-    else if (mode == gridMode::FORMING)
+    }
+    else if (mode == gridMode::FORMING) {
+        grid_mode_setpoint.allow_set = true;
         grid_mode_setpoint.component_control_value.value_int = grid_forming_value;
-    else
+    } else {
         FPS_ERROR_LOG("Asset_ESS::set_grid_mode received invalid mode.\n");
+    }
 }
 
 // Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case.

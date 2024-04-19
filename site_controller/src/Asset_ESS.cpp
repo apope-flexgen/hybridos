@@ -293,18 +293,22 @@ void Asset_ESS::set_power_mode(powerMode mode) {
 }
 
 bool Asset_ESS::send_grid_mode(void) {
-    if (grid_mode_setpoint.component_control_value.value_int != grid_mode_setpoint.value.value_int)
+    if ((grid_mode_setpoint.component_control_value.value_int != grid_mode_setpoint.value.value_int) && grid_mode_setpoint.allow_set) {
         return grid_mode_setpoint.send_to_component();
+    }
     return false;
 }
 
 void Asset_ESS::set_grid_mode(gridMode mode) {
-    if (mode == gridMode::FOLLOWING)
+    if (mode == gridMode::FOLLOWING) {
+        grid_mode_setpoint.allow_set = true;
         grid_mode_setpoint.component_control_value.value_int = grid_following_value;
-    else if (mode == gridMode::FORMING)
+    } else if (mode == gridMode::FORMING) {
+        grid_mode_setpoint.allow_set = true;
         grid_mode_setpoint.component_control_value.value_int = grid_forming_value;
-    else
+    } else {
         FPS_ERROR_LOG("Asset_ESS::set_grid_mode received invalid mode.\n");
+    }
 }
 
 bool Asset_ESS::send_pcs_nominal_voltage_setting(void) {
@@ -357,13 +361,14 @@ bool Asset_ESS::open_bms_contactors(void) {
     return (send_to_comp_uri(bms_control_open, uri_open_dc_contacts));
 }
 
-gridMode Asset_ESS::get_grid_mode(void) {
-    if (grid_mode_setpoint.value.value_int == grid_following_value)
+gridMode Asset_ESS::get_grid_mode(void) const {
+    if (grid_mode_setpoint.value.value_int == grid_following_value) {
         return gridMode::FOLLOWING;
-    else if (grid_mode_setpoint.value.value_int == grid_forming_value)
+    } 
+    if (grid_mode_setpoint.value.value_int == grid_forming_value) {
         return gridMode::FORMING;
-    else
-        return gridMode::UNDEFINED;
+    }          
+    return gridMode::UNDEFINED;
 }
 
 float Asset_ESS::get_voltage_slew_setpoint(void) {
@@ -734,7 +739,6 @@ Config_Validation_Result Asset_ESS::configure_typed_asset_fims_vars(Type_Configu
     validation_result.absorb(configure_single_fims_var(&dischargeable_power_raw, "system_dischargeable_power", configurator));
     validation_result.absorb(configure_single_fims_var(&chargeable_energy_raw, "system_chargeable_energy", configurator));
     validation_result.absorb(configure_single_fims_var(&dischargeable_energy_raw, "system_dischargeable_energy", configurator));
-    validation_result.absorb(configure_single_fims_var(&grid_mode_setpoint, "grid_mode", configurator, Int, 0.0, FOLLOWING));
     validation_result.absorb(configure_single_fims_var(&power_mode_setpoint, "reactive_power_mode", configurator, Int, 0, REACTIVEPWR));
     validation_result.absorb(configure_single_fims_var(&racks_in_service, "racks_in_service", configurator, Int));
     validation_result.absorb(configure_single_fims_var(&dc_contactors_closed, "dc_contactors_closed", configurator, Bool));
@@ -744,6 +748,12 @@ Config_Validation_Result Asset_ESS::configure_typed_asset_fims_vars(Type_Configu
     validation_result.absorb(configure_single_fims_var(&min_rack_voltage, "min_rack_voltage", configurator, Bool));
     validation_result.absorb(configure_single_fims_var(&max_rack_voltage, "max_rack_voltage", configurator, Bool));
     validation_result.absorb(configure_single_fims_var(&status, "status", configurator, Status));
+
+    // FOLLOWING here is actually invalid. grid_mode_setpoint will only be allowed to send setpoints AFTER.
+    // A call to one of the grid baseds sequences functions have been called. "set_all_<asset>_form..."
+    // TODO(JUD): could rip out and redo configuration to make this not confusing, but not deemed worth the effort atm
+    validation_result.absorb(configure_single_fims_var(&grid_mode_setpoint, "grid_mode", configurator, Int, 0,
+                FOLLOWING, false, true, "", "", 1, false)); // need the last one false to prevent set spam.
 
     return validation_result;
 }

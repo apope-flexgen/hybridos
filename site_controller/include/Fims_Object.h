@@ -80,6 +80,10 @@ public:
     // else could be strange
     bool configured;
 
+    // You can use this bool to prevent set spam.
+    // Use case is grid_mode_setpoint currently
+    bool allow_set;
+
     // Map used to store one or more string/value pairs held by the fims register
     // This is typically used for alarms/faults/statuses and site feature selections
     std::unordered_map<uint64_t, std::pair<std::string, Value_Object>> options_map;

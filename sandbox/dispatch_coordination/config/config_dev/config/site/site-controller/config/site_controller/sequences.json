@@ -216,6 +216,17 @@
                         },
                         {
                             "entry_actions": {
+                                "route": "/gen/set_all_gen_grid_follow",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "GEN Following"
+                        },
+                        {
+                            "entry_actions": {
                                 "route": "/gen/start_all_gen",
                                 "value": true
                             },
@@ -226,6 +237,17 @@
                                 "value": 1
                             },
                             "step_name": "Start Gen"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/ess/set_all_ess_grid_follow",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "ESS Following"
                         },
                         {
                             "entry_actions": {

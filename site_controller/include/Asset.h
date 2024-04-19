@@ -193,9 +193,11 @@ protected:
     Config_Validation_Result configure_common_asset_instance_vars(Type_Configurator* configurator);
     Config_Validation_Result configure_component_vars(Type_Configurator* configurator);
     Config_Validation_Result configure_common_asset_fims_vars(Type_Configurator* configurator);
-    Config_Validation_Result configure_single_fims_var(Fims_Object* fims_var, const char* var_id, Type_Configurator* configurator, valueType type = Float, float default_float = 0.0, int default_int = 0, bool default_bool = false,
-                                                       bool comes_from_component = true, const char* var_name = "", const char* var_units = "", int var_scaler = 1);
-    void update_fims_var(Fims_Object* fims_var, valueType type, float default_float, int default_int, bool default_bool, const char* var_id = "", const char* var_name = "", const char* var_units = "", int var_scaler = 1);
+    Config_Validation_Result configure_single_fims_var(Fims_Object* fims_var, const char* var_id, Type_Configurator* configurator, valueType type = Float, 
+            float default_float = 0.0, int default_int = 0, bool default_bool = false, bool comes_from_component = true, const char* var_name = "", 
+            const char* var_units = "", int var_scaler = 1, bool allow_set = true);
+    void update_fims_var(Fims_Object* fims_var, valueType type, float default_float, int default_int, bool default_bool, const char* var_id = "", const char* var_name = "", 
+            const char* var_units = "", int var_scaler = 1);
     Config_Validation_Result configure_watchdog_vars();
     Config_Validation_Result configure_actions_fims_objects();
     Config_Validation_Result configure_component_local_mode_vars(Type_Configurator* configurator);
