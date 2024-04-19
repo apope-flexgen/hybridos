@@ -1343,7 +1343,7 @@ func UnmarshalConfig(data []byte) {
 						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "expression", JType: simdjson.TypeString})
 						for _, metric := range metricsObjects {
 							var warning string
-							warning, internal_err = getExpression(&metric, internal_vars, len(MetricsConfig.Metrics))
+							warning, internal_err = metric.getExpression(internal_vars, len(MetricsConfig.Metrics))
 							if len(warning) > 0 {
 								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v (warning only)", warning))
 								wasError = true
@@ -2158,53 +2158,31 @@ func generateScope() {
 	}
 }
 
-func getExpression(metricsObject *MetricsObject, internal_vars []string, netIndex int) (string, error) {
-	// preprocess all of the expressions in the metrics document
-	// so that all we need to do is evaluate the expressions at runtime.
-	// currently modeling after https://github.com/crsmithdev/goexpr
-	var warning string
-	if inputToMetricsExpression == nil {
-		inputToMetricsExpression = make(map[string][]int, 0)
+// Configure the MetricsObject state and outputs with default values. Will hold the metricsMutex[netIndex]
+// until configuration has completed. This function is used both during initial configuration, and during
+// runtime when an expression is manually reset.
+// metricsObject: The MetricsObject to configure
+// netIndex: The index of the MetricsObject within the list of MetricsObjects
+// return: any configuration warnings or errors that occurred
+func configureStateAndOutputs(metricsObject *MetricsObject, netIndex int) (warning string, err error) {
+	// Setup locks
+	metricsAlreadyConfigured := len(metricsMutex) > 0
+	// Only lock if reconfiguring. Otherwise the lock will not have been configured and will not be usable yet
+	if metricsAlreadyConfigured {
+		metricsMutex[netIndex].RLock()
 	}
-	if expressionNeedsEval == nil {
-		expressionNeedsEval = make(map[int]bool, len(MetricsConfig.Metrics))
-	}
-	if InputScope == nil {
-		InputScope = make(map[string][]Union, 0)
-		OutputScope = make(map[string][]Union, 0)
-	}
-
-	exp, err := Parse((*metricsObject).Expression)
-	if err != nil {
-		return "", err
-	}
-	(*metricsObject).ParsedExpression = *exp
-
-	if containedInValChanged == nil {
-		containedInValChanged = make(map[string]bool, 0)
-	}
-
-	if inputYieldsDirectMsg == nil {
-		inputYieldsDirectMsg = make(map[string]bool, 0)
-	}
-
-	for _, var_name := range exp.Vars {
-		if _, ok := inputToMetricsExpression[var_name]; !ok {
-			inputToMetricsExpression[var_name] = make([]int, 0)
-			if MetricsConfig.Inputs[var_name].Internal && !stringInSlice(internal_vars, var_name) {
-				warning = fmt.Sprintf("metrics expression uses internal_output var '%v' prior to its calculation; results displayed for this metric will lag behind '%v' by one cycle", var_name, var_name)
-			}
-			containedInValChanged[var_name] = false
-			inputYieldsDirectMsg[var_name] = false
+	expressionNeedsEvalMutex.RLock()
+	defer func() {
+		expressionNeedsEvalMutex.RUnlock()
+		if metricsAlreadyConfigured {
+			metricsMutex[netIndex].RUnlock()
 		}
-		inputToMetricsExpression[var_name] = append(inputToMetricsExpression[var_name], netIndex)
+	}()
 
-		if strings.Contains((*metricsObject).ParsedExpression.String, "ValueChanged") || strings.Contains((*metricsObject).ParsedExpression.String, "OverTimescale") {
-			containedInValChanged[var_name] = true
-		}
-	}
-
+	// Mark the expression for reevaluation
 	expressionNeedsEval[netIndex] = true
+
+	// (Re)configure state
 	(*metricsObject).State = make(map[string][]Union, 0)
 	// Time-based operations that need regular evaluation to ensure they get the updates they need
 	if strings.Contains((*metricsObject).ParsedExpression.String, "Integrate") ||
@@ -2250,11 +2228,72 @@ func getExpression(metricsObject *MetricsObject, internal_vars []string, netInde
 		MetricsConfig.Outputs[outputVar] = output
 		if stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "direct_set") ||
 			stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "post") {
-			for _, var_name := range exp.Vars {
+			for _, var_name := range (*metricsObject).ParsedExpression.Vars {
 				inputYieldsDirectMsg[var_name] = true
 			}
 		}
 	}
+	return
+}
+
+// Preprocess all of the expressions in the metrics document
+// so that all we need to do is evaluate the expressions at runtime.
+// currently modeling after https://github.com/crsmithdev/goexpr
+func (metricsObject *MetricsObject) getExpression(internal_vars []string, netIndex int) (string, error) {
+	var warning string
+	if inputToMetricsExpression == nil {
+		inputToMetricsExpression = make(map[string][]int, 0)
+	}
+	if outputToMetricsObject == nil {
+		outputToMetricsObject = make(map[string][]*MetricsObject, 0)
+	}
+	if expressionNeedsEval == nil {
+		expressionNeedsEval = make(map[int]bool, len(MetricsConfig.Metrics))
+	}
+	if InputScope == nil {
+		InputScope = make(map[string][]Union, 0)
+		OutputScope = make(map[string][]Union, 0)
+	}
+
+	exp, err := Parse((*metricsObject).Expression)
+	if err != nil {
+		return "", fmt.Errorf("could not parse expression: %w", err)
+	}
+	(*metricsObject).ParsedExpression = *exp
+
+	if containedInValChanged == nil {
+		containedInValChanged = make(map[string]bool, 0)
+	}
+
+	if inputYieldsDirectMsg == nil {
+		inputYieldsDirectMsg = make(map[string]bool, 0)
+	}
+
+	for _, var_name := range exp.Vars {
+		if _, ok := inputToMetricsExpression[var_name]; !ok {
+			inputToMetricsExpression[var_name] = make([]int, 0)
+			if MetricsConfig.Inputs[var_name].Internal && !stringInSlice(internal_vars, var_name) {
+				warning = fmt.Sprintf("metrics expression uses internal_output var '%v' prior to its calculation; results displayed for this metric will lag behind '%v' by one cycle", var_name, var_name)
+			}
+			containedInValChanged[var_name] = false
+			inputYieldsDirectMsg[var_name] = false
+		}
+		inputToMetricsExpression[var_name] = append(inputToMetricsExpression[var_name], netIndex)
+
+		if strings.Contains((*metricsObject).ParsedExpression.String, "ValueChanged") || strings.Contains((*metricsObject).ParsedExpression.String, "OverTimescale") {
+			containedInValChanged[var_name] = true
+		}
+	}
+
+	// Map the expression to all of its associated outputs
+	for _, output := range (*metricsObject).Outputs {
+		// Use the associated expression index (netIndex) to point to the expression
+		// An expression can have multiple outputs and each output can have multiple expressions (but only one is used currently)
+		outputToMetricsObject[output] = append(outputToMetricsObject[output], metricsObject)
+	}
+
+	// TODO: warning is being reassigned so only the last warning will be returned
+	warning, err = configureStateAndOutputs(metricsObject, netIndex)
 	return warning, err
 }
 
@@ -2650,15 +2689,16 @@ func GetSubscribeUris() {
 	}
 
 	// do the same for outputs so that we can respond to "gets"
-	uriToOutputNameMap = make(map[string]string, len(MetricsConfig.Outputs))
+	uriToOutputNameMap = make(map[string][]string, len(MetricsConfig.Outputs))
 	for outputName, output := range MetricsConfig.Outputs {
 		if len(output.Uri) > 0 {
 			if len(output.Name) > 0 {
-				uriToOutputNameMap[output.Uri+"/"+output.Name] = outputName // output.Name might be repeated, so we may overwrite another entry with this one
-				uriToOutputNameMap[output.Uri+"/"+outputName] = outputName
-			} else {
-				uriToOutputNameMap[output.Uri+"/"+outputName] = outputName
+				// It's possible for multiple output names to map to a single uri.
+				// Store all of the collisions in a list so they can still be tracked rather than overwritten
+				uriToOutputNameMap[output.Uri+"/"+output.Name] = append(uriToOutputNameMap[output.Uri+"/"+output.Name], outputName)
 			}
+			// output.Name itself might be repeated, so we may overwrite another entry with this one due to the same URI being produced
+			uriToOutputNameMap[output.Uri+"/"+outputName] = append(uriToOutputNameMap[output.Uri+"/"+outputName], outputName)
 			SubscribeUris = append(SubscribeUris, output.Uri)
 		}
 	}

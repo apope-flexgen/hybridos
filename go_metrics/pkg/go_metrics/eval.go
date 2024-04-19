@@ -79,8 +79,13 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 								temp_uri = uriGroup
 							}
 
+							directMsgMutex.RLock()
+							// Check whether there are still direct messages that should be sent out
 							_, is_direct_set := uriIsDirect["set"][uriGroup]
 							_, is_direct_post := uriIsDirect["post"][uriGroup]
+							sendDirectSet := is_direct_set && uriToDirectMsgActive["set"][uriGroup]
+							sendDirectPost := is_direct_post && uriToDirectMsgActive["post"][uriGroup]
+							directMsgMutex.RUnlock()
 
 							if uriIsIntervalSet[uriGroup] && (len(directMsgBody) > 0 || uriHeartbeat[uriGroup]) {
 								if uriIsLonely[uriGroup] {
@@ -100,7 +105,7 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 										Body:   directMsgBody,
 									})
 								}
-							} else if len(directMsgBody) > 0 && (is_direct_set || is_direct_post) {
+							} else if len(directMsgBody) > 0 && (sendDirectSet || sendDirectPost) {
 								if uriIsLonely[uriGroup] {
 									lonelyVarName := uriGroup[strings.Index(uriGroup, "[")+1 : strings.Index(uriGroup, "]")]
 									if _, ok := MetricsConfig.Outputs[lonelyVarName]; ok && len(MetricsConfig.Outputs[lonelyVarName].Name) > 0 {
@@ -108,14 +113,14 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 									}
 									// Lock and lower the direct message signal if the message is sent
 									directMsgMutex.Lock()
-									if is_direct_set {
+									if sendDirectSet {
 										f.Send(fims.FimsMsg{
 											Method: "set",
 											Uri:    (temp_uri + "/" + lonelyVarName),
 											Body:   directMsgBody[lonelyVarName],
 										})
 										uriToDirectMsgActive["set"][uriGroup] = false
-									} else if is_direct_post {
+									} else if sendDirectPost {
 										f.Send(fims.FimsMsg{
 											Method: "post",
 											Uri:    (temp_uri + "/" + lonelyVarName),
@@ -127,14 +132,14 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 								} else {
 									// Lock and lower the direct message signal if the message is sent
 									directMsgMutex.Lock()
-									if is_direct_set {
+									if sendDirectSet {
 										f.Send(fims.FimsMsg{
 											Method: "set",
 											Uri:    (temp_uri),
 											Body:   directMsgBody,
 										})
 										uriToDirectMsgActive["set"][uriGroup] = false
-									} else if is_direct_post {
+									} else if sendDirectPost {
 										f.Send(fims.FimsMsg{
 											Method: "post",
 											Uri:    (temp_uri),
@@ -599,7 +604,7 @@ func EvaluateExpressions() {
 								}
 
 								pubDataChangedMutex.Lock()
-								pubDataChanged[outputToUriGroup[outputVar]] = true
+								pubDataChanged[outputToUriGroup[outputVar]] = false
 								pubDataChangedMutex.Unlock()
 
 								if debug {
@@ -655,7 +660,7 @@ func EvaluateExpressions() {
 							}
 
 							pubDataChangedMutex.Lock()
-							pubDataChanged[outputToUriGroup[fullOutputName]] = true
+							pubDataChanged[outputToUriGroup[fullOutputName]] = false
 							pubDataChangedMutex.Unlock()
 							if debug {
 								if stringInSlice(debug_outputs, fullOutputName) {

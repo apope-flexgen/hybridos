@@ -6604,27 +6604,27 @@ func TestGetSubscribeUris(t *testing.T) {
 		"/components/feeder1": {0: 0},
 		"/components/feeder2": {0: 1},
 	}
-	expecteduriToOutputNameMap := map[string]string{
-		"/some/output1/output1_cheetah":       "output1_cheetah",
-		"/some/output1/output1_bobcat":        "output1_bobcat",
-		"/some/output1/output1_lion":          "output1_lion",
-		"/some/output2/output2_cheetah":       "output2_cheetah",
-		"/some/output2/output2_bobcat":        "output2_bobcat",
-		"/some/output2/output2_lion":          "output2_lion",
-		"/some/output3/output3_cheetah":       "output3_cheetah",
-		"/some/output3/output3_bobcat":        "output3_bobcat",
-		"/some/output3/output3_lion":          "output3_lion",
-		"/some/output1/timestamp":             "output1",
-		"/some/output2/timestamp":             "output2",
-		"/some/output3/timestamp":             "output3",
-		"/some/level2/level2_output":          "level2_output",
-		"/some/status/output/status":          "enum_output",
-		"/some/status/output/status2":         "bitfield_output",
-		"/some/output1/output1":               "output1",
-		"/some/output2/output2":               "output2",
-		"/some/output3/output3":               "output3",
-		"/some/status/output/enum_output":     "enum_output",
-		"/some/status/output/bitfield_output": "bitfield_output",
+	expecteduriToOutputNameMap := map[string][]string{
+		"/some/output1/output1_cheetah":       {"output1_cheetah"},
+		"/some/output1/output1_bobcat":        {"output1_bobcat"},
+		"/some/output1/output1_lion":          {"output1_lion"},
+		"/some/output2/output2_cheetah":       {"output2_cheetah"},
+		"/some/output2/output2_bobcat":        {"output2_bobcat"},
+		"/some/output2/output2_lion":          {"output2_lion"},
+		"/some/output3/output3_cheetah":       {"output3_cheetah"},
+		"/some/output3/output3_bobcat":        {"output3_bobcat"},
+		"/some/output3/output3_lion":          {"output3_lion"},
+		"/some/output1/timestamp":             {"output1"},
+		"/some/output2/timestamp":             {"output2"},
+		"/some/output3/timestamp":             {"output3"},
+		"/some/level2/level2_output":          {"level2_output"},
+		"/some/status/output/status":          {"enum_output"},
+		"/some/status/output/status2":         {"bitfield_output"},
+		"/some/output1/output1":               {"output1"},
+		"/some/output2/output2":               {"output2"},
+		"/some/output3/output3":               {"output3"},
+		"/some/status/output/enum_output":     {"enum_output"},
+		"/some/status/output/bitfield_output": {"bitfield_output"},
 	}
 	expectedUriElements := map[string]interface{}{
 		"": map[string]interface{}{
@@ -7034,21 +7034,21 @@ func TestGetSubscribeUris(t *testing.T) {
 	if len(uriToOutputNameMap) != len(expecteduriToOutputNameMap) {
 		t.Errorf("Expected %d URIs-to-output-name but only got %d\n", len(expecteduriToOutputNameMap), len(uriToOutputNameMap))
 	}
-	for subUri, outputName := range expecteduriToOutputNameMap {
-		if outputName2, ok := uriToOutputNameMap[subUri]; !ok {
+	for subUri, outputNames := range expecteduriToOutputNameMap {
+		if outputNames2, ok := uriToOutputNameMap[subUri]; !ok {
 			t.Errorf("Expected subscribe URI [%s] in uriToOutputNameMap but did not get\n", subUri)
 		} else {
-			if outputName != outputName2 {
-				t.Errorf("Expected uri:input [%s : %s] in uriToOutputNameMap but did not get\n", subUri, outputName)
-			}
-		}
-	}
-	for subUri, outputName := range uriToOutputNameMap {
-		if outputName2, ok := expecteduriToOutputNameMap[subUri]; !ok {
-			t.Errorf("Unexpected subscribe URI [%s] in uriToOutputNameMap\n", subUri)
-		} else {
-			if outputName != outputName2 {
-				t.Errorf("Unexpected uri:input [%s : %s] in uriToOutputNameMap\n", subUri, outputName)
+			// Ensure each individual name/output pair is present
+			for _, outputName := range outputNames {
+				nameFound := false
+				for _, outputName2 := range outputNames2 {
+					if outputName == outputName2 {
+						nameFound = true
+					}
+				}
+				if !nameFound {
+					t.Errorf("Expected uri:input [%s : %s] in uriToOutputNameMap but did not get\n", subUri, outputName)
+				}
 			}
 		}
 	}

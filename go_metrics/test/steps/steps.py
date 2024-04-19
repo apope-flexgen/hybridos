@@ -62,6 +62,7 @@ def step_impl(context, method, uri):
 def step_impl(context, method, uri):
     subprocess.run(["fims_send", "-m", method, "-u", uri, context.text],
                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+    context.start_time = time.time()
 
 
 @then(u'I expect a fims {method} to {uri} within {delay} seconds containing')
@@ -81,53 +82,54 @@ def step_impl(context, method, uri, delay):
         assertion_text = ""
         for match in reversed(context.matches):
             if "uri" in match and match['uri'] == uri:
-                found_match = True
-                body = match['body']
-                # try:
-                #     body = json.loads(body_str)
-                # except json.JSONDecodeError:
-                #     assertion_text = f"Invalid json message sent by go_metrics "
-                # except (TypeError, ValueError):
-                #     message_type = type(body_str)
-                #     try:
-                #         expected_val = message_type(context.text)
-                #         if expected_val == body_str:
-                #             assert True
-                #             return
-                #         else:
-                #             assertion_text = f'\nExpected: "{uri}": {context.text}\nGot:"{uri}": {body_str}'
-                #     except (TypeError, ValueError):
-                #         assertion_text = f"Unexpected type {message_type} received from go_metrics message."
-                # except Exception as e:
-                #     print(e)
-                if isinstance(body, dict):
-                    for key, value in body.items():
-                        if key in context.expected_message:
-                            if value == context.expected_message[key]:
-                                continue
+                if "timestamp" in match and match['timestamp'] >= context.start_time and match['timestamp'] <= context.start_time + float(delay):
+                    found_match = True
+                    body = match['body']
+                    # try:
+                    #     body = json.loads(body_str)
+                    # except json.JSONDecodeError:
+                    #     assertion_text = f"Invalid json message sent by go_metrics "
+                    # except (TypeError, ValueError):
+                    #     message_type = type(body_str)
+                    #     try:
+                    #         expected_val = message_type(context.text)
+                    #         if expected_val == body_str:
+                    #             assert True
+                    #             return
+                    #         else:
+                    #             assertion_text = f'\nExpected: "{uri}": {context.text}\nGot:"{uri}": {body_str}'
+                    #     except (TypeError, ValueError):
+                    #         assertion_text = f"Unexpected type {message_type} received from go_metrics message."
+                    # except Exception as e:
+                    #     print(e)
+                    if isinstance(body, dict):
+                        for key, value in body.items():
+                            if key in context.expected_message:
+                                if value == context.expected_message[key]:
+                                    continue
+                                else:
+                                    assertion_text = f'\nExpected: "{key}": {context.expected_message[key]}\nGot:"{key}": {value}'
+                                    break
                             else:
-                                assertion_text = f'\nExpected: "{key}": {context.expected_message[key]}\nGot:"{key}": {value}'
+                                assertion_text = f"Extra key [{key}] found"
                                 break
-                        else:
-                            assertion_text = f"Extra key [{key}] found"
-                            break
-                    for key, value in context.expected_message.items():
-                        if key not in body:
-                            assertion_text = f"Missing key [{key}]"
-                else:
-                    message_type = type(body)
-                    try:
-                        expected_val = message_type(context.text)
-                        if expected_val == body:
-                            assert True
-                            return
-                        else:
-                            assertion_text = f'\nExpected: "{uri}": {context.text}\nGot:"{uri}": {body}'
-                    except (TypeError, ValueError):
-                        assertion_text = f"Unexpected type {message_type} received from go_metrics message."
-                # Return early if a match was found
-                if found_match:
-                    return
+                        for key, value in context.expected_message.items():
+                            if key not in body:
+                                assertion_text = f"Missing key [{key}]"
+                    else:
+                        message_type = type(body)
+                        try:
+                            expected_val = message_type(context.text)
+                            if expected_val == body:
+                                assert True
+                                return
+                            else:
+                                assertion_text = f'\nExpected: "{uri}": {context.text}\nGot:"{uri}": {body}'
+                        except (TypeError, ValueError):
+                            assertion_text = f"Unexpected type {message_type} received from go_metrics message."
+                    # Return early if a match was found
+                    if found_match:
+                        return
         if assertion_text != "":
             assert False, assertion_text
         if not found_match:
@@ -260,7 +262,7 @@ def step_impl(context, method, uri):
         result = subprocess.run(["fims_listen", "-n", "1", "-m", method, "-u", uri],
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False, timeout=5)
         if result and result.stdout:
-            assert False, "Expected no messages but received fims {method}."
+            assert False, f"Expected no messages but received fims {method}."
     except subprocess.TimeoutExpired:
         assert True
 

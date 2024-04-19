@@ -8,6 +8,7 @@ import (
 	"time"
 
 	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/flexgen-power/go_flexgen/parsemap"
 	simdjson "github.com/minio/simdjson-go"
 )
 
@@ -54,29 +55,27 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 		}
 		// find metric in outputs and set back out
 		_, last_uri_element_is_output := MetricsConfig.Outputs[msg.Frags[len(msg.Frags)-1]]
-		_, last_urilast_uri_element_is_input := MetricsConfig.Inputs[msg.Frags[len(msg.Frags)-1]]
+		_, last_uri_element_is_input := MetricsConfig.Inputs[msg.Frags[len(msg.Frags)-1]]
 		_, isEchoPublishUri := echoPublishUristoEchoNum[msg.Uri]
-		if outputVar, ok := uriToOutputNameMap[msg.Uri]; ok { // asking for a single output value
-			outputScopeMutex.Lock()
-			output := OutputScope[outputVar]
-			var val interface{}
-			if len(output) > 1 {
-				val_list := make([]interface{}, len(output))
-				for g, union := range output {
-					val_list[g] = getValueFromUnion(&union)
+		if outputNames, ok := uriToOutputNameMap[msg.Uri]; ok && len(outputNames) > 0 { // asking for all outputs associated with the given URI
+			anyOutputsClothed, outputVals := mapOutputNamesToMsgVars(outputNames)
+			// Construct the message body to go out over fims
+			// If multiple values are present they will be returned as an array
+			var responseBody interface{}
+			if anyOutputsClothed {
+				if len(outputVals) == 1 {
+					responseBody = map[string]interface{}{"value": outputVals[0]}
+				} else {
+					responseBody = map[string]interface{}{"value": outputVals}
 				}
-				val = val_list
-			} else if len(output) == 1 {
-				val = getValueFromUnion(&output[0])
 			} else {
-				val = 0
+				if len(outputVals) == 1 {
+					responseBody = outputVals[0]
+				} else {
+					responseBody = outputVals
+				}
 			}
-			outputScopeMutex.Unlock()
-			if stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "clothed") {
-				f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: map[string]interface{}{"value": val}})
-			} else {
-				f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: val})
-			}
+			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: responseBody})
 		} else if outputVars, ok := PublishUris[msg.Uri]; ok { // asking for data from a single publish URI
 			pubDataChangedMutex.Lock()
 			pubDataChanged[msg.Uri] = true
@@ -97,7 +96,7 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 			}
 			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: msgBody})
 			pubDataChangedMutex.Unlock()
-		} else if last_urilast_uri_element_is_input && len(msg.Frags) > 0 && msg.Frags[0] == "inputs" { // asking for a specific input
+		} else if last_uri_element_is_input && len(msg.Frags) > 0 && msg.Frags[0] == "inputs" { // asking for a specific input
 			inputScopeMutex.RLock()
 			input := InputScope[msg.Frags[len(msg.Frags)-1]]
 			var val interface{}
@@ -135,24 +134,43 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 			}
 			inputScopeMutex.RUnlock()
 			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: msgBody})
-		} else if last_uri_element_is_output && len(msg.Frags) > 0 && msg.Frags[0] == "outputs" { // asking for a specific output (in a different way)
-			outputName := MetricsConfig.Outputs[outputVar].Name
-			outputScopeMutex.RLock()
-			output := OutputScope[msg.Frags[len(msg.Frags)-1]]
-			var val interface{}
-			if len(output) > 1 {
-				val_list := make([]interface{}, len(output))
-				for g, union := range output {
-					val_list[g] = getValueFromUnion(&union)
+		} else if last_uri_element_is_output && len(msg.Frags) > 0 && msg.Frags[0] == "outputs" { // asking for all outputs associated with the given uri (in a different way)
+			outputScopeMutex.Lock()
+			outputVals := make(map[string]interface{}, 0)
+			// Iterate over the values associated with the URI
+			// Generally, only a single value will be present, but multiple are possible
+			for _, outputVar := range outputNames {
+				outputName := MetricsConfig.Outputs[outputVar].Name
+				output := OutputScope[msg.Frags[len(msg.Frags)-1]]
+				var val interface{}
+				if len(output) > 1 {
+					val_list := make([]interface{}, len(output))
+					for g, union := range output {
+						val_list[g] = getValueFromUnion(&union)
+					}
+					val = val_list
+				} else if len(output) == 1 {
+					val = getValueFromUnion(&output[0])
+				} else {
+					val = 0
 				}
-				val = val_list
-			} else if len(output) == 1 {
-				val = getValueFromUnion(&output[0])
-			} else {
-				val = 0
+				// It's unclear whether the names will all be the same
+				// Therefore, track each unique name and construct a list any time a second value for that name is found
+				switch currentVal := outputVals[outputName].(type) {
+				case []interface{}:
+					outputVals[outputName] = append(outputVals[outputName].([]interface{}), currentVal)
+				case interface{}:
+					if currentVal != nil {
+						// A value already exists. Construct an array containing the values
+						outputVals[outputName] = make([]interface{}, 2)
+						outputVals[outputName] = append(outputVals[outputName].([]interface{}), currentVal)
+					}
+					outputVals[outputName] = val
+				default:
+					log.Errorf("Encountered invalid type when constructing get response for %s. There is a problem with the code", msg.Uri)
+				}
 			}
-			outputScopeMutex.RUnlock()
-			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: map[string]interface{}{outputName: val}})
+			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: outputVals})
 		} else if len(msg.Frags) > 0 && msg.Frags[0] == "outputs" { // asking for all outputs
 			msgBody := make(map[string]interface{}, len(OutputScope))
 			outputScopeMutex.RLock()
@@ -257,6 +275,39 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 	}
 }
 
+// Get all the values associated with the list of input names.
+// Will return the list of values as well as whether any were clothed.
+// Uses the outputScopeMutex
+// outputNames: the list of names to check
+func mapOutputNamesToMsgVars(outputNames []string) (bool, []interface{}) {
+	outputScopeMutex.Lock()
+	// If there are multiple outputs and any of them are clothed, all of them must be clothed
+	anyOutputsClothed := false
+	outputVals := make([]interface{}, 0)
+	// Iterate over the values associated with the URI
+	// Generally, only a single value will be present, but multiple are possible
+	for _, outputVar := range outputNames {
+		output := OutputScope[outputVar]
+		var val interface{}
+		if len(output) > 1 {
+			val_list := make([]interface{}, len(output))
+			for g, union := range output {
+				val_list[g] = getValueFromUnion(&union)
+			}
+			val = val_list
+		} else if len(output) == 1 {
+			val = getValueFromUnion(&output[0])
+		} else {
+			val = 0
+		}
+		if stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "clothed") {
+			anyOutputsClothed = true
+		}
+		outputVals = append(outputVals, val)
+	}
+	return anyOutputsClothed, outputVals
+}
+
 func findValuesInMap(msg *fims.FimsMsgRaw, currentUri string, valuesToLookFor map[string]interface{}, iter *simdjson.Iter) {
 	fullUri := ""
 	var err error
@@ -308,6 +359,12 @@ func findValuesInMap(msg *fims.FimsMsgRaw, currentUri string, valuesToLookFor ma
 							handleUriElement(msg, fullUri, name)
 							elementValueMutex.Unlock()
 						}
+					} else if strings.EqualFold(name, "reevaluate") {
+						// Reevaluation case: all output uris accept a command to reevaluate their metric
+						elementValueMutex.Lock()
+						elementValue, _ = elemMap[currentUri].Interface()
+						handleUriElement(msg, fullUri, name)
+						elementValueMutex.Unlock()
 					}
 					name, typ, err = objMap[currentUri].NextElement(elemMap[currentUri])
 				}
@@ -316,9 +373,66 @@ func findValuesInMap(msg *fims.FimsMsgRaw, currentUri string, valuesToLookFor ma
 		case simdjson.TypeNone:
 			return
 		}
-
 		//typ = iter.Advance() // not sure if we can reach this line // need to test that
 	}
+}
+
+// handle reevaluation signal that maps an output uri to a metric that needs reevaluation
+// uri: the output uri that should be mapped to the metric
+// return whether the metric was updated
+func handleReevaluationSignal(uri string, elementName string) (bool, error) {
+	// We got here with a different set somehow
+	if elementName != "reevaluate" {
+		return false, nil
+	}
+
+	// Check if the output resolves to the given name
+	outputNames, uriToNameOk := uriToOutputNameMap[uri]
+	if !uriToNameOk {
+		return false, fmt.Errorf("failed to find an output associated with the given uri: %s", uri)
+	}
+
+	for _, outputName := range outputNames {
+		// Check if the name can be mapped to a metrics expression
+		metricsObjects, nameToMetricOk := outputToMetricsObject[outputName]
+		if !nameToMetricOk {
+			return false, fmt.Errorf("failed to find the metric associated with the given output: %s", outputName)
+		}
+
+		// If this is a valid endpoint, make sure the set object is in the right format
+		// Handle either a naked or clothed object
+		unwrappedVal := parsemap.UnwrapVariable(elementValue)
+		val, ok := unwrappedVal.(bool)
+		if !ok || !val {
+			return false, fmt.Errorf("reevaluation signal must be true")
+		}
+
+		// The output should map to an expression, so ensure there's an associated expression number
+		if len(metricsObjects) == 0 {
+			return false, fmt.Errorf("failed to find the metric number associated with the given output: %s", outputName)
+		}
+		// Update all the expressions associated with the output (typically just 1)
+		for expNum, object := range metricsObjects {
+			// Also clear their output and state so they're evaluated as new
+			warn, err := configureStateAndOutputs(object, expNum)
+			if warn != "" {
+				log.Warnf("Warning reconfiguring metric state and scope: %s", warn)
+			}
+			if err != nil {
+				return false, fmt.Errorf("failed to reconfigure the metric's state and scope: %w", err)
+			}
+		}
+
+		// Clear the output scope as well so the metric is reevaluated as new
+		if _, ok = OutputScope[outputName]; !ok {
+			return false, fmt.Errorf("could not clear the outputScope for output: %s", outputName)
+		}
+		outputScopeMutex.Lock()
+		OutputScope[outputName] = nil
+		outputScopeMutex.Unlock()
+	}
+
+	return true, nil
 }
 
 func handleUriElement(msg *fims.FimsMsgRaw, uri string, elementName string) {
@@ -375,9 +489,18 @@ func handleUriElement(msg *fims.FimsMsgRaw, uri string, elementName string) {
 		}
 	}
 
-	// handle echo "set" forwarding
+	// handle sets
 	if (*msg).Method == "set" {
+		// Check for reevaluation signal
+		if ok, err := handleReevaluationSignal(msg.Uri, elementName); err != nil {
+			log.Errorf("Error reevaluating metric %s: %v", msg.Uri, err)
+			return
+		} else if ok {
+			// Return early if the reevaluation signal was received
+			return
+		}
 
+		// handle echo "set" forwarding
 		// handle echo register "sets" that need to be forwarded to original inputs
 		sentAsSet := false
 		if inputNum, isEchoOutputRegister := echoOutputToInputNum[uri]; isEchoOutputRegister {
@@ -519,45 +642,54 @@ func handleDecodedMetricsAttributeValue(inputName, scopeVar string) {
 	inputScopeMutex.Unlock()
 }
 
+// TODO: this function is not called anywhere in the code
 func GetOutputMsgBody(uri string) interface{} {
-	if outputVar, ok := uriToOutputNameMap[uri]; ok {
-		outputScopeMutex.RLock()
-		output := OutputScope[outputVar]
-		var val interface{}
-		if len(output) > 1 {
-			val_list := make([]interface{}, len(output))
-			for g, union := range output {
-				val_list[g] = getValueFromUnion(&union)
-			}
-			val = val_list
-		} else if len(output) == 1 {
-			val = getValueFromUnion(&output[0])
-		} else {
-			val = 0
-		}
-		if output2, ok := MetricsConfig.Outputs[outputVar]; ok {
-			if stringInSlice(output2.Flags, "clothed") {
-				val = map[string]interface{}{
-					"value": val,
+	if outputNames, ok := uriToOutputNameMap[uri]; ok {
+		outputVals := make([]interface{}, 0)
+		for _, outputVar := range outputNames {
+			outputScopeMutex.RLock()
+			output := OutputScope[outputVar]
+			var val interface{}
+			if len(output) > 1 {
+				val_list := make([]interface{}, len(output))
+				for g, union := range output {
+					val_list[g] = getValueFromUnion(&union)
 				}
-				for attributeName := range output2.Attributes {
-					outputVals := []Union{}
-					if _, ok := OutputScope[outputVar+"@"+attributeName]; ok {
-						outputVals = make([]Union, len(OutputScope[outputVar+"@"+attributeName]))
-						copy(outputVals, OutputScope[outputVar+"@"+attributeName])
+				val = val_list
+			} else if len(output) == 1 {
+				val = getValueFromUnion(&output[0])
+			} else {
+				val = 0
+			}
+			if output2, ok := MetricsConfig.Outputs[outputVar]; ok {
+				if stringInSlice(output2.Flags, "clothed") {
+					val = map[string]interface{}{
+						"value": val,
 					}
+					for attributeName := range output2.Attributes {
+						outputVals := []Union{}
+						if _, ok := OutputScope[outputVar+"@"+attributeName]; ok {
+							outputVals = make([]Union, len(OutputScope[outputVar+"@"+attributeName]))
+							copy(outputVals, OutputScope[outputVar+"@"+attributeName])
+						}
 
-					if len(outputVals) >= 1 {
-						val.(map[string]interface{})[attributeName] = getValueFromUnion(&outputVals[0])
-					} else {
-						val.(map[string]interface{})[attributeName] = output2.Attributes[attributeName]
+						if len(outputVals) >= 1 {
+							val.(map[string]interface{})[attributeName] = getValueFromUnion(&outputVals[0])
+						} else {
+							val.(map[string]interface{})[attributeName] = output2.Attributes[attributeName]
+						}
 					}
 				}
 			}
+			outputVals = append(outputVals, val)
 		}
-
 		outputScopeMutex.RUnlock()
-		return val
+		// Maintaining the old convention that a single value will be returned, unless there are multiple values present (new use case)
+		if len(outputVals) == 1 {
+			return outputVals[0]
+		} else {
+			return outputVals
+		}
 	} else {
 		outputMap := make(map[string]interface{}, 0)
 		for outputName, output := range MetricsConfig.Outputs {

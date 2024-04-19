@@ -106,7 +106,8 @@ type ProcessFimsTestsGlobal struct {
 	inputToMetricsExpression map[string][]int
 	uriToInputNameMap        map[string][]string
 	uriToEchoObjectInputMap  map[string]map[int]int
-	uriToOutputNameMap       map[string]string
+	uriToOutputNameMap       map[string][]string
+	outputToMetricsObject    map[string][]*MetricsObject
 	uriElements              map[string]interface{}
 	allPossibleAttributes    map[string][]string
 }
@@ -230,7 +231,8 @@ var GlobalConstants = ProcessFimsTestsGlobal{
 		"/echo/test1/input1": {0: 0},
 		"/echo/test2/input2": {0: 1},
 	},
-	uriToOutputNameMap: map[string]string{},
+	uriToOutputNameMap:    map[string][]string{},
+	outputToMetricsObject: map[string][]*MetricsObject{},
 	allPossibleAttributes: map[string][]string{
 		"attribute": {"input1@attribute"},
 	},

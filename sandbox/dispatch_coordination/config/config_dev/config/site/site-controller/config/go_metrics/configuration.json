@@ -3,14 +3,21 @@
         "v1": { "uri": "/example/v1", "type": "float" }
     },
     "outputs": {
-        "v1_times_5": { "uri": "/some/output", "flags":["clothed", "post", "sparse", "no_heartbeat"] }
+        "example_duration": { "uri": "/some/output", "flags":["clothed", "post", "sparse", "no_heartbeat"] },
+        "something": { "uri": "/some/output", "flags":["clothed", "post", "sparse", "no_heartbeat"] }
 	},
     "metrics": [
         {
-            "id": "v1_times_5",
+            "id": "example_duration",
             "type": "bool", 
-            "outputs": "v1_times_5",
+            "outputs": "example_duration",
             "expression": "Duration(v1 > 0, 5)"
+        },
+        {
+            "id": "something",
+            "type": "bool", 
+            "outputs": "something",
+            "expression": "Duration(v1 > 3, 5)"
         }
     ]
 }

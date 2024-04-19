@@ -46,24 +46,25 @@ var uriIsSparse map[string]bool
 var uriIsIntervalSet map[string]bool
 var uriIsLonely map[string]bool
 var uriIsDirect map[string]map[string]bool          // map of uris that send direct messages (set or post)
-var uriToDirectMsgActive map[string]map[string]bool // map of uris that have direct messages to whether or not we need to send a pub out now. The outer map indicates the method (set or post) and the inner map indicates the uri
+var uriToDirectMsgActive map[string]map[string]bool // map of uris that have direct messages to whether or not we need to send a pub out now. The outer map indicates the method (set or post) and the inner map indicates the uri and number of messages
 var uriHeartbeat map[string]bool
-var uriToInputNameMap map[string][]string          // a map of uri's to input variable names
-var uriToEchoObjectInputMap map[string]map[int]int // a map of uri's to listen for and corresponding echo objects that use them
-var uriToOutputNameMap map[string]string           // a map of uri's to output variable names
-var allPossibleAttributes map[string][]string      // get a map of all possible attribute names (e.g. enabled, scale, etc) to their attribute name in the metricsConfig attributes map
-var staticFilterExpressions map[string]Filter      // this holds a map of "filtered" variable names to the expressions required to evaluate them; these can be evaluated prior to runtime
-var dynamicFilterExpressions map[string]Filter     // this holds a map of "filtered" variable names to the expressions required to evaluate them; these m	ust be evaluated at runtime
-var inputToMetricsExpression map[string][]int      // when variables change their values (and only when), we will re-evaluate the corresponding expressions
-var inputToFilterExpression map[string][]string    // when variables change their values (and only when), we will re-evaluate the corresponding filters (which may result in new expressions to evaluate)
-var expressionNeedsEval map[int]bool               // map of expressions that need re-evaluation (true means needs re-eval)
-var filterNeedsEval map[string]bool                // map of dynamic expressions that need re-evaluation (true means needs re-eval)
-var pubDataChanged map[string]bool                 // if data in a publish uri changes, we need to send out a new pub!!
-var outputToUriGroup map[string]string             // since outputs can get published to the same uri but at different times, we need this to keep track of the groups
-var outputVarChanged map[string]bool               // if an output variable changed, we want to keep track of it for sparse publishes
-var noGetResponse map[string]bool                  // don't respond to get requests for this uri
-var echoOutputToInputNum map[string]int            // full echo register uri to input num
-var echoPublishUristoEchoNum map[string]int        // the pub uri to the echo object number
+var uriToInputNameMap map[string][]string             // a map of uri's to input variable names
+var uriToEchoObjectInputMap map[string]map[int]int    // a map of uri's to listen for and corresponding echo objects that use them
+var uriToOutputNameMap map[string][]string            // a map of uri's to output variable names. A uri can have multiple outputs associated with it
+var allPossibleAttributes map[string][]string         // get a map of all possible attribute names (e.g. enabled, scale, etc) to their attribute name in the metricsConfig attributes map
+var staticFilterExpressions map[string]Filter         // this holds a map of "filtered" variable names to the expressions required to evaluate them; these can be evaluated prior to runtime
+var dynamicFilterExpressions map[string]Filter        // this holds a map of "filtered" variable names to the expressions required to evaluate them; these must be evaluated at runtime
+var inputToMetricsExpression map[string][]int         // when variables change their values (and only when), we will re-evaluate the corresponding expressions
+var inputToFilterExpression map[string][]string       // when variables change their values (and only when), we will re-evaluate the corresponding filters (which may result in new expressions to evaluate)
+var outputToMetricsObject map[string][]*MetricsObject // the user can send a signal to the output that will trigger a re-evaluation of the metric
+var expressionNeedsEval map[int]bool                  // map of expressions that need re-evaluation (true means needs re-eval)
+var filterNeedsEval map[string]bool                   // map of dynamic expressions that need re-evaluation (true means needs re-eval)
+var pubDataChanged map[string]bool                    // if data in a publish uri changes, we need to send out a new pub!!
+var outputToUriGroup map[string]string                // since outputs can get published to the same uri but at different times, we need this to keep track of the groups
+var outputVarChanged map[string]bool                  // if an output variable changed, we want to keep track of it for sparse publishes
+var noGetResponse map[string]bool                     // don't respond to get requests for this uri
+var echoOutputToInputNum map[string]int               // full echo register uri to input num
+var echoPublishUristoEchoNum map[string]int           // the pub uri to the echo object number
 
 // local variables used for publishing messages
 var directMsgBody map[string]interface{}
