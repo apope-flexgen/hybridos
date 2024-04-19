@@ -1810,11 +1810,13 @@ bool Asset::handle_generic_asset_controls_set(std::string uri, cJSON& body) {
  * @return True on success, false on failure.
  */
 bool Asset::process_watchdog_status() {
-    if (!watchdog_enable)
+    if (!watchdog_enable) {
         return true;
+    }
 
-    if (!component_connected.value.value_bool)
+    if (!component_connected.value.value_bool) {
         FPS_ERROR_LOG("Component not connected");
+    }
 
     char event_msg[MEDIUM_MSG_LEN];
     watchdog_status.value.value_bool = !check_fims_timeout() && component_connected.value.value_bool;
@@ -2034,8 +2036,10 @@ void Asset::process_asset(void) {
         }
     }
 
+    // We ALWAYS want this to run so store result now to dodge short_circuit
+    const bool watchdog_result = process_watchdog_status();     
     // Availability logic, including local mode status and watchdog status if the feature is enabled
-    isAvail = (get_num_active_faults() == 0) && !inMaintenance && !local_mode_status.value.value_bool && process_watchdog_status();
+    isAvail = (get_num_active_faults() == 0) && !inMaintenance && !local_mode_status.value.value_bool && watchdog_result;
 
     // Process running status
     if (status.get_status_type() == random_enum) {
