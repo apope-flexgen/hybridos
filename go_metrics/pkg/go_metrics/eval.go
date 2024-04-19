@@ -79,7 +79,10 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 								temp_uri = uriGroup
 							}
 
-							if uriIsSet[uriGroup] && (len(setMsgBody) > 0 || uriHeartbeat[uriGroup]) {
+							_, is_direct_set := uriIsDirect["set"][uriGroup]
+							_, is_direct_post := uriIsDirect["post"][uriGroup]
+
+							if uriIsIntervalSet[uriGroup] && (len(directMsgBody) > 0 || uriHeartbeat[uriGroup]) {
 								if uriIsLonely[uriGroup] {
 									lonelyVarName := uriGroup[strings.Index(uriGroup, "[")+1 : strings.Index(uriGroup, "]")]
 									if _, ok := MetricsConfig.Outputs[lonelyVarName]; ok && len(MetricsConfig.Outputs[lonelyVarName].Name) > 0 {
@@ -88,14 +91,58 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 									_, err = f.Send(fims.FimsMsg{
 										Method: "set",
 										Uri:    temp_uri + "/" + lonelyVarName,
-										Body:   setMsgBody[lonelyVarName],
+										Body:   directMsgBody[lonelyVarName],
 									})
 								} else {
 									_, err = f.Send(fims.FimsMsg{
 										Method: "set",
 										Uri:    temp_uri,
-										Body:   setMsgBody,
+										Body:   directMsgBody,
 									})
+								}
+							} else if len(directMsgBody) > 0 && (is_direct_set || is_direct_post) {
+								if uriIsLonely[uriGroup] {
+									lonelyVarName := uriGroup[strings.Index(uriGroup, "[")+1 : strings.Index(uriGroup, "]")]
+									if _, ok := MetricsConfig.Outputs[lonelyVarName]; ok && len(MetricsConfig.Outputs[lonelyVarName].Name) > 0 {
+										lonelyVarName = MetricsConfig.Outputs[lonelyVarName].Name
+									}
+									// Lock and lower the direct message signal if the message is sent
+									directMsgMutex.Lock()
+									if is_direct_set {
+										f.Send(fims.FimsMsg{
+											Method: "set",
+											Uri:    (temp_uri + "/" + lonelyVarName),
+											Body:   directMsgBody[lonelyVarName],
+										})
+										uriToDirectMsgActive["set"][uriGroup] = false
+									} else if is_direct_post {
+										f.Send(fims.FimsMsg{
+											Method: "post",
+											Uri:    (temp_uri + "/" + lonelyVarName),
+											Body:   directMsgBody[lonelyVarName],
+										})
+										uriToDirectMsgActive["post"][uriGroup] = false
+									}
+									directMsgMutex.Unlock()
+								} else {
+									// Lock and lower the direct message signal if the message is sent
+									directMsgMutex.Lock()
+									if is_direct_set {
+										f.Send(fims.FimsMsg{
+											Method: "set",
+											Uri:    (temp_uri),
+											Body:   directMsgBody,
+										})
+										uriToDirectMsgActive["set"][uriGroup] = false
+									} else if is_direct_post {
+										f.Send(fims.FimsMsg{
+											Method: "post",
+											Uri:    (temp_uri),
+											Body:   directMsgBody,
+										})
+										uriToDirectMsgActive["post"][uriGroup] = false
+									}
+									directMsgMutex.Unlock()
 								}
 							} else if len(pubMsgBody) > 0 || uriHeartbeat[uriGroup] {
 								if uriIsLonely[uriGroup] {
@@ -342,45 +389,74 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 	}
 }
 
-func ProcessDirectSets() {
-	EvaluateExpressions()
-	inputScopeMutex.Lock()
-	directSetMutex.Lock()
-	for directSetUriGroup, active := range uriToDirectSetActive {
-		if active {
-			pubDataChangedMutex.Lock()
-			PrepareBody(directSetUriGroup)
-			if strings.Contains(directSetUriGroup, "[") {
-				directSetUri = directSetUriGroup[0:strings.Index(directSetUriGroup, "[")]
-			} else {
-				directSetUri = directSetUriGroup
-			}
+// Construct and send the fims message to the uri provided using the appropriate method
+// The caller must ensure that the pubDataChanged, outputScope, and directMsgMutex all are unlocked
+// method: the fims method by which the message will be sent
+// directMsgUriGroup: the uri group to which the message will be sent
+func constructAndSendDirectMsgs(method string, directMsgUriGroup string) {
+	var directMsgUri string
+	pubDataChangedMutex.Lock()
+	PrepareBody(directMsgUriGroup)
+	if strings.Contains(directMsgUriGroup, "[") {
+		directMsgUri = directMsgUriGroup[0:strings.Index(directMsgUriGroup, "[")]
+	} else {
+		directMsgUri = directMsgUriGroup
+	}
 
-			if len(setMsgBody) > 0 {
-				if uriIsLonely[directSetUriGroup] {
-					lonelyVarName := directSetUriGroup[strings.Index(directSetUriGroup, "[")+1 : strings.Index(directSetUriGroup, "]")]
-					if _, ok := MetricsConfig.Outputs[lonelyVarName]; ok && len(MetricsConfig.Outputs[lonelyVarName].Name) > 0 {
-						lonelyVarName = MetricsConfig.Outputs[lonelyVarName].Name
-					}
-					f.Send(fims.FimsMsg{
-						Method: "set",
-						Uri:    (directSetUri + "/" + lonelyVarName),
-						Body:   setMsgBody[lonelyVarName],
-					})
-				} else {
-					f.Send(fims.FimsMsg{
-						Method: "set",
-						Uri:    directSetUri,
-						Body:   setMsgBody,
-					})
-				}
+	if len(directMsgBody) > 0 {
+		if uriIsLonely[directMsgUriGroup] {
+			lonelyVarName := directMsgUriGroup[strings.Index(directMsgUriGroup, "[")+1 : strings.Index(directMsgUriGroup, "]")]
+			if _, ok := MetricsConfig.Outputs[lonelyVarName]; ok && len(MetricsConfig.Outputs[lonelyVarName].Name) > 0 {
+				lonelyVarName = MetricsConfig.Outputs[lonelyVarName].Name
 			}
-			pubDataChanged[directSetUriGroup] = false
-			uriToDirectSetActive[directSetUriGroup] = false
-			pubDataChangedMutex.Unlock()
+			f.Send(fims.FimsMsg{
+				Method: method,
+				Uri:    (directMsgUri + "/" + lonelyVarName),
+				Body:   directMsgBody[lonelyVarName],
+			})
+		} else {
+			f.Send(fims.FimsMsg{
+				Method: method,
+				Uri:    directMsgUri,
+				Body:   directMsgBody,
+			})
 		}
 	}
-	directSetMutex.Unlock()
+	pubDataChanged[directMsgUriGroup] = false
+	directMsgMutex.Lock()
+	uriToDirectMsgActive[method][directMsgUriGroup] = false
+	directMsgMutex.Unlock()
+	pubDataChangedMutex.Unlock()
+}
+
+// Handle and send out messages directly
+func ProcessDirectMsgs() {
+	EvaluateExpressions()
+	inputScopeMutex.Lock()
+
+	// Get the direct messages that are active
+	activeDirectSets := make([]string, 0)
+	activeDirectPosts := make([]string, 0)
+	directMsgMutex.RLock()
+	for directMsgUriGroup, active := range uriToDirectMsgActive["set"] {
+		if active {
+			activeDirectSets = append(activeDirectSets, directMsgUriGroup)
+		}
+	}
+	for directMsgUriGroup, active := range uriToDirectMsgActive["post"] {
+		if active {
+			activeDirectPosts = append(activeDirectPosts, directMsgUriGroup)
+		}
+	}
+	directMsgMutex.RUnlock()
+
+	// Send out the direct messages to their given uris
+	for _, directMsgUriGroup := range activeDirectSets {
+		constructAndSendDirectMsgs("set", directMsgUriGroup)
+	}
+	for _, directMsgUriGroup := range activeDirectPosts {
+		constructAndSendDirectMsgs("post", directMsgUriGroup)
+	}
 	inputScopeMutex.Unlock()
 }
 
@@ -484,30 +560,54 @@ func EvaluateExpressions() {
 						if len(splitOutputVar) == 2 {
 							outputVar := splitOutputVar[0]
 							attribute := splitOutputVar[1]
-							directSetMutex.RLock()
-							_, is_direct_set := uriToDirectSetActive[outputToUriGroup[outputVar]]
-							directSetMutex.RUnlock()
+
+							directMsgMutex.RLock()
+							// Check for both methods of direct messages in determining whether to send messages
+							_, is_direct_set := uriIsDirect["set"][outputToUriGroup[outputVar]]
+							_, is_direct_post := uriIsDirect["post"][outputToUriGroup[outputVar]]
+							directMsgMutex.RUnlock()
+
 							is_sparse := uriIsSparse[outputToUriGroup[outputVar]]
+							// Check if the values have changed from the last evaluation, then copy the new values into the OutputScope
+							valuesChanged := !unionListsMatch(OutputScope[fullOutputName], outputVals)
+
+							// Update the scope here to allow for direct messages to occur below
 							outputScopeMutex.Lock()
-							if !unionListsMatch(OutputScope[fullOutputName], outputVals) || (is_direct_set && !is_sparse) {
+							OutputScope[fullOutputName] = make([]Union, len(outputVals))
+							copy(OutputScope[fullOutputName], outputVals)
+							outputScopeMutex.Unlock()
+
+							if valuesChanged || ((is_direct_set || is_direct_post) && !is_sparse) {
 								pubDataChangedMutex.Lock()
 								outputVarChanged[outputVar] = true
+								pubDataChangedMutex.Unlock()
+
+								// Lock and raise the direct message flag
+								if is_direct_set {
+									directMsgMutex.Lock()
+									// Mark the uri as holding an active set
+									uriToDirectMsgActive["set"][outputVar] = true
+									directMsgMutex.Unlock()
+									constructAndSendDirectMsgs("set", outputToUriGroup[outputVar])
+								}
+								if is_direct_post {
+									directMsgMutex.Lock()
+									// Mark the uri as holding an active post
+									uriToDirectMsgActive["post"][outputVar] = true
+									directMsgMutex.Unlock()
+									constructAndSendDirectMsgs("post", outputToUriGroup[outputVar])
+								}
+
+								pubDataChangedMutex.Lock()
 								pubDataChanged[outputToUriGroup[outputVar]] = true
 								pubDataChangedMutex.Unlock()
-								directSetMutex.Lock()
-								if is_direct_set {
-									uriToDirectSetActive[outputToUriGroup[outputVar]] = true
-								}
-								directSetMutex.Unlock()
+
 								if debug {
 									if stringInSlice(debug_outputs, outputVar) {
 										log.Debugf("Output [%s] attribute [%s] changed value to [%v]", outputVar, attribute, tempValue)
 									}
 								}
 							}
-							OutputScope[fullOutputName] = make([]Union, len(outputVals))
-							copy(OutputScope[fullOutputName], outputVals)
-							outputScopeMutex.Unlock()
 						} else {
 							log.Errorf("Something went wrong when trying to change the value of " + fullOutputName)
 						}
@@ -516,30 +616,53 @@ func EvaluateExpressions() {
 						output := make([]Union, len(OutputScope[fullOutputName]))
 						copy(output, OutputScope[fullOutputName])
 						outputScopeMutex.Unlock()
-						directSetMutex.RLock()
-						_, is_direct_set := uriToDirectSetActive[outputToUriGroup[fullOutputName]]
-						directSetMutex.RUnlock()
+
+						directMsgMutex.RLock()
+						// Check for both methods of direct messages in determining whether to send messages
+						_, is_direct_set := uriIsDirect["set"][outputToUriGroup[fullOutputName]]
+						_, is_direct_post := uriIsDirect["post"][outputToUriGroup[fullOutputName]]
+						directMsgMutex.RUnlock()
+
 						is_sparse := uriIsSparse[outputToUriGroup[fullOutputName]]
-						if !unionListsMatch(output, outputVals) || (is_direct_set && !is_sparse) {
+						// Check if the values have changed from the last evaluation, then copy the new values into the OutputScope
+						valuesChanged := !unionListsMatch(output, outputVals)
+
+						// Update the scope here to allow for direct messages to occur below
+						outputScopeMutex.Lock()
+						OutputScope[fullOutputName] = make([]Union, len(outputVals))
+						copy(OutputScope[fullOutputName], outputVals)
+						outputScopeMutex.Unlock()
+
+						if valuesChanged || ((is_direct_set || is_direct_post) && !is_sparse) {
 							pubDataChangedMutex.Lock()
 							outputVarChanged[fullOutputName] = true
+							pubDataChangedMutex.Unlock()
+
+							// Lock and raise the direct message flag
+							if is_direct_set {
+								directMsgMutex.Lock()
+								// Mark the uri as holding an active set
+								uriToDirectMsgActive["set"][fullOutputName] = true
+								directMsgMutex.Unlock()
+								constructAndSendDirectMsgs("set", outputToUriGroup[fullOutputName])
+							}
+							if is_direct_post {
+								directMsgMutex.Lock()
+								// Mark the uri as holding an active post
+								uriToDirectMsgActive["post"][fullOutputName] = true
+								directMsgMutex.Unlock()
+								constructAndSendDirectMsgs("post", outputToUriGroup[fullOutputName])
+							}
+
+							pubDataChangedMutex.Lock()
 							pubDataChanged[outputToUriGroup[fullOutputName]] = true
 							pubDataChangedMutex.Unlock()
-							directSetMutex.Lock()
-							if is_direct_set {
-								uriToDirectSetActive[outputToUriGroup[fullOutputName]] = true
-							}
-							directSetMutex.Unlock()
 							if debug {
 								if stringInSlice(debug_outputs, fullOutputName) {
 									log.Debugf("Output [%s] changed value to [%v]", fullOutputName, getValueFromUnion(&outputVals[0]))
 								}
 							}
 						}
-						outputScopeMutex.Lock()
-						OutputScope[fullOutputName] = make([]Union, len(outputVals))
-						copy(OutputScope[fullOutputName], outputVals)
-						outputScopeMutex.Unlock()
 					}
 				}
 

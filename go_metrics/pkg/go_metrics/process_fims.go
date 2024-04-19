@@ -451,7 +451,7 @@ func handleDecodedMetricsInputValue(inputName string) {
 		}
 	}
 
-	if !unionListsMatch(InputScope[inputName], union_array) || containedInValChanged[inputName] || inputYieldsDirectSet[inputName] {
+	if !unionListsMatch(InputScope[inputName], union_array) || containedInValChanged[inputName] || inputYieldsDirectMsg[inputName] {
 		for _, filterName := range inputToFilterExpression[inputName] {
 			filterNeedsEvalMutex.Lock()
 			filterNeedsEval[filterName] = true
@@ -473,8 +473,8 @@ func handleDecodedMetricsInputValue(inputName string) {
 	inputScopeMutex.Lock()
 	InputScope[inputName] = union_array
 	inputScopeMutex.Unlock()
-	if containedInValChanged[inputName] || inputYieldsDirectSet[inputName] {
-		ProcessDirectSets()
+	if containedInValChanged[inputName] || inputYieldsDirectMsg[inputName] {
+		ProcessDirectMsgs()
 	}
 }
 

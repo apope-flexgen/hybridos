@@ -2184,8 +2184,8 @@ func getExpression(metricsObject *MetricsObject, internal_vars []string, netInde
 		containedInValChanged = make(map[string]bool, 0)
 	}
 
-	if inputYieldsDirectSet == nil {
-		inputYieldsDirectSet = make(map[string]bool, 0)
+	if inputYieldsDirectMsg == nil {
+		inputYieldsDirectMsg = make(map[string]bool, 0)
 	}
 
 	for _, var_name := range exp.Vars {
@@ -2195,7 +2195,7 @@ func getExpression(metricsObject *MetricsObject, internal_vars []string, netInde
 				warning = fmt.Sprintf("metrics expression uses internal_output var '%v' prior to its calculation; results displayed for this metric will lag behind '%v' by one cycle", var_name, var_name)
 			}
 			containedInValChanged[var_name] = false
-			inputYieldsDirectSet[var_name] = false
+			inputYieldsDirectMsg[var_name] = false
 		}
 		inputToMetricsExpression[var_name] = append(inputToMetricsExpression[var_name], netIndex)
 
@@ -2248,9 +2248,10 @@ func getExpression(metricsObject *MetricsObject, internal_vars []string, netInde
 		output.Value = outputUnion
 		OutputScope[outputVar] = []Union{outputUnion}
 		MetricsConfig.Outputs[outputVar] = output
-		if stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "direct_set") {
+		if stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "direct_set") ||
+			stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "post") {
 			for _, var_name := range exp.Vars {
-				inputYieldsDirectSet[var_name] = true
+				inputYieldsDirectMsg[var_name] = true
 			}
 		}
 	}
@@ -2306,11 +2307,18 @@ func combineFlags(outputName string, output *Output) {
 	if outputToUriGroup == nil {
 		outputToUriGroup = make(map[string]string, 0)
 	}
-	if uriIsSet == nil {
-		uriIsSet = make(map[string]bool, 0)
+	if uriIsIntervalSet == nil {
+		uriIsIntervalSet = make(map[string]bool, 0)
 	}
-	if uriToDirectSetActive == nil {
-		uriToDirectSetActive = make(map[string]bool, 0)
+	if uriIsDirect == nil {
+		uriIsDirect = make(map[string]map[string]bool, 0)
+		uriIsDirect["set"] = make(map[string]bool)
+		uriIsDirect["post"] = make(map[string]bool)
+	}
+	if uriToDirectMsgActive == nil {
+		uriToDirectMsgActive = make(map[string]map[string]bool, 0)
+		uriToDirectMsgActive["set"] = make(map[string]bool)
+		uriToDirectMsgActive["post"] = make(map[string]bool)
 	}
 	if uriIsSparse == nil {
 		uriIsSparse = make(map[string]bool, 0)
@@ -2355,11 +2363,11 @@ func combineFlags(outputName string, output *Output) {
 		PubUriFlags[uriGroup] = append(PubUriFlags[uriGroup], output.Flags...)
 		PubUriFlags[uriGroup] = removeDuplicateValues(PubUriFlags[uriGroup])
 		if stringInSlice(PubUriFlags[uriGroup], "interval_set") {
-			uriIsSet[uriGroup] = true
+			uriIsIntervalSet[uriGroup] = true
 			noGetResponse[output.Uri] = true
 			noGetResponse[output.Uri+"/"+outputName] = true
 		} else {
-			uriIsSet[uriGroup] = false
+			uriIsIntervalSet[uriGroup] = false
 		}
 		if stringInSlice(PubUriFlags[uriGroup], "sparse") {
 			uriIsSparse[uriGroup] = true
@@ -2372,7 +2380,14 @@ func combineFlags(outputName string, output *Output) {
 			uriHeartbeat[uriGroup] = true
 		}
 		if stringInSlice(PubUriFlags[uriGroup], "direct_set") {
-			uriToDirectSetActive[uriGroup] = false
+			uriIsDirect["set"][uriGroup] = true
+			uriToDirectMsgActive["set"][uriGroup] = false
+			noGetResponse[output.Uri] = true
+			noGetResponse[output.Uri+"/"+outputName] = true
+		}
+		if stringInSlice(PubUriFlags[uriGroup], "post") {
+			uriIsDirect["post"][uriGroup] = true
+			uriToDirectMsgActive["post"][uriGroup] = false
 			noGetResponse[output.Uri] = true
 			noGetResponse[output.Uri+"/"+outputName] = true
 		}
@@ -2464,7 +2479,9 @@ func GetPubTickers() {
 				pubDataChanged[output.Uri] = true
 				uriGroup = output.Uri
 			}
-			if _, ok := uriToDirectSetActive[uriGroup]; !ok { // if it's not a direct set, then we need a pub ticker for it
+			_, set_ok := uriIsDirect["set"][uriGroup]
+			_, post_ok := uriIsDirect["post"][uriGroup]
+			if !set_ok && !post_ok { // if it's not a direct message, then we need a pub ticker for it
 				if stringInSlice(output.Flags, "lonely") && output.PublishRate > 0 && output.PublishRate != globalPubRate { // if it's lonely, create its own ticker
 					pubTicker := time.NewTicker(time.Duration(output.PublishRate) * time.Millisecond)
 					tickers = append(tickers, pubTicker)
@@ -2501,10 +2518,11 @@ func GetPubTickers() {
 		MetricsConfig.Echo[echoIndex].Ticker = time.NewTicker(time.Duration(MetricsConfig.Echo[echoIndex].PublishRate) * time.Millisecond)
 	}
 	EvaluateExpressions()
-	for directSetUriGroup := range uriToDirectSetActive {
-		directSetMutex.Lock()
-		uriToDirectSetActive[directSetUriGroup] = false
-		directSetMutex.Unlock()
+	for directMsgUriGroup := range uriToDirectMsgActive {
+		directMsgMutex.Lock()
+		uriToDirectMsgActive["set"][directMsgUriGroup] = false
+		uriToDirectMsgActive["post"][directMsgUriGroup] = false
+		directMsgMutex.Unlock()
 	}
 }
 

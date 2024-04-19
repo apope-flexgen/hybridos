@@ -2,13 +2,14 @@ package go_metrics
 
 func PrepareBody(outputUri string) map[string]interface{} {
 	msgBody := make(map[string]interface{}, len(PublishUris[outputUri]))
-	setMsgBody = make(map[string]interface{}, 0)
+	directMsgBody = make(map[string]interface{}, 0)
 	pubMsgBody = make(map[string]interface{}, 0)
 	clothed := false
 	naked := false
 	checkFormat := false
-	interval_set := uriIsSet[outputUri]
-	_, direct_set := uriToDirectSetActive[outputUri]
+	interval_set := uriIsIntervalSet[outputUri]
+	_, direct_set := uriIsDirect["set"][outputUri]
+	_, direct_post := uriIsDirect["post"][outputUri]
 
 	if stringInSlice(PubUriFlags[outputUri], "clothed") {
 		clothed = true
@@ -172,8 +173,8 @@ func PrepareBody(outputUri string) map[string]interface{} {
 					}
 				}
 			}
-			if interval_set || direct_set {
-				setMsgBody[outputVar] = msgBody[outputVar]
+			if interval_set || direct_set || direct_post {
+				directMsgBody[outputVar] = msgBody[outputVar]
 			} else {
 				pubMsgBody[outputVar] = msgBody[outputVar]
 			}

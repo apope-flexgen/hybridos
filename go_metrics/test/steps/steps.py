@@ -252,8 +252,17 @@ def step_impl(context, method, uri):
     else:
         assert False, f"Did not receive complete fims message {match}"
 
-# TODO: Handle single-value gets
-# e.g. fims_send -m get -u /some/output/output_var ---> returns "some_string"
+
+@then(u'I expect no fims {method}s will be sent to {uri}')
+def step_impl(context, method, uri):
+    # TODO: warn the user if the given statement is not present without checking that the fims_listen_result_array exists
+    try:
+        result = subprocess.run(["fims_listen", "-n", "1", "-m", method, "-u", uri],
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False, timeout=5)
+        if result and result.stdout:
+            assert False, "Expected no messages but received fims {method}."
+    except subprocess.TimeoutExpired:
+        assert True
 
 
 @then(u'a fims get to {uri} should yield')

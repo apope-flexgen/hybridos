@@ -36,16 +36,17 @@ var echoMutex sync.RWMutex
 var filterNeedsEvalMutex sync.RWMutex
 var pubDataChangedMutex sync.RWMutex
 var echoMsgBodyMutex sync.RWMutex
-var directSetMutex sync.RWMutex
+var directMsgMutex sync.RWMutex
 var elementValueMutex sync.Mutex
 
 // local variables used throughout the package
 // since we want to minimize garbage collection
-var allOutputFlags = []string{"naked", "clothed", `group\d+`, "interval_set", "enum", "bitfield", "sparse", "no_heartbeat", "direct_set", "lonely"}
+var allOutputFlags = []string{"naked", "clothed", `group\d+`, "interval_set", "enum", "bitfield", "sparse", "no_heartbeat", "direct_set", "post", "lonely"}
 var uriIsSparse map[string]bool
-var uriIsSet map[string]bool
+var uriIsIntervalSet map[string]bool
 var uriIsLonely map[string]bool
-var uriToDirectSetActive map[string]bool // map of uris that have direct sets to whether or not we need to send a pub out now
+var uriIsDirect map[string]map[string]bool          // map of uris that send direct messages (set or post)
+var uriToDirectMsgActive map[string]map[string]bool // map of uris that have direct messages to whether or not we need to send a pub out now. The outer map indicates the method (set or post) and the inner map indicates the uri
 var uriHeartbeat map[string]bool
 var uriToInputNameMap map[string][]string          // a map of uri's to input variable names
 var uriToEchoObjectInputMap map[string]map[int]int // a map of uri's to listen for and corresponding echo objects that use them
@@ -65,7 +66,7 @@ var echoOutputToInputNum map[string]int            // full echo register uri to 
 var echoPublishUristoEchoNum map[string]int        // the pub uri to the echo object number
 
 // local variables used for publishing messages
-var setMsgBody map[string]interface{}
+var directMsgBody map[string]interface{}
 var pubMsgBody map[string]interface{}
 var echoMsgBody map[string]interface{}
 var tickers [](*time.Ticker)    // tickers that keep track of publishing rates
@@ -82,14 +83,13 @@ var debug bool
 var debug_inputs []string
 var debug_filters []string
 var debug_outputs []string
-var directSetUri string
 var echoInput EchoInput
 var mdooutput Output
 var tempValue interface{}
 var mdoBuf *bytes.Buffer
 var mdoEncoder *json.Encoder
 var containedInValChanged map[string]bool
-var inputYieldsDirectSet map[string]bool
+var inputYieldsDirectMsg map[string]bool
 
 // runtime parsing variables - for process_fims
 var pj *simdjson.ParsedJson
