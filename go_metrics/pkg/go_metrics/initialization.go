@@ -2206,11 +2206,13 @@ func getExpression(metricsObject *MetricsObject, internal_vars []string, netInde
 
 	expressionNeedsEval[netIndex] = true
 	(*metricsObject).State = make(map[string][]Union, 0)
+	// Time-based operations that need regular evaluation to ensure they get the updates they need
 	if strings.Contains((*metricsObject).ParsedExpression.String, "Integrate") ||
 		strings.Contains((*metricsObject).ParsedExpression.String, "Time") ||
 		strings.Contains((*metricsObject).ParsedExpression.String, "Milliseconds") ||
-		strings.Contains((*metricsObject).ParsedExpression.String, "Pulse") {
-		(*metricsObject).State["alwaysEvaluate"] = []Union{{tag: BOOL, b: true}}
+		strings.Contains((*metricsObject).ParsedExpression.String, "Pulse") ||
+		strings.Contains((*metricsObject).ParsedExpression.String, "Duration") {
+		(*metricsObject).State["alwaysEvaluate"] = []Union{Union{tag: BOOL, b: true}}
 	} else {
 		(*metricsObject).State["alwaysEvaluate"] = []Union{{tag: BOOL, b: false}}
 	}

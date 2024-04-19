@@ -40,6 +40,11 @@ func (dataType DataType) String() string {
 	}
 }
 
+// Determine whether the data type is numeric
+func (dataType DataType) isNumeric() bool {
+	return (dataType == INT || dataType == UINT || dataType == FLOAT)
+}
+
 func (dataType *DataType) MarshalJSON() ([]byte, error) {
 	switch *dataType {
 	case STRING:

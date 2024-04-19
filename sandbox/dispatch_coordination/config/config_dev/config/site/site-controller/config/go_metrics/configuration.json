@@ -1,1 +1,16 @@
-{}
+{
+    "inputs": {
+        "v##": { "uri": "/example/v1", "type": "float" }
+    },
+    "outputs": {
+        "v1_times_5": { "uri": "/some/output", "flags":["clothed"] }
+	},
+    "metrics": [
+        {
+            "id": "v1_times_5",
+            "type": "bool", 
+            "outputs": "v1_times_5",
+            "expression": "Duration(v1 > 0, 5)"
+        }
+    ]
+}

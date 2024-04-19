@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/bits"
+	"strings"
 	"time"
 )
 
@@ -2053,4 +2054,58 @@ func In(compareVal Union, argVals []Union) (Union, error) {
 		}
 	}
 	return Union{tag: BOOL, b: false}, nil
+}
+
+// Duration ensures the provided expression is true for the given duration.
+// TODO: Only boolean expressions are supported currently
+// expressionResult: The result of the expression to monitor
+// durationSecs: The duration for which the expression must be true
+// state: Any auxiliary data relevant to the metric
+// Returns true/false Union and errors present
+func Duration(expressionResult bool, durationSecs float64, state *map[string][]Union) (Union, error) {
+	if state == nil {
+		return Union{}, fmt.Errorf("do not have a defined state for Duration")
+	}
+
+	// Ensure the previous value and timestamp exist
+	if len((*state)["previousValue"]) == 0 {
+		// previousValue tracks the last value of the expression
+		(*state)["previousValue"] = []Union{{tag: BOOL, b: false}}
+	}
+	if len((*state)["firstTriggered"]) == 0 {
+		// firstTriggered tracks the timestamp (uint milliseconds) when the expression was first true
+		(*state)["firstTriggered"] = []Union{{tag: INT, i: 0}}
+	}
+
+	// Before exiting, always update the previous value with the current value
+	defer func() {
+		(*state)["previousValue"][0] = Union{tag: BOOL, b: expressionResult}
+	}()
+
+	if !expressionResult {
+		// The expression was false
+		return Union{tag: BOOL, b: false}, nil
+	}
+
+	// If the expression is true, check how long it has been true
+	// Reset the trigger time if the expression has changed value
+	if expressionResult != (*state)["previousValue"][0].b {
+		updated_timestamp, _ := CurrentTimeMilliseconds()
+		(*state)["firstTriggered"][0] = Union{tag: INT, i: updated_timestamp.i}
+	}
+	// Compare the time difference (in milliseconds) to the given duration (in seconds)
+	time_since_trigger, err := MillisecondsSince((*state)["firstTriggered"][0])
+	if err != nil {
+		attempted_resolution := ""
+		// If there is an overflow error, attempt to resolve by resetting the timestamp
+		if strings.Contains(err.Error(), "overflow") {
+			updated_timestamp, _ := CurrentTimeMilliseconds()
+			(*state)["firstTriggered"][0] = Union{tag: INT, i: updated_timestamp.i}
+			attempted_resolution = " Manually reset trigger time for reevaluation"
+		}
+		return Union{}, fmt.Errorf("error checking Duration: %v.%s", err, attempted_resolution)
+	}
+	// Return whether the expression was true for the full duration
+	true_for_duration := float64(time_since_trigger.i)/1000 > durationSecs
+	return Union{tag: BOOL, b: true_for_duration}, nil
 }

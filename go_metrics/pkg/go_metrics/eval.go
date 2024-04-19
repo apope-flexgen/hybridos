@@ -1102,6 +1102,30 @@ func evaluateCallExpr(node *ast.CallExpr, state *map[string][]Union) ([]Union, e
 				return []Union{}, fmt.Errorf("incorrect number of arguments for In function")
 			}
 			result, err = In(argVals[0], argVals[1:])
+		case "duration":
+			// Check arguments
+			if num_eval_args := len(argVals); num_eval_args != 2 {
+				return []Union{}, fmt.Errorf("incorrect number of arguments for duration function. Expected 2 but got %d", num_eval_args)
+			}
+			// TODO: only boolean expression outputs are supported for now
+			expressionResult := argVals[0]
+			if expressionResult.tag != BOOL {
+				if err := castUnionType(&expressionResult, BOOL); err != nil {
+					return []Union{}, fmt.Errorf("incorrect type of expression for duration function. Requires boolean but got %s", argVals[0].tag.String())
+				}
+			}
+			durationArg := argVals[1]
+			// Internal timing functions use int64 so use the same type to match
+			if durationArg.tag != FLOAT {
+				if err := castUnionType(&durationArg, FLOAT); err != nil {
+					return []Union{}, fmt.Errorf("incorrect type of duration for duration function. Requires float but got %s", argVals[0].tag.String())
+				}
+			}
+
+			result, err = Duration(expressionResult.b, durationArg.f, state)
+			if err != nil {
+				return []Union{}, fmt.Errorf("failed to evaluate Duration function, %w", err)
+			}
 		default:
 			return []Union{}, fmt.Errorf("unrecognized function %v", id.Name)
 		}

@@ -710,6 +710,16 @@ func extractFunc(node *ast.CallExpr) ([]string, DataType, error) {
 			for _, tag := range tags {
 				resultType = getResultType(resultType, tag)
 			}
+		case "duration":
+			// Check arguments
+			if num_args := len(node.Args); num_args != 2 {
+				return stringArr, NIL, fmt.Errorf("received %d arguments for Duration function; need exactly 2 arguments (the expression and the duration in seconds)", num_args)
+			}
+			// The last tag must be able to be parsed as an integer
+			if !tags[len(tags)-1].isNumeric() {
+				return stringArr, NIL, fmt.Errorf("duration in seconds must be numeric for Duration function. Got %s", tags[len(tags)-1].String())
+			}
+			resultType = BOOL
 		default:
 			return stringArr, NIL, fmt.Errorf("unrecognized function %v", id.Name)
 		}
