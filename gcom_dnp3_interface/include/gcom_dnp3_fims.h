@@ -75,6 +75,8 @@ struct UriRequest
     static constexpr auto Debug_Suffix = "_debug";                          // set
     static constexpr auto Force_Suffix = "_force";                          // set
     static constexpr auto Unforce_Suffix = "_unforce";                      // set
+    static constexpr auto Enable_Suffix = "_enable";                        // set
+    static constexpr auto Disable_Suffix = "_disable";                      // set
 
     static constexpr auto Points_Suffix = "_points";            // get
     static constexpr auto Full_Suffix = "_full";                // get
@@ -107,13 +109,21 @@ struct UriRequest
                 if (method == FimsMethod::Set)
                 {
                     if (uri_frags[idx] == Reset_Timings_Request_Suffix)
+                    {
                         is_reset_timings_request = true;
+                    }
                     else if (uri_frags[idx] == Reset_Errors_Request_Suffix)
+                    {
                         is_reset_errors_request = true;
+                    }
                     else if (uri_frags[idx] == Reload_Request_Suffix)
+                    {
                         is_reload_request = true;
+                    }
                     else if (uri_frags[idx] == Debug_Suffix)
+                    {
                         is_debug_request = true;
+                    }
                     else if (uri_frags[idx] == Force_Suffix && contains_local_uri)
                     {
                         is_force_request = true;
@@ -121,6 +131,14 @@ struct UriRequest
                     else if (uri_frags[idx] == Unforce_Suffix && contains_local_uri)
                     {
                         is_unforce_request = true;
+                    }
+                    else if (uri_frags[idx] == Enable_Suffix)
+                    {
+                        is_enable_request = true;
+                    }
+                    else if (uri_frags[idx] == Disable_Suffix)
+                    {
+                        is_disable_request = true;
                     }
                 }
                 else if (method == FimsMethod::Get)
@@ -149,8 +167,9 @@ struct UriRequest
         }
         is_request = is_raw_request || is_timings_request || is_errors_request || is_reset_timings_request ||
                      is_reset_errors_request || is_reload_request || is_config_request || is_debug_request ||
-                     is_force_request || is_unforce_request || is_points_request ||
-                     is_stats_request;  // omit is_full_request because that's handled a little differently
+                     is_force_request || is_unforce_request || is_points_request || is_stats_request ||
+                     is_enable_request ||
+                     is_disable_request;  // omit is_full_request because that's handled a little differently
     };
 
     void clear_uri()
@@ -169,6 +188,8 @@ struct UriRequest
         is_points_request = false;
         is_full_request = false;
         is_stats_request = false;
+        is_enable_request = false;
+        is_disable_request = false;
         uri_frags.clear();
     }
 
@@ -202,6 +223,8 @@ struct UriRequest
     bool is_points_request;
     bool is_full_request;
     bool is_stats_request;
+    bool is_enable_request;
+    bool is_disable_request;
     bool is_request = false;
     int num_uri_frags;
 

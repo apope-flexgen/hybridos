@@ -128,6 +128,11 @@ public:
     bool is_forced = false;                            // is the point currently in forced mode?
     bool sent_operate_before_or_during_force = false;  // did we receive a REAL "set" on the
                                                        // client while the point was being forced?
+    bool is_enabled = true;  // Basically, if a point is disabled, we pretend it doesn't exist in our system.
+                             // DNP3 requests will still contain data for this point, but we will not update point
+                             // values, nor send anything out over fims for this point. Output points will not send out
+                             // operate commands over DNP3 if disabled on the client side, nore will they send out fims
+                             // sets if disabled on the server side.
 
     Register_Types type;
     std::string name;                            // how this point is identified

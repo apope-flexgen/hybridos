@@ -24,10 +24,10 @@ USE_LATEST_RELEASE = False
 
 # All you really need is the configs directory.
 # The other directories will be made for you.
-CONFIGS_DIR = "configs/forced_unforced"
-TEST_CONFIG_DIR = "test_configs/forced_unforced"
-TEST_OUTPUT_DIR = "test_output/forced_unforced"
-TEST_LOG_DIR = "logs/forced_unforced"
-TEST_CONSOLE_OUTPUT_DIR="console/forced_unforced"
-TEST_SCRIPT_DIR="test_scripts/forced_unforced"
+CONFIGS_DIR = "configs/disable_enable"
+TEST_CONFIG_DIR = "test_configs/disable_enable"
+TEST_OUTPUT_DIR = "test_output/disable_enable"
+TEST_LOG_DIR = "logs/disable_enable"
+TEST_CONSOLE_OUTPUT_DIR="console/disable_enable"
+TEST_SCRIPT_DIR="test_scripts/disable_enable"
 DIRS = [CONFIGS_DIR, TEST_CONFIG_DIR, TEST_OUTPUT_DIR, TEST_LOG_DIR, TEST_CONSOLE_OUTPUT_DIR, TEST_SCRIPT_DIR]

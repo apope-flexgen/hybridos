@@ -8,8 +8,7 @@
 #include "Jval_buif.hpp"
 #include "tmwscl/utils/tmwsim.h"
 
-extern "C"
-{
+extern "C" {
 #include "tmwscl/utils/tmwpltmr.h"
 #include "tmwscl/dnp/sdnpo002.h"
 #include "tmwscl/dnp/sdnpo022.h"
@@ -33,9 +32,9 @@ using namespace std;
 GcomSystem serverSys = GcomSystem(Protocol::DNP3);
 
 #ifndef DNP3_TEST_MODE
-GcomSystem *clientSysp = nullptr; //&Sys;
+GcomSystem* clientSysp = nullptr;  //&Sys;
 #endif
-GcomSystem *serverSysp = &serverSys;
+GcomSystem* serverSysp = &serverSys;
 
 int64_t num_configs_server = 0;
 
@@ -58,36 +57,51 @@ void signal_handler_server(int sig)
  *
  * @param pSetWork void * pointer to the SetWork for a particular point
  */
-void fimsSendSetCallback(void *pSetWork)
+void fimsSendSetCallback(void* pSetWork)
 {
-    SetWork *set_work = (SetWork *)pSetWork;
+    SetWork* set_work = (SetWork*)pSetWork;
     set_work->send_buf.clear();
-    TMWSIM_POINT *dbPoint = set_work->dbPoint;
-    if(((FlexPoint *)dbPoint->flexPointHandle)->is_individual_bits){
-        for(auto bit : ((FlexPoint *)dbPoint->flexPointHandle)->dbBits) {
+    TMWSIM_POINT* dbPoint = set_work->dbPoint;
+    if (!((FlexPoint*)(dbPoint->flexPointHandle))->is_enabled)
+    {
+        return;
+    }
+    if (((FlexPoint*)dbPoint->flexPointHandle)->is_individual_bits)
+    {
+        for (auto bit : ((FlexPoint*)dbPoint->flexPointHandle)->dbBits)
+        {
             set_work->send_buf.clear();
-            if(bit.first == "Unknown"){
+            if (bit.first == "Unknown")
+            {
                 continue;
             }
             format_individual_bit(set_work->send_buf, dbPoint, set_work->value, 255, nullptr, bit.first);
-            std::string uri = std::string(((FlexPoint *)dbPoint->flexPointHandle)->uri) + "/" + bit.first;
-            if (!send_set((((FlexPoint *)dbPoint->flexPointHandle)->sys)->fims_dependencies->fims_gateway, std::string_view{uri.data(), uri.size()}, std::string_view{set_work->send_buf.data(), set_work->send_buf.size()}))
+            std::string uri = std::string(((FlexPoint*)dbPoint->flexPointHandle)->uri) + "/" + bit.first;
+            if (!send_set((((FlexPoint*)dbPoint->flexPointHandle)->sys)->fims_dependencies->fims_gateway,
+                          std::string_view{ uri.data(), uri.size() },
+                          std::string_view{ set_work->send_buf.data(), set_work->send_buf.size() }))
             {
-                if (!spam_limit(((FlexPoint *)dbPoint->flexPointHandle)->sys, ((FlexPoint *)dbPoint->flexPointHandle)->sys->fims_errors))
+                if (!spam_limit(((FlexPoint*)dbPoint->flexPointHandle)->sys,
+                                ((FlexPoint*)dbPoint->flexPointHandle)->sys->fims_errors))
                 {
-                    FPS_ERROR_LOG("could not send fims_set to %s", std::string_view{uri.data(), uri.size()});
+                    FPS_ERROR_LOG("could not send fims_set to %s", std::string_view{ uri.data(), uri.size() });
                     FPS_LOG_IT("fims_send_error");
                 }
             }
         }
-        
-    } else {
+    }
+    else
+    {
         format_point(set_work->send_buf, dbPoint, set_work->value, 255, nullptr, false);
-        if (!send_set((((FlexPoint *)dbPoint->flexPointHandle)->sys)->fims_dependencies->fims_gateway, std::string_view{set_work->send_uri.data(), set_work->send_uri.size()}, std::string_view{set_work->send_buf.data(), set_work->send_buf.size()}))
+        if (!send_set((((FlexPoint*)dbPoint->flexPointHandle)->sys)->fims_dependencies->fims_gateway,
+                      std::string_view{ set_work->send_uri.data(), set_work->send_uri.size() },
+                      std::string_view{ set_work->send_buf.data(), set_work->send_buf.size() }))
         {
-            if (!spam_limit(((FlexPoint *)dbPoint->flexPointHandle)->sys, ((FlexPoint *)dbPoint->flexPointHandle)->sys->fims_errors))
+            if (!spam_limit(((FlexPoint*)dbPoint->flexPointHandle)->sys,
+                            ((FlexPoint*)dbPoint->flexPointHandle)->sys->fims_errors))
             {
-                FPS_ERROR_LOG("could not send fims_set to %s", std::string_view{set_work->send_uri.data(), set_work->send_uri.size()});
+                FPS_ERROR_LOG("could not send fims_set to %s",
+                              std::string_view{ set_work->send_uri.data(), set_work->send_uri.size() });
                 FPS_LOG_IT("fims_send_error");
             }
         }
@@ -103,15 +117,14 @@ void fimsSendSetCallback(void *pSetWork)
  *
  * @param pSetWork void * pointer to the SetWork for a particular point
  */
-void fimsSendIntervalSetCallback(void *pSetWork)
+void fimsSendIntervalSetCallback(void* pSetWork)
 {
     fimsSendSetCallback(pSetWork);
-    TMWSIM_POINT *dbPoint = ((SetWork *)pSetWork)->dbPoint;
-    tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->set_timer),
-                   ((FlexPoint *)(dbPoint->flexPointHandle))->interval_set_rate,
-                   (((FlexPoint *)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
-                   fimsSendIntervalSetCallback,
-                   (void *)(&((FlexPoint *)(dbPoint->flexPointHandle))->set_work));
+    TMWSIM_POINT* dbPoint = ((SetWork*)pSetWork)->dbPoint;
+    tmwtimer_start((&((FlexPoint*)(dbPoint->flexPointHandle))->set_timer),
+                   ((FlexPoint*)(dbPoint->flexPointHandle))->interval_set_rate,
+                   (((FlexPoint*)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
+                   fimsSendIntervalSetCallback, (void*)(&((FlexPoint*)(dbPoint->flexPointHandle))->set_work));
 }
 
 /**
@@ -133,82 +146,92 @@ void fimsSendIntervalSetCallback(void *pSetWork)
  * function currently only handles Group 40 and Group 10.
  * @param pointNumber TMWTYPES_UINT the point number for the current point being handled
  */
-void received_command_callback(void *pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_OBJ_GROUP_ID objectGroup, TMWTYPES_UINT pointNumber)
+void received_command_callback(void* pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_OBJ_GROUP_ID objectGroup,
+                               TMWTYPES_UINT pointNumber)
 {
     if (type == TMWSIM_POINT_UPDATE)
     {
         if (objectGroup == DNPDEFS_OBJ_40_ANA_OUT_STATUSES)
         {
-            TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)sdnpsim_anlgOutGetPoint(pDbHandle, pointNumber);
-            if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr && dbPoint->reason == TMWDEFS_CHANGE_REMOTE_OP)
+            TMWSIM_POINT* dbPoint = (TMWSIM_POINT*)sdnpsim_anlgOutGetPoint(pDbHandle, pointNumber);
+            if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr &&
+                dbPoint->reason == TMWDEFS_CHANGE_REMOTE_OP)
             {
-                // checkOutputOverflow(dbPoint); // I don't think this works...something weird with how the over_range flag is set
-                ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value = dbPoint->data.analog.value;
-                if(((FlexPoint *)dbPoint->flexPointHandle)->sent_operate) { // sent_operate is actually not accurate here...it's more like "received_value_over_fims"
-                    dbPoint->data.analog.value = ((FlexPoint *)(dbPoint->flexPointHandle))->operate_value; // this is the last value received over fims
+                // checkOutputOverflow(dbPoint); // I don't think this works...something weird with how the over_range
+                // flag is set
+                ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.value = dbPoint->data.analog.value;
+                if (((FlexPoint*)dbPoint->flexPointHandle)->sent_operate)
+                {  // sent_operate is actually not accurate here...it's more like "received_value_over_fims"
+                    dbPoint->data.analog.value = ((FlexPoint*)(dbPoint->flexPointHandle))
+                                                     ->operate_value;  // this is the last value received over fims
                 }
-                if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->set_timer))
+                if (!tmwtimer_isActive(&((FlexPoint*)(dbPoint->flexPointHandle))->set_timer))
                 {
-                    if (((FlexPoint *)(dbPoint->flexPointHandle))->interval_sets)
+                    if (((FlexPoint*)(dbPoint->flexPointHandle))->interval_sets)
                     {
-                        tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->set_timer),
-                                       ((FlexPoint *)(dbPoint->flexPointHandle))->interval_set_rate,
-                                       (((FlexPoint *)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
-                                       fimsSendIntervalSetCallback,
-                                       (void *)(&((FlexPoint *)(dbPoint->flexPointHandle))->set_work));
+                        tmwtimer_start(
+                            (&((FlexPoint*)(dbPoint->flexPointHandle))->set_timer),
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->interval_set_rate,
+                            (((FlexPoint*)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
+                            fimsSendIntervalSetCallback, (void*)(&((FlexPoint*)(dbPoint->flexPointHandle))->set_work));
                     }
-                    else if (((FlexPoint *)(dbPoint->flexPointHandle))->batch_sets)
+                    else if (((FlexPoint*)(dbPoint->flexPointHandle))->batch_sets)
                     {
-                        tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->set_timer),
-                                       ((FlexPoint *)(dbPoint->flexPointHandle))->batch_set_rate,
-                                       (((FlexPoint *)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
-                                       fimsSendSetCallback,
-                                       (void *)(&((FlexPoint *)(dbPoint->flexPointHandle))->set_work));
+                        tmwtimer_start(
+                            (&((FlexPoint*)(dbPoint->flexPointHandle))->set_timer),
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->batch_set_rate,
+                            (((FlexPoint*)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
+                            fimsSendSetCallback, (void*)(&((FlexPoint*)(dbPoint->flexPointHandle))->set_work));
                     }
                     else
                     {
-                        fimsSendSetCallback((void *)(&((FlexPoint *)(dbPoint->flexPointHandle))->set_work));
+                        fimsSendSetCallback((void*)(&((FlexPoint*)(dbPoint->flexPointHandle))->set_work));
                     }
                 }
             }
         }
         else if (objectGroup == DNPDEFS_OBJ_10_BIN_OUT_STATUSES)
         {
-
-            TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)sdnpsim_binOutGetPoint(pDbHandle, pointNumber);
-            if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr && dbPoint->reason == TMWDEFS_CHANGE_REMOTE_OP)
+            TMWSIM_POINT* dbPoint = (TMWSIM_POINT*)sdnpsim_binOutGetPoint(pDbHandle, pointNumber);
+            if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr &&
+                dbPoint->reason == TMWDEFS_CHANGE_REMOTE_OP)
             {
-                // checkOutputOverflow(dbPoint); // I don't think this works...something weird with how the over_range flag is set
-                ((FlexPoint *)(dbPoint->flexPointHandle))->set_work.value = dbPoint->data.binary.value;
-                if(((FlexPoint *)dbPoint->flexPointHandle)->sent_operate) { // sent_operate is actually not accurate here...it's more like "received_value_over_fims"
-                    dbPoint->data.binary.value = static_cast<bool>(((FlexPoint *)(dbPoint->flexPointHandle))->operate_value); // this is the last value received over fims
+                // checkOutputOverflow(dbPoint); // I don't think this works...something weird with how the over_range
+                // flag is set
+                ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.value = dbPoint->data.binary.value;
+                if (((FlexPoint*)dbPoint->flexPointHandle)->sent_operate)
+                {  // sent_operate is actually not accurate here...it's more like "received_value_over_fims"
+                    dbPoint->data.binary.value = static_cast<bool>(
+                        ((FlexPoint*)(dbPoint->flexPointHandle))
+                            ->operate_value);  // this is the last value received over fims
                 }
-                if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->set_timer))
+                if (!tmwtimer_isActive(&((FlexPoint*)(dbPoint->flexPointHandle))->set_timer))
                 {
-                    if (((FlexPoint *)(dbPoint->flexPointHandle))->interval_sets)
+                    if (((FlexPoint*)(dbPoint->flexPointHandle))->interval_sets)
                     {
-                        tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->set_timer),
-                                       ((FlexPoint *)(dbPoint->flexPointHandle))->interval_set_rate,
-                                       (((FlexPoint *)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
-                                       fimsSendIntervalSetCallback,
-                                       (void *)(&((FlexPoint *)(dbPoint->flexPointHandle))->set_work));
+                        tmwtimer_start(
+                            (&((FlexPoint*)(dbPoint->flexPointHandle))->set_timer),
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->interval_set_rate,
+                            (((FlexPoint*)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
+                            fimsSendIntervalSetCallback, (void*)(&((FlexPoint*)(dbPoint->flexPointHandle))->set_work));
                     }
-                    else if (((FlexPoint *)(dbPoint->flexPointHandle))->batch_sets)
+                    else if (((FlexPoint*)(dbPoint->flexPointHandle))->batch_sets)
                     {
-                        tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->set_timer),
-                                       ((FlexPoint *)(dbPoint->flexPointHandle))->batch_set_rate,
-                                       (((FlexPoint *)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
-                                       fimsSendSetCallback,
-                                       (void *)(&((FlexPoint *)(dbPoint->flexPointHandle))->set_work));
+                        tmwtimer_start(
+                            (&((FlexPoint*)(dbPoint->flexPointHandle))->set_timer),
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->batch_set_rate,
+                            (((FlexPoint*)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
+                            fimsSendSetCallback, (void*)(&((FlexPoint*)(dbPoint->flexPointHandle))->set_work));
                     }
                     else
                     {
-                        fimsSendSetCallback((void *)(&((FlexPoint *)(dbPoint->flexPointHandle))->set_work));
+                        fimsSendSetCallback((void*)(&((FlexPoint*)(dbPoint->flexPointHandle))->set_work));
                     }
                 }
             }
         }
-        // else if (objectGroup == DNPDEFS_OBJ_30_ANA_INPUTS)  // I don't think this works...something weird with how the over_range flag is set
+        // else if (objectGroup == DNPDEFS_OBJ_30_ANA_INPUTS)  // I don't think this works...something weird with how
+        // the over_range flag is set
         // {
         //     TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)sdnpsim_anlgInGetPoint(pDbHandle, pointNumber);
         //     if (dbPoint != nullptr && dbPoint->flexPointHandle != nullptr)
@@ -236,18 +259,19 @@ void received_command_callback(void *pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_
  * @param dbPoint the TMWSIM_POINT * currently being updated
  * @param value the value that was passed over fims that will be stored in dbPoint->data.analog.value
  */
-void add_analog_event_callback(void *pDbPoint)
+void add_analog_event_callback(void* pDbPoint)
 {
-    TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)pDbPoint;
+    TMWSIM_POINT* dbPoint = (TMWSIM_POINT*)pDbPoint;
     TMWTYPES_ANALOG_VALUE analogValue;
     analogValue.type = TMWTYPES_ANALOG_TYPE_DOUBLE;
     analogValue.value.dval = tmwsim_getAnalogValue(dbPoint);
     check_limits_server(dbPoint, analogValue.value.dval);
-    if (((FlexPoint *)dbPoint->flexPointHandle)->event_pub)
+    if (((FlexPoint*)dbPoint->flexPointHandle)->event_pub)
     {
-        ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
-        sdnpo032_addEvent(((FlexPoint *)dbPoint->flexPointHandle)->sys->protocol_dependencies->dnp3.pSession, dbPoint->pointNumber, &analogValue, dbPoint->flags, &dbPoint->timeStamp);
-        ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
+        ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
+        sdnpo032_addEvent(((FlexPoint*)dbPoint->flexPointHandle)->sys->protocol_dependencies->dnp3.pSession,
+                          dbPoint->pointNumber, &analogValue, dbPoint->flags, &dbPoint->timeStamp);
+        ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
     }
 }
 
@@ -260,200 +284,189 @@ void add_analog_event_callback(void *pDbPoint)
  * @param dbPoint the TMWSIM_POINT * currently being updated
  * @param value the value that was passed over fims that will be stored in dbPoint->data.counter.value
  */
-void add_counter_event_callback(void *pDbPoint)
+void add_counter_event_callback(void* pDbPoint)
 {
-    TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)pDbPoint;
+    TMWSIM_POINT* dbPoint = (TMWSIM_POINT*)pDbPoint;
     TMWTYPES_ULONG counterValue = tmwsim_getCounterValue(dbPoint);
     double tempCounterValue = static_cast<double>(counterValue);
     check_limits_server(dbPoint, tempCounterValue);
     counterValue = static_cast<uint32_t>(tempCounterValue);
-    if (((FlexPoint *)dbPoint->flexPointHandle)->event_pub)
+    if (((FlexPoint*)dbPoint->flexPointHandle)->event_pub)
     {
-        ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
-        sdnpo022_addEvent(((FlexPoint *)dbPoint->flexPointHandle)->sys->protocol_dependencies->dnp3.pSession, dbPoint->pointNumber, counterValue, dbPoint->flags, &dbPoint->timeStamp);
-        ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
+        ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
+        sdnpo022_addEvent(((FlexPoint*)dbPoint->flexPointHandle)->sys->protocol_dependencies->dnp3.pSession,
+                          dbPoint->pointNumber, counterValue, dbPoint->flags, &dbPoint->timeStamp);
+        ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
     }
 }
 
 /// @brief
 /// @param pDbPoint
-void add_binary_event_callback(void *pDbPoint)
+void add_binary_event_callback(void* pDbPoint)
 {
-    TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)pDbPoint;
+    TMWSIM_POINT* dbPoint = (TMWSIM_POINT*)pDbPoint;
 
-    ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
+    ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
     if (dbPoint->data.binary.value)
     {
-        if (((FlexPoint *)dbPoint->flexPointHandle)->event_pub)
+        if (((FlexPoint*)dbPoint->flexPointHandle)->event_pub)
         {
-            ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
-            sdnpo002_addEvent(((FlexPoint *)dbPoint->flexPointHandle)->sys->protocol_dependencies->dnp3.pSession, dbPoint->pointNumber, DNPDEFS_DBAS_FLAG_BINARY_ON | dbPoint->flags, &dbPoint->timeStamp);
-            ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
+            ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
+            sdnpo002_addEvent(((FlexPoint*)dbPoint->flexPointHandle)->sys->protocol_dependencies->dnp3.pSession,
+                              dbPoint->pointNumber, DNPDEFS_DBAS_FLAG_BINARY_ON | dbPoint->flags, &dbPoint->timeStamp);
+            ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
         }
     }
     else
     {
-        dbPoint->flags &= ~DNPDEFS_DBAS_FLAG_BINARY_ON; // if it's already on, turn it off
-        if (((FlexPoint *)dbPoint->flexPointHandle)->event_pub)
+        dbPoint->flags &= ~DNPDEFS_DBAS_FLAG_BINARY_ON;  // if it's already on, turn it off
+        if (((FlexPoint*)dbPoint->flexPointHandle)->event_pub)
         {
-            ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
-            sdnpo002_addEvent(((FlexPoint *)dbPoint->flexPointHandle)->sys->protocol_dependencies->dnp3.pSession, dbPoint->pointNumber, dbPoint->flags, &dbPoint->timeStamp);
-            ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
+            ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.lock_shared();
+            sdnpo002_addEvent(((FlexPoint*)dbPoint->flexPointHandle)->sys->protocol_dependencies->dnp3.pSession,
+                              dbPoint->pointNumber, dbPoint->flags, &dbPoint->timeStamp);
+            ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
         }
     }
-    ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
+    ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.unlock_shared();
 }
 /// @brief
 /// @param pDbPoint
-void add_interval_analog_event_callback(void *pDbPoint)
+void add_interval_analog_event_callback(void* pDbPoint)
 {
     add_analog_event_callback(pDbPoint);
-    TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)pDbPoint;
-    tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
-                   ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate,
-                   serverSys.protocol_dependencies->dnp3.pChannel,
-                   add_interval_analog_event_callback,
-                   pDbPoint);
+    TMWSIM_POINT* dbPoint = (TMWSIM_POINT*)pDbPoint;
+    tmwtimer_start((&((FlexPoint*)(dbPoint->flexPointHandle))->pub_timer),
+                   ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pub_rate,
+                   serverSys.protocol_dependencies->dnp3.pChannel, add_interval_analog_event_callback, pDbPoint);
 }
 
-void add_interval_counter_event_callback(void *pDbPoint)
+void add_interval_counter_event_callback(void* pDbPoint)
 {
     add_counter_event_callback(pDbPoint);
-    TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)pDbPoint;
-    tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
-                   ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate,
-                   serverSys.protocol_dependencies->dnp3.pChannel,
-                   add_interval_counter_event_callback,
-                   pDbPoint);
+    TMWSIM_POINT* dbPoint = (TMWSIM_POINT*)pDbPoint;
+    tmwtimer_start((&((FlexPoint*)(dbPoint->flexPointHandle))->pub_timer),
+                   ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pub_rate,
+                   serverSys.protocol_dependencies->dnp3.pChannel, add_interval_counter_event_callback, pDbPoint);
 }
 
 /// @brief
 /// @param pDbPoint
-void add_interval_binary_event_callback(void *pDbPoint)
+void add_interval_binary_event_callback(void* pDbPoint)
 {
     add_binary_event_callback(pDbPoint);
-    TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)pDbPoint;
-    tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
-                   ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate,
-                   serverSys.protocol_dependencies->dnp3.pChannel,
-                   add_interval_binary_event_callback,
-                   pDbPoint);
+    TMWSIM_POINT* dbPoint = (TMWSIM_POINT*)pDbPoint;
+    tmwtimer_start((&((FlexPoint*)(dbPoint->flexPointHandle))->pub_timer),
+                   ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pub_rate,
+                   serverSys.protocol_dependencies->dnp3.pChannel, add_interval_binary_event_callback, pDbPoint);
 }
 /// @brief
 /// @param pCallbackParam
 /// @param pPoint
-void analog_input_callback(void *pCallbackParam, void *pPoint)
+void analog_input_callback(void* pCallbackParam, void* pPoint)
 {
-    TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)pPoint;
-    if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer))
+    TMWSIM_POINT* dbPoint = (TMWSIM_POINT*)pPoint;
+    if (!tmwtimer_isActive(&((FlexPoint*)(dbPoint->flexPointHandle))->pub_timer))
     {
-        if (((FlexPoint *)(dbPoint->flexPointHandle))->interval_pubs)
+        if (((FlexPoint*)(dbPoint->flexPointHandle))->interval_pubs)
         {
-            tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
-                           ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate,
-                           serverSys.protocol_dependencies->dnp3.pChannel,
-                           add_interval_analog_event_callback,
-                           pPoint);
+            tmwtimer_start((&((FlexPoint*)(dbPoint->flexPointHandle))->pub_timer),
+                           ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pub_rate,
+                           serverSys.protocol_dependencies->dnp3.pChannel, add_interval_analog_event_callback, pPoint);
         }
-        else if (((FlexPoint *)(dbPoint->flexPointHandle))->batch_pubs)
+        else if (((FlexPoint*)(dbPoint->flexPointHandle))->batch_pubs)
         {
-            tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
-                           ((FlexPoint *)(dbPoint->flexPointHandle))->batch_pub_rate,
-                           serverSys.protocol_dependencies->dnp3.pChannel,
-                           add_analog_event_callback,
-                           pPoint);
+            tmwtimer_start((&((FlexPoint*)(dbPoint->flexPointHandle))->pub_timer),
+                           ((FlexPoint*)(dbPoint->flexPointHandle))->batch_pub_rate,
+                           serverSys.protocol_dependencies->dnp3.pChannel, add_analog_event_callback, pPoint);
         }
         else
         {
-            ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock();
+            ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.unlock();
             add_analog_event_callback(pPoint);
-            ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock();
+            ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.lock();
         }
     }
 }
 
-void counter_callback(void *pCallbackParam, void *pPoint)
+void counter_callback(void* pCallbackParam, void* pPoint)
 {
-    TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)pPoint;
-    if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer))
+    TMWSIM_POINT* dbPoint = (TMWSIM_POINT*)pPoint;
+    if (!tmwtimer_isActive(&((FlexPoint*)(dbPoint->flexPointHandle))->pub_timer))
     {
-        if (((FlexPoint *)(dbPoint->flexPointHandle))->interval_pubs)
+        if (((FlexPoint*)(dbPoint->flexPointHandle))->interval_pubs)
         {
-            tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
-                           ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate,
-                           serverSys.protocol_dependencies->dnp3.pChannel,
-                           add_interval_counter_event_callback,
-                           pPoint);
+            tmwtimer_start((&((FlexPoint*)(dbPoint->flexPointHandle))->pub_timer),
+                           ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pub_rate,
+                           serverSys.protocol_dependencies->dnp3.pChannel, add_interval_counter_event_callback, pPoint);
         }
-        else if (((FlexPoint *)(dbPoint->flexPointHandle))->batch_pubs)
+        else if (((FlexPoint*)(dbPoint->flexPointHandle))->batch_pubs)
         {
-            tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
-                           ((FlexPoint *)(dbPoint->flexPointHandle))->batch_pub_rate,
-                           serverSys.protocol_dependencies->dnp3.pChannel,
-                           add_counter_event_callback,
-                           pPoint);
+            tmwtimer_start((&((FlexPoint*)(dbPoint->flexPointHandle))->pub_timer),
+                           ((FlexPoint*)(dbPoint->flexPointHandle))->batch_pub_rate,
+                           serverSys.protocol_dependencies->dnp3.pChannel, add_counter_event_callback, pPoint);
         }
         else
         {
-            ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock();
+            ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.unlock();
             add_counter_event_callback(pPoint);
-            ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock();
+            ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.lock();
         }
     }
 }
 /// @brief
 /// @param pCallbackParam
 /// @param pPoint
-void binary_input_callback(void *pCallbackParam, void *pPoint)
+void binary_input_callback(void* pCallbackParam, void* pPoint)
 {
-    TMWSIM_POINT *dbPoint = (TMWSIM_POINT *)pPoint;
-    if (!tmwtimer_isActive(&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer))
+    TMWSIM_POINT* dbPoint = (TMWSIM_POINT*)pPoint;
+    if (!tmwtimer_isActive(&((FlexPoint*)(dbPoint->flexPointHandle))->pub_timer))
     {
-        if (((FlexPoint *)(dbPoint->flexPointHandle))->interval_pubs)
+        if (((FlexPoint*)(dbPoint->flexPointHandle))->interval_pubs)
         {
-            tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer),
-                           ((FlexPoint *)(dbPoint->flexPointHandle))->interval_pub_rate,
-                           serverSys.protocol_dependencies->dnp3.pChannel,
-                           add_interval_binary_event_callback,
-                           pPoint);
+            tmwtimer_start((&((FlexPoint*)(dbPoint->flexPointHandle))->pub_timer),
+                           ((FlexPoint*)(dbPoint->flexPointHandle))->interval_pub_rate,
+                           serverSys.protocol_dependencies->dnp3.pChannel, add_interval_binary_event_callback, pPoint);
         }
-        else if (((FlexPoint *)(dbPoint->flexPointHandle))->batch_pubs)
+        else if (((FlexPoint*)(dbPoint->flexPointHandle))->batch_pubs)
         {
-            tmwtimer_start((&((FlexPoint *)(dbPoint->flexPointHandle))->pub_timer), // if we're not batching the pub_timer will immediately go off anyway
-                           ((FlexPoint *)(dbPoint->flexPointHandle))->batch_pub_rate,
-                           serverSys.protocol_dependencies->dnp3.pChannel,
-                           add_binary_event_callback,
-                           pPoint);
+            tmwtimer_start((&((FlexPoint*)(dbPoint->flexPointHandle))
+                                 ->pub_timer),  // if we're not batching the pub_timer will immediately go off anyway
+                           ((FlexPoint*)(dbPoint->flexPointHandle))->batch_pub_rate,
+                           serverSys.protocol_dependencies->dnp3.pChannel, add_binary_event_callback, pPoint);
         }
         else
         {
-            ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.unlock();
+            ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.unlock();
             add_binary_event_callback(pPoint);
-            ((FlexPoint *)(dbPoint->flexPointHandle))->sys->db_mutex.lock();
+            ((FlexPoint*)(dbPoint->flexPointHandle))->sys->db_mutex.lock();
         }
     }
 }
 /// @brief
 /// @param serverSys
 /// @return
-bool openTMWServerChannel(GcomSystem &serverSys)
+bool openTMWServerChannel(GcomSystem& serverSys)
 {
-    DNP3Dependencies *dnp3_sys = &(serverSys.protocol_dependencies->dnp3);
+    DNP3Dependencies* dnp3_sys = &(serverSys.protocol_dependencies->dnp3);
     if (serverSys.debug)
     {
         dnp3_sys->channelConfig.chnlDiagMask = (TMWDIAG_ID_PHYS | TMWDIAG_ID_LINK | TMWDIAG_ID_TPRT | TMWDIAG_ID_APPL |
                                                 TMWDIAG_ID_USER | TMWDIAG_ID_MMI | TMWDIAG_ID_STATIC_DATA |
                                                 TMWDIAG_ID_STATIC_HDRS | TMWDIAG_ID_EVENT_DATA | TMWDIAG_ID_EVENT_HDRS |
-                                                TMWDIAG_ID_CYCLIC_DATA | TMWDIAG_ID_CYCLIC_HDRS | TMWDIAG_ID_SECURITY_DATA |
-                                                TMWDIAG_ID_SECURITY_HDRS | TMWDIAG_ID_TX | TMWDIAG_ID_RX |
-                                                TMWDIAG_ID_TIMESTAMP | TMWDIAG_ID_ERROR | TMWDIAG_ID_TARGET);
+                                                TMWDIAG_ID_CYCLIC_DATA | TMWDIAG_ID_CYCLIC_HDRS |
+                                                TMWDIAG_ID_SECURITY_DATA | TMWDIAG_ID_SECURITY_HDRS | TMWDIAG_ID_TX |
+                                                TMWDIAG_ID_RX | TMWDIAG_ID_TIMESTAMP | TMWDIAG_ID_ERROR |
+                                                TMWDIAG_ID_TARGET);
     }
     else
     {
         dnp3_sys->channelConfig.chnlDiagMask = TMWDIAG_ID_ERROR;
     }
     dnp3_sys->channelConfig.pStatCallback = dnp3stats_chnlEventCallback;
-    dnp3_sys->pChannel = dnpchnl_openChannel(dnp3_sys->pApplContext, &(dnp3_sys->channelConfig), &(dnp3_sys->tprtConfig), &(dnp3_sys->linkConfig), &(dnp3_sys->physConfig), &(dnp3_sys->IOConfig), &(dnp3_sys->targConfig));
+    dnp3_sys->pChannel = dnpchnl_openChannel(dnp3_sys->pApplContext, &(dnp3_sys->channelConfig),
+                                             &(dnp3_sys->tprtConfig), &(dnp3_sys->linkConfig), &(dnp3_sys->physConfig),
+                                             &(dnp3_sys->IOConfig), &(dnp3_sys->targConfig));
     if (dnp3_sys->pChannel == TMWDEFS_NULL)
     {
         return false;
@@ -471,9 +484,9 @@ bool openTMWServerChannel(GcomSystem &serverSys)
 /// @brief
 /// @param serverSys
 /// @return
-bool openTMWServerSession(GcomSystem &serverSys)
+bool openTMWServerSession(GcomSystem& serverSys)
 {
-    DNP3Dependencies *dnp3_sys = &(serverSys.protocol_dependencies->dnp3);
+    DNP3Dependencies* dnp3_sys = &(serverSys.protocol_dependencies->dnp3);
     sdnpsesn_initConfig(&(dnp3_sys->serverSesnConfig));
     dnp3_sys->serverSesnConfig.linkStatusPeriod = 30000;
     dnp3_sys->serverSesnConfig.source = serverSys.protocol_dependencies->station_address;
@@ -482,12 +495,14 @@ bool openTMWServerSession(GcomSystem &serverSys)
     dnp3_sys->serverSesnConfig.analogInputMaxEvents = serverSys.protocol_dependencies->dnp3.event_buffer;
     if (serverSys.debug)
     {
-        dnp3_sys->serverSesnConfig.sesnDiagMask = (TMWDIAG_ID_PHYS | TMWDIAG_ID_LINK | TMWDIAG_ID_TPRT | TMWDIAG_ID_APPL |
-                                                   TMWDIAG_ID_USER | TMWDIAG_ID_MMI | TMWDIAG_ID_STATIC_DATA |
-                                                   TMWDIAG_ID_STATIC_HDRS | TMWDIAG_ID_EVENT_DATA | TMWDIAG_ID_EVENT_HDRS |
-                                                   TMWDIAG_ID_CYCLIC_DATA | TMWDIAG_ID_CYCLIC_HDRS | TMWDIAG_ID_SECURITY_DATA |
-                                                   TMWDIAG_ID_SECURITY_HDRS | TMWDIAG_ID_TX | TMWDIAG_ID_RX |
-                                                   TMWDIAG_ID_TIMESTAMP | TMWDIAG_ID_ERROR | TMWDIAG_ID_TARGET);
+        dnp3_sys->serverSesnConfig.sesnDiagMask = (TMWDIAG_ID_PHYS | TMWDIAG_ID_LINK | TMWDIAG_ID_TPRT |
+                                                   TMWDIAG_ID_APPL | TMWDIAG_ID_USER | TMWDIAG_ID_MMI |
+                                                   TMWDIAG_ID_STATIC_DATA | TMWDIAG_ID_STATIC_HDRS |
+                                                   TMWDIAG_ID_EVENT_DATA | TMWDIAG_ID_EVENT_HDRS |
+                                                   TMWDIAG_ID_CYCLIC_DATA | TMWDIAG_ID_CYCLIC_HDRS |
+                                                   TMWDIAG_ID_SECURITY_DATA | TMWDIAG_ID_SECURITY_HDRS | TMWDIAG_ID_TX |
+                                                   TMWDIAG_ID_RX | TMWDIAG_ID_TIMESTAMP | TMWDIAG_ID_ERROR |
+                                                   TMWDIAG_ID_TARGET);
     }
     else
     {
@@ -502,22 +517,22 @@ bool openTMWServerSession(GcomSystem &serverSys)
     }
     dnp3_sys->serverSesnConfig.pStatCallback = dnp3stats_sesnStatCallback;
     dnp3_sys->serverSesnConfig.pStatCallbackParam = &serverSys;
-    dnp3_sys->pSession = (TMWSESN *)sdnpsesn_openSession(dnp3_sys->pChannel, &(dnp3_sys->serverSesnConfig), (void *)1);
+    dnp3_sys->pSession = (TMWSESN*)sdnpsesn_openSession(dnp3_sys->pChannel, &(dnp3_sys->serverSesnConfig), (void*)1);
     if (dnp3_sys->pSession == TMWDEFS_NULL)
     {
         return false;
     }
-    dnp3_sys->dbHandle = ((SDNPSESN *)(dnp3_sys->pSession))->pDbHandle;
+    dnp3_sys->dbHandle = ((SDNPSESN*)(dnp3_sys->pSession))->pDbHandle;
     sdnpsim_setCallback(dnp3_sys->dbHandle, received_command_callback, dnp3_sys->dbHandle);
     return true;
 }
 /// @brief
 /// @param dbPoint
 /// @param value
-void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
+void check_limits_server(TMWSIM_POINT* dbPoint, double& value)
 {
-    GcomSystem *sys = ((FlexPoint *)(dbPoint->flexPointHandle))->sys;
-    if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
+    GcomSystem* sys = ((FlexPoint*)(dbPoint->flexPointHandle))->sys;
+    if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::Analog)
     {
         if (dbPoint->defaultStaticVariation == Group30Var1 || dbPoint->defaultStaticVariation == Group30Var3)
         {
@@ -526,7 +541,9 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = std::numeric_limits<int32_t>::max();
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit signed int) exceeded maximum (2,147,483,647). Setting to maximum value instead.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG(
+                        "Pub to analog input point [%d] (32-bit signed int) exceeded maximum (2,147,483,647). Setting to maximum value instead.",
+                        dbPoint->pointNumber);
                 }
             }
             else if (value < std::numeric_limits<int32_t>::lowest())
@@ -534,19 +551,22 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = std::numeric_limits<int32_t>::lowest();
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit signed int) exceeded minimum (-2,147,483,648). Setting to minimum value instead.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG(
+                        "Pub to analog input point [%d] (32-bit signed int) exceeded minimum (-2,147,483,648). Setting to minimum value instead.",
+                        dbPoint->pointNumber);
                 }
             }
         }
         else if (dbPoint->defaultStaticVariation == Group30Var2 || dbPoint->defaultStaticVariation == Group30Var4)
         {
-
             if (value > std::numeric_limits<int16_t>::max())
             {
                 value = std::numeric_limits<int16_t>::max();
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog input point [%d] (16-bit signed int) exceeded maximum (32,767). Setting to maximum value instead.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG(
+                        "Pub to analog input point [%d] (16-bit signed int) exceeded maximum (32,767). Setting to maximum value instead.",
+                        dbPoint->pointNumber);
                 }
             }
             else if (value < std::numeric_limits<int16_t>::lowest())
@@ -554,7 +574,9 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = std::numeric_limits<int16_t>::lowest();
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog input point [%d] (16-bit signed int) exceeded minimum (-32,768). Setting to minimum value instead.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG(
+                        "Pub to analog input point [%d] (16-bit signed int) exceeded minimum (-32,768). Setting to minimum value instead.",
+                        dbPoint->pointNumber);
                 }
             }
         }
@@ -565,7 +587,9 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = TMWDEFS_SFLOAT_MAX;
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded maximum (%g). Setting to maximum value instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_MAX);
+                    FPS_ERROR_LOG(
+                        "Pub to analog input point [%d] (32-bit float) exceeded maximum (%g). Setting to maximum value instead.",
+                        dbPoint->pointNumber, TMWDEFS_SFLOAT_MAX);
                 }
             }
             else if (value < TMWDEFS_SFLOAT_MIN)
@@ -573,7 +597,9 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = TMWDEFS_SFLOAT_MIN;
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded minimum (%g). Setting to minimum value instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_MIN);
+                    FPS_ERROR_LOG(
+                        "Pub to analog input point [%d] (32-bit float) exceeded minimum (%g). Setting to minimum value instead.",
+                        dbPoint->pointNumber, TMWDEFS_SFLOAT_MIN);
                 }
             }
             else if (value != 0.0 && abs(value) < TMWDEFS_SFLOAT_SMALLEST)
@@ -581,12 +607,14 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = 0.0;
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded minimum exponent value (%g). Setting to 0 instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_SMALLEST);
+                    FPS_ERROR_LOG(
+                        "Pub to analog input point [%d] (32-bit float) exceeded minimum exponent value (%g). Setting to 0 instead.",
+                        dbPoint->pointNumber, TMWDEFS_SFLOAT_SMALLEST);
                 }
             }
         }
     }
-    else if (((FlexPoint *)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
+    else if (((FlexPoint*)(dbPoint->flexPointHandle))->type == Register_Types::Counter)
     {
         if (dbPoint->defaultStaticVariation == Group20Var1 || dbPoint->defaultStaticVariation == Group20Var3 ||
             dbPoint->defaultStaticVariation == Group20Var5 || dbPoint->defaultStaticVariation == Group20Var7)
@@ -596,7 +624,9 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = std::numeric_limits<uint32_t>::max();
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to counter [%d] (32-bit unsigned integer) exceeded maximum (4,294,967,295). Setting to maximum value instead.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG(
+                        "Pub to counter [%d] (32-bit unsigned integer) exceeded maximum (4,294,967,295). Setting to maximum value instead.",
+                        dbPoint->pointNumber);
                 }
             }
             else if (value < 0)
@@ -604,20 +634,23 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = 0;
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to counter [%d] (32-bit unsigned integer) exceeded minimum (0). Setting to minimum value instead.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG(
+                        "Pub to counter [%d] (32-bit unsigned integer) exceeded minimum (0). Setting to minimum value instead.",
+                        dbPoint->pointNumber);
                 }
             }
         }
         else if (dbPoint->defaultStaticVariation == Group20Var2 || dbPoint->defaultStaticVariation == Group20Var4 ||
                  dbPoint->defaultStaticVariation == Group20Var6 || dbPoint->defaultStaticVariation == Group20Var8)
         {
-
             if (value > std::numeric_limits<uint16_t>::max())
             {
                 value = std::numeric_limits<uint16_t>::max();
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to counter [%d] (16-bit unsigned int) exceeded maximum (32,767). Setting to maximum value instead.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG(
+                        "Pub to counter [%d] (16-bit unsigned int) exceeded maximum (32,767). Setting to maximum value instead.",
+                        dbPoint->pointNumber);
                 }
             }
             else if (value < 0)
@@ -625,7 +658,9 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = 0;
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to counter [%d] (16-bit unsigned int) exceeded minimum (0). Setting to minimum value instead.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG(
+                        "Pub to counter [%d] (16-bit unsigned int) exceeded minimum (0). Setting to minimum value instead.",
+                        dbPoint->pointNumber);
                 }
             }
         }
@@ -639,7 +674,9 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = std::numeric_limits<int32_t>::max();
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog output point [%d] (32-bit signed int) exceeded maximum (2,147,483,647). Setting to maximum value instead.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG(
+                        "Pub to analog output point [%d] (32-bit signed int) exceeded maximum (2,147,483,647). Setting to maximum value instead.",
+                        dbPoint->pointNumber);
                 }
             }
             else if (value < std::numeric_limits<int32_t>::lowest())
@@ -647,19 +684,22 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = std::numeric_limits<int32_t>::lowest();
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog output point [%d] (32-bit signed int) exceeded minimum (-2,147,483,648). Setting to minimum value instead.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG(
+                        "Pub to analog output point [%d] (32-bit signed int) exceeded minimum (-2,147,483,648). Setting to minimum value instead.",
+                        dbPoint->pointNumber);
                 }
             }
         }
         else if (dbPoint->defaultStaticVariation == Group40Var2)
         {
-
             if (value > std::numeric_limits<int16_t>::max())
             {
                 value = std::numeric_limits<int16_t>::max();
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog output point [%d] (16-bit signed int) exceeded maximum (32,767). Setting to maximum value instead.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG(
+                        "Pub to analog output point [%d] (16-bit signed int) exceeded maximum (32,767). Setting to maximum value instead.",
+                        dbPoint->pointNumber);
                 }
             }
             else if (value < std::numeric_limits<int16_t>::lowest())
@@ -667,7 +707,9 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = std::numeric_limits<int16_t>::lowest();
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog output point [%d] (16-bit signed int) exceeded minimum (-32,768). Setting to minimum value instead.", dbPoint->pointNumber);
+                    FPS_ERROR_LOG(
+                        "Pub to analog output point [%d] (16-bit signed int) exceeded minimum (-32,768). Setting to minimum value instead.",
+                        dbPoint->pointNumber);
                 }
             }
         }
@@ -678,7 +720,9 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = TMWDEFS_SFLOAT_MAX;
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded maximum (%g). Setting to maximum value instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_MAX);
+                    FPS_ERROR_LOG(
+                        "Pub to analog input point [%d] (32-bit float) exceeded maximum (%g). Setting to maximum value instead.",
+                        dbPoint->pointNumber, TMWDEFS_SFLOAT_MAX);
                 }
             }
             else if (value < TMWDEFS_SFLOAT_MIN)
@@ -686,7 +730,9 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = TMWDEFS_SFLOAT_MIN;
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded minimum (%g). Setting to minimum value instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_MIN);
+                    FPS_ERROR_LOG(
+                        "Pub to analog input point [%d] (32-bit float) exceeded minimum (%g). Setting to minimum value instead.",
+                        dbPoint->pointNumber, TMWDEFS_SFLOAT_MIN);
                 }
             }
             else if (value != 0.0 && abs(value) < TMWDEFS_SFLOAT_SMALLEST)
@@ -694,7 +740,9 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
                 value = 0.0;
                 if (!spam_limit(sys, sys->point_errors))
                 {
-                    FPS_ERROR_LOG("Pub to analog input point [%d] (32-bit float) exceeded minimum exponent value (%g). Setting to 0 instead.", dbPoint->pointNumber, TMWDEFS_SFLOAT_SMALLEST);
+                    FPS_ERROR_LOG(
+                        "Pub to analog input point [%d] (32-bit float) exceeded minimum exponent value (%g). Setting to 0 instead.",
+                        dbPoint->pointNumber, TMWDEFS_SFLOAT_SMALLEST);
                 }
             }
         }
@@ -717,22 +765,26 @@ void check_limits_server(TMWSIM_POINT *dbPoint, double &value)
  * sys.fims_dependencies->uri_view corresponds to the current message uri.
  * @pre sys.fims_dependencies->data_buf has been properly initialized
  */
-bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
+bool parseBodyServer(GcomSystem& sys, Meta_Data_Info& meta_data)
 {
-    auto &parser = sys.fims_dependencies->parser;
-    auto &doc = sys.fims_dependencies->doc;
+    auto& parser = sys.fims_dependencies->parser;
+    auto& doc = sys.fims_dependencies->doc;
 
-    memset(reinterpret_cast<u8 *>(sys.fims_dependencies->data_buf) + meta_data.data_len, '\0', simdjson::SIMDJSON_PADDING);
+    memset(reinterpret_cast<u8*>(sys.fims_dependencies->data_buf) + meta_data.data_len, '\0',
+           simdjson::SIMDJSON_PADDING);
     // gets doc
-    if (const auto err = parser.iterate(reinterpret_cast<const char *>(sys.fims_dependencies->data_buf),
-                                        meta_data.data_len,
-                                        meta_data.data_len + simdjson::SIMDJSON_PADDING)
+    if (const auto err = parser
+                             .iterate(reinterpret_cast<const char*>(sys.fims_dependencies->data_buf),
+                                      meta_data.data_len, meta_data.data_len + simdjson::SIMDJSON_PADDING)
                              .get(doc);
         err)
     {
         if (!spam_limit(&sys, sys.parse_errors))
         {
-            FPS_ERROR_LOG("Listener for '%s', from sender: '%s', with base uri '%s': could not parse json string from pub request, err = %s Message dropped", sys.fims_dependencies->name.c_str(), sys.fims_dependencies->name, sys.fims_dependencies->uri_view, simdjson::error_message(err));
+            FPS_ERROR_LOG(
+                "Listener for '%s', from sender: '%s', with base uri '%s': could not parse json string from pub request, err = %s Message dropped",
+                sys.fims_dependencies->name.c_str(), sys.fims_dependencies->name, sys.fims_dependencies->uri_view,
+                simdjson::error_message(err));
             FPS_LOG_IT("parsing_error");
         }
         return false;
@@ -742,14 +794,15 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
     Jval_buif to_set;
     bool ok = true;
     int uriType = getUriType(sys, sys.fims_dependencies->uri_view);
-    if (uriType == 1) // multi-set input uri
+    if (uriType == 1)  // multi-set input uri
     {
         simdjson::ondemand::object set_obj;
         if (const auto err = doc.get(set_obj); err)
         {
             if (!spam_limit(&sys, sys.parse_errors))
             {
-                FPS_ERROR_LOG("could not get multi-pub fims message as a json object, err = %s Message dropped", simdjson::error_message(err));
+                FPS_ERROR_LOG("could not get multi-pub fims message as a json object, err = %s Message dropped",
+                              simdjson::error_message(err));
                 FPS_LOG_IT("parsing_error");
             }
             return false;
@@ -766,7 +819,8 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
             {
                 if (!spam_limit(&sys, sys.parse_errors))
                 {
-                    FPS_ERROR_LOG("parsing error on getting a multi-set key, err = %s Message dropped", simdjson::error_message(err));
+                    FPS_ERROR_LOG("parsing error on getting a multi-set key, err = %s Message dropped",
+                                  simdjson::error_message(err));
                     FPS_LOG_IT("parsing_error");
                 }
                 ok = false;
@@ -778,7 +832,9 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
             {
                 if (!spam_limit(&sys, sys.parse_errors))
                 {
-                    FPS_ERROR_LOG("base uri '%s', on multi-set key '%s': parse error on getting value, err = %s Message dropped", sys.fims_dependencies->uri_view, key_view, simdjson::error_message(err));
+                    FPS_ERROR_LOG(
+                        "base uri '%s', on multi-set key '%s': parse error on getting value, err = %s Message dropped",
+                        sys.fims_dependencies->uri_view, key_view, simdjson::error_message(err));
                     FPS_LOG_IT("parsing_error");
                 }
                 ok = false;
@@ -794,67 +850,80 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
                 continue;
             }
 
-            TMWSIM_POINT *dbPoint = getDbVar(sys, sys.fims_dependencies->uri_view, key_view);
+            TMWSIM_POINT* dbPoint = getDbVar(sys, sys.fims_dependencies->uri_view, key_view);
             if (!dbPoint)
             {
                 ok = false;
                 if (sys.debug > 0)
                 {
-                    FPS_ERROR_LOG("with multi-pub uri: '%s', could not find point '%s'", sys.fims_dependencies->uri_view, key_view);
+                    FPS_ERROR_LOG("with multi-pub uri: '%s', could not find point '%s'",
+                                  sys.fims_dependencies->uri_view, key_view);
                     FPS_LOG_IT("could_not_find_point");
                 }
                 continue;
             }
+            else if (!((FlexPoint*)(dbPoint->flexPointHandle))->is_enabled)
+            {
+                continue;
+            }
 
             if (!sys.fims_dependencies->uri_requests.contains_local_uri &&
-                !(((FlexPoint *)dbPoint->flexPointHandle)->is_output_point))
+                !(((FlexPoint*)dbPoint->flexPointHandle)->is_output_point))
             {
                 setInputPointOnline(dbPoint);
             }
 
             // record who sent the last real value
-            if (!sys.fims_dependencies->uri_requests.contains_local_uri) {
-                std::memcpy(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,
-                        sys.fims_dependencies->process_name_view.data(),
-                        sys.fims_dependencies->process_name_view.size());
-                std::memcpy(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,
-                                sys.fims_dependencies->username_view.data(),
-                                sys.fims_dependencies->username_view.size());
-                ((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process[sys.fims_dependencies->process_name_view.size()] = '\0';
-                ((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username[sys.fims_dependencies->username_view.size()] = '\0';
+            if (!sys.fims_dependencies->uri_requests.contains_local_uri)
+            {
+                std::memcpy(((FlexPoint*)(dbPoint->flexPointHandle))->last_update_process,
+                            sys.fims_dependencies->process_name_view.data(),
+                            sys.fims_dependencies->process_name_view.size());
+                std::memcpy(((FlexPoint*)(dbPoint->flexPointHandle))->last_update_username,
+                            sys.fims_dependencies->username_view.data(), sys.fims_dependencies->username_view.size());
+                ((FlexPoint*)(dbPoint->flexPointHandle))
+                    ->last_update_process[sys.fims_dependencies->process_name_view.size()] = '\0';
+                ((FlexPoint*)(dbPoint->flexPointHandle))
+                    ->last_update_username[sys.fims_dependencies->username_view.size()] = '\0';
             }
 
             double value = jval_to_double(to_set);
             sys.db_mutex.lock();
-            if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog &&
-                (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                 ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
+            if (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::Analog &&
+                (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 &&
+                  sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                 ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 &&
+                  !sys.fims_dependencies->uri_requests.contains_local_uri)))
             {
-                if (((FlexPoint *)dbPoint->flexPointHandle)->scale != 0)
+                if (((FlexPoint*)dbPoint->flexPointHandle)->scale != 0)
                 {
-                    value = ((FlexPoint *)dbPoint->flexPointHandle)->scale * value;
+                    value = ((FlexPoint*)dbPoint->flexPointHandle)->scale * value;
                 }
                 sdnputil_getDateTime(sys.protocol_dependencies->dnp3.pSession, &dbPoint->timeStamp);
                 check_limits_server(dbPoint, value);
                 sdnpsim_anlgInWrite(dbPoint, value);
             }
-            else if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter &&
-                     (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
+            else if (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::Counter &&
+                     (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 &&
+                       sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 &&
+                       !sys.fims_dependencies->uri_requests.contains_local_uri)))
             {
-                if (((FlexPoint *)dbPoint->flexPointHandle)->scale != 0)
+                if (((FlexPoint*)dbPoint->flexPointHandle)->scale != 0)
                 {
-                    value = ((FlexPoint *)dbPoint->flexPointHandle)->scale * value;
+                    value = ((FlexPoint*)dbPoint->flexPointHandle)->scale * value;
                 }
                 sdnputil_getDateTime(sys.protocol_dependencies->dnp3.pSession, &dbPoint->timeStamp);
                 check_limits_server(dbPoint, value);
                 sdnpsim_binCntrWrite(dbPoint, value);
             }
-            else if (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary &&
-                     (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
+            else if (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::Binary &&
+                     (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 &&
+                       sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 &&
+                       !sys.fims_dependencies->uri_requests.contains_local_uri)))
             {
-                if (((FlexPoint *)dbPoint->flexPointHandle)->scale < 0)
+                if (((FlexPoint*)dbPoint->flexPointHandle)->scale < 0)
                 {
                     value = !value;
                 }
@@ -862,56 +931,61 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
 
                 sdnpsim_binInWrite(dbPoint, static_cast<bool>(value));
             }
-            else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt16) ||
-                      (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt32) ||
-                      (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPF32) ||
-                      (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnalogOS)) &&
-                     (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
+            else if (((((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt16) ||
+                      (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt32) ||
+                      (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::AnOPF32) ||
+                      (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::AnalogOS)) &&
+                     (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 &&
+                       sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 &&
+                       !sys.fims_dependencies->uri_requests.contains_local_uri))
 
             )
             {
                 TMWTYPES_ANALOG_VALUE analogValue;
                 analogValue.type = TMWTYPES_ANALOG_TYPE_DOUBLE;
-                if (((FlexPoint *)(dbPoint->flexPointHandle))->scale == 0.0)
+                if (((FlexPoint*)(dbPoint->flexPointHandle))->scale == 0.0)
                 {
                     analogValue.value.dval = value;
                 }
                 else
                 {
-                    analogValue.value.dval = value * ((FlexPoint *)(dbPoint->flexPointHandle))->scale;
+                    analogValue.value.dval = value * ((FlexPoint*)(dbPoint->flexPointHandle))->scale;
                 }
                 check_limits_server(dbPoint, analogValue.value.dval);
-                ((FlexPoint *)dbPoint->flexPointHandle)->operate_value = analogValue.value.dval;
-                ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
+                ((FlexPoint*)dbPoint->flexPointHandle)->operate_value = analogValue.value.dval;
+                ((FlexPoint*)dbPoint->flexPointHandle)->sent_operate = true;
                 sdnpsim_anlgOutWrite(dbPoint, &analogValue);
             }
-            else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::BinaryOS) ||
-                      (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::CROB)) &&
-                     (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
+            else if (((((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::BinaryOS) ||
+                      (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::CROB)) &&
+                     (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 &&
+                       sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                      ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 &&
+                       !sys.fims_dependencies->uri_requests.contains_local_uri))
 
             )
             {
                 bool bool_value = static_cast<bool>(value);
-                if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
+                if (((FlexPoint*)(dbPoint->flexPointHandle))->scale < 0)
                 {
                     bool_value = !bool_value;
                 }
-                ((FlexPoint *)dbPoint->flexPointHandle)->operate_value = static_cast<double>(bool_value);
-                ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
+                ((FlexPoint*)dbPoint->flexPointHandle)->operate_value = static_cast<double>(bool_value);
+                ((FlexPoint*)dbPoint->flexPointHandle)->sent_operate = true;
                 sdnpsim_binOutSetValue(dbPoint, bool_value);
             }
-            else if (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
+            else if (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 &&
+                      !sys.fims_dependencies->uri_requests.contains_local_uri))
             {
-                ((FlexPoint *)dbPoint->flexPointHandle)->standby_value = value;
+                ((FlexPoint*)dbPoint->flexPointHandle)->standby_value = value;
             }
             sys.db_mutex.unlock();
         }
 
         return ok;
     }
-    else if (uriType == 2) // single-set input uri
+    else if (uriType == 2)  // single-set input uri
     {
         if (sys.debug)
         {
@@ -926,7 +1000,7 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
             return false;
         }
 
-        TMWSIM_POINT *dbPoint = getDbVar(sys, sys.fims_dependencies->uri_view, "");
+        TMWSIM_POINT* dbPoint = getDbVar(sys, sys.fims_dependencies->uri_view, "");
         if (!dbPoint)
         {
             if (sys.debug > 0)
@@ -936,55 +1010,68 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
             }
             return false;
         }
+        else if (!((FlexPoint*)(dbPoint->flexPointHandle))->is_enabled)
+        {
+            return true;
+        }
 
         if (!sys.fims_dependencies->uri_requests.contains_local_uri &&
-            !(((FlexPoint *)dbPoint->flexPointHandle)->is_output_point))
+            !(((FlexPoint*)dbPoint->flexPointHandle)->is_output_point))
         {
             setInputPointOnline(dbPoint);
         }
 
         // record who sent the last real value
-        if (!sys.fims_dependencies->uri_requests.contains_local_uri) {
-            std::memcpy(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process,
-                    sys.fims_dependencies->process_name_view.data(),
-                    sys.fims_dependencies->process_name_view.size());
-            std::memcpy(((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username,
-                            sys.fims_dependencies->username_view.data(),
-                            sys.fims_dependencies->username_view.size());
-            ((FlexPoint *)(dbPoint->flexPointHandle))->last_update_process[sys.fims_dependencies->process_name_view.size()] = '\0';
-            ((FlexPoint *)(dbPoint->flexPointHandle))->last_update_username[sys.fims_dependencies->username_view.size()] = '\0';
+        if (!sys.fims_dependencies->uri_requests.contains_local_uri)
+        {
+            std::memcpy(((FlexPoint*)(dbPoint->flexPointHandle))->last_update_process,
+                        sys.fims_dependencies->process_name_view.data(),
+                        sys.fims_dependencies->process_name_view.size());
+            std::memcpy(((FlexPoint*)(dbPoint->flexPointHandle))->last_update_username,
+                        sys.fims_dependencies->username_view.data(), sys.fims_dependencies->username_view.size());
+            ((FlexPoint*)(dbPoint->flexPointHandle))
+                ->last_update_process[sys.fims_dependencies->process_name_view.size()] = '\0';
+            ((FlexPoint*)(dbPoint->flexPointHandle))
+                ->last_update_username[sys.fims_dependencies->username_view.size()] = '\0';
         }
 
         double value = jval_to_double(to_set);
         sys.db_mutex.lock();
-        if ((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Analog) &&
-            (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-             ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
+        if ((((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::Analog) &&
+            (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 &&
+              sys.fims_dependencies->uri_requests.contains_local_uri) ||
+             ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 &&
+              !sys.fims_dependencies->uri_requests.contains_local_uri)))
         {
-            if (((FlexPoint *)dbPoint->flexPointHandle)->scale != 0)
+            if (((FlexPoint*)dbPoint->flexPointHandle)->scale != 0)
             {
-                value = ((FlexPoint *)dbPoint->flexPointHandle)->scale * value;
+                value = ((FlexPoint*)dbPoint->flexPointHandle)->scale * value;
             }
             sdnputil_getDateTime(sys.protocol_dependencies->dnp3.pSession, &dbPoint->timeStamp);
             check_limits_server(dbPoint, value);
             sdnpsim_anlgInWrite(dbPoint, value);
         }
-        else if ((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Counter) &&
-                 (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                  ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
+        else if ((((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::Counter) &&
+                 (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 &&
+                   sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                  ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 &&
+                   !sys.fims_dependencies->uri_requests.contains_local_uri)))
         {
-            if (((FlexPoint *)dbPoint->flexPointHandle)->scale != 0)
+            if (((FlexPoint*)dbPoint->flexPointHandle)->scale != 0)
             {
-                value = ((FlexPoint *)dbPoint->flexPointHandle)->scale * value;
+                value = ((FlexPoint*)dbPoint->flexPointHandle)->scale * value;
             }
             sdnputil_getDateTime(sys.protocol_dependencies->dnp3.pSession, &dbPoint->timeStamp);
             check_limits_server(dbPoint, value);
             sdnpsim_binCntrWrite(dbPoint, value);
         }
-        else if ((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::Binary) && (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                                                                                               ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri)))
+        else if ((((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::Binary) &&
+                 (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 &&
+                   sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                  ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 &&
+                   !sys.fims_dependencies->uri_requests.contains_local_uri)))
         {
-            if (((FlexPoint *)dbPoint->flexPointHandle)->scale < 0)
+            if (((FlexPoint*)dbPoint->flexPointHandle)->scale < 0)
             {
                 value = !value;
             }
@@ -992,49 +1079,54 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
 
             sdnpsim_binInWrite(dbPoint, static_cast<bool>(value));
         }
-        else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt16) ||
-                  (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt32) ||
-                  (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnOPF32) ||
-                  (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::AnalogOS)) &&
-                 (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                  ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
+        else if (((((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt16) ||
+                  (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::AnOPInt32) ||
+                  (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::AnOPF32) ||
+                  (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::AnalogOS)) &&
+                 (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 &&
+                   sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                  ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 &&
+                   !sys.fims_dependencies->uri_requests.contains_local_uri))
 
         )
         {
             TMWTYPES_ANALOG_VALUE analogValue;
             analogValue.type = TMWTYPES_ANALOG_TYPE_DOUBLE;
-            if (((FlexPoint *)(dbPoint->flexPointHandle))->scale == 0.0)
+            if (((FlexPoint*)(dbPoint->flexPointHandle))->scale == 0.0)
             {
                 analogValue.value.dval = value;
             }
             else
             {
-                analogValue.value.dval = value * ((FlexPoint *)(dbPoint->flexPointHandle))->scale;
+                analogValue.value.dval = value * ((FlexPoint*)(dbPoint->flexPointHandle))->scale;
             }
             check_limits_server(dbPoint, analogValue.value.dval);
-            ((FlexPoint *)dbPoint->flexPointHandle)->operate_value = analogValue.value.dval;
-            ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
+            ((FlexPoint*)dbPoint->flexPointHandle)->operate_value = analogValue.value.dval;
+            ((FlexPoint*)dbPoint->flexPointHandle)->sent_operate = true;
             sdnpsim_anlgOutWrite(dbPoint, &analogValue);
         }
-        else if (((((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::BinaryOS) ||
-                  (((FlexPoint *)dbPoint->flexPointHandle)->type == Register_Types::CROB)) &&
-                 (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && sys.fims_dependencies->uri_requests.contains_local_uri) ||
-                  ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
+        else if (((((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::BinaryOS) ||
+                  (((FlexPoint*)dbPoint->flexPointHandle)->type == Register_Types::CROB)) &&
+                 (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 &&
+                   sys.fims_dependencies->uri_requests.contains_local_uri) ||
+                  ((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0 &&
+                   !sys.fims_dependencies->uri_requests.contains_local_uri))
 
         )
         {
             bool bool_value = static_cast<bool>(value);
-            if (((FlexPoint *)(dbPoint->flexPointHandle))->scale < 0)
+            if (((FlexPoint*)(dbPoint->flexPointHandle))->scale < 0)
             {
                 bool_value = !bool_value;
             }
-            ((FlexPoint *)dbPoint->flexPointHandle)->operate_value = static_cast<double>(bool_value);
-            ((FlexPoint *)dbPoint->flexPointHandle)->sent_operate = true;
+            ((FlexPoint*)dbPoint->flexPointHandle)->operate_value = static_cast<double>(bool_value);
+            ((FlexPoint*)dbPoint->flexPointHandle)->sent_operate = true;
             sdnpsim_binOutSetValue(dbPoint, bool_value);
         }
-        else if (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 && !sys.fims_dependencies->uri_requests.contains_local_uri))
+        else if (((dbPoint->flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) != 0 &&
+                  !sys.fims_dependencies->uri_requests.contains_local_uri))
         {
-            ((FlexPoint *)dbPoint->flexPointHandle)->standby_value = value;
+            ((FlexPoint*)dbPoint->flexPointHandle)->standby_value = value;
         }
         sys.db_mutex.unlock();
         return true;
@@ -1052,30 +1144,30 @@ bool parseBodyServer(GcomSystem &sys, Meta_Data_Info &meta_data)
  *
  * @param dnp3_sys a pointer to a fully initialized DNP3Dependencies struct
  */
-void add_input_callbacks(DNP3Dependencies *dnp3_sys)
+void add_input_callbacks(DNP3Dependencies* dnp3_sys)
 {
-    TMWSIM_POINT *dbPoint;
-    for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->analogInputs); i++)
+    TMWSIM_POINT* dbPoint;
+    for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogInputs); i++)
     {
-        dbPoint = (TMWSIM_POINT *)sdnpsim_anlgInGetPoint(dnp3_sys->dbHandle, i);
+        dbPoint = (TMWSIM_POINT*)sdnpsim_anlgInGetPoint(dnp3_sys->dbHandle, i);
         if (dbPoint)
         {
             dbPoint->pCallbackFunc = analog_input_callback;
             dbPoint->pCallbackParam = dbPoint;
         }
     }
-    for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryCounters); i++)
+    for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryCounters); i++)
     {
-        dbPoint = (TMWSIM_POINT *)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+        dbPoint = (TMWSIM_POINT*)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
         if (dbPoint)
         {
             dbPoint->pCallbackFunc = counter_callback;
             dbPoint->pCallbackParam = dbPoint;
         }
     }
-    for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE *)(dnp3_sys->dbHandle))->binaryInputs); i++)
+    for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryInputs); i++)
     {
-        dbPoint = (TMWSIM_POINT *)sdnpsim_binInGetPoint(dnp3_sys->dbHandle, i);
+        dbPoint = (TMWSIM_POINT*)sdnpsim_binInGetPoint(dnp3_sys->dbHandle, i);
         if (dbPoint)
         {
             dbPoint->pCallbackFunc = binary_input_callback;
@@ -1090,7 +1182,7 @@ void add_input_callbacks(DNP3Dependencies *dnp3_sys)
 /// @param argc
 /// @param argv
 /// @return
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     std::string file_name = getFileName(argc, argv);
     signal(SIGTERM, signal_handler_server);
@@ -1114,7 +1206,7 @@ int main(int argc, char *argv[])
         // regardless of any config settings.
         // Later, we will need to modify IOConfig, initConfig for
         // the channel and the session, openChannel, and openSession.
-        DNP3Dependencies *dnp3_sys = &(serverSys.protocol_dependencies->dnp3);
+        DNP3Dependencies* dnp3_sys = &(serverSys.protocol_dependencies->dnp3);
         dnp3_sys->openTMWChannel = openTMWServerChannel;
         dnp3_sys->openTMWSession = openTMWServerSession;
         initStatsMonitor(serverSys);
@@ -1129,7 +1221,8 @@ int main(int argc, char *argv[])
         init_fims(serverSys);
 
         init_vars(serverSys, num_configs_server);
-        add_input_callbacks(dnp3_sys); // add analog_input_callbacks to analog input points and binary_input_callbacks to binary input points
+        add_input_callbacks(dnp3_sys);  // add analog_input_callbacks to analog input points and binary_input_callbacks
+                                        // to binary input points
         getSysUris(serverSys, DNP3_OUTSTATION, num_configs_server);
 
         show_fims_subs(serverSys);
@@ -1148,7 +1241,8 @@ int main(int argc, char *argv[])
             return 0;
         }
 
-        if(serverSys.dbi_save_frequency_seconds > 0){
+        if (serverSys.dbi_save_frequency_seconds > 0)
+        {
             load_points_from_dbi_server(serverSys);
         }
 
@@ -1158,20 +1252,20 @@ int main(int argc, char *argv[])
             serverSys.stats_pub_future = std::async(std::launch::async, pub_stats_thread, std::ref(serverSys));
         }
         initTimers(serverSys);
-        usleep(500); // wait for things to settle before we start
+        usleep(500);  // wait for things to settle before we start
         serverSys.start_signal = true;
         serverSys.keep_running = true;
         serverSys.main_cond.notify_all();
-        outputPointsGoOnline(serverSys); // set all analog and binary outputs to be ONLINE (so they can receive commands)
-        if(serverSys.dbi_save_frequency_seconds > 0){
-            tmwtimer_start(&serverSys.dbi_save_timer, serverSys.dbi_save_frequency_seconds*1000, serverSys.protocol_dependencies->dnp3.pChannel, write_points_to_dbi_server, &serverSys);
+        outputPointsGoOnline(
+            serverSys);  // set all analog and binary outputs to be ONLINE (so they can receive commands)
+        if (serverSys.dbi_save_frequency_seconds > 0)
+        {
+            tmwtimer_start(&serverSys.dbi_save_timer, serverSys.dbi_save_frequency_seconds * 1000,
+                           serverSys.protocol_dependencies->dnp3.pChannel, write_points_to_dbi_server, &serverSys);
         }
         FPS_INFO_LOG("DNP3 Server Setup complete: Entering main loop.");
         FPS_LOG_IT("startup");
-        defer
-        {
-            serverSys.keep_running = false;
-        };
+        defer { serverSys.keep_running = false; };
 
         while (serverSys.keep_running)
         {

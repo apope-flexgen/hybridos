@@ -306,6 +306,10 @@ void assignValueBasedOnType(PubPoint* point, PubPoint* status_point, TMWSIM_POIN
 void addPointToPubWork(void* pDbPoint)
 {
     TMWSIM_POINT* dbPoint = (TMWSIM_POINT*)pDbPoint;
+    if (!((FlexPoint*)(dbPoint->flexPointHandle))->is_enabled)
+    {
+        return;
+    }
     GcomSystem* sys = ((FlexPoint*)(dbPoint->flexPointHandle))->sys;
     ((FlexPoint*)(dbPoint->flexPointHandle))->last_pub = std::chrono::system_clock::now();
     if (sys->protocol_dependencies->dnp3.pub_all && ((FlexPoint*)(dbPoint->flexPointHandle))->batch_pubs &&
@@ -1092,6 +1096,10 @@ bool parseBodyClient(GcomSystem& sys, Meta_Data_Info& meta_data)
                 ok = false;
                 continue;
             }
+            else if (!((FlexPoint*)(dbPoint->flexPointHandle))->is_enabled)
+            {
+                continue;
+            }
             else if (!((FlexPoint*)dbPoint->flexPointHandle)->is_output_point &&
                      !sys.fims_dependencies->uri_requests.contains_local_uri)
             {
@@ -1330,6 +1338,10 @@ bool parseBodyClient(GcomSystem& sys, Meta_Data_Info& meta_data)
                 FPS_LOG_IT("could_not_find_point");
             }
             return false;
+        }
+        else if (!((FlexPoint*)(dbPoint->flexPointHandle))->is_enabled)
+        {
+            return true;
         }
         else if (!((FlexPoint*)dbPoint->flexPointHandle)->is_output_point &&
                  !sys.fims_dependencies->uri_requests.contains_local_uri)

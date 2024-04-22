@@ -118,7 +118,7 @@ void lintls_terminateSslLibrary(void)
     ENGINE_cleanup();
     ERR_free_strings();
 #else
-    FIPS_mode_set(0);
+    // FIPS_mode_set(0); // we can comment this out because OpenSSL 3.0.7 has FIPS disabled by default
     ENGINE_cleanup();
     CONF_modules_unload(1);
     CRYPTO_cleanup_all_ex_data();

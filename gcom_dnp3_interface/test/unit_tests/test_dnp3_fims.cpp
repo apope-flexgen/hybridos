@@ -1045,6 +1045,108 @@ TEST_SUITE("dnp3_fims")
         CHECK((dbPoint_analog_out.flags & DNPDEFS_DBAS_FLAG_LOCAL_FORCED) == 0);
         CHECK(dbPoint_analog_out.data.analog.value == 20);
     }
+    TEST_CASE("processCmds - disable requests")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        Meta_Data_Info meta_data;
+
+        // Set up dependencies
+        sys.fims_dependencies->uri_view = std::string_view{ "/components/test/_disable" };
+        sys.fims_dependencies->uri_requests.clear_uri();
+        sys.fims_dependencies->uri_requests.is_disable_request = true;
+        sys.protocol_dependencies->who = 5;  // doesn't need to be anything in particular
+
+        // create a few mock points
+        TMWSIM_POINT dbPoint_analog_out;
+        FlexPoint fp_an_out(&sys, "analog_out_0", "/components/test");
+        dbPoint_analog_out.flexPointHandle = &fp_an_out;
+        addDbUri(sys, "/components/test", &dbPoint_analog_out);
+
+        TMWSIM_POINT dbPoint_analog_in;
+        FlexPoint fp_an_in(&sys, "analog_in_0", "/components/test");
+        dbPoint_analog_in.flexPointHandle = &fp_an_in;
+        addDbUri(sys, "/components/test", &dbPoint_analog_in);
+
+        TMWSIM_POINT dbPoint_binary_out;
+        FlexPoint fp_bin_out(&sys, "binary_out_0", "/components/test");
+        dbPoint_binary_out.flexPointHandle = &fp_bin_out;
+        addDbUri(sys, "/components/test", &dbPoint_binary_out);
+
+        TMWSIM_POINT dbPoint_binary_in;
+        FlexPoint fp_bin_in(&sys, "binary_in_0", "/components/test");
+        dbPoint_binary_in.flexPointHandle = &fp_bin_in;
+        addDbUri(sys, "/components/test", &dbPoint_binary_in);
+
+        TMWSIM_POINT dbPoint_counter;
+        FlexPoint fp_counter(&sys, "counter_0", "/components/test");
+        dbPoint_counter.flexPointHandle = &fp_counter;
+        addDbUri(sys, "/components/test", &dbPoint_counter);
+
+        // call function
+        bool result = processCmds(sys, meta_data);
+
+        // Assert
+        CHECK(result);
+        CHECK(!((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_enabled);
+        CHECK(!((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_enabled);
+        CHECK(!((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_enabled);
+        CHECK(!((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_enabled);
+        CHECK(!((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_enabled);
+
+        // make sure the result is the same when everything is already disabled
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(!((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_enabled);
+        CHECK(!((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_enabled);
+        CHECK(!((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_enabled);
+        CHECK(!((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_enabled);
+        CHECK(!((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_enabled);
+
+        // now let's enable
+        sys.fims_dependencies->uri_view = std::string_view{ "/components/test/_enable" };
+        sys.fims_dependencies->uri_requests.clear_uri();
+        sys.fims_dependencies->uri_requests.is_enable_request = true;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_enabled);
+        CHECK(((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_enabled);
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_enabled);
+        CHECK(((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_enabled);
+        CHECK(((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_enabled);
+
+        // make sure running it again doesn't break everything
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_enabled);
+        CHECK(((FlexPoint*)(dbPoint_analog_in.flexPointHandle))->is_enabled);
+        CHECK(((FlexPoint*)(dbPoint_binary_out.flexPointHandle))->is_enabled);
+        CHECK(((FlexPoint*)(dbPoint_binary_in.flexPointHandle))->is_enabled);
+        CHECK(((FlexPoint*)(dbPoint_counter.flexPointHandle))->is_enabled);
+
+        // now check individual points work
+        sys.fims_dependencies->uri_view = std::string_view{ "/components/test/analog_out_0/_disable" };
+        sys.fims_dependencies->uri_requests.clear_uri();
+        sys.fims_dependencies->uri_requests.is_disable_request = true;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(!((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_enabled);
+
+        sys.fims_dependencies->uri_view = std::string_view{ "/components/test/analog_out_0/_enable" };
+        sys.fims_dependencies->uri_requests.clear_uri();
+        sys.fims_dependencies->uri_requests.is_enable_request = true;
+
+        result = processCmds(sys, meta_data);
+
+        CHECK(result);
+        CHECK(((FlexPoint*)(dbPoint_analog_out.flexPointHandle))->is_enabled);
+    }
     TEST_CASE("uriIsMultiOrSingle") {}
     TEST_CASE("replyToFullGet") {}
     TEST_CASE("formatPointValue") {}

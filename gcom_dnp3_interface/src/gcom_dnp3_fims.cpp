@@ -559,6 +559,46 @@ bool processCmds(GcomSystem& sys, Meta_Data_Info& meta_data)
         return true;
     }
 
+    // handle enable request - set
+    if (sys.fims_dependencies->uri_requests.is_enable_request)
+    {
+        const auto uri_len = sys.fims_dependencies->uri_view.size();
+        const auto request_len = std::string_view{ "/_enable" }.size();
+        std::string uri = std::string{ sys.fims_dependencies->uri_view.substr(0, uri_len - request_len) };
+        std::map<std::string, varList*>::iterator uri_item = sys.dburiMap.find(uri);
+        if (uri_item != sys.dburiMap.end())
+        {
+            FPS_INFO_LOG("Received enable request for [%s]", uri.c_str());
+            for (std::pair<const std::string, TMWSIM_POINT*> pair : uri_item->second->dbmap)
+            {
+                TMWSIM_POINT* dbPoint = pair.second;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->is_enabled = true;
+            }
+        }
+
+        return true;
+    }
+
+    // handle disable request - set
+    if (sys.fims_dependencies->uri_requests.is_disable_request)
+    {
+        const auto uri_len = sys.fims_dependencies->uri_view.size();
+        const auto request_len = std::string_view{ "/_disable" }.size();
+        std::string uri = std::string{ sys.fims_dependencies->uri_view.substr(0, uri_len - request_len) };
+        std::map<std::string, varList*>::iterator uri_item = sys.dburiMap.find(uri);
+        if (uri_item != sys.dburiMap.end())
+        {
+            FPS_INFO_LOG("Received disable request for [%s]", uri.c_str());
+            for (std::pair<const std::string, TMWSIM_POINT*> pair : uri_item->second->dbmap)
+            {
+                TMWSIM_POINT* dbPoint = pair.second;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->is_enabled = false;
+            }
+        }
+
+        return true;
+    }
+
     // handle points request - get
     if (sys.fims_dependencies->uri_requests.is_points_request)
     {

@@ -1509,6 +1509,166 @@ TEST_SUITE("dnp3_server")
         }
         free(sys.fims_dependencies->data_buf);
         shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
+    }
+    TEST_CASE("parseBody - forced - multi - local uri")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        std::vector<TMWSIM_POINT*> points = setupParseBodyServerTest(sys, true);
+        setForced(points);
+        DNP3Dependencies* dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT* dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        sys.fims_dependencies->data_buf = (char*)malloc(1000);
+
+        sprintf(sys.fims_dependencies->data_buf, "{");
+        std::string combinedJSON = "{";  // Initialize the combined JSON object
+        bool isFirstPoint = true;        // To keep track of the first point
+        int value = 55;
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgOutGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                // Append a comma if it's not the first point
+                if (!isFirstPoint)
+                {
+                    strcat(sys.fims_dependencies->data_buf, ",");
+                    combinedJSON += ",";
+                }
+                isFirstPoint = false;
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":%d", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(), value);
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgInGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                strcat(sys.fims_dependencies->data_buf, ",");
+                combinedJSON += ",";
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":%d", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(), value);
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binOutGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                strcat(sys.fims_dependencies->data_buf, ",");
+                combinedJSON += ",";
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":true", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binInGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                strcat(sys.fims_dependencies->data_buf, ",");
+                combinedJSON += ",";
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":true", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                strcat(sys.fims_dependencies->data_buf, ",");
+                combinedJSON += ",";
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":%d", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(), value);
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+
+        combinedJSON += "}";  // Close the combined JSON object
+        strcat(sys.fims_dependencies->data_buf, "}");
+
+        meta_data.data_len = combinedJSON.length();
+        sys.fims_dependencies->uri_view = std::string_view(((FlexPoint*)(dbPoint->flexPointHandle))->uri);
+        sys.fims_dependencies->uri_requests.contains_local_uri = true;
+        CHECK(parseBodyServer(sys, meta_data));
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgOutGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->standby_value == 0);
+                CHECK(dbPoint->data.analog.value ==
+                      static_cast<double>(value * ((FlexPoint*)(dbPoint->flexPointHandle))->scale));
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgInGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->standby_value == 0);
+                CHECK(dbPoint->data.analog.value ==
+                      static_cast<double>(value * ((FlexPoint*)(dbPoint->flexPointHandle))->scale));
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->standby_value == 0);
+                CHECK(dbPoint->data.counter.value == value * ((FlexPoint*)(dbPoint->flexPointHandle))->scale);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binInGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->standby_value == 0);
+                CHECK(dbPoint->data.binary.value == 1);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binOutGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->standby_value == 0);
+                CHECK(dbPoint->data.binary.value == 1);
+            }
+        }
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
     }
     TEST_CASE("parseBody - forced - multi - no local uri")
     {
@@ -1672,6 +1832,10 @@ TEST_SUITE("dnp3_server")
         }
         free(sys.fims_dependencies->data_buf);
         shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
     }
     TEST_CASE("parseBody - forced - single - local uri")
     {
@@ -1788,6 +1952,10 @@ TEST_SUITE("dnp3_server")
 
         free(sys.fims_dependencies->data_buf);
         shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
     }
     TEST_CASE("parseBody - forced - single - no local uri")
     {
@@ -1915,6 +2083,159 @@ TEST_SUITE("dnp3_server")
 
         free(sys.fims_dependencies->data_buf);
         shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
+    }
+    TEST_CASE("parseBody - disabled")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        std::vector<TMWSIM_POINT*> points = setupParseBodyServerTest(sys, true);
+        setDisabled(points);
+        DNP3Dependencies* dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT* dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        sys.fims_dependencies->data_buf = (char*)malloc(1000);
+
+        sprintf(sys.fims_dependencies->data_buf, "{");
+        std::string combinedJSON = "{";  // Initialize the combined JSON object
+        bool isFirstPoint = true;        // To keep track of the first point
+        int value = 55;
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgOutGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                // Append a comma if it's not the first point
+                if (!isFirstPoint)
+                {
+                    strcat(sys.fims_dependencies->data_buf, ",");
+                    combinedJSON += ",";
+                }
+                isFirstPoint = false;
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":%d", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(), value);
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgInGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                strcat(sys.fims_dependencies->data_buf, ",");
+                combinedJSON += ",";
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":%d", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(), value);
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binOutGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                strcat(sys.fims_dependencies->data_buf, ",");
+                combinedJSON += ",";
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":true", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binInGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                strcat(sys.fims_dependencies->data_buf, ",");
+                combinedJSON += ",";
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":true", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                strcat(sys.fims_dependencies->data_buf, ",");
+                combinedJSON += ",";
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":%d", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(), value);
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+
+        combinedJSON += "}";  // Close the combined JSON object
+        strcat(sys.fims_dependencies->data_buf, "}");
+
+        meta_data.data_len = combinedJSON.length();
+        sys.fims_dependencies->uri_view = std::string_view(((FlexPoint*)(dbPoint->flexPointHandle))->uri);
+        CHECK(parseBodyServer(sys, meta_data));
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgOutGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                CHECK(dbPoint->data.analog.value == 0);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgInGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                CHECK(dbPoint->data.analog.value == 0);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binCntrGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                CHECK(dbPoint->data.counter.value == 0);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binInGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                CHECK(dbPoint->data.binary.value == 0);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binOutGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                CHECK(dbPoint->data.binary.value == 0);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
     }
     TEST_CASE("received_command_callback - analog outputs")
     {
@@ -2518,6 +2839,48 @@ TEST_SUITE("dnp3_server")
                               ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.send_buf.size()) == 0);
                 CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->set_timer.active);
                 send_buf.clear();
+            }
+        }
+
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
+    }
+    TEST_CASE("fimsSendSetCallback - all points disabled")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        std::vector<TMWSIM_POINT*> points = setupParseBodyServerTest(sys);
+        setDisabled(points);
+        DNP3Dependencies* dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT* dbPoint = nullptr;
+        fmt::memory_buffer send_buf;
+
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_anlgOutGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.value = rand() % 100;
+                send_buf.clear();
+                fimsSendSetCallback(&((FlexPoint*)(dbPoint->flexPointHandle))->set_work);
+                CHECK(strncmp(((FlexPoint*)(dbPoint->flexPointHandle))->set_work.send_buf.data(), send_buf.data(),
+                              ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.send_buf.size()) == 0);
+            }
+        }
+
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binOutGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                send_buf.clear();
+                ((FlexPoint*)(dbPoint->flexPointHandle))->crob_int = true;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.value = rand() % 2 == 0;
+
+                CHECK(strncmp(((FlexPoint*)(dbPoint->flexPointHandle))->set_work.send_buf.data(), send_buf.data(),
+                              ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.send_buf.size()) == 0);
             }
         }
 

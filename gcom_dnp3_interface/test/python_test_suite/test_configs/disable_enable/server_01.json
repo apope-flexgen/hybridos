@@ -1,0 +1,545 @@
+{
+    "Client AnOPInt32 Baseline Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_0\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPInt32 Baseline Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_0 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPInt32 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_0/_disable\nsleep 0.3\n",
+            "fims_send -m set -u /components/test/analog_out_0 555\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPInt32 Disable Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_0\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPInt32 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_0/_enable\nsleep 0.3\n",
+            "fims_send -m set -u /components/test/analog_out_0 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPInt32 Enable Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_0\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPInt16 Baseline Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_2\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPInt16 Baseline Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_2 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPInt16 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_2/_disable\nsleep 0.3\n",
+            "fims_send -m set -u /components/test/analog_out_2 555\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPInt16 Disable Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_2\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPInt16 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_2/_enable\nsleep 0.3\n",
+            "fims_send -m set -u /components/test/analog_out_2 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPInt16 Enable Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_2\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPF32 Baseline Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_4\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPF32 Baseline Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_4 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPF32 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_4/_disable\nsleep 0.3\n",
+            "fims_send -m set -u /components/test/analog_out_4 555\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPF32 Disable Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_4\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPF32 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_4/_enable\nsleep 0.3\n",
+            "fims_send -m set -u /components/test/analog_out_4 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnOPF32 Enable Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_4\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnalogOS Baseline Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_6\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnalogOS Baseline Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_6 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnalogOS Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_6/_disable\nsleep 0.3\n",
+            "fims_send -m set -u /components/test/analog_out_6 555\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client AnalogOS Disable Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_6\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client AnalogOS Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_6/_enable\nsleep 0.3\n",
+            "fims_send -m set -u /components/test/analog_out_6 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client AnalogOS Enable Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"analog_out_6\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client BinaryOS Baseline Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_2\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client BinaryOS Baseline Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_2 false\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client BinaryOS Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_2/_disable\nsleep 0.3\n",
+            "fims_send -m set -u /components/test/binary_out_2 true\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client BinaryOS Disable Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_2\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client BinaryOS Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_2/_enable\nsleep 0.3\n",
+            "fims_send -m set -u /components/test/binary_out_2 true\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client BinaryOS Enable Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_2\":false}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client CROB Baseline Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_0\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client CROB Baseline Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_0 false\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client CROB Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_0/_disable\nsleep 0.3\n",
+            "fims_send -m set -u /components/test/binary_out_0 true\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client CROB Disable Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_0\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [],
+        "actual": null,
+        "result": null
+    },
+    "Client CROB Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_0/_enable\nsleep 0.3\n",
+            "fims_send -m set -u /components/test/binary_out_0 true\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Client CROB Enable Multi": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_0\":false}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "git_commit_hash": null,
+    "git_branch": null,
+    "git_commit_author": null
+}

@@ -11,3 +11,5 @@ void setBatchPub(std::vector<TMWSIM_POINT*>& allPoints);
 void setIntervalPub(std::vector<TMWSIM_POINT*>& allPoints);
 void setForced(std::vector<TMWSIM_POINT*>& allPoints);
 void setUnforced(std::vector<TMWSIM_POINT*>& allPoints);
+void setEnabled(std::vector<TMWSIM_POINT*>& allPoints);
+void setDisabled(std::vector<TMWSIM_POINT*>& allPoints);

@@ -188,3 +188,19 @@ void setUnforced(std::vector<TMWSIM_POINT*>& allPoints)
         ((FlexPoint*)(dbPoint->flexPointHandle))->standby_value = 0;
     }
 }
+
+void setDisabled(std::vector<TMWSIM_POINT*>& allPoints)
+{
+    for (TMWSIM_POINT* dbPoint : allPoints)
+    {
+        ((FlexPoint*)(dbPoint->flexPointHandle))->is_enabled = false;
+    }
+}
+
+void setEnabled(std::vector<TMWSIM_POINT*>& allPoints)
+{
+    for (TMWSIM_POINT* dbPoint : allPoints)
+    {
+        ((FlexPoint*)(dbPoint->flexPointHandle))->is_enabled = true;
+    }
+}

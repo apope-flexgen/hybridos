@@ -1,0 +1,1656 @@
+{
+    "Server AnOPInt32 Baseline Multi": {
+        "commands": [
+            "sleep 3\n",
+            "fims_send -m pub -u /components/test '{\"analog_out_0\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPInt32 Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/analog_out_0 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPInt32 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_0/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_out_0 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPInt32 Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_out_0\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPInt32 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_0/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_out_0 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPInt32 Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_out_0\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_0": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPInt16 Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_out_2\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPInt16 Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/analog_out_2 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPInt16 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_2/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_out_2 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPInt16 Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_out_2\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPInt16 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_2/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_out_2 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPInt16 Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_out_2\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_2": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPF32 Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_out_4\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPF32 Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/analog_out_4 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPF32 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_4/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_out_4 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPF32 Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_out_4\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPF32 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_4/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_out_4 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnOPF32 Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_out_4\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_4": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnalogOS Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_out_6\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnalogOS Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/analog_out_6 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnalogOS Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_6/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_out_6 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnalogOS Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_out_6\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnalogOS Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_out_6/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_out_6 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server AnalogOS Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_out_6\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_out_6": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 1 Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_0\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_0": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 1 Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/analog_in_0 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_0": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 1 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_in_0/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_in_0 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_0": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 1 Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_0\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_0": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 1 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_in_0/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_in_0 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_0": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 1 Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_0\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_0": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 2 Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_1\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_1": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 2 Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/analog_in_1 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_1": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 2 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_in_1/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_in_1 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_1": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 2 Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_1\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_1": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 2 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_in_1/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_in_1 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_1": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 2 Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_1\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_1": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 3 Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_2\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_2": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 3 Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/analog_in_2 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_2": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 3 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_in_2/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_in_2 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_2": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 3 Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_2\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_2": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 3 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_in_2/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_in_2 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_2": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 3 Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_2\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_2": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 4 Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_3\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_3": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 4 Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/analog_in_3 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_3": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 4 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_in_3/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_in_3 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_3": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 4 Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_3\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_3": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 4 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_in_3/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_in_3 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_3": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 4 Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_3\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_3": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 5 Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_4\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_4": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 5 Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/analog_in_4 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_4": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 5 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_in_4/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_in_4 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_4": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 5 Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_4\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_4": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 5 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_in_4/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_in_4 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_4": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 5 Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_4\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_4": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 6 Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_5\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_5": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 6 Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/analog_in_5 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_5": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 6 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_in_5/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_in_5 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_5": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 6 Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_5\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_5": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 6 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/analog_in_5/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/analog_in_5 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_5": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Analog Var 6 Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"analog_in_5\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "analog_in_5": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Counter Var 1 Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"counter_0\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "counter_0": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Counter Var 1 Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/counter_0 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "counter_0": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Counter Var 1 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/counter_0/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/counter_0 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "counter_0": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Counter Var 1 Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"counter_0\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "counter_0": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Counter Var 1 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/counter_0/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/counter_0 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "counter_0": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Counter Var 1 Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"counter_0\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "counter_0": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Counter Var 2 Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"counter_1\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "counter_1": {
+                        "value": 12345
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Counter Var 2 Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/counter_1 5555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "counter_1": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Counter Var 2 Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/counter_1/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/counter_1 555\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "counter_1": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Counter Var 2 Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"counter_1\":12345}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "counter_1": {
+                        "value": 5555
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Counter Var 2 Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/counter_1/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/counter_1 333\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "counter_1": {
+                        "value": 333
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Counter Var 2 Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"counter_1\":11111}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "counter_1": {
+                        "value": 11111
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Binary Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"binary_in_1\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_in_1": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Binary Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/binary_in_1 false\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_in_1": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Binary Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_in_1/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/binary_in_1 true\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_in_1": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Binary Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"binary_in_1\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_in_1": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Binary Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_in_1/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/binary_in_1 true\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_in_1": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server Binary Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"binary_in_1\":false}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_in_1": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server BinaryOS Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"binary_out_2\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server BinaryOS Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/binary_out_2 false\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server BinaryOS Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_2/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/binary_out_2 true\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server BinaryOS Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"binary_out_2\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server BinaryOS Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_2/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/binary_out_2 true\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server BinaryOS Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"binary_out_2\":false}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server CROB Baseline Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"binary_out_0\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server CROB Baseline Single": {
+        "commands": [
+            "fims_send -m pub -u /components/test/binary_out_0 false\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server CROB Disable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_0/_disable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/binary_out_0 true\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server CROB Disable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"binary_out_0\":true}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server CROB Enable Single": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_0/_enable\nsleep 0.3\n",
+            "fims_send -m pub -u /components/test/binary_out_0 true\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": true
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "Server CROB Enable Multi": {
+        "commands": [
+            "fims_send -m pub -u /components/test '{\"binary_out_0\":false}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": {
+                        "value": false
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "git_commit_hash": null,
+    "git_branch": null,
+    "git_commit_author": null
+}

@@ -13,7 +13,8 @@ NO_URI = 2
 NO_BODY = 3
 MISSING_URI = 4
 MISSING_KEY = 5
-INCORRECT_VALUE = 6
+EXTRA_KEY = 6
+INCORRECT_VALUE = 7
 
 SUCCESS = 10
 
@@ -125,6 +126,13 @@ def compare_messages(test_id, expected_message, actual_message):
                                 f'Expected: "{key}": {expected_value}\n' + \
                                 f'Got     : "{key}": Missing from message body!\n'
                 return_value = MISSING_KEY
+        if 'excluded_keys' in expected_message:
+            for key in expected_message['excluded_keys']:
+                if isinstance(actual_message['body'],dict) and key in actual_message['body']:
+                    return_string = f'Test Case {test_id}:\n' + \
+                                f'Expected: No "{key}" in message body\n' + \
+                                f'Got     : "{key}": {actual_message['body'][key]}\n'
+                return_value = EXTRA_KEY
         return return_value, return_string
     parent_uri = actual_message['uri'][0:actual_message['uri'].rindex("/")]
     key = actual_message['uri'][actual_message['uri'].rindex("/")+1:]
@@ -188,9 +196,9 @@ def compare_messages(test_id, expected_message, actual_message):
                 return_value = INCORRECT_VALUE
         else:
             return_string = f'Test Case {test_id}:\n' + \
-                            f'Expected: "{key}": Missing!\n' + \
+                            f'Expected: No "{key}" in message body\n' + \
                             f'Got     : "{key}": {actual_message["body"]}\n'
-            return_value = MISSING_KEY
+            return_value = EXTRA_KEY
     else:
         return_string = f'Test Case {test_id}:\n' + \
                         f'Expected: "uri": {expected_message["uri"]}\n' + \

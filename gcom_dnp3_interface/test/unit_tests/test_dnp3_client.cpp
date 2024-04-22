@@ -2308,6 +2308,219 @@ TEST_SUITE("dnp3_client")
         free(sys.fims_dependencies->data_buf);
         shutdown_tmw(&sys.protocol_dependencies->dnp3);
     }
+    TEST_CASE("parseBody - disabled - multi")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        std::vector<TMWSIM_POINT*> points = setupParseBodyClientTest(sys, true);
+        setDisabled(points);
+        DNP3Dependencies* dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT* dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        sys.fims_dependencies->data_buf = (char*)malloc(1000);
+
+        sprintf(sys.fims_dependencies->data_buf, "{");
+        std::string combinedJSON = "{";  // Initialize the combined JSON object
+        bool isFirstPoint = true;        // To keep track of the first point
+        int value = 55;
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_analogOutputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                // Append a comma if it's not the first point
+                if (!isFirstPoint)
+                {
+                    strcat(sys.fims_dependencies->data_buf, ",");
+                    combinedJSON += ",";
+                }
+                isFirstPoint = false;
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":%d", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(), value);
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_analogInputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                strcat(sys.fims_dependencies->data_buf, ",");
+                combinedJSON += ",";
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":%d", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(), value);
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryOutputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                strcat(sys.fims_dependencies->data_buf, ",");
+                combinedJSON += ",";
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":true", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryInputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                strcat(sys.fims_dependencies->data_buf, ",");
+                combinedJSON += ",";
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":true", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryCounterGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                strcat(sys.fims_dependencies->data_buf, ",");
+                combinedJSON += ",";
+                char* pointJSON;
+                asprintf(&pointJSON, "\"%s\":%d", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(), value);
+
+                strcat(sys.fims_dependencies->data_buf, pointJSON);  // Append to the data_buf
+                combinedJSON += pointJSON;                           // Append to the combined JSON
+                free(pointJSON);
+            }
+        }
+
+        combinedJSON += "}";  // Close the combined JSON object
+        strcat(sys.fims_dependencies->data_buf, "}");
+
+        meta_data.data_len = combinedJSON.length();
+        sys.fims_dependencies->uri_view = std::string_view(((FlexPoint*)(dbPoint->flexPointHandle))->uri);
+        CHECK(parseBodyClient(sys, meta_data));
+        checkRequestCounts(sys, 0, 0, 0, 0);
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+    }
+    TEST_CASE("parseBody - disabled - single")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        std::vector<TMWSIM_POINT*> points = setupParseBodyClientTest(sys, true);
+        setDisabled(points);
+        DNP3Dependencies* dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT* dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        char* fims_message;
+        char* uri;
+        sys.fims_dependencies->data_buf = (char*)malloc(1000);
+        sys.fims_dependencies->uri_requests.contains_local_uri = true;
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_analogOutputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100 + 1;
+                asprintf(&fims_message, "%d", value);
+                sprintf(sys.fims_dependencies->data_buf, "%d", value);
+                asprintf(&uri, "%s/%s", ((FlexPoint*)(dbPoint->flexPointHandle))->uri,
+                         ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(uri);
+                CHECK(parseBodyClient(sys, meta_data));
+                checkRequestCounts(sys, 0, 0, 0, 0);
+                free(fims_message);
+                free(uri);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_analogInputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100 + 1;
+                asprintf(&fims_message, "%d", value);
+                sprintf(sys.fims_dependencies->data_buf, "%d", value);
+                asprintf(&uri, "%s/%s", ((FlexPoint*)(dbPoint->flexPointHandle))->uri,
+                         ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(uri);
+                CHECK(parseBodyClient(sys, meta_data));
+                checkRequestCounts(sys, 0, 0, 0, 0);
+                free(fims_message);
+                free(uri);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryCounterGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100 + 1;
+                asprintf(&fims_message, "%d", value);
+                sprintf(sys.fims_dependencies->data_buf, "%d", value);
+                asprintf(&uri, "%s/%s", ((FlexPoint*)(dbPoint->flexPointHandle))->uri,
+                         ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(uri);
+                CHECK(parseBodyClient(sys, meta_data));
+                checkRequestCounts(sys, 0, 0, 0, 0);
+                free(fims_message);
+                free(uri);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryOutputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100 - 50;
+                bool bool_value = value > 0;
+                asprintf(&fims_message, "%s", bool_value ? "true" : "false");
+                sprintf(sys.fims_dependencies->data_buf, "%s", bool_value ? "true" : "false");
+                asprintf(&uri, "%s/%s", ((FlexPoint*)(dbPoint->flexPointHandle))->uri,
+                         ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(uri);
+                CHECK(parseBodyClient(sys, meta_data));
+                checkRequestCounts(sys, 0, 0, 0, 0);
+                free(fims_message);
+                free(uri);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryInputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                int value = rand() % 100 - 50;
+                bool bool_value = value > 0;
+                asprintf(&fims_message, "%s", bool_value ? "true" : "false");
+                sprintf(sys.fims_dependencies->data_buf, "%s", bool_value ? "true" : "false");
+                asprintf(&uri, "%s/%s", ((FlexPoint*)(dbPoint->flexPointHandle))->uri,
+                         ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(uri);
+                CHECK(parseBodyClient(sys, meta_data));
+                checkRequestCounts(sys, 0, 0, 0, 0);
+                free(fims_message);
+                free(uri);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+    }
     TEST_CASE("updatePointCallback - direct")
     {
         GcomSystem sys = GcomSystem(Protocol::DNP3);
@@ -2532,6 +2745,78 @@ TEST_SUITE("dnp3_client")
         queuePubs(&sys);
         shutdown_tmw(&sys.protocol_dependencies->dnp3);
     }
+    TEST_CASE("addPointToPubWork - disabled points")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        std::vector<TMWSIM_POINT*> points = setupParseBodyClientTest(sys);
+        setDisabled(points);
+        DNP3Dependencies* dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT* dbPoint = nullptr;
+
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_analogInputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->data.analog.value = rand() % 100;
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+                tmwtarg_getDateTime(&dbPoint->timeStamp);
+                addPointToPubWork(dbPoint);
+                CHECK(sys.fims_dependencies->uris_with_data.size() == 0);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->analogOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_analogOutputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->data.analog.value = rand() % 100;
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+                tmwtarg_getDateTime(&dbPoint->timeStamp);
+                addPointToPubWork(dbPoint);
+                CHECK(sys.fims_dependencies->uris_with_data.size() == 0);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryCounters); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryCounterGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->data.analog.value = rand() % 100;
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+                tmwtarg_getDateTime(&dbPoint->timeStamp);
+                addPointToPubWork(dbPoint);
+                CHECK(sys.fims_dependencies->uris_with_data.size() == 0);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryInputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryInputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->data.binary.value = rand() % 2 == 0;
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+                tmwtarg_getDateTime(&dbPoint->timeStamp);
+                addPointToPubWork(dbPoint);
+                CHECK(sys.fims_dependencies->uris_with_data.size() == 0);
+            }
+        }
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryOutputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->data.binary.value = rand() % 2 == 0;
+                dbPoint->flags = DNPDEFS_DBAS_FLAG_ON_LINE;
+                tmwtarg_getDateTime(&dbPoint->timeStamp);
+                addPointToPubWork(dbPoint);
+                CHECK(sys.fims_dependencies->uris_with_data.size() == 0);
+            }
+        }
+
+        queuePubs(&sys);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+    }
     TEST_CASE("addPointToPubWork - batch")
     {
         GcomSystem sys = GcomSystem(Protocol::DNP3);
@@ -2642,10 +2927,11 @@ TEST_SUITE("dnp3_client")
     }
     TEST_CASE("assignValueBasedOnType - analog - not forced")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::Analog;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)dbPoint.flexPointHandle)->standby_value = 10.0;
@@ -2663,16 +2949,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 20.0);
         CHECK(status_point.value == 0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - analog - forced")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::Analog;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = true;
         ((FlexPoint*)dbPoint.flexPointHandle)->standby_value = 10.0;
@@ -2690,16 +2974,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 10.0);
         CHECK(status_point.value == 0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - binary - not forced")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::Binary;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)dbPoint.flexPointHandle)->standby_value = 1;
@@ -2717,16 +2999,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 1);
         CHECK(status_point.value == 0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - binary - forced")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::Binary;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = true;
         ((FlexPoint*)dbPoint.flexPointHandle)->standby_value = 1;
@@ -2744,16 +3024,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 1);
         CHECK(status_point.value == 0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - counter - not forced")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::Counter;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)dbPoint.flexPointHandle)->standby_value = 10.0;
@@ -2771,16 +3049,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 20.0);
         CHECK(status_point.value == 0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - counter - forced")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::Counter;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = true;
         ((FlexPoint*)dbPoint.flexPointHandle)->standby_value = 10.0;
@@ -2798,16 +3074,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 10.0);
         CHECK(status_point.value == 0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - analogOS - has not sent operate - show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnalogOS;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->show_output_status = true;
@@ -2826,16 +3100,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 20.0);
         CHECK(status_point.value == 20.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - analogOS - has not sent operate - don't show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnalogOS;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->show_output_status = false;
@@ -2854,16 +3126,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 20.0);
         CHECK(status_point.value == 0.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - AnOPInt32 - has not sent operate - show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnOPInt32;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->show_output_status = true;
@@ -2882,16 +3152,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 20.0);
         CHECK(status_point.value == 20.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - AnOPInt32 - has not sent operate - don't show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnOPInt32;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->show_output_status = false;
@@ -2910,16 +3178,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 20.0);
         CHECK(status_point.value == 0.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - AnOPInt16 - has not sent operate - show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnOPInt16;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->show_output_status = true;
@@ -2938,16 +3204,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 20.0);
         CHECK(status_point.value == 20.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - AnOPInt16 - has not sent operate - don't show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnOPInt16;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->show_output_status = false;
@@ -2966,16 +3230,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 20.0);
         CHECK(status_point.value == 0.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - AnOPF32 - has not sent operate - show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnOPF32;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->show_output_status = true;
@@ -2994,16 +3256,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 20.0);
         CHECK(status_point.value == 20.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - AnOPF32 - has not sent operate - don't show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnOPF32;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = false;
@@ -3023,16 +3283,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 20.0);
         CHECK(status_point.value == 0.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - analogOS - has sent operate - show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnalogOS;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = true;
@@ -3053,16 +3311,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 15.0);
         CHECK(status_point.value == 20.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - analogOS - has sent operate - don't show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnalogOS;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = true;
@@ -3083,16 +3339,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 15.0);
         CHECK(status_point.value == 0.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - AnOPInt32 - has sent operate - show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnOPInt32;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = true;
@@ -3113,16 +3367,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 15.0);
         CHECK(status_point.value == 20.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - AnOPInt32 - has sent operate - don't show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnOPInt32;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = true;
@@ -3143,16 +3395,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 15.0);
         CHECK(status_point.value == 0.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - AnOPInt16 - has sent operate - show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnOPInt16;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = true;
@@ -3173,16 +3423,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 15.0);
         CHECK(status_point.value == 20.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - AnOPInt16 - has sent operate - don't show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnOPInt16;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = true;
@@ -3203,16 +3451,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 15.0);
         CHECK(status_point.value == 0.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - AnOPF32 - has sent operate - show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnOPF32;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = true;
@@ -3233,16 +3479,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 15.0);
         CHECK(status_point.value == 20.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - AnOPF32 - has sent operate - don't show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::AnOPF32;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = true;
@@ -3263,16 +3507,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 15.0);
         CHECK(status_point.value == 0.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - BinaryOS - has not sent operate - show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::BinaryOS;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = false;
@@ -3292,16 +3534,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 1);
         CHECK(status_point.value == 1);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - BinaryOS - has not sent operate - don't show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::BinaryOS;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = false;
@@ -3321,16 +3561,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 1);
         CHECK(status_point.value == 0.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - CROB - has not sent operate - show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::CROB;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = false;
@@ -3350,16 +3588,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 1);
         CHECK(status_point.value == 1);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - CROB - has not sent operate - don't show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::CROB;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = false;
@@ -3379,16 +3615,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 1);
         CHECK(status_point.value == 0.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - BinaryOS - has sent operate - show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::BinaryOS;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = true;
@@ -3409,16 +3643,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 1);
         CHECK(status_point.value == 1);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - BinaryOS - has sent operate - don't show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::BinaryOS;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = true;
@@ -3439,16 +3671,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 1);
         CHECK(status_point.value == 0.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - CROB - has sent operate - show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::CROB;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = true;
@@ -3469,16 +3699,14 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 1);
         CHECK(status_point.value == 1);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
     TEST_CASE("assignValueBasedOnType - CROB - has sent operate - don't show output status")
     {
-        GcomSystem sys;
+        GcomSystem sys(Protocol::DNP3);
         // Create a TMWSIM_POINT object
         TMWSIM_POINT dbPoint;
-        dbPoint.flexPointHandle = new FlexPoint(&sys, "some_point", "/some/uri");
+        FlexPoint flexPoint = FlexPoint(&sys, "some_point", "/some/uri");
+        dbPoint.flexPointHandle = &flexPoint;
         ((FlexPoint*)dbPoint.flexPointHandle)->type = Register_Types::CROB;
         ((FlexPoint*)dbPoint.flexPointHandle)->is_forced = false;
         ((FlexPoint*)(dbPoint.flexPointHandle))->sent_operate = true;
@@ -3499,9 +3727,6 @@ TEST_SUITE("dnp3_client")
         // Check if the value was assigned correctly
         CHECK(point.value == 1);
         CHECK(status_point.value == 0.0);
-
-        // Clean up
-        delete (FlexPoint*)dbPoint.flexPointHandle;
     }
 
     // TODO: Fix this for formatting

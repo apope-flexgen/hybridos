@@ -1,0 +1,188 @@
+{
+  "system": {
+    "name": "FlexGen HybridOS",
+    "protocol": "DNP3",
+    "version": "0.2",
+    "base_uri": "/base_uri_client",
+    "id": "test_client",
+    "ip_address": "172.10.0.3",
+    "local_uri": "/local_client",
+    "port": 20000,
+    "frequency": 100,
+    "event_pub": false,
+    "pub_outputs": true
+  },
+  "registers": [
+    {
+      "type": "AnOPInt32",
+      "map": [
+        {
+          "id": "analog_out_0",
+          "offset": 0,
+          "uri": "/components/test"
+        },
+        {
+          "id": "analog_out_1",
+          "offset": 1,
+          "uri": "/components/test"
+        }
+      ]
+    },
+    {
+      "type": "AnOPInt16",
+      "map": [
+        {
+          "id": "analog_out_2",
+          "offset": 2,
+          "uri": "/components/test"
+        },
+        {
+          "id": "analog_out_3",
+          "offset": 3,
+          "uri": "/components/test"
+        }
+      ]
+    },
+    {
+      "type": "AnOPF32",
+      "map": [
+        {
+          "id": "analog_out_4",
+          "offset": 4,
+          "uri": "/components/test"
+        },
+        {
+          "id": "analog_out_5",
+          "offset": 5,
+          "uri": "/components/test"
+        }
+      ]
+    },
+    {
+      "type": "analogOS",
+      "map": [
+        {
+          "id": "analog_out_6",
+          "offset": 6,
+          "uri": "/components/test",
+          "variation": "Group40Var4"
+        },
+        {
+          "id": "analog_out_7",
+          "offset": 7,
+          "uri": "/components/test",
+          "variation": "Group40Var4"
+        }
+      ]
+    },
+    {
+      "type": "CROB",
+      "map": [
+        {
+          "id": "binary_out_0",
+          "offset": 0,
+          "uri": "/components/test"
+        },
+        {
+          "id": "binary_out_1",
+          "offset": 1,
+          "uri": "/components/test"
+        }
+      ]
+    },
+    {
+      "type": "binaryOS",
+      "map": [
+        {
+          "id": "binary_out_2",
+          "offset": 2,
+          "uri": "/components/test"
+        },
+        {
+          "id": "binary_out_3",
+          "offset": 3,
+          "uri": "/components/test"
+        }
+      ]
+    },
+    {
+      "type": "binary",
+      "map": [
+        {
+          "id": "binary_in_0",
+          "offset": 2,
+          "uri": "/components/test"
+        },
+        {
+          "id": "binary_in_1",
+          "offset": 3,
+          "uri": "/components/test"
+        }
+      ]
+    },
+    {
+      "type": "analog",
+      "map": [
+        {
+          "id": "analog_in_0",
+          "offset": 0,
+          "uri": "/components/test",
+          "variation": "Group30Var1"
+        },
+        {
+          "id": "analog_in_1",
+          "offset": 1,
+          "uri": "/components/test",
+          "variation": "Group30Var2"
+        },
+        {
+          "id": "analog_in_2",
+          "offset": 2,
+          "uri": "/components/test",
+          "variation": "Group30Var3"
+        },
+        {
+          "id": "analog_in_3",
+          "offset": 3,
+          "uri": "/components/test",
+          "variation": "Group30Var4"
+        },
+        {
+          "id": "analog_in_4",
+          "offset": 4,
+          "uri": "/components/test",
+          "variation": "Group30Var5"
+        },
+        {
+          "id": "analog_in_5",
+          "offset": 5,
+          "uri": "/components/test",
+          "variation": "Group30Var6"
+        }
+      ]
+    },
+    {
+      "type": "counter",
+      "map": [
+        {
+          "id": "counter_0",
+          "offset": 0,
+          "uri": "/components/test",
+          "variation": "Group20Var1"
+        },
+        {
+          "id": "counter_1",
+          "offset": 1,
+          "uri": "/components/test",
+          "variation": "Group20Var2"
+        },
+        {
+          "id": "counter_2",
+          "offset": 2,
+          "uri": "/components/test",
+          "variation": "Group20Var1"
+        }
+      ]
+    }
+  ]
+}
