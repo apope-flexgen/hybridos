@@ -3,21 +3,23 @@
         "v1": { "uri": "/example/v1", "type": "float" }
     },
     "outputs": {
-        "example_duration": { "uri": "/some/output", "flags":["clothed", "post", "sparse", "no_heartbeat"] },
-        "something": { "uri": "/some/output", "flags":["clothed", "post", "sparse", "no_heartbeat"] }
+        "duration1": {"name": "duration1", "uri": "/some/output", "flags":["clothed", "post", "sparse", "no_heartbeat"], "attributes": {"source": "Alerts", "severity": 2}},
+        "duration2": {"name": "duration2", "uri": "/some/output", "flags":["clothed", "post", "sparse", "no_heartbeat"], "attributes": {"source": "Alerts", "severity": 2}}
 	},
     "metrics": [
         {
-            "id": "example_duration",
+            "id": "duration1",
             "type": "bool", 
-            "outputs": "example_duration",
-            "expression": "Duration(v1 > 0, 5)"
+            "outputs": "duration1",
+            "expression": "Duration(v1 > 0, 5)",
+            "alert": true
         },
         {
-            "id": "something",
+            "id": "duration2",
             "type": "bool", 
-            "outputs": "something",
-            "expression": "Duration(v1 > 3, 5)"
+            "outputs": "duration2",
+            "expression": "Duration(v1 > 3, 5)",
+            "alert": true
         }
     ]
 }

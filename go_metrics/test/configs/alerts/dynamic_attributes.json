@@ -1,0 +1,24 @@
+{
+    "inputs": {
+        "input": { "uri": "/example/input", "type": "bool" }
+    },
+    "outputs": {
+        "output1": {"uri": "/some/output", "flags":["clothed", "post", "sparse", "no_heartbeat"], "attributes": {"source": "Alerts", "severity": 2}},
+        "output2": {"uri": "/some/output", "flags":["clothed", "post", "sparse", "no_heartbeat"], "attributes": {"something": "else"}}
+	},
+    "metrics": [
+        {
+            "id": "output1",
+            "type": "bool", 
+            "outputs": "output1",
+            "expression": "input",
+            "alert": true
+        },
+        {
+            "id": "output2",
+            "type": "bool", 
+            "outputs": "output2",
+            "expression": "input"
+        }
+    ]
+}

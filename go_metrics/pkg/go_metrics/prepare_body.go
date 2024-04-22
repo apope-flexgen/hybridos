@@ -1,5 +1,73 @@
 package go_metrics
 
+import (
+	"fmt"
+
+	log "github.com/flexgen-power/go_flexgen/logger"
+)
+
+// Adds the alerting attributes to the fims object if the variable is an alert.
+// The attributes added will be the active/inactive status and a list of timestamps in the form of a
+// details array that indicates when the alert was triggered.
+// Uses the outputScopeMutex to read the values of these attributes
+// outputVar: the current output variable being sent out on fims
+// clothedOutputVal: the current clothed fims object that has been constructed
+// return if the variable is an alert and any errors that occurred
+func addAlertingAttributesToOutput(outputVar string, clothedOutputVal *map[string]interface{}) (bool, error) {
+	// Check if the name can be mapped to a metrics expression and the expression is an alert
+	metricsObjects, ok := outputToMetricsObject[outputVar]
+	if !ok {
+		return false, nil
+	}
+
+	isAlert := false
+	// Check all the expressions associated with the output (typically just 1)
+	for _, metricObject := range metricsObjects {
+		if metricObject.Alert {
+			isAlert = true
+			break
+		}
+	}
+	if !isAlert {
+		return false, nil
+	}
+
+	outputScopeMutex.RLock()
+	alertStatus, ok := OutputScope[outputVar+"@alertStatus"]
+	if !ok {
+		return true, fmt.Errorf("alert does not have a status attribute. There is an error in the code")
+	} else {
+		if len(alertStatus) != 1 || alertStatus[0].tag != BOOL {
+			return true, fmt.Errorf("invalid number of alert status values. Expected 1 but got %d. There is an error in the code", len(alertStatus))
+		}
+		// Update the alert status based on the value of the metric
+		if alertStatus[0].b {
+			(*clothedOutputVal)["status"] = "active"
+		} else {
+			(*clothedOutputVal)["status"] = "inactive"
+		}
+	}
+
+	detailsList, ok := OutputScope[outputVar+"@alertDetails"]
+	if !ok {
+		return true, fmt.Errorf("alert does not have a details list. There is an error in the code")
+	} else {
+		// Create an array of all the trigger times for the alert.
+		// This tracks separate timestamps for OR'd conditions so we know
+		// when each individual subcondition became true.
+		// It is not a history of the alert
+		var details []map[string]interface{}
+		details = make([]map[string]interface{}, 0)
+		for _, triggerTime := range detailsList {
+			details = append(details, map[string]interface{}{"timestamp": triggerTime.s})
+		}
+		(*clothedOutputVal)["details"] = details
+	}
+	outputScopeMutex.RUnlock()
+
+	return true, nil
+}
+
 func PrepareBody(outputUri string) map[string]interface{} {
 	msgBody := make(map[string]interface{}, len(PublishUris[outputUri]))
 	directMsgBody = make(map[string]interface{}, 0)
@@ -173,6 +241,14 @@ func PrepareBody(outputUri string) map[string]interface{} {
 					}
 				}
 			}
+
+			// Add the alerting attributes to the fims message if this is an alert
+			if isAlert, err := addAlertingAttributesToOutput(outputVar, &clothedOutputVal); err != nil {
+				log.Errorf("Error adding alerting attributes to output variable %s: %v.", outputVar, err)
+			} else if isAlert {
+				msgBody[outputVar] = clothedOutputVal
+			}
+
 			if interval_set || direct_set || direct_post {
 				directMsgBody[outputVar] = msgBody[outputVar]
 			} else {

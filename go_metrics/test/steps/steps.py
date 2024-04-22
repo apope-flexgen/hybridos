@@ -60,9 +60,9 @@ def step_impl(context, method, uri):
 
 @when(u'I send a fims {method} to {uri} containing')
 def step_impl(context, method, uri):
+    context.start_time = time.time()
     subprocess.run(["fims_send", "-m", method, "-u", uri, context.text],
                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
-    context.start_time = time.time()
 
 
 @then(u'I expect a fims {method} to {uri} within {delay} seconds containing')
@@ -81,6 +81,8 @@ def step_impl(context, method, uri, delay):
         found_match = False
         assertion_text = ""
         for match in reversed(context.matches):
+            print(
+                f"checking match {match} vs expected {context.expected_message}")
             if "uri" in match and match['uri'] == uri:
                 if "timestamp" in match and match['timestamp'] >= context.start_time and match['timestamp'] <= context.start_time + float(delay):
                     found_match = True
@@ -105,7 +107,8 @@ def step_impl(context, method, uri, delay):
                     if isinstance(body, dict):
                         for key, value in body.items():
                             if key in context.expected_message:
-                                if value == context.expected_message[key]:
+                                # Reserve "any" as a accepting any value and just checking that the key is present
+                                if value == context.expected_message[key] or context.expected_message[key] == "any":
                                     continue
                                 else:
                                     assertion_text = f'\nExpected: "{key}": {context.expected_message[key]}\nGot:"{key}": {value}'
@@ -120,7 +123,7 @@ def step_impl(context, method, uri, delay):
                         message_type = type(body)
                         try:
                             expected_val = message_type(context.text)
-                            if expected_val == body:
+                            if expected_val == body or expected_val == "any":
                                 assert True
                                 return
                             else:
@@ -130,6 +133,9 @@ def step_impl(context, method, uri, delay):
                     # Return early if a match was found
                     if found_match:
                         return
+                else:
+                    print(
+                        f"out of timestamp: ac {match['timestamp']} start {context.start_time}, end {context.start_time + float(delay)}")
         if assertion_text != "":
             assert False, assertion_text
         if not found_match:
@@ -178,8 +184,11 @@ def step_impl(context, method, uri, delay):
                     if isinstance(body, dict):
                         for key, value in body.items():
                             if key in context.expected_message:
-                                assert value == context.expected_message[
-                                    key], f'\nExpected: "{key}": {context.expected_message[key]}\nGot:"{key}": {value}'
+                                assertionResult = (
+                                    # Reserve "any" as a accepting any value and just checking that the key is present
+                                    value == context.expected_message[key] or context.expected_message[key] == "any"
+                                )
+                                assert assertionResult, f'\nExpected: "{key}": {context.expected_message[key]}\nGot:"{key}": {value}'
                             else:
                                 assert False, f"Extra key [{key}] found"
                         for key, value in context.expected_message.items():

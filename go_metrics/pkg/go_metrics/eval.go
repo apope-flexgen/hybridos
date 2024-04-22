@@ -533,6 +533,93 @@ func EvaluateFilter(filterName string) {
 	}
 }
 
+// Track the alerting attributes that are automatically added for every alert. This function only sets up the
+// tracking, and relies on storeAlertingAttributes and addAlertingAttributesToOutput to setup the attributes for sending on fims.
+// The alerting attributes include the timestamp of the last time the alert triggered as well as the last value of the alert.
+// Uses the metrics mutex for the given index.
+// rawExpressionResult: the unparsed expression result. Must be able to be cast as a boolean, else an error will be returned
+// metricIndex: index of the metric within the MetricsConfig.Metrics array
+// metricsObject: the current MetricsObject being evaluated
+// return error if there were any issues with the tracking such as invalid data types
+func trackAlertingAttributes(rawExpressionResult Union, metricIndex int, metricsObject *MetricsObject) error {
+	// Return early if this is not an alert or it's expression is not supported
+	if !metricsObject.Alert {
+		return nil
+	}
+	expressionResult := rawExpressionResult
+	if err := castUnionType(&expressionResult, BOOL); err != nil {
+		return fmt.Errorf("cannot generate alert for %s metric: %w", metricsObject.Id, err)
+	}
+
+	// Handle locks for the duration of the function
+	metricsMutex[metricIndex].Lock()
+	defer metricsMutex[metricIndex].Unlock()
+
+	// Ensure the previous value and timestamp exist
+	if len(metricsObject.State["lastAlertValue"]) == 0 {
+		// lastAlertVal tracks the last value of the expression
+		metricsObject.State["lastAlertValue"] = []Union{{tag: BOOL, b: false}}
+	}
+	if len(metricsObject.State["lastAlertTrigger"]) == 0 {
+		// lastAlertTrigger tracks the timestamp (RFC-3339 string) when the expression was first true
+		metricsObject.State["lastAlertTrigger"] = []Union{{tag: STRING, s: ""}}
+	}
+
+	// If the expression value just changed to true, update the trigger time with the current time
+	if expressionResult.b != metricsObject.State["lastAlertValue"][0].b {
+		metricsObject.State["lastAlertTrigger"][0].s = time.Now().Format(time.RFC3339)
+	}
+
+	// Update the previous value with the current value
+	metricsObject.State["lastAlertValue"][0] = expressionResult
+
+	return nil
+}
+
+// Store the automatically generated alerting attributes in the OutputScope. This includes the true/false status
+// of the alert as well as the timestamp(s) when the alert was triggered.
+// Uses the outputScopeMutex before writing to the OutputScope
+// outputVar: the current output variable that should use the attributes
+// outputVals: the result of the metrics expression
+// metricsObject: the current metricsObject being evaluated
+// return any errors that occurred
+func storeAlertingAttributes(outputVar string, outputVals []Union, metricsObject *MetricsObject) error {
+	if !metricsObject.Alert {
+		return nil
+	}
+
+	// Ensure the status and details array exist for the given output variable
+	outputScopeMutex.Lock()
+	if len(OutputScope[outputVar+"@alertStatus"]) == 0 {
+		// alertStatus tracks whether the alert is current active (true) or inactive (false)
+		// this is essentially just the value, but it's routed through the outputScope for consistency with other attributes
+		OutputScope[outputVar+"@alertStatus"] = []Union{{tag: BOOL, b: false}}
+	}
+	if len(OutputScope[outputVar+"@alertDetails"]) == 0 {
+		// The details array tracks all of the timestamps and messages of the given alert
+		// It should be empty if the alert is inactive
+		OutputScope[outputVar+"@alertDetails"] = []Union{}
+	}
+	if len(outputVals) == 0 {
+		return fmt.Errorf("no result available for the expression")
+	}
+	expressionResult := outputVals[0]
+	if err := castUnionType(&expressionResult, BOOL); err != nil {
+		return fmt.Errorf("cannot cast a boolean result from the metrics expression")
+	}
+	OutputScope[outputVar+"@alertStatus"][0].b = expressionResult.b
+	if expressionResult.b {
+		// If true, populate the details array with the timestamp
+		// TODO: iterate over for all the timestamps when multiple are triggered
+		OutputScope[outputVar+"@alertDetails"] = []Union{metricsObject.State["lastAlertTrigger"][0]}
+	} else {
+		// If the alert is not active make sure it does not have any incidents (timestamps)
+		OutputScope[outputVar+"@alertDetails"] = []Union{}
+	}
+	outputScopeMutex.Unlock()
+	return nil
+}
+
 func EvaluateExpressions() {
 	inputScopeMutex.Lock()
 	evalExpressionsTiming.start()
@@ -559,6 +646,14 @@ func EvaluateExpressions() {
 				if originalType != NIL {
 					castUnionType(&outputVals[0], originalType)
 				}
+				// Track any special alerting behavior based on the result of the evaluation
+				if err = trackAlertingAttributes(outputVals[0], q, &metricsObject); err != nil {
+					log.Errorf("Failed to track alert: %v", err)
+					// Will only error if an alert should have been handled
+					// If this occurs, do not allow the metric to be sent out on any of the outputs
+					continue
+				}
+
 				for _, fullOutputName := range metricsObject.Outputs {
 					if strings.Contains(fullOutputName, "@") {
 						splitOutputVar := strings.Split(fullOutputName, "@")
@@ -581,6 +676,11 @@ func EvaluateExpressions() {
 							OutputScope[fullOutputName] = make([]Union, len(outputVals))
 							copy(OutputScope[fullOutputName], outputVals)
 							outputScopeMutex.Unlock()
+
+							// Storage the alerting attributes if this is an alert
+							if err := storeAlertingAttributes(outputVar, outputVals, &metricsObject); err != nil {
+								log.Errorf("Cannot generate alert for %s metric: %v", metricsObject.Id, err)
+							}
 
 							if valuesChanged || ((is_direct_set || is_direct_post) && !is_sparse) {
 								pubDataChangedMutex.Lock()
@@ -637,6 +737,11 @@ func EvaluateExpressions() {
 						OutputScope[fullOutputName] = make([]Union, len(outputVals))
 						copy(OutputScope[fullOutputName], outputVals)
 						outputScopeMutex.Unlock()
+
+						// Storage the alerting attributes if this is an alert
+						if err := storeAlertingAttributes(fullOutputName, outputVals, &metricsObject); err != nil {
+							log.Errorf("Cannot generate alert for %s metric: %v", metricsObject.Id, err)
+						}
 
 						if valuesChanged || ((is_direct_set || is_direct_post) && !is_sparse) {
 							pubDataChangedMutex.Lock()
