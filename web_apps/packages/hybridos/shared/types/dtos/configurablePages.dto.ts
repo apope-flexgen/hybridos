@@ -111,4 +111,5 @@ export type DataPointVariantType = 'vertical' | 'horizontal' | 'dynamic';
 export enum DashboardLayout {
   TABLE = 'table',
   CARD = 'card',
+  DIAGRAM = 'diagram'
 }

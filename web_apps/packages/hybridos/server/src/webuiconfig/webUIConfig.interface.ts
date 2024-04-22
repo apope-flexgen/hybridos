@@ -10,6 +10,7 @@ export type SiteConfiguration = {
     features: boolean;
     site_status_bar?: boolean;
     alerting?: boolean;
+    site_diagram?: boolean;
     system_status?: boolean;
     site: boolean;
     events: boolean;

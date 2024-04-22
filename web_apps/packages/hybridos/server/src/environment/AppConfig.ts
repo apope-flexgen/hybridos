@@ -79,6 +79,10 @@ export class AppConfig {
     @IsBoolean()
     alerting: boolean
 
+    @IsOptional()
+    @IsBoolean()
+    site_diagram: boolean
+
     @IsNotEmpty()
     @IsObject()
     units: {
@@ -119,6 +123,7 @@ export class AppConfig {
             met_station,
             site_status_bar,
             alerting,
+            site_diagram,
             tracker,
             feeders,
             features,
@@ -142,6 +147,7 @@ export class AppConfig {
             met_station: boolean
             site_status_bar: boolean
             alerting: boolean
+            site_diagram: boolean
             tracker: boolean
             feeders: boolean
             features: boolean
@@ -172,6 +178,7 @@ export class AppConfig {
             (this.met_station = met_station ?? false),
             (this.site_status_bar = site_status_bar ?? false),
             (this.alerting = alerting ?? false),
+            (this.site_diagram = site_diagram ?? false),
             (this.tracker = tracker ?? false),
             (this.feeders = feeders ?? false),
             (this.features = features ?? false),

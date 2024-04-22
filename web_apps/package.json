@@ -13,7 +13,9 @@
     "ci:hybridos-shared": "pnpm --filter @hybridos/shared i",
     "ci:hybridos-ui": "pnpm --filter @hybridos/ui i",
     "ci:hybridos-server": "pnpm --filter @hybridos/server i",
-    "ci:hybridos-all": "pnpm run ci:shared && pnpm run ci:hybridos-shared && pnpm run ci:hybridos-ui && pnpm run ci:hybridos-server"
+    "ci:hybridos-all": "pnpm run ci:shared && pnpm run ci:hybridos-shared && pnpm run ci:hybridos-ui && pnpm run ci:hybridos-server",
+    "watch:server": "pnpm --filter @hybridos/server run start:dev",
+    "watch:ui": "pnpm --filter @hybridos/ui run start"
   },
   "repository": {
     "type": "git",

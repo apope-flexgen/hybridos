@@ -20,6 +20,7 @@ export const SiteConfigDescriptions = {
     system_status: 'Whether or not to display the System Status page',
     events: 'Whether or not to display the Events tab of the Activity Log page',
     alerting: 'Whether or not to display the Alerting tabs on the Activity Log page',
+    site_diagram: 'Whether or not to display the Site Diagram Option on the Dashboard page',
     scheduler: 'Whether or not to display the Scheduler page',
     units: 'An object containing the units to be used on the Configurable Asset Pages (generic) throughout the UI',
     inspectorComponentsName: '(deprecated)',

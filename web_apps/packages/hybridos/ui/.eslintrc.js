@@ -90,5 +90,6 @@ module.exports = {
         skipComments: true,
       },
     ],
+    'import/prefer-default-export': 'off'
   },
 };

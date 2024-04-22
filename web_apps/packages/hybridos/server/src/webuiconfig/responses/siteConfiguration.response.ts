@@ -40,6 +40,9 @@ export class SiteConfigurationDetailedResponse {
     @ApiProperty({description: SiteConfigDescriptions.alerting})
     @IsOptional()
     alerting: boolean
+    @ApiProperty({description: SiteConfigDescriptions.site_diagram})
+    @IsOptional()
+    site_diagram: boolean
     @ApiProperty({description: SiteConfigDescriptions.control_cabinet})
     @IsOptional()
     control_cabinet: boolean

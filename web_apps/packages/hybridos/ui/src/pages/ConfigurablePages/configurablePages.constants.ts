@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 export const ControlTypeMap: { [key: string]: string } = {
   enum_button: 'MuiButton',
   button: 'MuiButton',

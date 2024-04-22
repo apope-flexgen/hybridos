@@ -4876,6 +4876,10 @@
 						"type": "boolean",
 						"description": "Whether or not to display the Alerting tabs on the Activity Log page"
 					},
+					"site_diagram": {
+						"type": "boolean",
+						"description": "Whether or not to display the Site Diagram Option on the Dashboard page"
+					},
 					"control_cabinet": {
 						"type": "boolean",
 						"description": "Whether or not to display the Control Cabinet page (deprecated)"
@@ -4930,6 +4934,7 @@
 					"site",
 					"events",
 					"alerting",
+					"site_diagram",
 					"control_cabinet",
 					"fleet_manager_dashboard",
 					"scheduler",
