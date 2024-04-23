@@ -1,0 +1,2788 @@
+{
+  "git_commit_hash": null,
+  "git_branch": null,
+  "git_commit_author": null,
+  "AnOPInt32 Server Test 1": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"individual_bits_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "third_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 2": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"individual_bits_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "third_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 3": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 4": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "second_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 5": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "second_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 6": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"individual_bits_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 7": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"bitfield_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 8": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"bitfield_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 9": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 10": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 11": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 12": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"bitfield_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 13": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"enum_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_register": [{"value":4, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 14": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_register": [{"value":3, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 15": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_register": [{"value":2, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 16": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 17": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 18": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"enum_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_register": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 19": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_individual_bits_register\":31}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 20": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_individual_bits_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": true,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 21": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_individual_bits_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 22": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": true,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 23": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": true,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 24": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_individual_bits_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "first_string": false,
+          "second_string": false,
+          "third_string": false,
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 25": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_bitfield_register\":31}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "third_string"
+            },
+            {
+              "value": 4,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 26": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_bitfield_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "third_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 27": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_bitfield_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 28": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 29": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 30": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_bitfield_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 31": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_enum_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_enum_register": [{"value":4, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 32": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_enum_register": [{"value":3, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 33": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_enum_register": [{"value":2, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 34": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 35": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 36": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"skip_bits_enum_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "skip_bits_enum_register": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 37": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"enum_with_numbering\":21}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_with_numbering": [{"value":21, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 38": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"enum_with_numbering\":20}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_with_numbering": [{"value":20, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 39": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"enum_with_numbering\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_with_numbering": [{"value":7, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 40": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"enum_with_numbering\":6}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_with_numbering": [{"value":6, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 41": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"enum_with_numbering\":5}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_with_numbering": [{"value":5, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt32 Server Test 42": {
+    "commands": [
+      "fims_send -m set -u /components/outputs32 '{\"enum_with_numbering\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs32",
+        "body": {
+          "enum_with_numbering": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 1": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"individual_bits_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "third_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 2": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"individual_bits_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "third_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 3": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 4": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "second_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 5": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "first_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "second_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 6": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"individual_bits_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 7": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"bitfield_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 8": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"bitfield_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 9": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 10": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 11": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 12": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"bitfield_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 13": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"enum_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "enum_register": [{"value":4, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 14": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "enum_register": [{"value":3, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 15": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "enum_register": [{"value":2, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 16": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 17": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPInt16 Server Test 18": {
+    "commands": [
+      "fims_send -m set -u /components/outputs16 '{\"enum_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs16",
+        "body": {
+          "enum_register": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 1": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"individual_bits_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "third_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 2": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"individual_bits_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "third_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 3": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 4": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "second_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 5": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "first_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "second_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 6": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"individual_bits_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 7": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"bitfield_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 8": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"bitfield_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 9": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 10": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 11": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 12": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"bitfield_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 13": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"enum_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "enum_register": [{"value":4, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 14": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "enum_register": [{"value":3, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 15": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "enum_register": [{"value":2, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 16": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 17": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "AnOPF32 Server Test 18": {
+    "commands": [
+      "fims_send -m set -u /components/outputsF32 '{\"enum_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputsF32",
+        "body": {
+          "enum_register": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 1": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"individual_bits_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "third_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 2": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"individual_bits_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "third_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 3": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 4": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "second_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 5": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "first_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "second_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "fourth_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 6": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"individual_bits_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "first_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "second_string": true
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "third_string": false
+        }
+      },
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "fourth_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 7": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"bitfield_register\":15}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 8": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"bitfield_register\":7}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 2,
+              "string": "third_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 9": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 10": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 11": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 12": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"bitfield_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            },
+            {
+              "value": 1,
+              "string": "second_string"
+            },
+            {
+              "value": 3,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 13": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"enum_register\":4}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "enum_register": [{"value":4, "string":"Unknown"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 14": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "enum_register": [{"value":3, "string":"fourth_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 15": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "enum_register": [{"value":2, "string":"third_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 16": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 17": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "analogOS Server Test 18": {
+    "commands": [
+      "fims_send -m set -u /components/outputs '{\"enum_register\":11}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/outputs",
+        "body": {
+          "enum_register": [
+            {
+              "value": 11,
+              "string": "Unknown"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Server Test 1": {
+    "commands": [
+      "fims_send -m set -u /components/crob '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/crob",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Server Test 2": {
+    "commands": [
+      "fims_send -m set -u /components/crob '{\"individual_bits_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/crob",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Server Test 3": {
+    "commands": [
+      "fims_send -m set -u /components/crob '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/crob",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Server Test 4": {
+    "commands": [
+      "fims_send -m set -u /components/crob '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/crob",
+        "body": {
+          "first_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Server Test 5": {
+    "commands": [
+      "fims_send -m set -u /components/crob '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/crob",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Server Test 6": {
+    "commands": [
+      "fims_send -m set -u /components/crob '{\"bitfield_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/crob",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Server Test 7": {
+    "commands": [
+      "fims_send -m set -u /components/crob '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/crob",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Server Test 8": {
+    "commands": [
+      "fims_send -m set -u /components/crob '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/crob",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Server Test 9": {
+    "commands": [
+      "fims_send -m set -u /components/crob '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/crob",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Server Test 10": {
+    "commands": [
+      "fims_send -m set -u /components/crob '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/crob",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Server Test 11": {
+    "commands": [
+      "fims_send -m set -u /components/crob '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/crob",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "crob Server Test 12": {
+    "commands": [
+      "fims_send -m set -u /components/crob '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/crob",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Server Test 1": {
+    "commands": [
+      "fims_send -m set -u /components/binaryOS '{\"individual_bits_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/binaryOS",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Server Test 2": {
+    "commands": [
+      "fims_send -m set -u /components/binaryOS '{\"individual_bits_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/binaryOS",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Server Test 3": {
+    "commands": [
+      "fims_send -m set -u /components/binaryOS '{\"individual_bits_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/binaryOS",
+        "body": {
+          "first_string": true
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Server Test 4": {
+    "commands": [
+      "fims_send -m set -u /components/binaryOS '{\"individual_bits_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/binaryOS",
+        "body": {
+          "first_string": false
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Server Test 5": {
+    "commands": [
+      "fims_send -m set -u /components/binaryOS '{\"bitfield_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/binaryOS",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Server Test 6": {
+    "commands": [
+      "fims_send -m set -u /components/binaryOS '{\"bitfield_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/binaryOS",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Server Test 7": {
+    "commands": [
+      "fims_send -m set -u /components/binaryOS '{\"bitfield_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/binaryOS",
+        "body": {
+          "bitfield_register": [
+            {
+              "value": 0,
+              "string": "first_string"
+            }
+          ]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Server Test 8": {
+    "commands": [
+      "fims_send -m set -u /components/binaryOS '{\"bitfield_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/binaryOS",
+        "body": {
+          "bitfield_register": []
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Server Test 9": {
+    "commands": [
+      "fims_send -m set -u /components/binaryOS '{\"enum_register\":3}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/binaryOS",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Server Test 10": {
+    "commands": [
+      "fims_send -m set -u /components/binaryOS '{\"enum_register\":2}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/binaryOS",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Server Test 11": {
+    "commands": [
+      "fims_send -m set -u /components/binaryOS '{\"enum_register\":1}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/binaryOS",
+        "body": {
+          "enum_register": [{"value":1, "string":"second_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  },
+  "binaryOS Server Test 12": {
+    "commands": [
+      "fims_send -m set -u /components/binaryOS '{\"enum_register\":0}'\nsleep 0.5\n"
+    ],
+    "expected": [
+      {
+        "method": "set",
+        "uri": "/components/binaryOS",
+        "body": {
+          "enum_register": [{"value":0, "string":"first_string"}]
+        }
+      }
+    ],
+    "actual": null,
+    "result": null
+  }
+}

@@ -1,0 +1,81 @@
+{
+    "0": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"hold_1_1\":-10.221053629060009}'\nsleep 0\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/sel_2440",
+                "body": {
+                    "hold_1_1": 0
+                }
+            }
+        ],
+        "actual": null,
+        "result": null,
+        "git_commit": null,
+        "git_branch": null,
+        "git_commit_hash": null
+    },
+    "1": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"hold_1_1\":249.8587287172167}'\nsleep 0\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/sel_2440",
+                "body": {
+                    "hold_1_1": 249
+                }
+            }
+        ],
+        "actual": null,
+        "result": null,
+        "git_commit": null,
+        "git_branch": null,
+        "git_commit_hash": null
+    },
+    "2": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"hold_1_1\":-207}'\nsleep 0\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/sel_2440",
+                "body": {
+                    "hold_1_1": {
+                        "value": 0,
+                        "tolerance":0.1
+                    }
+                }
+            }
+        ],
+        "actual": null,
+        "result": null,
+        "git_commit": null,
+        "git_branch": null,
+        "git_commit_hash": null
+    },
+    "3": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"hold_1_1\":190}'\nsleep 0\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/sel_2440",
+                "body": {
+                    "hold_1_1": 190
+                }
+            }
+        ],
+        "actual": null,
+        "result": null,
+        "git_commit": null,
+        "git_branch": null,
+        "git_commit_hash": null
+    }
+}

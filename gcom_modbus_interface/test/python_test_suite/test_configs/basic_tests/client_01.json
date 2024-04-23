@@ -1,0 +1,50 @@
+{
+    "1680": {
+        "commands": [
+            "fims_send -m pub -u /components/sel_2440 '{\"hold_1_1\":-21.455746989371562}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "hold_1_1": 0.0
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "1681": {
+        "commands": [
+            "fims_send -m pub -u /components/sel_2440 '{\"hold_1_1\":105.681410617106}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "hold_1_1": 105
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "1682": {
+        "commands": [
+            "fims_send -m pub -u /components/sel_2440 '{\"hold_1_1\":372}'\nsleep 0.3\n"
+        ],
+        "expected": [
+            {
+                "method": "pub",
+                "uri": "/components/test",
+                "body": {
+                    "hold_1_1": 372
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    }
+}

@@ -1,0 +1,432 @@
+{
+  "system": {
+    "name": "FlexGen HybridOS",
+    "protocol": "DNP3",
+    "version": "0.2",
+    "base_uri": "/components",
+    "id": "test_client",
+    "ip_address": "172.10.0.3",
+    "local_uri": "/local_client",
+    "port": 20000,
+    "frequency": 100,
+    "event_pub": false,
+    "pub_outputs": true
+  },
+  "registers": [
+    {
+      "type": "AnOPInt32",
+      "map": [
+        {
+          "id": "individual_bits_register",
+          "offset": 0,
+          "uri": "/components/outputs32",
+          "individual_bits": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "enum_register",
+          "offset": 1,
+          "uri": "/components/outputs32",
+          "enum": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "bitfield_register",
+          "offset": 2,
+          "uri": "/components/outputs32",
+          "bit_field": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "skip_bits_individual_bits_register",
+          "offset": 12,
+          "uri": "/components/outputs32",
+          "individual_bits": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            null,
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "skip_bits_bitfield_register",
+          "offset": 13,
+          "uri": "/components/outputs32",
+          "bit_field": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            null,
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "skip_bits_enum_register",
+          "offset": 14,
+          "uri": "/components/outputs32",
+          "enum": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            null,
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "enum_with_numbering",
+          "offset": 15,
+          "uri": "/components/outputs32",
+          "enum": true,
+          "bit_strings": [
+            {
+              "value": 5,
+              "string": "first_string"
+            },
+            "second_string",
+            null,
+            {
+              "value": 20,
+              "string": "third_string"
+            },
+            {
+              "value": 21,
+              "string": "fourth_string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "AnOPInt16",
+      "map": [
+        {
+          "id": "individual_bits_register",
+          "offset": 3,
+          "uri": "/components/outputs16",
+          "individual_bits": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "enum_register",
+          "offset": 4,
+          "uri": "/components/outputs16",
+          "enum": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "bitfield_register",
+          "offset": 5,
+          "uri": "/components/outputs16",
+          "bit_field": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "AnOPF32",
+      "map": [
+        {
+          "id": "individual_bits_register",
+          "offset": 6,
+          "uri": "/components/outputsF32",
+          "individual_bits": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "enum_register",
+          "offset": 7,
+          "uri": "/components/outputsF32",
+          "enum": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "bitfield_register",
+          "offset": 8,
+          "uri": "/components/outputsF32",
+          "bit_field": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "analogOS",
+      "map": [
+        {
+          "id": "individual_bits_register",
+          "offset": 9,
+          "uri": "/components/outputs",
+          "variation": "Group40Var4",
+          "individual_bits": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "enum_register",
+          "offset": 10,
+          "uri": "/components/outputs",
+          "variation": "Group40Var4",
+          "enum": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "bitfield_register",
+          "offset": 11,
+          "uri": "/components/outputs",
+          "variation": "Group40Var4",
+          "bit_field": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "CROB",
+      "map": [
+        {
+          "id": "individual_bits_register",
+          "offset": 0,
+          "uri": "/components/crob",
+          "individual_bits": true,
+          "bit_strings": [
+            "first_string",
+            "second_string"
+          ]
+        },
+        {
+          "id": "enum_register",
+          "offset": 1,
+          "uri": "/components/crob",
+          "enum": true,
+          "bit_strings": [
+            "first_string",
+            "second_string"
+          ]
+        },
+        {
+          "id": "bitfield_register",
+          "offset": 2,
+          "uri": "/components/crob",
+          "bit_field": true,
+          "bit_strings": [
+            "first_string",
+            "second_string"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "binaryOS",
+      "map": [
+        {
+          "id": "individual_bits_register",
+          "offset": 3,
+          "uri": "/components/binaryOS",
+          "individual_bits": true,
+          "bit_strings": [
+            "first_string",
+            "second_string"
+          ]
+        },
+        {
+          "id": "enum_register",
+          "offset": 4,
+          "uri": "/components/binaryOS",
+          "enum": true,
+          "bit_strings": [
+            "first_string",
+            "second_string"
+          ]
+        },
+        {
+          "id": "bitfield_register",
+          "offset": 5,
+          "uri": "/components/binaryOS",
+          "bit_field": true,
+          "bit_strings": [
+            "first_string",
+            "second_string"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "binary",
+      "map": [
+        {
+          "id": "individual_bits_register",
+          "offset": 0,
+          "uri": "/components/binary",
+          "individual_bits": true,
+          "bit_strings": [
+            "first_string",
+            "second_string"
+          ]
+        },
+        {
+          "id": "enum_register",
+          "offset": 1,
+          "uri": "/components/binary",
+          "enum": true,
+          "bit_strings": [
+            "first_string",
+            "second_string"
+          ]
+        },
+        {
+          "id": "bitfield_register",
+          "offset": 2,
+          "uri": "/components/binary",
+          "bit_field": true,
+          "bit_strings": [
+            "first_string",
+            "second_string"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "analog",
+      "map": [
+        {
+          "id": "individual_bits_register",
+          "offset": 0,
+          "uri": "/components/analog",
+          "individual_bits": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "enum_register",
+          "offset": 1,
+          "uri": "/components/analog",
+          "enum": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "bitfield_register",
+          "offset": 2,
+          "uri": "/components/analog",
+          "bit_field": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "counter",
+      "map": [
+        {
+          "id": "individual_bits_register",
+          "offset": 0,
+          "uri": "/components/counter",
+          "individual_bits": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "enum_register",
+          "offset": 1,
+          "uri": "/components/counter",
+          "enum": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        },
+        {
+          "id": "bitfield_register",
+          "offset": 2,
+          "uri": "/components/counter",
+          "bit_field": true,
+          "bit_strings": [
+            "first_string",
+            "second_string",
+            "third_string",
+            "fourth_string"
+          ]
+        }
+      ]
+    }
+  ]
+}
