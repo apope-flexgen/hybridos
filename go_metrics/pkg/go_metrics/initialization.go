@@ -2230,6 +2230,13 @@ func configureStateAndOutputs(metricsObject *MetricsObject, netIndex int) (warni
 			stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "post") {
 			for _, var_name := range (*metricsObject).ParsedExpression.Vars {
 				inputYieldsDirectMsg[var_name] = true
+				for input_name, filter_names := range inputToFilterExpression {
+					for _, filter_name := range filter_names {
+						if filter_name == var_name {
+							inputYieldsDirectMsg[input_name] = true
+						}
+					}
+				}
 			}
 		}
 	}
