@@ -4,7 +4,7 @@ import React, {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
 import { useAppContext } from 'src/App/App';
-import { FLEET_MANAGER } from 'src/components/BaseApp';
+
 import { checkRequiredAlertValues, initialNewAlert } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 
 import { dataTableBox } from 'src/pages/ActivityLog/Alerts/alerts.styles';
@@ -14,7 +14,7 @@ import Aliases from './Aliases/Aliases';
 import RequiredResponseTime from './RequiredResponseTime/RequiredResponseTime';
 import RuleLogic from './RuleLogic/RuleLogic';
 import Scope from './Scope/Scope';
-import Templates from './Templates/Templates';
+
 import { AlertFormContext, AlertFormContextType } from './contexts/AlertFormContext';
 
 export interface AlertFormProps {
@@ -72,12 +72,11 @@ const AlertForm = ({
 
   return (
     <AlertFormContext.Provider value={contextValue}>
-      <Box sx={dataTableBox}>
+      <Box sx={{ dataTableBox, overflowY: 'auto' }}>
         <AlertInfo />
-        { product === FLEET_MANAGER
-          && <Scope />}
+        <Scope />
         <RequiredResponseTime />
-        <Templates />
+        {/* <Templates /> */}
         <Aliases />
         <RuleLogic />
       </Box>

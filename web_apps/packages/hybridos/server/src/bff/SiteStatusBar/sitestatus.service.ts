@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Observable, filter, map, merge } from 'rxjs';
+import { Observable, filter, map, merge, mergeMap } from 'rxjs';
 import { computeClothedValue, computeNakedValue } from '../../utils/utils';
 import { FimsService } from '../../fims/fims.service';
 import { FIMS_SERVICE } from '../../fims/interfaces/fims.interface';
@@ -16,7 +16,7 @@ import { SiteConfiguration } from 'src/webuiconfig/webUIConfig.interface';
 import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
 
 const SITE_SUMMARY_URI = '/site/summary';
-
+const ACTIVE_ALERTS_URI = '/events/alerts';
 @Injectable()
 export class SiteStatusService implements ISiteStatusService {
   private siteConfiguration: SiteConfiguration;
@@ -64,8 +64,9 @@ export class SiteStatusService implements ISiteStatusService {
     );
 
     const siteStateObs: Observable<SiteStatusResponse> = this.buildSiteStateObservable();
+    const alertStateObs: Observable<SiteStatusResponse> = await this.buildAlertStateObservable();
 
-    return merge(siteStateObs, ...dataObservables);
+    return merge(siteStateObs, alertStateObs, ...dataObservables);
   };
 
   buildSiteStateObservable = (): Observable<SiteStatusResponse> => {
@@ -90,6 +91,43 @@ export class SiteStatusService implements ISiteStatusService {
     );
 
     return siteStateObs;
+  };
+
+  getActiveAlertsData = async (): Promise<number> => {
+    const activeAlertsFimsMsg = (await this.fimsService.get(ACTIVE_ALERTS_URI)).body['count']
+    return activeAlertsFimsMsg;
+  }
+
+  buildAlertStateObservable = async (): Promise<Observable<SiteStatusResponse>> => {
+    const initialActiveAlertsFimsMsg = await this.getActiveAlertsData();
+    const activeAlertsFimsSubscribe = this.fimsService.subscribe(ACTIVE_ALERTS_URI);
+    const base = new Observable<SiteStatusResponse>((observer) => {
+      observer.next({
+        data: {
+          baseData: {
+            activeAlerts: initialActiveAlertsFimsMsg,
+          },
+        },
+      });
+    });
+
+    // FIXME: validate the data from fims first
+    const activeAlertsData: Observable<SiteStatusResponse> = activeAlertsFimsSubscribe.pipe(
+      mergeMap(async (fimsMsg) => {
+        const newData = await this.getActiveAlertsData();
+        const newDTO: SiteStatusResponse = {
+          data: {
+            baseData: {
+              activeAlerts: newData,
+            },
+          },
+        };
+
+        return newDTO;
+      }),
+    );
+
+    return merge(base, activeAlertsData);
   };
 
   buildDataSourceObservable = (dataSource: SiteStatusDataField): Observable<SiteStatusResponse> => {

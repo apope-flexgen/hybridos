@@ -11,22 +11,17 @@ export enum LogicalOperators {
   LessThanOrEqual = '<=',
   GreaterThan = '>',
   GreaterThanOrEqual = '>=',
-  Addition = '+',
-  Subtraction = '-',
-  Multiplication = '*',
-  Division = '%',
   And = '&&',
   Or = '||',
 }
 
-export type LogicalOperator = '==' | '!=' | '<' | '>=' | '>' | '<=' | '+' | '-' | '*' | '%' | '&&' | '||';
+export type LogicalOperator = '==' | '!=' | '<' | '>=' | '>' | '<=';
 
 export interface AlertFilters {
   resolvedFilter?: boolean,
   severityFilter?: number,
   statusFilter?: string,
   orgFilter?: string,
-  sitesFilter?: string[],
   limit?: number,
   page?: number,
   order?: number,
@@ -55,7 +50,6 @@ export interface ActiveAlertObject {
 export interface Comparator {
   type: 'alias' | 'literal',
   value: string | number | boolean,
-  unit?: string,
 }
 
 export interface Duration {
@@ -69,7 +63,8 @@ export interface Expression {
   comparator1: Comparator,
   conditional: LogicalOperator,
   comparator2: Comparator,
-  duration?: Duration
+  duration?: Duration,
+  message: string,
 }
 
 export interface Alias {
@@ -85,6 +80,8 @@ export interface Template {
   list?: string[],
   from?: number,
   to?: number,
+  padStart?: boolean,
+  separateAlerts: boolean,
   token: string
 }
 
@@ -94,7 +91,6 @@ export interface AlertConfigurationObject {
   title: string,
   severity: number | string,
   organization: string,
-  sites: string[],
   last_trigger_time?: string,
   deadline: { value: number | string, unit: 'minute' | 'hour' },
   aliases: Alias[],
@@ -107,7 +103,6 @@ export interface AlertManagementRow {
   deliver: JSX.Element | string,
   name: string,
   organization?: JSX.Element | string,
-  sites?: JSX.Element | string,
   severity: JSX.Element | string,
   last_triggered: string,
   actions: JSX.Element | string,

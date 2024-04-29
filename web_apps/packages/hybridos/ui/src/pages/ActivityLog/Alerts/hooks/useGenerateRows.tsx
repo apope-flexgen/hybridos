@@ -94,7 +94,6 @@ const useGenerateActiveAlertRows = () => {
         status: generateStatusBadge(alert.status),
         severity: generateSeverityComponent(alert.severity),
         organization: alert.organization,
-        site: alert.site,
         alert: alert.details[0].message,
         timestamp: alert.trigger_time,
         deadline: generateDeadline(alert.trigger_time, alert.deadline),

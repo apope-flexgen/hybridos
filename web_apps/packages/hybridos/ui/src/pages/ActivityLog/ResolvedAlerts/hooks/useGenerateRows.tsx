@@ -50,7 +50,6 @@ const useGenerateRows = () => {
       id: alert.id,
       severity: generateSeverityComponent(alert.severity),
       organization: alert.organization,
-      site: alert.site,
       alert: alert.details[0].message,
       triggerTime: alert.trigger_time,
       resolutionTime: alert.resolution_time,

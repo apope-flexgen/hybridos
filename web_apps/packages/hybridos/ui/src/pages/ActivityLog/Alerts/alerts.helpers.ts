@@ -6,7 +6,7 @@ export const formatColumnLabel = (column: string) => column.replace(/_/g, ' ');
 
 export const initialActiveAlertsFilters: AlertFilters = {
   resolvedFilter: false,
-  limit: 50,
+  limit: 10,
   page: 0,
   order: -1,
   orderBy: 'trigger_time',
@@ -22,9 +22,6 @@ export const activeAlertsColumns = (product: string): Column[] => {
     },
     product === FLEET_MANAGER && {
       id: 'organization', label: 'Organization',
-    },
-    product === FLEET_MANAGER && {
-      id: 'site', label: 'Site',
     },
     {
       id: 'alert', label: 'Alert',

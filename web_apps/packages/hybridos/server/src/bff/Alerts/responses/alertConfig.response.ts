@@ -3,12 +3,14 @@ import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString } from 'cl
 import { AlertsDescriptions } from '../alerts.constants'
 
 export interface Template {
-  id?: string,
-  type: "list" | "sequential",
+  id: string,
+  type: 'list' | 'sequential',
   list?: string[],
-  to?: number,
   from?: number,
-  token: string,
+  to?: number,
+  padStart?: boolean,
+  separateAlerts: boolean,
+  token: string
 }
 export interface Alias {
   id?: string,
@@ -20,7 +22,6 @@ export interface Alias {
 export interface Comparator {
   type: 'alias' | 'literal',
   value: string | number | boolean,
-  unit?: string,
 }
   
 export interface Duration {
@@ -31,10 +32,11 @@ export interface Duration {
 export interface Expression {
   index: number,
   connectionOperator: 'and' | 'or' | null,
-  operand1: Comparator,
-  operator: string,
-  operand2: Comparator,
-  duration?: Duration
+  comparator1: Comparator,
+  conditional: string,
+  comparator2: Comparator,
+  duration?: Duration,
+  message: string,
 }
 
 export interface Deadline {
@@ -61,9 +63,6 @@ export class AlertConfiguration {
   @ApiProperty({ description: AlertsDescriptions.organization })
   @IsString()
   organization: string
-  @ApiProperty({ description: AlertsDescriptions.sites })
-  @IsString()
-  sites: string[]
   @ApiProperty({ description: AlertsDescriptions.trigger_time })
   @IsOptional()
   last_trigger_time?: string

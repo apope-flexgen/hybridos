@@ -7,6 +7,8 @@ import {
 } from 'src/bff/SiteStatusBar/sitestatus.interface';
 import { SiteStatusService } from 'src/bff/SiteStatusBar/sitestatus.service';
 import {
+  mockAlertStateFimsMsg,
+  mockAlertStateResponse,
   mockBooleanResponse,
   mockClothedNumberResponse,
   mockClothedValueBoolean,
@@ -14,6 +16,7 @@ import {
   mockClothedValueString,
   mockConfig,
   mockDBIConfig,
+  mockDataAlertCountFimsMsg,
   mockDataSource,
   mockDataSourceBoolean,
   mockDataSourceBooleanFimsMsg,
@@ -60,6 +63,7 @@ describe('SiteStatusService', () => {
           provide: FIMS_SERVICE,
           useValue: {
             subscribe: jest.fn(),
+            get: jest.fn(),
           },
         },
         {
@@ -91,6 +95,7 @@ describe('SiteStatusService', () => {
         mockNumberResponse,
         mockBooleanResponse,
         mockSiteStateResponse,
+        mockAlertStateResponse
       ];
       const emittedValues = [];
 
@@ -104,6 +109,9 @@ describe('SiteStatusService', () => {
         .spyOn(fimsService, 'subscribe')
         .mockReturnValueOnce(of(mockDataSourceBooleanFimsMsg as FimsMsg));
       jest.spyOn(fimsService, 'subscribe').mockReturnValueOnce(of(mockSiteStateFimsMsg as FimsMsg));
+      jest.spyOn(fimsService, 'get').mockResolvedValue(mockDataAlertCountFimsMsg as FimsMsg);
+      jest.spyOn(fimsService, 'subscribe').mockReturnValueOnce(of(mockAlertStateFimsMsg as FimsMsg));
+      jest.spyOn(siteStatusService, 'buildAlertStateObservable').mockResolvedValueOnce(of(mockAlertStateResponse));
 
       const obs = await siteStatusService.subscribeToSiteStatus();
 
@@ -119,6 +127,16 @@ describe('SiteStatusService', () => {
 
       expect(emittedValues.length).toEqual(expectedValues.length);
       expect(emittedValues).toEqual(expect.arrayContaining(expectedValues));
+    });
+  });
+
+  describe('test getActiveAlertsData', () => {
+    it('should emit correct value, a number', async () => {
+      jest.spyOn(fimsService, 'get').mockResolvedValue(mockDataAlertCountFimsMsg as FimsMsg);
+
+      const numActiveAlerts = await siteStatusService.getActiveAlertsData();
+
+      expect(numActiveAlerts).toBeDefined();
     });
   });
 
@@ -139,6 +157,7 @@ describe('SiteStatusService', () => {
         mockNumberResponse,
         mockBooleanResponse,
         mockSiteStateResponse,
+        mockAlertStateResponse
       ];
       const emittedValues = [];
 
@@ -152,6 +171,9 @@ describe('SiteStatusService', () => {
         .spyOn(fimsService, 'subscribe')
         .mockReturnValueOnce(of(mockDataSourceBooleanFimsMsg as FimsMsg));
       jest.spyOn(fimsService, 'subscribe').mockReturnValueOnce(of(mockSiteStateFimsMsg as FimsMsg));
+       jest.spyOn(fimsService, 'get').mockResolvedValue(mockDataAlertCountFimsMsg as FimsMsg);
+      jest.spyOn(fimsService, 'subscribe').mockReturnValueOnce(of(mockAlertStateFimsMsg as FimsMsg));
+      jest.spyOn(siteStatusService, 'buildAlertStateObservable').mockResolvedValueOnce(of(mockAlertStateResponse));
 
       const obs = await siteStatusService.getObservable(mockConfig);
 

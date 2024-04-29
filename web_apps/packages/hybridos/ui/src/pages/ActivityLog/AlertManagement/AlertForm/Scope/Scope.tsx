@@ -15,17 +15,10 @@ const Scope = () => {
       <Box sx={formRowSx}>
         <Box sx={formRowTitleAndDescriptionSx}>
           <Typography text="Scope" variant="bodyMBold" />
-          <Typography text="Which organization and sites should receive this alert" variant="bodyM" />
+          <Typography text="Which organization should receive this alert" variant="bodyM" />
         </Box>
         <Box sx={formRowContentsSx}>
           <TextField required label="Organization" value={alertValues.organization} onChange={(e) => handleFieldChange('organization', e.target.value)} />
-          <TextField
-            required
-            label="Site(s)"
-            value={alertValues.sites.join(',')}
-            onChange={(e) => handleFieldChange('sites', e.target.value, true)}
-            helperText="If configuring multiple sites, separate each site with a comma"
-          />
         </Box>
       </Box>
       <Divider variant="fullWidth" orientation="horizontal" />

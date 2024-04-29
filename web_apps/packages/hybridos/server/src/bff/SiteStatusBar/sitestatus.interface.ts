@@ -33,6 +33,7 @@ export type SiteStatusDataPointsDTO = {
 export type SiteStatusBaseDataDTO = {
   siteStatusLabel?: string;
   activeFaults?: number;
+  activeAlerts?: number;
   activeAlarms?: number;
   siteState?: string;
 };
@@ -50,6 +51,10 @@ export interface ISiteStatusService {
   subscribeToSiteStatus(): Promise<Observable<SiteStatusResponse>>;
 
   getConfig(): Promise<SiteStatusConfig>;
+
+  getActiveAlertsData(): Promise<number>;
+
+  buildAlertStateObservable(): Promise<Observable<SiteStatusResponse>>;
 
   getObservable(config: SiteStatusConfig): Promise<Observable<SiteStatusResponse>>;
 

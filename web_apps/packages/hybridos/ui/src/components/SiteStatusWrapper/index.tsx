@@ -1,6 +1,7 @@
 import { SiteStatusBar } from '@flexgen/storybook';
 import { DataProps } from '@flexgen/storybook/dist/components/PlatformSpecific/HosControl/SiteStatusBar/Status';
 import { useState, useEffect, useCallback } from 'react';
+import { useAppContext } from 'src/App/App';
 import QueryService from 'src/services/QueryService';
 
 // FIXME: where should this live?
@@ -9,9 +10,13 @@ export type SiteStateEnum = 'Init' | 'Ready' | 'Startup' | 'Running' | 'Shutdown
 const SiteStatusWrapper = () => {
   const [activeFaults, setActiveFaults] = useState(0);
   const [activeAlarms, setActiveAlarms] = useState(0);
+  const [activeAlerts, setActiveAlerts] = useState(0);
+
   const [siteState, setSiteState] = useState<SiteStateEnum | undefined>(undefined);
   const [data, setData] = useState<{ [uri: string]: DataProps }>({});
   const [siteStatusLabel, setSiteStatusLabel] = useState<string | undefined>(undefined);
+
+  const { siteConfiguration } = useAppContext();
 
   const handleNewMessage = useCallback((newInformationFromSocket: any) => {
     const parsedData = newInformationFromSocket.data;
@@ -27,6 +32,11 @@ const SiteStatusWrapper = () => {
 
     if (baseData?.activeAlarms !== undefined) {
       setActiveAlarms(parseInt(baseData.activeAlarms, 10));
+    }
+
+    if (baseData?.activeAlerts !== undefined) {
+      if (!siteConfiguration?.alerting) setActiveAlerts(0);
+      else setActiveAlerts(parseInt(baseData.activeAlerts, 10));
     }
 
     if (baseData?.siteState !== undefined) {
@@ -51,6 +61,7 @@ const SiteStatusWrapper = () => {
     <SiteStatusBar
       activeAlarms={activeAlarms}
       activeFaults={activeFaults}
+      activeAlerts={activeAlerts}
       data={data}
       siteName={siteStatusLabel || ''}
       siteStatus={siteState || ''}

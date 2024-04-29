@@ -18,7 +18,7 @@ export const generateInitialAliases = (aliases: Alias[]): Alias[] => [{
 }];
 
 export const generateInitialTemplates = (templates: Template[]): Template[] => [{
-  token: '', list: [], type: 'sequential', id: templates ? `${templates.length + 1}` : '0',
+  token: '', list: [], type: 'sequential', separateAlerts: false, id: templates ? `${templates.length + 1}` : '0',
 }];
 
 export const initialAlertManagementFilters = {
@@ -38,14 +38,19 @@ export const initialNewExpression = (conditions: Expression[]): Expression => ({
   comparator1: { value: '', type: 'alias' },
   conditional: '==',
   comparator2: { value: '', type: 'literal' },
+  message: '',
 });
+
+export const convertToMinutes = (value: string, unit: 'Minutes' | 'Hours') => {
+  if (unit === 'Minutes') return Number(value);
+  return (Number(value) * 60);
+};
 
 export const initialNewAlert: AlertConfigurationObject = {
   enabled: true,
   title: '',
   severity: '',
   organization: '',
-  sites: [],
   deadline: { value: '', unit: 'minute' },
   aliases: [{
     alias: '', uri: '', type: 'number', id: '0',
@@ -72,13 +77,27 @@ export const checkIfAliasesFieldsArePresent = (
   aliases?: Alias[],
 ) => {
   if (aliases && aliases.length > 0) {
-    let fieldsMissing = false;
-    aliases.forEach((alias) => {
-      fieldsMissing = !alias.alias || !alias.uri;
-    });
-    return !fieldsMissing;
+    const aliasFieldsMissing = aliases.some((alias) => !alias.alias || !alias.uri);
+    return !aliasFieldsMissing;
   }
-  return true;
+  return false;
+};
+
+export const checkIfRuleLogicFieldsArePresent = (
+  conditions?: Expression[],
+) => {
+  if (conditions && conditions.length > 0) {
+    const ruleLogicFieldsMissing = conditions.some(
+      (condition) => (
+        condition.comparator1.value === undefined
+      || !condition.conditional
+      || !condition.comparator2.value
+      || !condition.message
+      ),
+    );
+    return !ruleLogicFieldsMissing;
+  }
+  return false;
 };
 
 export const checkRequiredAlertValues = (
@@ -91,6 +110,7 @@ export const checkRequiredAlertValues = (
     || !alertValues.deadline.unit
     || !checkIfTemplateFieldsArePresent(alertValues.templates)
     || !checkIfAliasesFieldsArePresent(alertValues.aliases)
+    || !checkIfRuleLogicFieldsArePresent(alertValues.conditions)
     || alertValues.enabled === undefined
     || alertValues.severity === undefined
     || !alertValues.title
@@ -98,9 +118,6 @@ export const checkRequiredAlertValues = (
       product === FLEET_MANAGER
       && (
         !alertValues.organization
-        || !alertValues.sites
-        || alertValues.sites.length === 0
-        || !alertValues.sites.join(',')
       )
     )
 );
@@ -114,7 +131,7 @@ export const determineAlertManagementHeader = (
   return 'Create New Alert';
 };
 
-export const alertManagementColumns = (product: string): Column[] => {
+export const alertManagementColumns = (): Column[] => {
   const arrayWithBools = [
     {
       id: 'deliver', label: 'Deliver',
@@ -122,11 +139,8 @@ export const alertManagementColumns = (product: string): Column[] => {
     {
       id: 'name', label: 'Alert Name',
     },
-    product === FLEET_MANAGER && {
+    {
       id: 'organization', label: 'Organization',
-    },
-    product === FLEET_MANAGER && {
-      id: 'sites', label: 'Sites',
     },
     {
       id: 'severity', label: 'Severity',

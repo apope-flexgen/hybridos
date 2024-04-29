@@ -6,6 +6,16 @@ export const AlertURIs = {
   ALERT_CONFIGS: '/events/alerts/management',
   ALERT_INSTANCES: '/events/alerts',
 }
+
+export const AlertConditionalsMapping = {
+  or: '||',
+  and: '&&',
+  '||': 'or',
+  '&&': 'and'
+};
+
+export const LogicalOperators = ['==' , '!=' , '<' , '>=' , '>' , '<='];
+
 export const AlertsDescriptions = {
     alertId: 'ID of particular alert',
     title: 'Title used to identify an alert',

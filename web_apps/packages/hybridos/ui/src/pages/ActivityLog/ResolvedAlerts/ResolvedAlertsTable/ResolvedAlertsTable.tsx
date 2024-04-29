@@ -1,6 +1,9 @@
+import { DataTablePagination } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import DataTable from '@flexgen/storybook/dist/components/DataDisplay/DataTable';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent, useCallback, useEffect, useState,
+} from 'react';
 import { useAppContext } from 'src/App/App';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import { dataTableBox } from 'src/pages/ActivityLog/Alerts/alerts.styles';
@@ -19,16 +22,18 @@ const ResolvedAlertsTable = ({
   const [filters, setFilters] = useState<AlertFilters>(initialResolvedAlertsFilters);
   const [resolvedAlertsData, setResolvedAlertsData] = useState<ResolvedAlertObject[]>([]);
   const [count, setCount] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
   const { product } = useAppContext();
   const { results, generateRowsData } = useGenerateRows();
   const axiosInstance = useAxiosWebUIInstance();
 
   const getInitialData = async () => {
-    const filtersArray: any[] = [];
-    Object.keys(filters).forEach((key) => {
-      if (key !== null && key !== undefined) filtersArray.push([key, filters[key].toString()]);
-    });
+    const filtersArray = Object.keys(filters)
+      .filter((key) => key !== null && key !== undefined)
+      .map((key: string) => [key, filters[key].toString()]);
+
     const filtersWithAmpersand = new URLSearchParams(filtersArray);
     const resolvedAlertsURL = `/alerts/resolved?${filtersWithAmpersand}`;
 
@@ -39,12 +44,22 @@ const ResolvedAlertsTable = ({
     });
   };
 
-  // TODO: fix page change handling
-  const handlePageChange = () => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      page: prevFilters.page ? prevFilters.page + 1 : 2,
-    }));
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setRowsPerPage(+event.target.value);
+    setCurrentPage(0);
+    setFilters({
+      ...filters,
+      page: 0,
+      limit: +event.target.value,
+    });
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setCurrentPage(newPage);
+    setFilters({
+      ...filters,
+      page: newPage,
+    });
   };
 
   const handleDataOnSocket = useCallback(() => { getInitialData(); }, []);
@@ -74,14 +89,18 @@ const ResolvedAlertsTable = ({
         columns={resolvedAlertsColumns(product || '')}
         dense
         headerColor="secondary"
-        pagination
-        rowsPerPage={[10, 20, 50]}
-        paperSx={{ boxShadow: 'none', minHeight: '400px' }}
+        paperSx={{ boxShadow: 'none', maxHeight: '90%' }}
         expandable
         showExpandableRowIcons
-        totalRows={count}
-        onPageChange={() => { handlePageChange(); }}
         emptyStateText="No Resolved Alerts"
+      />
+      <DataTablePagination
+        dataLength={count}
+        onPageChange={handleChangePage}
+        rowsPerPageOptions={[10, 25, 50]}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        page={currentPage}
+        rowsPerPage={rowsPerPage}
       />
     </Box>
   );

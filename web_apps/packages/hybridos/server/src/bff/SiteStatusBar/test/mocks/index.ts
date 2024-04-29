@@ -95,9 +95,11 @@ const createFimsMsg = (field: string = mockField, data: any = {}) => createField
 export const mockDataSourceStringFimsMsg = createFimsMsg(mockField, mockValueString);
 export const mockDataSourceNumberFimsMsg = createFimsMsg(mockField, mockValueNumber);
 export const mockDataSourceBooleanFimsMsg = createFimsMsg(mockField, mockValueBoolean);
+export const mockDataAlertCountFimsMsg = createFimsMsg('count', mockValueNumber);
 
 const mockActiveFaults = 'activeFaults';
 const mockActiveAlarms = 'activeAlarms';
+const mockActiveAlerts = 'activeAlerts';
 const mockSiteState = 'siteState';
 
 export const mockSiteStateFimsMsg = {
@@ -107,6 +109,18 @@ export const mockSiteStateFimsMsg = {
     site_state: mockSiteState,
   },
 };
+
+export const mockAlertStateFimsMsg = {
+  body: {
+    count: mockActiveAlerts,
+  },
+};
+
+export const mockAlertStateResponse = createMockResponse({
+  baseData: {
+    activeAlerts: mockActiveAlerts,
+  },
+});
 
 export const mockSiteStateResponse = createMockResponse({
   baseData: {

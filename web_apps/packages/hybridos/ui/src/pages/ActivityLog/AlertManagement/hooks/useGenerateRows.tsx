@@ -3,7 +3,7 @@ import {
 } from '@flexgen/storybook';
 
 import { useState } from 'react';
-import { actionsBoxSx, sitesBoxSx } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
+import { actionsBoxSx } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
 import SeverityIndicator from 'src/pages/ActivityLog/Alerts/SeverityIndicator/SeverityIndicator';
 import { AlertConfigurationObject, AlertManagementRow } from 'src/pages/ActivityLog/activityLog.types';
 
@@ -18,14 +18,6 @@ const useGenerateAlertManagementRows = (
     severity: number | string,
   ) => <SeverityIndicator severity={Number(severity)} />;
 
-  const generateSitesComponent = (sites: string[]) => (
-    <Box sx={sitesBoxSx}>
-      {
-        sites.map((site) => <Chip size="small" borderStyle="rounded" variant="filled" color="primary" label={site} />)
-      }
-    </Box>
-  );
-
   const generateDeliverToggle = (deliver: boolean, alert: AlertConfigurationObject) => (
     <Switch
       value={deliver}
@@ -39,7 +31,7 @@ const useGenerateAlertManagementRows = (
         <IconButton icon="ContentCopy" onClick={() => duplicateAlert(alert)} />
       </Tooltip>
       <Tooltip placement="bottom-end" arrow title="Edit Alert">
-        <IconButton icon="Edit" onClick={() => editAlert(alert)} />
+        <IconButton icon="EditOutlined" onClick={() => editAlert(alert)} />
       </Tooltip>
     </Box>
   );
@@ -52,7 +44,6 @@ const useGenerateAlertManagementRows = (
       deliver: alert.enabled !== undefined ? generateDeliverToggle(alert.enabled, alert) : '-',
       name: alert.title ? alert.title : '-',
       organization: alert.organization ? <Chip size="small" borderStyle="rounded" variant="filled" color="primary" label={alert.organization} /> : '-',
-      sites: alert.sites?.length > 0 ? generateSitesComponent(alert.sites) : '-',
       severity: alert.severity !== undefined ? generateSeverityComponent(alert.severity) : '-',
       deadline: alert.deadline ? `${alert.deadline.value} ${alert.deadline.unit}${Number(alert.deadline.value) > 1 ? 's' : ''}` : '-',
       last_triggered: alert.last_trigger_time || '',

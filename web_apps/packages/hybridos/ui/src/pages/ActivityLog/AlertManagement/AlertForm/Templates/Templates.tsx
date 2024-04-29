@@ -14,6 +14,7 @@ import {
   externalFormRowBoxSx,
   templateFieldsBoxSx,
   templateSwitchSx,
+  accordionRowsSx,
 } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
 import { Template } from 'src/pages/ActivityLog/activityLog.types';
 
@@ -75,10 +76,12 @@ const Templates = () => {
             />
             <Typography text="Configure templates" variant="bodySBold" />
           </Box>
-          {
+          <Box sx={accordionRowsSx}>
+            {
                 showTemplateFields
                 && templateRows
           }
+          </Box>
           {
             showTemplateFields
             && <MuiButton variant="text" label="Add Template" startIcon="Add" onClick={addNewRow} />

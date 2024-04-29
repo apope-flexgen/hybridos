@@ -25,9 +25,6 @@ export class AlertConfigDTO {
     @ApiProperty({ description: AlertsDescriptions.organization })
     @IsOptional()
     organization?: string
-    @ApiProperty({ description: AlertsDescriptions.sites })
-    @IsOptional()
-    sites?: string[]
     @ApiProperty({ description: AlertsDescriptions.conditions })
     @IsOptional()
     conditions?: Expression[]

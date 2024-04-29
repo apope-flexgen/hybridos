@@ -2106,18 +2106,6 @@
 						}
 					},
 					{
-						"name": "sitesFilter",
-						"required": true,
-						"in": "query",
-						"description": "Site to which a particular alert pertains",
-						"schema": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							}
-						}
-					},
-					{
 						"name": "resolvedFilter",
 						"required": true,
 						"in": "query",
@@ -2395,18 +2383,6 @@
 						"description": "Organization that a particular alert pertains to and arose from",
 						"schema": {
 							"type": "string"
-						}
-					},
-					{
-						"name": "sitesFilter",
-						"required": true,
-						"in": "query",
-						"description": "Site to which a particular alert pertains",
-						"schema": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							}
 						}
 					},
 					{
@@ -4371,13 +4347,6 @@
 						"type": "string",
 						"description": "Organization that a particular alert pertains to and arose from"
 					},
-					"sites": {
-						"description": "An array of all configured sites that this alert configuration pertains to",
-						"type": "array",
-						"items": {
-							"type": "string"
-						}
-					},
 					"last_trigger_time": {
 						"type": "string",
 						"description": "Trigger time of a particular alert"
@@ -4415,7 +4384,6 @@
 					"title",
 					"severity",
 					"organization",
-					"sites",
 					"last_trigger_time",
 					"deadline",
 					"aliases",
@@ -4469,13 +4437,6 @@
 						"type": "string",
 						"description": "Organization that a particular alert pertains to and arose from"
 					},
-					"sites": {
-						"description": "An array of all configured sites that this alert configuration pertains to",
-						"type": "array",
-						"items": {
-							"type": "string"
-						}
-					},
 					"conditions": {
 						"description": "An array of front-end friendly expressions representing the rule logic for this alert",
 						"type": "array",
@@ -4506,7 +4467,6 @@
 					"deadline",
 					"severity",
 					"organization",
-					"sites",
 					"conditions",
 					"aliases",
 					"templates"

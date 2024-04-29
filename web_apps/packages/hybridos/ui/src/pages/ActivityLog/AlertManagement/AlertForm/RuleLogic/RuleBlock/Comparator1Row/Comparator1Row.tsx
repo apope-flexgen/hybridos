@@ -4,7 +4,7 @@ import {
 } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import { actionsBoxSx } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
-import { logicalOperatorList } from 'src/pages/ActivityLog/activitiyLog.helpers';
+import { logicalOperatorList } from 'src/pages/ActivityLog/activityLog.helpers';
 
 import { Expression } from 'src/pages/ActivityLog/activityLog.types';
 
@@ -52,6 +52,7 @@ const Comparator1Row = ({
         )
     }
       <Select
+        required
         menuItems={comparatorOptions}
         value={expression.comparator1.value.toString()}
         label="Alias"

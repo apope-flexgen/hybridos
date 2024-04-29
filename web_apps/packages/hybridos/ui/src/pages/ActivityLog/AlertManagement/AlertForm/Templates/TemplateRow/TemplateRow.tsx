@@ -1,17 +1,26 @@
 import {
-  IconButton,
-  Select,
-  TextField,
+  Accordion,
+  MuiButton,
 } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
-import { templateRowBoxSx, replacementValueBoxSx, templateToFromBoxSx } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
+import { useState } from 'react';
+import ListFields from 'src/pages/ActivityLog/AlertManagement/AlertForm/Templates/TemplateRow/ListFields';
+import SeparateAlerts from 'src/pages/ActivityLog/AlertManagement/AlertForm/Templates/TemplateRow/SeparateAlerts';
+import SequentialFields from 'src/pages/ActivityLog/AlertManagement/AlertForm/Templates/TemplateRow/SequentialFields';
+import TemplateInfo from 'src/pages/ActivityLog/AlertManagement/AlertForm/Templates/TemplateRow/TemplateInfo';
+
+import {
+  rightAlignedButton,
+  setWidth,
+  templateRowBoxSx,
+} from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
 import { Template } from 'src/pages/ActivityLog/activityLog.types';
 
 export interface TemplateRowProps {
   allTemplates: Template[],
   template: Template,
   handleFieldChange: (field: string, updatedValue: any, commaSeparatedList?: boolean) => void,
-  removeRow: (tempateId: string) => void;
+  removeRow: (templateId: string) => void;
 }
 
 // Input fields for a single template - wildcard, list, and value
@@ -21,7 +30,11 @@ const TemplateRow = ({
   handleFieldChange,
   removeRow,
 }: TemplateRowProps) => {
-  const handleTemplateFieldchange = (field: string, newValue: string | string[] | number) => {
+  const [expanded, setExpanded] = useState<boolean>(!template.token);
+  const handleTemplateFieldChange = (
+    field: string,
+    newValue: string | string[] | boolean | number,
+  ) => {
     const templatesWithoutCurrent = allTemplates.filter(
       (existingTemplate) => template.id !== existingTemplate.id,
     );
@@ -29,55 +42,38 @@ const TemplateRow = ({
   };
 
   return (
-    <Box sx={templateRowBoxSx}>
-      <TextField
-        required
-        label="Wildcard Character"
-        value={template.token}
-        onChange={(e) => handleTemplateFieldchange('token', e.target.value)}
-      />
-      <Select
-        required
-        minWidth={130}
-        label="Template Type"
-        menuItems={['list', 'sequential']}
-        value={template.type}
-        onChange={(e) => handleTemplateFieldchange('type', e.target.value)}
-      />
-      {
+    <Accordion
+      heading={template.token}
+      expanded={expanded}
+      onChange={(isExpanded) => { setExpanded(isExpanded); }}
+      accordionStyles={setWidth(650)}
+    >
+      <Box sx={{ ...templateRowBoxSx, flexDirection: 'column' }}>
+        <TemplateInfo template={template} handleTemplateFieldChange={handleTemplateFieldChange} />
+        {
         template.type === 'sequential'
           ? (
-            <Box sx={templateToFromBoxSx}>
-              <TextField
-                required
-                fullWidth
-                label="From"
-                value={template.from?.toString() || ''}
-                onChange={(e) => handleTemplateFieldchange('from', e.target.value)}
-              />
-              <TextField
-                required
-                fullWidth
-                label="To"
-                value={template.to?.toString() || ''}
-                onChange={(e) => handleTemplateFieldchange('to', e.target.value)}
-              />
-            </Box>
+            <SequentialFields
+              template={template}
+              handleTemplateFieldChange={handleTemplateFieldChange}
+            />
           )
           : (
-            <Box sx={replacementValueBoxSx}>
-              <TextField
-                required
-                label="Replacement Values"
-                value={template.type === 'list' ? (template.list || []).join(',') : `${template.from}..${template.to}`}
-                onChange={(e) => handleTemplateFieldchange('list', e.target.value.split(',').map((v) => v.replace(' ', '')))}
-                helperText="Enter a list of comma separated values to replace the wildcard character defined."
-              />
-            </Box>
+            <ListFields
+              template={template}
+              handleTemplateFieldChange={handleTemplateFieldChange}
+            />
           )
       }
-      <IconButton icon="Close" onClick={() => removeRow(template.id)} />
-    </Box>
+        <SeparateAlerts
+          template={template}
+          handleTemplateFieldChange={handleTemplateFieldChange}
+        />
+        <Box sx={rightAlignedButton}>
+          <MuiButton variant="text" startIcon="Close" label="Remove template" onClick={() => removeRow(template.id)} />
+        </Box>
+      </Box>
+    </Accordion>
   );
 };
 

@@ -55,7 +55,7 @@ const Aliases = () => {
           <Typography text="Aliases" variant="bodyMBold" />
           <Box sx={expressionRowSx}>
             <Typography text="Aliases to use in your rule logic below" variant="bodyM" />
-            <Typography text="To configure a templated URI, use a wildcard from the list above to denote where the replacement should occur." variant="bodyM" />
+            {/* <Typography text="To configure a templated URI, use a wildcard from the list above to denote where the replacement should occur." variant="bodyM" /> */}
           </Box>
         </Box>
         <Box sx={templateFieldsBoxSx}>

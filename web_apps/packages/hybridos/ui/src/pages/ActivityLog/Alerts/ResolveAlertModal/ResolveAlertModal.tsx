@@ -41,10 +41,10 @@ const ResolveAlertModal: React.FC<ResolveAlertModalProps> = ({
     }
 
     axiosInstance.post(`/alerts/${alertInfo.id}`, { message }).then((res) => {
-      if (res.data.body.success) {
+      if (res.data.success) {
         onClose();
         notifCtx?.notif('success', 'Alert successfully resolved');
-      } else notifCtx?.notif('error', `Error resolving alert: ${res.data.body.message}`);
+      } else notifCtx?.notif('error', `Error resolving alert ${res.data.message || ''}`);
     });
   };
 

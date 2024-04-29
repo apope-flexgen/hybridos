@@ -7,7 +7,12 @@ import { headerBoxSx, tableBoxSx } from 'src/pages/ActivityLog/Alerts/alerts.sty
 import { mainContentBoxSx } from 'src/pages/ActivityLog/Events/Styles';
 import { useTheme } from 'styled-components';
 
-const Alerts = () => {
+export interface AlertsPageProps {
+  setTotalActiveAlertCount: React.Dispatch<React.SetStateAction<string>>
+}
+const Alerts = ({
+  setTotalActiveAlertCount,
+}: AlertsPageProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const theme = useTheme() as ThemeType;
@@ -22,7 +27,10 @@ const Alerts = () => {
         <Divider variant="fullWidth" orientation="horizontal" />
       </Box>
       <Box sx={tableBoxSx}>
-        <AlertsTable setIsLoading={setIsLoading} />
+        <AlertsTable
+          setIsLoading={setIsLoading}
+          setTotalActiveAlertCount={setTotalActiveAlertCount}
+        />
       </Box>
       <PageLoadingIndicator isLoading={isLoading} type="primary" />
     </Box>

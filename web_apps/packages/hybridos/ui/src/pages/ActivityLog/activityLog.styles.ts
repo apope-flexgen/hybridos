@@ -35,6 +35,19 @@ export const alertModalSx = {
   width: '400px',
 };
 
+export const alertBubbleSx = (theme: ThemeType) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  border: `1px solid ${theme.fgd.primary.main_50p}`,
+  backgroundColor: theme.fgd.primary.main_12p,
+  borderRadius: 50,
+  minWidth: '24px',
+  minHeight: '24px',
+  paddingLeft: '4px',
+  paddingRight: '4px',
+});
+
 export const textFieldSx = { padding: '5px 0px' };
 
 export const modalButtonsSx = {

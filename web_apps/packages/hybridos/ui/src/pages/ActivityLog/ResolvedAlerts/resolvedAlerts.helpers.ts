@@ -6,7 +6,7 @@ export const formatColumnLabel = (column: string) => column.replace(/_/g, ' ');
 export const initialResolvedAlertsFilters = {
   resolvedFilter: true,
   orgFilter: 'VFakeCo',
-  limit: 50,
+  limit: 10,
   page: 0,
   order: -1,
   orderBy: 'resolution_time',
@@ -19,9 +19,6 @@ export const resolvedAlertsColumns = (product: string): Column[] => {
     },
     product === FLEET_MANAGER && {
       id: 'organization', label: 'Organization',
-    },
-    product === FLEET_MANAGER && {
-      id: 'site', label: 'Site',
     },
     {
       id: 'alert', label: 'Alert',

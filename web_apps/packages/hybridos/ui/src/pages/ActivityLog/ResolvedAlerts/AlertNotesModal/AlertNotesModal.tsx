@@ -51,7 +51,7 @@ const AlertNotesModal: React.FC<AlertNotesModalProps> = ({
       if (res.data.success) {
         onClose();
         notifCtx?.notif('success', 'Resolution successfully updated');
-      } else notifCtx?.notif('error', `Error updating resolution: ${res.data.body.message}`);
+      } else notifCtx?.notif('error', `Error updating resolution: ${res.data.message || ''}`);
     });
   };
 
@@ -91,7 +91,7 @@ const AlertNotesModal: React.FC<AlertNotesModalProps> = ({
           : (
             <Box sx={notesDetailsSx}>
               <Typography text="Resolution" variant="labelS" />
-              <Typography text={alertInfo.resolution_message} />
+              <Typography text={alertInfo.resolution_message} sx={{ whiteSpace: 'pre-line' }} />
             </Box>
           )}
         <Divider orientation="horizontal" variant="fullWidth" />

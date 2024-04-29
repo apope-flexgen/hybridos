@@ -6,6 +6,7 @@ import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import Comparator1Row from 'src/pages/ActivityLog/AlertManagement/AlertForm/RuleLogic/RuleBlock/Comparator1Row/Comparator1Row';
 import Comparator2Row from 'src/pages/ActivityLog/AlertManagement/AlertForm/RuleLogic/RuleBlock/Comparator2Row/Comparator2Row';
 import DurationRow from 'src/pages/ActivityLog/AlertManagement/AlertForm/RuleLogic/RuleBlock/DurationRow/DurationRow';
+import MessageRow from 'src/pages/ActivityLog/AlertManagement/AlertForm/RuleLogic/RuleBlock/MessageRow/MessageRow';
 
 import { initialNewExpression } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import { comparator1RowSx, expressionRowSx } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
@@ -32,58 +33,47 @@ const ExpressionBlock = ({
     handleFieldChange('conditions', newExpressions);
   };
 
+  const expressionToUse = expression || initialNewExpression(expressions);
   return (
     <Box sx={expressionRowSx}>
-      {
-        expression
-          ? (
-            <>
-              <Box sx={comparator1RowSx}>
-                <Comparator1Row
-                  comparatorOptions={aliasValues}
-                  expression={expression}
-                  allExpressions={expressions}
-                  handleFieldChange={handleFieldChange}
-                />
-                {
-                    expression.index !== 0
-                    && (
-                    <Tooltip title="Remove Condition" arrow position="right">
-                      <IconButton icon="Close" onClick={removeExpression} />
-                    </Tooltip>
-                    )
-                }
-              </Box>
-              <Comparator2Row
-                comparatorOptions={aliasValues}
-                expression={expression}
-                allExpressions={expressions}
-                handleFieldChange={handleFieldChange}
-              />
-              {
-                expression.duration
-                && (
-                <DurationRow
-                  expression={expression}
-                  allExpressions={expressions}
-                  handleFieldChange={handleFieldChange}
-                />
-                )
-              }
-              <Divider variant="fullWidth" orientation="horizontal" />
-            </>
+      <Box sx={comparator1RowSx}>
+        <Comparator1Row
+          comparatorOptions={aliasValues}
+          expression={expressionToUse}
+          allExpressions={expressions}
+          handleFieldChange={handleFieldChange}
+        />
+        {
+          expressionToUse.index !== 0
+          && (
+          <Tooltip title="Remove Condition" arrow position="right">
+            <IconButton icon="Close" onClick={removeExpression} />
+          </Tooltip>
           )
-          : (
-            <Box sx={comparator1RowSx}>
-              <Comparator1Row
-                expression={initialNewExpression(expressions)}
-                allExpressions={expressions}
-                handleFieldChange={handleFieldChange}
-                comparatorOptions={aliasValues}
-              />
-            </Box>
+        }
+      </Box>
+      <Comparator2Row
+        comparatorOptions={aliasValues}
+        expression={expressionToUse}
+        allExpressions={expressions}
+        handleFieldChange={handleFieldChange}
+      />
+      {
+        expressionToUse.duration
+          && (
+          <DurationRow
+            expression={expressionToUse}
+            allExpressions={expressions}
+            handleFieldChange={handleFieldChange}
+          />
           )
       }
+      <MessageRow
+        expression={expressionToUse}
+        allExpressions={expressions}
+        handleFieldChange={handleFieldChange}
+      />
+      <Divider variant="fullWidth" orientation="horizontal" />
     </Box>
   );
 };

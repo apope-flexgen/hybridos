@@ -21,7 +21,7 @@ export const tableBoxSx = {
   padding: '16px',
 };
 
-export const dataTableBox = { width: '100%' };
+export const dataTableBox = { width: '100%', height: '100%', overflowY: 'hidden' };
 
 export const expandedRowBoxSx = {
   display: 'flex', flexDirection: 'column', width: '100%', gap: '8px', padding: '2.5rem 0.5rem',

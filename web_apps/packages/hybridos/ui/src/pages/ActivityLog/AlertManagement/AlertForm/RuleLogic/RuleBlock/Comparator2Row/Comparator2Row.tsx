@@ -45,7 +45,8 @@ const Comparator2Row = ({
         expression.comparator2.type === 'alias'
           ? (
             <Select
-              minWidth={125}
+              required
+              minWidth={190}
               menuItems={comparatorOptions}
               value={expression.comparator2.value.toString()}
               label="Alias"
@@ -53,18 +54,12 @@ const Comparator2Row = ({
             />
           )
           : (
-            <Box sx={{ ...setWidth(275), display: 'flex', gap: '8px' }}>
+            <Box sx={setWidth(190)}>
               <TextField
+                required
                 value={expression.comparator2.value.toString()}
                 onChange={(e) => handleComparator2FieldChange('value', e.target.value)}
                 label="Literal Value"
-                fullWidth
-              />
-              <TextField
-                size="small"
-                value={expression.comparator2.unit}
-                onChange={(e) => handleComparator2FieldChange('unit', e.target.value)}
-                label="Unit"
                 fullWidth
               />
             </Box>

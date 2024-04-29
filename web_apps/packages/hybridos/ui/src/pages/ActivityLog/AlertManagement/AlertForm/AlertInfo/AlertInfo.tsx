@@ -1,7 +1,6 @@
 import {
-  Typography, TextField, Select, Divider, TMenuItem,
+  Typography, TextField, Select, Divider, TMenuItem, Box,
 } from '@flexgen/storybook';
-import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 
 import { useAlertFormContext } from 'src/pages/ActivityLog/AlertManagement/AlertForm/contexts/AlertFormContext';
 

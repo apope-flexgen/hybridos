@@ -28,9 +28,6 @@ export class AlertsRequest {
     @ApiProperty({ description: AlertsDescriptions.organization })
     @IsOptional()
     orgFilter: string
-    @ApiProperty({ description: AlertsDescriptions.site })
-    @IsOptional()
-    sitesFilter: string[]
     @ApiProperty({ description: AlertsDescriptions.resolved })
     @IsOptional()
     resolvedFilter: boolean   

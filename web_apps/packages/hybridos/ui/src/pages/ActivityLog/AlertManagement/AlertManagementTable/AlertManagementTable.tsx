@@ -2,7 +2,6 @@ import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import DataTable from '@flexgen/storybook/dist/components/DataDisplay/DataTable';
 import React, { useContext, useEffect, useState } from 'react';
 
-import { useAppContext } from 'src/App/App';
 import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import { alertManagementColumns } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
@@ -28,7 +27,6 @@ const AlertManagementTable = ({
   ] = useState<AlertConfigurationObject[]>([]);
   const axiosInstance = useAxiosWebUIInstance();
   const notifCtx = useContext<NotifContextType | null>(NotifContext);
-  const { product } = useAppContext();
 
   const duplicateAlert = (alert: AlertConfigurationObject) => {
     const newAlert = { ...alert, id: undefined, enabled: true };
@@ -90,7 +88,7 @@ const AlertManagementTable = ({
     <Box sx={dataTableBox} id="alerts-management-table">
       <DataTable
         rowsData={results}
-        columns={alertManagementColumns(product || '')}
+        columns={alertManagementColumns()}
         dense
         headerColor="secondary"
         emptyStateText="No Alerts"
