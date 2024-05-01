@@ -1,0 +1,49 @@
+{
+    "system": {
+        "name": "FlexGen HybridOS",
+        "conn_type": "TCP",
+        "protocol": "DNP3",
+        "version": "0.2",
+        "base_uri": "/components",
+        "id": "test",
+        "ip_address": "0.0.0.0",
+        "local_uri": "/local_server",
+        "port": 20000
+    },
+    "registers": [
+        {
+          "type": "CROB",
+          "map": [
+            {
+              "id": "binary_out_0",
+              "offset": 0,
+              "pulse_enabled": true,
+              "on_time": 1000,
+              "off_time": 2000,
+              "num_pulses":3
+            },
+            {
+              "id": "binary_out_1",
+              "offset": 1
+            }
+          ]
+        },
+        {
+          "type": "binaryOS",
+          "map": [
+            {
+              "id": "binary_out_2",
+              "offset": 2,
+              "pulse_enabled": true,
+              "on_time": 1000,
+              "off_time": 2000,
+              "num_pulses":3
+            },
+            {
+              "id": "binary_out_3",
+              "offset": 3
+            }
+          ]
+        }
+      ]
+}

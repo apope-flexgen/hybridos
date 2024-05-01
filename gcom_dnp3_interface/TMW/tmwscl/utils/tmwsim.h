@@ -117,6 +117,10 @@ typedef struct TMWSimBinaryStruct {
   TMWTYPES_USHORT faultNumber;  /* for 103 */
   TMWTYPES_UCHAR control;
   TMWTYPES_BOOL lastReportedValue;
+  TMWTYPES_UCHAR control_value;
+  TMWTYPES_UCHAR count;
+  TMWTYPES_ULONG onTime;
+  TMWTYPES_ULONG offTime;
 } TMWSIM_BINARY;
 
 typedef struct TMWSimDoubleBinaryStruct {

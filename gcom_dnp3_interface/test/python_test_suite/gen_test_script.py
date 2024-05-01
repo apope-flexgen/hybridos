@@ -8,10 +8,10 @@ import json
 import os
 try:
     from user_global_utils import LOCAL_PYTHON_SCRIPT_DIR, TEST_CONFIG_DIR, \
-        CONFIGS_DIR, DIRS
+        CONFIGS_DIR, DIRS, TEST_SCRIPT_DIR
 except ImportError:
     from global_utils import LOCAL_PYTHON_SCRIPT_DIR, TEST_CONFIG_DIR, \
-        CONFIGS_DIR, DIRS
+        CONFIGS_DIR, DIRS, TEST_SCRIPT_DIR
 from gen_test_cases import test_basics, COMMANDS_BY_TEST_ID
 from comms_configs import ConfigFile, MergedRegister, \
     analog_input_registers, analog_output_registers
@@ -49,6 +49,33 @@ def load_output_files():
         except Exception as e:
             print(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONFIG_DIR}/{server_filename}: {e}")
         OUTPUT_FILE_CONTENT.append((client_file, server_file))
+
+        client_script_filename = client_filename.replace(".json", ".sh")
+        server_script_filename = server_filename.replace(".json", ".sh")
+        if not os.path.exists(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_SCRIPT_DIR}/" + \
+                              client_script_filename) and client_file:
+            try:
+                with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_SCRIPT_DIR}/{client_script_filename}",
+                        "w", encoding="utf-8") as file:
+                    for test_id, client_test_case in client_file.items():
+                        if test_id in ['git_commit_hash', 'git_branch', 'git_commit_author']:
+                            continue
+                        file.write(f'## {test_id} ##\n')
+                        file.writelines(client_test_case["commands"])
+            except Exception as e:
+                print(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONFIG_DIR}/{client_script_filename}: {e}")
+        if not os.path.exists(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_SCRIPT_DIR}/" + \
+                              server_script_filename) and server_file:
+            try:
+                with open(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_SCRIPT_DIR}/{server_script_filename}",
+                        "w", encoding="utf-8") as file:
+                    for test_id, server_test_case in server_file.items():
+                        if test_id in ['git_commit_hash', 'git_branch', 'git_commit_author']:
+                            continue
+                        file.write(f'\n## {test_id} ##\n')
+                        file.writelines(server_test_case["commands"])
+            except Exception as e:
+                print(f"{LOCAL_PYTHON_SCRIPT_DIR}/{TEST_CONFIG_DIR}/{server_script_filename}: {e}")
 
 
 def write_output_files(output_dir, include_timestamp=True):

@@ -1232,11 +1232,26 @@ bool parseBodyClient(GcomSystem& sys, Meta_Data_Info& meta_data)
                 MDNPBRM_CROB_INFO& CROBInfo = sys.protocol_dependencies->dnp3.CROBInfo[num_binary_requests];
                 num_binary_requests++;
                 CROBInfo.pointNumber = dbPoint->pointNumber;
-                CROBInfo.control = (TMWTYPES_UCHAR)(bool_value ? DNPDEFS_CROB_CTRL_LATCH_ON
-                                                               : DNPDEFS_CROB_CTRL_LATCH_OFF);
-                CROBInfo.onTime = 0;
-                CROBInfo.offTime = 0;
-                ((FlexPoint*)(dbPoint->flexPointHandle))->operate_value = static_cast<double>(bool_value);
+                if (((FlexPoint*)(dbPoint->flexPointHandle))->pulse_crob &&
+                    sys.fims_dependencies->uri_requests.is_pulse_request)
+                {
+                    CROBInfo.control = (TMWTYPES_UCHAR)(bool_value ? DNPDEFS_CROB_CTRL_PULSE_ON
+                                                                   : DNPDEFS_CROB_CTRL_PULSE_OFF);
+                    CROBInfo.onTime = ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_on_ms;
+                    CROBInfo.offTime = ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_off_ms;
+                    CROBInfo.count = ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_count;
+                    // invert bool_value because it ends up opposite of what was sent
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->operate_value = static_cast<double>(!bool_value);
+                }
+                else
+                {
+                    CROBInfo.control = (TMWTYPES_UCHAR)(bool_value ? DNPDEFS_CROB_CTRL_LATCH_ON
+                                                                   : DNPDEFS_CROB_CTRL_LATCH_OFF);
+                    CROBInfo.onTime = 0;
+                    CROBInfo.offTime = 0;
+                    CROBInfo.count = 0;
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->operate_value = static_cast<double>(bool_value);
+                }
                 ((FlexPoint*)(dbPoint->flexPointHandle))->sent_operate = true;
                 ((FlexPoint*)(dbPoint->flexPointHandle))->last_operate_time = get_time_double();
             }

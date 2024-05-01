@@ -75,6 +75,7 @@ struct UriRequest
     static constexpr auto Debug_Suffix = "_debug";                          // set
     static constexpr auto Force_Suffix = "_force";                          // set
     static constexpr auto Unforce_Suffix = "_unforce";                      // set
+    static constexpr auto Pulse_Suffix = "_pulse";                          // set
     static constexpr auto Enable_Suffix = "_enable";                        // set
     static constexpr auto Disable_Suffix = "_disable";                      // set
 
@@ -132,6 +133,13 @@ struct UriRequest
                     {
                         is_unforce_request = true;
                     }
+                    else if (uri_frags[idx] == Pulse_Suffix)
+                    {
+                        is_pulse_request = true;
+                        const auto uri_len = uri_view.size();
+                        const auto request_len = std::string_view{ "/_pulse" }.size();
+                        uri_view = uri_view.substr(0, uri_len - request_len);
+                    }
                     else if (uri_frags[idx] == Enable_Suffix)
                     {
                         is_enable_request = true;
@@ -170,6 +178,7 @@ struct UriRequest
                      is_force_request || is_unforce_request || is_points_request || is_stats_request ||
                      is_enable_request ||
                      is_disable_request;  // omit is_full_request because that's handled a little differently
+                                          // also omit is_pulse_request because that's also handled differently
     };
 
     void clear_uri()
@@ -188,6 +197,7 @@ struct UriRequest
         is_points_request = false;
         is_full_request = false;
         is_stats_request = false;
+        is_pulse_request = false;
         is_enable_request = false;
         is_disable_request = false;
         uri_frags.clear();
@@ -223,6 +233,7 @@ struct UriRequest
     bool is_points_request;
     bool is_full_request;
     bool is_stats_request;
+    bool is_pulse_request;
     bool is_enable_request;
     bool is_disable_request;
     bool is_request = false;
@@ -305,7 +316,8 @@ bool add_fims_sub(GcomSystem& sys, std::string name);
 bool show_fims_subs(GcomSystem& sys);
 
 /**
- * @brief Connect to fims using sys.fims_dependencies->name and subscribe to all uris in sys.fims_dependencies->subs.
+ * @brief Connect to fims using sys.fims_dependencies->name and subscribe to all uris in
+ * sys.fims_dependencies->subs.
  *
  * @param sys a GcomSystem with a valid sys.fims_dependencies->name (no spaces) and a valid vector of uris to
  * subscribe to
@@ -317,10 +329,11 @@ bool fims_connect(GcomSystem& sys);
  *
  * Of the format <value> or "value": <value>
  *
- * @param val_clothed In a key-value pair, val_clothed represents the value as an object. This may or may not be valid
- * based on the particular JSON message. (Either this will be valid or curr_val will be valid.) Example: {"value": 5}
- * @param curr_val In a key-value pair, curr_val represents the value as a raw value. This may or may not be valid based
- * on the particular JSON message. (Either this will be valid or val_clothed will be valid.) Example: 5
+ * @param val_clothed In a key-value pair, val_clothed represents the value as an object. This may or may not be
+ * valid based on the particular JSON message. (Either this will be valid or curr_val will be valid.) Example:
+ * {"value": 5}
+ * @param curr_val In a key-value pair, curr_val represents the value as a raw value. This may or may not be valid
+ * based on the particular JSON message. (Either this will be valid or val_clothed will be valid.) Example: 5
  * @param to_set a Jval_buif that will be se to the value in the json object
  *
  * @pre val_clothed and curr_val contain the results from parsing a simdjson doc object down to a key-value pair
@@ -334,11 +347,11 @@ bool extractValueMulti(GcomSystem& sys, simdjson::simdjson_result<simdjson::fall
  * Of the format <value> or {"value": <value>}
  *
  * @param sys GcomSystem with sys.fims_dependencies->doc and pre-parsed sys.fims_dependencies->uri_view
- * @param val_clothed In a single-value message, val_clothed represents the value as an object. This may or may not be
- * valid based on the particular JSON message. (Either this will be valid or curr_val will be valid.) Example: {"value":
- * 5}
- * @param curr_val In a key-value pair, curr_val represents the value as a raw value. This may or may not be valid based
- * on the particular JSON message. (Either this will be valid or val_clothed will be valid.) Example: 5
+ * @param val_clothed In a single-value message, val_clothed represents the value as an object. This may or may not
+ * be valid based on the particular JSON message. (Either this will be valid or curr_val will be valid.) Example:
+ * {"value": 5}
+ * @param curr_val In a key-value pair, curr_val represents the value as a raw value. This may or may not be valid
+ * based on the particular JSON message. (Either this will be valid or val_clothed will be valid.) Example: 5
  * @param to_set a Jval_buif that will be se to the value in the json object
  *
  * @pre val_clothed and curr_val contain the results from parsing a simdjson doc object down to a key-value pair

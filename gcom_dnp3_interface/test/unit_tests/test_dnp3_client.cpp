@@ -265,6 +265,64 @@ TEST_SUITE("dnp3_client")
         free(sys.fims_dependencies->data_buf);
         shutdown_tmw(&sys.protocol_dependencies->dnp3);
     }
+    TEST_CASE("parseBody - binary outputs - PULSE_ON/PULSE_OFF - multi")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        setupParseBodyClientTest(sys);
+        DNP3Dependencies* dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT* dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        char* fims_message;
+        sys.fims_dependencies->data_buf = (char*)malloc(1000);
+
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryOutputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_crob = rand() % 2 == 0;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_on_ms = 1234;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_off_ms = 4321;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_count = 3;
+                sys.fims_dependencies->uri_requests.is_pulse_request = true;
+                bool value = rand() % 2 == 0;
+                asprintf(&fims_message, "{\"%s\":%s}", ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(),
+                         value ? "true" : "false");
+                sprintf(sys.fims_dependencies->data_buf, "{\"%s\":%s}",
+                        ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(), value ? "true" : "false");
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(((FlexPoint*)(dbPoint->flexPointHandle))->uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
+                CHECK(parseBodyClient(sys, meta_data));
+                CHECK(strcmp(((FlexPoint*)(dbPoint->flexPointHandle))->last_update_process, "some_process") == 0);
+                CHECK(strcmp(((FlexPoint*)(dbPoint->flexPointHandle))->last_update_username, "some_username") == 0);
+                CHECK(!((FlexPoint*)(dbPoint->flexPointHandle))->set_timer.active);
+                checkRequestCounts(sys, 0, 0, 0, 0);
+                CHECK(dnp3_sys->CROBInfo[0].pointNumber == dbPoint->pointNumber);
+                if (((FlexPoint*)(dbPoint->flexPointHandle))->pulse_crob)
+                {
+                    CHECK(dnp3_sys->CROBInfo[0].control ==
+                          ((TMWTYPES_UCHAR)(value ? DNPDEFS_CROB_CTRL_PULSE_ON : DNPDEFS_CROB_CTRL_PULSE_OFF)));
+                    CHECK(dnp3_sys->CROBInfo[0].onTime == 1234);
+                    CHECK(dnp3_sys->CROBInfo[0].offTime == 4321);
+                    CHECK(dnp3_sys->CROBInfo[0].count == 3);
+                }
+                else
+                {
+                    CHECK(dnp3_sys->CROBInfo[0].control ==
+                          ((TMWTYPES_UCHAR)(value ? DNPDEFS_CROB_CTRL_LATCH_ON : DNPDEFS_CROB_CTRL_LATCH_OFF)));
+                    CHECK(dnp3_sys->CROBInfo[0].onTime == 0);
+                    CHECK(dnp3_sys->CROBInfo[0].offTime == 0);
+                    CHECK(dnp3_sys->CROBInfo[0].count == 0);
+                }
+                free(fims_message);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+    }
     TEST_CASE("parseBody - test multi")
     {
         GcomSystem sys = GcomSystem(Protocol::DNP3);
@@ -810,6 +868,51 @@ TEST_SUITE("dnp3_client")
                 CHECK(strcmp(((FlexPoint*)(dbPoint->flexPointHandle))->last_update_username, "some_username") == 0);
                 CHECK(!((FlexPoint*)(dbPoint->flexPointHandle))->set_timer.active);
                 checkRequestCounts(sys, 0, 0, 0, 0);
+                CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->set_work.value == static_cast<double>(value));
+                free(fims_message);
+                free(uri);
+            }
+        }
+
+        free(sys.fims_dependencies->data_buf);
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+    }
+    TEST_CASE("parseBody - binary outputs - PULSE_ON/PULSE_OFF - single")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        setupParseBodyClientTest(sys);
+        DNP3Dependencies* dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT* dbPoint = nullptr;
+        Meta_Data_Info meta_data;
+        char* fims_message;
+        char* uri;
+        sys.fims_dependencies->data_buf = (char*)malloc(1000);
+
+        for (uint i = 0; i < tmwsim_tableSize(&((MDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)mdnpsim_binaryOutputGetPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_crob = rand() % 2 == 0;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_on_ms = 1234;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_off_ms = 4321;
+                ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_count = 3;
+                sys.fims_dependencies->uri_requests.is_pulse_request = true;
+                bool value = rand() % 2 == 0;
+                asprintf(&fims_message, "%s", value ? "true" : "false");
+                sprintf(sys.fims_dependencies->data_buf, "%s", value ? "true" : "false");
+                asprintf(&uri, "%s/%s", ((FlexPoint*)(dbPoint->flexPointHandle))->uri,
+                         ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+                meta_data.data_len = strlen(fims_message);
+                sys.fims_dependencies->uri_view = std::string_view(uri);
+                sys.fims_dependencies->process_name_view = std::string_view("some_process");
+                sys.fims_dependencies->username_view = std::string_view("some_username");
+                CHECK(parseBodyClient(sys, meta_data));
+                CHECK(strcmp(((FlexPoint*)(dbPoint->flexPointHandle))->last_update_process, "some_process") == 0);
+                CHECK(strcmp(((FlexPoint*)(dbPoint->flexPointHandle))->last_update_username, "some_username") == 0);
+                CHECK(!((FlexPoint*)(dbPoint->flexPointHandle))->set_timer.active);
+                checkRequestCounts(sys, 0, 0, 0, 0);
+                // unfortunately can't really check if this was sent correctly...
                 CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->set_work.value == static_cast<double>(value));
                 free(fims_message);
                 free(uri);

@@ -128,6 +128,44 @@ void fimsSendIntervalSetCallback(void* pSetWork)
 }
 
 /**
+ * @brief Call fimsSendSetCallback and then restart the crob timer for the point to call
+ * this function again after the onTime/offTime.
+ *
+ * This function is called from (or set as a timer callback) from received_command_callback
+ * after a DNP3 command message is received.
+ *
+ * @param pSetWork void * pointer to the SetWork for a particular point
+ */
+void crobControl(void* pSetWork)
+{
+    SetWork* set_work = (SetWork*)pSetWork;
+    TMWSIM_POINT* dbPoint = set_work->dbPoint;
+    if (set_work->count > 0)
+    {
+        fimsSendSetCallback(pSetWork);
+        ((FlexPoint*)dbPoint->flexPointHandle)->num_switches_completed++;
+    }
+
+    if (((FlexPoint*)dbPoint->flexPointHandle)->num_switches_completed < (2 * set_work->count))
+    {
+        if (static_cast<bool>(set_work->value))
+        {
+            set_work->value = false;  // switch the value from true to false
+            tmwtimer_start((&((FlexPoint*)(dbPoint->flexPointHandle))->set_timer), set_work->onTime,
+                           (((FlexPoint*)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
+                           crobControl, (void*)(&((FlexPoint*)(dbPoint->flexPointHandle))->set_work));
+        }
+        else
+        {
+            set_work->value = true;  // switch the value from false to true
+            tmwtimer_start((&((FlexPoint*)(dbPoint->flexPointHandle))->set_timer), set_work->offTime,
+                           (((FlexPoint*)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
+                           crobControl, (void*)(&((FlexPoint*)(dbPoint->flexPointHandle))->set_work));
+        }
+    }
+}
+
+/**
  * @brief In response to an incoming DNP3 command, prepare to send a 'set' over fims based
  * on whether the point is a batch set, interval set, or direct set.
  *
@@ -222,6 +260,15 @@ void received_command_callback(void* pDbHandle, TMWSIM_EVENT_TYPE type, DNPDEFS_
                             ((FlexPoint*)(dbPoint->flexPointHandle))->batch_set_rate,
                             (((FlexPoint*)dbPoint->flexPointHandle)->sys)->protocol_dependencies->dnp3.pChannel,
                             fimsSendSetCallback, (void*)(&((FlexPoint*)(dbPoint->flexPointHandle))->set_work));
+                    }
+                    else if ((dbPoint->data.binary.control_value == SDNPDATA_CROB_CTRL_PULSE_ON) ||
+                             (dbPoint->data.binary.control_value == SDNPDATA_CROB_CTRL_PULSE_OFF))
+                    {
+                        ((FlexPoint*)dbPoint->flexPointHandle)->num_switches_completed = 0;
+                        ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.count = dbPoint->data.binary.count;
+                        ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.onTime = dbPoint->data.binary.onTime;
+                        ((FlexPoint*)(dbPoint->flexPointHandle))->set_work.offTime = dbPoint->data.binary.offTime;
+                        crobControl((void*)(&((FlexPoint*)(dbPoint->flexPointHandle))->set_work));
                     }
                     else
                     {

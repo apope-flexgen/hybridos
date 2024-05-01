@@ -2080,6 +2080,7 @@ bool parse_items(GcomSystem& sys, cJSON* objs, int type, int who)
         cJSON *batch_pub_rate, *interval_pub_rate, *batch_set_rate, *interval_set_rate;
         cJSON *show_output_status, *resend_tolerance, *resend_rate_ms, *output_status_uri;
         cJSON *is_bitfield, *is_enum, *is_individual_bits, *bitstrings;
+        cJSON *pulse_enabled, *on_time, *off_time, *num_pulses;
 
         // heartbeat stuff
         // cJSON *min, *max, *incr;
@@ -2117,6 +2118,10 @@ bool parse_items(GcomSystem& sys, cJSON* objs, int type, int who)
         cjctrue = cJSON_GetObjectItem(obj, "crob_true");      // string like POWER_ON
         cjcfalse = cJSON_GetObjectItem(obj, "crob_false");    // string like POWER_OFF
         cjcint = cJSON_GetObjectItem(obj, "crob_int");        // true / false
+        pulse_enabled = cJSON_GetObjectItem(obj, "pulse_enabled");
+        on_time = cJSON_GetObjectItem(obj, "on_time");
+        off_time = cJSON_GetObjectItem(obj, "off_time");
+        num_pulses = cJSON_GetObjectItem(obj, "num_pulses");
 
         // stuff for outputs
         batch_set_rate = cJSON_GetObjectItem(obj, "batch_set_rate");
@@ -2481,6 +2486,50 @@ bool parse_items(GcomSystem& sys, cJSON* objs, int type, int who)
             if (cjcfalse && cjcfalse->valuestring)
             {
                 ((FlexPoint*)(dbPoint->flexPointHandle))->crob_false = strdup(cjcfalse->valuestring);
+            }
+
+            if (pulse_enabled)
+            {
+                ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_crob = (pulse_enabled->type == cJSON_True);
+                bool pulse_crob = ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_crob;
+                if (pulse_crob && on_time && off_time && num_pulses)
+                {
+                    if (((FlexPoint*)(dbPoint->flexPointHandle))->interval_sets ||
+                        ((FlexPoint*)(dbPoint->flexPointHandle))->batch_sets)
+                    {
+                        FPS_ERROR_LOG(
+                            "Cannot implement pulsed CROB for point [%s]. Must choose among interval sets, batched sets, or pulsed CROB.",
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str());
+                        pulse_crob = false;
+                    }
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_on_ms = on_time->valueint;
+                    if (pulse_crob && ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_on_ms <= 0)
+                    {
+                        FPS_ERROR_LOG(
+                            "Cannot implement pulsed CROB for point [%s]. on_time [%d]. Need value greater than 0.",
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(),
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_on_ms);
+                        ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_crob = false;
+                    }
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_off_ms = off_time->valueint;
+                    if (pulse_crob && ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_off_ms <= 0)
+                    {
+                        FPS_ERROR_LOG(
+                            "Cannot implement pulsed CROB for point [%s]. off_time [%d]. Need value greater than 0.",
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(),
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_off_ms);
+                        ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_crob = false;
+                    }
+                    ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_count = num_pulses->valueint;
+                    if (pulse_crob && ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_count <= 0)
+                    {
+                        FPS_ERROR_LOG(
+                            "Cannot implement pulsed CROB for point [%s]. num_pulses [%d]. Need value greater than 0.",
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->name.c_str(),
+                            ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_count);
+                        ((FlexPoint*)(dbPoint->flexPointHandle))->pulse_crob = false;
+                    }
+                }
             }
         }
         if (dbPoint != NULL)

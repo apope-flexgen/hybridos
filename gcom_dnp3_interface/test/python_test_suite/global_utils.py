@@ -24,10 +24,10 @@ USE_LATEST_RELEASE = False
 
 # All you really need is the configs directory.
 # The other directories will be made for you.
-CONFIGS_DIR = "configs/disable_enable"
-TEST_CONFIG_DIR = "test_configs/disable_enable"
-TEST_OUTPUT_DIR = "test_output/disable_enable"
-TEST_LOG_DIR = "logs/disable_enable"
-TEST_CONSOLE_OUTPUT_DIR="console/disable_enable"
-TEST_SCRIPT_DIR="test_scripts/disable_enable"
+CONFIGS_DIR = "configs/crob_pulse"
+TEST_CONFIG_DIR = "test_configs/crob_pulse"
+TEST_OUTPUT_DIR = "test_output/crob_pulse"
+TEST_LOG_DIR = "logs/crob_pulse"
+TEST_CONSOLE_OUTPUT_DIR="console/crob_pulse"
+TEST_SCRIPT_DIR="test_scripts/crob_pulse"
 DIRS = [CONFIGS_DIR, TEST_CONFIG_DIR, TEST_OUTPUT_DIR, TEST_LOG_DIR, TEST_CONSOLE_OUTPUT_DIR, TEST_SCRIPT_DIR]

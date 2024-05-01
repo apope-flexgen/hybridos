@@ -147,7 +147,7 @@ def gen_directories() -> None:
     '''
     for folder in DIRS:
         if not os.path.exists(f"{LOCAL_PYTHON_SCRIPT_DIR}/{folder}"):
-            os.mkdir(f"{LOCAL_PYTHON_SCRIPT_DIR}/{folder}")
+            os.makedirs(f"{LOCAL_PYTHON_SCRIPT_DIR}/{folder}", exist_ok=True)
 
 def run_client_test_case(test_id: str, test_case: dict) -> (bool, str):
     '''
@@ -173,7 +173,16 @@ def build_containers():
     subprocess_run_quiet(["docker", "stop", SERVER_CONTAINER])
     subprocess_run_quiet(["docker", "rm", CLIENT_CONTAINER])
     subprocess_run_quiet(["docker", "rm", SERVER_CONTAINER])
-    subprocess_run_quiet(["docker-compose", "up", "-d", "--build"])
+    with subprocess.Popen(["docker-compose", "up", "-d", "--build"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as process:
+        while True:
+            try:
+                process.wait(0.5)
+                break
+            except:
+                if not process.poll():
+                    print(process.stdout.readline())
+                else:
+                    break
     print("Containers built.")
     print("Installing Flask...")
     subprocess_run_quiet(["docker", "exec", CLIENT_CONTAINER, "pip3", "install", "flask"])

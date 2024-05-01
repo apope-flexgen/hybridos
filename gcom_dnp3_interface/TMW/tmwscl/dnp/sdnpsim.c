@@ -1281,9 +1281,10 @@ DNPDEFS_CROB_ST TMWDEFS_GLOBAL sdnpsim_binOutOperate(
   TMWTYPES_UCHAR supported = (pSimPoint)->data.binary.control;
   TMWTYPES_BOOL value = 0;
 
-  TMWTARG_UNUSED_PARAM(count);
-  TMWTARG_UNUSED_PARAM(onTime);
-  TMWTARG_UNUSED_PARAM(offTime); 
+  pSimPoint->data.binary.control_value = control;
+  pSimPoint->data.binary.count = count;
+  pSimPoint->data.binary.onTime = onTime;
+  pSimPoint->data.binary.offTime = offTime; 
   
   /* See if this point has been set to fail for test purposes */
   mode = tmwsim_getTestingMode(pSimPoint);

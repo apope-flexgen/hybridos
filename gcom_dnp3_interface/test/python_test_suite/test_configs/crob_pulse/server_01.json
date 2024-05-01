@@ -1,0 +1,1004 @@
+{
+    "git_commit_hash": null,
+    "git_branch": null,
+    "git_commit_author": null,
+    "CROB PULSE_ON single - start": {
+        "commands": [
+            "sleep 3\n",
+            "fims_send -m set -u /components/test/binary_out_0/_pulse true\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_ON single - off 1": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_ON single - on 2": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_ON single - off 2": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_ON single - on 3": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_ON single - off 3": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_OFF single - start": {
+        "commands": [
+            "sleep 3\n",
+            "fims_send -m set -u /components/test/binary_out_0/_pulse false\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_OFF single - off 1": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_OFF single - on 2": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_OFF single - off 2": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_OFF single - on 3": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_OFF single - off 3": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_ON single - start": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_2/_pulse true\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_ON single - off 1": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_ON single - on 2": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_ON single - off 2": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_ON single - on 3": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_ON single - off 3": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_OFF single - start": {
+        "commands": [
+            "sleep 3\n",
+            "fims_send -m set -u /components/test/binary_out_2/_pulse false\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_OFF single - off 1": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_OFF single - on 2": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_OFF single - off 2": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_OFF single - on 3": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_OFF single - off 3": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB LATCH_ON single - start": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_0 true\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB LATCH_ON single - wait": {
+        "commands": [
+            "sleep 6\n"
+        ],
+        "expected": [
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB LATCH_OFF single - start": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_0 false\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB LATCH_OFF single - wait": {
+        "commands": [
+            "sleep 6\n"
+        ],
+        "expected": [
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS LATCH_ON single - start": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_2 true\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS LATCH_ON single - wait": {
+        "commands": [
+            "sleep 6\n"
+        ],
+        "expected": [
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS LATCH_OFF single - start": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_2 false\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS LATCH_OFF single - wait": {
+        "commands": [
+            "sleep 6\n"
+        ],
+        "expected": [
+        ],
+        "actual": null,
+        "result": null
+    },
+    "PULSE_ON multi - start": {
+        "commands": [
+            "fims_send -m set -u /components/test/_pulse '{\"binary_out_0\": true, \"binary_out_1\": true, \"binary_out_2\": true, \"binary_out_3\": true}'\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_1": true
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_3": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "PULSE_ON multi - off 1": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "PULSE_ON multi - on 2": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "PULSE_ON multi - off 2": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "PULSE_ON multi - on 3": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "PULSE_ON multi - off 3": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "PULSE_OFF multi - start": {
+        "commands": [
+            "fims_send -m set -u /components/test/_pulse '{\"binary_out_0\": false, \"binary_out_1\": false, \"binary_out_2\": false, \"binary_out_3\": false}'\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_1": false
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_3": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "PULSE_OFF multi - off 1": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "PULSE_OFF multi - on 2": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "PULSE_OFF multi - off 2": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "PULSE_OFF multi - on 3": {
+        "commands": [
+            "sleep 1\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "PULSE_OFF multi - off 3": {
+        "commands": [
+            "sleep 2\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "LATCH_ON multi - start": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_0\": true, \"binary_out_1\": true, \"binary_out_2\": true, \"binary_out_3\": true}'\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": true
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_1": true
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": true
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_3": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "LATCH_ON multi - wait": {
+        "commands": [
+            "sleep 6\n"
+        ],
+        "expected": [
+        ],
+        "actual": null,
+        "result": null
+    },
+    "LATCH_OFF multi - start": {
+        "commands": [
+            "fims_send -m set -u /components/test '{\"binary_out_0\": false, \"binary_out_1\": false, \"binary_out_2\": false, \"binary_out_3\": false}'\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_0": false
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_1": false
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_2": false
+                }
+            },
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_3": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "LATCH_OFF multi - wait": {
+        "commands": [
+            "sleep 6\n"
+        ],
+        "expected": [
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_ON disabled single - start": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_1/_pulse true\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_1": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_ON disabled single - wait": {
+        "commands": [
+            "sleep 6\n"
+        ],
+        "expected": [
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_OFF disabled single - start": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_1/_pulse false\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_1": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "CROB PULSE_OFF disabled single - wait": {
+        "commands": [
+            "sleep 6\n"
+        ],
+        "expected": [
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_ON disabled single - start": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_3/_pulse true\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_3": true
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_ON disabled single - wait": {
+        "commands": [
+            "sleep 6\n"
+        ],
+        "expected": [
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_OFF disabled single - start": {
+        "commands": [
+            "fims_send -m set -u /components/test/binary_out_3/_pulse false\n",
+            "sleep 0.01\n"
+        ],
+        "expected": [
+            {
+                "method": "set",
+                "uri": "/components/test",
+                "body": {
+                    "binary_out_3": false
+                }
+            }
+        ],
+        "actual": null,
+        "result": null
+    },
+    "BinaryOS PULSE_OFF disabled single - wait": {
+        "commands": [
+            "sleep 6\n"
+        ],
+        "expected": [
+        ],
+        "actual": null,
+        "result": null
+    }
+}

@@ -81,6 +81,9 @@ struct SetWork
     fmt::memory_buffer send_buf;
     TMWSIM_POINT* dbPoint;
     double value;
+    TMWTYPES_UCHAR count;
+    TMWTYPES_ULONG onTime;
+    TMWTYPES_ULONG offTime;
 };
 
 struct PubPoint
@@ -128,11 +131,12 @@ public:
     bool is_forced = false;                            // is the point currently in forced mode?
     bool sent_operate_before_or_during_force = false;  // did we receive a REAL "set" on the
                                                        // client while the point was being forced?
-    bool is_enabled = true;  // Basically, if a point is disabled, we pretend it doesn't exist in our system.
-                             // DNP3 requests will still contain data for this point, but we will not update point
-                             // values, nor send anything out over fims for this point. Output points will not send out
-                             // operate commands over DNP3 if disabled on the client side, nore will they send out fims
-                             // sets if disabled on the server side.
+    bool pulse_crob = false;  // Do we send pulse_on/pulse_off commands or latch_on/latch_off commands (CROBs only)
+    bool is_enabled = true;   // Basically, if a point is disabled, we pretend it doesn't exist in our system.
+                              // DNP3 requests will still contain data for this point, but we will not update point
+                              // values, nor send anything out over fims for this point. Output points will not send out
+                              // operate commands over DNP3 if disabled on the client side, nore will they send out fims
+                              // sets if disabled on the server side.
 
     Register_Types type;
     std::string name;                            // how this point is identified
@@ -148,27 +152,35 @@ public:
                                                  // last set (if client) or pub (if
                                                  // server) for this point
 
-    double scale;                  // scale based on how we're representing the value on this side
-                                   // of the connection (e.g. x1000, x10, /1000, /10)
-    double offset;                 // shift based off of how we're representing the value on this
-                                   // side of the connection
-    double timeout;                // used to detect COMM_LOSS
-    double standby_value = 0;      // (server: ) value is currently in LOCAL_FORCED mode, and we
-                                   // are saving this value for when we clear that flag
-                                   // (client inputs: ) value is currently being forced, and this is the
-                                   // value that we want to publish instead of the actual value
-                                   // (client outputs: ) value is currently being forced, and this is the
-                                   // value that we last set to the server prior to forcing
-    double operate_value = 0;      // the last value sent as an operate command from
-                                   // the client (Group 12 or Group 41); this is what we will
-                                   // publish by default
-    double resend_tolerance = 0;   // do we send another operate command if the
-                                   // output status differs by specific tolerance?
-                                   // (only after value has adjusted)
-    double resend_rate_ms = 0;     // how often do we send another operate command if
-                                   // the output status differs by specific tolerance?
-                                   // Measured in milliseconds.
-    double last_operate_time = 0;  // measured in seconds
+    double scale;                    // scale based on how we're representing the value on this side
+                                     // of the connection (e.g. x1000, x10, /1000, /10)
+    double offset;                   // shift based off of how we're representing the value on this
+                                     // side of the connection
+    double timeout;                  // used to detect COMM_LOSS
+    double standby_value = 0;        // (server: ) value is currently in LOCAL_FORCED mode, and we
+                                     // are saving this value for when we clear that flag
+                                     // (client inputs: ) value is currently being forced, and this is the
+                                     // value that we want to publish instead of the actual value
+                                     // (client outputs: ) value is currently being forced, and this is the
+                                     // value that we last set to the server prior to forcing
+    double operate_value = 0;        // the last value sent as an operate command from
+                                     // the client (Group 12 or Group 41); this is what we will
+                                     // publish by default
+    double resend_tolerance = 0;     // do we send another operate command if the
+                                     // output status differs by specific tolerance?
+                                     // (only after value has adjusted)
+    double resend_rate_ms = 0;       // how often do we send another operate command if
+                                     // the output status differs by specific tolerance?
+                                     // Measured in milliseconds.
+    double last_operate_time = 0;    // measured in seconds
+    int pulse_on_ms = 0;             // for CROBS; on the client side: determines how long the "on" time is.
+                                     // On the server side: send out a set of "true", then send out a set of
+                                     // "false" XXX milliseconds later -- see dnp3 manual pg 507 for more details
+    int pulse_off_ms = 0;            // for CROBS; on the client side: determines how long the "off" time is.
+                                     // On the server side: send out a set of "false", then send out a set of
+                                     // "true" XXX milliseconds later -- see dnp3 manual pg 507 for more details
+    int pulse_count = 0;             // for CROBS; how many pulses -- see dnp3 manual pg 507 for more details
+    int num_switches_completed = 0;  // for CROBS; used to implement pulses on server side
 
     std::chrono::time_point<std::chrono::system_clock> last_pub;  // time of last update
     TMWTYPES_UCHAR lastFlags = DNPDEFS_DBAS_FLAG_RESTART;

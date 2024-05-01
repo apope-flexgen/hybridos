@@ -11,7 +11,7 @@
   - Save these files in `<python_script_dir>/configs`
 
 ## Running the script
-As long as the LOCAL_PYTHON_SCRIPT_DIR is the full path to the `run_test.py` script directory, then all you need to do is run the python script from anywhere in Windows.
+As long as the LOCAL_PYTHON_SCRIPT_DIR is the full path to the `test_comms.py` script directory, then all you need to do is run the python script from anywhere in Windows.
 ```
 python <path_to_python_script_folder>/test_comms.py
 ```

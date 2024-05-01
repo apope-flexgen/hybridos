@@ -131,7 +131,7 @@ def compare_messages(test_id, expected_message, actual_message):
                 if isinstance(actual_message['body'],dict) and key in actual_message['body']:
                     return_string = f'Test Case {test_id}:\n' + \
                                 f'Expected: No "{key}" in message body\n' + \
-                                f'Got     : "{key}": {actual_message['body'][key]}\n'
+                                f'Got     : "{key}": {actual_message["body"][key]}\n'
                 return_value = EXTRA_KEY
         return return_value, return_string
     parent_uri = actual_message['uri'][0:actual_message['uri'].rindex("/")]

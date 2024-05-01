@@ -2292,6 +2292,43 @@ TEST_SUITE("dnp3_server")
             delete sys.protocol_dependencies->dnp3.point_status_info;
         }
     }
+    TEST_CASE("received_command_callback - binary outputs - PULSE_ON/PULSE_OFF")
+    {
+        GcomSystem sys = GcomSystem(Protocol::DNP3);
+        setupParseBodyServerTest(sys);
+        DNP3Dependencies* dnp3_sys = &sys.protocol_dependencies->dnp3;
+        TMWSIM_POINT* dbPoint = nullptr;
+
+        for (uint i = 0; i < tmwsim_tableSize(&((SDNPSIM_DATABASE*)(dnp3_sys->dbHandle))->binaryOutputs); i++)
+        {
+            dbPoint = (TMWSIM_POINT*)sdnpsim_binOutGetEnabledPoint(dnp3_sys->dbHandle, i);
+            if (dbPoint)
+            {
+                dbPoint->reason = TMWDEFS_CHANGE_REMOTE_OP;
+                dbPoint->data.binary.value = rand() % 2 == 0;
+                dbPoint->data.binary.control_value = (dbPoint->data.binary.value) ? SDNPDATA_CROB_CTRL_PULSE_ON
+                                                                                  : SDNPDATA_CROB_CTRL_PULSE_OFF;
+                dbPoint->data.binary.count = 3;
+                dbPoint->data.binary.onTime = 1234;
+                dbPoint->data.binary.offTime = 4321;
+                received_command_callback(sys.protocol_dependencies->dnp3.dbHandle, TMWSIM_POINT_UPDATE,
+                                          DNPDEFS_OBJ_10_BIN_OUT_STATUSES, dbPoint->pointNumber);
+                CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->set_timer.active);
+                CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->set_work.value ==
+                      static_cast<double>(!dbPoint->data.binary.value));
+                CHECK(((FlexPoint*)dbPoint->flexPointHandle)->num_switches_completed == 1);
+                CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->set_work.count == 3);
+                CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->set_work.onTime == 1234);
+                CHECK(((FlexPoint*)(dbPoint->flexPointHandle))->set_work.offTime == 4321);
+            }
+        }
+
+        shutdown_tmw(&sys.protocol_dependencies->dnp3);
+        if (sys.protocol_dependencies->dnp3.point_status_info != nullptr)
+        {
+            delete sys.protocol_dependencies->dnp3.point_status_info;
+        }
+    }
     TEST_CASE("received_command_callback - analog inputs, binary inputs, and counters")
     {
         GcomSystem sys = GcomSystem(Protocol::DNP3);
