@@ -478,8 +478,9 @@ bool ESS_Manager::aggregate_ess_data(void) {
 }
 
 void ESS_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, const char* const var) {
-    if (var == NULL)
+    if (var == NULL) {
         bufJSON_StartObject(buf);  // summary {
+    }
 
     bufJSON_AddStringCheckVar(buf, "name", "ESS Summary", var);
     bufJSON_AddNumberCheckVar(buf, "num_ess_available", numAvail, var);
@@ -502,8 +503,9 @@ void ESS_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, cons
     bufJSON_AddNumberCheckVar(buf, "ess_total_alarms", get_num_active_alarms(), var);
     bufJSON_AddNumberCheckVar(buf, "ess_total_faults", get_num_active_faults(), var);
 
-    if (var == NULL)
+    if (var == NULL) {
         bufJSON_EndObjectNoComma(buf);  // } summary
+    }
 }
 
 /*

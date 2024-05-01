@@ -33,11 +33,15 @@ CPPFLAGS += -std=c++11 -Wall -Wpedantic -Werror -Wextra -D SPDLOG_COMPILED_LIB
 
 ifeq ($(BUILD_MODE),debug)
 	# add FPS_DEVELOPER_MODE (prints to console)
-	CPPFLAGS += -D FPS_DEVELOPER_MODE
+	CPPFLAGS += -DFPS_DEVELOPER_MODE  
 	# add debugging 
-	CPPFLAGS += -g -D FPS_DEBUG_MODE
+	CPPFLAGS += -g -DFPS_DEBUG_MODE
+	# add mem sanitizer
+	CPPFLAGS += -fsanitize=address
+	LIBS += -fsanitize=address
+
 else ifeq ($(BUILD_MODE),test)
-	CPPFLAGS += -g -D FPS_TEST_MODE
+	CPPFLAGS += -g -DFPS_TEST_MODE
 	LIBS += -lgtest -lgmock
 	INCLUDES_BUILD += -Iunit_tests/
 else

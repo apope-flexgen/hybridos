@@ -188,35 +188,37 @@ bool Feeder_Manager::aggregate_feeder_data(void) {
 }
 
 void Feeder_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, const char* const var) {
-    if (var == NULL)
+    if (var == NULL) {
         bufJSON_StartObject(buf);  // summary {
+    }
 
     bufJSON_AddStringCheckVar(buf, "name", "Feeder Summary", var);
     if (pSyncFeeder != NULL) {
         bufJSON_AddBoolCheckVar(buf, "sync_feeder_status", pSyncFeeder->get_breaker_status(), var);
     }
     char temp_name[MEDIUM_MSG_LEN];
-    for (auto it : pFeeder) {
-        const char* feeder_id = it->get_id().c_str();
-        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_breaker_status", feeder_id);
+    for (auto *it : pFeeder) {
+        std::string feeder_id(it->get_id());
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_breaker_status", feeder_id.c_str());
         bufJSON_AddStringCheckVar(buf, temp_name, it->get_breaker_status() ? "Closed" : "Open", var);
-        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_active_power", feeder_id);
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_active_power", feeder_id.c_str());
         bufJSON_AddNumberCheckVar(buf, temp_name, it->get_active_power(), var);
         if (it == pPointOfInterConnect) {
-            snprintf(temp_name, MEDIUM_MSG_LEN, "%s_voltage", feeder_id);
+            snprintf(temp_name, MEDIUM_MSG_LEN, "%s_voltage", feeder_id.c_str());
             bufJSON_AddNumberCheckVar(buf, temp_name, it->get_gridside_avg_voltage(), var);
         }
         // Add a binary 1/0 if any alarms/faults are present for each asset
-        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_alarms", feeder_id);
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_alarms", feeder_id.c_str());
         bufJSON_AddNumberCheckVar(buf, temp_name, get_num_active_alarms() > 0 ? 1 : 0, var);
-        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_faults", feeder_id);
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_faults", feeder_id.c_str());
         bufJSON_AddNumberCheckVar(buf, temp_name, get_num_active_faults() > 0 ? 1 : 0, var);
     }
     bufJSON_AddNumberCheckVar(buf, "feeder_num_alarmed", get_num_alarmed(), var);
     bufJSON_AddNumberCheckVar(buf, "feeder_num_faulted", get_num_faulted(), var);
 
-    if (var == NULL)
+    if (var == NULL) {
         bufJSON_EndObjectNoComma(buf);  // } summary
+    }
 }
 
 // HybridOS Step 2: Process Asset Data

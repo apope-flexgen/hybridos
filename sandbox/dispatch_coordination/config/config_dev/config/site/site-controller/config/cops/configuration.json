@@ -7,7 +7,7 @@
     "enableRedundantFailover": false,
     "heartbeatFrequencyMS": 1000,
     "otherCtrlrOutlet": "2",
-    "otherCtrlrStaticIP": "172.16.2.82",
+    "otherCtrlrStaticIP": "172.16.2.92",
     "patrolFrequencyMS": 1000,
     "pduIP": "10.0.1.83",
     "primaryIP": [
@@ -157,5 +157,5 @@
     ],
     "statsPubFrequencySeconds": 1,
     "syswatch": true,
-    "thisCtrlrStaticIP": "172.16.1.80"
+    "thisCtrlrStaticIP": "172.16.1.90"
 }

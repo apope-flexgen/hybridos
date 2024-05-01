@@ -20,8 +20,8 @@ struct Result_Details {
     int line;
 
     Result_Details(std::string details, const char* file, const char* function, const int line) {
-        strncpy(this->file, file, sizeof(this->file));
-        strncpy(this->function, function, sizeof(this->function));
+        strncpy(this->file, file, SHORT_MSG_LEN_COPY);
+        strncpy(this->function, function, SHORT_MSG_LEN_COPY);
         this->line = line;
         this->details = details;
     }

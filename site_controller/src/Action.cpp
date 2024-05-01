@@ -338,12 +338,16 @@ void Action::call_sequence(Action_Status& action_status) {
         switch (sequence_type) {
             case (Sequence_Type::Asset_ESS):
                 asset_ess->actions_faults.value.value_bit_field |= static_cast<uint64_t>(0x2);
+                break;
             case (Sequence_Type::Asset_Solar):
                 asset_solar->actions_faults.value.value_bit_field |= static_cast<uint64_t>(0x2);
+                break;
             case (Sequence_Type::Asset_Generator):
                 asset_generator->actions_faults.value.value_bit_field |= static_cast<uint64_t>(0x2);
+                break;
             case (Sequence_Type::Asset_Feeder):
                 asset_feeder->actions_faults.value.value_bit_field |= static_cast<uint64_t>(0x2);
+                break;
             default:
                 FPS_ERROR_LOG("Entered state not intended. Action has invalid sequence_type.");
         }

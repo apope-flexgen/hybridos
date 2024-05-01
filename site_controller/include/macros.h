@@ -19,6 +19,7 @@
 #define GENERATORS_TYPE_ID ("generators")
 #define SOLAR_TYPE_ID ("solar")
 #define LONG_MSG_LEN (1024)
+#define LONG_MSG_LEN_COPY (1023)  // make this one less than LONG_MSG_LEN for using strncpy. We want null termination.
 #define MAX_SCAN (50) // used as a maximum word size when evaluating c strings with strnlen() etc.
 #define MAX_COMPS (32)
 #define MAX_MODE_NAME_LENGTH (32)
@@ -27,6 +28,7 @@
 #define MAX_STATUS_BITS (64)
 #define MAX_SCAN (50)
 #define MEDIUM_MSG_LEN (512)
+#define MEDIUM_MSG_LEN_COPY (511)  // make this one less than MEDIUM_MSG_LEN for using strncpy. We want null termination.
 #define MS_TO_NS_MULTIPLIER (1000000)
 #define MS_TO_uS_MULTIPLIER (1000)
 #define NUM_ASSET_PRIORITIES (6)
@@ -42,4 +44,5 @@
 #define ONE_SECOND_IN_TERMS_OF_NS (1000000000)
 #define RESERVED_BOOL_FAULTS_OFFSET (15)
 #define SHORT_MSG_LEN (256)
+#define SHORT_MSG_LEN_COPY (255)  // make this one less than SHORT_MSG_LEN for using strncpy. We want null termination.
 #define STATE_MACHINE_INTERVAL_uS (10000)

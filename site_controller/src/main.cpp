@@ -57,7 +57,7 @@ cJSON* parseJSONConfig(char* file_path) {
     rewind(fp);
 
     // create configuration file
-    char* configFile = new char[file_size];
+    char* configFile = new char[file_size + 1];
     if (configFile == NULL) {
         FPS_ERROR_LOG("Memory allocation error config file\n");
         fclose(fp);

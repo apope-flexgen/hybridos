@@ -50,8 +50,9 @@ std::string string_format(const std::string& format, Args... args) {
     auto size = static_cast<size_t>(size_s);
 
     // allocate memory for a char* and use snprintf (with the proper limit this time) to actually execute the formatting
-    std::unique_ptr<char> buf(new char[size]);
-    if (buf.get() == nullptr) {
+    std::unique_ptr<char[]> buf(new char[size]);
+
+    if (buf == nullptr) {
         throw std::runtime_error("Memory allocation error during formatting.");
     }
     std::snprintf(buf.get(), size, format.c_str(), args...);

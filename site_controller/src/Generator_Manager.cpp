@@ -223,8 +223,9 @@ bool Generator_Manager::aggregate_gen_data(void) {
 }
 
 void Generator_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, const char* const var) {
-    if (var == NULL)
+    if (var == NULL) {
         bufJSON_StartObject(buf);  // summary {
+    }
 
     bufJSON_AddStringCheckVar(buf, "name", "Generator Summary", var);
     bufJSON_AddNumberCheckVar(buf, "num_gen_available", numAvail, var);
@@ -248,20 +249,21 @@ void Generator_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf
     }
 
     char temp_name[MEDIUM_MSG_LEN];
-    for (auto it : pGens) {
-        const char* gen_name = it->get_name().c_str();
-        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_active_power", gen_name);
+    for (auto *it : pGens) {
+        std::string gen_name = it->get_name();
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_active_power", gen_name.c_str());
         bufJSON_AddNumberCheckVar(buf, temp_name, it->get_active_power(), var);
-        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_alarms", gen_name);
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_alarms", gen_name.c_str());
         bufJSON_AddNumberCheckVar(buf, temp_name, it->get_num_active_alarms() > 0 ? 1 : 0, var);
-        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_faults", gen_name);
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_faults", gen_name.c_str());
         bufJSON_AddNumberCheckVar(buf, temp_name, it->get_num_active_faults() > 0 ? 1 : 0, var);
     }
     bufJSON_AddNumberCheckVar(buf, "gen_num_alarmed", get_num_alarmed(), var);
     bufJSON_AddNumberCheckVar(buf, "gen_num_faulted", get_num_faulted(), var);
 
-    if (var == NULL)
+    if (var == NULL) {
         bufJSON_EndObjectNoComma(buf);  // } summary
+}
 }
 
 // respond to new generator target power setpoints from site manager

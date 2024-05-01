@@ -9,6 +9,7 @@ import os
 import sys
 import grp
 import pwd
+import getpass
 from subprocess import Popen, run, DEVNULL, PIPE
 from textwrap import dedent
 from typing import Dict
@@ -24,7 +25,7 @@ sleeptime = 1
 bin_dir = "/usr/local/bin"
 config_usecase_dir = ""
 machine_config_dir_symlink = "/usr/local/etc/config"
-username = os.getlogin()
+username = getpass.getuser()
 site_product = "site_controller"
 fleet_product = "fleet_man"
 product = site_product
@@ -304,19 +305,20 @@ def start_influx():
 def start_mongo():
     print("starting mongo")
     # stop mongod if it was enabled at startup
-    Popen(["sudo", "systemctl", "stop", "mongod"])
+    #Popen(["sudo", "systemctl", "stop", "mongod"])
     # reset mongod every time, avoid failed states on VM restarts
     cmd = "sudo chown mongod:mongod /home/mongodb/* -R"
     run(cmd, shell=True)  # running a shell command.
     # Run mongod one time to initialize socket files
-    Popen(["sudo", "systemctl", "start", "mongod"])
+   # Popen(["sudo", "systemctl", "start", "mongod"])
     time.sleep(sleeptime)
-    Popen(["sudo", "systemctl", "stop", "mongod"])
+    #Popen(["sudo", "systemctl", "stop", "mongod"])
     time.sleep(sleeptime)
     if systemd:
         Popen(["sudo", "systemctl", "restart", "mongod"])
     else:
-        Popen(['sudo', 'mongod', '--config', '/etc/mongod.conf'])
+        Popen(["sudo", "systemctl", "restart", "mongod"])
+        #Popen(['sudo', 'mongod', '--config', '/etc/mongod.conf'])
 
 
 def start_fims():
@@ -552,10 +554,10 @@ def start_web_ui():
 # and place these files at /usr/lib/systemd/system
 def update_service_files():
     # Always reset mongod permissions 
-    Popen(["sudo", "systemctl", "stop", "mongod"])
-    cmd = "sudo chown mongod:mongod /home/mongodb/* -R"
-    run(cmd, shell=True)  # running a shell command.
-    time.sleep(sleeptime)
+    #Popen(["sudo", "systemctl", "stop", "mongod"])
+    #cmd = "sudo chown mongod:mongod /home/mongodb/* -R"
+    #run(cmd, shell=True)  # running a shell command.
+    #time.sleep(sleeptime)
 
     # Update service files if necessary
     if update_services:
@@ -575,10 +577,11 @@ def update_service_files():
 
                         # If .service files are found copy it
                         if service_files:
-                            file_to_copy = os.path.join(folder, service_files[0])
-                            cmd = "sudo cp " + file_to_copy + " " + target_dir
-                            run(cmd, shell=True)  # running a shell command.
-                            print(f"File '{service_files[0]}' updated.")
+                            for service_file in service_files:
+                                file_to_copy = os.path.join(folder, service_file)
+                                cmd = "sudo cp " + file_to_copy + " " + target_dir
+                                run(cmd, shell=True)  # running a shell command.
+                                print(f"File '{service_file}' updated.")
 
         # Reload systemctl daemon with updated files
         cmd = "sudo systemctl daemon-reload"

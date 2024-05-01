@@ -260,8 +260,9 @@ bool Solar_Manager::aggregate_solar_data(void) {
 }
 
 void Solar_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, const char* const var) {
-    if (var == NULL)
+    if (var == NULL) {
         bufJSON_StartObject(buf);  // summary {
+    }
 
     bufJSON_AddStringCheckVar(buf, "name", "Solar Summary", var);
     bufJSON_AddNumberCheckVar(buf, "num_solar_available", numAvail, var);
@@ -279,8 +280,9 @@ void Solar_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, co
     bufJSON_AddNumberCheckVar(buf, "solar_total_alarms", get_num_active_alarms(), var);
     bufJSON_AddNumberCheckVar(buf, "solar_total_faults", get_num_active_faults(), var);
 
-    if (var == NULL)
+    if (var == NULL) {
         bufJSON_EndObjectNoComma(buf);  // } summary
+    }
 }
 
 // HybridOS Step 2: Process Asset Data
