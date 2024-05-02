@@ -1347,6 +1347,7 @@ int main_test_new_ess(int argc, char* argv[])
     {
         FPS_PRINT_INFO("syscpVec [{}] [{}]", idx++, cstr{ x });
     }
+    delete syscpVec;
 
     FPS_PRINT_INFO("deleting remaining sched items ...", NULL);
     for (auto sr : schreqs)

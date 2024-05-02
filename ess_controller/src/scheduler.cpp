@@ -285,9 +285,9 @@ scheduler::~scheduler()
     }
     while (reqChan.get(si, false))
     {
-        FPS_PRINT_INFO("we got a schedItem {} not deleting it for now ...", fmt::ptr(si));
+        FPS_PRINT_INFO("we found a schedItem {} still on the reqChan. deleting it", fmt::ptr(si));
         si->show();
-        // delete si;
+        delete si;
     }
     FPS_PRINT_INFO("shutdown scheduler [{}] done", name);
 }
