@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
+import { IUsersService, USERS_SERVICE } from 'src/users/interfaces/users.service.interface';
 
 @Injectable()
 export class RefreshTokenService {
@@ -9,6 +10,8 @@ export class RefreshTokenService {
     private readonly jwtService: JwtService,
     @Inject(APP_ENV_SERVICE)
     private appEnvService: IAppEnvService,
+    @Inject(USERS_SERVICE)
+    private readonly usersService: IUsersService,
   ) {}
 
   private readonly refreshTokens: Set<string> = new Set();
@@ -25,8 +28,22 @@ export class RefreshTokenService {
     return this.refreshTokens.has(token);
   }
 
-  createRefreshTokenFromUser(username: string, role: string): string {
-    const payload = { sub: username, role: role, nonce: performance.now() };
+  async validateRefreshToken(token: string): Promise<boolean> {
+    try {
+      const { userId, role } = await this.jwtService.verifyAsync(token);
+
+      // check if user is still a valid user
+      const user = await this.usersService.readById(userId);
+      // check if jwt is in the list of valid JWTs
+      return user?.role === role && this.containsRefreshToken(token);
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async createRefreshTokenFromUser(username: string, role: string): Promise<string> {
+    const user = await this.usersService.readByUsername(username);
+    const payload = { sub: username, userId: user.id, role: role, nonce: performance.now() };
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: this.appEnvService.getRefreshTokenTimeout(),
     });
@@ -44,11 +61,11 @@ export class RefreshTokenService {
 
   @Cron(CronExpression.EVERY_MINUTE)
   garbageCollector() {
-    this.refreshTokens.forEach(async (accessToken) => {
-      try {
-        await this.jwtService.verifyAsync(accessToken);
-      } catch (TokenExpiredError) {
-        this.refreshTokens.delete(accessToken);
+    this.refreshTokens.forEach(async (token) => {
+      const isValid = await this.validateRefreshToken(token);
+
+      if (!isValid) {
+        this.invalidateRefreshToken(token);
       }
     });
   }

@@ -1,32 +1,50 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { IValidAccessTokenService } from 'src/auth/interfaces/validAccessToken.service.interface';
 import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
+import { IUsersService, USERS_SERVICE } from 'src/users/interfaces/users.service.interface';
 
 @Injectable()
-export class ValidAccessTokenService {
+export class ValidAccessTokenService implements IValidAccessTokenService {
   constructor(
     private readonly jwtService: JwtService,
     @Inject(APP_ENV_SERVICE)
     private appEnvService: IAppEnvService,
+    @Inject(USERS_SERVICE)
+    private readonly usersService: IUsersService,
   ) {}
 
-  private readonly validAccessTokens: Set<string> = new Set();
+  private readonly validJWTs: Set<string> = new Set();
 
   addAccessToken(accessToken: string) {
-    this.validAccessTokens.add(accessToken);
+    this.validJWTs.add(accessToken);
   }
 
   invalidateAccessToken(accessToken: string): boolean {
-    return this.validAccessTokens.delete(accessToken);
+    return this.validJWTs.delete(accessToken);
   }
 
   containsAccessToken(accessToken: string): boolean {
-    return this.validAccessTokens.has(accessToken);
+    return this.validJWTs.has(accessToken);
   }
 
-  createAccessTokenFromUser(username: string, role: string): string {
-    const payload = { sub: username, role: role, nonce: performance.now() };
+  async validateAccessToken(accessToken: string): Promise<boolean> {
+    try {
+      const { userId, role } = await this.jwtService.verifyAsync(accessToken);
+
+      // check if user is still a valid user
+      const user = await this.usersService.readById(userId);
+      // check if jwt is in the list of valid JWTs
+      return user?.role === role && this.containsAccessToken(accessToken);
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async createAccessTokenFromUser(username: string, role: string): Promise<string> {
+    const user = await this.usersService.readByUsername(username);
+    const payload = { sub: username, userId: user.id, role: role, nonce: performance.now() };
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: this.appEnvService.getAccessTokenTimeout(),
     });
@@ -44,12 +62,16 @@ export class ValidAccessTokenService {
 
   @Cron(CronExpression.EVERY_MINUTE)
   garbageCollector() {
-    this.validAccessTokens.forEach(async (accessToken) => {
-      try {
-        await this.jwtService.verifyAsync(accessToken);
-      } catch (TokenExpiredError) {
-        this.validAccessTokens.delete(accessToken);
+    this.validJWTs.forEach(async (accessToken) => {
+      const isValid = await this.validateAccessToken(accessToken);
+
+      if (!isValid) {
+        this.invalidateAccessToken(accessToken);
       }
     });
+  }
+
+  extractUserDataFromToken(token: string) {
+    return this.jwtService.decode(token);
   }
 }

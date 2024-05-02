@@ -10,7 +10,6 @@ import { AUTH_SERVICE } from './interfaces/auth.service.interface';
 import { MFA_SERVICE } from './interfaces/mfa.service.interface';
 import { PASS_EXP_SERVICE } from './interfaces/passExp.service.interface';
 import { RADIUS_SERVICE } from './interfaces/radius.service.interface';
-import { VALID_JWT_SERVICE } from './interfaces/validJWT.service.interface';
 import { MfaService } from './mfa.service';
 import { PassExpService } from './passExp.service';
 import { RadiusService } from './radius.service';
@@ -21,11 +20,12 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { RadiusStrategy } from './strategies/radius.strategy';
 import { TotpStrategy } from './strategies/totp.strategy';
 import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
-import { RefreshTokenService } from './refreshTokenService';
-import { ValidAccessTokenService } from './validJWT.service';
+import { RefreshTokenService } from './refreshToken.service';
+import { ValidAccessTokenService } from './validAccessToken.service';
 import { BasicAccessStrategy } from './strategies/basicAccessAuth.strategy';
 import { AuditLoggingModule } from '../logging/auditLogging/auditLogging.module';
 import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
+import { VALID_ACCESS_TOKEN_SERVICE } from 'src/auth/interfaces/validAccessToken.service.interface';
 
 @Module({
   imports: [
@@ -63,7 +63,7 @@ import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interfac
       useClass: RadiusService,
     },
     {
-      provide: VALID_JWT_SERVICE,
+      provide: VALID_ACCESS_TOKEN_SERVICE,
       useClass: ValidAccessTokenService,
     },
     RefreshTokenService,
@@ -76,11 +76,6 @@ import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interfac
     RadiusStrategy,
     BasicAccessStrategy,
   ],
-  exports: [
-    {
-      provide: VALID_JWT_SERVICE,
-      useClass: ValidAccessTokenService,
-    },
-  ],
+  exports: [VALID_ACCESS_TOKEN_SERVICE],
 })
 export class AuthModule {}

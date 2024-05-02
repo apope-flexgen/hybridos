@@ -6,8 +6,11 @@ import { PassExpCredentials } from './dto/passExpCredentials.dto';
 import { IUsersService, USERS_SERVICE } from '../users/interfaces/users.service.interface';
 import { UnchangedPasswordException } from './exceptions/unchangedPassword.exception';
 import { IMfaService, MFA_SERVICE } from './interfaces/mfa.service.interface';
-import { IValidJWTService, VALID_JWT_SERVICE } from './interfaces/validJWT.service.interface';
-import { RefreshTokenService } from './refreshTokenService';
+import { RefreshTokenService } from './refreshToken.service';
+import {
+  IValidAccessTokenService,
+  VALID_ACCESS_TOKEN_SERVICE,
+} from 'src/auth/interfaces/validAccessToken.service.interface';
 
 @Injectable()
 export class AuthService {
@@ -15,8 +18,8 @@ export class AuthService {
     @Inject(USERS_SERVICE) private readonly usersService: IUsersService,
     @Inject(MFA_SERVICE)
     private readonly mfaService: IMfaService,
-    @Inject(VALID_JWT_SERVICE)
-    private readonly validJwtService: IValidJWTService,
+    @Inject(VALID_ACCESS_TOKEN_SERVICE)
+    private readonly validAssetTokenService: IValidAccessTokenService,
     private readonly refreshTokenService: RefreshTokenService,
   ) {}
   async validateUser(username: string, plainTextPass: string): Promise<User> {
@@ -28,9 +31,12 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const accessToken = this.validJwtService.createAccessTokenFromUser(user.username, user.role);
+    const accessToken = await this.validAssetTokenService.createAccessTokenFromUser(
+      user.username,
+      user.role,
+    );
 
-    const refreshToken = this.refreshTokenService.createRefreshTokenFromUser(
+    const refreshToken = await this.refreshTokenService.createRefreshTokenFromUser(
       user.username,
       user.role,
     );
@@ -57,10 +63,10 @@ export class AuthService {
   }
 
   logout(req): LogoutResponse {
-    const accessToken = this.validJwtService.extractAccessTokenFromRequest(req);
+    const accessToken = this.validAssetTokenService.extractAccessTokenFromRequest(req);
     const refreshToken = this.refreshTokenService.extractRefreshTokenFromRequest(req);
 
-    const removedAccessToken = this.validJwtService.invalidateAccessToken(accessToken);
+    const removedAccessToken = this.validAssetTokenService.invalidateAccessToken(accessToken);
     const removedRefreshToken = this.refreshTokenService.invalidateRefreshToken(refreshToken);
 
     if (!removedAccessToken || !removedRefreshToken) {
@@ -79,9 +85,15 @@ export class AuthService {
   async refreshTokens(username: string, role: string, oldRefreshToken: string) {
     this.refreshTokenService.invalidateRefreshToken(oldRefreshToken);
 
-    const newAccessToken = this.validJwtService.createAccessTokenFromUser(username, role);
+    const newAccessToken = await this.validAssetTokenService.createAccessTokenFromUser(
+      username,
+      role,
+    );
 
-    const newRefreshToken = this.refreshTokenService.createRefreshTokenFromUser(username, role);
+    const newRefreshToken = await this.refreshTokenService.createRefreshTokenFromUser(
+      username,
+      role,
+    );
 
     return {
       refreshToken: newRefreshToken,

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
-import { RefreshTokenService } from '../refreshTokenService';
+import { RefreshTokenService } from '../refreshToken.service';
 import { APP_ENV_SERVICE, IAppEnvService } from 'src/environment/appEnv.interface';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, 'refresh-to
 
   async validate(req, payload: any) {
     const refreshToken = this.refreshTokenService.extractRefreshTokenFromRequest(req);
-    return this.refreshTokenService.containsRefreshToken(refreshToken)
+    return (await this.refreshTokenService.validateRefreshToken(refreshToken))
       ? { ...payload, refreshToken }
       : null;
   }
