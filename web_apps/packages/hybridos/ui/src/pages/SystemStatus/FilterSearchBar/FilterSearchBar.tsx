@@ -35,10 +35,6 @@ const FilterSearchBar = ({
   }, [searchTerms, handleSearch]);
 
   useEffect(() => {
-    setSearchTerms('');
-  }, [systemStatusData]);
-
-  useEffect(() => {
     handleSearchSubmit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerms, filteredData]);
@@ -67,12 +63,10 @@ const FilterSearchBar = ({
       );
     });
     setFilteredData(updatedFilteredData);
-    setDisplayData(updatedFilteredData);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, systemStatusData]);
 
   const clearFilters = () => {
-    setDisplayData(systemStatusData);
     setFilteredData(systemStatusData);
     setFilters(initialSystemStatusFilter);
   };
@@ -87,7 +81,7 @@ const FilterSearchBar = ({
           multiSelect
           menuItems={serviceNames}
           onChange={(e) => handleFilter(e.target.value, 'serviceNames')}
-          onDelete={() => handleDeleteFilter('element', 'serviceNames')}
+          onDelete={(element) => handleDeleteFilter(element, 'serviceNames')}
         />
         <Select
           label="Service Status"
@@ -95,7 +89,7 @@ const FilterSearchBar = ({
           value={filters.serviceStatus}
           multiSelect
           menuItems={serviceStatuses}
-          onDelete={() => handleDeleteFilter('element', 'serviceStatus')}
+          onDelete={(element) => handleDeleteFilter(element, 'serviceStatus')}
           onChange={(e) => handleFilter(e.target.value, 'serviceStatus')}
         />
         <Select
@@ -104,7 +98,7 @@ const FilterSearchBar = ({
           value={filters.connectionStatus}
           multiSelect
           menuItems={connectionStatuses}
-          onDelete={() => handleDeleteFilter('element', 'connectionStatus')}
+          onDelete={(element) => handleDeleteFilter(element, 'connectionStatus')}
           onChange={(e) => handleFilter(e.target.value, 'connectionStatus')}
         />
         <MuiButton variant="text" label="Clear Filters" onClick={clearFilters} />
