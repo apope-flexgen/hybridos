@@ -11,7 +11,7 @@ type MsgType = {
 const ONE_TIME_AUTH_URI = '/api/fims/one-time-auth';
 const { SOCKET_URI, SOCKET_PORT } =
   process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'development'
-    ? { SOCKET_URI: 'wss://172.16.1.80', SOCKET_PORT: '3001' }
+    ? { SOCKET_URI: 'wss://172.16.1.90', SOCKET_PORT: '3001' }
     : {
         SOCKET_URI: `wss://${window.location.hostname}`,
         SOCKET_PORT:

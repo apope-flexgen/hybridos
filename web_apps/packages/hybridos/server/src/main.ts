@@ -47,7 +47,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.useWebSocketAdapter(new AuthWsAdapter(app));
   app.enableCors({
-    origin: ['https://172.16.1.80', 'http://localhost'],
+    origin: ['https://172.16.1.90', 'http://localhost'],
     credentials: true,
   });
   await app.listen(PORT);

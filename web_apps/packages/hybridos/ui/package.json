@@ -98,5 +98,5 @@
   "msw": {
     "workerDirectory": "public"
   },
-  "proxy": "https://172.16.1.80:3001"
+  "proxy": "https://172.16.1.90:3001"
 }
