@@ -1195,6 +1195,55 @@ func UnmarshalConfig(data []byte) {
 						}
 						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "alert"
 
+						if metric.Alert {
+							element, internal_err = metricsIter.FindElement(nil, "messages")
+							// Messages are required for alerts, optional (unused) otherwise
+							if internal_err != nil || element == nil {
+								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("message array required for alerts: %w", internal_err))
+								wasError = true
+							} else {
+								var messageArray *simdjson.Array
+								messageArray, internal_err = element.Iter.Array(nil)
+								currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "messages", JType: simdjson.TypeArray})
+								if internal_err != nil {
+									logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("failed to get alert message array: %w", internal_err))
+									wasError = true
+								} else {
+									metric.Messages = make(map[string]string)
+									var positionIndex int
+									messageArray.ForEach(func(messageItr simdjson.Iter) {
+										currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: positionIndex, JType: simdjson.TypeObject})
+										var messageObj *simdjson.Object
+										messageObj, internal_err = messageItr.Object(nil)
+										if internal_err != nil {
+											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("failed to get message entry %d from alert message array: %w", positionIndex, internal_err))
+											wasError = true
+										} else {
+											messageMap := make(map[string]interface{})
+											_, internal_err = messageObj.Map(messageMap)
+											if internal_err != nil || len(messageMap) == 0 {
+												logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("failed to get message expression %d from alert message array: %w", positionIndex, internal_err))
+												wasError = true
+											} else {
+												for messageExpression, messageInterface := range messageMap {
+													messageString, ok := messageInterface.(string)
+													if !ok {
+														logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("failed to get message string %d from alert message array: %w", positionIndex, internal_err))
+														wasError = true
+													} else {
+														metric.Messages[messageExpression] = messageString
+													}
+												}
+											}
+										}
+										positionIndex += 1
+										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove positionIndex
+									})
+								}
+								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "messages"
+							}
+						}
+
 						// get the outputs (at least one is required)
 						element, internal_err = metricsIter.FindElement(nil, "outputs")
 						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "outputs", JType: simdjson.TypeArray})
@@ -1367,6 +1416,26 @@ func UnmarshalConfig(data []byte) {
 
 		}
 		checkUnusedOutputs()
+		currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "metrics", JType: simdjson.TypeArray})
+		warnings, errs := mapOutputsToMetrics()
+		for j, warning := range warnings {
+			if len(warning) > 0 {
+				currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: j, JType: simdjson.TypeObject})
+				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("had an issue mapping outputs to metrics: %v (warning only)", warning))
+				wasError = true
+				currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+			}
+		}
+		j := 0
+		for j, internal_err = range errs {
+			if internal_err != nil {
+				currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: j, JType: simdjson.TypeObject})
+				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("had an issue mapping outputs to metrics: %v; excluding this metric from calculations", internal_err))
+				wasError = true
+				currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+			}
+		}
+		currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
 
 		// handle echos ([]EchoObject)
 		element, internal_err = i.FindElement(nil, "echo")
@@ -2169,13 +2238,13 @@ func configureStateAndOutputs(metricsObject *MetricsObject, netIndex int) (warni
 	metricsAlreadyConfigured := len(metricsMutex) > 0
 	// Only lock if reconfiguring. Otherwise the lock will not have been configured and will not be usable yet
 	if metricsAlreadyConfigured {
-		metricsMutex[netIndex].RLock()
+		metricsMutex[netIndex].Lock()
 	}
 	expressionNeedsEvalMutex.RLock()
 	defer func() {
 		expressionNeedsEvalMutex.RUnlock()
 		if metricsAlreadyConfigured {
-			metricsMutex[netIndex].RUnlock()
+			metricsMutex[netIndex].Unlock()
 		}
 	}()
 
@@ -2183,24 +2252,24 @@ func configureStateAndOutputs(metricsObject *MetricsObject, netIndex int) (warni
 	expressionNeedsEval[netIndex] = true
 
 	// (Re)configure state
-	(*metricsObject).State = make(map[string][]Union, 0)
+	metricsObject.State = make(map[string][]Union, 0)
 	// Time-based operations that need regular evaluation to ensure they get the updates they need
-	if strings.Contains((*metricsObject).ParsedExpression.String, "Integrate") ||
-		strings.Contains((*metricsObject).ParsedExpression.String, "Time") ||
-		strings.Contains((*metricsObject).ParsedExpression.String, "Milliseconds") ||
-		strings.Contains((*metricsObject).ParsedExpression.String, "Pulse") ||
-		strings.Contains((*metricsObject).ParsedExpression.String, "Duration") {
-		(*metricsObject).State["alwaysEvaluate"] = []Union{Union{tag: BOOL, b: true}}
+	if strings.Contains(metricsObject.ParsedExpression.String, "Integrate") ||
+		strings.Contains(metricsObject.ParsedExpression.String, "Time") ||
+		strings.Contains(metricsObject.ParsedExpression.String, "Milliseconds") ||
+		strings.Contains(metricsObject.ParsedExpression.String, "Pulse") ||
+		strings.Contains(metricsObject.ParsedExpression.String, "Duration") {
+		metricsObject.State["alwaysEvaluate"] = []Union{Union{tag: BOOL, b: true}}
 	} else {
-		(*metricsObject).State["alwaysEvaluate"] = []Union{{tag: BOOL, b: false}}
+		metricsObject.State["alwaysEvaluate"] = []Union{{tag: BOOL, b: false}}
 	}
 
 	// populate the initialValues map
-	outputUnion := Union{tag: (*metricsObject).Type}
-	if (*metricsObject).ParsedExpression.ResultType != outputUnion.tag {
-		if (*metricsObject).ParsedExpression.ResultType == STRING {
+	outputUnion := Union{tag: metricsObject.Type}
+	if metricsObject.ParsedExpression.ResultType != outputUnion.tag {
+		if metricsObject.ParsedExpression.ResultType == STRING {
 			containsFilter := false
-			for _, varName := range (*metricsObject).ParsedExpression.Vars {
+			for _, varName := range metricsObject.ParsedExpression.Vars {
 				if _, ok := MetricsConfig.Filters[varName]; ok {
 					containsFilter = true
 				}
@@ -2211,24 +2280,43 @@ func configureStateAndOutputs(metricsObject *MetricsObject, netIndex int) (warni
 				err = fmt.Errorf("metrics expression produces possible result type %v but gets cast to %v", metricsObject.ParsedExpression.ResultType, outputUnion.tag)
 			}
 		} else { // we can do an implicit type cast, but this may not be what we want to do...
-			if (*metricsObject).Type != NIL {
+			if metricsObject.Type != NIL {
 				warning = fmt.Sprintf("metrics expression produces possible result type %v but gets cast to %v", metricsObject.ParsedExpression.ResultType, outputUnion.tag)
 			}
 		}
 	}
-	if (*metricsObject).ParsedExpression.ResultType != NIL && outputUnion.tag == NIL {
-		outputUnion = Union{tag: (*metricsObject).ParsedExpression.ResultType}
+	if metricsObject.ParsedExpression.ResultType != NIL && outputUnion.tag == NIL {
+		outputUnion = Union{tag: metricsObject.ParsedExpression.ResultType}
 	}
 
 	metricsObject.State["value"] = []Union{outputUnion}
-	for _, outputVar := range (*metricsObject).Outputs { // metricsObject.Outputs is a list of output variable names
+	// For alerts, track the pair of subexpressions to their associated messages
+	// For example, when soc < 10, the user might configure "SOC {soc} is too low" to be reported by the metric
+	// the messageExpression would then be "soc < 10" and the messageString would be "SOC {soc} is too low"
+	// The messageStrings are raw string literals that will later have their {variables} substituted with their actual values in the parsedMessageStrings
+	if metricsObject.Alert {
+		metricsObject.State["activeMessages"] = make([]Union, 0)
+		metricsObject.State["activeTimestamps"] = make([]Union, 0)
+		metricsObject.State["previousExpressionValues"] = make([]Union, 0)
+		metricsObject.State["messageExpressions"] = make([]Union, 0)
+		metricsObject.State["messageStrings"] = make([]Union, 0)
+		for messageExpression, messageString := range metricsObject.Messages {
+			// State holds a slice for each key rather than a map, so split the expressions, their values, and associated strings into separate
+			// slices with corresponding indices
+			metricsObject.State["previousExpressionValues"] = append(metricsObject.State["previousExpressionValues"], Union{tag: BOOL, b: false})
+			metricsObject.State["messageExpressions"] = append(metricsObject.State["messageExpressions"], Union{tag: STRING, s: messageExpression})
+			metricsObject.State["messageStrings"] = append(metricsObject.State["messageStrings"], Union{tag: STRING, s: messageString})
+		}
+	}
+
+	for _, outputVar := range metricsObject.Outputs { // metricsObject.Outputs is a list of output variable names
 		output := MetricsConfig.Outputs[outputVar] // MetricsConfig.Outputs is a map[string]Output of output variable names to Output objects
 		output.Value = outputUnion
 		OutputScope[outputVar] = []Union{outputUnion}
 		MetricsConfig.Outputs[outputVar] = output
 		if stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "direct_set") ||
 			stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "post") {
-			for _, var_name := range (*metricsObject).ParsedExpression.Vars {
+			for _, var_name := range metricsObject.ParsedExpression.Vars {
 				inputYieldsDirectMsg[var_name] = true
 				for input_name, filter_names := range inputToFilterExpression {
 					for _, filter_name := range filter_names {
@@ -2292,15 +2380,6 @@ func (metricsObject *MetricsObject) getExpression(internal_vars []string, netInd
 		}
 	}
 
-	// Map the expression to all of its associated outputs
-	for _, output := range (*metricsObject).Outputs {
-		// Use the associated expression index (netIndex) to point to the expression
-		// An expression can have multiple outputs and each output can have multiple expressions (but only one is used currently)
-		outputToMetricsObject[output] = append(outputToMetricsObject[output], metricsObject)
-	}
-
-	// TODO: warning is being reassigned so only the last warning will be returned
-	warning, err = configureStateAndOutputs(metricsObject, netIndex)
 	return warning, err
 }
 
@@ -2950,4 +3029,23 @@ func checkUnusedOutputs() {
 			delete(MetricsConfig.Outputs, outputName)
 		}
 	}
+}
+
+// Map the Output Variables to their associated metrics
+// Return any warning strings or errors that occurred
+func mapOutputsToMetrics() (warnings []string, errs []error) {
+	for i, metricsObject := range MetricsConfig.Metrics {
+		metricsObjectPointer := &MetricsConfig.Metrics[i]
+		// Map the expression to all of its associated outputs
+		for _, output := range (metricsObject).Outputs {
+			// Use the associated expression index (netIndex) to point to the expression
+			// An expression can have multiple outputs and each output can have multiple expressions (but only one is used currently)
+			outputToMetricsObject[output] = append(outputToMetricsObject[output], metricsObjectPointer)
+		}
+
+		warning, err := configureStateAndOutputs(metricsObjectPointer, i)
+		warnings = append(warnings, warning)
+		errs = append(errs, err)
+	}
+	return
 }

@@ -9,6 +9,7 @@ import (
 	"math"
 	"os"
 	"reflect"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -533,49 +534,6 @@ func EvaluateFilter(filterName string) {
 	}
 }
 
-// Track the alerting attributes that are automatically added for every alert. This function only sets up the
-// tracking, and relies on storeAlertingAttributes and addAlertingAttributesToOutput to setup the attributes for sending on fims.
-// The alerting attributes include the timestamp of the last time the alert triggered as well as the last value of the alert.
-// Uses the metrics mutex for the given index.
-// rawExpressionResult: the unparsed expression result. Must be able to be cast as a boolean, else an error will be returned
-// metricIndex: index of the metric within the MetricsConfig.Metrics array
-// metricsObject: the current MetricsObject being evaluated
-// return error if there were any issues with the tracking such as invalid data types
-func trackAlertingAttributes(rawExpressionResult Union, metricIndex int, metricsObject *MetricsObject) error {
-	// Return early if this is not an alert or it's expression is not supported
-	if !metricsObject.Alert {
-		return nil
-	}
-	expressionResult := rawExpressionResult
-	if err := castUnionType(&expressionResult, BOOL); err != nil {
-		return fmt.Errorf("cannot generate alert for %s metric: %w", metricsObject.Id, err)
-	}
-
-	// Handle locks for the duration of the function
-	metricsMutex[metricIndex].Lock()
-	defer metricsMutex[metricIndex].Unlock()
-
-	// Ensure the previous value and timestamp exist
-	if len(metricsObject.State["lastAlertValue"]) == 0 {
-		// lastAlertVal tracks the last value of the expression
-		metricsObject.State["lastAlertValue"] = []Union{{tag: BOOL, b: false}}
-	}
-	if len(metricsObject.State["lastAlertTrigger"]) == 0 {
-		// lastAlertTrigger tracks the timestamp (RFC-3339 string) when the expression was first true
-		metricsObject.State["lastAlertTrigger"] = []Union{{tag: STRING, s: ""}}
-	}
-
-	// If the expression value just changed to true, update the trigger time with the current time
-	if expressionResult.b != metricsObject.State["lastAlertValue"][0].b {
-		metricsObject.State["lastAlertTrigger"][0].s = time.Now().Format(time.RFC3339)
-	}
-
-	// Update the previous value with the current value
-	metricsObject.State["lastAlertValue"][0] = expressionResult
-
-	return nil
-}
-
 // Store the automatically generated alerting attributes in the OutputScope. This includes the true/false status
 // of the alert as well as the timestamp(s) when the alert was triggered.
 // Uses the outputScopeMutex before writing to the OutputScope
@@ -595,11 +553,6 @@ func storeAlertingAttributes(outputVar string, outputVals []Union, metricsObject
 		// this is essentially just the value, but it's routed through the outputScope for consistency with other attributes
 		OutputScope[outputVar+"@alertStatus"] = []Union{{tag: BOOL, b: false}}
 	}
-	if len(OutputScope[outputVar+"@alertDetails"]) == 0 {
-		// The details array tracks all of the timestamps and messages of the given alert
-		// It should be empty if the alert is inactive
-		OutputScope[outputVar+"@alertDetails"] = []Union{}
-	}
 	if len(outputVals) == 0 {
 		return fmt.Errorf("no result available for the expression")
 	}
@@ -608,16 +561,37 @@ func storeAlertingAttributes(outputVar string, outputVals []Union, metricsObject
 		return fmt.Errorf("cannot cast a boolean result from the metrics expression")
 	}
 	OutputScope[outputVar+"@alertStatus"][0].b = expressionResult.b
+
+	// Reset details and add the ones currently active
+	OutputScope[outputVar+"@activeMessages"] = make([]Union, 0)
+	OutputScope[outputVar+"@activeTimestamps"] = make([]Union, 0)
 	if expressionResult.b {
-		// If true, populate the details array with the timestamp
-		// TODO: iterate over for all the timestamps when multiple are triggered
-		OutputScope[outputVar+"@alertDetails"] = []Union{metricsObject.State["lastAlertTrigger"][0]}
-	} else {
-		// If the alert is not active make sure it does not have any incidents (timestamps)
-		OutputScope[outputVar+"@alertDetails"] = []Union{}
+		// If true, populate the details array with the timestamp and messages
+		// The two will be added together in the outputs, with each active message getting the latest timestamp
+		OutputScope[outputVar+"@activeMessages"] = append(OutputScope[outputVar+"@activeMessages"], (*metricsObject).State["activeMessages"]...)
+		OutputScope[outputVar+"@activeTimestamps"] = append(OutputScope[outputVar+"@activeTimestamps"], (*metricsObject).State["activeTimestamps"]...)
 	}
 	outputScopeMutex.Unlock()
 	return nil
+}
+
+// Return whether there are new active messages indicating the metric has changed
+func (metricsObject *MetricsObject) alertAttributesHaveChanged() bool {
+	return len(metricsObject.State["activeMessages"]) > 0
+}
+
+// Clear out the metricsObject state from the last iteration
+func (metricsObject *MetricsObject) clearAlertingState() {
+	if !metricsObject.Alert {
+		return
+	}
+
+	if len(metricsObject.State["activeMessages"]) > 0 {
+		metricsObject.State["activeMessages"] = make([]Union, 0)
+	}
+	if len(metricsObject.State["activeTimestamps"]) > 0 {
+		metricsObject.State["activeTimestamps"] = make([]Union, 0)
+	}
 }
 
 func EvaluateExpressions() {
@@ -631,13 +605,19 @@ func EvaluateExpressions() {
 		metricsMutex[0].RLock()
 	}
 	for q, metricsObject := range MetricsConfig.Metrics {
+		metricsObjectPointer := &MetricsConfig.Metrics[q]
 		metricsMutex[q].RUnlock()
 		expressionNeedsEvalMutex.RLock()
 		needEval := expressionNeedsEval[q]
 		expressionNeedsEvalMutex.RUnlock()
 		if needEval {
-			originalType := metricsObject.Type
-			outputVals, err := Evaluate(&(metricsObject.ParsedExpression), &(metricsObject.State))
+			originalType := metricsObjectPointer.Type
+			// Clear out the previous state for alerting values that should not persist
+			metricsMutex[q].Lock()
+
+			metricsObjectPointer.clearAlertingState()
+			outputVals, err := Evaluate(&(metricsObject.ParsedExpression), &(metricsObjectPointer.State))
+			metricsMutex[q].Unlock()
 			if err != nil {
 				log.Warnf("Error with metrics expression  [   %s   ]:\n%s\n", metricsObject.Expression, err)
 			}
@@ -645,13 +625,6 @@ func EvaluateExpressions() {
 			if err == nil && outputVals[0].tag != NIL {
 				if originalType != NIL {
 					castUnionType(&outputVals[0], originalType)
-				}
-				// Track any special alerting behavior based on the result of the evaluation
-				if err = trackAlertingAttributes(outputVals[0], q, &metricsObject); err != nil {
-					log.Errorf("Failed to track alert: %v", err)
-					// Will only error if an alert should have been handled
-					// If this occurs, do not allow the metric to be sent out on any of the outputs
-					continue
 				}
 
 				for _, fullOutputName := range metricsObject.Outputs {
@@ -667,9 +640,10 @@ func EvaluateExpressions() {
 							_, is_direct_post := uriIsDirect["post"][outputToUriGroup[outputVar]]
 							directMsgMutex.RUnlock()
 
-							is_sparse := uriIsSparse[outputToUriGroup[outputVar]]
-							// Check if the values have changed from the last evaluation, then copy the new values into the OutputScope
-							valuesChanged := !unionListsMatch(OutputScope[fullOutputName], outputVals)
+							// Storage the alerting attributes if this is an alert
+							if err := storeAlertingAttributes(outputVar, outputVals, metricsObjectPointer); err != nil {
+								log.Errorf("Cannot generate alert for %s metric: %v", metricsObjectPointer.Id, err)
+							}
 
 							// Update the scope here to allow for direct messages to occur below
 							outputScopeMutex.Lock()
@@ -677,10 +651,9 @@ func EvaluateExpressions() {
 							copy(OutputScope[fullOutputName], outputVals)
 							outputScopeMutex.Unlock()
 
-							// Storage the alerting attributes if this is an alert
-							if err := storeAlertingAttributes(outputVar, outputVals, &metricsObject); err != nil {
-								log.Errorf("Cannot generate alert for %s metric: %v", metricsObject.Id, err)
-							}
+							is_sparse := uriIsSparse[outputToUriGroup[outputVar]]
+							// Check if the values have changed from the last evaluation, then copy the new values into the OutputScope
+							valuesChanged := !unionListsMatch(OutputScope[fullOutputName], outputVals) || metricsObjectPointer.alertAttributesHaveChanged()
 
 							if valuesChanged || ((is_direct_set || is_direct_post) && !is_sparse) {
 								pubDataChangedMutex.Lock()
@@ -728,20 +701,20 @@ func EvaluateExpressions() {
 						_, is_direct_post := uriIsDirect["post"][outputToUriGroup[fullOutputName]]
 						directMsgMutex.RUnlock()
 
+						// Storage the alerting attributes if this is an alert
+						if err := storeAlertingAttributes(fullOutputName, outputVals, metricsObjectPointer); err != nil {
+							log.Errorf("Cannot generate alert for %s metric: %v", metricsObjectPointer.Id, err)
+						}
+
 						is_sparse := uriIsSparse[outputToUriGroup[fullOutputName]]
 						// Check if the values have changed from the last evaluation, then copy the new values into the OutputScope
-						valuesChanged := !unionListsMatch(output, outputVals)
+						valuesChanged := !unionListsMatch(OutputScope[fullOutputName], outputVals) || metricsObjectPointer.alertAttributesHaveChanged()
 
 						// Update the scope here to allow for direct messages to occur below
 						outputScopeMutex.Lock()
 						OutputScope[fullOutputName] = make([]Union, len(outputVals))
 						copy(OutputScope[fullOutputName], outputVals)
 						outputScopeMutex.Unlock()
-
-						// Storage the alerting attributes if this is an alert
-						if err := storeAlertingAttributes(fullOutputName, outputVals, &metricsObject); err != nil {
-							log.Errorf("Cannot generate alert for %s metric: %v", metricsObject.Id, err)
-						}
 
 						if valuesChanged || ((is_direct_set || is_direct_post) && !is_sparse) {
 							pubDataChangedMutex.Lock()
@@ -796,11 +769,10 @@ func EvaluateExpressions() {
 			}
 
 			metricsMutex[q].Lock()
-			metricsObject.State["value"] = make([]Union, len(outputVals))
-			copy(metricsObject.State["value"], outputVals)
-			MetricsConfig.Metrics[q] = metricsObject
+			metricsObjectPointer.State["value"] = make([]Union, len(outputVals))
+			copy(metricsObjectPointer.State["value"], outputVals)
 			metricsMutex[q].Unlock()
-			if !metricsObject.State["alwaysEvaluate"][0].b {
+			if !metricsObjectPointer.State["alwaysEvaluate"][0].b {
 				expressionNeedsEvalMutex.Lock()
 				expressionNeedsEval[q] = false
 				expressionNeedsEvalMutex.Unlock()
@@ -821,7 +793,7 @@ func EvaluateExpressions() {
 // TODO: Handle filter functions ("aliases") as input types
 func Evaluate(parsed *Expression, state *map[string][]Union) ([]Union, error) {
 
-	result, err := evaluate(&(parsed.Ast), state)
+	result, err := parsed.evaluate(&(parsed.Ast), state)
 
 	if err != nil || len(result) == 0 {
 		return []Union{{}}, err
@@ -832,32 +804,42 @@ func Evaluate(parsed *Expression, state *map[string][]Union) ([]Union, error) {
 
 // Looks at a node in an AST and determines the type of the node.
 // Based on the type, it calls an auxiliary function to do the actual evaluation.
-func evaluate(node *ast.Node, state *map[string][]Union) (values []Union, err error) {
+func (exp *Expression) evaluate(node *ast.Node, state *map[string][]Union) (values []Union, err error) {
 	switch (*node).(type) {
 	case *ast.Ident:
-		values, err = evaluateIdent((*node).(*ast.Ident))
+		values, err = exp.evaluateIdent((*node).(*ast.Ident))
 	case *ast.CallExpr:
-		values, err = evaluateCallExpr((*node).(*ast.CallExpr), state)
+		values, err = exp.evaluateCallExpr((*node).(*ast.CallExpr), state)
 	case *ast.BinaryExpr:
-		values, err = evaluateBinary((*node).(*ast.BinaryExpr), state)
+		values, err = exp.evaluateBinary((*node).(*ast.BinaryExpr), state)
 	case *ast.ParenExpr:
 		newNode := ast.Node((*node).(*ast.ParenExpr).X)
-		values, err = evaluate(&newNode, state)
+		values, err = exp.evaluate(&newNode, state)
 	case *ast.UnaryExpr:
-		values, err = evaluateUnary((*node).(*ast.UnaryExpr), state)
+		values, err = exp.evaluateUnary((*node).(*ast.UnaryExpr), state)
 	case *ast.BasicLit:
-		values, err = evaluateBasicLit((*node).(*ast.BasicLit))
+		values, err = exp.evaluateBasicLit((*node).(*ast.BasicLit))
 	case *ast.SelectorExpr:
-		values, err = evaluateSelector((*node).(*ast.SelectorExpr))
+		values, err = exp.evaluateSelector((*node).(*ast.SelectorExpr))
 	default:
 		err = fmt.Errorf("unsupported node %+v (type %+v)", *node, reflect.TypeOf(*node))
+	}
+
+	// Check each of the subexpressions to see if any are matched against the list that should be reported
+	if msgErr := exp.trackActiveSubexpressions(node, state, &values); msgErr != nil {
+		if err != nil {
+			// Combine errors
+			err = fmt.Errorf("%w, and error matching subexpression: %w", err, msgErr)
+		} else {
+			err = fmt.Errorf("error matching subexpression: %w", err)
+		}
 	}
 
 	return values, err
 }
 
 // pull a variable out of the map of inputs
-func evaluateIdent(node *ast.Ident) ([]Union, error) {
+func (exp *Expression) evaluateIdent(node *ast.Ident) ([]Union, error) {
 	if node.Name == "true" {
 		return []Union{{tag: BOOL, b: true}}, nil
 	} else if node.Name == "false" {
@@ -878,7 +860,7 @@ func evaluateIdent(node *ast.Ident) ([]Union, error) {
 }
 
 // pull a variable out of the map of inputs
-func evaluateSelector(node *ast.SelectorExpr) ([]Union, error) {
+func (exp *Expression) evaluateSelector(node *ast.SelectorExpr) ([]Union, error) {
 	nodeName := node.X.(*ast.Ident).Name + "@" + node.Sel.Name
 	inputs, found := InputScope[nodeName]
 	if !found {
@@ -893,10 +875,10 @@ func evaluateSelector(node *ast.SelectorExpr) ([]Union, error) {
 }
 
 // evaluate the result of a binary operation
-func evaluateBinary(node *ast.BinaryExpr, state *map[string][]Union) ([]Union, error) {
+func (exp *Expression) evaluateBinary(node *ast.BinaryExpr, state *map[string][]Union) ([]Union, error) {
 	newNodeL := ast.Node(node.X)
 
-	lValues, err := evaluate(&newNodeL, state) // evaluate the left side before combining with the right
+	lValues, err := exp.evaluate(&newNodeL, state) // evaluate the left side before combining with the right
 	if err != nil {
 		return []Union{}, err
 	}
@@ -907,7 +889,7 @@ func evaluateBinary(node *ast.BinaryExpr, state *map[string][]Union) ([]Union, e
 	}
 	lValue := lValues[0]
 	newNodeR := ast.Node(node.Y)
-	rValues, err := evaluate(&newNodeR, state) // evaluate the right side before combining with the left
+	rValues, err := exp.evaluate(&newNodeR, state) // evaluate the right side before combining with the left
 
 	if err != nil {
 		return []Union{}, err
@@ -979,7 +961,7 @@ func evaluateBinary(node *ast.BinaryExpr, state *map[string][]Union) ([]Union, e
 }
 
 // evaluate the result of a function call
-func evaluateCallExpr(node *ast.CallExpr, state *map[string][]Union) ([]Union, error) {
+func (exp *Expression) evaluateCallExpr(node *ast.CallExpr, state *map[string][]Union) ([]Union, error) {
 	num_args := len(node.Args)
 	id, ok := node.Fun.(*ast.Ident)
 	if ok {
@@ -989,7 +971,7 @@ func evaluateCallExpr(node *ast.CallExpr, state *map[string][]Union) ([]Union, e
 				return []Union{}, fmt.Errorf("incorrect number of argments for function evaulation")
 			}
 			nodeArg := ast.Node(node.Args[0])
-			vals, err := evaluate(&nodeArg, state)
+			vals, err := exp.evaluate(&nodeArg, state)
 			if err != nil {
 				return []Union{}, err
 			}
@@ -997,7 +979,7 @@ func evaluateCallExpr(node *ast.CallExpr, state *map[string][]Union) ([]Union, e
 				return []Union{}, fmt.Errorf("no condition given to 'if' statement")
 			} else if len(vals) > 1 && num_args == 2 {
 				nodeArg := ast.Node(node.Args[1])
-				output, err := evaluate(&nodeArg, state)
+				output, err := exp.evaluate(&nodeArg, state)
 				outputUnions := make([]Union, 0)
 				if len(output) != len(vals) {
 					return []Union{}, fmt.Errorf("cannot do variadic pairwise if statement if arguments don't match in size")
@@ -1010,12 +992,12 @@ func evaluateCallExpr(node *ast.CallExpr, state *map[string][]Union) ([]Union, e
 				return outputUnions, err
 			} else if len(vals) > 1 && num_args == 3 {
 				nodeArg1 := ast.Node(node.Args[1])
-				output1, _ := evaluate(&nodeArg1, state)
+				output1, _ := exp.evaluate(&nodeArg1, state)
 				if len(output1) != len(vals) {
 					return []Union{}, fmt.Errorf("cannot do variadic pairwise if statement if arguments don't match in size")
 				}
 				nodeArg2 := ast.Node(node.Args[2])
-				output2, err := evaluate(&nodeArg2, state)
+				output2, err := exp.evaluate(&nodeArg2, state)
 				if len(output2) != len(vals) {
 					return []Union{}, fmt.Errorf("cannot do variadic pairwise if statement if arguments don't match in size")
 				}
@@ -1032,12 +1014,12 @@ func evaluateCallExpr(node *ast.CallExpr, state *map[string][]Union) ([]Union, e
 				val := vals[0]
 				if val.b {
 					nodeArg := ast.Node(node.Args[1])
-					values, err := evaluate(&nodeArg, state)
+					values, err := exp.evaluate(&nodeArg, state)
 					return values, err
 				} else {
 					if num_args == 3 {
 						nodeArg := ast.Node(node.Args[2])
-						values, err := evaluate(&nodeArg, state)
+						values, err := exp.evaluate(&nodeArg, state)
 						return values, err
 					} else {
 						return []Union{}, nil
@@ -1051,7 +1033,7 @@ func evaluateCallExpr(node *ast.CallExpr, state *map[string][]Union) ([]Union, e
 		argVals := make([]Union, 0)
 		for _, arg := range node.Args {
 			nodeArg := ast.Node(arg)
-			vals, err := evaluate(&nodeArg, state)
+			vals, err := exp.evaluate(&nodeArg, state)
 			if err != nil {
 				return []Union{}, err
 			}
@@ -1369,10 +1351,10 @@ func evaluateCallExpr(node *ast.CallExpr, state *map[string][]Union) ([]Union, e
 }
 
 // evaluate unary expressions
-func evaluateUnary(node *ast.UnaryExpr, state *map[string][]Union) ([]Union, error) {
+func (exp *Expression) evaluateUnary(node *ast.UnaryExpr, state *map[string][]Union) ([]Union, error) {
 
 	newValue := ast.Node(node.X)
-	rValues, err := evaluate(&newValue, state) // evaluate the operand before applying the unary operator to the result
+	rValues, err := exp.evaluate(&newValue, state) // evaluate the operand before applying the unary operator to the result
 
 	if err != nil {
 		return []Union{}, err
@@ -1403,7 +1385,7 @@ func evaluateUnary(node *ast.UnaryExpr, state *map[string][]Union) ([]Union, err
 
 // evaluate numbers as numbers (note that these have to fall within the constraints of node.Kind
 // which is why there isn't a BOOL conversion)
-func evaluateBasicLit(node *ast.BasicLit) ([]Union, error) {
+func (exp *Expression) evaluateBasicLit(node *ast.BasicLit) ([]Union, error) {
 	switch node.Kind {
 	case token.INT:
 		value, err := strconv.ParseInt(node.Value, 10, 64)
@@ -1431,4 +1413,82 @@ func evaluateBasicLit(node *ast.BasicLit) ([]Union, error) {
 	default:
 		return []Union{}, fmt.Errorf("error evaluating ast.BasicLit %v", node.Value)
 	}
+}
+
+// Substitute {variables} in the given string with their input values if the inputs exist
+// messageString: the string on which to perform the substitution
+// return the string with the completed substitution, and any errors that might have occurred
+func replaceMessageVarsWithInputValues(messageString string) string {
+	// Find all variables surrounded by braces which denotes that they should be substituted
+	re := regexp.MustCompile(`{([^}]+)}`)
+	parsedString := re.ReplaceAllStringFunc(messageString, func(rawVariable string) string {
+		parsedVariable := rawVariable[1 : len(rawVariable)-1]
+		if value, ok := InputScope[parsedVariable]; ok {
+			return unionValueToString(&value[0])
+		}
+		// Return the origin string if not found
+		return rawVariable
+	})
+	return parsedString
+}
+
+// Determine whether the AST node passed points to any subexpressions within the full expression being received. This is accomplished
+// by using the node as a position within the larger expression string. Then, for all nodes that match, add their associated messages
+// to the state to be reported later on for the alerting use case
+// node: The current AST node being examined
+// state: The state containing the subexpressions to match
+// return any errors that occurred
+func (exp *Expression) trackActiveSubexpressions(node *ast.Node, state *map[string][]Union, values *[]Union) error {
+	// Early return if there are no expressions to match
+	if state == nil || len((*state)["messageExpressions"]) == 0 {
+		return nil
+	}
+	// Two parallel slices track the expressions and their associated messages
+	// For instance, the expression might be "soc < 10" and the associated message to report might be "soc is too low"
+	// Ensure the lengths match
+	if len((*state)["messageExpressions"]) != len((*state)["messageStrings"]) {
+		return fmt.Errorf("mismatch between message configuration: got %d expressions but %d strings", len((*state)["messageExpressions"]), len((*state)["messageStrings"]))
+	}
+
+	// Only proceed if the expression is true
+	if len(*values) == 0 {
+		return nil
+	}
+	expressionIsTrue := (*values)[0]
+	if err := castUnionType(&expressionIsTrue, BOOL); err != nil {
+		return fmt.Errorf("couldn't determine whether the expression is true: %w", err)
+	}
+
+	// Protect against out of bounds
+	// ast node positions are offset by 1 character
+	startingPos := int((*node).Pos()) - 1
+	endingPos := int((*node).End()) - 1
+	if startingPos < 0 || endingPos > len(exp.String) {
+		return fmt.Errorf("ast node out of range for expression %s. There is a problem with the code", exp.String)
+	}
+
+	// Add any active messages that are currently matched if their value has gone from false to true
+	for index, subexpression := range (*state)["messageExpressions"] {
+		if exp.String[startingPos:endingPos] == subexpression.s {
+			if expressionIsTrue.b {
+				if index >= len((*state)["previousExpressionValues"]) {
+					return fmt.Errorf("failed to get previous expression value for expression %s. There is a problem with the code", exp.String)
+				}
+				// Value has changed from false to true
+				if !(*state)["previousExpressionValues"][index].b {
+					parsedMsg := replaceMessageVarsWithInputValues((*state)["messageStrings"][index].s)
+					// State holds a slice for each key rather than a map, so split the strings and timestamps into separate
+					// slices with corresponding indices
+					// The maps are cleared before each evaluation so these will not build up over time
+					(*state)["activeMessages"] = append((*state)["activeMessages"], Union{tag: STRING, s: parsedMsg})
+					(*state)["activeTimestamps"] = append((*state)["activeTimestamps"], Union{tag: STRING, s: time.Now().Format(time.RFC3339)})
+				}
+			}
+			// Update previous value
+			(*state)["previousExpressionValues"][index] = expressionIsTrue
+		}
+	}
+
+	return nil
+
 }

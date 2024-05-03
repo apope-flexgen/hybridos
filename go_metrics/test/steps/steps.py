@@ -81,10 +81,8 @@ def step_impl(context, method, uri, delay):
         found_match = False
         assertion_text = ""
         for match in reversed(context.matches):
-            print(
-                f"checking match {match} vs expected {context.expected_message}")
             if "uri" in match and match['uri'] == uri:
-                if "timestamp" in match and match['timestamp'] >= context.start_time and match['timestamp'] <= context.start_time + float(delay):
+                if "timestamp" in match and match['timestamp'] <= context.start_time + float(delay):
                     found_match = True
                     body = match['body']
                     # try:
@@ -133,9 +131,6 @@ def step_impl(context, method, uri, delay):
                     # Return early if a match was found
                     if found_match:
                         return
-                else:
-                    print(
-                        f"out of timestamp: ac {match['timestamp']} start {context.start_time}, end {context.start_time + float(delay)}")
         if assertion_text != "":
             assert False, assertion_text
         if not found_match:

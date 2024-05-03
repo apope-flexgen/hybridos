@@ -12,7 +12,10 @@
             "type": "bool", 
             "outputs": "output1",
             "expression": "input",
-            "alert": true
+            "alert": true,
+            "messages": [
+                {"input": "something"}
+            ]
         },
         {
             "id": "output2",

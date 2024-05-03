@@ -48,9 +48,12 @@ func addAlertingAttributesToOutput(outputVar string, clothedOutputVal *map[strin
 		}
 	}
 
-	detailsList, ok := OutputScope[outputVar+"@alertDetails"]
-	if !ok {
-		return true, fmt.Errorf("alert does not have a details list. There is an error in the code")
+	// messages and timestamps are separated but stored at the same index. Make sure both lists match up
+	// An empty list is acceptable and should be sent out if no message/timestamp pairs exist
+	messagesList, messagesOk := OutputScope[outputVar+"@activeMessages"]
+	timestampsList, timestampsOk := OutputScope[outputVar+"@activeTimestamps"]
+	if !messagesOk || !timestampsOk || len(messagesList) != len(timestampsList) {
+		return true, fmt.Errorf("issue with alert details list. There is an error in the code")
 	} else {
 		// Create an array of all the trigger times for the alert.
 		// This tracks separate timestamps for OR'd conditions so we know
@@ -58,9 +61,10 @@ func addAlertingAttributesToOutput(outputVar string, clothedOutputVal *map[strin
 		// It is not a history of the alert
 		var details []map[string]interface{}
 		details = make([]map[string]interface{}, 0)
-		for _, triggerTime := range detailsList {
-			details = append(details, map[string]interface{}{"timestamp": triggerTime.s})
+		for index, activeMessage := range messagesList {
+			details = append(details, map[string]interface{}{"message": activeMessage.s, "timestamp": timestampsList[index].s})
 		}
+		// We still want to send an empty array if no entries are present
 		(*clothedOutputVal)["details"] = details
 	}
 	outputScopeMutex.RUnlock()
