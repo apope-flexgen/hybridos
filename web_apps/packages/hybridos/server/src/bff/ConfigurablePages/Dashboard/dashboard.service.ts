@@ -115,6 +115,7 @@ export class DashboardService {
   private parseSiteDiagramConfig = (data): SiteDiagramResponse => {
     const parsedData: SiteDiagramResponse = {
       id: data?.root.id,
+      asset_type: data?.root.asset_type,
       children: data?.root.children
     };
 

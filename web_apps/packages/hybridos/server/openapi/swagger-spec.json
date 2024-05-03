@@ -4596,7 +4596,11 @@
 				"properties": {
 					"id": {
 						"type": "string",
-						"description": "ID of the asset as specified in the site diagram"
+						"description": "ID of the asset, as specified in the site diagram"
+					},
+					"asset_type": {
+						"type": "string",
+						"description": "Asset type, as specified in the site diagram"
 					},
 					"children": {
 						"description": "Children of the asset, determined from the site diagram",
@@ -4608,6 +4612,7 @@
 				},
 				"required": [
 					"id",
+					"asset_type",
 					"children"
 				]
 			},

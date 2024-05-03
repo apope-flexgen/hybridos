@@ -1,15 +1,18 @@
 import { CardContainer, ThemeType } from '@flexgen/storybook';
-import { dia, shapes, layout } from '@joint/plus';
 import {
-  useEffect, useState, useRef,
+  useEffect, useState,
 } from 'react';
-
+import ReactFlow, {
+  Edge, Node, useEdgesState, useNodesState,
+} from 'reactflow';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
+import AssetNode from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/Components/AssetNode';
+import { generateDiagramNodes, getLayoutElements } from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.helpers';
 import { SITE_DIAGRAM_URL } from 'src/pages/ConfigurablePages/Dashboard/dashboard.constants';
 import { useTheme } from 'styled-components';
-import { addItemToGraph } from './diagramDashboard.helpers';
-import { canvasSx, cardContainerSx } from './diagramDashboard.styles';
+import { cardContainerSx } from './diagramDashboard.styles';
 import { DiagramItem } from './diagramDashboard.types';
+import 'reactflow/dist/style.css';
 
 /**
  * A Site Diagram Dashboard view, the 3rd option from the Dashboard view.
@@ -20,94 +23,46 @@ import { DiagramItem } from './diagramDashboard.types';
  * @returns DiagramDashboard Component
  */
 const DiagramDashboard = () => {
-  const theme = useTheme() as ThemeType;
-  const canvasRef = useRef(null);
   const [diagramData, setDiagramData] = useState<DiagramItem>();
-  const axiosInstance = useAxiosWebUIInstance();
+  const [nodes, setNodes] = useNodesState<Node[]>([]);
+  const [edges, setEdges] = useEdgesState<Edge[]>([]);
 
-  // Fetch site diagram data
+  const axiosInstance = useAxiosWebUIInstance();
+  const theme = useTheme() as ThemeType;
+
+  const nodeTypes = {
+    assetNode: AssetNode,
+  };
+
   useEffect(() => {
     axiosInstance.get(SITE_DIAGRAM_URL).then((res) => {
       setDiagramData(res.data);
     });
   }, [axiosInstance]);
 
-  /**
-   * Process diagram data to create diagram nodes
-   *
-   * 1. Instantiate graph, paper, layout
-   * 2. Run layout of tree to determine dimensions
-   * 3. Manually position of first graph element
-   * 4. Rerun final layout & set paper dimensions
-   * 5. Create event listener for paper to resize on window resize
-   */
-  // process diagram data to create diagram nodes
   useEffect(() => {
-    if (!diagramData || !canvasRef.current) {
-      return () => {};
-    }
-    const canvas = canvasRef.current as HTMLElement;
-    // recursively add all diagram items to graph
-    const graph = new dia.Graph();
-    addItemToGraph(diagramData, graph, theme);
-
-    // instantiate paper
-    const paper = new dia.Paper({
-      model: graph,
-      sorting: dia.Paper.sorting.APPROX,
-      cellViewNamespace: shapes,
-      interactive: false,
-    });
-
-    // Add paper to canvas
-    canvas.appendChild(paper.el);
-    const treeLayout = new layout.TreeLayout({
-      graph,
-      parentGap: 50,
-      siblingGap: 20,
-      direction: 'B',
-    });
-
-    // initially run layout
-    treeLayout.layout();
-
-    // Get the bounding box of all elements in the graph
-    const graphBoundingBox = graph.getBBox();
-    const graphDims = {
-      width: (graphBoundingBox?.width || 0),
-      height: (graphBoundingBox?.height || 0),
-    };
-
-    // force first graph element location
-    const root = graph.getElements()[0];
-    root.position(graphDims.width * 0.5 - (root.getBBox().width / 2), 0);
-    // rerun layout
-    treeLayout.layout();
-
-    const handleResize = () => {
-      if (!paper || !canvas) return;
-      const ratio = (Math.min(canvas.clientWidth / (graphDims.width), canvas.clientHeight / (graphDims.height)));
-      paper.setDimensions(graphDims.width * ratio, graphDims.height * ratio);
-      paper.scale(ratio, ratio);
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      paper.remove();
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [diagramData, theme]);
+    const { nodes: diagramNodes, edges: diagramEdges } = generateDiagramNodes(theme, diagramData);
+    const layoutElements = getLayoutElements(diagramNodes, diagramEdges);
+    setNodes(layoutElements.nodes);
+    setEdges(layoutElements.edges);
+  }, [diagramData]);
 
   return (
     <CardContainer
+      id="diagram-container"
       boxShadow={false}
       variant="rounded"
       direction="column"
       styleOverrides={cardContainerSx}
     >
-      <div ref={canvasRef} style={canvasSx} />
+      <ReactFlow
+        id="diagram-component"
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={nodeTypes}
+        fitView
+        proOptions={{ hideAttribution: true }}
+      />
     </CardContainer>
   );
 };

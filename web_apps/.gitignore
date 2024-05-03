@@ -73,8 +73,6 @@ web_modules/
 
 # Output of 'npm pack'
 *.tgz
-# But allow joint plus tgz
-!lib/joint-plus/joint-plus.tgz
 
 # Yarn Integrity file
 .yarn-integrity

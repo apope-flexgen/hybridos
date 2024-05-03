@@ -18,7 +18,7 @@
     "timezone": "America/Chicago",
     "tracker": false,
     "alerting": true,
-    "site_diagram": false,
+    "site_diagram": true,
     "units": {
         "VA": "M",
         "VAR": "M",

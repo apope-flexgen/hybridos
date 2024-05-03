@@ -10,6 +10,13 @@ export class SiteDiagramResponse implements SiteDiagramNode {
     @IsOptional()
     id?: string
 
+    @ApiProperty({
+        description: siteDiagramDescriptions.asset_type
+    })
+    @IsString()
+    @IsOptional()
+    asset_type?: string
+
     @ApiProperty({ 
         description: siteDiagramDescriptions.children 
     })
