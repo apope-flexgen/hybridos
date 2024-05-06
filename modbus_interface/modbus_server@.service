@@ -5,7 +5,7 @@ After=fims.service
 
 [Service]
 User=root
-ExecStart=/usr/local/bin/modbus_server /usr/local/etc/config/modbus_server/%I
+ExecStart=/usr/local/bin/modbus_server /usr/local/etc/config/modbus_server/%i
 Restart=always
 RestartSec=10s
 

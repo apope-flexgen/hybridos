@@ -5,7 +5,7 @@ After=fims.service
 
 [Service]
 User=hybridos
-ExecStart=/usr/local/bin/modbus_client /usr/local/etc/config/modbus_client/%I
+ExecStart=/usr/local/bin/modbus_client /usr/local/etc/config/modbus_client/%i
 Restart=always
 RestartSec=10s
 

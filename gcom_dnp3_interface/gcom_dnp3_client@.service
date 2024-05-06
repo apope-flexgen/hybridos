@@ -5,7 +5,7 @@ After=fims.service
 
 [Service]
 User=hybridos
-ExecStart=/usr/local/bin/gcom_dnp3_client /usr/local/etc/config/gcom_dnp3_client/%I
+ExecStart=/usr/local/bin/gcom_dnp3_client /usr/local/etc/config/gcom_dnp3_client/%i
 Restart=always
 RestartSec=10s
 
