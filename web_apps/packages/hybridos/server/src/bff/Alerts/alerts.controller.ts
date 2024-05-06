@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     Param,
     Post,
@@ -20,9 +21,11 @@ import { AlertConfigurationsResponse } from './responses/alertConfig.response'
 import { AlertsPostResponse } from './responses/alertPost.response'
 import { DefaultApiError } from 'src/exceptions/defaultResponse.exception'
 import { AlertsRequest } from './dtos/alerts.dto';
+import { OrganizationsDTO } from './dtos/organizations.dto'
 import { AlertConfigDTO } from './dtos/alertConfig.dto';
 import { UserFromAccessToken } from 'src/decorators/userFromAccessToken.decorator';
 import { User } from 'src/users/dtos/user.dto';
+import { OrganizationsResponse } from './responses/organizations.response';
 
 @ApiTags('alerts')
 @ApiSecurity('bearerAuth')
@@ -63,6 +66,31 @@ export class AlertsController {
     ): Promise<AlertsPostResponse> {
         const addAlertConfigResponse = await this.alertsService.addNewConfig(alertConfigDTO, user.username);
         return addAlertConfigResponse;
+    }
+
+    
+    @Post('organizations')
+    @ApiOkResponse({ type: ResolveAlertResponse })
+    async editOrganizations(
+        @Body() newOrganizations: OrganizationsDTO,
+        @UserFromAccessToken() user: User,
+    ): Promise<ResolveAlertResponse> {
+        return await this.alertsService.editOrganizations(newOrganizations, user.username);
+    }
+
+    @Get('organizations')
+    @ApiOkResponse({ type: OrganizationsResponse })
+    async getOrganizations(): Promise<OrganizationsResponse> {
+        return await this.alertsService.getOrganizations();
+    }
+
+    @Delete('organizations/:id')
+    @ApiOkResponse({ type: ResolveAlertResponse })
+    async deleteOrganization(
+        @Param('id') id: string,
+        @UserFromAccessToken() user: User,
+    ): Promise<ResolveAlertResponse> {
+        return await this.alertsService.deleteOrganization(id, user.username);
     }
 
     @Post(':id')

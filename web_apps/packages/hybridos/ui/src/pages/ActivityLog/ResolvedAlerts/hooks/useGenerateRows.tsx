@@ -1,6 +1,9 @@
 import {
   Box, ColorType, Typography,
 } from '@flexgen/storybook';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import timezone from 'dayjs/plugin/timezone';
 import { useState } from 'react';
 import SeverityIndicator from 'src/pages/ActivityLog/Alerts/SeverityIndicator/SeverityIndicator';
 import { expandedRowBoxSx, expandedRowContentSx } from 'src/pages/ActivityLog/Alerts/alerts.styles';
@@ -10,6 +13,8 @@ import { ResolvedAlertObject, ResolvedAlertRow } from 'src/pages/ActivityLog/act
 
 const useGenerateRows = () => {
   const [results, setResults] = useState<ResolvedAlertRow[]>([]);
+  dayjs.extend(timezone);
+  dayjs.extend(advancedFormat);
 
   const generateSeverityComponent = (severity: number) => <SeverityIndicator severity={severity} />;
 
@@ -49,10 +54,10 @@ const useGenerateRows = () => {
     const returnData: ResolvedAlertRow[] = alertsData.map((alert) => ({
       id: alert.id,
       severity: generateSeverityComponent(alert.severity),
-      organization: alert.organization,
-      alert: alert.details[0].message,
-      triggerTime: alert.trigger_time,
-      resolutionTime: alert.resolution_time,
+      organization: alert.organization || '-',
+      alert: alert.details[0]?.message || '-',
+      triggerTime: alert.trigger_time ? dayjs(alert.trigger_time).format('YYYY-MM-DD HH:mm:ss z') : '-',
+      resolutionTime: alert.resolution_time ? dayjs(alert.resolution_time).format('YYYY-MM-DD HH:mm:ss z') : '-',
       notes: generateNotesButton(alert),
       expandRowContent: generateExpandRowContent(alert.details, alert.title),
       rowHoverColor: rowHoverColorMapping[alert.severity],

@@ -39,6 +39,22 @@ const AlertManagementTable = ({
     setCurrentAlert(alert);
   };
 
+  const getInitialData = async () => {
+    setIsLoading(true);
+    const alertConfigurationURL = '/alerts/configuration';
+
+    axiosInstance.get(alertConfigurationURL).then((res) => {
+      const configWithTemplates = res.data.data.map(
+        (alertConfig: AlertConfigurationObject) => ({
+          ...alertConfig,
+          templates: res.data.templates || [],
+        }),
+      );
+      setAlertConfigurationData(configWithTemplates);
+      setIsLoading(false);
+    });
+  };
+
   const disableAlert = (value: boolean, alert: AlertConfigurationObject) => {
     const alertConfigurationURL = `/alerts/configuration/${alert.id}`;
     const disableAlertMessage = { ...alert, enabled: value };
@@ -49,10 +65,15 @@ const AlertManagementTable = ({
           'success',
           'Alert successfully updated',
         );
+        const dataWithEdit = alertConfigurationData.map((config) => {
+          if (config.id === alert.id) return disableAlertMessage;
+          return config;
+        });
+        setAlertConfigurationData(dataWithEdit);
       } else {
         notifCtx?.notif(
           'error',
-          'Error udpating alert',
+          'Error updating alert',
         );
       }
     });
@@ -62,16 +83,6 @@ const AlertManagementTable = ({
     results,
     generateRowsData,
   } = useGenerateAlertManagementRows(disableAlert, editAlert, duplicateAlert);
-
-  const getInitialData = async () => {
-    setIsLoading(true);
-    const alertConfigurationURL = '/alerts/configuration';
-
-    axiosInstance.get(alertConfigurationURL).then((res) => {
-      setAlertConfigurationData(res.data.data);
-      setIsLoading(false);
-    });
-  };
 
   // initial GET request to populate data for page
   useEffect(() => {

@@ -1,10 +1,11 @@
 import {
+  Divider,
   NumericInput,
-  Switch,
 
   Typography,
 } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
+import { alertManagementHelperText } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import {
   templateRowTitleAndDescriptionSx,
   templateFieldsBoxSx,
@@ -40,6 +41,7 @@ const SequentialFields = ({
         />
       </Box>
     </Box>
+    <Divider variant="fullWidth" orientation="horizontal" />
     <Box sx={formRowSx}>
       <Box sx={templateRowTitleAndDescriptionSx}>
         <Typography text="To" variant="bodyL" />
@@ -54,15 +56,18 @@ const SequentialFields = ({
         />
       </Box>
     </Box>
+    <Divider variant="fullWidth" orientation="horizontal" />
     <Box sx={formRowSx}>
       <Box sx={templateRowTitleAndDescriptionSx}>
-        <Typography text="Pad Start" variant="bodyL" />
-        <Typography text="If checked, 1-9 will be prefixed with a leading zero" variant="bodyS" />
+        <Typography text="Minimum Width" variant="bodyL" />
+        <Typography text={alertManagementHelperText.padStart} variant="bodyS" />
+        <Typography text={alertManagementHelperText.padStartExample1} variant="bodySBold" />
       </Box>
       <Box sx={templateFieldsBoxSx}>
-        <Switch
-          value={template.separateAlerts || false}
-          onChange={(value) => handleTemplateFieldChange('separateAlerts', value || false)}
+        <NumericInput
+          validationRegEx="positiveIntegers"
+          value={template.minWidth?.toString() || '1'}
+          onChange={(e) => handleTemplateFieldChange('minWidth', Number(e.target.value))}
         />
       </Box>
     </Box>

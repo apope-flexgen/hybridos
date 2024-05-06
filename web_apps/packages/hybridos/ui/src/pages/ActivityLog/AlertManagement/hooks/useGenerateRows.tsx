@@ -1,6 +1,9 @@
 import {
   Box, Chip, IconButton, Switch, Tooltip,
 } from '@flexgen/storybook';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import timezone from 'dayjs/plugin/timezone';
 
 import { useState } from 'react';
 import { actionsBoxSx } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
@@ -13,6 +16,8 @@ const useGenerateAlertManagementRows = (
   duplicateAlert: (alert: AlertConfigurationObject) => void,
 ) => {
   const [results, setResults] = useState<AlertManagementRow[]>([]);
+  dayjs.extend(timezone);
+  dayjs.extend(advancedFormat);
 
   const generateSeverityComponent = (
     severity: number | string,
@@ -46,7 +51,7 @@ const useGenerateAlertManagementRows = (
       organization: alert.organization ? <Chip size="small" borderStyle="rounded" variant="filled" color="primary" label={alert.organization} /> : '-',
       severity: alert.severity !== undefined ? generateSeverityComponent(alert.severity) : '-',
       deadline: alert.deadline ? `${alert.deadline.value} ${alert.deadline.unit}${Number(alert.deadline.value) > 1 ? 's' : ''}` : '-',
-      last_triggered: alert.last_trigger_time || '',
+      last_triggered: alert.last_trigger_time ? dayjs(alert.last_trigger_time).format('YYYY-MM-DD HH:mm:ss z') : '',
       actions: generateActions(alert),
     }));
 

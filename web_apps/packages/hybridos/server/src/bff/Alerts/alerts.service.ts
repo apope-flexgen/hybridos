@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ActiveAlertsResponse, ResolveAlertResponse, ResolvedAlertsResponse } from './responses/alerts.response'
-import { AlertConfiguration, AlertConfigurationsResponse, Alias, Comparator, Deadline, Duration, Expression } from './responses/alertConfig.response'
+import { AlertConfiguration, AlertConfigurationsResponse, Alias, Comparator, Deadline, Duration, Expression, Template } from './responses/alertConfig.response'
 import { AlertsRequest } from './dtos/alerts.dto'
 import {
     FimsMsg,
@@ -11,6 +11,8 @@ import { Observable, map } from 'rxjs'
 import { AlertConfigDTO } from './dtos/alertConfig.dto'
 import { AlertsPostResponse } from './responses/alertPost.response'
 import { AlertURIs, AlertConditionalsMapping, LogicalOperators } from './alerts.constants';
+import { OrganizationsDTO } from './dtos/organizations.dto';
+import { Organization, OrganizationsResponse } from './responses/organizations.response'
 
 @Injectable()
 export class AlertsService {
@@ -63,7 +65,7 @@ export class AlertsService {
             const andOrRegEx = /[\||\&&]+/g;
             const listOfConditions = expression.split(andOrRegEx);
             const listOfConnectionOperators: ("or" | "and")[] = [...expression.matchAll(andOrRegEx)].map((match) => match[0] === '||' ? 'or' : 'and');
-    
+        
             const conditions: Expression[] = listOfConditions.map((condition, index) => {
                 let expressionWithoutDuration = condition
                 let durationSeconds = ''
@@ -94,7 +96,9 @@ export class AlertsService {
                 }
     
                 let connectionOperator = index !== 0 ? listOfConnectionOperators[index - 1] : null;
-    
+                
+                const message = messages.find((message) => message[condition.trim()] !== undefined);
+
                 const mappedCondition: Expression = {
                     index,
                     connectionOperator,
@@ -102,7 +106,7 @@ export class AlertsService {
                     conditional,
                     comparator2, 
                     duration: durationSeconds ? this.convertDurationToProperUnit(durationSeconds) : undefined,
-                    message: messages ? messages[expression] : ''
+                    message: message ? message[condition.trim()] : ''
                 }
     
                 return mappedCondition;
@@ -150,12 +154,6 @@ export class AlertsService {
             expressionString += newExpression
         })
 
-        // TODO: remove in later PR, just used for QA
-        console.log('GO METRICS EXPRESSION:')
-        console.log(expressionString.trim())
-        console.log('MESSAGES:')
-        console.log(messages)
-
         return {expression: expressionString.trim(), messages};
     }
 
@@ -184,7 +182,6 @@ export class AlertsService {
                         type: aliasObject.type === 'float' || aliasObject.type === 'int' ? 'number' : aliasObject.type
                     })) 
                     : alert.aliases,
-                templates: alert.templates?.length > 0 ? alert.templates.map((template, index) =>({...template, id: index})): alert.templates,
             }))
         return alertConfigurations;
     }
@@ -204,6 +201,7 @@ export class AlertsService {
         const newAlertConfig = {
             title, deadline: deadlineInMinutes, messages, sites: [], severity, organization, templates, expression, aliases: aliasesWithProperFormatting, enabled
         }
+
         const postNewAlertResponse = await this.fimsService.send({
             method: 'post',
             uri:  AlertURIs.ALERT_CONFIGS,
@@ -245,9 +243,10 @@ export class AlertsService {
 
     async alertConfigurations(): Promise<AlertConfigurationsResponse> {
         const fimsResponse: FimsMsg = await this.fimsService.get(AlertURIs.ALERT_CONFIGS)
-        const data = this.parseAlertConfigurationsFromEvents(fimsResponse.body)
+        const data = this.parseAlertConfigurationsFromEvents(fimsResponse.body.rows || [])
+        const templates: Template[] = fimsResponse.body.templates
 
-        return { data }
+        return { data, templates }
     }
 
     getAlertingObservable = (): Observable<any> => {
@@ -286,5 +285,35 @@ export class AlertsService {
         const dataFromFims: FimsMsg = await this.fimsService.get(AlertURIs.ALERT_INSTANCES, filters);
         const { rows, count } = dataFromFims.body;
         return { data: rows, count };
+    }
+
+    async editOrganizations(newOrganizations: OrganizationsDTO, username: string): Promise<ResolveAlertResponse> {
+        const editOrganizationsResponse = await this.fimsService.send({
+            method: 'post',
+            uri: `${AlertURIs.ALERT_INSTANCES}/organizations`,
+            replyto: '/web_server/alerts/edit_organizations',
+            body: JSON.stringify({ rows: newOrganizations.organizations }),
+            username: username,
+        })
+
+        return editOrganizationsResponse.body as ResolveAlertResponse;
+    }
+
+    async getOrganizations(): Promise<OrganizationsResponse> {
+        const getOrganizationsResponse = await this.fimsService.get(`${AlertURIs.ALERT_INSTANCES}/organizations`)
+        const organizations = getOrganizationsResponse.body as Organization[];
+
+        return { data: organizations };
+    }
+
+    async deleteOrganization(id: string, username: string): Promise<ResolveAlertResponse> {
+        const deleteOrganizationResponse = await this.fimsService.send({
+            method: 'del',
+            uri: `${AlertURIs.ALERT_INSTANCES}/organizations`,
+            replyto: '/web_server/alerts/delete_organizations',
+            body: { id },
+            username: username,
+        })
+        return deleteOrganizationResponse.body as ResolveAlertResponse;
     }
 }

@@ -1,11 +1,12 @@
 import {
   Accordion,
+
   MuiButton,
 } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import { useState } from 'react';
 import ListFields from 'src/pages/ActivityLog/AlertManagement/AlertForm/Templates/TemplateRow/ListFields';
-import SeparateAlerts from 'src/pages/ActivityLog/AlertManagement/AlertForm/Templates/TemplateRow/SeparateAlerts';
+
 import SequentialFields from 'src/pages/ActivityLog/AlertManagement/AlertForm/Templates/TemplateRow/SequentialFields';
 import TemplateInfo from 'src/pages/ActivityLog/AlertManagement/AlertForm/Templates/TemplateRow/TemplateInfo';
 
@@ -62,15 +63,16 @@ const TemplateRow = ({
             <ListFields
               template={template}
               handleTemplateFieldChange={handleTemplateFieldChange}
+              range={template.type === 'range'}
             />
           )
       }
-        <SeparateAlerts
+        {/*         <SeparateAlerts
           template={template}
           handleTemplateFieldChange={handleTemplateFieldChange}
-        />
+        /> */}
         <Box sx={rightAlignedButton}>
-          <MuiButton variant="text" startIcon="Close" label="Remove template" onClick={() => removeRow(template.id)} />
+          <MuiButton variant="text" startIcon="Close" color="error" label="Delete template" onClick={() => removeRow(template.id)} />
         </Box>
       </Box>
     </Accordion>

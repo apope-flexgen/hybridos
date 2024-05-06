@@ -28,17 +28,21 @@ export const templateRowTitleAndDescriptionSx = {
 export const formRowContentsSx = {
   display: 'flex', width: '75%', gap: '16px', alignItems: 'center', minHeight: '60px',
 };
+
+export const formRowContentVerticalSx = {
+  display: 'flex', width: '75%', gap: '8px', flexDirection: 'column', alignItems: 'flex-start',
+};
 export const templateRowBoxSx = { display: 'flex', alignItems: 'flex-start', gap: '16px' };
 
 export const accordionRowsSx = { display: 'flex', flexDirection: 'column', gap: '0px' };
 export const templateFieldsBoxSx = {
-  display: 'flex', width: '75%', flexDirection: 'column', gap: '12px', alignItems: 'flex-start',
+  display: 'flex', flexDirection: 'column', width: '75%', gap: '12px', alignItems: 'flex-start',
 };
 
 export const templateSwitchSx = { display: 'flex', alignItems: 'center', gap: '4px' };
 
 export const ruleBlockBoxSx = (theme: ThemeType) => ({
-  display: 'flex', padding: '24px', flexDirection: 'column', gap: '24px', backgroundColor: theme.fgd.primary.main_8p, width: '80%',
+  display: 'flex', padding: '24px', flexDirection: 'column', gap: '24px', backgroundColor: theme.fgd.primary.main_8p,
 });
 export const setWidth = (width: number | string) => ({
   width: typeof width === 'string' ? width : `${width}px`,
@@ -58,3 +62,6 @@ export const saveDisabledErrorBoxSx = {
 };
 
 export const rightAlignedButton = { display: 'flex', width: '100%', justifyContent: 'flex-end' };
+export const orgRowSx = {
+  display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start', width: '100%', maxHeight: '250px', overflowY: 'auto',
+};

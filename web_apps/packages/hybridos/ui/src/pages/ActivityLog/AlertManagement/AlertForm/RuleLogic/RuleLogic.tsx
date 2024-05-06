@@ -4,6 +4,7 @@ import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import RuleBlock from 'src/pages/ActivityLog/AlertManagement/AlertForm/RuleLogic/RuleBlock/RuleBlock';
 import { useAlertFormContext } from 'src/pages/ActivityLog/AlertManagement/AlertForm/contexts/AlertFormContext';
 
+import { alertManagementHelperText } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import {
   formRowSx, formRowTitleAndDescriptionSx, formRowContentsSx, externalFormRowBoxSx,
 } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
@@ -17,7 +18,7 @@ const RuleLogic = () => {
       <Box sx={formRowSx}>
         <Box sx={formRowTitleAndDescriptionSx}>
           <Typography text="Rule Logic" variant="bodyMBold" />
-          <Typography text="Settings that will trigger this alert" variant="bodyM" />
+          <Typography text={alertManagementHelperText.ruleLogic} variant="bodyM" />
         </Box>
         <Box sx={formRowContentsSx}>
           <RuleBlock

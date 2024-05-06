@@ -1,8 +1,10 @@
 import {
+  Divider,
   Switch,
   Typography,
 } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
+import { alertManagementHelperText } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import {
   templateRowTitleAndDescriptionSx,
   templateFieldsBoxSx,
@@ -23,18 +25,21 @@ const SeparateAlerts = ({
   handleTemplateFieldChange,
   template,
 }: SeparateAlertsProps) => (
-  <Box sx={formRowSx}>
-    <Box sx={templateRowTitleAndDescriptionSx}>
-      <Typography text="Separate Alerts" variant="bodyL" />
-      <Typography text="If checked, you will receive a bespoke notification when conditions are met for each replacement value." variant="bodyS" />
+  <>
+    <Divider variant="fullWidth" orientation="horizontal" />
+    <Box sx={formRowSx}>
+      <Box sx={templateRowTitleAndDescriptionSx}>
+        <Typography text="Separate Alerts" variant="bodyL" />
+        <Typography text={alertManagementHelperText.templateSeparateAlerts} variant="bodyS" />
+      </Box>
+      <Box sx={templateFieldsBoxSx}>
+        <Switch
+          value={template.padStart || false}
+          onChange={(value) => handleTemplateFieldChange('padStart', value || false)}
+        />
+      </Box>
     </Box>
-    <Box sx={templateFieldsBoxSx}>
-      <Switch
-        value={template.padStart || false}
-        onChange={(value) => handleTemplateFieldChange('padStart', value || false)}
-      />
-    </Box>
-  </Box>
+  </>
 );
 
 export default SeparateAlerts;

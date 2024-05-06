@@ -4,7 +4,6 @@ import DataTable from '@flexgen/storybook/dist/components/DataDisplay/DataTable'
 import React, {
   ChangeEvent, useCallback, useEffect, useState,
 } from 'react';
-import { useAppContext } from 'src/App/App';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import { dataTableBox } from 'src/pages/ActivityLog/Alerts/alerts.styles';
 import useGenerateRows from 'src/pages/ActivityLog/ResolvedAlerts/hooks/useGenerateRows';
@@ -25,7 +24,6 @@ const ResolvedAlertsTable = ({
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
-  const { product } = useAppContext();
   const { results, generateRowsData } = useGenerateRows();
   const axiosInstance = useAxiosWebUIInstance();
 
@@ -86,7 +84,7 @@ const ResolvedAlertsTable = ({
     <Box sx={dataTableBox} id="resolved-alerts-table">
       <DataTable
         rowsData={results}
-        columns={resolvedAlertsColumns(product || '')}
+        columns={resolvedAlertsColumns()}
         dense
         headerColor="secondary"
         paperSx={{ boxShadow: 'none', maxHeight: '90%' }}

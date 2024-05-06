@@ -2273,6 +2273,131 @@
 				]
 			}
 		},
+		"/api/alerts/organizations": {
+			"post": {
+				"operationId": "editOrganizations",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OrganizationsDTO"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ResolveAlertResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"alerts"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			},
+			"get": {
+				"operationId": "getOrganizations",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganizationsResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"alerts"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
+		"/api/alerts/organizations/{id}": {
+			"delete": {
+				"operationId": "deleteOrganization",
+				"parameters": [
+					{
+						"name": "id",
+						"required": true,
+						"in": "path",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ResolveAlertResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"alerts"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
 		"/api/alerts/{id}": {
 			"post": {
 				"operationId": "resolveAlert",
@@ -4363,7 +4488,7 @@
 						}
 					},
 					"templates": {
-						"description": "An array of objects containing the templated wildcards and their corresponding definitions used by this alert",
+						"description": "An array of objects containing the templated wildcards and their corresponding definitions",
 						"type": "array",
 						"items": {
 							"type": "string"
@@ -4391,6 +4516,10 @@
 					"conditions"
 				]
 			},
+			"Template": {
+				"type": "object",
+				"properties": {}
+			},
 			"AlertConfigurationsResponse": {
 				"type": "object",
 				"properties": {
@@ -4400,10 +4529,18 @@
 						"items": {
 							"$ref": "#/components/schemas/AlertConfiguration"
 						}
+					},
+					"templates": {
+						"description": "An array of objects containing the templated wildcards and their corresponding definitions",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Template"
+						}
 					}
 				},
 				"required": [
-					"data"
+					"data",
+					"templates"
 				]
 			},
 			"AlertConfigDTO": {
@@ -4452,7 +4589,7 @@
 						}
 					},
 					"templates": {
-						"description": "An array of objects containing the templated wildcards and their corresponding definitions used by this alert",
+						"description": "An array of objects containing the templated wildcards and their corresponding definitions",
 						"type": "array",
 						"items": {
 							"type": "string"
@@ -4489,6 +4626,21 @@
 					"message"
 				]
 			},
+			"OrganizationsDTO": {
+				"type": "object",
+				"properties": {
+					"organizations": {
+						"description": "The global list of possible organizations that a user has access to",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"required": [
+					"organizations"
+				]
+			},
 			"ResolveAlertResponse": {
 				"type": "object",
 				"properties": {
@@ -4504,6 +4656,21 @@
 				"required": [
 					"success",
 					"message"
+				]
+			},
+			"OrganizationsResponse": {
+				"type": "object",
+				"properties": {
+					"data": {
+						"description": "The global list of possible organizations that a user has access to",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"required": [
+					"data"
 				]
 			},
 			"ResolvedAlert": {

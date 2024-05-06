@@ -3,6 +3,9 @@ import {
   Chip, ColorType, Countdown, Typography,
 } from '@flexgen/storybook';
 import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import timezone from 'dayjs/plugin/timezone';
+
 import { useState } from 'react';
 import ResolveAlertButton from 'src/pages/ActivityLog/Alerts/ResolveAlertButton/ResolveAlertButton';
 import SeverityIndicator from 'src/pages/ActivityLog/Alerts/SeverityIndicator/SeverityIndicator';
@@ -11,6 +14,8 @@ import { ActiveAlertObject, ActiveAlertRow } from 'src/pages/ActivityLog/activit
 
 const useGenerateActiveAlertRows = () => {
   const [results, setResults] = useState<ActiveAlertRow[]>([]);
+  dayjs.extend(timezone);
+  dayjs.extend(advancedFormat);
 
   const generateSeverityComponent = (severity: number) => <SeverityIndicator severity={severity} />;
 
@@ -61,15 +66,16 @@ const useGenerateActiveAlertRows = () => {
   const generateExpandRowContent = (
     instances: { message: string, timestamp: string }[],
     alertTitle: string,
+    alertStatus: string,
   ) => (
     <Box sx={expandedRowBoxSx}>
       {
           instances.map((instance) => (
             <Box sx={expandedRowContentSx}>
-              <Typography text={instance.timestamp} variant="bodySBold" />
+              <Typography text={dayjs(instance.timestamp).format('YYYY-MM-DD HH:mm:ss z')} variant="bodySBold" />
               <Box sx={{ display: 'flex', gap: '2px' }}>
                 <Typography text={alertTitle ? `${alertTitle} -` : ''} variant="bodySBold" />
-                <Typography text={instance.message} variant="bodyS" />
+                <Typography text={`${instance.message} (${alertStatus})`} variant="bodyS" />
               </Box>
             </Box>
           ))
@@ -95,10 +101,10 @@ const useGenerateActiveAlertRows = () => {
         severity: generateSeverityComponent(alert.severity),
         organization: alert.organization,
         alert: alert.details[0].message,
-        timestamp: alert.trigger_time,
+        timestamp: dayjs(alert.trigger_time).format('YYYY-MM-DD HH:mm:ss z'),
         deadline: generateDeadline(alert.trigger_time, alert.deadline),
         resolve: generateResolveButton(alert),
-        expandRowContent: generateExpandRowContent(alert.details, alert.title),
+        expandRowContent: generateExpandRowContent(alert.details, alert.title, alert.status),
         rowHoverColor: rowHoverColorMapping[alert.severity],
       }));
 

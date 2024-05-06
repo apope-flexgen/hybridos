@@ -2,14 +2,14 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString } from 'class-validator'
 import { AlertsDescriptions } from '../alerts.constants'
 
-export interface Template {
-  id: string,
-  type: 'list' | 'sequential',
-  list?: string[],
-  from?: number,
-  to?: number,
-  padStart?: boolean,
-  separateAlerts: boolean,
+export class Template {
+  id: string
+  type: 'list' | 'sequential' | 'range'
+  list?: string[]
+  from?: number
+  to?: number
+  minWidth?: number
+  separateAlerts?: boolean
   token: string
 }
 export interface Alias {
@@ -84,4 +84,7 @@ export class AlertConfigurationsResponse {
   @ApiProperty({ description: AlertsDescriptions.data, type: AlertConfiguration, isArray: true })
   @IsArray()
   data: AlertConfiguration[]
+  @ApiProperty({ description: AlertsDescriptions.templates, type: Template, isArray: true })
+  @IsArray()
+  templates: Template[]
 }

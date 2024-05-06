@@ -6,7 +6,7 @@ import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import { useState, useEffect } from 'react';
 import AliasRow from 'src/pages/ActivityLog/AlertManagement/AlertForm/Aliases/AliasRow/AliasRow';
 import { useAlertFormContext } from 'src/pages/ActivityLog/AlertManagement/AlertForm/contexts/AlertFormContext';
-import { generateInitialAliases } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
+import { generateInitialAliases, alertManagementHelperText } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import {
   formRowSx,
   formRowTitleAndDescriptionSx,
@@ -54,7 +54,7 @@ const Aliases = () => {
         <Box sx={formRowTitleAndDescriptionSx}>
           <Typography text="Aliases" variant="bodyMBold" />
           <Box sx={expressionRowSx}>
-            <Typography text="Aliases to use in your rule logic below" variant="bodyM" />
+            <Typography text={alertManagementHelperText.aliases} variant="bodyM" />
             {/* <Typography text="To configure a templated URI, use a wildcard from the list above to denote where the replacement should occur." variant="bodyM" /> */}
           </Box>
         </Box>

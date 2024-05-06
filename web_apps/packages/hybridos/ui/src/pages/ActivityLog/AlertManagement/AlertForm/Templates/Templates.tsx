@@ -6,8 +6,8 @@ import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import { useState, useEffect } from 'react';
 import TemplateRow from 'src/pages/ActivityLog/AlertManagement/AlertForm/Templates/TemplateRow/TemplateRow';
 import { useAlertFormContext } from 'src/pages/ActivityLog/AlertManagement/AlertForm/contexts/AlertFormContext';
+import { alertManagementHelperText, generateInitialTemplates } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 
-import { generateInitialTemplates } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import {
   formRowSx,
   formRowTitleAndDescriptionSx,
@@ -66,7 +66,7 @@ const Templates = () => {
       <Box sx={formRowSx}>
         <Box sx={formRowTitleAndDescriptionSx}>
           <Typography text="Templates" variant="bodyMBold" />
-          <Typography text="Any templated wildcards to utilize in the aliases below" variant="bodyM" />
+          <Typography text={alertManagementHelperText.templates} variant="bodyM" />
         </Box>
         <Box sx={templateFieldsBoxSx}>
           <Box sx={templateSwitchSx}>

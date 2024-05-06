@@ -1,4 +1,9 @@
 /* eslint-disable max-lines */
+
+export interface Organization {
+  id?: string,
+  name: string,
+}
 export interface Details {
   message: string,
   timestamp: string,
@@ -32,6 +37,7 @@ export interface AlertInstance {
   site?: string,
   resolved: boolean
 }
+
 export interface ActiveAlertObject {
   id: string,
   status: string,
@@ -76,11 +82,11 @@ export interface Alias {
 
 export interface Template {
   id: string,
-  type: 'list' | 'sequential',
+  type: 'list' | 'sequential' | 'range',
   list?: string[],
   from?: number,
   to?: number,
-  padStart?: boolean,
+  minWidth?: number,
   separateAlerts: boolean,
   token: string
 }

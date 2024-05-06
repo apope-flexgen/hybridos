@@ -3,6 +3,7 @@ import {
   TextField,
 } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
+import { alertManagementHelperText } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import { messageBoxSx } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
 import { Expression } from 'src/pages/ActivityLog/activityLog.types';
 
@@ -40,8 +41,8 @@ const MessageRow = ({
         minRows={1}
         maxRows={3}
       />
-      <Typography variant="bodyS" text="An alias placed in braces within the message will be replaced with the actual value incoming from that alias" />
-      <Typography variant="bodyXSBold" text="If your alias were SOC Value, 'SOC reached {SOC Value}%' -> 'SOC reached 90%'" />
+      <Typography variant="bodyS" text={alertManagementHelperText.expressionMessageFormatting} />
+      <Typography variant="bodyXSBold" text={alertManagementHelperText.expressionMessageExample} />
     </Box>
   );
 };

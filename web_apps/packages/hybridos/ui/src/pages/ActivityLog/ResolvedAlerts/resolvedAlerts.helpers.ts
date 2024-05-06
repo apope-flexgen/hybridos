@@ -1,23 +1,21 @@
 import { Column } from '@flexgen/storybook';
-import { FLEET_MANAGER } from 'src/components/BaseApp';
 
 export const formatColumnLabel = (column: string) => column.replace(/_/g, ' ');
 
 export const initialResolvedAlertsFilters = {
   resolvedFilter: true,
-  orgFilter: 'VFakeCo',
   limit: 10,
   page: 0,
   order: -1,
   orderBy: 'resolution_time',
 };
 
-export const resolvedAlertsColumns = (product: string): Column[] => {
+export const resolvedAlertsColumns = (): Column[] => {
   const arrayWithBools = [
     {
       id: 'severity', label: 'Severity',
     },
-    product === FLEET_MANAGER && {
+    {
       id: 'organization', label: 'Organization',
     },
     {
