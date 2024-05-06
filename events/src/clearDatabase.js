@@ -1,10 +1,12 @@
+/* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-console */
 const mongoose = require('mongoose');
 const { Event } = require('./eventsDb');
 const { Alert } = require('./alerts/alertsDb');
-const readline = require('readline');
+const { AlertOrganization } = require('./alerts/alertsOrgDb');
+const { AlertTemplate } = require('./alerts/alertsTemplateDb');
 
-const dbName = "standalone_storage";
+const dbName = 'standalone_storage';
 
 async function clearDatabase() {
     await mongoose.connect(`mongodb://localhost:27017/${dbName}`, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -16,36 +18,48 @@ async function clearDatabase() {
                 console.log("Something didn't work: ", err);
                 reject(false);
             }
-            if (process.env.NODE_ENV !== "test") console.log(`${evt.n} events deleted before ${d}`);
+            if (process.env.NODE_ENV !== 'test') console.log(`${evt.n} events deleted before ${d}`);
             resolve(true);
         });
-    })
+    });
     const alertPromise = new Promise((resolve, reject) => {
         Alert.deleteMany().exec((err, evt) => {
             if (err) {
                 console.log("Something didn't work: ", err);
                 reject(false);
             }
-            if (process.env.NODE_ENV !== "test") console.log(`${evt.n} events deleted before ${d}`);
+            if (process.env.NODE_ENV !== 'test') console.log(`${evt.n} alerts deleted before ${d}`);
             resolve(true);
         });
     });
-    await Promise.all([eventPromise, alertPromise]);
+    const alertTemplatesPromise = new Promise((resolve, reject) => {
+        AlertTemplate.deleteMany().exec((err, evt) => {
+            if (err) {
+                console.log("Something didn't work: ", err);
+                reject(false);
+            }
+            if (process.env.NODE_ENV !== 'test') console.log(`${evt.n} alertTemplates deleted before ${d}`);
+            resolve(true);
+        });
+    });
+    const alertOrgsPromise = new Promise((resolve, reject) => {
+        AlertOrganization.deleteMany().exec((err, evt) => {
+            if (err) {
+                console.log("Something didn't work: ", err);
+                reject(false);
+            }
+            if (process.env.NODE_ENV !== 'test') console.log(`${evt.n} alertOrgs deleted before ${d}`);
+            resolve(true);
+        });
+    });
+    await Promise.all([eventPromise, alertPromise, alertTemplatesPromise, alertOrgsPromise]);
 }
 
-if (process.env.NODE_ENV !== "test") {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    });
-    rl.question('Are you sure you want to want to clear the database?\nThis will delete every entry in the events collection. Type DELETE to confirm. ', (answer) => {
-        if (answer === 'DELETE') {
-            clearDatabase();
-        }
-        rl.close();
-    });
+if (!['loadData', 'test'].includes(process.env.NODE_ENV)) {
+    clearDatabase();
+    console.log('Database has been cleared');
 }
 
 module.exports = {
     clearDatabase,
-}
+};

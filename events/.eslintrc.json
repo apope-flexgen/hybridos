@@ -7,6 +7,14 @@
             {
                 "SwitchCase": 1
             }
-        ]
+        ],
+        "linebreak-style": "off",
+        "max-len": "off",
+        "no-console": "off",
+        "no-restricted-syntax": "off", // eventually could be nice to change all of these
+        "no-continue": "off",
+        "prefer-destructuring": "off",
+        "import/no-extraneous-dependencies": "off",
+        "global-require": "off"
     }
 }

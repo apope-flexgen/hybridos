@@ -1,16 +1,13 @@
-
-
-
 const internalServerError = {
     success: false,
-    message: "Internal Server Error",
-}
+    message: 'Internal Server Error',
+};
 const invalidJsonError = {
     success: false,
-    message: "Supplied body is invalid JSON",
-}
+    message: 'Supplied body is invalid JSON',
+};
 function formatList(l) {
-    return `[${l?.map((x) => `'${x}'`).join(",")}]`;
+    return `[${(l || []).map((x) => `'${x}'`).join(',')}]`;
 }
 /**
  * Validate a msg object alongside required keys
@@ -20,16 +17,15 @@ function formatList(l) {
  */
 function validateAlert(msg, config) {
     try {
-        if (Object.keys(msg).includes("body")) {
-            if (["string", "number"].includes(typeof msg.body)) {
-                JSON.parse(msg.body)
-            } else if (typeof msg.body === "object") {
+        if (Object.keys(msg).includes('body')) {
+            if (['string', 'number'].includes(typeof msg.body)) {
+                JSON.parse(msg.body);
+            } else if (typeof msg.body === 'object') {
                 JSON.stringify(msg.body);
             } else {
                 return internalServerError;
             }
         }
-
     } catch (err) {
         return invalidJsonError;
     }
@@ -43,20 +39,20 @@ function validateAlert(msg, config) {
                 found = true;
             }
         }
-        if (!found && !config.optional?.includes(key)) {
+        if (!found && !config.optional.includes(key)) {
             unrecognized.push(key);
         }
     }
     // if we find an empty requirement option set
     if (config.requiredGroups.length === 0 || config.requiredGroups.some((g) => g.length === 0)) {
-        return { success: true, message: null};
+        return { success: true, message: null };
     }
     return {
         success: false,
-        message: `Invalid request - missing required keys: ${formatList(config.requiredGroups[0])} ${unrecognized.length ? `, unrecognized keys: ${formatList(unrecognized)}` : ""}`
-    }
+        message: `Invalid request - missing required keys: ${formatList(config.requiredGroups[0])} ${unrecognized.length ? `, unrecognized keys: ${formatList(unrecognized)}` : ''}`,
+    };
 }
 
 module.exports = {
     validateAlert,
-}
+};

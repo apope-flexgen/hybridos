@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const { ObjectId } = mongoose.Schema.Types;
 
-pathArg = "/usr/local/etc/config/events"
+const pathArg = '/usr/local/etc/config/events';
 const configPath = path.resolve(pathArg);
 const configPathAndFile = path.join(configPath, 'events.json');
 if (!fs.existsSync(configPathAndFile)) {
@@ -49,7 +49,7 @@ const sch = mongoose.Schema({
 });
 
 // add composite index on severity and timestamp to Schema
-sch.index({timestamp: -1, severity: 1, source: 1}, {background: true})
+sch.index({ timestamp: -1, severity: 1, source: 1 }, { background: true });
 
 const Event = mongoose.model('events', sch);
 
