@@ -18,6 +18,8 @@ export class AppEnvService implements IAppEnvService {
   jwtSecretKeyMFA: string;
   jwtSecretKeyPasswordExpiration: string;
 
+  accessTokenSecretFimsSocket: string;
+
   constructor(
     @Inject('WEB_UI_CONFIG_PATH')
     private webUiConfigPath: string,
@@ -35,6 +37,8 @@ export class AppEnvService implements IAppEnvService {
     this.jwtSecretKey = secretGenerationService.generateSecret('base64', 32);
     this.jwtSecretKeyMFA = secretGenerationService.generateSecret('base64', 32);
     this.jwtSecretKeyPasswordExpiration = secretGenerationService.generateSecret('base64', 32);
+
+    this.accessTokenSecretFimsSocket = secretGenerationService.generateSecret('base64', 32);
   }
 
   getMongoUri(): string {
@@ -62,7 +66,7 @@ export class AppEnvService implements IAppEnvService {
   }
 
   getAccessTokenSecretFimsSocket(): string {
-    return process.env.ACCESS_TOKEN_SECRET_FIMS_SOCKET;
+    return this.accessTokenSecretFimsSocket;
   }
 
   getRefreshTokenTimeout(): number {
