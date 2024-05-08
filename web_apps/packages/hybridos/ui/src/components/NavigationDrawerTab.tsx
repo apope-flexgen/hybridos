@@ -6,13 +6,13 @@ import { RouteProps } from './Routes';
 
 export interface DrawerTabProps extends Omit<RouteProps, 'componentName'> {
   /** whether this tab is currently selected */
-  isSelected?: boolean
+  isSelected?: boolean;
   /** holds whether the tab is currently open */
-  open: boolean
+  open: boolean;
   /** navigate, usually on click  */
-  handleClick?: (path: string) => void
+  handleClick?: (path: string) => void;
   /** whether to show a divider */
-  showDivider?: boolean
+  showDivider?: boolean;
 }
 
 // TODO: Export interface from DrawerTab component so it can be reused here

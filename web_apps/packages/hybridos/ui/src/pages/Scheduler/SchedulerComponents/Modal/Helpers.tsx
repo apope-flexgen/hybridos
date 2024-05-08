@@ -19,7 +19,8 @@ export const labels = {
   },
   addVariableToMode: {
     title: 'Are you sure?',
-    description: 'Adding new variables or editing a variable type will cause all scheduled events using this Mode to be deleted. This action cannot be undone.',
+    description:
+      'Adding new variables or editing a variable type will cause all scheduled events using this Mode to be deleted. This action cannot be undone.',
     secondaryLabel: 'Discard',
     primaryLabel: 'Save',
   },

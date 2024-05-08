@@ -1,5 +1,8 @@
 import {
-  AlarmFaultData, AlarmFaultDataIndexable, ColumnData, RowData,
+  AlarmFaultData,
+  AlarmFaultDataIndexable,
+  ColumnData,
+  RowData,
 } from 'shared/types/dtos/dataTables.dto';
 import AlarmFaultContainer from 'src/pages/ConfigurablePages/ComponentFactory/components/AlarmFaultContainer';
 import SortableColumn from 'src/pages/ConfigurablePages/Dashboard/TableDashboard/Components/SortableColumn';
@@ -24,16 +27,18 @@ export const tableColumns = (
     id: column.id,
     label: column.label,
     minWidth: column.minWidth,
-    content: <SortableColumn
-      label={column.label}
-      columnID={column.id}
-      columnData={columns}
-      rowData={rows}
-      tableName={tableName}
-      generateRowsData={generateRowsData}
-      alarmStatus={alarmStatus}
-      faultStatus={faultStatus}
-    />,
+    content: (
+      <SortableColumn
+        label={column.label}
+        columnID={column.id}
+        columnData={columns}
+        rowData={rows}
+        tableName={tableName}
+        generateRowsData={generateRowsData}
+        alarmStatus={alarmStatus}
+        faultStatus={faultStatus}
+      />
+    ),
   }));
 
   return parsedColumns;
@@ -44,15 +49,13 @@ export const generateAlarmFaultStatusComponent = (
   alarmStatus?: AlarmFaultData,
   faultStatus?: AlarmFaultData,
 ): JSX.Element => {
-  const alarmPresent = component === 'alarm_status' && alarmStatus ? Object.values(alarmStatus).some((value) => value) : false;
-  const faultPresent = component === 'fault_status' && faultStatus ? Object.values(faultStatus).some((value) => value) : false;
-  return (
-    <AlarmFaultContainer
-      showAlarm={alarmPresent}
-      showFault={faultPresent}
-      tableView
-    />
-  );
+  const alarmPresent = component === 'alarm_status' && alarmStatus
+    ? Object.values(alarmStatus).some((value) => value)
+    : false;
+  const faultPresent = component === 'fault_status' && faultStatus
+    ? Object.values(faultStatus).some((value) => value)
+    : false;
+  return <AlarmFaultContainer showAlarm={alarmPresent} showFault={faultPresent} tableView />;
 };
 
 export const sortByAlarmFaultStatus = (

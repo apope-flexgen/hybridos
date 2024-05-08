@@ -1,1 +1,1 @@
-declare const CONFIG_PATH: string
+declare const CONFIG_PATH: string;

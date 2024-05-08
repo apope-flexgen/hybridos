@@ -1,13 +1,14 @@
 import { CardContainer, ThemeType } from '@flexgen/storybook';
-import {
-  useEffect, useState,
-} from 'react';
+import { useEffect, useState } from 'react';
 import ReactFlow, {
   Edge, Node, useEdgesState, useNodesState,
 } from 'reactflow';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import AssetNode from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/Components/AssetNode';
-import { generateDiagramNodes, getLayoutElements } from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.helpers';
+import {
+  generateDiagramNodes,
+  getLayoutElements,
+} from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.helpers';
 import { SITE_DIAGRAM_URL } from 'src/pages/ConfigurablePages/Dashboard/dashboard.constants';
 import { useTheme } from 'styled-components';
 import { cardContainerSx } from './diagramDashboard.styles';

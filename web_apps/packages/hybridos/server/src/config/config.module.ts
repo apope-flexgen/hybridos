@@ -33,8 +33,20 @@ const WebUiConfigDirectoryPathProvider: Provider = {
 
 @Global()
 @Module({
-  providers: [WebUiConfigPathProvider, WebServerConfigPathProvider, WebUiBuildPathProvider, WebServerConfigDirectoryPathProvider, WebUiConfigDirectoryPathProvider],
-  exports: [WebUiConfigPathProvider, WebServerConfigPathProvider, WebUiBuildPathProvider, WebServerConfigDirectoryPathProvider, WebUiConfigDirectoryPathProvider],
+  providers: [
+    WebUiConfigPathProvider,
+    WebServerConfigPathProvider,
+    WebUiBuildPathProvider,
+    WebServerConfigDirectoryPathProvider,
+    WebUiConfigDirectoryPathProvider,
+  ],
+  exports: [
+    WebUiConfigPathProvider,
+    WebServerConfigPathProvider,
+    WebUiBuildPathProvider,
+    WebServerConfigDirectoryPathProvider,
+    WebUiConfigDirectoryPathProvider,
+  ],
 })
 export class ConfigModule {
   static setWebUiConfigPath(value: string) {

@@ -240,12 +240,12 @@ export default function useScheduler(currentUser: { role: string }, product: str
     );
   }, [axiosInstance, updateConfigurationData, handleDataOnSocket]);
 
-  useEffect(()=> {
+  useEffect(() => {
     return () => {
       QueryService.cleanupSocket();
     };
-  }, [])
-  
+  }, []);
+
   return {
     contextValue,
     displayTabs,

@@ -2,10 +2,7 @@
 /* eslint-disable */
 import { Box, CardContainer, CardRow, DataTable, Progress, Typography } from '@flexgen/storybook';
 import { useState, useEffect, useCallback } from 'react';
-import {
-  TableDashboardDataTableDTO,
-  DataTablesState
-} from 'shared/types/dtos/dataTables.dto';
+import { TableDashboardDataTableDTO, DataTablesState } from 'shared/types/dtos/dataTables.dto';
 import QueryService from 'src/services/QueryService';
 import { batteryViewBoxSx, tableBoxSx } from './tableDashboard.styles';
 import useGenerateDashboardTable from 'src/pages/ConfigurablePages/Dashboard/TableDashboard/hooks/useGenerateTable';
@@ -27,16 +24,16 @@ const TableDashboard = () => {
             dataTableInfo.batteryViewData === undefined
               ? prevDataTables[name]?.batteryViewData
               : (() => {
-                let oldBatteryViewData = prevDataTables[name]?.batteryViewData ?? [];
-                dataTableInfo.batteryViewData?.forEach((newBatteryDataPoint) => {
-                  oldBatteryViewData = oldBatteryViewData.filter(
-                    (oldBatteryDataPoint) =>
-                      oldBatteryDataPoint.label !== newBatteryDataPoint.label,
-                  );
-                  oldBatteryViewData.push(newBatteryDataPoint);
-                });
-                return oldBatteryViewData;
-              })();
+                  let oldBatteryViewData = prevDataTables[name]?.batteryViewData ?? [];
+                  dataTableInfo.batteryViewData?.forEach((newBatteryDataPoint) => {
+                    oldBatteryViewData = oldBatteryViewData.filter(
+                      (oldBatteryDataPoint) =>
+                        oldBatteryDataPoint.label !== newBatteryDataPoint.label,
+                    );
+                    oldBatteryViewData.push(newBatteryDataPoint);
+                  });
+                  return oldBatteryViewData;
+                })();
           batteryViewData.sort((a, b) =>
             a.label.localeCompare(b.label, undefined, { numeric: true }),
           );
@@ -45,35 +42,43 @@ const TableDashboard = () => {
             dataTableInfo.alarmStatus === undefined
               ? prevDataTables[name]?.faultStatus
               : (() => {
-                let updatedAlarmStatus = prevDataTables[name]?.alarmStatus ?? {};
-                Object.entries(dataTableInfo.alarmStatus).forEach(([id, newStatuses]) => {
-                  if (dataTableInfo.alarmStatus?.[id] !== undefined) {
-                    updatedAlarmStatus[id] = newStatuses;
-                  }
-                });
-                return updatedAlarmStatus;
-              })();
+                  let updatedAlarmStatus = prevDataTables[name]?.alarmStatus ?? {};
+                  Object.entries(dataTableInfo.alarmStatus).forEach(([id, newStatuses]) => {
+                    if (dataTableInfo.alarmStatus?.[id] !== undefined) {
+                      updatedAlarmStatus[id] = newStatuses;
+                    }
+                  });
+                  return updatedAlarmStatus;
+                })();
 
           const faultStatus =
             dataTableInfo.faultStatus === undefined
               ? prevDataTables[name]?.faultStatus
               : (() => {
-                let updatedFaultStatus = prevDataTables[name]?.faultStatus ?? {};
-                Object.entries(dataTableInfo.faultStatus).forEach(([id, newStatuses]) => {
-                  if (dataTableInfo.faultStatus?.[id] !== undefined) {
-                    updatedFaultStatus[id] = newStatuses;
-                  }
-                });
-                return updatedFaultStatus;
-              })();
+                  let updatedFaultStatus = prevDataTables[name]?.faultStatus ?? {};
+                  Object.entries(dataTableInfo.faultStatus).forEach(([id, newStatuses]) => {
+                    if (dataTableInfo.faultStatus?.[id] !== undefined) {
+                      updatedFaultStatus[id] = newStatuses;
+                    }
+                  });
+                  return updatedFaultStatus;
+                })();
 
-          generateRowsData(name, columns, dataTableInfo.rows ?? [], undefined, undefined, alarmStatus, faultStatus);
+          generateRowsData(
+            name,
+            columns,
+            dataTableInfo.rows ?? [],
+            undefined,
+            undefined,
+            alarmStatus,
+            faultStatus,
+          );
 
           acc[name] = {
             columns: columns,
             batteryViewData,
             alarmStatus,
-            faultStatus
+            faultStatus,
           };
           return acc;
         },
@@ -93,46 +98,51 @@ const TableDashboard = () => {
   }, []);
 
   const renderedDataTables = Object.entries(dataTables).map(([dataTableName, dataTableInfo]) => {
-    const renderedColumns = tableColumns(dataTableName, dataTableInfo.columns, results[dataTableName], generateRowsData, dataTableInfo.alarmStatus, dataTableInfo.faultStatus);
+    const renderedColumns = tableColumns(
+      dataTableName,
+      dataTableInfo.columns,
+      results[dataTableName],
+      generateRowsData,
+      dataTableInfo.alarmStatus,
+      dataTableInfo.faultStatus,
+    );
 
-    return (<Box key={dataTableName} sx={{ width: '100%' }}>
-      <CardContainer direction='column' styleOverrides={{ paddingTop: '12px', width: '100%' }}>
-        <CardRow>
-          <Typography text={dataTableName} variant='headingS' />
-        </CardRow>
-        <Box sx={batteryViewBoxSx}>
-          {dataTableInfo.batteryViewData &&
-            dataTableInfo.batteryViewData.map((battery) => {
-              return (
-                <Progress
-                  orientation='vertical'
-                  width={65}
-                  fullWidth={false}
-                  height={80}
-                  label={battery.label}
-                  value={Number(battery.value)}
-                />
-              );
-            })}
-        </Box>
-        <Box sx={{ width: '100%' }}>
-          <DataTable
-            columns={renderedColumns}
-            dense
-            pagination
-            rowsPerPage={[20, 10, 5]}
-            rowsData={results[dataTableName] || []}
-          />
-        </Box>
-      </CardContainer>
-    </Box>)
+    return (
+      <Box key={dataTableName} sx={{ width: '100%' }}>
+        <CardContainer direction='column' styleOverrides={{ paddingTop: '12px', width: '100%' }}>
+          <CardRow>
+            <Typography text={dataTableName} variant='headingS' />
+          </CardRow>
+          <Box sx={batteryViewBoxSx}>
+            {dataTableInfo.batteryViewData &&
+              dataTableInfo.batteryViewData.map((battery) => {
+                return (
+                  <Progress
+                    orientation='vertical'
+                    width={65}
+                    fullWidth={false}
+                    height={80}
+                    label={battery.label}
+                    value={Number(battery.value)}
+                  />
+                );
+              })}
+          </Box>
+          <Box sx={{ width: '100%' }}>
+            <DataTable
+              columns={renderedColumns}
+              dense
+              pagination
+              rowsPerPage={[20, 10, 5]}
+              rowsData={results[dataTableName] || []}
+            />
+          </Box>
+        </CardContainer>
+      </Box>
+    );
   });
 
-  return (
-    <Box sx={tableBoxSx}>
-      {renderedDataTables}
-    </Box>
-  );
+  return <Box sx={tableBoxSx}>{renderedDataTables}</Box>;
 };
 
 export default TableDashboard;

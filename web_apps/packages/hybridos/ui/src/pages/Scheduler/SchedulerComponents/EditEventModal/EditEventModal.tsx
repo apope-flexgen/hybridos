@@ -102,10 +102,9 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
       events !== null
         ? events[siteId].find((eventFromAPI) => eventFromAPI.repeat?.id === event.repeat?.id)
         : undefined;
-    const recurringDateWithNewStart =
-      parentEvent?.start_time
-        ? getNewStartDate(state.startTime, parentEvent.start_time, timezone[0])
-        : getNewStartDate(state.startTime, startUTC, timezone[0]);
+    const recurringDateWithNewStart = parentEvent?.start_time
+      ? getNewStartDate(state.startTime, parentEvent.start_time, timezone[0])
+      : getNewStartDate(state.startTime, startUTC, timezone[0]);
     const typedVariableValues = handleVariableValues(state.variableValues, state.modeId, modes);
 
     if (applyChangesTo.allInSeries) {
@@ -141,7 +140,7 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
       state.startTime,
       state.endTime,
       state.endDate,
-      timezone[0] || 'America/New_York'
+      timezone[0] || 'America/New_York',
     );
     const typedVariableValues = handleVariableValues(state.variableValues, state.modeId, modes);
 
@@ -166,9 +165,9 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
 
   const handleAddException = (eventWithoutException: SchedulerEvent, startTime: string) => {
     if (
-      eventWithoutException.repeat !== undefined 
-      && eventWithoutException.repeat.id !== undefined 
-      && events !== null
+      eventWithoutException.repeat !== undefined &&
+      eventWithoutException.repeat.id !== undefined &&
+      events !== null
     ) {
       const parentEvent = events[siteId].find(
         (eventFromAPI) => eventFromAPI.repeat?.id === eventWithoutException.repeat?.id,

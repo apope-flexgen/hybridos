@@ -94,9 +94,9 @@ export class SiteStatusService implements ISiteStatusService {
   };
 
   getActiveAlertsData = async (): Promise<number> => {
-    const activeAlertsFimsMsg = (await this.fimsService.get(ACTIVE_ALERTS_URI)).body['count']
+    const activeAlertsFimsMsg = (await this.fimsService.get(ACTIVE_ALERTS_URI)).body['count'];
     return activeAlertsFimsMsg;
-  }
+  };
 
   buildAlertStateObservable = async (): Promise<Observable<SiteStatusResponse>> => {
     const initialActiveAlertsFimsMsg = await this.getActiveAlertsData();

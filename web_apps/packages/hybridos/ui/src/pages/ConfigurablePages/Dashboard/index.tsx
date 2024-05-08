@@ -12,9 +12,7 @@ import { dashboardBoxSx } from './dashboard.styles';
 const Dashboard = () => {
   const storedLayout: DashboardLayout = (localStorage.getItem('dashboardLayout') as DashboardLayout) ?? DashboardLayout.CARD;
   const [layout, setLayout] = useState<DashboardLayout>(storedLayout);
-  const {
-    siteConfiguration,
-  } = useAppContext();
+  const { siteConfiguration } = useAppContext();
 
   const handleLayout = (e: React.MouseEvent<HTMLElement, MouseEvent>, value: DashboardLayout) => {
     setLayout(value);
@@ -26,13 +24,15 @@ const Dashboard = () => {
       <ToggleButtonGroup size="small" value={layout} exclusive required onChange={handleLayout}>
         <ToggleButton value={DashboardLayout.TABLE}>Table</ToggleButton>
         <ToggleButton value={DashboardLayout.CARD}>Card</ToggleButton>
-        {siteConfiguration?.site_diagram
-        && <ToggleButton value={DashboardLayout.DIAGRAM}>Diagram</ToggleButton>}
+        {siteConfiguration?.site_diagram && (
+          <ToggleButton value={DashboardLayout.DIAGRAM}>Diagram</ToggleButton>
+        )}
       </ToggleButtonGroup>
       {layout === DashboardLayout.CARD && <CardDashboard />}
       {layout === DashboardLayout.TABLE && <TableDashboard />}
-      {siteConfiguration?.site_diagram
-        && layout === DashboardLayout.DIAGRAM && <DiagramDashboard />}
+      {siteConfiguration?.site_diagram && layout === DashboardLayout.DIAGRAM && (
+        <DiagramDashboard />
+      )}
     </Box>
   );
 };

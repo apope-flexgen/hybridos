@@ -116,11 +116,11 @@ export class DashboardService {
     const parsedData: SiteDiagramResponse = {
       id: data?.root.id,
       asset_type: data?.root.asset_type,
-      children: data?.root.children
+      children: data?.root.children,
     };
 
     return parsedData;
-  }
+  };
 
   private getStatusDTOs = (statuses: SingleStatus[] | string[]): DisplayGroupDTO['status'] => {
     const statusDTOs: DisplayGroupDTO['status'] = {};

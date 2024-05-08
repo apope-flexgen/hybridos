@@ -2,7 +2,7 @@ export type ConfigurablePageDTO = {
   hasStatic: boolean;
   hasBatchControls?: boolean;
   hasMaintenanceActions?: boolean;
-  assetKey?: string,
+  assetKey?: string;
   displayGroups: {
     [displayGroupID: string]: DisplayGroupDTO;
   };
@@ -10,7 +10,7 @@ export type ConfigurablePageDTO = {
 
 export type DisplayGroupDTO = {
   displayName?: string;
-  tabKey?: string,
+  tabKey?: string;
   batteryViewStatus?: {
     [componentID: string]: StatusComponentDTO;
   };
@@ -26,7 +26,7 @@ export type DisplayGroupDTO = {
   control?: {
     [componentID: string]: ControlComponentDTO;
   };
-  batchControl?: { 
+  batchControl?: {
     [componentID: string]: ControlComponentDTO;
   };
   maintenanceActions?: {
@@ -37,22 +37,22 @@ export type DisplayGroupDTO = {
 };
 
 export type MaintenanceActionStep = {
-  step_name: string,
-  estimated_duration: number,
-}
+  step_name: string;
+  estimated_duration: number;
+};
 
 export type MaintenanceActionPath = {
-  path_name: string,
-  estimated_duration: number,
-  steps: MaintenanceActionStep[],
-}
+  path_name: string;
+  estimated_duration: number;
+  steps: MaintenanceActionStep[];
+};
 
 export type MaintenanceActionComponentDTO = {
   static?: {
-      path_index: number,
-      step_index: number,
-      status: string,
-      paths: MaintenanceActionPath[],
+    path_index: number;
+    step_index: number;
+    status: string;
+    paths: MaintenanceActionPath[];
   };
   state?: {
     name?: string;
@@ -111,5 +111,5 @@ export type DataPointVariantType = 'vertical' | 'horizontal' | 'dynamic';
 export enum DashboardLayout {
   TABLE = 'table',
   CARD = 'card',
-  DIAGRAM = 'diagram'
+  DIAGRAM = 'diagram',
 }

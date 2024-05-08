@@ -6,8 +6,8 @@ import { useTheme } from 'styled-components';
 import { SCADASettingsSx, siteFleetConfigLabels as labels } from './Helpers';
 
 interface SCADASettingsProps {
-  settings: Configuration['scada']
-  setConfigEdits: React.Dispatch<React.SetStateAction<Configuration | null | undefined>>
+  settings: Configuration['scada'];
+  setConfigEdits: React.Dispatch<React.SetStateAction<Configuration | null | undefined>>;
 }
 
 const SCADASettings: React.FC<SCADASettingsProps> = ({
@@ -77,18 +77,16 @@ const SCADASettings: React.FC<SCADASettingsProps> = ({
       <Box sx={sx.boxRow}>
         <Switch
           autoLayout
-          color='primary'
+          color="primary"
           label={labels.SCADA.appendCanEdit}
-          labelPlacement='right'
-          onChange={(event) => 
-            setConfigEdits((prevState: any) => ({
-              ...prevState,
-              scada : {
-                ...prevState.scada,
-                append_can_edit: !prevState.scada.append_can_edit || event
-              }
-            }))
-          }
+          labelPlacement="right"
+          onChange={(event) => setConfigEdits((prevState: any) => ({
+            ...prevState,
+            scada: {
+              ...prevState.scada,
+              append_can_edit: !prevState.scada.append_can_edit || event,
+            },
+          }))}
           value={settings?.append_can_edit || false}
         />
       </Box>

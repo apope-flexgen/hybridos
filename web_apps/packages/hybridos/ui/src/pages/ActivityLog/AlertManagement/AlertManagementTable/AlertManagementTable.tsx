@@ -11,9 +11,9 @@ import { dataTableBox } from 'src/pages/ActivityLog/Alerts/alerts.styles';
 import { AlertConfigurationObject } from 'src/pages/ActivityLog/activityLog.types';
 
 export interface AlertManagementTableProps {
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  setAlertManagementView: React.Dispatch<React.SetStateAction<'form' | 'table'>>,
-  setCurrentAlert: React.Dispatch<React.SetStateAction<AlertConfigurationObject | null>>
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setAlertManagementView: React.Dispatch<React.SetStateAction<'form' | 'table'>>;
+  setCurrentAlert: React.Dispatch<React.SetStateAction<AlertConfigurationObject | null>>;
 }
 
 const AlertManagementTable = ({
@@ -21,10 +21,9 @@ const AlertManagementTable = ({
   setAlertManagementView,
   setCurrentAlert,
 }: AlertManagementTableProps) => {
-  const [
-    alertConfigurationData,
-    setAlertConfigurationData,
-  ] = useState<AlertConfigurationObject[]>([]);
+  const [alertConfigurationData, setAlertConfigurationData] = useState<AlertConfigurationObject[]>(
+    [],
+  );
   const axiosInstance = useAxiosWebUIInstance();
   const notifCtx = useContext<NotifContextType | null>(NotifContext);
 
@@ -44,12 +43,10 @@ const AlertManagementTable = ({
     const alertConfigurationURL = '/alerts/configuration';
 
     axiosInstance.get(alertConfigurationURL).then((res) => {
-      const configWithTemplates = res.data.data.map(
-        (alertConfig: AlertConfigurationObject) => ({
-          ...alertConfig,
-          templates: res.data.templates || [],
-        }),
-      );
+      const configWithTemplates = res.data.data.map((alertConfig: AlertConfigurationObject) => ({
+        ...alertConfig,
+        templates: res.data.templates || [],
+      }));
       setAlertConfigurationData(configWithTemplates);
       setIsLoading(false);
     });
@@ -61,28 +58,23 @@ const AlertManagementTable = ({
 
     axiosInstance.post(alertConfigurationURL, disableAlertMessage).then((res) => {
       if (res.data.success) {
-        notifCtx?.notif(
-          'success',
-          'Alert successfully updated',
-        );
+        notifCtx?.notif('success', 'Alert successfully updated');
         const dataWithEdit = alertConfigurationData.map((config) => {
           if (config.id === alert.id) return disableAlertMessage;
           return config;
         });
         setAlertConfigurationData(dataWithEdit);
       } else {
-        notifCtx?.notif(
-          'error',
-          'Error updating alert',
-        );
+        notifCtx?.notif('error', 'Error updating alert');
       }
     });
   };
 
-  const {
-    results,
-    generateRowsData,
-  } = useGenerateAlertManagementRows(disableAlert, editAlert, duplicateAlert);
+  const { results, generateRowsData } = useGenerateAlertManagementRows(
+    disableAlert,
+    editAlert,
+    duplicateAlert,
+  );
 
   // initial GET request to populate data for page
   useEffect(() => {

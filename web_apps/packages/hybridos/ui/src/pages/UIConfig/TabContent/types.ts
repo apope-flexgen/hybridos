@@ -1,3 +1,3 @@
 export interface TabContentProps {
-  selectedTab: string
+  selectedTab: string;
 }

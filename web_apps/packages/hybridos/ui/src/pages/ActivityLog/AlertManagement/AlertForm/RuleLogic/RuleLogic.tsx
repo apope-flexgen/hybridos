@@ -6,7 +6,10 @@ import { useAlertFormContext } from 'src/pages/ActivityLog/AlertManagement/Alert
 
 import { alertManagementHelperText } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import {
-  formRowSx, formRowTitleAndDescriptionSx, formRowContentsSx, externalFormRowBoxSx,
+  formRowSx,
+  formRowTitleAndDescriptionSx,
+  formRowContentsSx,
+  externalFormRowBoxSx,
 } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
 
 // Rule logic container, will contain the rule block with multiple conditions

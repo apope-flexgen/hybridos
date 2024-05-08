@@ -1,7 +1,11 @@
 import {
   Box, Icon, ThemeType, Typography,
 } from '@flexgen/storybook';
-import { alertBannerIconSx, alertBannerMessageSx, resolveActiveAlertBannerSx } from 'src/pages/ActivityLog/Alerts/alerts.styles';
+import {
+  alertBannerIconSx,
+  alertBannerMessageSx,
+  resolveActiveAlertBannerSx,
+} from 'src/pages/ActivityLog/Alerts/alerts.styles';
 import { resolveActiveAlertBannerMessage } from 'src/pages/ActivityLog/activityLog.constants';
 import { useTheme } from 'styled-components';
 

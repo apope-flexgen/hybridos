@@ -47,7 +47,9 @@ export class ErcotOverrideService {
       username: user.sub,
     });
 
-    return { data: `SET request sent to /fleet/features/ercotAs/${site.id}/${variable.name}` };
+    return {
+      data: `SET request sent to /fleet/features/ercotAs/${site.id}/${variable.name}`,
+    };
   }
   getUriSpecificObservable = (siteId: string): Observable<ErcotOverrideDto> => {
     const fimsSubscribe = this.fimsService.subscribe(`/fleet/features/ercotAs/${siteId}`);

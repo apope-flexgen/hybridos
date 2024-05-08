@@ -5,12 +5,13 @@ import { useTheme } from 'styled-components';
 import { assetControlOuterBoxSx, getControlInnerBoxSx } from './assetsPage.styles';
 
 interface IndiviudalAssetControlProps {
-  controlChildrenMapped: JSX.Element[]
-  componentFunctions?: DisplayGroupFunctions
+  controlChildrenMapped: JSX.Element[];
+  componentFunctions?: DisplayGroupFunctions;
 }
 
 const IndiviudalAssetControl = ({
-  componentFunctions, controlChildrenMapped,
+  componentFunctions,
+  controlChildrenMapped,
 }: IndiviudalAssetControlProps) => {
   const theme = useTheme() as ThemeType;
 
@@ -19,18 +20,16 @@ const IndiviudalAssetControl = ({
       <Typography
         variant="bodyLBold"
         text={
-        controlChildrenMapped.length > 0
-          ? componentFunctions?.displayName
-            ? `${componentFunctions.displayName} Controls`
-            : 'Asset Controls'
-          : 'No Controls Configured'
-      }
+          controlChildrenMapped.length > 0
+            ? componentFunctions?.displayName
+              ? `${componentFunctions.displayName} Controls`
+              : 'Asset Controls'
+            : 'No Controls Configured'
+        }
       />
-      {
-    controlChildrenMapped.length > 0 && (
-    <Box sx={getControlInnerBoxSx(theme)}>{controlChildrenMapped}</Box>
-    )
-    }
+      {controlChildrenMapped.length > 0 && (
+        <Box sx={getControlInnerBoxSx(theme)}>{controlChildrenMapped}</Box>
+      )}
     </Box>
   );
 };

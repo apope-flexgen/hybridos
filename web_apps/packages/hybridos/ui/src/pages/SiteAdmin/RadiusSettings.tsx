@@ -12,22 +12,20 @@ import {
   ThemeType,
 } from '@flexgen/storybook';
 import { FunctionComponent } from 'react';
-import {
-  RadiusSettings,
-} from 'shared/types/api/SiteAdmin.types';
+import { RadiusSettings } from 'shared/types/api/SiteAdmin.types';
 import { useTheme } from 'styled-components';
 import { siteAdminLabels } from './SiteAdmin.constants';
 
 export interface RadiusSettingsProps {
-  radiusSettings: RadiusSettings,
-  setRadiusSettings: React.Dispatch<React.SetStateAction<RadiusSettings>>,
-  username: string,
-  setUsername: React.Dispatch<React.SetStateAction<string>>,
-  password: string,
-  setPassword: React.Dispatch<React.SetStateAction<string>>,
-  sendRadiusTest: ()=>void,
-  isRadiusTestLoading: boolean,
-  radiusTestSuccessful: boolean
+  radiusSettings: RadiusSettings;
+  setRadiusSettings: React.Dispatch<React.SetStateAction<RadiusSettings>>;
+  username: string;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
+  password: string;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
+  sendRadiusTest: () => void;
+  isRadiusTestLoading: boolean;
+  radiusTestSuccessful: boolean;
 }
 
 const RadiusSettingsFields: FunctionComponent<RadiusSettingsProps> = ({
@@ -62,25 +60,35 @@ const RadiusSettingsFields: FunctionComponent<RadiusSettingsProps> = ({
             backgroundColor: theme.fgd.primary.main_12p,
           }}
         >
-          <Box sx={{
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%',
-          }}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+            }}
           >
             <Typography text={siteAdminLabels.radiusPageCardTitle} variant="bodyLBold" />
             <Box sx={{ width: '10%', whiteSpace: 'nowrap' }}>
               <Badge
                 anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
                 badgeColor={!radiusTestSuccessful ? 'error' : 'success'}
-                badgeContent={!radiusTestSuccessful
-                  ? siteAdminLabels.radiusTestBadgeError
-                  : siteAdminLabels.radiusTestBadgeSuccess}
+                badgeContent={
+                  !radiusTestSuccessful
+                    ? siteAdminLabels.radiusTestBadgeError
+                    : siteAdminLabels.radiusTestBadgeSuccess
+                }
                 children={<Box />}
               />
             </Box>
           </Box>
-          <Box sx={{
-            display: 'flex', flexDirection: 'column', gap: '16px', width: '100%',
-          }}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+              width: '100%',
+            }}
           >
             <CardContainer
               direction="column"

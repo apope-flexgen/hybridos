@@ -177,9 +177,12 @@ const BaseApp = (): JSX.Element => {
     QueryService.getLayouts(handleNewMessage);
   }, [handleNewMessage]);
 
-  useEffect(() => () => {
-    QueryService.cleanupSocket();
-  }, []);
+  useEffect(
+    () => () => {
+      QueryService.cleanupSocket();
+    },
+    [],
+  );
 
   useEffect(() => {
     fetchData();

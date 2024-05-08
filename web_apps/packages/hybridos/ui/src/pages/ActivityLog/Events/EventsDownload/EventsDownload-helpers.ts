@@ -36,7 +36,9 @@ export const downloadXlsxCsv = (
   const worksheet = XLSX.utils.json_to_sheet(data);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Events');
-  XLSX.writeFile(workbook, `${baseFilename}${timeSuffix}.${format}`, { bookType: format });
+  XLSX.writeFile(workbook, `${baseFilename}${timeSuffix}.${format}`, {
+    bookType: format,
+  });
 };
 
 export const getTimeSuffix = (startTime?: string, endTime?: string): string => {

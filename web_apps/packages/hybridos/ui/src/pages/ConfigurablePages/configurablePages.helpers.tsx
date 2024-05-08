@@ -25,7 +25,12 @@ const getStatusStateForDisplayGroup: (
   batteryViewStatus: ConfigurablePageDTO['displayGroups'][string]['batteryViewStatus'],
   alarmStatus: ConfigurablePageDTO['displayGroups'][string]['alarmStatus'],
   faultStatus: ConfigurablePageDTO['displayGroups'][string]['faultStatus'],
-) => DisplayGroupStateStructure['status'] = (status, batteryViewStatus, alarmStatus, faultStatus) => {
+) => DisplayGroupStateStructure['status'] = (
+  status,
+  batteryViewStatus,
+  alarmStatus,
+  faultStatus,
+) => {
   const combinedStatuses = {
     ...(status || {}),
     ...(batteryViewStatus || {}),
@@ -50,7 +55,10 @@ const getMaintenanceActionStateForDisplayGroup: (
 ) => DisplayGroupStateStructure['maintenanceActions'] = (maintenanceAction) => {
   if (maintenanceAction === undefined) return {};
   return Object.entries(maintenanceAction).reduce(
-    (maintenanceActionsState: DisplayGroupStateStructure['maintenanceActions'], [componentID, component]) => {
+    (
+      maintenanceActionsState: DisplayGroupStateStructure['maintenanceActions'],
+      [componentID, component],
+    ) => {
       const { state } = component;
       if (state === undefined) return maintenanceActionsState;
 
@@ -84,7 +92,7 @@ const getControlStateForDisplayGroup: (
 
 export const getUpdatedStates: (
   data: ConfigurablePageDTO['displayGroups'],
-  prevComponentState?: ConfigurablePageStateStructure
+  prevComponentState?: ConfigurablePageStateStructure,
 ) => [ConfigurablePageStateStructure, AlertState, MaintModeState] = (data, prevComponentState) => {
   const updatedComponentState: ConfigurablePageStateStructure = {};
   const updatedAlertState: AlertState = {};
@@ -92,11 +100,17 @@ export const getUpdatedStates: (
 
   Object.entries(data).forEach(([displayGroupID, displayGroup]) => {
     updatedComponentState[displayGroupID] = {
-      status: getStatusStateForDisplayGroup(displayGroup.status, displayGroup.batteryViewStatus, displayGroup.alarmStatus, displayGroup.faultStatus),
+      status: getStatusStateForDisplayGroup(
+        displayGroup.status,
+        displayGroup.batteryViewStatus,
+        displayGroup.alarmStatus,
+        displayGroup.faultStatus,
+      ),
       control: getControlStateForDisplayGroup(displayGroup.control),
-      maintenanceActions: Object.keys(displayGroup.maintenanceActions || {}).length !== 0
-        ? getMaintenanceActionStateForDisplayGroup(displayGroup.maintenanceActions)
-        : prevComponentState?.[displayGroupID]?.maintenanceActions || [],
+      maintenanceActions:
+        Object.keys(displayGroup.maintenanceActions || {}).length !== 0
+          ? getMaintenanceActionStateForDisplayGroup(displayGroup.maintenanceActions)
+          : prevComponentState?.[displayGroupID]?.maintenanceActions || [],
     };
 
     updatedAlertState[displayGroupID] = {
@@ -157,7 +171,7 @@ const generateBatteryViewReactComponentFunction: (
 const generateAlarmFaultComponentFunction: (
   displayGroupID: string,
   alarmStatus: string[],
-  faultStatus: string[]
+  faultStatus: string[],
 ) => ConfigurableComponentFunction = (displayGroupID, alarmStatus, faultStatus) => generateReactComponentFunction(
   {
     component: 'AlarmFaultContainer',
@@ -257,8 +271,8 @@ const getMaintenanceActionComponentFunctions: (
   displayGroupID: string,
 ) => ConfigurableComponentFunction[] = (maintenanceAction, displayGroupID) => {
   if (maintenanceAction === undefined) return [];
-  return Object.entries(maintenanceAction)
-    .reduce((maintenanceActionFunctions: ConfigurableComponentFunction[], [componentID, component]) => {
+  return Object.entries(maintenanceAction).reduce(
+    (maintenanceActionFunctions: ConfigurableComponentFunction[], [componentID, component]) => {
       const { static: staticData } = component;
 
       if (staticData === undefined) return maintenanceActionFunctions;
@@ -267,7 +281,9 @@ const getMaintenanceActionComponentFunctions: (
       );
 
       return maintenanceActionFunctions;
-    }, []);
+    },
+    [],
+  );
 };
 
 const generateControlComponentFunction: (
@@ -285,7 +301,10 @@ const generateControlComponentFunction: (
 
   // switches in batch control components will be displayed as two buttons
   // one for setting URI to true (turning on), one for setting URI to false (turning off)
-  if (batchControl && (staticData.controlType === 'switch' || staticData.controlType === 'maint_mode_slider')) {
+  if (
+    batchControl
+    && (staticData.controlType === 'switch' || staticData.controlType === 'maint_mode_slider')
+  ) {
     if (staticData.controlType === 'maint_mode_slider') ReactComponent = 'TrueFalseMaintModeButtonSet';
     else ReactComponent = 'TrueFalseButtonSet';
   }
@@ -364,10 +383,20 @@ export const getUpdatedComponentFunctions: (data: ConfigurablePageDTO['displayGr
         displayGroup.status,
         displayGroup.batteryViewStatus,
       ),
-      alarmFaultStatusFunction: getAlarmFaultStatusComponentFunction(displayGroup.alarmStatus, displayGroup.faultStatus, displayGroupID),
+      alarmFaultStatusFunction: getAlarmFaultStatusComponentFunction(
+        displayGroup.alarmStatus,
+        displayGroup.faultStatus,
+        displayGroupID,
+      ),
       controlFunctions: getControlComponentFunctions(displayGroup.control, displayGroupID),
-      batchControlFunctions: getBatchControlComponentFunctions(displayGroup.batchControl, displayGroupID),
-      maintenanceActionsFunctions: getMaintenanceActionComponentFunctions(displayGroup.maintenanceActions, displayGroupID),
+      batchControlFunctions: getBatchControlComponentFunctions(
+        displayGroup.batchControl,
+        displayGroupID,
+      ),
+      maintenanceActionsFunctions: getMaintenanceActionComponentFunctions(
+        displayGroup.maintenanceActions,
+        displayGroupID,
+      ),
     };
   });
 

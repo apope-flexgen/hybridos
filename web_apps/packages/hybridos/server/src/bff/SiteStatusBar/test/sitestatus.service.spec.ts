@@ -68,7 +68,9 @@ describe('SiteStatusService', () => {
         },
         {
           provide: APP_ENV_SERVICE,
-          useValue: { getSiteConfiguration: jest.fn().mockReturnValue(mockSiteConfiguration) },
+          useValue: {
+            getSiteConfiguration: jest.fn().mockReturnValue(mockSiteConfiguration),
+          },
         },
       ],
     }).compile();
@@ -95,7 +97,7 @@ describe('SiteStatusService', () => {
         mockNumberResponse,
         mockBooleanResponse,
         mockSiteStateResponse,
-        mockAlertStateResponse
+        mockAlertStateResponse,
       ];
       const emittedValues = [];
 
@@ -110,8 +112,12 @@ describe('SiteStatusService', () => {
         .mockReturnValueOnce(of(mockDataSourceBooleanFimsMsg as FimsMsg));
       jest.spyOn(fimsService, 'subscribe').mockReturnValueOnce(of(mockSiteStateFimsMsg as FimsMsg));
       jest.spyOn(fimsService, 'get').mockResolvedValue(mockDataAlertCountFimsMsg as FimsMsg);
-      jest.spyOn(fimsService, 'subscribe').mockReturnValueOnce(of(mockAlertStateFimsMsg as FimsMsg));
-      jest.spyOn(siteStatusService, 'buildAlertStateObservable').mockResolvedValueOnce(of(mockAlertStateResponse));
+      jest
+        .spyOn(fimsService, 'subscribe')
+        .mockReturnValueOnce(of(mockAlertStateFimsMsg as FimsMsg));
+      jest
+        .spyOn(siteStatusService, 'buildAlertStateObservable')
+        .mockResolvedValueOnce(of(mockAlertStateResponse));
 
       const obs = await siteStatusService.subscribeToSiteStatus();
 
@@ -157,7 +163,7 @@ describe('SiteStatusService', () => {
         mockNumberResponse,
         mockBooleanResponse,
         mockSiteStateResponse,
-        mockAlertStateResponse
+        mockAlertStateResponse,
       ];
       const emittedValues = [];
 
@@ -171,9 +177,13 @@ describe('SiteStatusService', () => {
         .spyOn(fimsService, 'subscribe')
         .mockReturnValueOnce(of(mockDataSourceBooleanFimsMsg as FimsMsg));
       jest.spyOn(fimsService, 'subscribe').mockReturnValueOnce(of(mockSiteStateFimsMsg as FimsMsg));
-       jest.spyOn(fimsService, 'get').mockResolvedValue(mockDataAlertCountFimsMsg as FimsMsg);
-      jest.spyOn(fimsService, 'subscribe').mockReturnValueOnce(of(mockAlertStateFimsMsg as FimsMsg));
-      jest.spyOn(siteStatusService, 'buildAlertStateObservable').mockResolvedValueOnce(of(mockAlertStateResponse));
+      jest.spyOn(fimsService, 'get').mockResolvedValue(mockDataAlertCountFimsMsg as FimsMsg);
+      jest
+        .spyOn(fimsService, 'subscribe')
+        .mockReturnValueOnce(of(mockAlertStateFimsMsg as FimsMsg));
+      jest
+        .spyOn(siteStatusService, 'buildAlertStateObservable')
+        .mockResolvedValueOnce(of(mockAlertStateResponse));
 
       const obs = await siteStatusService.getObservable(mockConfig);
 

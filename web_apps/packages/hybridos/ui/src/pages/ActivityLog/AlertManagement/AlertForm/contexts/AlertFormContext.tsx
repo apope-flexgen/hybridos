@@ -1,12 +1,10 @@
-import {
-  createContext, useContext,
-} from 'react';
+import { createContext, useContext } from 'react';
 import { initialNewAlert } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import { AlertConfigurationObject } from 'src/pages/ActivityLog/activityLog.types';
 
 export type AlertFormContextType = {
-  alertValues: AlertConfigurationObject,
-  handleFieldChange: (field: string, updatedValue: any, commaSeparatedList?: boolean) => void
+  alertValues: AlertConfigurationObject;
+  handleFieldChange: (field: string, updatedValue: any, commaSeparatedList?: boolean) => void;
 };
 
 export const AlertFormContext = createContext<AlertFormContextType>({

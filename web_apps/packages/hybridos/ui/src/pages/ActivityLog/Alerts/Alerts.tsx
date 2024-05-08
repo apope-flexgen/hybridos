@@ -1,5 +1,10 @@
 import {
-  Box, CardRow, ThemeType, Typography, Divider, PageLoadingIndicator,
+  Box,
+  CardRow,
+  ThemeType,
+  Typography,
+  Divider,
+  PageLoadingIndicator,
 } from '@flexgen/storybook';
 import { useState } from 'react';
 import AlertsTable from 'src/pages/ActivityLog/Alerts/AlertsTable/AlertsTable';
@@ -8,11 +13,9 @@ import { mainContentBoxSx } from 'src/pages/ActivityLog/Events/Styles';
 import { useTheme } from 'styled-components';
 
 export interface AlertsPageProps {
-  setTotalActiveAlertCount: React.Dispatch<React.SetStateAction<string>>
+  setTotalActiveAlertCount: React.Dispatch<React.SetStateAction<string>>;
 }
-const Alerts = ({
-  setTotalActiveAlertCount,
-}: AlertsPageProps) => {
+const Alerts = ({ setTotalActiveAlertCount }: AlertsPageProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const theme = useTheme() as ThemeType;

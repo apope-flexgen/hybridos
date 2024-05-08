@@ -1,12 +1,10 @@
 import { Box, ColorType, Icon } from '@flexgen/storybook';
 
 export interface SeverityIndicatorProps {
-  severity: number,
+  severity: number;
 }
 
-const SeverityIndicator = ({
-  severity,
-}: SeverityIndicatorProps) => {
+const SeverityIndicator = ({ severity }: SeverityIndicatorProps) => {
   const numArray = [0, 1, 2, 3];
   const colorMapping: { [key: number]: ColorType | 'inherit' } = {
     0: 'inherit',
@@ -16,15 +14,13 @@ const SeverityIndicator = ({
   };
   return (
     <Box>
-      {
-            numArray.map((number) => (
-              <Icon
-                src="Circle"
-                size={number <= severity ? '8px' : '4px'}
-                color={number <= severity ? colorMapping[severity] : 'disabled'}
-              />
-            ))
-        }
+      {numArray.map((number) => (
+        <Icon
+          src="Circle"
+          size={number <= severity ? '8px' : '4px'}
+          color={number <= severity ? colorMapping[severity] : 'disabled'}
+        />
+      ))}
     </Box>
   );
 };

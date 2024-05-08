@@ -5,8 +5,8 @@ import { EventsRequestParams } from 'shared/types/dtos/events.dto';
 import { Sources } from 'src/pages/ActivityLog/Events/EventsHeader/EventsHeaderTypes';
 
 interface EventsSourceProps {
-  filters: EventsRequestParams
-  setFilters: (value: React.SetStateAction<EventsRequestParams>) => void
+  filters: EventsRequestParams;
+  setFilters: (value: React.SetStateAction<EventsRequestParams>) => void;
 }
 
 const sourceOptions = ['Site', 'COPS', 'Assets', 'Modbus Client', 'Modbus Server', 'Any'];
@@ -33,12 +33,9 @@ const EventSource: FC<EventsSourceProps> = ({ filters, setFilters }: EventsSourc
     <Select
       label={sourceLabel}
       menuItems={sourceOptions}
-      onChange={(event: SelectChangeEvent<string>) => handleSourceChange(
-        event,
-        setSource,
-        filters,
-        setFilters,
-      )}
+      onChange={(event: SelectChangeEvent<string>) => {
+        handleSourceChange(event, setSource, filters, setFilters);
+      }}
       value={source}
     />
   );

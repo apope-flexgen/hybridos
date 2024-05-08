@@ -1,5 +1,15 @@
 export const statusColorMapping: {
-  [key: string]: 'error' | 'primary' | 'warning' | 'success' | 'inherit' | 'secondary' | 'disabled' | 'action' | 'info' | undefined
+  [key: string]:
+  | 'error'
+  | 'primary'
+  | 'warning'
+  | 'success'
+  | 'inherit'
+  | 'secondary'
+  | 'disabled'
+  | 'action'
+  | 'info'
+  | undefined;
 } = {
   failed: 'error',
   initialized: 'primary',

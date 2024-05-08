@@ -1,8 +1,6 @@
 import { IconList } from '@flexgen/storybook';
 import { numberValidationEnum } from './SchedulerComponents/AddEvent/AddEventHelpers';
-import {
-  Tab, MoveDirections, ButtonColors, ButtonVariants,
-} from './SchedulerTypes';
+import { Tab, MoveDirections, ButtonVariants } from './SchedulerTypes';
 
 export const addEventLabels = {
   title: { label: 'Create New Event' },
@@ -34,9 +32,23 @@ export const calendarGroupLabels = {
   todayButton: { label: 'TODAY', move: 'today' as MoveDirections },
 };
 
+export type ButtonColors =
+  | 'inherit'
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'error'
+  | 'info'
+  | 'warning'
+  | undefined;
+
 export const editEventLabels = {
   eventType: { label: 'Mode' },
-  title: { pastEventLabel: 'View Past Event', activeEventLabel: 'Edit Active Event', eventLabel: 'Edit Event' },
+  title: {
+    pastEventLabel: 'View Past Event',
+    activeEventLabel: 'Edit Active Event',
+    eventLabel: 'Edit Event',
+  },
   deleteButton: {
     icon: 'Trash' as IconList,
     seriesIcon: 'DeleteSeries' as IconList,

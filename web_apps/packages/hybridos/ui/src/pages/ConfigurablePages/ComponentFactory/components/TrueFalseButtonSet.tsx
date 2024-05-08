@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import RealTimeService from 'src/services/RealTimeService/realtime.service';
 
 export interface TrueFalseButtonSetProps {
-  onClickHandlers: { [key: string]: ()=> void };
+  onClickHandlers: { [key: string]: () => void };
   label: string;
   disabled: boolean;
   isMaintMode: boolean;
@@ -36,16 +36,13 @@ const TrueFalseButtonSet: React.FC<TrueFalseButtonSetProps> = ({
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      {
-        isMaintMode
-        && (
+      {isMaintMode && (
         <MaintModeModal
           open={modalOpen}
           onClose={() => setModalOpen(false)}
           onSubmit={onModalSubmit}
         />
-        )
-      }
+      )}
       <MuiButton
         label={`${label} - On`}
         fullWidth

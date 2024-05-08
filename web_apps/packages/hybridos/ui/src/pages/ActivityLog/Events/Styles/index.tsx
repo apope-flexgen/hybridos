@@ -12,7 +12,10 @@ export const mainContentBoxSx = (theme: ThemeType) => ({
 });
 
 export const headerBoxSx = {
-  maxHeight: '175px', width: '100%', overflowY: 'auto', height: '100%',
+  maxHeight: '175px',
+  width: '100%',
+  overflowY: 'auto',
+  height: '100%',
 };
 
 export const tableBoxSx = {

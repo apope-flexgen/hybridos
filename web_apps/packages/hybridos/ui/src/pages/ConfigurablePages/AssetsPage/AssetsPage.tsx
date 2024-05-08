@@ -22,22 +22,31 @@ const AssetsPage = (props: AssetsPageProps) => {
     const updatedTabComponents: JSX.Element[] = [];
     Object.entries(componentFunctions).forEach(([displayGroupID, displayGroup]) => {
       const { tabKey } = displayGroup;
-      const existingTabKeyComponent = updatedTabComponents
-        .find((component) => component.key === tabKey);
+      const existingTabKeyComponent = updatedTabComponents.find(
+        (component) => component.key === tabKey,
+      );
 
       if (existingTabKeyComponent) {
         Object.entries(displayGroup.statusFunctions).forEach(([, statusFunction]) => {
-          if (!componentFunctions[existingTabKeyComponent.props.value]
-            .statusFunctions.includes(statusFunction)) {
-            componentFunctions[existingTabKeyComponent.props.value]
-              .statusFunctions.push(statusFunction);
+          if (
+            !componentFunctions[existingTabKeyComponent.props.value].statusFunctions.includes(
+              statusFunction,
+            )
+          ) {
+            componentFunctions[existingTabKeyComponent.props.value].statusFunctions.push(
+              statusFunction,
+            );
           }
         });
         Object.entries(displayGroup.controlFunctions).forEach(([, controlFunction]) => {
-          if (!componentFunctions[existingTabKeyComponent.props.value]
-            .controlFunctions.includes(controlFunction)) {
-            componentFunctions[existingTabKeyComponent.props.value]
-              .controlFunctions.push(controlFunction);
+          if (
+            !componentFunctions[existingTabKeyComponent.props.value].controlFunctions.includes(
+              controlFunction,
+            )
+          ) {
+            componentFunctions[existingTabKeyComponent.props.value].controlFunctions.push(
+              controlFunction,
+            );
           }
         });
       } else {

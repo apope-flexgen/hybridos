@@ -84,7 +84,7 @@ class QueryService {
     this.realTimeService.listen(listenerFunction, 'alerts');
     this.realTimeService.send('alerts', '', 'alerts');
   };
-  
+
   getErcotOverridePage: (siteId: string, listenerFunction: (data: any) => void) => void = async (
     siteId: string,
     listenerFunction: (data: any) => void,

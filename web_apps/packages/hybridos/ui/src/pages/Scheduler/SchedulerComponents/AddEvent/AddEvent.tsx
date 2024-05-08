@@ -94,12 +94,13 @@ const AddEvent: React.FC = () => {
     );
   }, [state]);
 
-  const addDisabled = useMemo(() => (
-    isOverlappingStartTime(state, eventsForUi, timezone[0])
+  const addDisabled = useMemo(
+    () => isOverlappingStartTime(state, eventsForUi, timezone[0])
       || isDurationOver24Hours(state)
       || checkIfStartBeforeEnd(state)
-      || checkIfStartOrEndInPast(state, timezone[0])
-  ), [state, eventsForUi]);
+      || checkIfStartOrEndInPast(state, timezone[0]),
+    [state, eventsForUi],
+  );
 
   const handleClear = () => {
     setVariables([]);

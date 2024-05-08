@@ -58,7 +58,7 @@ const ExpandingTable: React.FC<ExpandingTableProps> = ({
           !validateURI(obj.uri) ||
           duplicateName
         )
-        setSetpointError(true);
+          setSetpointError(true);
         else if (!duplicateName && validateURI(obj.uri)) setSetpointError(false);
       }
     }

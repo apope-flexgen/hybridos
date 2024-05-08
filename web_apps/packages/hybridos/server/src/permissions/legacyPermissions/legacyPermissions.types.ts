@@ -1,12 +1,12 @@
 export interface LegacyPermissions {
-    authentication: {
-        notes: string
-        permissions: LegacyRole[]
-    }
+  authentication: {
+    notes: string;
+    permissions: LegacyRole[];
+  };
 }
 
 export interface LegacyRole {
-    roleOrUsername: string
-    notes: string
-    access: string[]
+  roleOrUsername: string;
+  notes: string;
+  access: string[];
 }

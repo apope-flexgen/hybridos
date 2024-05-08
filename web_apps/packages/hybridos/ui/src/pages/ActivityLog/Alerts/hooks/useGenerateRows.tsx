@@ -1,6 +1,5 @@
 import {
-  Box,
-  Chip, ColorType, Countdown, Typography,
+  Box, Chip, ColorType, Countdown, Typography,
 } from '@flexgen/storybook';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
@@ -19,9 +18,7 @@ const useGenerateActiveAlertRows = () => {
 
   const generateSeverityComponent = (severity: number) => <SeverityIndicator severity={severity} />;
 
-  const generateStatusBadge = (
-    status: string,
-  ) => {
+  const generateStatusBadge = (status: string) => {
     if (status.toLowerCase() === 'active') {
       return (
         <Chip
@@ -34,52 +31,37 @@ const useGenerateActiveAlertRows = () => {
       );
     }
     return (
-      <Chip
-        label="Inactive"
-        variant="filled"
-        color="default"
-        size="small"
-        borderStyle="rounded"
-      />
+      <Chip label="Inactive" variant="filled" color="default" size="small" borderStyle="rounded" />
     );
   };
 
-  const generateDeadline = (
-    triggerTime: string,
-    deadline: number,
-  ) => {
+  const generateDeadline = (triggerTime: string, deadline: number) => {
     const endTime = dayjs(triggerTime).add(deadline, 'minutes');
-    return (
-      <Countdown
-        endTime={endTime}
-        showSeconds
-        negativeCount
-        onNegativeCountColor="#BA1A1A"
-      />
-    );
+    return <Countdown endTime={endTime} showSeconds negativeCount onNegativeCountColor="#BA1A1A" />;
   };
 
-  const generateResolveButton = (
-    alert: ActiveAlertObject,
-  ) => <ResolveAlertButton alertInfo={alert} />;
+  const generateResolveButton = (alert: ActiveAlertObject) => (
+    <ResolveAlertButton alertInfo={alert} />
+  );
 
   const generateExpandRowContent = (
-    instances: { message: string, timestamp: string }[],
+    instances: { message: string; timestamp: string }[],
     alertTitle: string,
     alertStatus: string,
   ) => (
     <Box sx={expandedRowBoxSx}>
-      {
-          instances.map((instance) => (
-            <Box sx={expandedRowContentSx}>
-              <Typography text={dayjs(instance.timestamp).format('YYYY-MM-DD HH:mm:ss z')} variant="bodySBold" />
-              <Box sx={{ display: 'flex', gap: '2px' }}>
-                <Typography text={alertTitle ? `${alertTitle} -` : ''} variant="bodySBold" />
-                <Typography text={`${instance.message} (${alertStatus})`} variant="bodyS" />
-              </Box>
-            </Box>
-          ))
-        }
+      {instances.map((instance) => (
+        <Box sx={expandedRowContentSx}>
+          <Typography
+            text={dayjs(instance.timestamp).format('YYYY-MM-DD HH:mm:ss z')}
+            variant="bodySBold"
+          />
+          <Box sx={{ display: 'flex', gap: '2px' }}>
+            <Typography text={alertTitle ? `${alertTitle} -` : ''} variant="bodySBold" />
+            <Typography text={`${instance.message} (${alertStatus})`} variant="bodyS" />
+          </Box>
+        </Box>
+      ))}
     </Box>
   );
 
@@ -90,9 +72,7 @@ const useGenerateActiveAlertRows = () => {
     3: 'danger',
   };
 
-  const generateRowsData = (
-    alertsData: ActiveAlertObject[],
-  ) => {
+  const generateRowsData = (alertsData: ActiveAlertObject[]) => {
     const returnData: ActiveAlertRow[] = alertsData
       .filter((alert) => !alert.resolved)
       .map((alert) => ({

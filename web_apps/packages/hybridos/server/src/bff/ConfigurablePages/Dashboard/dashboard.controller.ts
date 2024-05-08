@@ -1,14 +1,6 @@
-import {
-  Controller,
-  Get,
-} from '@nestjs/common'
-import {
-  ApiDefaultResponse,
-  ApiOkResponse,
-  ApiSecurity,
-  ApiTags,
-} from '@nestjs/swagger'
-import { DashboardService } from "./dashboard.service";
+import { Controller, Get } from '@nestjs/common';
+import { ApiDefaultResponse, ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { DashboardService } from './dashboard.service';
 import { DefaultApiError } from 'src/exceptions/defaultResponse.exception';
 import { SiteDiagramResponse } from './responses/dashboard.response';
 

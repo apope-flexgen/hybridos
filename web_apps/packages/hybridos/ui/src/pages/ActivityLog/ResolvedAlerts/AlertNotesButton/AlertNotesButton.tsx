@@ -1,12 +1,10 @@
-import {
-  IconButton,
-} from '@flexgen/storybook';
+import { IconButton } from '@flexgen/storybook';
 import React, { useState } from 'react';
 import AlertNotesModal from 'src/pages/ActivityLog/ResolvedAlerts/AlertNotesModal/AlertNotesModal';
 import { ResolvedAlertObject } from 'src/pages/ActivityLog/activityLog.types';
 
 export interface AlertNotesButtonProps {
-  alertInfo: ResolvedAlertObject
+  alertInfo: ResolvedAlertObject;
 }
 
 const AlertNotesButton: React.FC<AlertNotesButtonProps> = ({
@@ -17,13 +15,18 @@ const AlertNotesButton: React.FC<AlertNotesButtonProps> = ({
   return (
     <>
       {modalOpen && (
-      <AlertNotesModal
-        open={modalOpen}
-        alertInfo={alertInfo}
-        onClose={() => setModalOpen(false)}
-      />
+        <AlertNotesModal
+          open={modalOpen}
+          alertInfo={alertInfo}
+          onClose={() => setModalOpen(false)}
+        />
       )}
-      <IconButton icon="Events" onClick={() => { setModalOpen(true); }} />
+      <IconButton
+        icon="Events"
+        onClick={() => {
+          setModalOpen(true);
+        }}
+      />
     </>
   );
 };

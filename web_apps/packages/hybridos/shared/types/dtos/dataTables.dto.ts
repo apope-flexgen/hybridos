@@ -73,11 +73,11 @@ export type AlarmFaultDataIndexable = {
 };
 
 export type TableSortBehavior = {
-  [key: string]: { columnToSortBy: keyof RowData, reverseOrder: boolean }
-}
+  [key: string]: { columnToSortBy: keyof RowData; reverseOrder: boolean };
+};
 
 export type ColumnSortDirection = {
   [tableName: string]: {
     [columnID: string]: boolean;
-  }
-}
+  };
+};

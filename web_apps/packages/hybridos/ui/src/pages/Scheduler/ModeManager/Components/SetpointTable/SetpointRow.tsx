@@ -22,8 +22,12 @@ import {
 import { validateURI } from 'shared/functions/uriValidation';
 import React, { useEffect, useState } from 'react';
 import { schedulerConfigLabels as labels, uriRules } from 'src/pages/Scheduler/ModeManager/Helpers';
-import { DeleteSetpointLabel, Setpoints, SetpointTypes } from 'src/pages/Scheduler/ModeManager/Types';
-import { setpointRowStyles as styles } from 'src/pages/Scheduler/ModeManager/Styles'
+import {
+  DeleteSetpointLabel,
+  Setpoints,
+  SetpointTypes,
+} from 'src/pages/Scheduler/ModeManager/Types';
+import { setpointRowStyles as styles } from 'src/pages/Scheduler/ModeManager/Styles';
 import { nameRegex } from 'src/pages/Scheduler/SchedulerConfiguration/Helpers';
 
 interface SetpointRowProps {
@@ -42,7 +46,7 @@ const SetpointRow: React.FC<SetpointRowProps> = ({
   disableModeManager,
 }: SetpointRowProps) => {
   const [open, setOpen] = useState(false);
-  const [showTemplateFields, setShowTemplateFields] = useState<boolean>(setpoint.is_template)
+  const [showTemplateFields, setShowTemplateFields] = useState<boolean>(setpoint.is_template);
   const [incomplete, setIncomplete] = useState<boolean>(false);
 
   // TODO: unsure if this is actually required but it gets rejected by the backend if it is not included.
@@ -54,9 +58,13 @@ const SetpointRow: React.FC<SetpointRowProps> = ({
         <NumericInput
           fullWidth
           disabled={disableModeManager}
-          helperText={(isNaN(Number(setpoint.value)) || setpoint.value === '') ? labels.modeInfo.setpointRow.required : undefined}
+          helperText={
+            isNaN(Number(setpoint.value)) || setpoint.value === ''
+              ? labels.modeInfo.setpointRow.required
+              : undefined
+          }
           endTextAdornment={setpoint.unit}
-          color={(isNaN(Number(setpoint.value)) || setpoint.value === '') ? 'error' : 'primary'}
+          color={isNaN(Number(setpoint.value)) || setpoint.value === '' ? 'error' : 'primary'}
           label={label}
           onChange={(event) =>
             updateSetpoint(setpoint.id, type, 'update', 'value', event.target.value, setpoint.type)
@@ -71,8 +79,12 @@ const SetpointRow: React.FC<SetpointRowProps> = ({
       return (
         <Select
           disabled={disableModeManager}
-          error={(setpoint.value === undefined || setpoint.value === '')}
-          helperText={(setpoint.value === undefined || setpoint.value === '') ? labels.modeInfo.setpointRow.required : undefined}
+          error={setpoint.value === undefined || setpoint.value === ''}
+          helperText={
+            setpoint.value === undefined || setpoint.value === ''
+              ? labels.modeInfo.setpointRow.required
+              : undefined
+          }
           label={label}
           menuItems={['true', 'false']}
           onChange={(event) =>
@@ -87,18 +99,21 @@ const SetpointRow: React.FC<SetpointRowProps> = ({
       <TextField
         fullWidth
         disabled={disableModeManager}
-        helperText={(setpoint.value === undefined || setpoint.value === '' || nameRegex.test(setpoint.value)) ? labels.modeInfo.setpointRow.required : undefined}
+        helperText={
+          setpoint.value === undefined || setpoint.value === '' || nameRegex.test(setpoint.value)
+            ? labels.modeInfo.setpointRow.required
+            : undefined
+        }
         label={label}
-        color={(setpoint.value === undefined || setpoint.value === '' || nameRegex.test(setpoint.value)) ? 'error' : 'primary'}
-        onChange={(event) => updateSetpoint(
-          setpoint.id,
-          type,
-          'update',
-          'value',
-          event.target.value,
-          setpoint.type,
-        )}
-        size="small"
+        color={
+          setpoint.value === undefined || setpoint.value === '' || nameRegex.test(setpoint.value)
+            ? 'error'
+            : 'primary'
+        }
+        onChange={(event) =>
+          updateSetpoint(setpoint.id, type, 'update', 'value', event.target.value, setpoint.type)
+        }
+        size='small'
         value={setpoint.value}
       />
     );
@@ -129,7 +144,7 @@ const SetpointRow: React.FC<SetpointRowProps> = ({
   const handleTurnOffTemplating = (value: boolean) => {
     setShowTemplateFields(value);
     updateSetpoint(setpoint.id, type, 'update', 'is_template', value);
-  }
+  };
 
   return (
     <>
@@ -147,8 +162,7 @@ const SetpointRow: React.FC<SetpointRowProps> = ({
             <Box sx={styles.innerBox}>
               <Table>
                 <TableBody>
-
-                <TableRow>
+                  <TableRow>
                     <TableCell>
                       <Typography variant='bodyL' text={labels.modeInfo.setpointRow.isTemplate} />
                     </TableCell>
@@ -160,70 +174,96 @@ const SetpointRow: React.FC<SetpointRowProps> = ({
                       />
                     </TableCell>
                   </TableRow>
-                  {
-                  showTemplateFields && 
+                  {showTemplateFields && (
                     <>
-                    <TableRow>
-                    <TableCell>
-                      <Typography variant='bodyL' text={labels.modeInfo.setpointRow.batchPrefix} />
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        fullWidth
-                        disabled={disableModeManager}
-                        color={!setpoint.batch_prefix ? 'error' : 'primary'}
-                        label={labels.modeInfo.setpointRow.batchPrefix}
-                        onChange={(event) =>
-                          updateSetpoint(setpoint.id, type, 'update', 'batch_prefix', event.target.value)
-                        }
-                        size='small'
-                        required
-                        value={setpoint.batch_prefix}
-                      />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      <Typography variant='bodyL' text={labels.modeInfo.setpointRow.batchRange} />
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        fullWidth
-                        disabled={disableModeManager}
-                        color={!setpoint.batch_range ? 'error' : 'primary'}
-                        label={labels.modeInfo.setpointRow.batchRange}
-                        helperText={labels.modeInfo.setpointRow.batchRangeHelper}
-                        onChange={(event) =>
-                          updateSetpoint(setpoint.id, type, 'update', 'batch_range', event.target.value)
-                        }
-                        size='small'
-                        required
-                        value={setpoint.batch_range?.join(',') || ''}
-                      />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      <Typography variant='bodyL' text={labels.modeInfo.setpointRow.batchValue} />
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        fullWidth
-                        disabled={disableModeManager}
-                        color={!setpoint.batch_value ? 'error' : 'primary'}
-                        label={labels.modeInfo.setpointRow.batchValue}
-                        helperText={labels.modeInfo.setpointRow.batchValueHelper}
-                        onChange={(event) =>
-                          updateSetpoint(setpoint.id, type, 'update', 'batch_value', event.target.value)
-                        }
-                        size='small'
-                        required
-                        value={setpoint.batch_value?.join(',') || ''}
-                      />
-                    </TableCell>
-                  </TableRow>
-                  </>
-                }
+                      <TableRow>
+                        <TableCell>
+                          <Typography
+                            variant='bodyL'
+                            text={labels.modeInfo.setpointRow.batchPrefix}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            fullWidth
+                            disabled={disableModeManager}
+                            color={!setpoint.batch_prefix ? 'error' : 'primary'}
+                            label={labels.modeInfo.setpointRow.batchPrefix}
+                            onChange={(event) =>
+                              updateSetpoint(
+                                setpoint.id,
+                                type,
+                                'update',
+                                'batch_prefix',
+                                event.target.value,
+                              )
+                            }
+                            size='small'
+                            required
+                            value={setpoint.batch_prefix}
+                          />
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <Typography
+                            variant='bodyL'
+                            text={labels.modeInfo.setpointRow.batchRange}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            fullWidth
+                            disabled={disableModeManager}
+                            color={!setpoint.batch_range ? 'error' : 'primary'}
+                            label={labels.modeInfo.setpointRow.batchRange}
+                            helperText={labels.modeInfo.setpointRow.batchRangeHelper}
+                            onChange={(event) =>
+                              updateSetpoint(
+                                setpoint.id,
+                                type,
+                                'update',
+                                'batch_range',
+                                event.target.value,
+                              )
+                            }
+                            size='small'
+                            required
+                            value={setpoint.batch_range?.join(',') || ''}
+                          />
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <Typography
+                            variant='bodyL'
+                            text={labels.modeInfo.setpointRow.batchValue}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            fullWidth
+                            disabled={disableModeManager}
+                            color={!setpoint.batch_value ? 'error' : 'primary'}
+                            label={labels.modeInfo.setpointRow.batchValue}
+                            helperText={labels.modeInfo.setpointRow.batchValueHelper}
+                            onChange={(event) =>
+                              updateSetpoint(
+                                setpoint.id,
+                                type,
+                                'update',
+                                'batch_value',
+                                event.target.value,
+                              )
+                            }
+                            size='small'
+                            required
+                            value={setpoint.batch_value?.join(',') || ''}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  )}
                   <TableRow>
                     <TableCell>
                       <Typography variant='bodyL' text={labels.modeInfo.setpointRow.name} />

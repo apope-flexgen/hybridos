@@ -1,90 +1,98 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString } from 'class-validator'
-import { AlertsDescriptions } from '../alerts.constants'
+import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
+import { AlertsDescriptions } from '../alerts.constants';
 
 export class Template {
-  id: string
-  type: 'list' | 'sequential' | 'range'
-  list?: string[]
-  from?: number
-  to?: number
-  minWidth?: number
-  separateAlerts?: boolean
-  token: string
+  id: string;
+  type: 'list' | 'sequential' | 'range';
+  list?: string[];
+  from?: number;
+  to?: number;
+  minWidth?: number;
+  separateAlerts?: boolean;
+  token: string;
 }
 export interface Alias {
-  id?: string,
-  alias: string,
-  uri: string,
-  type: string,
+  id?: string;
+  alias: string;
+  uri: string;
+  type: string;
 }
 
 export interface Comparator {
-  type: 'alias' | 'literal',
-  value: string | number | boolean,
+  type: 'alias' | 'literal';
+  value: string | number | boolean;
 }
-  
+
 export interface Duration {
-  value: string | number,
-  unit: "minute" | "hour" | "second",
+  value: string | number;
+  unit: 'minute' | 'hour' | 'second';
 }
 
 export interface Expression {
-  index: number,
-  connectionOperator: 'and' | 'or' | null,
-  comparator1: Comparator,
-  conditional: string,
-  comparator2: Comparator,
-  duration?: Duration,
-  message: string,
+  index: number;
+  connectionOperator: 'and' | 'or' | null;
+  comparator1: Comparator;
+  conditional: string;
+  comparator2: Comparator;
+  duration?: Duration;
+  message: string;
 }
 
 export interface Deadline {
-  unit: 'minute' | 'hour',
-  value: string | number
+  unit: 'minute' | 'hour';
+  value: string | number;
 }
 
 export class AlertConfiguration {
   @ApiProperty({ description: AlertsDescriptions.alertId })
   @IsString()
-  id: string
+  id: string;
   @ApiProperty({ description: AlertsDescriptions.deliver })
   @IsBoolean()
-  enabled: boolean
+  enabled: boolean;
   @ApiProperty({ description: AlertsDescriptions.deleted })
   @IsOptional()
-  deleted?: boolean
+  deleted?: boolean;
   @ApiProperty({ description: AlertsDescriptions.name })
   @IsString()
-  title: string
+  title: string;
   @ApiProperty({ description: AlertsDescriptions.severity })
   @IsNumber()
-  severity: number
+  severity: number;
   @ApiProperty({ description: AlertsDescriptions.organization })
   @IsString()
-  organization: string
+  organization: string;
   @ApiProperty({ description: AlertsDescriptions.trigger_time })
   @IsOptional()
-  last_trigger_time?: string
+  last_trigger_time?: string;
   @ApiProperty({ description: AlertsDescriptions.deadline })
   @IsObject()
-  deadline: Deadline
+  deadline: Deadline;
   @ApiProperty({ description: AlertsDescriptions.aliases })
   @IsArray()
-  aliases: Alias[]
+  aliases: Alias[];
   @ApiProperty({ description: AlertsDescriptions.templates })
   @IsOptional()
-  templates?: Template[]
+  templates?: Template[];
   @ApiProperty({ description: AlertsDescriptions.conditions })
   @IsObject()
-  conditions: Expression[]
+  conditions: Expression[];
 }
 
 export class AlertConfigurationsResponse {
-  @ApiProperty({ description: AlertsDescriptions.data, type: AlertConfiguration, isArray: true })
+  @ApiProperty({
+    description: AlertsDescriptions.data,
+    type: AlertConfiguration,
+    isArray: true,
+  })
   @IsArray()
-  data: AlertConfiguration[]
-  @ApiProperty({ description: AlertsDescriptions.templates, type: Template, isArray: true })
+  data: AlertConfiguration[];
+  @ApiProperty({
+    description: AlertsDescriptions.templates,
+    type: Template,
+    isArray: true,
+  })
   @IsArray()
-  templates: Template[]
+  templates: Template[];
 }

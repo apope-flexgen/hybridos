@@ -1,5 +1,5 @@
 export type ErcotOverrideDto = {
-   data: {
-    [key: string]: number | boolean
-   } 
-}
+  data: {
+    [key: string]: number | boolean;
+  };
+};

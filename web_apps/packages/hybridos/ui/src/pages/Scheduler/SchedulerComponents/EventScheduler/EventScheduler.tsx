@@ -120,7 +120,9 @@ const EventScheduler = ({ setIsLoading, schedulerType }: EventSchedulerProps) =>
 
   const addException = (eventId: string, exception: string) => {
     axiosInstance
-      .post(`${schedulerURLS.addEvent}/${siteId}/${eventId}/exceptions`, { data: exception })
+      .post(`${schedulerURLS.addEvent}/${siteId}/${eventId}/exceptions`, {
+        data: exception,
+      })
       .then((res) => {
         if (res.data.body.error) notifCtx?.notif('error', res.data.body.error);
       });

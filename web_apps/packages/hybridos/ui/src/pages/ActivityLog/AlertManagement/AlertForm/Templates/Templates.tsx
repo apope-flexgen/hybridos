@@ -6,7 +6,10 @@ import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import { useState, useEffect } from 'react';
 import TemplateRow from 'src/pages/ActivityLog/AlertManagement/AlertForm/Templates/TemplateRow/TemplateRow';
 import { useAlertFormContext } from 'src/pages/ActivityLog/AlertManagement/AlertForm/contexts/AlertFormContext';
-import { alertManagementHelperText, generateInitialTemplates } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
+import {
+  alertManagementHelperText,
+  generateInitialTemplates,
+} from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 
 import {
   formRowSx,
@@ -30,26 +33,26 @@ const Templates = () => {
 
   const initialTemplates = generateInitialTemplates(alertValues.templates || []);
 
-  const addNewRow = () => handleFieldChange('templates', alertValues.templates ? [...alertValues.templates, ...initialTemplates] : initialTemplates);
+  const addNewRow = () => handleFieldChange(
+    'templates',
+    alertValues.templates ? [...alertValues.templates, ...initialTemplates] : initialTemplates,
+  );
 
-  const generateTemplateRows = () => (
-    alertValues.templates && alertValues.templates.length > 0
-      ? alertValues.templates.sort((a, b) => a.id.toString().localeCompare(b.id))
-      : []
-  )
-    .map((template) => (
-      <TemplateRow
-        removeRow={removeRow}
-        template={template}
-        handleFieldChange={handleFieldChange}
-        allTemplates={alertValues.templates || []}
-      />
-    ));
+  const generateTemplateRows = () => (alertValues.templates && alertValues.templates.length > 0
+    ? alertValues.templates.sort((a, b) => a.id.toString().localeCompare(b.id))
+    : []
+  ).map((template) => (
+    <TemplateRow
+      removeRow={removeRow}
+      template={template}
+      handleFieldChange={handleFieldChange}
+      allTemplates={alertValues.templates || []}
+    />
+  ));
 
-  const [
-    showTemplateFields,
-    setShowTemplateFields,
-  ] = useState<boolean>(alertValues.templates ? alertValues.templates.length > 0 : false);
+  const [showTemplateFields, setShowTemplateFields] = useState<boolean>(
+    alertValues.templates ? alertValues.templates.length > 0 : false,
+  );
   const [templateRows, setTemplateRows] = useState<JSX.Element[]>(generateTemplateRows());
 
   useEffect(() => {
@@ -70,23 +73,13 @@ const Templates = () => {
         </Box>
         <Box sx={templateFieldsBoxSx}>
           <Box sx={templateSwitchSx}>
-            <Switch
-              value={showTemplateFields}
-              onChange={handleToggleTemplatesOff}
-            />
+            <Switch value={showTemplateFields} onChange={handleToggleTemplatesOff} />
             <Typography text="Configure templates" variant="bodySBold" />
           </Box>
-          <Box sx={accordionRowsSx}>
-            {
-                showTemplateFields
-                && templateRows
-          }
-          </Box>
-          {
-            showTemplateFields
-            && <MuiButton variant="text" label="Add Template" startIcon="Add" onClick={addNewRow} />
-
-          }
+          <Box sx={accordionRowsSx}>{showTemplateFields && templateRows}</Box>
+          {showTemplateFields && (
+            <MuiButton variant="text" label="Add Template" startIcon="Add" onClick={addNewRow} />
+          )}
         </Box>
       </Box>
       <Divider variant="fullWidth" orientation="horizontal" />

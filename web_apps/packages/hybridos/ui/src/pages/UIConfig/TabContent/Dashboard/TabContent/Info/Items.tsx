@@ -2,12 +2,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable react/no-array-index-key */
 import {
-  Accordion,
-  Divider,
-  MuiButton,
-  Switch,
-  TextField,
-  Typography,
+  Accordion, Divider, MuiButton, Switch, TextField, Typography,
 } from '@flexgen/storybook';
 import { ChangeEvent, useState } from 'react';
 import { Dashboard } from 'shared/types/dtos/dashboards.dto';

@@ -8,16 +8,12 @@ export type NotifContextType = {
   severity: NotifSeverityType | null;
   message: string | null;
   action?: React.ReactNode;
-  notif: (
-    newSeverity: NotifSeverityType,
-    newMessage: string,
-    newAction?: React.ReactNode
-  ) => void;
+  notif: (newSeverity: NotifSeverityType, newMessage: string, newAction?: React.ReactNode) => void;
   clear: () => void;
 };
 
 interface Props {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export const NotifContext = createContext<NotifContextType | null>(null);
@@ -40,15 +36,18 @@ const NotifProvider: FC<Props> = ({ children }) => {
 
   const clear = () => setMessage(null);
 
-  const context = useMemo(() => ({
-    severity, message, action, notif, clear,
-  }), [action, message, severity]);
-
-  return (
-    <NotifContext.Provider value={context}>
-      {children}
-    </NotifContext.Provider>
+  const context = useMemo(
+    () => ({
+      severity,
+      message,
+      action,
+      notif,
+      clear,
+    }),
+    [action, message, severity],
   );
+
+  return <NotifContext.Provider value={context}>{children}</NotifContext.Provider>;
 };
 
 export default NotifProvider;

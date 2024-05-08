@@ -24,10 +24,16 @@ export const tableBoxSx = {
 export const dataTableBox = { width: '100%', height: '100%', overflowY: 'hidden' };
 
 export const expandedRowBoxSx = {
-  display: 'flex', flexDirection: 'column', width: '100%', gap: '8px', padding: '2.5rem 0.5rem',
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  gap: '8px',
+  padding: '2.5rem 0.5rem',
 };
 export const expandedRowContentSx = {
-  display: 'flex', flexDirection: 'column', gap: '2px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '2px',
 };
 
 export const resolveActiveAlertBannerSx = (theme: ThemeType) => ({

@@ -1,11 +1,19 @@
 import { useState } from 'react';
 import {
-  AlarmFaultDataIndexable, ColumnData, RowData, TableSortBehavior,
+  AlarmFaultDataIndexable,
+  ColumnData,
+  RowData,
+  TableSortBehavior,
 } from 'shared/types/dtos/dataTables.dto';
-import { generateAlarmFaultStatusComponent, sortByAlarmFaultStatus } from 'src/pages/ConfigurablePages/Dashboard/TableDashboard/TableDashboard.helpers';
+import {
+  generateAlarmFaultStatusComponent,
+  sortByAlarmFaultStatus,
+} from 'src/pages/ConfigurablePages/Dashboard/TableDashboard/TableDashboard.helpers';
 
 const useGenerateDashboardTable = () => {
-  const storedSortBehavior: TableSortBehavior = JSON.parse(localStorage.getItem('dashboardSortBehavior') || '{}');
+  const storedSortBehavior: TableSortBehavior = JSON.parse(
+    localStorage.getItem('dashboardSortBehavior') || '{}',
+  );
   const [results, setResults] = useState<{ [key: string]: RowData[] }>({});
   const [, setSortBehavior] = useState<TableSortBehavior>(storedSortBehavior);
 
@@ -24,25 +32,29 @@ const useGenerateDashboardTable = () => {
         columnToSortBy: columnToSortBy ?? currentSortBehavior?.columnToSortBy ?? columns[0].id,
         reverseOrder: reverseOrder ?? currentSortBehavior?.reverseOrder ?? false,
       };
-      localStorage.setItem('dashboardSortBehavior', JSON.stringify({ ...prevSortBehavior, [tableName]: newSortBehavior }));
+      localStorage.setItem(
+        'dashboardSortBehavior',
+        JSON.stringify({ ...prevSortBehavior, [tableName]: newSortBehavior }),
+      );
 
       setResults((prevResults) => {
         const updatedRows = (() => {
           let oldRows = prevResults[tableName] ?? [];
           newRows?.forEach((newRow) => {
+            const tempNewRow = newRow;
             columns.forEach((column) => {
               if (column.id === 'alarm_status' || column.id === 'fault_status') {
-                newRow[column.id] = generateAlarmFaultStatusComponent(
+                tempNewRow[column.id] = generateAlarmFaultStatusComponent(
                   column.id,
                   alarmStatus?.[newRow.id] ?? {},
                   faultStatus?.[newRow.id] ?? {},
                 );
               } else {
-                newRow[column.id] = String(newRow?.[column.id] ?? '-');
+                tempNewRow[column.id] = String(tempNewRow?.[column.id] ?? '-');
               }
             });
-            oldRows = oldRows.filter((oldRow) => oldRow.id !== newRow.id);
-            oldRows.push(newRow);
+            oldRows = oldRows.filter((oldRow) => oldRow.id !== tempNewRow.id);
+            oldRows.push(tempNewRow);
           });
           return oldRows;
         })();
@@ -50,24 +62,25 @@ const useGenerateDashboardTable = () => {
 
         const rowIndex = newSortBehavior.columnToSortBy;
         if (rowIndex === 'alarm_status' || rowIndex === 'fault_status') {
-          updatedRows.sort((objectA, objectB) => sortByAlarmFaultStatus(
-            objectA,
-            objectB,
-            rowIndex,
-            newSortBehavior.reverseOrder,
-          ));
+          // TODO: shorten line
+          // eslint-disable-next-line max-len
+          updatedRows.sort((objectA, objectB) => sortByAlarmFaultStatus(objectA, objectB, rowIndex, newSortBehavior.reverseOrder));
         } else {
-          updatedRows.sort(
-            (objectA, objectB) => {
-              if (!newSortBehavior.reverseOrder) return `${objectA[rowIndex]}`.localeCompare(`${objectB[rowIndex]}`, 'en', { numeric: true });
-              return `${objectB[rowIndex]}`.localeCompare(`${objectA[rowIndex]}`, 'en', { numeric: true });
-            },
-          );
+          updatedRows.sort((objectA, objectB) => {
+            if (!newSortBehavior.reverseOrder) {
+              return `${objectA[rowIndex]}`.localeCompare(`${objectB[rowIndex]}`, 'en', {
+                numeric: true,
+              });
+            }
+            return `${objectB[rowIndex]}`.localeCompare(`${objectA[rowIndex]}`, 'en', {
+              numeric: true,
+            });
+          });
         }
-        return ({ ...prevResults, [tableName]: updatedRows });
+        return { ...prevResults, [tableName]: updatedRows };
       });
 
-      return ({ ...prevSortBehavior, [tableName]: newSortBehavior });
+      return { ...prevSortBehavior, [tableName]: newSortBehavior };
     });
   };
 

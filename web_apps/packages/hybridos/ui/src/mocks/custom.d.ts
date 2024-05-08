@@ -1,4 +1,6 @@
 declare global {
-  interface Window { msw: any; }
+  interface Window {
+    msw: any;
+  }
 }
 export default global;

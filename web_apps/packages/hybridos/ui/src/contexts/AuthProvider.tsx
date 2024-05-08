@@ -1,12 +1,12 @@
 import { createContext, useMemo, useState } from 'react';
 
 type UserAuth = {
-  accessToken?: string | null
+  accessToken?: string | null;
 };
 
 export type AuthContextType = {
-  auth: UserAuth | null,
-  setAuth: React.Dispatch<React.SetStateAction<UserAuth>>,
+  auth: UserAuth | null;
+  setAuth: React.Dispatch<React.SetStateAction<UserAuth>>;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -19,9 +19,5 @@ export const AuthProvider = ({ children }: any) => {
 
   const contextValue = useMemo(() => ({ auth, setAuth }), [auth]);
 
-  return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };

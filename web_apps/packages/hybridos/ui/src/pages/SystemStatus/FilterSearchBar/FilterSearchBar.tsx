@@ -5,33 +5,40 @@ import { useCallback, useEffect, useState } from 'react';
 import { initialSystemStatusFilter } from 'src/pages/SystemStatus/SystemStatus.constants';
 import { formatServiceName, toTitleCase } from 'src/pages/SystemStatus/SystemStatus.helpers';
 import { filterBoxSx } from 'src/pages/SystemStatus/SystemStatus.styles';
-import { FilterSearchBarProps, SystemStatusFilter, SystemStatusObject } from 'src/pages/SystemStatus/SystemStatus.types';
+import {
+  FilterSearchBarProps,
+  SystemStatusFilter,
+  SystemStatusObject,
+} from 'src/pages/SystemStatus/SystemStatus.types';
 import useHandleSearch from 'src/pages/SystemStatus/hooks/useHandleSearch';
 
-const FilterSearchBar = ({
-  systemStatusData,
-  setDisplayData,
-}: FilterSearchBarProps) => {
+const FilterSearchBar = ({ systemStatusData, setDisplayData }: FilterSearchBarProps) => {
   const [searchTerms, setSearchTerms] = useState<string>('');
   const [filters, setFilters] = useState<SystemStatusFilter>(initialSystemStatusFilter);
   const [filteredData, setFilteredData] = useState<SystemStatusObject[]>([]);
 
   const serviceNames = systemStatusData.map((systemStatusObject) => formatServiceName(systemStatusObject.serviceName || ''));
-  const serviceStatuses = [...new Set(systemStatusData.map((systemStatusObject) => toTitleCase(systemStatusObject.serviceStatus || '')))];
-  const connectionStatuses = [...new Set(systemStatusData.map((systemStatusObject) => toTitleCase(systemStatusObject.connectionStatus || '')))];
+  const serviceStatuses = [
+    ...new Set(
+      systemStatusData.map((systemStatusObject) => toTitleCase(systemStatusObject.serviceStatus || '')),
+    ),
+  ];
+  const connectionStatuses = [
+    ...new Set(
+      systemStatusData.map((systemStatusObject) => toTitleCase(systemStatusObject.connectionStatus || '')),
+    ),
+  ];
 
   const { handleSearch } = useHandleSearch(filteredData);
 
-  const handleSearchOnChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) => {
+  const handleSearchOnChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setSearchTerms(e.target.value);
   };
 
   const handleSearchSubmit = useCallback(() => {
     const results = handleSearch(searchTerms);
     setDisplayData(results);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerms, handleSearch]);
 
   useEffect(() => {
@@ -39,11 +46,17 @@ const FilterSearchBar = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerms, filteredData]);
 
-  const handleFilter = (selectedValue: string | string[], field: 'serviceNames' | 'serviceStatus' | 'connectionStatus') => {
+  const handleFilter = (
+    selectedValue: string | string[],
+    field: 'serviceNames' | 'serviceStatus' | 'connectionStatus',
+  ) => {
     setFilters({ ...filters, [field]: selectedValue });
   };
 
-  const handleDeleteFilter = (element: string, field: 'serviceNames' | 'serviceStatus' | 'connectionStatus') => {
+  const handleDeleteFilter = (
+    element: string,
+    field: 'serviceNames' | 'serviceStatus' | 'connectionStatus',
+  ) => {
     const tempItems = filters[field];
     const indexOfItem = filters[field].indexOf(element);
     tempItems.splice(indexOfItem, 1);
@@ -55,15 +68,16 @@ const FilterSearchBar = ({
       const compareName = formatServiceName(serviceStatusObject.serviceName || '');
       return (
         (filters.serviceStatus.length === 0
-          || filters.serviceStatus.includes(toTitleCase(serviceStatusObject.serviceStatus || ''))
-        )
+          || filters.serviceStatus.includes(toTitleCase(serviceStatusObject.serviceStatus || '')))
         && (filters.connectionStatus.length === 0
-            || filters.connectionStatus.includes(toTitleCase(serviceStatusObject.connectionStatus || '')))
+          || filters.connectionStatus.includes(
+            toTitleCase(serviceStatusObject.connectionStatus || ''),
+          ))
         && (filters.serviceNames.length === 0 || filters.serviceNames.includes(compareName))
       );
     });
     setFilteredData(updatedFilteredData);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, systemStatusData]);
 
   const clearFilters = () => {

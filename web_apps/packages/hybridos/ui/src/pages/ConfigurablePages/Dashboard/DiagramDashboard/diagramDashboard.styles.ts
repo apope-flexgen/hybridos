@@ -1,7 +1,11 @@
 import { ThemeType } from '@flexgen/storybook';
 
 export const cardContainerSx = {
-  alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%', padding: 24,
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '100%',
+  width: '100%',
+  padding: 24,
 };
 
 export const nodeBoxSx = (theme: ThemeType) => ({

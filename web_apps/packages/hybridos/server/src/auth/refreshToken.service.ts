@@ -43,7 +43,12 @@ export class RefreshTokenService {
 
   async createRefreshTokenFromUser(username: string, role: string): Promise<string> {
     const user = await this.usersService.readByUsername(username);
-    const payload = { sub: username, userId: user.id, role: role, nonce: performance.now() };
+    const payload = {
+      sub: username,
+      userId: user.id,
+      role: role,
+      nonce: performance.now(),
+    };
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: this.appEnvService.getRefreshTokenTimeout(),
     });

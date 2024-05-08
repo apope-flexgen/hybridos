@@ -1,6 +1,4 @@
-import {
-  Box, ThemeType, PageLoadingIndicator,
-} from '@flexgen/storybook';
+import { Box, ThemeType, PageLoadingIndicator } from '@flexgen/storybook';
 import { useCallback, useEffect, useState } from 'react';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import QueryService from 'src/services/QueryService';
@@ -54,10 +52,14 @@ const SystemStatus: React.FunctionComponent = () => {
   const getInitialData = async () => {
     axiosInstance.get(SYSTEM_STATUS_URL).then((res) => {
       setSystemStatusData(() => {
-        const summaryData = res.data.find((entry: SystemStatusObject) => entry.serviceName === 'summary');
+        const summaryData = res.data.find(
+          (entry: SystemStatusObject) => entry.serviceName === 'summary',
+        );
         if (summaryData) setSummarySystemData(summaryData);
 
-        return res.data.filter((entry: SystemStatusObject) => entry.serviceName !== 'summary') as SystemStatusObject[];
+        return res.data.filter(
+          (entry: SystemStatusObject) => entry.serviceName !== 'summary',
+        ) as SystemStatusObject[];
       });
       setIsLoading(false);
     });

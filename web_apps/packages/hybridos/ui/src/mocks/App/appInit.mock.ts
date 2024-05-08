@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { SITE_CONFIGURATION_URL, LAYOUTS_URL } from '../../App/helpers/constants';
+import { SITE_CONFIGURATION_URL, LAYOUTS_URL } from 'src/App/helpers/constants';
 
 const mockSiteConfig = {
   timezone: 'America/Chicago',
@@ -28,6 +28,8 @@ const mockSiteConfig = {
 
 const layouts = [{ info: { key: 'ESS', name: 'ESS' } }];
 
-export const appInitMock = rest.get(SITE_CONFIGURATION_URL, (req, res, ctx) => res(ctx.json(mockSiteConfig)));
+const appInitCallback = (req, res, ctx) => res(ctx.json(mockSiteConfig));
+export const appInitMock = rest.get(SITE_CONFIGURATION_URL, appInitCallback);
 
-export const layoutsMock = rest.get(LAYOUTS_URL, (req, res, ctx) => res(ctx.json({ data: layouts })));
+const layoutsMockCallabck = (req, res, ctx) => res(ctx.json({ data: layouts }));
+export const layoutsMock = rest.get(LAYOUTS_URL, layoutsMockCallabck);

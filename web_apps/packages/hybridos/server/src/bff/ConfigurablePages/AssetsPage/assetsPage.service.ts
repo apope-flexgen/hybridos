@@ -82,7 +82,7 @@ export class AssetsPageService {
     let keys = Object.keys(initialRawData);
     if (keys.length === 1 && keys[0] === '/assets') {
       initialRawData = initialRawData['/assets'];
-      keys = Object.keys(initialRawData); 
+      keys = Object.keys(initialRawData);
     }
 
     const uriCandidates = keys.filter((key) => !key.includes('summary'));
@@ -96,14 +96,14 @@ export class AssetsPageService {
         }
       }
       return false;
-    })
+    });
 
     let isDefaultValues = {};
     URIs.forEach((uri) => {
       const isDefault = assetKey in DEFAULT_URIS;
-      isDefaultValues = {...isDefaultValues, [uri]: isDefault};
+      isDefaultValues = { ...isDefaultValues, [uri]: isDefault };
     });
-    
+
     const initialSendData = await this.getInitialSendData(
       initialRawData,
       URIs,
@@ -111,7 +111,7 @@ export class AssetsPageService {
       queryURIsArray,
       enableAssetPageControls,
       individualMetadataArray,
-      assetKey
+      assetKey,
     );
 
     return this.getMergedStream(
@@ -122,7 +122,7 @@ export class AssetsPageService {
       enableAssetPageControls,
       individualMetadataArray,
       isDefaultValues,
-      assetKey
+      assetKey,
     );
   }
 
@@ -132,13 +132,13 @@ export class AssetsPageService {
   ): Promise<summaryDataFromFims> => {
     if (!individualMetadata) {
       const fimsData = (await this.fimsService.get(queryURIsArray[0])).body as summaryDataFromFims;
-      
+
       const initialRawData: summaryDataFromFims = {};
       Object.entries(fimsData).forEach(([key, value]) => {
         const { name, ...fields } = value;
         initialRawData[`${queryURIsArray[0]}/${key}`] = { name, ...fields };
       });
-      
+
       return initialRawData;
     }
 
@@ -160,32 +160,35 @@ export class AssetsPageService {
           uri: '/maint_actions_ctl',
         };
 
-
         // if this asset is configured to include a control for maintenance mode
         // put the maintenance actions right after the maintenance mode control so they appear together
-        const indexOfMaintMode = metadata.controls.findIndex((control) => control.name.toLowerCase() === "maintenance mode");
+        const indexOfMaintMode = metadata.controls.findIndex(
+          (control) => control.name.toLowerCase() === 'maintenance mode',
+        );
         if (indexOfMaintMode !== -1) {
-          metadata.controls.splice(indexOfMaintMode + 1, 0, maintenanceActionControl)
-        } else { 
-          metadata.controls.push(maintenanceActionControl)
+          metadata.controls.splice(indexOfMaintMode + 1, 0, maintenanceActionControl);
+        } else {
+          metadata.controls.push(maintenanceActionControl);
         }
 
         // if user has included a batch controls array in the config and has matintenance actions
         // include maintenance action control on batch control array
         if (metadata.info.hasBatchControls && metadata.batchControls) {
-          const indexOfMaintMode = metadata.batchControls.findIndex((control) => control.name.toLowerCase() === "maintenance mode");
+          const indexOfMaintMode = metadata.batchControls.findIndex(
+            (control) => control.name.toLowerCase() === 'maintenance mode',
+          );
           if (indexOfMaintMode !== -1) {
-            metadata.batchControls.splice(indexOfMaintMode + 1, 0, maintenanceActionControl)
-          } else { 
-            metadata.batchControls.push(maintenanceActionControl)
+            metadata.batchControls.splice(indexOfMaintMode + 1, 0, maintenanceActionControl);
+          } else {
+            metadata.batchControls.push(maintenanceActionControl);
           }
         }
       }
-  
+
       let extension = metadata.info.extension ?? '';
       const maybeNumber = Number(metadata.info.numberOfItems);
       const numItems = isNaN(maybeNumber) ? -1 : maybeNumber;
-      const range = metadata.info.range
+      const range = metadata.info.range;
       const baseName = metadata.info.name ?? '';
       const itemName = metadata.info.itemName ?? '';
 
@@ -208,24 +211,26 @@ export class AssetsPageService {
         let numericExtensions = [];
         range.forEach((rangeItem) => {
           if (typeof rangeItem === 'string' && rangeItem.includes('..')) {
-              const arrayOfRange = rangeItem.split('..')
-              const startNumber = Number(arrayOfRange[0]);
-              const endNumber = Number(arrayOfRange[1]);
-              if (startNumber > endNumber || Number.isNaN(startNumber) || Number.isNaN(endNumber)) {
-                console.warn(
-                  `received an invalid string within range array for ${queryURIsArray[index]}, getting initial data will fail`,
-                );
-              }
-              for (var i = startNumber; i < endNumber + 1; i++) {
-                numericExtensions.push(i)
-              }
+            const arrayOfRange = rangeItem.split('..');
+            const startNumber = Number(arrayOfRange[0]);
+            const endNumber = Number(arrayOfRange[1]);
+            if (startNumber > endNumber || Number.isNaN(startNumber) || Number.isNaN(endNumber)) {
+              console.warn(
+                `received an invalid string within range array for ${queryURIsArray[index]}, getting initial data will fail`,
+              );
+            }
+            for (var i = startNumber; i < endNumber + 1; i++) {
+              numericExtensions.push(i);
+            }
           } else {
             numericExtensions.push(Number(rangeItem));
           }
         });
         numericExtensions.forEach((rangeItem) => {
-          const assetID = `${extension}${rangeItem < 10 ? leadingZero : ''}${rangeItem}`.substring(1);
-    
+          const assetID = `${extension}${rangeItem < 10 ? leadingZero : ''}${rangeItem}`.substring(
+            1,
+          );
+
           initialRawData[`${queryURIsArray[index]}/${assetID}`] = {
             name: `${baseName} ${itemName} ${rangeItem}`,
             ...this.getClothedBodyFieldsForConfiguredAsset(metadata),
@@ -233,22 +238,22 @@ export class AssetsPageService {
         });
       } else {
         for (let j = 1; j <= numItems; j++) {
-          const templatedItem: boolean = extension.slice(-1) === '_' || extension.slice(-2) === '_0';
-          const assetID = 
-            templatedItem ?
-            `${extension}${j < 10 ? leadingZero : ''}${j}`.substring(1)
+          const templatedItem: boolean =
+            extension.slice(-1) === '_' || extension.slice(-2) === '_0';
+          const assetID = templatedItem
+            ? `${extension}${j < 10 ? leadingZero : ''}${j}`.substring(1)
             : `${extension}`.substring(1);
-    
-          const name = templatedItem ?  `${baseName} ${itemName} ${j}` : (itemName || `${baseName}`);
-    
+
+          const name = templatedItem ? `${baseName} ${itemName} ${j}` : itemName || `${baseName}`;
+
           initialRawData[`${queryURIsArray[index]}/${assetID}`] = {
             name: name,
             ...this.getClothedBodyFieldsForConfiguredAsset(metadata),
           };
         }
       }
-    })   
-   
+    });
+
     return initialRawData;
   };
 
@@ -291,8 +296,8 @@ export class AssetsPageService {
           {
             name: '',
             return_value: '',
-          }
-        ]
+          },
+        ],
       };
     });
     return clothedBodyFields;
@@ -309,7 +314,7 @@ export class AssetsPageService {
         `No metadata found for assetKey ${assetKey}, will use a default configuration if available, but this should be added to assets.json`,
       );
       return null;
-    } 
+    }
 
     return filteredMetadata;
   };
@@ -322,7 +327,7 @@ export class AssetsPageService {
     enableAssetPageControls: boolean,
     dbiMetadata: metadataFromDBI[],
     isDefaultValues: { [uri: string]: boolean },
-    assetKey: string
+    assetKey: string,
   ): Observable<ConfigurablePageDTO> => {
     const base = new Observable<ConfigurablePageDTO>((observer) => {
       observer.next(initialSendData);
@@ -341,7 +346,7 @@ export class AssetsPageService {
         false,
         hasBatchControls,
         hasMaintenanceActions,
-        assetKey
+        assetKey,
       );
     });
 
@@ -358,9 +363,9 @@ export class AssetsPageService {
             true,
             hasBatchControls,
             hasMaintenanceActions,
-            assetKey
-          )
-        )
+            assetKey,
+          ),
+        );
       }
     });
 
@@ -379,12 +384,16 @@ export class AssetsPageService {
     return {} as metadataFromDBI[];
   };
 
-  private getIndividualAssetMetadata = (uri: string, dbiMetadata: metadataFromDBI[], isSummary: boolean) => {
+  private getIndividualAssetMetadata = (
+    uri: string,
+    dbiMetadata: metadataFromDBI[],
+    isSummary: boolean,
+  ) => {
     let indexOfMetadata = -1;
     if (isSummary) return dbiMetadata[0];
 
     dbiMetadata.every((metadata, index) => {
-      // check if the uri listed in this metadata matches the uri passed in 
+      // check if the uri listed in this metadata matches the uri passed in
       // if so, this is the correct metadata for this uri
       const metadataUri = `${metadata.info.sourceURI}${metadata.info.baseURI}${metadata.info.extension}`;
 
@@ -392,25 +401,25 @@ export class AssetsPageService {
         indexOfMetadata = index;
         return false;
       }
-      // check if there is a range object in the metadata 
+      // check if there is a range object in the metadata
       // if so and if the asset number from this uri is listed in this range,
       // this is the correct metadata for this uri
       else if ('range' in metadata.info) {
-        const lastUnderscore = uri.lastIndexOf("_")
-        const assetNumber = uri.slice(lastUnderscore + 1)
-        let numericExtensions = []
+        const lastUnderscore = uri.lastIndexOf('_');
+        const assetNumber = uri.slice(lastUnderscore + 1);
+        let numericExtensions = [];
         metadata.info.range.forEach((rangeItem) => {
           if (typeof rangeItem === 'string' && rangeItem.includes('..')) {
-            const arrayOfRange = rangeItem.split('..')
+            const arrayOfRange = rangeItem.split('..');
             const startNumber = Number(arrayOfRange[0]);
             const endNumber = Number(arrayOfRange[1]);
             for (var i = startNumber; i < endNumber + 1; i++) {
-              numericExtensions.push(i)
+              numericExtensions.push(i);
             }
           } else {
-            numericExtensions.push(Number(rangeItem))
+            numericExtensions.push(Number(rangeItem));
           }
-        })
+        });
         if (numericExtensions.includes(Number(assetNumber))) {
           indexOfMetadata = index;
           return false;
@@ -425,9 +434,9 @@ export class AssetsPageService {
       ) {
         indexOfMetadata = index;
         return false;
-      };
+      }
       return true;
-    })
+    });
 
     if (indexOfMetadata === -1) {
       console.warn(`error getting metadata for uri ${uri}`);
@@ -439,16 +448,16 @@ export class AssetsPageService {
     URIs: string[],
     baseUri: string,
   ): Promise<any> => {
-    // if this asset is configured to have maintenance actions 
+    // if this asset is configured to have maintenance actions
     // get initial data to send to frontend
     const entries = await Promise.all(
       URIs.map(async (uri, index) => {
-        const indiviudalMetadata = await this.fimsService.get(`${uri}/actions`)
+        const indiviudalMetadata = await this.fimsService.get(`${uri}/actions`);
         return [uri, indiviudalMetadata.body];
-      })
+      }),
     );
     return Object.fromEntries(entries);
-  }
+  };
 
   private getInitialSendData = async (
     summaryData: summaryDataFromFims,
@@ -460,7 +469,7 @@ export class AssetsPageService {
     assetKey: string,
   ): Promise<ConfigurablePageDTO> => {
     const hasMaintenanceActions = dbiMetadata?.[0].info.hasMaintenanceActions ? true : false;
-    const hasBatchControls = dbiMetadata?.[0].info.hasBatchControls ? true : false
+    const hasBatchControls = dbiMetadata?.[0].info.hasBatchControls ? true : false;
 
     const returnWithMetadata: ConfigurablePageDTO = {
       hasStatic: true,
@@ -470,7 +479,9 @@ export class AssetsPageService {
       displayGroups: {},
     };
 
-    const maintenanceActionsMetadata = hasMaintenanceActions ? await this.getInitialMaintenanceActionsData(URIs, baseURIsArray[0]) : undefined;
+    const maintenanceActionsMetadata = hasMaintenanceActions
+      ? await this.getInitialMaintenanceActionsData(URIs, baseURIsArray[0])
+      : undefined;
 
     URIs.forEach((uri, index) => {
       const parsedData: DisplayGroupDTO = isDefaultValues[uri]
@@ -504,7 +515,7 @@ export class AssetsPageService {
       returnWithMetadata.displayGroups[uri] = {
         ...parsedData,
         displayName,
-        tabKey: dbiMetadata?.[index]?.info.tabKey
+        tabKey: dbiMetadata?.[index]?.info.tabKey,
       };
     });
 
@@ -562,7 +573,7 @@ export class AssetsPageService {
               this.siteConfiguration,
             )
           : !isDefault
-            ? parseConfiguredData(
+          ? parseConfiguredData(
               event.body as nakedBodyFromFims,
               this.setLockMode(uri),
               this.getIndividualAssetMetadata(uri, dbiMetadata, isSummary),
@@ -571,7 +582,7 @@ export class AssetsPageService {
               this.siteConfiguration,
               maintenanceActions,
             )
-            : parseDefaultData(
+          : parseDefaultData(
               event.body as clothedBodyFromFims,
               this.setLockMode(uri),
               false,
@@ -587,7 +598,9 @@ export class AssetsPageService {
             [uri]: {
               ...parsedData,
               displayName: name || uri,
-              tabKey: !isDefault ? this.getIndividualAssetMetadata(uri, dbiMetadata, isSummary).info.tabKey : undefined
+              tabKey: !isDefault
+                ? this.getIndividualAssetMetadata(uri, dbiMetadata, isSummary).info.tabKey
+                : undefined,
             },
           },
         };

@@ -41,7 +41,7 @@ export class DashboardLayoutInterceptor implements NestInterceptor {
           rows: {},
           batteryViewData: {},
           alarmStatus: {},
-          faultStatus: {}
+          faultStatus: {},
         };
       }
 
@@ -69,7 +69,7 @@ export class DashboardLayoutInterceptor implements NestInterceptor {
           if ('state' in statusInfo) {
             toReturn[tableName].alarmStatus[rowName] = {
               ...toReturn[tableName].alarmStatus[rowName],
-              [statusID]: statusInfo.state.value
+              [statusID]: statusInfo.state.value,
             };
           }
         });
@@ -88,7 +88,7 @@ export class DashboardLayoutInterceptor implements NestInterceptor {
           if ('state' in statusInfo) {
             toReturn[tableName].faultStatus[rowName] = {
               ...toReturn[tableName].faultStatus[rowName],
-              [statusID]: statusInfo.state.value
+              [statusID]: statusInfo.state.value,
             };
           }
         });
@@ -106,7 +106,7 @@ export class DashboardLayoutInterceptor implements NestInterceptor {
             };
           }
         }
-        
+
         if ('state' in statusInfo) {
           if (!(rowName in toReturn[tableName].rows)) {
             toReturn[tableName].rows[rowName] = { id: rowName };
@@ -127,7 +127,7 @@ export class DashboardLayoutInterceptor implements NestInterceptor {
         rows: Object.values(tableData.rows),
         batteryViewData: Object.values(tableData.batteryViewData),
         alarmStatus: tableData.alarmStatus,
-        faultStatus: tableData.faultStatus
+        faultStatus: tableData.faultStatus,
       };
     });
     return toReturn;

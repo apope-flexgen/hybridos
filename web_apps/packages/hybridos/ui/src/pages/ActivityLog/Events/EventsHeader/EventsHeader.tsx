@@ -79,9 +79,13 @@ const EventsHeader: FC<EventsProps> = ({
   }, [filters]);
 
   return (
-    <Box sx={{
-      marginTop: '16px', width: '100%', display: 'flex', flexDirection: 'column',
-    }}
+    <Box
+      sx={{
+        marginTop: '16px',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
     >
       <CardRow justifyContent="space-between">
         <Typography text="Events" variant="bodyXLBold" />

@@ -4,7 +4,10 @@ import {
 import { Box } from '@mui/material';
 import FilterSearchBar from 'src/pages/SystemStatus/FilterSearchBar/FilterSearchBar';
 import {
-  headerFiltersRow, interiorHeaderFiltersBox, summaryStatusBoxSx, summaryStatusSx,
+  headerFiltersRow,
+  interiorHeaderFiltersBox,
+  summaryStatusBoxSx,
+  summaryStatusSx,
 } from 'src/pages/SystemStatus/SystemStatus.styles';
 import { SystemStatusHeaderProps } from 'src/pages/SystemStatus/SystemStatus.types';
 
@@ -19,16 +22,36 @@ const SystemStatusHeader = ({
         <Typography text="System Status" variant="headingM" />
         <Box sx={summaryStatusBoxSx}>
           <Box sx={summaryStatusSx}>
-            <InfoDisplay helper="System Uptime" header={summarySystemData.uptime as string || '-'} color="primary" />
+            <InfoDisplay
+              helper="System Uptime"
+              header={(summarySystemData.uptime as string) || '-'}
+              color="primary"
+            />
           </Box>
           <Box sx={summaryStatusSx}>
-            <InfoDisplay helper="Last Restart" header={summarySystemData.lastRestart as string || '-'} color="primary" />
+            <InfoDisplay
+              helper="Last Restart"
+              header={(summarySystemData.lastRestart as string) || '-'}
+              color="primary"
+            />
           </Box>
           <Box sx={summaryStatusSx}>
-            <InfoDisplay helper="CPU Usage" header={summarySystemData.cpuUsage ? `${summarySystemData.cpuUsage.toFixed(1)}%` : '-'} color="primary" />
+            <InfoDisplay
+              helper="CPU Usage"
+              header={
+                summarySystemData.cpuUsage ? `${summarySystemData.cpuUsage.toFixed(1)}%` : '-'
+              }
+              color="primary"
+            />
           </Box>
           <Box sx={summaryStatusSx}>
-            <InfoDisplay helper="Memory Usage" header={summarySystemData.memoryUsage ? `${summarySystemData.memoryUsage.toFixed(1)}%` : '-'} color="primary" />
+            <InfoDisplay
+              helper="Memory Usage"
+              header={
+                summarySystemData.memoryUsage ? `${summarySystemData.memoryUsage.toFixed(1)}%` : '-'
+              }
+              color="primary"
+            />
           </Box>
         </Box>
       </CardRow>

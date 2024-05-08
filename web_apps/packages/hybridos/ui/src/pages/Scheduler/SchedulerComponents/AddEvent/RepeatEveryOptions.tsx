@@ -17,13 +17,15 @@ import { useTheme } from 'styled-components';
 import { addEventLabels, dayNames, onArrow } from './AddEventHelpers';
 
 export interface RepeatEveryOptionsProps {
-  state: EditEventState
-  dispatch: React.Dispatch<any>
-  event?: SchedulerEvent
+  state: EditEventState;
+  dispatch: React.Dispatch<any>;
+  event?: SchedulerEvent;
 }
 
 const RepeatEvery: React.FunctionComponent<RepeatEveryOptionsProps> = ({
-  state, dispatch, event,
+  state,
+  dispatch,
+  event,
 }) => {
   const theme = useTheme() as ThemeType;
   const muiOverrides = createMuiTheme(theme);
@@ -52,7 +54,7 @@ const RepeatEvery: React.FunctionComponent<RepeatEveryOptionsProps> = ({
               downArrowOnClick={() => onArrow('down', state.repeatEveryValue, dispatch)}
               upArrowOnClick={() => onArrow('up', state.repeatEveryValue, dispatch)}
             />
-                      )}
+          )}
           fullWidth
           label=""
           onChange={(e) => dispatch({ type: 'setRepeatEveryValue', payload: e.target.value })}
@@ -100,9 +102,9 @@ const RepeatEvery: React.FunctionComponent<RepeatEveryOptionsProps> = ({
                   ...state.daysSelected,
                   [dayNames[dayOfWeekSelected]]: true,
                   [day.name]:
-                                            dayNames[dayOfWeekSelected] !== day.name
-                                              ? !state.daysSelected[day.name]
-                                              : true,
+                      dayNames[dayOfWeekSelected] !== day.name
+                        ? !state.daysSelected[day.name]
+                        : true,
                 },
               })}
               selected={state.daysSelected[day.name]}

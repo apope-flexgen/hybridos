@@ -1,7 +1,11 @@
 import Dagre from '@dagrejs/dagre';
 import { ThemeType } from '@flexgen/storybook';
 import { Edge, Node } from 'reactflow';
-import { ASSET, assetTypeMapping, layoutDirection } from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.constants';
+import {
+  ASSET,
+  assetTypeMapping,
+  layoutDirection,
+} from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.constants';
 import { edgeSx } from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.styles';
 import { DiagramItem } from './diagramDashboard.types';
 
@@ -63,7 +67,7 @@ export const generateDiagramNodes = (
   parentId = '',
   xOffset = 0,
   yOffset = 0,
-): { nodes: Node[], edges: Edge[] } => {
+): { nodes: Node[]; edges: Edge[] } => {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
 
@@ -123,7 +127,7 @@ export const generateDiagramNodes = (
 export const getLayoutElements = (
   nodes: Node[],
   edges: Edge[],
-): { nodes: Node[], edges: Edge[] } => {
+): { nodes: Node[]; edges: Edge[] } => {
   const graph = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
   // set layout options, such as direction

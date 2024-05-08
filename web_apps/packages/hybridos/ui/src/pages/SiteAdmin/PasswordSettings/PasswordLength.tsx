@@ -4,7 +4,7 @@ import {
 import { FunctionComponent } from 'react';
 import { PasswordSettings } from 'shared/types/api/SiteAdmin.types';
 import { siteAdminLabels, onArrow } from 'src/pages/SiteAdmin/SiteAdmin.constants';
-import { numericInputSx } from './styles';
+import { numericInputSx, passwordLengthBoxSx } from './styles';
 
 export interface PasswordLengthProps {
   passwordSettings: PasswordSettings;
@@ -31,15 +31,7 @@ const PasswordLength: FunctionComponent<PasswordLengthProps> = ({
   return (
     <>
       <Typography text={siteAdminLabels.passwordLengthField} variant="bodyL" />
-      <Box
-        sx={{
-          display: 'flex',
-          gap: '16px',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          width: '60%',
-        }}
-      >
+      <Box sx={passwordLengthBoxSx}>
         <Box sx={numericInputSx}>
           <NumericInput
             color={

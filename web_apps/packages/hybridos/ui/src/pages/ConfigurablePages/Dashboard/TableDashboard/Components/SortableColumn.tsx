@@ -1,18 +1,19 @@
-import {
-  Box, IconButton, Typography,
-} from '@flexgen/storybook';
+import { Box, IconButton, Typography } from '@flexgen/storybook';
 import { useState } from 'react';
 import {
-  AlarmFaultDataIndexable, ColumnData, ColumnSortDirection, RowData,
+  AlarmFaultDataIndexable,
+  ColumnData,
+  ColumnSortDirection,
+  RowData,
 } from 'shared/types/dtos/dataTables.dto';
 import { sortedTableHeaderSx } from 'src/pages/ConfigurablePages/Dashboard/TableDashboard/tableDashboard.styles';
 
 interface Props {
-  label: string,
-  columnID: keyof RowData,
-  columnData: ColumnData[],
-  rowData: RowData[],
-  tableName: string,
+  label: string;
+  columnID: keyof RowData;
+  columnData: ColumnData[];
+  rowData: RowData[];
+  tableName: string;
   generateRowsData: (
     tableName: string,
     columns: ColumnData[],
@@ -21,17 +22,24 @@ interface Props {
     reverseOrder?: boolean,
     alarmStatus?: AlarmFaultDataIndexable,
     faultStatus?: AlarmFaultDataIndexable,
-  ) => void,
-  alarmStatus?: AlarmFaultDataIndexable,
-  faultStatus?: AlarmFaultDataIndexable
+  ) => void;
+  alarmStatus?: AlarmFaultDataIndexable;
+  faultStatus?: AlarmFaultDataIndexable;
 }
 
-export const SortableColumn = (
-  {
-    label, columnID, columnData, rowData, tableName, generateRowsData, alarmStatus, faultStatus,
-  }: Props,
-) => {
-  const storedReverseOrder: ColumnSortDirection = JSON.parse(localStorage.getItem('dashboardColumnSortDirection') || '{}');
+export const SortableColumn = ({
+  label,
+  columnID,
+  columnData,
+  rowData,
+  tableName,
+  generateRowsData,
+  alarmStatus,
+  faultStatus,
+}: Props) => {
+  const storedReverseOrder: ColumnSortDirection = JSON.parse(
+    localStorage.getItem('dashboardColumnSortDirection') || '{}',
+  );
   const [reverseOrder, setReverseOrder] = useState<ColumnSortDirection>(storedReverseOrder);
 
   const handleSort = () => {
@@ -56,11 +64,11 @@ export const SortableColumn = (
     <Box sx={sortedTableHeaderSx}>
       <Typography text={label} variant="tableHeader" />
       {label && (
-      <IconButton
-        icon={reverseOrder?.[tableName]?.[columnID] ? 'ArrowDown' : 'ArrowUp'}
-        onClick={handleSort}
-        size="small"
-      />
+        <IconButton
+          icon={reverseOrder?.[tableName]?.[columnID] ? 'ArrowDown' : 'ArrowUp'}
+          onClick={handleSort}
+          size="small"
+        />
       )}
     </Box>
   );

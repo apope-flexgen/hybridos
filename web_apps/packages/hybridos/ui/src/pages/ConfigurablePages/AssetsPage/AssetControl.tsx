@@ -12,7 +12,10 @@ import { AssetTab, AssetTabs } from 'src/pages/ConfigurablePages/AssetsPage/asse
 import { useContext, useState } from 'react';
 import IndiviudalAssetControl from './IndividualAssetControls';
 import BatchAssetControl from './BatchAssetControls';
-import { BatchSelectContext, BatchSelectContextType } from 'src/pages/ConfigurablePages/contexts/BatchSelectContext';
+import {
+  BatchSelectContext,
+  BatchSelectContextType,
+} from 'src/pages/ConfigurablePages/contexts/BatchSelectContext';
 
 type AssetControlProps = {
   componentFunctions?: DisplayGroupFunctions;
@@ -27,7 +30,7 @@ const AssetControl = ({
   assetState,
   batchControlsState,
   assetKey,
-  isSummaryTab
+  isSummaryTab,
 }: AssetControlProps) => {
   const theme = useTheme() as ThemeType;
   const [selectedTab, setSelectedTab] = useState<AssetTab>('asset');
@@ -35,8 +38,8 @@ const AssetControl = ({
   const { selectedAssets } = useContext(BatchSelectContext) as BatchSelectContextType;
 
   const handleTabChange = (newValue: any) => {
-    setSelectedTab(newValue)
-  }
+    setSelectedTab(newValue);
+  };
 
   const controlChildrenMapped =
     componentFunctions !== undefined
@@ -44,27 +47,36 @@ const AssetControl = ({
       : [];
 
   const batchControlChildrenMapped =
-      (componentFunctions !== undefined
-      && componentFunctions.batchControlFunctions !== undefined)
-        ? componentFunctions.batchControlFunctions.map((child) => <>{child(assetState, selectedAssets)}</>)
-        : [];
-  
+    componentFunctions !== undefined && componentFunctions.batchControlFunctions !== undefined
+      ? componentFunctions.batchControlFunctions.map((child) => (
+          <>{child(assetState, selectedAssets)}</>
+        ))
+      : [];
+
   return (
     <>
-    {batchControlsState &&  !isSummaryTab && (
+      {batchControlsState && !isSummaryTab && (
         <Box sx={{ paddingTop: '8px', backgroundColor: theme.fgd.text.reversed }}>
           <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)}>
-              <Tab label="Asset" value={AssetTabs.asset} />
-              <Tab label="Batch" value={AssetTabs.batch} />
+            <Tab label='Asset' value={AssetTabs.asset} />
+            <Tab label='Batch' value={AssetTabs.batch} />
           </Tabs>
         </Box>
+      )}
+      <Box sx={getControlOuterBoxSx(theme)}>
+        {!batchControlsState || selectedTab === AssetTabs.asset || isSummaryTab ? (
+          <IndiviudalAssetControl
+            controlChildrenMapped={controlChildrenMapped}
+            componentFunctions={componentFunctions}
+          />
+        ) : (
+          <BatchAssetControl
+            assetKey={assetKey}
+            uris={assetState ? Object.keys(assetState) : []}
+            batchControlChildrenMapped={batchControlChildrenMapped}
+          />
         )}
-    <Box sx={getControlOuterBoxSx(theme)}>
-        {(!batchControlsState || selectedTab === AssetTabs.asset || isSummaryTab) ? 
-            <IndiviudalAssetControl controlChildrenMapped={controlChildrenMapped} componentFunctions={componentFunctions} />
-            : <BatchAssetControl assetKey={assetKey} uris={assetState ? Object.keys(assetState) : []} batchControlChildrenMapped={batchControlChildrenMapped} />
-        }
-    </Box>
+      </Box>
     </>
   );
 };

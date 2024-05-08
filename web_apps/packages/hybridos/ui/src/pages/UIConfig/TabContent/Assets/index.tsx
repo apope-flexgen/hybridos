@@ -196,9 +196,7 @@ const Assets = () => {
   const disabledSave = useMemo(
     () =>
       !!assets.length &&
-      (!(selectedAsset?.info.name || '').trim() ||
-        !(selectedAsset?.info.sourceURI || '').trim()
-      ),
+      (!(selectedAsset?.info.name || '').trim() || !(selectedAsset?.info.sourceURI || '').trim()),
     [assets, selectedAsset],
   );
 
@@ -206,9 +204,7 @@ const Assets = () => {
     () =>
       !!assets.length &&
       assets.some(
-        (asset) =>
-          !(asset?.info.name || '').trim() ||
-          !(asset?.info.sourceURI || '').trim()
+        (asset) => !(asset?.info.name || '').trim() || !(asset?.info.sourceURI || '').trim(),
       ),
     [assets],
   );

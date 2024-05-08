@@ -18,7 +18,9 @@ const AliasRow = ({
     const aliasesWithoutCurrent = allAliases.filter(
       (existingAlias) => alias.id !== existingAlias.id,
     );
-    if (field) handleFieldChange('aliases', [...aliasesWithoutCurrent, { ...alias, [field]: newValue }]);
+    if (field) {
+      handleFieldChange('aliases', [...aliasesWithoutCurrent, { ...alias, [field]: newValue }]);
+    }
   };
   return (
     <Box sx={templateRowBoxSx}>

@@ -3,8 +3,8 @@ import { ChangeEvent, FC, useState } from 'react';
 import { EventsRequestParams } from 'shared/types/dtos/events.dto';
 
 interface EventsSearchProps {
-  filters: EventsRequestParams
-  setFilters: (value: React.SetStateAction<EventsRequestParams>) => void
+  filters: EventsRequestParams;
+  setFilters: (value: React.SetStateAction<EventsRequestParams>) => void;
 }
 
 const searchLabel = 'Search';

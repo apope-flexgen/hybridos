@@ -15,47 +15,17 @@ const AlarmFaultContainer: React.FC<AlarmFaultContainerProps> = ({
     const showDash = !showAlarm && !showFault;
     return (
       <>
-        {showDash && (
-          <Typography text="-" />
-        )}
-        {showAlarm && (
-          <Chip
-            label="Alarm"
-            icon="Alarm"
-            color="warning"
-            size="small"
-          />
-        )}
-        {showFault && (
-          <Chip
-            label="Fault"
-            icon="Fault"
-            color="error"
-            size="small"
-          />
-        )}
+        {showDash && <Typography text="-" />}
+        {showAlarm && <Chip label="Alarm" icon="Alarm" color="warning" size="small" />}
+        {showFault && <Chip label="Fault" icon="Fault" color="error" size="small" />}
       </>
     );
   }
 
   return (
     <div style={showAlarm || showFault ? { padding: '0.5rem 1rem' } : {}}>
-      {showAlarm && (
-        <Chip
-          label="Alarm"
-          icon="Alarm"
-          color="warning"
-          size="small"
-        />
-      )}
-      {showFault && (
-        <Chip
-          label="Fault"
-          icon="Fault"
-          color="error"
-          size="small"
-        />
-      )}
+      {showAlarm && <Chip label="Alarm" icon="Alarm" color="warning" size="small" />}
+      {showFault && <Chip label="Fault" icon="Fault" color="error" size="small" />}
     </div>
   );
 };

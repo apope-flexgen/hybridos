@@ -2,7 +2,7 @@
 /* eslint-disable no-param-reassign */
 import { Timezones, Views } from '@flexgen/storybook';
 import dayjs, { Dayjs, ManipulateType, OpUnitType } from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
+import dayjstimezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { ApiMode, RepeatForAPI, SchedulerEvent } from 'shared/types/dtos/scheduler.dto';
 import {
@@ -14,7 +14,7 @@ import {
 import { v4 as uuid } from 'uuid';
 
 dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(dayjstimezone);
 
 export const schedulerURLS = {
   getEvents: '/scheduler/events' as SchedulerUrls,
@@ -37,25 +37,24 @@ export const views = {
   minute: 'minutes',
 };
 
-export const getStartAndEndTimeFrame = (
-  value: Dayjs | null,
-  view: Views,
-  timezone: Timezones,
-) => {
+export const getStartAndEndTimeFrame = (value: Dayjs | null, view: Views, timezone: Timezones) => {
   dayjs.tz.setDefault(timezone);
   let startTime: Dayjs = dayjs.tz(value).subtract(48, 'h');
   let endTime: Dayjs = dayjs.tz(value).add(48, 'h');
 
   if (view === (views.month as Views) || view === (views.twoWeeks as Views)) {
-    startTime = dayjs.tz(value)
+    startTime = dayjs
+      .tz(value)
       .startOf(views.week as OpUnitType)
       .subtract(48, 'h');
     const endOfMonth = dayjs.tz(value).endOf(views.month as OpUnitType);
-    endTime = dayjs.tz(endOfMonth)
+    endTime = dayjs
+      .tz(endOfMonth)
       .add(1, views.day as ManipulateType)
       .endOf(views.month as OpUnitType);
   } else if (view === (views.week as Views)) {
-    startTime = dayjs.tz(value)
+    startTime = dayjs
+      .tz(value)
       .startOf(views.week as OpUnitType)
       .subtract(48, 'h');
     endTime = dayjs.tz(value).endOf(views.week as OpUnitType);

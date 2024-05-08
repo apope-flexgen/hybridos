@@ -1,5 +1,10 @@
 import {
-  Box, CardRow, ThemeType, Typography, Divider, PageLoadingIndicator,
+  Box,
+  CardRow,
+  ThemeType,
+  Typography,
+  Divider,
+  PageLoadingIndicator,
 } from '@flexgen/storybook';
 import { useState } from 'react';
 import { headerBoxSx, tableBoxSx } from 'src/pages/ActivityLog/Alerts/alerts.styles';

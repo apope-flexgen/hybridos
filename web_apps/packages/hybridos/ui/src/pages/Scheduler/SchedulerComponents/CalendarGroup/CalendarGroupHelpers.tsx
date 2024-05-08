@@ -1,12 +1,14 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-len */
 import { IconList, Timezones, Views } from '@flexgen/storybook';
 import Calendar from '@toast-ui/calendar';
 import dayjs, { Dayjs } from 'dayjs';
-import { Tab } from 'src/pages/Scheduler/SchedulerTypes';
-import timezone from 'dayjs/plugin/timezone';
+import dayjstimezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import { Tab } from 'src/pages/Scheduler/SchedulerTypes';
 
 dayjs.extend(utc);
-dayjs.extend(timezone)
+dayjs.extend(dayjstimezone);
 
 const handleWeekDisplay = (rangeStart: any, rangeEnd: any) => {
   const date = rangeStart.getDate();
@@ -100,7 +102,7 @@ export const formatStartTime = (
   startTime: string,
   endTime: string,
   endDate: Dayjs | null,
-  timezone: Timezones
+  timezone: Timezones,
 ) => {
   const startTimeAsDayJs = dayjs.tz(`${date?.format('YYYY-MM-DD')} ${startTime}`, timezone);
   const endTimeAsDayJs = dayjs.tz(`${endDate?.format('YYYY-MM-DD')} ${endTime}`, timezone);
@@ -144,10 +146,7 @@ export const calendarGroupLabels = {
 export const recurringString = 'recurring';
 
 // TODO: fix arg types
-export const getTempEvents = (
-  displayEvents: any[] | undefined,
-  newValue: unknown,
-) => displayEvents?.map((displayEvent) => ({
+export const getTempEvents = (displayEvents: any[] | undefined, newValue: unknown) => displayEvents?.map((displayEvent) => ({
   ...displayEvent,
   category: newValue === '2weeks' || newValue === 'month' ? ['task'] : undefined,
 }));

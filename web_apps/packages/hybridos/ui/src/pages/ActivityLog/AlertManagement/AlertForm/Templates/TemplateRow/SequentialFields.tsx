@@ -1,9 +1,4 @@
-import {
-  Divider,
-  NumericInput,
-
-  Typography,
-} from '@flexgen/storybook';
+import { Divider, NumericInput, Typography } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import { alertManagementHelperText } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import {
@@ -14,18 +9,15 @@ import {
 import { Template } from 'src/pages/ActivityLog/activityLog.types';
 
 export interface SequentialFieldsProps {
-  template: Template,
-  handleTemplateFieldChange:(
+  template: Template;
+  handleTemplateFieldChange: (
     field: string,
     newValue: string | string[] | boolean | number,
-  ) => void,
+  ) => void;
 }
 
 // Input fields for a single template - wildcard, list, and value
-const SequentialFields = ({
-  handleTemplateFieldChange,
-  template,
-}: SequentialFieldsProps) => (
+const SequentialFields = ({ handleTemplateFieldChange, template }: SequentialFieldsProps) => (
   <>
     <Box sx={formRowSx}>
       <Box sx={templateRowTitleAndDescriptionSx}>

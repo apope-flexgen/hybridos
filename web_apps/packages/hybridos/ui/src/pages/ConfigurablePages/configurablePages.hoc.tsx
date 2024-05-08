@@ -30,7 +30,9 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
   WrappedComponent: (props: T) => JSX.Element,
   pageName: string,
 ) => (props: Omit<T, keyof ConfigurablePagesProps>) => {
-    const [componentState, setComponentState] = useState<{ [key: string]: ConfigurablePageStateStructure }>({});
+    const [componentState, setComponentState] = useState<{
+      [key: string]: ConfigurablePageStateStructure;
+    }>({});
     const [batchControlsState, setBatchControlsState] = useState<boolean>(false);
     const [maintenanceActionsState, setMaintenanceActionsState] = useState<boolean>(false);
     const [alertState, setAlertState] = useState<AlertState>({});
@@ -41,12 +43,11 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
       [displayGroupID: string]: DisplayGroupFunctions;
     }>({});
 
-    const updateStateFromNewData = (data: ConfigurablePageDTO['displayGroups'], assetKey: string) => {
-      const [
-        ,
-        updatedAlertState,
-        updatedMaintModeState,
-      ] = getUpdatedStates(data);
+    const updateStateFromNewData = (
+      data: ConfigurablePageDTO['displayGroups'],
+      assetKey: string,
+    ) => {
+      const [, updatedAlertState, updatedMaintModeState] = getUpdatedStates(data);
 
       setMaintModeState((prevMaintModeState) => ({
         ...prevMaintModeState,
@@ -55,10 +56,10 @@ const ConfigurablePagesHOC = <T extends ConfigurablePagesProps>(
 
       setComponentState((prevComponentState) => {
         const [updatedComponentState] = getUpdatedStates(data, prevComponentState[assetKey]);
-        return ({
+        return {
           ...prevComponentState,
           [assetKey]: { ...prevComponentState[assetKey], ...updatedComponentState },
-        });
+        };
       });
 
       setAlertState((prevAlertState) => ({

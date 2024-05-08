@@ -24,7 +24,12 @@ export const tabBoxSx = {
 };
 
 export const eventsBoxSx = (theme: ThemeType) => ({
-  width: '100%', height: '100%', overflowY: 'auto', display: 'flex', boxShadow: theme.fgb.pageHeader.sizing.boxShadow, borderRadius: '8px',
+  width: '100%',
+  height: '100%',
+  overflowY: 'auto',
+  display: 'flex',
+  boxShadow: theme.fgb.pageHeader.sizing.boxShadow,
+  borderRadius: '8px',
 });
 
 export const alertModalSx = {

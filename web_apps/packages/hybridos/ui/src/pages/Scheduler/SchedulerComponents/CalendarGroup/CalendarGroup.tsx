@@ -6,6 +6,8 @@ import {
 import { Box } from '@mui/material';
 import { EventObject } from '@toast-ui/calendar/*';
 import dayjs, { ManipulateType } from 'dayjs';
+import dayjstimezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useState, useCallback } from 'react';
 import { SchedulerEvent } from 'shared/types/dtos/scheduler.dto';
 import { useSchedulerContext } from 'src/pages/Scheduler/Scheduler';
@@ -17,11 +19,9 @@ import { Mode, ModeColors } from 'src/pages/Scheduler/SchedulerTypes';
 import { useTheme } from 'styled-components';
 import { initialEventObject, recurringString } from './CalendarGroupHelpers';
 import ViewDisplay from './ViewDisplay';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
-dayjs.extend(timezone)
+dayjs.extend(dayjstimezone);
 
 const CalendarGroup: React.FC = () => {
   const [displayEvents, setDisplayEvents] = useState<any[] | undefined>([]);
@@ -94,14 +94,14 @@ const CalendarGroup: React.FC = () => {
             ? ['task']
             : undefined,
         isReadOnly: true,
-        start: 
-          view === (views.twoWeeks as Views) || view === (views.month as Views) 
-          ? new Date(startTime.format('YYYY-MM-DD HH:mm:ss')) 
-          : startTime.toDate(),
-        end: 
-          view === (views.twoWeeks as Views) || view === (views.month as Views) 
-          ? new Date(endTime.format('YYYY-MM-DD HH:mm:ss'))
-          : endTime.toDate(),
+        start:
+          view === (views.twoWeeks as Views) || view === (views.month as Views)
+            ? new Date(startTime.format('YYYY-MM-DD HH:mm:ss'))
+            : startTime.toDate(),
+        end:
+          view === (views.twoWeeks as Views) || view === (views.month as Views)
+            ? new Date(endTime.format('YYYY-MM-DD HH:mm:ss'))
+            : endTime.toDate(),
         recurrenceRule: event.repeat.end_count === 1 ? '' : recurringString,
         customStyle: {
           border:

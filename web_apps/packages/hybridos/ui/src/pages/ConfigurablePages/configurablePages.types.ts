@@ -2,41 +2,41 @@ import { ValueType } from 'shared/types/dtos/configurablePages.dto';
 
 export type AlertState = {
   [displayGroupID: string]: {
-    alarmInformation: string[]
-    faultInformation: string[]
-  }
+    alarmInformation: string[];
+    faultInformation: string[];
+  };
 };
 
 export type MaintModeState = {
   [displayGroupID: string]: {
-    value: boolean
-  }
+    value: boolean;
+  };
 };
 
 export type DisplayGroupStateStructure = {
   status: {
-    [componentID: string]: string
-  }
+    [componentID: string]: string;
+  };
   control: {
     [componentID: string]: {
-      value: ValueType
-      enabled?: boolean
+      value: ValueType;
+      enabled?: boolean;
       extraProps?: {
-        [key: string]: any
-      }
-    }
-  }
+        [key: string]: any;
+      };
+    };
+  };
   maintenanceActions: {
-    [componentId: string]: any
-  }
+    [componentId: string]: any;
+  };
 };
 
 export type ConfigurablePageStateStructure = {
-  [displayGroupID: string]: DisplayGroupStateStructure
+  [displayGroupID: string]: DisplayGroupStateStructure;
 };
 
 export type ConfigurableComponentFunction = (
-  assetState: ConfigurablePageStateStructure
+  assetState: ConfigurablePageStateStructure,
 ) => JSX.Element;
 
 export type ConfigurableBatchControlComponentFunction = (
@@ -45,11 +45,11 @@ export type ConfigurableBatchControlComponentFunction = (
 ) => JSX.Element;
 
 export type DisplayGroupFunctions = {
-  displayName: string
-  tabKey: string | undefined
-  statusFunctions: ConfigurableComponentFunction[]
-  alarmFaultStatusFunction: ConfigurableComponentFunction
-  controlFunctions: ConfigurableComponentFunction[]
-  batchControlFunctions?: ConfigurableBatchControlComponentFunction[]
-  maintenanceActionsFunctions: ConfigurableComponentFunction[]
+  displayName: string;
+  tabKey: string | undefined;
+  statusFunctions: ConfigurableComponentFunction[];
+  alarmFaultStatusFunction: ConfigurableComponentFunction;
+  controlFunctions: ConfigurableComponentFunction[];
+  batchControlFunctions?: ConfigurableBatchControlComponentFunction[];
+  maintenanceActionsFunctions: ConfigurableComponentFunction[];
 };

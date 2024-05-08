@@ -40,12 +40,8 @@ const EndsOptions: React.FunctionComponent<EndsOptionsProps> = ({ state, dispatc
             type: 'setEndsOption',
             payload: {
               Never: !state.endsOption.Never,
-              On: state.endsOption.On
-                ? !state.endsOption.On
-                : state.endsOption.On,
-              After: state.endsOption.After
-                ? !state.endsOption.After
-                : state.endsOption.After,
+              On: state.endsOption.On ? !state.endsOption.On : state.endsOption.On,
+              After: state.endsOption.After ? !state.endsOption.After : state.endsOption.After,
             },
           })}
         />
@@ -61,13 +57,9 @@ const EndsOptions: React.FunctionComponent<EndsOptionsProps> = ({ state, dispatc
             onChange={() => dispatch({
               type: 'setEndsOption',
               payload: {
-                Never: state.endsOption.Never
-                  ? !state.endsOption.Never
-                  : state.endsOption.Never,
+                Never: state.endsOption.Never ? !state.endsOption.Never : state.endsOption.Never,
                 On: !state.endsOption.On,
-                After: state.endsOption.After
-                  ? !state.endsOption.After
-                  : state.endsOption.After,
+                After: state.endsOption.After ? !state.endsOption.After : state.endsOption.After,
               },
             })}
           />
@@ -89,16 +81,12 @@ const EndsOptions: React.FunctionComponent<EndsOptionsProps> = ({ state, dispatc
           <RadioButton
             label={addEventLabels.endOptionsRadios.afterLabel}
             value={state.endsOption.After}
-                        // eslint-disable-next-line  @typescript-eslint/no-unused-expressions
+            // eslint-disable-next-line  @typescript-eslint/no-unused-expressions
             onChange={() => dispatch({
               type: 'setEndsOption',
               payload: {
-                Never: state.endsOption.Never
-                  ? !state.endsOption.Never
-                  : state.endsOption.Never,
-                On: state.endsOption.On
-                  ? !state.endsOption.On
-                  : state.endsOption.On,
+                Never: state.endsOption.Never ? !state.endsOption.Never : state.endsOption.Never,
+                On: state.endsOption.On ? !state.endsOption.On : state.endsOption.On,
                 After: !state.endsOption.After,
               },
             })}

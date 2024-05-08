@@ -69,7 +69,9 @@ const parseMaintenanceActionData = (includeStatic: boolean, maintenanceActionsSt
     Object.keys(maintenanceActionsStaticData).forEach((maintenanceAction) => {
       maintenanceActionsMetadata = {
         ...maintenanceActionsMetadata,
-        [maintenanceAction]: { [dataType]: maintenanceActionsStaticData[maintenanceAction] },
+        [maintenanceAction]: {
+          [dataType]: maintenanceActionsStaticData[maintenanceAction],
+        },
       };
     });
   }

@@ -3,14 +3,21 @@ import {
   Box, Select, ThemeType, Typography,
 } from '@flexgen/storybook';
 import { useEffect, useContext } from 'react';
-import { BatchSelectContext, BatchSelectContextType } from 'src/pages/ConfigurablePages/contexts/BatchSelectContext';
+import {
+  BatchSelectContext,
+  BatchSelectContextType,
+} from 'src/pages/ConfigurablePages/contexts/BatchSelectContext';
 import { useTheme } from 'styled-components';
-import { batchActionsOuterBoxSx, batchActionsTextBoxSx, getControlInnerBoxSx } from './assetsPage.styles';
+import {
+  batchActionsOuterBoxSx,
+  batchActionsTextBoxSx,
+  getControlInnerBoxSx,
+} from './assetsPage.styles';
 
 interface BatchAssetControlProps {
-  batchControlChildrenMapped: JSX.Element[]
-  uris: string[],
-  assetKey?: string,
+  batchControlChildrenMapped: JSX.Element[];
+  uris: string[];
+  assetKey?: string;
 }
 
 const BatchAssetControl = ({
@@ -22,10 +29,9 @@ const BatchAssetControl = ({
   const menuItems = uris.filter((uri) => !uri.includes('summary'));
 
   const theme = useTheme() as ThemeType;
-  const {
-    selectedAssets,
-    setSelectedAssets,
-  } = useContext(BatchSelectContext) as BatchSelectContextType;
+  const { selectedAssets, setSelectedAssets } = useContext(
+    BatchSelectContext,
+  ) as BatchSelectContextType;
 
   useEffect(() => {
     setSelectedAssets([]);
@@ -50,10 +56,7 @@ const BatchAssetControl = ({
   return (
     <Box sx={batchActionsOuterBoxSx}>
       <Box sx={batchActionsTextBoxSx}>
-        <Typography
-          variant="bodyLBold"
-          text="Batch Controls"
-        />
+        <Typography variant="bodyLBold" text="Batch Controls" />
         <Typography
           variant="bodyS"
           text="The controls below will be completed on all selected assets"
@@ -70,11 +73,9 @@ const BatchAssetControl = ({
         onDelete={handleRemoveControlRecipient}
         maxMultiSelectLines={3}
       />
-      {
-    batchControlChildrenMapped?.length > 0 && (
-    <Box sx={getControlInnerBoxSx(theme)}>{batchControlChildrenMapped}</Box>
-    )
-    }
+      {batchControlChildrenMapped?.length > 0 && (
+        <Box sx={getControlInnerBoxSx(theme)}>{batchControlChildrenMapped}</Box>
+      )}
     </Box>
   );
 };

@@ -13,6 +13,9 @@ export class LegacyRestPutResponse {
   uri?: string;
   @ApiProperty({ description: 'Value set', required: false })
   value?: any;
-  @ApiProperty({ description: 'Information about message request or reply.', required: false })
+  @ApiProperty({
+    description: 'Information about message request or reply.',
+    required: false,
+  })
   message?: string;
 }

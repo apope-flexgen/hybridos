@@ -76,7 +76,10 @@ export const getTabsContainerSx = (theme: ThemeType) => ({
 });
 
 export const tabsAndStatusContainerSx = {
-  display: 'flex', flexDirection: 'row', height: '100%', padding: '1.5rem',
+  display: 'flex',
+  flexDirection: 'row',
+  height: '100%',
+  padding: '1.5rem',
 };
 
 export const internalTabsAndStatusContainerSx = {
@@ -87,7 +90,11 @@ export const internalTabsAndStatusContainerSx = {
   width: '100%',
 };
 
-export const viewEventsButtonBoxSx = { flexGrow: 1, display: 'flex', flexDirection: 'row-reverse' };
+export const viewEventsButtonBoxSx = {
+  flexGrow: 1,
+  display: 'flex',
+  flexDirection: 'row-reverse',
+};
 
 export const expandButtonBoxSx = {
   position: 'absolute',
@@ -144,20 +151,43 @@ export const getAllControlsInnerBoxSx = () => ({
   gap: '10px',
 });
 
-export const statusAndMaintenanceActionsBoxSx = { display: 'flex', flexDirection: 'column', gap: '10px' };
+export const statusAndMaintenanceActionsBoxSx = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '10px',
+};
 
 export const statusPadding = { padding: '20px 15px 20px 15px' };
 
 export const statusPointsDisplayOuterBoxSx = { display: 'flex', flexDirection: 'column' };
 
-export const statusPointsDisplaySubheaderBoxSx = { marginBottom: '12px', width: '100%', padding: '20px 15px 0px 15px' };
-
-export const maintenanceActionsBoxSx = {
-  display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', padding: '24px 16px 24px 16px',
+export const statusPointsDisplaySubheaderBoxSx = {
+  marginBottom: '12px',
+  width: '100%',
+  padding: '20px 15px 0px 15px',
 };
 
-export const batchActionsOuterBoxSx = { display: 'flex', flexDirection: 'column', gap: '12px' };
-export const batchActionsTextBoxSx = { display: 'flex', flexDirection: 'column', gap: '4px' };
+export const maintenanceActionsBoxSx = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '12px',
+  width: '100%',
+  padding: '24px 16px 24px 16px',
+};
+
+export const batchActionsOuterBoxSx = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '12px',
+};
+export const batchActionsTextBoxSx = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '4px',
+};
 export const assetControlOuterBoxSx = {
-  margin: '5px', display: 'flex', flexDirection: 'column', gap: '8px',
+  margin: '5px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px',
 };

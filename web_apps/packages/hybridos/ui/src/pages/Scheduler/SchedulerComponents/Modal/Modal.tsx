@@ -2,14 +2,11 @@ import { Modal } from '@flexgen/storybook';
 import { ModalStateType, labels } from './Helpers';
 
 interface SchedulerModalProps {
-  open: boolean,
-  state: ModalStateType,
+  open: boolean;
+  state: ModalStateType;
 }
 
-const SchedulerModal: React.FC<SchedulerModalProps> = ({
-  open,
-  state,
-}: SchedulerModalProps) => {
+const SchedulerModal: React.FC<SchedulerModalProps> = ({ open, state }: SchedulerModalProps) => {
   const modalActions = [];
   if (state.secondaryActions) {
     modalActions.push({

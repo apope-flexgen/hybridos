@@ -168,39 +168,41 @@ const ModeInfo: React.FC<ModeInfoProps> = ({
 
       if (action === 'update' && property) {
         if (index !== undefined) {
-          switch (property){
-          case "type": {
-            arrayCopy[index] = {
-              // @ts-ignore
-              ...arrayCopy[index],
-              [property]: newValue,
-              value: '',
-            };
-            break;
-          } case 'isTemplate': {
-            arrayCopy[index] = {
-              ...arrayCopy[index],
-              "batch_prefix": "",
-              "batch_range": null,
-              "batch_value": null,
-            };
-            break;
-          } 
-          case 'batch_value' : 
-          case 'batch_range': {
-            arrayCopy[index] = {
-              ...arrayCopy[index],
-              [property]: newValue.split(',').map((v) => v.replace(' ', ''))
+          switch (property) {
+            case 'type': {
+              arrayCopy[index] = {
+                // @ts-ignore
+                ...arrayCopy[index],
+                [property]: newValue,
+                value: '',
+              };
+              break;
             }
-            break;
+            case 'isTemplate': {
+              arrayCopy[index] = {
+                ...arrayCopy[index],
+                batch_prefix: '',
+                batch_range: null,
+                batch_value: null,
+              };
+              break;
+            }
+            case 'batch_value':
+            case 'batch_range': {
+              arrayCopy[index] = {
+                ...arrayCopy[index],
+                [property]: newValue.split(',').map((v) => v.replace(' ', '')),
+              };
+              break;
+            }
+            default: {
+              arrayCopy[index] = {
+                ...arrayCopy[index],
+                [property]:
+                  property === 'value' ? handleValueTypes(setpointType, newValue) : newValue,
+              };
+            }
           }
-          default:  {
-            arrayCopy[index] = {
-              ...arrayCopy[index],
-              [property]:
-                property === 'value' ? handleValueTypes(setpointType, newValue) : newValue,
-            };
-          }}
         }
       } else if (action === 'delete') {
         arrayCopy.splice(index, 1);

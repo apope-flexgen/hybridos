@@ -1,7 +1,4 @@
-import {
-  MuiButton,
-  Select,
-} from '@flexgen/storybook';
+import { MuiButton, Select } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import { actionsBoxSx } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
 import { logicalOperatorList } from 'src/pages/ActivityLog/activityLog.helpers';
@@ -9,10 +6,10 @@ import { logicalOperatorList } from 'src/pages/ActivityLog/activityLog.helpers';
 import { Expression } from 'src/pages/ActivityLog/activityLog.types';
 
 export interface Comparator1RowProps {
-  comparatorOptions: string[],
-  expression: Expression,
-  allExpressions: Expression[],
-  handleFieldChange: (field: string, updatedValue: any, commaSeparatedList?: boolean) => void,
+  comparatorOptions: string[];
+  expression: Expression;
+  allExpressions: Expression[];
+  handleFieldChange: (field: string, updatedValue: any, commaSeparatedList?: boolean) => void;
 }
 
 const Comparator1Row = ({
@@ -40,17 +37,14 @@ const Comparator1Row = ({
   };
   return (
     <Box sx={actionsBoxSx}>
-      {
-        expression.connectionOperator
-        && (
+      {expression.connectionOperator && (
         <Select
           menuItems={['and', 'or']}
           value={expression.connectionOperator}
           minWidth={75}
           onChange={(e) => handleComparator1FieldChange('connectionOperator', e.target.value)}
         />
-        )
-    }
+      )}
       <Select
         required
         menuItems={comparatorOptions}
@@ -65,8 +59,18 @@ const Comparator1Row = ({
         value={expression.conditional}
         onChange={(e) => handleComparator1FieldChange('conditional', e.target.value)}
       />
-      <MuiButton variant="text" label="Add Alias" startIcon="Add" onClick={() => handleAddComparator2('alias')} />
-      <MuiButton variant="text" label="Add Literal Value" startIcon="Add" onClick={() => handleAddComparator2('literal')} />
+      <MuiButton
+        variant="text"
+        label="Add Alias"
+        startIcon="Add"
+        onClick={() => handleAddComparator2('alias')}
+      />
+      <MuiButton
+        variant="text"
+        label="Add Literal Value"
+        startIcon="Add"
+        onClick={() => handleAddComparator2('literal')}
+      />
     </Box>
   );
 };

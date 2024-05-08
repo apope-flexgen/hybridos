@@ -53,11 +53,12 @@ export const mapModesToVariables = (
   dispatch: React.Dispatch<any>,
 ) => {
   const tempVariableValues: VariableValues[] = [];
-  Object.keys(modesFromAPI).map((modeId: string) => {
+  Object.keys(modesFromAPI).forEach((modeId: string) => {
     if (modesFromAPI[modeId].name === e.target.value) {
       const { variables } = modesFromAPI[modeId];
       setVariables(variables);
-      variables.map((variable) => {
+      variables.forEach((variable) => {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         const { id, value, batch_value } = variable;
         tempVariableValues.push({
           name: id,
@@ -72,11 +73,7 @@ export const mapModesToVariables = (
   });
 };
 
-export const determineBatchItemsFromRange = (
-  prefix: string,
-  uri: string,
-  batchRange: string[],
-) => {
+export const determineBatchItemsFromRange = (prefix: string, uri: string, batchRange: string[]) => {
   let numericExtensions: { [key: string]: number } = {};
   const menuItems: string[] = [];
   const fullURI = `${prefix}${uri.split('#')[0]}`;
@@ -85,7 +82,7 @@ export const determineBatchItemsFromRange = (
       const arrayOfRange = rangeItem.split('..');
       const startNumber = Number(arrayOfRange[0]);
       const endNumber = Number(arrayOfRange[1]);
-      for (let i = startNumber; i < endNumber + 1; i++) {
+      for (let i = startNumber; i < endNumber + 1; i += 1) {
         numericExtensions = {
           ...numericExtensions,
           [`${fullURI}${i}`]: i,
@@ -111,15 +108,18 @@ export const isOverlappingStartTime = (
 ) => {
   let overlapping = false;
   if (state.startTime !== '' && state.endTime !== '') {
-    const startTimeOfNewEvent = dayjs.tz(`${state.date?.format('YYYY-MM-DD')} ${state.startTime}`, timezone);
-    const endTimeOfNewEvent = dayjs.tz(`${state.endDate?.format('YYYY-MM-DD')} ${state.endTime}`, timezone);
+    const startTimeOfNewEvent = dayjs.tz(
+      `${state.date?.format('YYYY-MM-DD')} ${state.startTime}`,
+      timezone,
+    );
+    const endTimeOfNewEvent = dayjs.tz(
+      `${state.endDate?.format('YYYY-MM-DD')} ${state.endTime}`,
+      timezone,
+    );
 
-    events.map((existingEvent) => {
+    events.forEach((existingEvent) => {
       const startTimeOfExistingEvent = dayjs(existingEvent.start_time).tz(timezone);
-      const endTimeOfExistingEvent = startTimeOfExistingEvent.add(
-        existingEvent.duration,
-        'm',
-      );
+      const endTimeOfExistingEvent = startTimeOfExistingEvent.add(existingEvent.duration, 'm');
       if (
         startTimeOfNewEvent.isBefore(endTimeOfExistingEvent)
         && endTimeOfNewEvent.isAfter(startTimeOfExistingEvent)

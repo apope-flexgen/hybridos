@@ -107,14 +107,13 @@ const SiteFleetConfig: React.FC<SiteFleetConfigProps> = ({
             setSaveDisabled={setSaveDisabled}
           />
         )}
-        {schedulerType === 'FM'
-          && (
+        {schedulerType === 'FM' && (
           <FleetManagerConfig
             data={configEdits}
             setConfigEdits={setConfigEdits}
             setSaveDisabled={setSaveDisabled}
           />
-          )}
+        )}
       </Box>
     </ThemeProvider>
   );

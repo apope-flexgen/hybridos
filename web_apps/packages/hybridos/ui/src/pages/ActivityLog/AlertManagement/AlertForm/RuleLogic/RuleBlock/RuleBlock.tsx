@@ -1,27 +1,24 @@
-import {
-  MuiButton, ThemeType,
-} from '@flexgen/storybook';
+import { MuiButton, ThemeType } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 
 import { useState, useEffect } from 'react';
 import ExpressionBlock from 'src/pages/ActivityLog/AlertManagement/AlertForm/RuleLogic/RuleBlock/ExpressionBlock/ExpressionBlock';
 import { initialNewExpression } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 
-import { ruleBlockBoxSx, setWidth } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
+import {
+  ruleBlockBoxSx,
+  setWidth,
+} from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
 
 import { Expression, Alias } from 'src/pages/ActivityLog/activityLog.types';
 import { useTheme } from 'styled-components';
 
 export interface RuleBlockProps {
-  conditions: Expression[],
-  aliases: Alias[],
-  handleFieldChange: (field: string, updatedValue: any, commaSeparatedList?: boolean) => void,
+  conditions: Expression[];
+  aliases: Alias[];
+  handleFieldChange: (field: string, updatedValue: any, commaSeparatedList?: boolean) => void;
 }
-const RuleBlock = ({
-  conditions,
-  aliases,
-  handleFieldChange,
-}: RuleBlockProps) => {
+const RuleBlock = ({ conditions, aliases, handleFieldChange }: RuleBlockProps) => {
   const generateExpressionBlocks = (): JSX.Element | JSX.Element[] => {
     if (conditions.length > 0) {
       return conditions
@@ -34,7 +31,8 @@ const RuleBlock = ({
             handleFieldChange={handleFieldChange}
           />
         ));
-    } return (
+    }
+    return (
       <ExpressionBlock
         aliases={aliases}
         expressions={conditions}
@@ -44,10 +42,9 @@ const RuleBlock = ({
     );
   };
 
-  const [
-    conditionRows,
-    setConditionRows,
-  ] = useState<JSX.Element | JSX.Element[]>(generateExpressionBlocks());
+  const [conditionRows, setConditionRows] = useState<JSX.Element | JSX.Element[]>(
+    generateExpressionBlocks(),
+  );
 
   useEffect(() => {
     setConditionRows(generateExpressionBlocks());

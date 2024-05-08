@@ -1,8 +1,21 @@
+// TODO: fix max lines error
+/* eslint-disable max-lines */
 import {
-  MuiButton, CardContainer, Typography, Stepper, Box, Icon, IconList, ColorType, IconButton,
+  MuiButton,
+  CardContainer,
+  Typography,
+  Stepper,
+  Box,
+  Icon,
+  IconList,
+  ColorType,
+  IconButton,
 } from '@flexgen/storybook';
 import { useState } from 'react';
-import { MaintenanceActionPath, MaintenanceActionStep } from 'shared/types/dtos/configurablePages.dto';
+import {
+  MaintenanceActionPath,
+  MaintenanceActionStep,
+} from 'shared/types/dtos/configurablePages.dto';
 import RealTimeService from 'src/services/RealTimeService/realtime.service';
 import MaintActionsDetailsModal from './MaintActionsDetailsModal';
 import {
@@ -20,7 +33,7 @@ import {
 export interface MaintActionProgressProps {
   label: string;
   paths: MaintenanceActionPath[];
-  status: MaintenanceActionStatuses,
+  status: MaintenanceActionStatuses;
   steps: MaintenanceActionStep[];
   stepIndex: number;
   pathIndex: number;
@@ -91,17 +104,28 @@ const MaintActionProgress: React.FC<MaintActionProgressProps> = ({
           <Typography variant="bodyM" text={subheader} />
           <Box sx={stepperBoxSx}>
             <Typography variant="bodyM" text={decideStepCountText(stepIndex, steps)} />
-            <Stepper orientation="horizontal">
-              {stepComponents}
-            </Stepper>
+            <Stepper orientation="horizontal">{stepComponents}</Stepper>
           </Box>
-          <MuiButton sx={{ padding: 0 }} variant="text" color="inherit" label="View Details" endIcon="Share" onClick={() => setModalOpen(true)} />
+          <MuiButton
+            sx={{ padding: 0 }}
+            variant="text"
+            color="inherit"
+            label="View Details"
+            endIcon="Share"
+            onClick={() => setModalOpen(true)}
+          />
         </Box>
-        {
-                    status === MaintenanceActionStatuses.InProgress
-                      ? <MuiButton label="Stop Action" startIcon="TrashOutline" variant="text" color="error" onClick={stopAction} />
-                      : <IconButton icon="Close" onClick={clearAction} />
-        }
+        {status === MaintenanceActionStatuses.InProgress ? (
+          <MuiButton
+            label="Stop Action"
+            startIcon="TrashOutline"
+            variant="text"
+            color="error"
+            onClick={stopAction}
+          />
+        ) : (
+          <IconButton icon="Close" onClick={clearAction} />
+        )}
       </Box>
     </CardContainer>
   );

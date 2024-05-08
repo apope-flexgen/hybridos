@@ -30,7 +30,10 @@ const RequiredResponseTime = () => {
             validationRegEx="positiveIntegers"
             label="Resolution Time"
             value={(alertValues.deadline.value || '').toString()}
-            onChange={(e) => handleFieldChange('deadline', { ...alertValues.deadline, value: e.target.value })}
+            onChange={(e) => handleFieldChange('deadline', {
+              ...alertValues.deadline,
+              value: e.target.value,
+            })}
           />
           <Select
             menuItems={['minute(s)', 'hour(s)']}

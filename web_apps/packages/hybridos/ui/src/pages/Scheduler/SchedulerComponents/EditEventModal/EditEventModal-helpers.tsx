@@ -1,13 +1,13 @@
 /* eslint-disable max-lines */
 import { TimeZones, Timezones } from '@flexgen/storybook';
 import dayjs from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
+import dayjstimezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { SchedulerEvent } from 'shared/types/dtos/scheduler.dto';
 import { VariableValues, DaysSelected } from 'src/pages/Scheduler/SchedulerTypes';
 
 dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(dayjstimezone);
 
 export const setUpVariablesValues = (event: SchedulerEvent, dispatch: React.Dispatch<any>) => {
   const tempVariableValues: VariableValues[] = [];
@@ -163,8 +163,10 @@ export const checkIfEventIsActive = (event: SchedulerEvent) => {
   const startTimeFromEvent = dayjs(event.start_time);
   // 10 seconds is subtracted from event end time to alleviate issue where fims message that event has ended is
   // sent a few seconds prior to the actual minute being completed
-  const endTimeFromEvent = startTimeFromEvent.add(event.duration, 'minutes').subtract(10, 'seconds');
-  return (startTimeFromEvent.isBefore(dayjs()) && endTimeFromEvent.isAfter(dayjs()));
+  const endTimeFromEvent = startTimeFromEvent
+    .add(event.duration, 'minutes')
+    .subtract(10, 'seconds');
+  return startTimeFromEvent.isBefore(dayjs()) && endTimeFromEvent.isAfter(dayjs());
 };
 
 export const initializeEditModal = (

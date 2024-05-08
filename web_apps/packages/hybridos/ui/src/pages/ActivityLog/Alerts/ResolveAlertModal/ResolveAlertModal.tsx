@@ -8,13 +8,17 @@ import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import ActiveAlertBanner from 'src/pages/ActivityLog/Alerts/ActiveAlertBanner/ActiveAlertBanner';
 import {
-  alertModalSx, cancelButtonSx, modalButtonsSx, saveButtonSx, textFieldSx,
+  alertModalSx,
+  cancelButtonSx,
+  modalButtonsSx,
+  saveButtonSx,
+  textFieldSx,
 } from 'src/pages/ActivityLog/activityLog.styles';
 import { ActiveAlertObject } from 'src/pages/ActivityLog/activityLog.types';
 
 export interface ResolveAlertModalProps {
   open: boolean;
-  alertInfo: ActiveAlertObject
+  alertInfo: ActiveAlertObject;
   onClose: () => void;
 }
 
@@ -53,19 +57,10 @@ const ResolveAlertModal: React.FC<ResolveAlertModalProps> = ({
       <Box sx={alertModalSx}>
         {alertInfo.status.toLowerCase() === 'active' && <ActiveAlertBanner />}
         {product === FLEET_MANAGER && (
-        <Typography
-          text={`Site: ${alertInfo.site}`}
-          variant="labelM"
-        />
+          <Typography text={`Site: ${alertInfo.site}`} variant="labelM" />
         )}
-        <Typography
-          text={`Alert: ${alertInfo.details[0].message}`}
-          variant="labelM"
-        />
-        <Typography
-          text={`Triggered: ${alertInfo.trigger_time}`}
-          variant="bodyS"
-        />
+        <Typography text={`Alert: ${alertInfo.details[0].message}`} variant="labelM" />
+        <Typography text={`Triggered: ${alertInfo.trigger_time}`} variant="bodyS" />
         <Divider orientation="horizontal" variant="fullWidth" />
         <Box sx={textFieldSx}>
           <TextField
@@ -82,17 +77,8 @@ const ResolveAlertModal: React.FC<ResolveAlertModalProps> = ({
         </Box>
         <Divider orientation="horizontal" variant="fullWidth" />
         <Box sx={modalButtonsSx}>
-          <MuiButton
-            label="Cancel"
-            variant="outlined"
-            onClick={onClose}
-            sx={cancelButtonSx}
-          />
-          <MuiButton
-            label="Resolve"
-            onClick={handleSubmit}
-            sx={saveButtonSx}
-          />
+          <MuiButton label="Cancel" variant="outlined" onClick={onClose} sx={cancelButtonSx} />
+          <MuiButton label="Resolve" onClick={handleSubmit} sx={saveButtonSx} />
         </Box>
       </Box>
     </Modal>

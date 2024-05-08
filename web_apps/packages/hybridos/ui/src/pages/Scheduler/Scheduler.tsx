@@ -85,9 +85,7 @@ const Scheduler: React.FunctionComponent<PageProps> = ({ currentUser, product }:
     modalState,
     setModalState,
     unsavedChange,
-    setUnsavedChange
-
-    ,
+    setUnsavedChange,
   } = useScheduler(currentUser, product);
 
   const handleTabChange = (newValue: any) => {

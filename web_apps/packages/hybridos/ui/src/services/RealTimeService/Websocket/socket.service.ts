@@ -57,7 +57,6 @@ class SocketService implements RealTimeService {
     data,
     namespace,
   ) => {
-
     namespace = namespace || generateNamespace();
     const msg = {
       event: destination,

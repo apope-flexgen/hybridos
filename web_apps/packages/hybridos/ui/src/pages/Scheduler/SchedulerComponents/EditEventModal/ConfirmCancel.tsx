@@ -5,15 +5,15 @@ import { editEventLabels } from 'src/pages/Scheduler/SchedulerLabels';
 
 export interface ConfirmCancelProps {
   // when the user hits confirm
-  onConfirmClick?: () => void
+  onConfirmClick?: () => void;
   // when the user hits cancel
-  onCancelClick?: () => void
+  onCancelClick?: () => void;
   // label to display next to cofirm
-  confirmLabel?: string
+  confirmLabel?: string;
   // label to display next to cancel
-  cancelLabel?: string
+  cancelLabel?: string;
   // whether to display iconbuttons next to or on top of eachother
-  displayDirection?: 'row' | 'column'
+  displayDirection?: 'row' | 'column';
 }
 
 const ConfirmCancel: React.FunctionComponent<ConfirmCancelProps> = ({

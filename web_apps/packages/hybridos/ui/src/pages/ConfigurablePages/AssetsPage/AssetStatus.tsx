@@ -1,14 +1,15 @@
+/* eslint-disable max-lines */
 import {
-  Divider, Typography, EmptyContainer, Chip, CardContainer, ThemeType,
+  Divider,
+  Typography,
+  EmptyContainer,
+  Chip,
+  CardContainer,
+  ThemeType,
 } from '@flexgen/storybook';
 import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import React, { ReactElement } from 'react';
-import {
-  AlertState,
-  ConfigurableComponentFunction,
-  ConfigurablePageStateStructure,
-} from 'src/pages/ConfigurablePages/configurablePages.types';
 import { useTheme } from 'styled-components';
 import AlertContainer from './AlertContainer';
 import {
@@ -18,31 +19,27 @@ import {
   statusPadding,
   statusPointsDisplaySubheaderBoxSx,
 } from './assetsPage.styles';
-
-// TODO: if we can find a way to calculate this automatically
-// rather than setting a constant for everyone, that would be
-// an upgrade. But this works for now
-
-export interface SingleAssetProps {
-  assetName: string;
-  statusChildren: ConfigurableComponentFunction[];
-  maintenanceActionsChildren: ConfigurableComponentFunction[];
-  assetState: ConfigurablePageStateStructure;
-  alertState: AlertState[string];
-  maintModeStatus?: boolean;
-  maintenanceActionsState: boolean;
-}
+import { SingleAssetProps } from './assetsPage.types';
 
 const Header = ({
   headerText,
   maintModeStatus,
-}: { headerText: string, maintModeStatus: boolean }) => (
+}: {
+  headerText: string;
+  maintModeStatus: boolean;
+}) => (
   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
     <Typography variant="headingL" color="primary" text={headerText} />
-    {
-        maintModeStatus
-        && <Chip variant="outlined" color="primary" size="small" borderStyle="squared" label="Maintenance Mode" icon="Build" />
-      }
+    {maintModeStatus && (
+      <Chip
+        variant="outlined"
+        color="primary"
+        size="small"
+        borderStyle="squared"
+        label="Maintenance Mode"
+        icon="Build"
+      />
+    )}
   </Box>
 );
 
@@ -59,7 +56,14 @@ const StatusPointsDisplay = ({ statusComponents }: { statusComponents: ReactElem
         <Divider orientation="horizontal" variant="fullWidth" />
       </Box>
       {statusComponents.length > 0 ? (
-        <Grid sx={statusPadding} container columns={numColumns} spacing={1} columnSpacing={3} alignItems="flex-end">
+        <Grid
+          sx={statusPadding}
+          container
+          columns={numColumns}
+          spacing={1}
+          columnSpacing={3}
+          alignItems="flex-end"
+        >
           {statusComponents}
         </Grid>
       ) : (
@@ -73,26 +77,26 @@ const StatusPointsDisplay = ({ statusComponents }: { statusComponents: ReactElem
 
 const MaintenanceActionsDisplay = ({
   maintenanceActionsComponents,
-}: { maintenanceActionsComponents: ReactElement[] }) => {
+}: {
+  maintenanceActionsComponents: ReactElement[];
+}) => {
   // don't display inactive maintenance actions
-  const activeMaintenaceActionsComponents = maintenanceActionsComponents.filter((maintenanceActionComponent) => !maintenanceActionComponent.props.inactive);
+  const activeMaintenaceActionsComponents = maintenanceActionsComponents.filter(
+    (maintenanceActionComponent) => !maintenanceActionComponent.props.inactive,
+  );
 
-  return (
-    activeMaintenaceActionsComponents.length !== 0
-      ? (
-        <CardContainer>
-          <Box sx={statusPointsDisplaySubheaderBoxSx}>
-            <Typography variant="labelM" color="primary" text="Maintenance Actions" />
-          </Box>
-          <Box sx={{ width: '100%' }}>
-            <Divider orientation="horizontal" variant="fullWidth" />
-          </Box>
-          <Box sx={maintenanceActionsBoxSx}>
-            {activeMaintenaceActionsComponents}
-          </Box>
-        </CardContainer>
-      )
-      : <></>
+  return activeMaintenaceActionsComponents.length !== 0 ? (
+    <CardContainer>
+      <Box sx={statusPointsDisplaySubheaderBoxSx}>
+        <Typography variant="labelM" color="primary" text="Maintenance Actions" />
+      </Box>
+      <Box sx={{ width: '100%' }}>
+        <Divider orientation="horizontal" variant="fullWidth" />
+      </Box>
+      <Box sx={maintenanceActionsBoxSx}>{activeMaintenaceActionsComponents}</Box>
+    </CardContainer>
+  ) : (
+    <></>
   );
 };
 
@@ -123,15 +127,12 @@ const AssetStatus: React.FC<SingleAssetProps> = (props: SingleAssetProps): React
     <Box sx={getStatusOuterBoxSx(theme)}>
       <Box sx={statusAndMaintenanceActionsBoxSx}>
         <Header headerText={assetName} maintModeStatus={maintModeStatus || false} />
-        {
-            (alertState.alarmInformation.length > 0
-            || alertState.faultInformation.length > 0)
-            && <AlertContainer alerts={alertState} />
-          }
-        {
-            maintenanceActionsState
-            && <MaintenanceActionsDisplay maintenanceActionsComponents={maintenanceActionsMapped} />
-          }
+        {(alertState.alarmInformation.length > 0 || alertState.faultInformation.length > 0) && (
+          <AlertContainer alerts={alertState} />
+        )}
+        {maintenanceActionsState && (
+          <MaintenanceActionsDisplay maintenanceActionsComponents={maintenanceActionsMapped} />
+        )}
         <StatusPointsDisplay statusComponents={statusChildrenMapped} />
       </Box>
     </Box>

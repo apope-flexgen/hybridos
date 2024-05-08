@@ -6,9 +6,9 @@ import { LockModeService } from './../lockMode/lockMode.service';
 import { LockModeGateway } from './lockMode.gateway';
 
 @Module({
-    imports: [FimsModule, DBIModule],
-    controllers: [],
-    providers: [LockModeInterceptor, LockModeService, LockModeGateway],
-    exports: [LockModeService],
+  imports: [FimsModule, DBIModule],
+  controllers: [],
+  providers: [LockModeInterceptor, LockModeService, LockModeGateway],
+  exports: [LockModeService],
 })
 export class LockModeModule {}

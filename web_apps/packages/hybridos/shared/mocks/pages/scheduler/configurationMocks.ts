@@ -69,9 +69,9 @@ import { Configuration } from '../../../../../hybridos/shared/types/dtos/schedul
 /** TESTING: swap schedulerType to SC / FM to show other configuration states. */
 
 export const schedulerConfigurationData = {
-    scheduler_type: 'SC',
-    local_schedule: {
-        id: 'raleigh',
-        name: 'Raleigh'
-    }
+  scheduler_type: 'SC',
+  local_schedule: {
+    id: 'raleigh',
+    name: 'Raleigh',
+  },
 }

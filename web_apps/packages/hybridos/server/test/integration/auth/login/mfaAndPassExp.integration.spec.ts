@@ -1,292 +1,260 @@
-import { INestApplication } from '@nestjs/common'
-import { WsAdapter } from '@nestjs/platform-ws'
-import { Test, TestingModule } from '@nestjs/testing'
+import { INestApplication } from '@nestjs/common';
+import { WsAdapter } from '@nestjs/platform-ws';
+import { Test, TestingModule } from '@nestjs/testing';
 // import * as cookieParser from 'cookie-parser';
-import cookieParser from 'cookie-parser'
-import { MongoMemoryServer } from 'mongodb-memory-server'
+import cookieParser from 'cookie-parser';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 
-import request from './../../../testReqAgent'
+import request from './../../../testReqAgent';
 
-import { AppModule } from '../../../../src/app.module'
-import { AppEnvService } from '../../../../src/environment/appEnv.service'
-import * as testUtils from '../../../testUtils'
-import { ThrottlerGuard } from '@nestjs/throttler'
-import { PermissionsService } from 'src/permissions/permissions.service'
+import { AppModule } from '../../../../src/app.module';
+import { AppEnvService } from '../../../../src/environment/appEnv.service';
+import * as testUtils from '../../../testUtils';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { PermissionsService } from 'src/permissions/permissions.service';
 
-const INCORRECT_PASSWORD = 'incorrectPassword'
-const INCORRECT_USERNAME = 'userDoesntExist'
+const INCORRECT_PASSWORD = 'incorrectPassword';
+const INCORRECT_USERNAME = 'userDoesntExist';
 
 describe('Authentication (Integration)', () => {
-    let app: INestApplication
-    let db: MongoMemoryServer
+  let app: INestApplication;
+  let db: MongoMemoryServer;
 
-    beforeEach(async () => {
-        console.log('running before all')
-        const mongoServer = await MongoMemoryServer.create()
+  beforeEach(async () => {
+    console.log('running before all');
+    const mongoServer = await MongoMemoryServer.create();
 
-        const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [AppModule],
-        })
-            .overrideProvider(AppEnvService)
-            .useValue(testUtils.mockAppEnvService(mongoServer.getUri()))
-            .overrideProvider(PermissionsService)
-            .useValue({webServerConfigDirectoryPath: () => ''})
-            .compile()
-
-        db = mongoServer
-
-        app = testUtils.createTestApiApplication(moduleFixture)
-        app.useWebSocketAdapter(new WsAdapter(app))
-        app.use(cookieParser())
-        await app.init()
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
     })
+      .overrideProvider(AppEnvService)
+      .useValue(testUtils.mockAppEnvService(mongoServer.getUri()))
+      .overrideProvider(PermissionsService)
+      .useValue({ webServerConfigDirectoryPath: () => '' })
+      .compile();
 
-    beforeEach(async () => {
-        await testUtils.initializeSite(db.getUri(), testUtils.site(true, true, false))
-    })
+    db = mongoServer;
 
-    describe('/login responses', () => {
-        const URL = '/login'
+    app = testUtils.createTestApiApplication(moduleFixture);
+    app.useWebSocketAdapter(new WsAdapter(app));
+    app.use(cookieParser());
+    await app.init();
+  });
 
-        describe('password expired - mfa not enabled', () => {
-            beforeEach(async () => {
-                await testUtils.initializeUser(db.getUri(), await testUtils.adminUser(true, false))
-            })
+  beforeEach(async () => {
+    await testUtils.initializeSite(db.getUri(), testUtils.site(true, true, false));
+  });
 
-            it('should return password expired response', async () => {
-                const requestBody = {
-                    username: testUtils.VALID_USERNAME,
-                    password: testUtils.VALID_PASS,
-                }
+  describe('/login responses', () => {
+    const URL = '/login';
 
-                return await request(app.getHttpServer())
-                    .post(URL)
-                    .send(requestBody)
-                    .then((res) => {
-                        expect(res.status).toBe(200)
-                        expect(res.body).toEqual(
-                            expect.objectContaining({
-                                username: testUtils.VALID_USERNAME,
-                                passwordExpired: true,
-                            })
-                        )
-                        expect(res.body.accessToken).toBeTruthy()
-                    })
-            })
+    describe('password expired - mfa not enabled', () => {
+      beforeEach(async () => {
+        await testUtils.initializeUser(db.getUri(), await testUtils.adminUser(true, false));
+      });
 
-            it('should fail to log in user (invalid password)', async () => {
-                const requestBody = {
-                    username: testUtils.VALID_USERNAME,
-                    password: INCORRECT_PASSWORD,
-                }
+      it('should return password expired response', async () => {
+        const requestBody = {
+          username: testUtils.VALID_USERNAME,
+          password: testUtils.VALID_PASS,
+        };
 
-                return await request(app.getHttpServer())
-                    .post(URL)
-                    .send(requestBody)
-                    .expect(401)
-                    .expect({
-                        statusCode: 401,
-                        message: 'Unauthorized',
-                    })
-            })
+        return await request(app.getHttpServer())
+          .post(URL)
+          .send(requestBody)
+          .then((res) => {
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual(
+              expect.objectContaining({
+                username: testUtils.VALID_USERNAME,
+                passwordExpired: true,
+              }),
+            );
+            expect(res.body.accessToken).toBeTruthy();
+          });
+      });
 
-            it('should fail to log in user (cannot find user)', async () => {
-                const requestBody = {
-                    username: INCORRECT_USERNAME,
-                    password: testUtils.VALID_PASS,
-                }
+      it('should fail to log in user (invalid password)', async () => {
+        const requestBody = {
+          username: testUtils.VALID_USERNAME,
+          password: INCORRECT_PASSWORD,
+        };
 
-                return await request(app.getHttpServer())
-                    .post(URL)
-                    .send(requestBody)
-                    .expect(401)
-                    .expect({
-                        statusCode: 401,
-                        message: 'Unauthorized',
-                    })
-            })
-        })
+        return await request(app.getHttpServer()).post(URL).send(requestBody).expect(401).expect({
+          statusCode: 401,
+          message: 'Unauthorized',
+        });
+      });
 
-        describe('password not expired - mfa not enabled', () => {
-            beforeEach(async () => {
-                await testUtils.initializeUser(db.getUri(), await testUtils.adminUser(false, false))
-            })
+      it('should fail to log in user (cannot find user)', async () => {
+        const requestBody = {
+          username: INCORRECT_USERNAME,
+          password: testUtils.VALID_PASS,
+        };
 
-            it('should return mfa response (not yet enabled)', async () => {
-                const requestBody = {
-                    username: testUtils.VALID_USERNAME,
-                    password: testUtils.VALID_PASS,
-                }
+        return await request(app.getHttpServer()).post(URL).send(requestBody).expect(401).expect({
+          statusCode: 401,
+          message: 'Unauthorized',
+        });
+      });
+    });
 
-                return await request(app.getHttpServer())
-                    .post(URL)
-                    .send(requestBody)
-                    .then((res) => {
-                        expect(res.status).toBe(200)
-                        expect(res.body.username).toBe(testUtils.VALID_USERNAME)
-                        expect(res.body).toHaveProperty('qrCode')
-                        expect(res.body.accessToken).toBeTruthy()
-                    })
-            })
+    describe('password not expired - mfa not enabled', () => {
+      beforeEach(async () => {
+        await testUtils.initializeUser(db.getUri(), await testUtils.adminUser(false, false));
+      });
 
-            it('should fail to log in user (invalid password)', async () => {
-                const requestBody = {
-                    username: testUtils.VALID_USERNAME,
-                    password: INCORRECT_PASSWORD,
-                }
+      it('should return mfa response (not yet enabled)', async () => {
+        const requestBody = {
+          username: testUtils.VALID_USERNAME,
+          password: testUtils.VALID_PASS,
+        };
 
-                return await request(app.getHttpServer())
-                    .post(URL)
-                    .send(requestBody)
-                    .expect(401)
-                    .expect({
-                        statusCode: 401,
-                        message: 'Unauthorized',
-                    })
-            })
+        return await request(app.getHttpServer())
+          .post(URL)
+          .send(requestBody)
+          .then((res) => {
+            expect(res.status).toBe(200);
+            expect(res.body.username).toBe(testUtils.VALID_USERNAME);
+            expect(res.body).toHaveProperty('qrCode');
+            expect(res.body.accessToken).toBeTruthy();
+          });
+      });
 
-            it('should fail to log in user (cannot find user)', async () => {
-                const requestBody = {
-                    username: INCORRECT_USERNAME,
-                    password: testUtils.VALID_PASS,
-                }
+      it('should fail to log in user (invalid password)', async () => {
+        const requestBody = {
+          username: testUtils.VALID_USERNAME,
+          password: INCORRECT_PASSWORD,
+        };
 
-                return await request(app.getHttpServer())
-                    .post(URL)
-                    .send(requestBody)
-                    .expect(401)
-                    .expect({
-                        statusCode: 401,
-                        message: 'Unauthorized',
-                    })
-            })
-        })
+        return await request(app.getHttpServer()).post(URL).send(requestBody).expect(401).expect({
+          statusCode: 401,
+          message: 'Unauthorized',
+        });
+      });
 
-        describe('password expired - mfa enabled', () => {
-            beforeEach(async () => {
-                await testUtils.initializeUser(db.getUri(), await testUtils.adminUser(true, true))
-            })
+      it('should fail to log in user (cannot find user)', async () => {
+        const requestBody = {
+          username: INCORRECT_USERNAME,
+          password: testUtils.VALID_PASS,
+        };
 
-            it('should return password expired response', async () => {
-                const requestBody = {
-                    username: testUtils.VALID_USERNAME,
-                    password: testUtils.VALID_PASS,
-                }
+        return await request(app.getHttpServer()).post(URL).send(requestBody).expect(401).expect({
+          statusCode: 401,
+          message: 'Unauthorized',
+        });
+      });
+    });
 
-                return await request(app.getHttpServer())
-                    .post(URL)
-                    .send(requestBody)
-                    .then((res) => {
-                        expect(res.status).toBe(200)
-                        expect(res.body).toEqual(
-                            expect.objectContaining({
-                                username: testUtils.VALID_USERNAME,
-                                passwordExpired: true,
-                            })
-                        )
-                        expect(res.body.accessToken).toBeTruthy()
-                    })
-            })
+    describe('password expired - mfa enabled', () => {
+      beforeEach(async () => {
+        await testUtils.initializeUser(db.getUri(), await testUtils.adminUser(true, true));
+      });
 
-            it('should fail to log in user (invalid password)', async () => {
-                const requestBody = {
-                    username: testUtils.VALID_USERNAME,
-                    password: INCORRECT_PASSWORD,
-                }
+      it('should return password expired response', async () => {
+        const requestBody = {
+          username: testUtils.VALID_USERNAME,
+          password: testUtils.VALID_PASS,
+        };
 
-                return await request(app.getHttpServer())
-                    .post(URL)
-                    .send(requestBody)
-                    .expect(401)
-                    .expect({
-                        statusCode: 401,
-                        message: 'Unauthorized',
-                    })
-            })
+        return await request(app.getHttpServer())
+          .post(URL)
+          .send(requestBody)
+          .then((res) => {
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual(
+              expect.objectContaining({
+                username: testUtils.VALID_USERNAME,
+                passwordExpired: true,
+              }),
+            );
+            expect(res.body.accessToken).toBeTruthy();
+          });
+      });
 
-            it('should fail to log in user (cannot find user)', async () => {
-                const requestBody = {
-                    username: INCORRECT_USERNAME,
-                    password: testUtils.VALID_PASS,
-                }
+      it('should fail to log in user (invalid password)', async () => {
+        const requestBody = {
+          username: testUtils.VALID_USERNAME,
+          password: INCORRECT_PASSWORD,
+        };
 
-                return await request(app.getHttpServer())
-                    .post(URL)
-                    .send(requestBody)
-                    .expect(401)
-                    .expect({
-                        statusCode: 401,
-                        message: 'Unauthorized',
-                    })
-            })
-        })
+        return await request(app.getHttpServer()).post(URL).send(requestBody).expect(401).expect({
+          statusCode: 401,
+          message: 'Unauthorized',
+        });
+      });
 
-        describe('password not expired - mfa enabled', () => {
-            beforeEach(async () => {
-                await testUtils.initializeUser(db.getUri(), await testUtils.adminUser(false, true))
-            })
+      it('should fail to log in user (cannot find user)', async () => {
+        const requestBody = {
+          username: INCORRECT_USERNAME,
+          password: testUtils.VALID_PASS,
+        };
 
-            it('should return mfa response (already enabled)', async () => {
-                const requestBody = {
-                    username: testUtils.VALID_USERNAME,
-                    password: testUtils.VALID_PASS,
-                }
+        return await request(app.getHttpServer()).post(URL).send(requestBody).expect(401).expect({
+          statusCode: 401,
+          message: 'Unauthorized',
+        });
+      });
+    });
 
-                return await request(app.getHttpServer())
-                    .post(URL)
-                    .send(requestBody)
-                    .then((res) => {
-                        expect(res.status).toBe(200)
-                        expect(res.body.username).toBe(testUtils.VALID_USERNAME)
-                        expect(res.body).not.toHaveProperty('qrCode')
-                        expect(res.body.accessToken).toBeTruthy()
-                    })
-            })
+    describe('password not expired - mfa enabled', () => {
+      beforeEach(async () => {
+        await testUtils.initializeUser(db.getUri(), await testUtils.adminUser(false, true));
+      });
 
-            it('should fail to log in user (invalid password)', async () => {
-                const requestBody = {
-                    username: testUtils.VALID_USERNAME,
-                    password: INCORRECT_PASSWORD,
-                }
+      it('should return mfa response (already enabled)', async () => {
+        const requestBody = {
+          username: testUtils.VALID_USERNAME,
+          password: testUtils.VALID_PASS,
+        };
 
-                return await request(app.getHttpServer())
-                    .post(URL)
-                    .send(requestBody)
-                    .expect(401)
-                    .expect({
-                        statusCode: 401,
-                        message: 'Unauthorized',
-                    })
-            })
+        return await request(app.getHttpServer())
+          .post(URL)
+          .send(requestBody)
+          .then((res) => {
+            expect(res.status).toBe(200);
+            expect(res.body.username).toBe(testUtils.VALID_USERNAME);
+            expect(res.body).not.toHaveProperty('qrCode');
+            expect(res.body.accessToken).toBeTruthy();
+          });
+      });
 
-            it('should fail to log in user (cannot find user)', async () => {
-                const requestBody = {
-                    username: INCORRECT_USERNAME,
-                    password: testUtils.VALID_PASS,
-                }
+      it('should fail to log in user (invalid password)', async () => {
+        const requestBody = {
+          username: testUtils.VALID_USERNAME,
+          password: INCORRECT_PASSWORD,
+        };
 
-                return await request(app.getHttpServer())
-                    .post(URL)
-                    .send(requestBody)
-                    .expect(401)
-                    .expect({
-                        statusCode: 401,
-                        message: 'Unauthorized',
-                    })
-            })
-        })
-    })
+        return await request(app.getHttpServer()).post(URL).send(requestBody).expect(401).expect({
+          statusCode: 401,
+          message: 'Unauthorized',
+        });
+      });
 
-    afterEach(async () => {
-        await testUtils.dropDatabase(db.getUri())
-    })
+      it('should fail to log in user (cannot find user)', async () => {
+        const requestBody = {
+          username: INCORRECT_USERNAME,
+          password: testUtils.VALID_PASS,
+        };
 
-    afterAll(async () => {
-        FIMS.closeConnection()
-        await app.close()
+        return await request(app.getHttpServer()).post(URL).send(requestBody).expect(401).expect({
+          statusCode: 401,
+          message: 'Unauthorized',
+        });
+      });
+    });
+  });
 
-        if (db) {
-            await db.stop()
-        }
-    })
-})
+  afterEach(async () => {
+    await testUtils.dropDatabase(db.getUri());
+  });
+
+  afterAll(async () => {
+    FIMS.closeConnection();
+    await app.close();
+
+    if (db) {
+      await db.stop();
+    }
+  });
+});

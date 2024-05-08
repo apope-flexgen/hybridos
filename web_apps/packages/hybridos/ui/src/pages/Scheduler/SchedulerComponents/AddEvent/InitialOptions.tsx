@@ -13,7 +13,10 @@ import dayjs from 'dayjs';
 import React from 'react';
 
 import { useSchedulerContext } from 'src/pages/Scheduler/Scheduler';
-import { addEventLabels, determineBatchItemsFromRange } from 'src/pages/Scheduler/SchedulerComponents/AddEvent/AddEventHelpers';
+import {
+  addEventLabels,
+  determineBatchItemsFromRange,
+} from 'src/pages/Scheduler/SchedulerComponents/AddEvent/AddEventHelpers';
 import { EditEventState, EventVariables, VariableValues } from 'src/pages/Scheduler/SchedulerTypes';
 import { useTheme } from 'styled-components';
 
@@ -50,36 +53,48 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
     const { unit, id, name, type } = variable;
 
     const handleVariableChange = (e: any) => {
-      const newVariableValues = state.variableValues.map(
-        (obj: VariableValues) => obj.name === id ? {...obj, value: e.target.value} : obj,
+      const newVariableValues = state.variableValues.map((obj: VariableValues) =>
+        obj.name === id ? { ...obj, value: e.target.value } : obj,
       );
       dispatch({ type: 'setVariableValues', payload: newVariableValues });
     };
 
     const { value, batch_value } = variableValue || { value: '', batch_value: [] };
 
-    const { menuItems, numericExtensions } = (determineBatchItemsFromRange(variable.batch_prefix || '', variable.uri, variable.batch_range || []));
-    const batchValues = (determineBatchItemsFromRange(variable.batch_prefix || '', variable.uri, batch_value || []));
+    const { menuItems, numericExtensions } = determineBatchItemsFromRange(
+      variable.batch_prefix || '',
+      variable.uri,
+      variable.batch_range || [],
+    );
+    const batchValues = determineBatchItemsFromRange(
+      variable.batch_prefix || '',
+      variable.uri,
+      batch_value || [],
+    );
 
     const handleBatchChange = (e: any, deleteEvent: boolean) => {
       if (deleteEvent) {
         const newVariableValues = state.variableValues.map((obj: VariableValues) => {
-          const numericArray = determineBatchItemsFromRange(variable.batch_prefix || '', variable.uri, obj.batch_value || [])
+          const numericArray = determineBatchItemsFromRange(
+            variable.batch_prefix || '',
+            variable.uri,
+            obj.batch_value || [],
+          );
           const newBatchValueArray = numericArray.menuItems.filter((value) => value !== e);
           const newBatchValues = newBatchValueArray.map((item) => numericExtensions[item]);
-          return obj.name === id ? {...obj, batch_value: newBatchValues } : obj
-        })
+          return obj.name === id ? { ...obj, batch_value: newBatchValues } : obj;
+        });
         dispatch({ type: 'setVariableValues', payload: newVariableValues });
       } else {
         const numericArray = e.target.value.map((item) => numericExtensions[item]);
-        const newVariableValues = state.variableValues.map(
-          (obj: VariableValues) => obj.name === id ? {...obj, batch_value: numericArray} : obj,
+        const newVariableValues = state.variableValues.map((obj: VariableValues) =>
+          obj.name === id ? { ...obj, batch_value: numericArray } : obj,
         );
         dispatch({ type: 'setVariableValues', payload: newVariableValues });
       }
     };
 
-    const batchSelector = variable.batch_prefix ? 
+    const batchSelector = variable.batch_prefix ? (
       <Select
         fullWidth
         multiSelect
@@ -90,8 +105,7 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
         value={batchValues.menuItems}
         menuItems={menuItems}
       />
-    : undefined;
-
+    ) : undefined;
 
     if (type === 'Bool') {
       return (
@@ -143,7 +157,6 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
     );
   });
 
-  
   return (
     <Box
       sx={{
@@ -169,11 +182,17 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
           width='small'
           onHourChange={(e) => {
             dispatch({ type: 'setStartHours', payload: e.target.value });
-            dispatch({ type: 'setStartTime', payload: `${e.target.value}:${state.startMinutes}` });
+            dispatch({
+              type: 'setStartTime',
+              payload: `${e.target.value}:${state.startMinutes}`,
+            });
           }}
           onMinuteChange={(e) => {
             dispatch({ type: 'setStartMinutes', payload: e.target.value });
-            dispatch({ type: 'setStartTime', payload: `${state.startHours}:${e.target.value}` });
+            dispatch({
+              type: 'setStartTime',
+              payload: `${state.startHours}:${e.target.value}`,
+            });
           }}
           hourValue={state.startHours}
           minuteValue={state.startMinutes}
@@ -194,11 +213,17 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
           width='small'
           onHourChange={(e) => {
             dispatch({ type: 'setEndHours', payload: e.target.value });
-            dispatch({ type: 'setEndTime', payload: `${e.target.value}:${state.endMinutes}` });
+            dispatch({
+              type: 'setEndTime',
+              payload: `${e.target.value}:${state.endMinutes}`,
+            });
           }}
           onMinuteChange={(e) => {
             dispatch({ type: 'setEndMinutes', payload: e.target.value });
-            dispatch({ type: 'setEndTime', payload: `${state.endHours}:${e.target.value}` });
+            dispatch({
+              type: 'setEndTime',
+              payload: `${state.endHours}:${e.target.value}`,
+            });
           }}
           hourValue={state.endHours}
           minuteValue={state.endMinutes}

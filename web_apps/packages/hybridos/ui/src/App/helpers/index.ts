@@ -141,7 +141,9 @@ const getRoutes = (
       path: '/generators',
     },
     ...customAssetsArray,
-    { showDivider: userRole === Roles.Admin || userRole === Roles.Developer ? true : false },
+    {
+      showDivider: userRole === Roles.Admin || userRole === Roles.Developer ? true : false,
+    },
     (userRole === Roles.Admin || userRole === Roles.Developer) && {
       componentName: 'UserAdmin',
       icon: 'UserAdmin',
@@ -160,18 +162,21 @@ const getRoutes = (
       itemName: 'UI Config',
       path: '/ui-config',
     },
-    { showDivider: userRole === Roles.Admin || userRole === Roles.Developer ? true : false },
-    ((userRole === Roles.Admin || userRole === Roles.Developer) 
-      && siteConfiguration.system_status 
-    ) && {
-      componentName: 'SystemStatus',
-      icon: 'SystemStatus',
-      itemName: 'System Status',
-      path: '/system-status',
+    {
+      showDivider: userRole === Roles.Admin || userRole === Roles.Developer ? true : false,
     },
+    (userRole === Roles.Admin || userRole === Roles.Developer) &&
+      siteConfiguration.system_status && {
+        componentName: 'SystemStatus',
+        icon: 'SystemStatus',
+        itemName: 'System Status',
+        path: '/system-status',
+      },
   ];
 
-  const returnRoutes = routes.filter((item) => typeof item !== 'boolean' && item !== undefined) as RouteObject[];
+  const returnRoutes = routes.filter(
+    (item) => typeof item !== 'boolean' && item !== undefined,
+  ) as RouteObject[];
 
   const routesWithoutAdjacentDividers = returnRoutes.filter(
     (item, index) =>

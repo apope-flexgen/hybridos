@@ -44,7 +44,12 @@ export class ValidAccessTokenService implements IValidAccessTokenService {
 
   async createAccessTokenFromUser(username: string, role: string): Promise<string> {
     const user = await this.usersService.readByUsername(username);
-    const payload = { sub: username, userId: user.id, role: role, nonce: performance.now() };
+    const payload = {
+      sub: username,
+      userId: user.id,
+      role: role,
+      nonce: performance.now(),
+    };
     const accessToken = this.jwtService.sign(payload, {
       expiresIn: this.appEnvService.getAccessTokenTimeout(),
     });

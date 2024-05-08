@@ -8,10 +8,7 @@ import schedulerEventsData from './schedulerEventsData';
 import modesData from './schedulerModesData';
 import timezonesData from './schedulerTimezonesData';
 
-const checkIfBeforeEndDate = (
-  currentEndTime: dayjs.Dayjs,
-  endTime: string,
-) => {
+const checkIfBeforeEndDate = (currentEndTime: dayjs.Dayjs, endTime: string) => {
   const endCheck = dayjs(endTime);
   return currentEndTime.isBefore(endCheck);
 };
@@ -47,17 +44,12 @@ const createRecurringEvents = (
       const recurringEndTime = recurringStartTime.add(event.duration, 'minutes');
       if (
         recurringStartTime.isAfter(startTimeAsDayJs)
-                && recurringEndTime.isBefore(endTimeAsDayJs)
-                && (
-                  (event.repeat.end_time
-                    && checkIfBeforeEndDate(recurringEndTime, event.repeat.end_time))
-                  || (event.repeat.end_count
-                  && checkIfBeforeEndCount(numOccurences, event.repeat.end_count))
-                )
-                && (
-                  event.repeat.exceptions === undefined
-                    || !checkIfInExceptions(event.repeat.exceptions, recurringStartTime.format())
-                )
+        && recurringEndTime.isBefore(endTimeAsDayJs)
+        && ((event.repeat.end_time && checkIfBeforeEndDate(recurringEndTime, event.repeat.end_time))
+          || (event.repeat.end_count
+            && checkIfBeforeEndCount(numOccurences, event.repeat.end_count)))
+        && (event.repeat.exceptions === undefined
+          || !checkIfInExceptions(event.repeat.exceptions, recurringStartTime.format()))
       ) {
         const recurringEventInframe: SchedulerEvent = {
           id: Math.floor(Math.random() * 1000000000).toString(),
@@ -83,17 +75,13 @@ const createRecurringEvents = (
 
           if (
             recurringStartTime.isAfter(startTimeFromEvent.add(1, 'minute'))
-                        && recurringEndTime.isBefore(endTimeAsDayJs)
-                        && ((event.repeat?.end_time
-                            && checkIfBeforeEndDate(recurringEndTime, event.repeat.end_time))
-                        || (event.repeat?.end_count
-                            && checkIfBeforeEndCount(numOccurences, event.repeat.end_count))
-                        )
-                        && (event.repeat?.exceptions === undefined
-                            || !checkIfInExceptions(
-                              event.repeat.exceptions,
-                              recurringStartTime.format(),
-                            ))
+            && recurringEndTime.isBefore(endTimeAsDayJs)
+            && ((event.repeat?.end_time
+              && checkIfBeforeEndDate(recurringEndTime, event.repeat.end_time))
+              || (event.repeat?.end_count
+                && checkIfBeforeEndCount(numOccurences, event.repeat.end_count)))
+            && (event.repeat?.exceptions === undefined
+              || !checkIfInExceptions(event.repeat.exceptions, recurringStartTime.format()))
           ) {
             const recurringEventInframe: SchedulerEvent = {
               id: Math.floor(Math.random() * 1000000000).toString(),
@@ -126,54 +114,42 @@ const createRecurringEvents = (
   }
 };
 
-export const schedulerEventsRoute = rest.get(
-  '/api/scheduler/events/:siteId',
-  (req, res, ctx) => {
-    const startTime = req.url.searchParams.get('startTime');
-    const startTimeAsDayJs = dayjs(startTime, 'YYYY-MM-DD HH:mm:ss');
-    const endTime = req.url.searchParams.get('endTime');
-    const endTimeAsDayJs = dayjs(endTime, 'YYYY-MM-DD HH:mm:ss');
-    const tempEventsData: SchedulerEvent[] = [];
+export const schedulerEventsRoute = rest.get('/api/scheduler/events/:siteId', (req, res, ctx) => {
+  const startTime = req.url.searchParams.get('startTime');
+  const startTimeAsDayJs = dayjs(startTime, 'YYYY-MM-DD HH:mm:ss');
+  const endTime = req.url.searchParams.get('endTime');
+  const endTimeAsDayJs = dayjs(endTime, 'YYYY-MM-DD HH:mm:ss');
+  const tempEventsData: SchedulerEvent[] = [];
 
-    // eslint-disable-next-line array-callback-return
-    schedulerEventsData.map((event) => {
-      const startTimeFromEvent = dayjs(event.start_time);
-      const endTimeFromEvent = startTimeFromEvent.add(event.duration, 'minutes');
-      if (
-        startTimeFromEvent.isAfter(startTimeAsDayJs)
-            && endTimeFromEvent.isBefore(endTimeAsDayJs)
-      ) {
-        tempEventsData.push(event);
-      }
-      if (event.repeat !== undefined) {
-        const recurringStartTime = startTimeFromEvent;
-        const numOccurences = 0;
+  // eslint-disable-next-line array-callback-return
+  schedulerEventsData.map((event) => {
+    const startTimeFromEvent = dayjs(event.start_time);
+    const endTimeFromEvent = startTimeFromEvent.add(event.duration, 'minutes');
+    if (startTimeFromEvent.isAfter(startTimeAsDayJs) && endTimeFromEvent.isBefore(endTimeAsDayJs)) {
+      tempEventsData.push(event);
+    }
+    if (event.repeat !== undefined) {
+      const recurringStartTime = startTimeFromEvent;
+      const numOccurences = 0;
 
-        createRecurringEvents(
-          event,
-          recurringStartTime,
-          endTimeAsDayJs,
-          numOccurences,
-          tempEventsData,
-          startTimeAsDayJs,
-          startTimeFromEvent,
-        );
-      }
-    });
+      createRecurringEvents(
+        event,
+        recurringStartTime,
+        endTimeAsDayJs,
+        numOccurences,
+        tempEventsData,
+        startTimeAsDayJs,
+        startTimeFromEvent,
+      );
+    }
+  });
 
-    return res(ctx.json(tempEventsData));
-  },
-);
+  return res(ctx.json(tempEventsData));
+});
 
-export const schedulerModesMock = rest.get(
-  '/api/scheduler/modes',
-  (req, res, ctx) => res(ctx.json(modesData)),
-);
+export const schedulerModesMock = rest.get('/api/scheduler/modes', (req, res, ctx) => res(ctx.json(modesData)));
 
-export const schedulerTimezonesMock = rest.get(
-  '/api/scheduler/timezones',
-  (req, res, ctx) => res(ctx.json(timezonesData)),
-);
+export const schedulerTimezonesMock = rest.get('/api/scheduler/timezones', (req, res, ctx) => res(ctx.json(timezonesData)));
 
 export const schedulerConfigurationMock = rest.get(
   '/api/scheduler/configuration',
@@ -194,7 +170,7 @@ export const putConfigurationRoute = rest.post<Configuration | null>(
 );
 
 export interface DeleteEventBody {
-  startTime: string
+  startTime: string;
 }
 
 export const postModesRoute = rest.post<[string, ApiMode]>(
@@ -213,23 +189,20 @@ export const postModesRoute = rest.post<[string, ApiMode]>(
   },
 );
 
-export const deleteModeRoute = rest.delete<any>(
-  'scheduler/modes',
-  async (req, res, ctx) => {
-    const body = await req.json();
-    const index = Object.keys(modesData).findIndex((modeId: string) => modeId === body);
-    if (index !== -1) {
-      delete modesData[body];
-      schedulerEventsData.forEach((obj: SchedulerEvent, eventIndex: number) => {
-        if (obj.mode === body) {
-          schedulerEventsData.splice(eventIndex, 1);
-        }
-      });
-    }
+export const deleteModeRoute = rest.delete<any>('scheduler/modes', async (req, res, ctx) => {
+  const body = await req.json();
+  const index = Object.keys(modesData).findIndex((modeId: string) => modeId === body);
+  if (index !== -1) {
+    delete modesData[body];
+    schedulerEventsData.forEach((obj: SchedulerEvent, eventIndex: number) => {
+      if (obj.mode === body) {
+        schedulerEventsData.splice(eventIndex, 1);
+      }
+    });
+  }
 
-    return res(ctx.json(modesData));
-  },
-);
+  return res(ctx.json(modesData));
+});
 
 export const postEventsRoute = rest.post<Event>(
   '/scheduler/events/:siteId',
@@ -246,9 +219,7 @@ export const deleteEventsRoute = rest.delete<DeleteEventBody>(
     const body = await req.json();
     const index = schedulerEventsData.findIndex((obj: SchedulerEvent) => obj.id === body.id);
     if (index === -1) {
-      const groupIndex = schedulerEventsData.findIndex(
-        (obj) => obj.repeat?.id === body.id,
-      );
+      const groupIndex = schedulerEventsData.findIndex((obj) => obj.repeat?.id === body.id);
       schedulerEventsData.splice(groupIndex, 1);
     } else schedulerEventsData.splice(index, 1);
 

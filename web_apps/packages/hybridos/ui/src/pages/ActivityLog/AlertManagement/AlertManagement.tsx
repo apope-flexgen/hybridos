@@ -31,6 +31,8 @@ import { useTheme } from 'styled-components';
 const AlertManagement = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [saveDisabled, setSaveDisabled] = useState<boolean>(false);
+  // TODO: fix max line length
+  // eslint-disable-next-line max-len
   const [alertManagementView, setAlertManagementView] = useState<AlertManagementPageLayout>(
     AlertManagementPageLayouts.TABLE,
   );

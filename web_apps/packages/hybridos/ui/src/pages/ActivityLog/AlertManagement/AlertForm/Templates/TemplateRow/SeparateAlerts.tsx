@@ -1,8 +1,4 @@
-import {
-  Divider,
-  Switch,
-  Typography,
-} from '@flexgen/storybook';
+import { Divider, Switch, Typography } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import { alertManagementHelperText } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import {
@@ -13,18 +9,15 @@ import {
 import { Template } from 'src/pages/ActivityLog/activityLog.types';
 
 export interface SeparateAlertsProps {
-  template: Template,
-  handleTemplateFieldChange:(
+  template: Template;
+  handleTemplateFieldChange: (
     field: string,
     newValue: string | string[] | boolean | number,
-  ) => void,
+  ) => void;
 }
 
 // Input fields for a single template - wildcard, list, and value
-const SeparateAlerts = ({
-  handleTemplateFieldChange,
-  template,
-}: SeparateAlertsProps) => (
+const SeparateAlerts = ({ handleTemplateFieldChange, template }: SeparateAlertsProps) => (
   <>
     <Divider variant="fullWidth" orientation="horizontal" />
     <Box sx={formRowSx}>

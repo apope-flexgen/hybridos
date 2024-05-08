@@ -1,24 +1,22 @@
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import DataTable from '@flexgen/storybook/dist/components/DataDisplay/DataTable';
-import React, {
-  useCallback, useEffect, useState,
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
-import { activeAlertsColumns, initialActiveAlertsFilters } from 'src/pages/ActivityLog/Alerts/alerts.helpers';
+import {
+  activeAlertsColumns,
+  initialActiveAlertsFilters,
+} from 'src/pages/ActivityLog/Alerts/alerts.helpers';
 import { dataTableBox } from 'src/pages/ActivityLog/Alerts/alerts.styles';
 import useGenerateActiveAlertRows from 'src/pages/ActivityLog/Alerts/hooks/useGenerateRows';
 import { ActiveAlertObject, AlertFilters } from 'src/pages/ActivityLog/activityLog.types';
 import QueryService from 'src/services/QueryService';
 
 export interface AlertsTableProps {
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  setTotalActiveAlertCount: React.Dispatch<React.SetStateAction<string>>
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setTotalActiveAlertCount: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const AlertsTable = ({
-  setIsLoading,
-  setTotalActiveAlertCount,
-}: AlertsTableProps) => {
+const AlertsTable = ({ setIsLoading, setTotalActiveAlertCount }: AlertsTableProps) => {
   const [filters] = useState<AlertFilters>(initialActiveAlertsFilters);
   const [activeAlertsData, setActiveAlertsData] = useState<ActiveAlertObject[]>([]);
 
@@ -40,7 +38,9 @@ const AlertsTable = ({
     });
   };
 
-  const handleDataOnSocket = useCallback(() => { getInitialData(); }, []);
+  const handleDataOnSocket = useCallback(() => {
+    getInitialData();
+  }, []);
 
   // start listening to web sockets
   useEffect(() => {

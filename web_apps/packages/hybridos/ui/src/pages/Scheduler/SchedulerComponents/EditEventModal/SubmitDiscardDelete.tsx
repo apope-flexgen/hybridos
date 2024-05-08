@@ -112,7 +112,14 @@ const SubmitDiscardDelete: React.FunctionComponent<SubmitDiscardDeleteProps> = (
           </Box>
         )}
       </Box>
-      <Box sx={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'flex-end' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          gap: '8px',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+        }}
+      >
         <Box sx={{ display: 'flex', gap: theme.fgb.editModal.spacing.gap }}>
           <MuiButton
             disabled={disableAllFields || pastEvent}
@@ -129,13 +136,14 @@ const SubmitDiscardDelete: React.FunctionComponent<SubmitDiscardDeleteProps> = (
         {saveDisabled && checkIfEndInPast(state, timezone[0]) && !pastEvent && (
           <Typography text={addEventLabels.endInPastError.label} variant='labelS' color='error' />
         )}
-        {saveDisabled && isOverlappingStartTime(state, eventsForUi, timezone[0] || 'America/New_York', event) && (
-          <Typography
-            text={addEventLabels.cannotOverlapError.label}
-            variant='labelS'
-            color='error'
-          />
-        )}
+        {saveDisabled &&
+          isOverlappingStartTime(state, eventsForUi, timezone[0] || 'America/New_York', event) && (
+            <Typography
+              text={addEventLabels.cannotOverlapError.label}
+              variant='labelS'
+              color='error'
+            />
+          )}
         {saveDisabled && checkIfStartBeforeEnd(state) && (
           <Typography
             text={addEventLabels.startAfterEndError.label}

@@ -57,7 +57,7 @@ export class AssetsController {
             icon: el.info.icon,
             key,
           },
-        });      
+        });
       }
       el.info.assetKey = key;
       return acc;

@@ -20,15 +20,16 @@ export type LoginInfo = {
   siteName?: string;
   customer?: string;
   server?: string;
-}
+};
 
 const WebUILogin = (props: any) => {
   const axiosInstance = useAxiosWebUIInstance(true);
   const LOGIN_INFO_URL = '/login-info';
-  const [loginInfo, setLoginInfo] = useState<LoginInfo>({product: "SC"});
+  const [loginInfo, setLoginInfo] = useState<LoginInfo>({ product: 'SC' });
 
   const { setAuth } = useAuth();
-  const { currentUser, setCurrentUser, setLoggedIn, setSiteConfiguration, setProduct } = useAppContext();
+  const { currentUser, setCurrentUser, setLoggedIn, setSiteConfiguration, setProduct } =
+    useAppContext();
 
   const onLogin = (user: any) => {
     const realTimeService = RealTimeService.Instance;
@@ -51,7 +52,7 @@ const WebUILogin = (props: any) => {
   useEffect(() => {
     return () => {
       QueryService.cleanupSocket();
-    }
+    };
   }, []);
 
   // get initial information for login page

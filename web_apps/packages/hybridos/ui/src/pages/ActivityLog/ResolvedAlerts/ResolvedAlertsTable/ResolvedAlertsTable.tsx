@@ -7,17 +7,18 @@ import React, {
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import { dataTableBox } from 'src/pages/ActivityLog/Alerts/alerts.styles';
 import useGenerateRows from 'src/pages/ActivityLog/ResolvedAlerts/hooks/useGenerateRows';
-import { initialResolvedAlertsFilters, resolvedAlertsColumns } from 'src/pages/ActivityLog/ResolvedAlerts/resolvedAlerts.helpers';
+import {
+  initialResolvedAlertsFilters,
+  resolvedAlertsColumns,
+} from 'src/pages/ActivityLog/ResolvedAlerts/resolvedAlerts.helpers';
 import { AlertFilters, ResolvedAlertObject } from 'src/pages/ActivityLog/activityLog.types';
 import QueryService from 'src/services/QueryService';
 
 export interface ResolvedAlertsTableProps {
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ResolvedAlertsTable = ({
-  setIsLoading,
-}: ResolvedAlertsTableProps) => {
+const ResolvedAlertsTable = ({ setIsLoading }: ResolvedAlertsTableProps) => {
   const [filters, setFilters] = useState<AlertFilters>(initialResolvedAlertsFilters);
   const [resolvedAlertsData, setResolvedAlertsData] = useState<ResolvedAlertObject[]>([]);
   const [count, setCount] = useState<number>(1);
@@ -60,7 +61,9 @@ const ResolvedAlertsTable = ({
     });
   };
 
-  const handleDataOnSocket = useCallback(() => { getInitialData(); }, []);
+  const handleDataOnSocket = useCallback(() => {
+    getInitialData();
+  }, []);
 
   // start listening to web sockets
   useEffect(() => {
@@ -72,12 +75,12 @@ const ResolvedAlertsTable = ({
 
   useEffect(() => {
     getInitialData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   useEffect(() => {
     generateRowsData(resolvedAlertsData);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resolvedAlertsData]);
 
   return (

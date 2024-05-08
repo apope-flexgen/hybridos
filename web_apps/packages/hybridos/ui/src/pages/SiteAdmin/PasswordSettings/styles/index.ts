@@ -11,3 +11,11 @@ export const mainBoxSx = {
   width: '60%',
   gap: '8px',
 };
+
+export const passwordLengthBoxSx = {
+  display: 'flex',
+  gap: '16px',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  width: '60%',
+};

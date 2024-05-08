@@ -40,7 +40,6 @@ export type Mode = {
   borderColor: string;
   backgroundColor: string;
 };
-
 export interface EventVariables {
   id: string;
   name: string;
@@ -57,21 +56,17 @@ export interface VariableValues {
   value: string | boolean | number;
   batch_value?: string[];
 }
-
 export interface ApplyChangesTo {
   thisEventOnly: boolean;
   allInSeries: boolean;
 }
-
 export interface EndsOnOptions {
   Never: boolean;
   On: boolean;
   After: boolean;
 }
-
 export interface RepeatEveryOptions {
   Days: boolean;
-  Weeks: boolean;
 }
 
 export interface DaysSelected {
@@ -102,7 +97,6 @@ export type SchedulerUrls =
   | '/scheduler/timezones'
   | '/scheduler/connected';
 
-export type SchedulerTabs = 'scheduler' | 'scheduler_config' | 'mode_manager';
 export interface Tab {
   label: string;
   value: string;
@@ -121,18 +115,8 @@ export type ModeColors =
   | 'deepOrange'
   | 'gray';
 
+export type SchedulerTabs = 'scheduler' | 'scheduler_config' | 'mode_manager';
 export type ButtonSizes = 'small' | 'medium' | 'large';
 export type ButtonVariants = 'contained' | 'outlined' | 'text';
-export type ButtonColors =
-  | 'inherit'
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'error'
-  | 'info'
-  | 'warning'
-  | undefined;
-
 export type DayCircleLabels = 'S' | 'M' | 'T' | 'W' | 'TH' | 'F' | 'S';
-
 export type DayCircleIndex = 'sun' | 'mon' | 'tues' | 'wed' | 'thurs' | 'fri' | 'sat' | 'sun';

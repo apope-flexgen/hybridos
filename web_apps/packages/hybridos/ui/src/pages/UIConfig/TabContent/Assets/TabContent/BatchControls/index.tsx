@@ -91,7 +91,7 @@ const BatchControls = () => {
     setExpanded((prevExpanded) => prevExpanded.filter((i) => i !== index));
   };
   const handleSelectChange = (e: SelectChangeEvent<string>, index: number) => {
-    const value = e.target.value
+    const value = e.target.value;
 
     setSelectedAsset((prevSelectedAsset) => {
       if (prevSelectedAsset?.batchControls === undefined) return prevSelectedAsset;
@@ -123,51 +123,53 @@ const BatchControls = () => {
       {selectedAsset?.batchControls &&
         selectedAsset?.batchControls.map((batchControl, index) => {
           return (
-          <Accordion
-            expanded={expanded.includes(index)}
-            expandIcon={!expanded.includes(index) ? 'Edit' : undefined}
-            heading={batchControl.name || ''}
-            // TODO: fix lint
-            // eslint-disable-next-line react/no-array-index-key
-            key={index}
-            onChange={(exp) => handleExpand(index, exp)}
-          >
-            <TextFieldsContainer>
-              {items.map(({ key, label, helperText, select, options, type }) => {
-                console.log(`${key}: ${batchControl[key]}`)
-                 if (select) return (
-                  <Select
-                    label={label}
-                    menuItems={options}
-                    onChange={(e) => handleSelectChange(e, index)}
-                    value={batchControl[key as keyof Control]}
-                  />
-                );
-                else return (
-                  <TextField
-                    disableLabelAnimation
-                    helperText={helperText}
-                    id={key}
-                    key={key}
-                    label={label}
-                    onChange={(e) => handleTextFieldChange(e, index)}
-                    value={batchControl[key as keyof Control]}
-                    type={type as 'number' | undefined}
-                  />
-                )
-              }
-              )}
-            </TextFieldsContainer>
-            <DeleteButtonContainer>
-              <MuiButton
-                color='error'
-                label={DELETE_BATCH_CONTROLS}
-                onClick={() => handleDelete(index)}
-                variant='outlined'
-              />
-            </DeleteButtonContainer>
-          </Accordion>
-        )})}
+            <Accordion
+              expanded={expanded.includes(index)}
+              expandIcon={!expanded.includes(index) ? 'Edit' : undefined}
+              heading={batchControl.name || ''}
+              // TODO: fix lint
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
+              onChange={(exp) => handleExpand(index, exp)}
+            >
+              <TextFieldsContainer>
+                {items.map(({ key, label, helperText, select, options, type }) => {
+                  console.log(`${key}: ${batchControl[key]}`);
+                  if (select)
+                    return (
+                      <Select
+                        label={label}
+                        menuItems={options}
+                        onChange={(e) => handleSelectChange(e, index)}
+                        value={batchControl[key as keyof Control]}
+                      />
+                    );
+                  else
+                    return (
+                      <TextField
+                        disableLabelAnimation
+                        helperText={helperText}
+                        id={key}
+                        key={key}
+                        label={label}
+                        onChange={(e) => handleTextFieldChange(e, index)}
+                        value={batchControl[key as keyof Control]}
+                        type={type as 'number' | undefined}
+                      />
+                    );
+                })}
+              </TextFieldsContainer>
+              <DeleteButtonContainer>
+                <MuiButton
+                  color='error'
+                  label={DELETE_BATCH_CONTROLS}
+                  onClick={() => handleDelete(index)}
+                  variant='outlined'
+                />
+              </DeleteButtonContainer>
+            </Accordion>
+          );
+        })}
       <MuiButton
         label={ADD_BATCH_CONTROLS}
         onClick={handleAdd}

@@ -3,7 +3,11 @@ import {
 } from '@flexgen/storybook';
 import { MaintenanceActionStep } from 'shared/types/dtos/configurablePages.dto';
 import {
-  MaintenanceActionStatuses, createStepComponents, modalContentSx, halfWidth, buttonBoxSx,
+  MaintenanceActionStatuses,
+  createStepComponents,
+  modalContentSx,
+  halfWidth,
+  buttonBoxSx,
 } from './maintActions.helpers';
 
 export interface MaintActionsDetailsModalProps {
@@ -42,16 +46,20 @@ const MaintActionsDetailsModal: React.FC<MaintActionsDetailsModalProps> = ({
   return (
     <Modal open={open} onClose={onClose} title={label} description={subheader}>
       <Box sx={modalContentSx}>
-        <Stepper orientation="vertical">
-          {stepComponents}
-        </Stepper>
+        <Stepper orientation="vertical">{stepComponents}</Stepper>
         <Box sx={buttonBoxSx}>
-          <MuiButton sx={halfWidth} label="Cancel" variant="outlined" color="inherit" onClick={onClose} />
-          {
-                        status === MaintenanceActionStatuses.InProgress
-                          ? <MuiButton sx={halfWidth} label="Stop Action" color="error" onClick={stopAndClose} />
-                          : <MuiButton sx={halfWidth} label="Clear Action" onClick={clearAndClose} />
-                    }
+          <MuiButton
+            sx={halfWidth}
+            label="Cancel"
+            variant="outlined"
+            color="inherit"
+            onClick={onClose}
+          />
+          {status === MaintenanceActionStatuses.InProgress ? (
+            <MuiButton sx={halfWidth} label="Stop Action" color="error" onClick={stopAndClose} />
+          ) : (
+            <MuiButton sx={halfWidth} label="Clear Action" onClick={clearAndClose} />
+          )}
         </Box>
       </Box>
     </Modal>

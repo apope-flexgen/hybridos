@@ -1,6 +1,5 @@
 import {
-  Box, Tab, Tabs, ThemeType,
-  Typography,
+  Box, Tab, Tabs, ThemeType, Typography,
 } from '@flexgen/storybook';
 import { useEffect, useState } from 'react';
 import { useAppContext } from 'src/App/App';
@@ -25,9 +24,7 @@ const ActivityLog: React.FunctionComponent = () => {
   const mainBoxSx = mainContentBoxSx(theme);
   const axiosInstance = useAxiosWebUIInstance();
 
-  const {
-    siteConfiguration,
-  } = useAppContext();
+  const { siteConfiguration } = useAppContext();
 
   const getInitialAlertCount = async () => {
     const filtersArray = Object.keys(initialActiveAlertsFilters)
@@ -48,59 +45,48 @@ const ActivityLog: React.FunctionComponent = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      {
-        siteConfiguration?.events
-        && !siteConfiguration?.alerting
-          ? <Box sx={eventsBoxSx(theme)}><Events /></Box>
-          : (
-            <Box sx={mainBoxSx}>
-              <Tabs
-                onChange={(_, newValue: any) => {
-                  setSelectedTab(newValue);
-                }}
-                value={selectedTab}
-              >
-                {activityLogTabs.map((tab) => (
-                  <Tab
-                    key={tab.value}
-                    label={tab.label}
-                    value={tab.value}
-                    iconPosition="end"
-                    icon={
-                      tab.value === ActivityLogTabs.Alerts
-                      && totalActiveAlertCount
-                      && totalActiveAlertCount !== '0'
-                        ? (
-                          <Box sx={alertBubbleSx(theme)}>
-                            <Typography text={totalActiveAlertCount} variant="bodySBold" color="color" />
-                          </Box>
-                        )
-                        : <></>
-                    }
-                  />
-                ))}
-              </Tabs>
-              <Box sx={tabBoxSx}>
-                {
-                    selectedTab === ActivityLogTabs.Events
-                    && <Events />
-                    }
-                {
-                    selectedTab === ActivityLogTabs.Alerts
-                    && <Alerts setTotalActiveAlertCount={setTotalActiveAlertCount} />
-                    }
-                {
-                    selectedTab === ActivityLogTabs.ResolvedAlerts
-                    && <ResolvedAlerts />
-                    }
-                {
-                    selectedTab === ActivityLogTabs.AlertManagement
-                    && <AlertManagement />
-              }
-              </Box>
-            </Box>
-          )
-      }
+      {siteConfiguration?.events && !siteConfiguration?.alerting ? (
+        <Box sx={eventsBoxSx(theme)}>
+          <Events />
+        </Box>
+      ) : (
+        <Box sx={mainBoxSx}>
+          <Tabs
+            onChange={(_, newValue: any) => {
+              setSelectedTab(newValue);
+            }}
+            value={selectedTab}
+          >
+            {activityLogTabs.map((tab) => (
+              <Tab
+                key={tab.value}
+                label={tab.label}
+                value={tab.value}
+                iconPosition="end"
+                icon={
+                  tab.value === ActivityLogTabs.Alerts
+                  && totalActiveAlertCount
+                  && totalActiveAlertCount !== '0' ? (
+                    <Box sx={alertBubbleSx(theme)}>
+                      <Typography text={totalActiveAlertCount} variant="bodySBold" color="color" />
+                    </Box>
+                    ) : (
+                      <></>
+                    )
+                }
+              />
+            ))}
+          </Tabs>
+          <Box sx={tabBoxSx}>
+            {selectedTab === ActivityLogTabs.Events && <Events />}
+            {selectedTab === ActivityLogTabs.Alerts && (
+              <Alerts setTotalActiveAlertCount={setTotalActiveAlertCount} />
+            )}
+            {selectedTab === ActivityLogTabs.ResolvedAlerts && <ResolvedAlerts />}
+            {selectedTab === ActivityLogTabs.AlertManagement && <AlertManagement />}
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 };

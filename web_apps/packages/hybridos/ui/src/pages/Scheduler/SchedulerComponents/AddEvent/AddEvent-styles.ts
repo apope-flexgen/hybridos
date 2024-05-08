@@ -1,14 +1,12 @@
 import { ThemeType } from '@flexgen/storybook';
 
-export const fullBoxSx = (theme: ThemeType) => (
-  {
-    width: '320px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.fgb.editModal.spacing.padding,
-    padding: theme.fgb.editModal.spacing.padding,
-  }
-);
+export const fullBoxSx = (theme: ThemeType) => ({
+  width: '320px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.fgb.editModal.spacing.padding,
+  padding: theme.fgb.editModal.spacing.padding,
+});
 
 export const buttonsAndErrorsSx = {
   display: 'flex',

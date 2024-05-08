@@ -12,15 +12,22 @@ import { useAppContext } from 'src/App/App';
 import { FLEET_MANAGER } from 'src/components/BaseApp';
 import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
-import { notesHeaderSx, notesDetailsSx } from 'src/pages/ActivityLog/ResolvedAlerts/resolvedAlerts.styles';
 import {
-  alertModalSx, cancelButtonSx, modalButtonsSx, saveButtonSx, textFieldSx,
+  notesHeaderSx,
+  notesDetailsSx,
+} from 'src/pages/ActivityLog/ResolvedAlerts/resolvedAlerts.styles';
+import {
+  alertModalSx,
+  cancelButtonSx,
+  modalButtonsSx,
+  saveButtonSx,
+  textFieldSx,
 } from 'src/pages/ActivityLog/activityLog.styles';
 import { ResolvedAlertObject } from 'src/pages/ActivityLog/activityLog.types';
 
 export interface AlertNotesModalProps {
   open: boolean;
-  alertInfo: ResolvedAlertObject
+  alertInfo: ResolvedAlertObject;
   onClose: () => void;
 }
 
@@ -59,20 +66,18 @@ const AlertNotesModal: React.FC<AlertNotesModalProps> = ({
     <Modal title="Alert Resolution" open={open} onClose={onClose}>
       <Box sx={alertModalSx}>
         <Typography
-          text={product === FLEET_MANAGER ? `${alertInfo.site} - ${alertInfo.details[0].message}` : `${alertInfo.details[0].message}`}
+          text={
+            product === FLEET_MANAGER
+              ? `${alertInfo.site} - ${alertInfo.details[0].message}`
+              : `${alertInfo.details[0].message}`
+          }
           variant="labelM"
         />
-        <Typography
-          text={`Triggered: ${alertInfo.trigger_time}`}
-          variant="bodyS"
-        />
+        <Typography text={`Triggered: ${alertInfo.trigger_time}`} variant="bodyS" />
         <Divider orientation="horizontal" variant="fullWidth" />
         <Box sx={notesHeaderSx}>
-          <Typography
-            text="Manual Resolution Entry"
-            variant="labelM"
-          />
-          {!formView && (<IconButton icon="Edit" onClick={() => setFormView(!formView)} />)}
+          <Typography text="Manual Resolution Entry" variant="labelM" />
+          {!formView && <IconButton icon="Edit" onClick={() => setFormView(!formView)} />}
         </Box>
         {formView ? (
           <Box sx={textFieldSx}>
@@ -87,13 +92,12 @@ const AlertNotesModal: React.FC<AlertNotesModalProps> = ({
               onChange={(event: any) => setMessage(event.target.value)}
             />
           </Box>
-        )
-          : (
-            <Box sx={notesDetailsSx}>
-              <Typography text="Resolution" variant="labelS" />
-              <Typography text={alertInfo.resolution_message} sx={{ whiteSpace: 'pre-line' }} />
-            </Box>
-          )}
+        ) : (
+          <Box sx={notesDetailsSx}>
+            <Typography text="Resolution" variant="labelS" />
+            <Typography text={alertInfo.resolution_message} sx={{ whiteSpace: 'pre-line' }} />
+          </Box>
+        )}
         <Divider orientation="horizontal" variant="fullWidth" />
         <Box sx={modalButtonsSx}>
           <MuiButton
@@ -102,12 +106,7 @@ const AlertNotesModal: React.FC<AlertNotesModalProps> = ({
             onClick={formView ? () => setFormView(!formView) : onClose}
             sx={!formView ? cancelButtonSx : undefined}
           />
-          <MuiButton
-            label="Save"
-            onClick={handleSubmit}
-            disabled={!formView}
-            sx={saveButtonSx}
-          />
+          <MuiButton label="Save" onClick={handleSubmit} disabled={!formView} sx={saveButtonSx} />
         </Box>
       </Box>
     </Modal>

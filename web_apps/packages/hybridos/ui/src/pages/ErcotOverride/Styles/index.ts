@@ -17,6 +17,10 @@ export const titleBoxSx = {
 
 export const contextBoxSx = { width: '100%', backgroundColor: 'transparent' };
 
-export const spacerSx = { width: '100%', backgorundColor: 'transprent', minHeight: '12px' };
+export const spacerSx = {
+  width: '100%',
+  backgorundColor: 'transprent',
+  minHeight: '12px',
+};
 
 export const emptyContainerSx = { minHeight: '500px' };

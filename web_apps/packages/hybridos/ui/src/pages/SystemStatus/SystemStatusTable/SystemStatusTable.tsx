@@ -8,9 +8,7 @@ import { systemStatusTableSx } from 'src/pages/SystemStatus/SystemStatus.styles'
 import { SystemStatusTableProps } from 'src/pages/SystemStatus/SystemStatus.types';
 import useGenerateSystemStatusTable from 'src/pages/SystemStatus/hooks/useGenerateTable';
 
-const SystemStatusTable = ({
-  systemStatusData,
-}: SystemStatusTableProps) => {
+const SystemStatusTable = ({ systemStatusData }: SystemStatusTableProps) => {
   const { generateRowsData, results } = useGenerateSystemStatusTable();
 
   useEffect(() => {

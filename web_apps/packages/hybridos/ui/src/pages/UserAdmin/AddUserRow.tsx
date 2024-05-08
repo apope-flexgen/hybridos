@@ -34,7 +34,9 @@ const AddUserRow: FunctionComponent<AddUserRowProps> = ({
 
   const checkPassword = (): boolean => validPassword;
 
-  const validInput = (data: any): { valid: boolean, field: 'username' | 'password' | 'role' | null } => {
+  const validInput = (
+    data: any,
+  ): { valid: boolean; field: 'username' | 'password' | 'role' | null } => {
     if (!checkPassword()) return { valid: false, field: 'password' };
     if (!data.hasOwnProperty('username')) return { valid: false, field: 'username' };
     if (!data.hasOwnProperty('password')) return { valid: false, field: 'password' };
@@ -44,7 +46,10 @@ const AddUserRow: FunctionComponent<AddUserRowProps> = ({
 
   const addUser = async () => {
     if (!validInput(userData).valid) {
-      notifCtx?.notif('error', `Error creating user: invalid input for ${validInput(userData).field} field`);
+      notifCtx?.notif(
+        'error',
+        `Error creating user: invalid input for ${validInput(userData).field} field`,
+      );
       return;
     }
     try {

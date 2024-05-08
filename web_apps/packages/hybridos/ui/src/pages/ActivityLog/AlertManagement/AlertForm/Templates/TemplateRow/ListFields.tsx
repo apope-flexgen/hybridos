@@ -1,11 +1,5 @@
 import {
-
-  Divider,
-
-  NumericInput,
-
-  TextField,
-  Typography,
+  Divider, NumericInput, TextField, Typography,
 } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import { alertManagementHelperText } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
@@ -17,45 +11,48 @@ import {
 import { Template } from 'src/pages/ActivityLog/activityLog.types';
 
 export interface ListFieldsProps {
-  template: Template,
-  handleTemplateFieldChange:(
+  template: Template;
+  handleTemplateFieldChange: (
     field: string,
     newValue: string | string[] | boolean | number,
-  ) => void,
-  range: boolean,
+  ) => void;
+  range: boolean;
 }
 
 // Input fields for a single template - wildcard, list, and value
-const ListFields = ({
-  handleTemplateFieldChange,
-  template,
-  range,
-}: ListFieldsProps) => (
+const ListFields = ({ handleTemplateFieldChange, template, range }: ListFieldsProps) => (
   <>
     <Box sx={formRowSx}>
       <Box sx={templateRowTitleAndDescriptionSx}>
         <Typography text="Replacement Values" variant="bodyL" />
         <Typography text={alertManagementHelperText.templateReplacementValues} variant="bodyS" />
-        { range
-      && (
-      <>
-        <Typography text={alertManagementHelperText.templateRangeReplacementValues} variant="bodyS" />
-        <Typography text={alertManagementHelperText.templateRangeExample} variant="bodySBold" />
-      </>
-      )}
+        {range && (
+          <>
+            <Typography
+              text={alertManagementHelperText.templateRangeReplacementValues}
+              variant="bodyS"
+            />
+            <Typography text={alertManagementHelperText.templateRangeExample} variant="bodySBold" />
+          </>
+        )}
       </Box>
       <Box sx={templateFieldsBoxSx}>
         <TextField
           required
           label="Replacement Values"
-          value={template.type === 'list' ? (template.list || []).join(',') : `${template.from}..${template.to}`}
-          onChange={(e) => handleTemplateFieldChange('list', e.target.value.split(',').map((v) => v.replace(' ', '')))}
+          value={
+            template.type === 'list'
+              ? (template.list || []).join(',')
+              : `${template.from}..${template.to}`
+          }
+          onChange={(e) => handleTemplateFieldChange(
+            'list',
+            e.target.value.split(',').map((v) => v.replace(' ', '')),
+          )}
         />
       </Box>
     </Box>
-    {
-    range
-    && (
+    {range && (
       <>
         <Divider variant="fullWidth" orientation="horizontal" />
         <Box sx={formRowSx}>
@@ -73,8 +70,7 @@ const ListFields = ({
           </Box>
         </Box>
       </>
-    )
-  }
+    )}
   </>
 );
 

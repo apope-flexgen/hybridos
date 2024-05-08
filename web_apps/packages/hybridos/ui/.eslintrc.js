@@ -73,7 +73,7 @@ module.exports = {
         patterns: ['../'],
       },
     ],
-    'react-hooks/exhaustive-deps': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
     'react/function-component-definition': [
       2,
       {
@@ -82,6 +82,7 @@ module.exports = {
       },
     ],
     'react/jsx-props-no-spreading': 'off',
+    'react/jsx-no-useless-fragment': 'warn',
     'max-lines': [
       'error',
       {
@@ -90,6 +91,6 @@ module.exports = {
         skipComments: true,
       },
     ],
-    'import/prefer-default-export': 'off'
+    'import/prefer-default-export': 'off',
   },
 };

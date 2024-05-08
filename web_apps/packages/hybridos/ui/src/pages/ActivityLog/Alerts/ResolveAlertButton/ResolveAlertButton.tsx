@@ -1,12 +1,10 @@
-import {
-  MuiButton,
-} from '@flexgen/storybook';
+import { MuiButton } from '@flexgen/storybook';
 import React, { useState } from 'react';
 import ResolveAlertModal from 'src/pages/ActivityLog/Alerts/ResolveAlertModal/ResolveAlertModal';
 import { ActiveAlertObject } from 'src/pages/ActivityLog/activityLog.types';
 
 export interface ResolveAlertButtonProps {
-  alertInfo: ActiveAlertObject
+  alertInfo: ActiveAlertObject;
 }
 
 const ResolveAlertButton: React.FC<ResolveAlertButtonProps> = ({
@@ -17,13 +15,19 @@ const ResolveAlertButton: React.FC<ResolveAlertButtonProps> = ({
   return (
     <>
       {modalOpen && (
-      <ResolveAlertModal
-        open={modalOpen}
-        alertInfo={alertInfo}
-        onClose={() => setModalOpen(false)}
-      />
+        <ResolveAlertModal
+          open={modalOpen}
+          alertInfo={alertInfo}
+          onClose={() => setModalOpen(false)}
+        />
       )}
-      <MuiButton label="Resolve" variant="text" onClick={() => { setModalOpen(true); }} />
+      <MuiButton
+        label="Resolve"
+        variant="text"
+        onClick={() => {
+          setModalOpen(true);
+        }}
+      />
     </>
   );
 };

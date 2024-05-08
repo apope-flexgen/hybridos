@@ -1,12 +1,13 @@
-import {
-  Typography, Divider, MuiButton,
-} from '@flexgen/storybook';
+import { Typography, Divider, MuiButton } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 
 import { useState, useEffect } from 'react';
 import AliasRow from 'src/pages/ActivityLog/AlertManagement/AlertForm/Aliases/AliasRow/AliasRow';
 import { useAlertFormContext } from 'src/pages/ActivityLog/AlertManagement/AlertForm/contexts/AlertFormContext';
-import { generateInitialAliases, alertManagementHelperText } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
+import {
+  generateInitialAliases,
+  alertManagementHelperText,
+} from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import {
   formRowSx,
   formRowTitleAndDescriptionSx,
@@ -26,21 +27,22 @@ const Aliases = () => {
     handleFieldChange('aliases', newAliases);
   };
 
-  const addNewRow = () => handleFieldChange('aliases', alertValues.aliases ? [...alertValues.aliases, ...initialAliases] : initialAliases);
+  const addNewRow = () => handleFieldChange(
+    'aliases',
+    alertValues.aliases ? [...alertValues.aliases, ...initialAliases] : initialAliases,
+  );
 
-  const generateAliasRows = () => (
-    alertValues.aliases && alertValues.aliases.length > 0
-      ? alertValues.aliases.sort((a, b) => a.id.toString().localeCompare(b.id))
-      : []
-  )
-    .map((alias) => (
-      <AliasRow
-        alias={alias}
-        handleFieldChange={handleFieldChange}
-        removeRow={removeRow}
-        allAliases={alertValues.aliases || []}
-      />
-    ));
+  const generateAliasRows = () => (alertValues.aliases && alertValues.aliases.length > 0
+    ? alertValues.aliases.sort((a, b) => a.id.toString().localeCompare(b.id))
+    : []
+  ).map((alias) => (
+    <AliasRow
+      alias={alias}
+      handleFieldChange={handleFieldChange}
+      removeRow={removeRow}
+      allAliases={alertValues.aliases || []}
+    />
+  ));
 
   const [aliasRows, setAliasRows] = useState<JSX.Element[]>(generateAliasRows());
 
@@ -59,9 +61,7 @@ const Aliases = () => {
           </Box>
         </Box>
         <Box sx={templateFieldsBoxSx}>
-          {
-            aliasRows
-          }
+          {aliasRows}
           <MuiButton variant="text" label="Add Alias" startIcon="Add" onClick={addNewRow} />
         </Box>
       </Box>
