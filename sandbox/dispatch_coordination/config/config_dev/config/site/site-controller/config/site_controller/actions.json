@@ -459,17 +459,6 @@
                 "value": true,
                 "debounce_timer": 5000
               }
-            },
-            {
-              "step_name": "Exit Maintenance",
-              "entry_actions": {
-                "route": "/set_maint_mode",
-                "value": false
-              },
-              "exit_conditions": {
-                "route": "/bypass",
-                "value": true
-              }
             }
           ]
         }

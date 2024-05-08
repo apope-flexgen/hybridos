@@ -4,7 +4,7 @@ from pytest_cases import parametrize, fixture
 from pytests.assertion_framework import Assertion_Type, Flex_Assertion
 from pytests.pytest_steps import Setup, Steps, Teardown
 from pytests.fims import fims_set, fims_get
-from pytest_utils.fims_listen_parser import listen_reply, listen_reply_validator
+from pytest_utils.fims_listen_parser import listen_reply, listen_reply_validator, grok_reply
 from datetime import datetime, timedelta
 from subprocess import Popen, PIPE
 from typing import List, Union
@@ -15,45 +15,6 @@ import threading
 import time
 
 stdout = []
-
-def grok_reply() -> Union[listen_reply, None]:
-    global stdout
-    # parse the output into these
-    method = ""
-    uri = ""
-    reply_to = ""
-    process_name = ""
-    username = ""
-    body = {}
-    timestamp = ""
-
-    if stdout != None:
-        for line in stdout:
-            if line.find("Method:") != -1:
-                method = line[line.find("Method:") + len("Method:"):].strip()
-            if line.find("Uri:") != -1:
-                uri = line[line.find("Uri:") + len("Uri:"):].strip()
-            if line.find("ReplyTo:") != -1:
-                reply_to = line[line.find("ReplyTo:") + len("ReplyTo:"):].strip()
-            if line.find("Process Name:") != -1:
-                process_name = line[line.find("Process Name:") + len("Process Name:"):].strip()
-            if line.find("Username:") != -1:
-                username = line[line.find("Username:") + len("Username:"):].strip()
-            if line.find("Body:") != -1:
-                body_str = line[line.find("Body:") + len("Body:"):].strip()
-                try:
-                    body = loads(body_str)
-                except JSONDecodeError:
-                    print("failed to parse body string")
-                    print(body_str)
-            if line.find("Timestamp:") != -1:
-                timestamp = line[line.find("Timestamp:") + len("Timestamp:"):].strip()
-                stdout = []
-                return listen_reply(method=method, uri=uri, replyto=reply_to, process=process_name, 
-                                     username=username, body=body, timestamp=timestamp)
-        return None
-    else:
-        return None
 
 def validate_pubs_silent(timeout: int, uri: Union[str, None] = None) -> Union[listen_reply, None]:
     """ Open a fims_listen on all endpoints and make sure that no one 
@@ -86,7 +47,7 @@ def validate_pubs_silent(timeout: int, uri: Union[str, None] = None) -> Union[li
         # read a single line if you can
         if proc.stdout is not None:
             stdout.append(proc.stdout.readline())
-        reply = grok_reply()
+        reply = grok_reply(stdout=stdout)
         if reply is not None:
             stdout = [] # you have digested a full fims_listen discard.
             print(reply)
@@ -125,7 +86,7 @@ def validate_action_pubs(uri: Union[str, None] = None, expected_info: Union[List
         if proc.stdout is not None:
             stdout.append(proc.stdout.readline())
 
-        reply = grok_reply()
+        reply = grok_reply(stdout=stdout)
         if reply is not None:
             stdout = []
             if reply.contains_action_pub():
@@ -207,7 +168,7 @@ def schedule_a_battery_balancing_event(expected_info: Union[List[listen_reply_va
         if proc.stdout is not None:
             stdout.append(proc.stdout.readline())
 
-        reply = grok_reply()
+        reply = grok_reply(stdout=stdout)
         if reply is not None:
             stdout = []
             if reply.contains_action_pub():

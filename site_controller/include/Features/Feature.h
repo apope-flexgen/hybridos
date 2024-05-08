@@ -3,7 +3,6 @@
 
 /* C Standard Library Dependencies */
 /* C++ Standard Library Dependencies */
-#include <memory>
 /* External Dependencies */
 #include <spdlog/fmt/fmt.h>
 /* System Internal Dependencies */
@@ -19,7 +18,7 @@ struct Feature {
     bool available = false;                                          // True if this feature is available to the customer to turn on
     std::vector<std::pair<Fims_Object*, std::string>> variable_ids;  // Lists the id of each variable in configuration
 
-    void add_feature_vars_to_JSON_buffer(fmt::memory_buffer& buf, const char* const var = NULL);
+    virtual void add_feature_vars_to_JSON_buffer(fmt::memory_buffer& buf, const char* const var = NULL);
     void add_summary_vars_to_JSON_buffer(fmt::memory_buffer& buf, const char* const var = NULL);
 
     // set the ui_enabled field of all feature variables
@@ -34,7 +33,8 @@ struct Feature {
      * @param multiple_inputs Mutable list of Multiple Input Command Variables that may be appended to.
      * @returns Result detailing whether or not the config is valid
      */
-    virtual Config_Validation_Result parse_json_config(cJSON* JSON_config, bool* primary_flag, Input_Source_List* inputs, const Fims_Object& field_defaults, std::vector<Fims_Object*>& multiple_inputs);
+    virtual Config_Validation_Result parse_json_config(cJSON* JSON_config, bool* primary_flag, Input_Source_List* inputs, const Fims_Object& field_defaults,
+                                                       std::vector<Fims_Object*>& multiple_inputs);
 
     /**
      * @brief Returns a list of the top-level variable ids recognized by the feature

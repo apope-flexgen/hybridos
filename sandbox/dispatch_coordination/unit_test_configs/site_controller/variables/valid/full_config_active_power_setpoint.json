@@ -910,6 +910,18 @@
                     "ui_type": "none",
                     "value": 1,
                     "var_type": "Int"
+                },
+                "min_heartbeat": {
+                    "name": "Watchdog Min Heartbeat",
+                    "ui_type": "control",
+                    "value": 0,
+                    "var_type": "Int"
+                },
+                "max_heartbeat": {
+                    "name": "Watchdog Max Heartbeat",
+                    "ui_type": "control",
+                    "value": 10,
+                    "var_type": "Int"
                 }
             },
             "standalone_power": {

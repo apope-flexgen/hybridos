@@ -62,9 +62,10 @@ TEST_F(ess_manager_test, calculate_ess_active_power) {
     };
 
     std::vector<test_case> tests = {
-        //   id   	num_ess rated_kw   			target_kw  		  socs                   result_kw_setpoints    		    soc_balancing_factor
+        //   id   	num_ess      rated_kw   			target_kw  		  socs                   result_kw_setpoints    		    soc_balancing_factor
         { 1, 4, 100, 100, { 50, 50, 50, 50 }, { 25, 25, 25, 25 }, 3 },                           // equal discharge
         { 2, 4, 100, -100, { 50, 50, 50, 50 }, { -25, -25, -25, -25 }, 3 },                      // equal charge
+
         { 3, 4, 100, 100, { 10, 45, 55, 90 }, { 0.101, 9.228, 16.848, 73.823 }, 3 },             // wide spread discharge
         { 4, 4, 100, -100, { 10, 45, 55, 90 }, { -73.823, -16.848, -9.228, -0.101 }, 3 },        // wide spread charge
         { 5, 4, 100, 100, { 49, 49.5, 50.5, 51 }, { 23.512, 24.239, 25.738, 26.510 }, 3 },       // narrow spread discharge
@@ -80,7 +81,7 @@ TEST_F(ess_manager_test, calculate_ess_active_power) {
         ESS_Manager_Mock ess_mgr;
 
         // build a JSON with this test case's number of ESS and power rating
-        cJSON* ess_config = ess_mgr.generate_calculatePower_essRoot(test.num_ess, test.rated_kw / test.num_ess, 0);
+        cJSON* ess_config = ess_mgr.generate_calculatePower_essRoot(test.num_ess, test.rated_kw, 0);
         defer { cJSON_Delete(ess_config); };
 
         // configure ESS Manager
@@ -102,6 +103,7 @@ TEST_F(ess_manager_test, calculate_ess_active_power) {
         ess_mgr.run_asset_instances(test.num_ess);
         ess_mgr.set_demand_modes();
         ess_mgr.set_soc_balancing_factor(test.soc_balancing_factor);
+        ess_mgr.process_all_ess_potential_active_power();
 
         // calculate test results
         ess_mgr.calculate_ess_active_power();

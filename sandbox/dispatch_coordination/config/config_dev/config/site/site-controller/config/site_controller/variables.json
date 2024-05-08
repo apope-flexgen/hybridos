@@ -888,7 +888,7 @@
                     "name": "Heartbeat Duration",
                     "ui_type": "none",
                     "unit": "ms",
-                    "value": 1,
+                    "value": 1000,
                     "var_type": "Int"
                 },
                 "watchdog_duration_ms": {
@@ -909,6 +909,18 @@
                     "name": "Watchdog Pet",
                     "ui_type": "none",
                     "value": 1,
+                    "var_type": "Int"
+                },
+                "min_heartbeat": {
+                    "name": "Watchdog Min Heartbeat",
+                    "ui_type": "control",
+                    "value": 0,
+                    "var_type": "Int"
+                },
+                "max_heartbeat": {
+                    "name": "Watchdog Max Heartbeat",
+                    "ui_type": "control",
+                    "value": 255,
                     "var_type": "Int"
                 }
             },

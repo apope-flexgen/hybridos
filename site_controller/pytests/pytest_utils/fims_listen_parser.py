@@ -1,7 +1,7 @@
 #! /bin/python3
 
-from json import dumps
-from typing import Dict
+from json import dumps, loads, JSONDecodeError
+from typing import Dict, Union, List
 
 """
 Method:       set
@@ -47,3 +47,46 @@ class listen_reply_validator:
     def __str__(self) -> str:
         return ' '.join([self.path_name, self.step_name, self.status])
 
+def grok_reply(stdout: List) -> Union[listen_reply, None]:
+    """ 
+    Reads from a list and tries to parse into a listen_reply. 
+    If this function returns a non None object it is on the user to 
+    modify their stdout if they need to. 
+    
+    e.g. I just parsed a listen yay. I need to zero my stdout now.
+    """
+    # parse the output into these
+    method = ""
+    uri = ""
+    reply_to = ""
+    process_name = ""
+    username = ""
+    body = {}
+    timestamp = ""
+
+    if stdout != None:
+        for line in stdout:
+            if line.find("Method:") != -1:
+                method = line[line.find("Method:") + len("Method:"):].strip()
+            if line.find("Uri:") != -1:
+                uri = line[line.find("Uri:") + len("Uri:"):].strip()
+            if line.find("ReplyTo:") != -1:
+                reply_to = line[line.find("ReplyTo:") + len("ReplyTo:"):].strip()
+            if line.find("Process Name:") != -1:
+                process_name = line[line.find("Process Name:") + len("Process Name:"):].strip()
+            if line.find("Username:") != -1:
+                username = line[line.find("Username:") + len("Username:"):].strip()
+            if line.find("Body:") != -1:
+                body_str = line[line.find("Body:") + len("Body:"):].strip()
+                try:
+                    body = loads(body_str)
+                except JSONDecodeError:
+                    print("failed to parse body string")
+                    print(body_str)
+            if line.find("Timestamp:") != -1:
+                timestamp = line[line.find("Timestamp:") + len("Timestamp:"):].strip()
+                return listen_reply(method=method, uri=uri, replyto=reply_to, process=process_name, 
+                                     username=username, body=body, timestamp=timestamp)
+        return None
+    else:
+        return None

@@ -778,6 +778,10 @@ bool Site_Manager::parse_variables(cJSON* variables_config_object) {
         validation_result.is_valid_config = false;
         has_valid_available_features_config = false;
     }
+    // if the watchdog is available above then try to parse it's configuration
+    if (watchdog_feature.available) {
+        watchdog_feature.parse_json_config(JSON_flat_vars, is_primary, &input_sources, field_defaults, multi_input_command_vars);
+    }
     // charge dispatch should always be available
     charge_dispatch.available = true;
 
@@ -2458,6 +2462,7 @@ void Site_Manager::process_state(void) {
             dogbark();
         }
     }
+    watchdog_feature.beat(sequences_status.current_time);
 
     // determine which state to run
     check_state();
