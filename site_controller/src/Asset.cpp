@@ -2498,10 +2498,20 @@ Config_Validation_Result Asset::parse_variable(cJSON* var_json, std::string comp
     cJSON* initial_mask = cJSON_HasObjectItem(var_json, "mask") ? cJSON_GetObjectItem(var_json, "mask") : NULL;
     if (initial_mask != NULL) {
         // Read in mask as string to support 64 bit width
-        component_variable->value.value_mask = (uint64_t)std::stoul(initial_mask->valuestring, NULL, 16);
+        component_variable->value.value_and_mask = (uint64_t)std::stoul(initial_mask->valuestring, NULL, 16);
     } else {
         // Represents 64 digits of 1
-        component_variable->value.value_mask = 0xFFFFFFFFFFFFFFFF;
+        component_variable->value.value_and_mask = 0xFFFFFFFFFFFFFFFF;
+    }
+
+    // Optionally you can provide an invert mask that will flip the bits of the actual value at the bits high in the invert mask.
+    cJSON* invert_mask = cJSON_HasObjectItem(var_json, "invert_mask") ? cJSON_GetObjectItem(var_json, "invert_mask") : NULL;
+    if (invert_mask != NULL) {
+        // Read in mask as string to support 64 bit width
+        component_variable->value.invert_mask = (uint64_t)std::stoul(invert_mask->valuestring, NULL, 16);
+    } else {
+        // Represents 64 digits of 0
+        component_variable->value.invert_mask = 0x0;
     }
 
     // The "unit" field is useful for the UI display

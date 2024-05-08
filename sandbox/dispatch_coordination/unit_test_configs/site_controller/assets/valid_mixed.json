@@ -103,6 +103,8 @@
                                     "name": "bms_fault",
                                     "register_id": "bms_fault",
                                     "type": "Int",
+                                    "invert_mask": "0x2",
+                                    "mask": "0x2",
                                     "ui_type": "fault"
                                 },
                                 "com_status": {

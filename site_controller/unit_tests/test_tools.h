@@ -14,7 +14,7 @@
 #include <vector>
 #include <math.h>
 #include <Site_Controller_Utils.h>
-#include <site_manager_mock.h>
+#include "site_manager_mock.h"
 
 typedef struct float_result {
     float expected;

@@ -67,4 +67,47 @@ TEST_F(fims_object_test, multiple_inputs_alt_ui_types) {
     EXPECT_EQ(to_string(buff), expected_output);
 }
 
+class maskingTester : public testing::Test {
+public:
+    void SetUp() override {}
+    void TearDown() override {}
+};
+
+TEST_F(maskingTester, invertMask) {
+    Fims_Object defaults;
+    defaults.set_value_type(valueType::Bit_Field);
+    // mask out everything
+    defaults.value.value_and_mask = UINT64_MAX;
+
+    // IGNORE invert_mask for now 
+    // https://media1.tenor.com/m/ZZ7lLVO1zZMAAAAC/surprise-tool-mickey-mouse.gif
+    defaults.value.invert_mask = 0;
+
+    // prove we can do basic anding 
+    EXPECT_EQ(0x0, defaults.handle_masking(0x0));
+    EXPECT_EQ(0x1, defaults.handle_masking(0x1));
+
+    // and with something that was not zero
+    EXPECT_EQ(0x0, defaults.handle_masking(0x0));
+
+    // now something complex
+    EXPECT_EQ(0xABCD, defaults.handle_masking(0xABCD));
+
+    // now without a full mask
+    defaults.value.value_and_mask = 0xFF;
+
+    // now something complex
+    EXPECT_EQ(0xCD, defaults.handle_masking(0xABCD));
+
+    // Now lets test the inversion
+    defaults.value.invert_mask = 0xD;
+    EXPECT_EQ(0xC0, defaults.handle_masking(0xABCD));
+
+    defaults.value.invert_mask = 0x55;
+    EXPECT_EQ(0x98, defaults.handle_masking(0xABCD));
+
+    defaults.value.value_and_mask = 0xF0;
+    EXPECT_EQ(0x90, defaults.handle_masking(0xABCD));
+}
+
 #endif /* FIMS_OBJECT_TEST_H_ */

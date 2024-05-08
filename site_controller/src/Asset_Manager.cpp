@@ -124,6 +124,7 @@ void Asset_Manager::handle_pubs(char** pfrags, int nfrags, char* body) {
     }
 }
 
+
 /**
  * Helper function used by handle_pubs(), handles options in the case of a status pub
  * @param cJcomp        The published cJSON data for a component
@@ -177,12 +178,9 @@ void Asset_Manager::handle_pub_status_options(cJSON* cJcomp, Fims_Object* fimsCo
         fimsComp->options_map[cJitemValue->valueint] = std::pair<std::string, Value_Object>(cJitemString->valuestring, uint64_t(cJitemValue->valueint));
     }
 
-    // All value options parsed
-    // And with the register's mask
-    uint64_t masked_value = fimsComp->value.value_mask & register_value;
     // Both bit_field and random_enum use bitfield internally
     fimsComp->value.type = valueType::Bit_Field;
-    fimsComp->value.value_bit_field = masked_value;
+    fimsComp->value.value_bit_field = fimsComp->handle_masking(register_value);
 
     // No need for Type_Managers->Asset_instance to process pub
     // Alarm/Fault/Status values updated in process_asset() step for each Asset
@@ -228,17 +226,15 @@ void Asset_Manager::handle_pub_alarm_or_fault_options(cJSON* cJcomp, Fims_Object
             FPS_ERROR_LOG("Asset_Manager::process_pub Index into component status string array out of bounds, %d, updateAsset()\n", cJitemValue->valueint);
     }
 
-    // All value options parsed
-    // And with the mask
-    uint64_t masked_value = fimsComp->value.value_mask & bit_field_agg;
     fimsComp->value.type = valueType::Bit_Field;
     if (strcmp(fimsComp->get_ui_type(), "alarm") == 0) {
         // Alarms nonlatching
-        fimsComp->value.value_bit_field = masked_value;
-    } else
+        fimsComp->value.value_bit_field = fimsComp->handle_masking(bit_field_agg);
+    } else {
         // Faults latching
         // Or with the current value to latch (maintain high bits)
-        fimsComp->value.value_bit_field |= masked_value;
+        fimsComp->value.value_bit_field |= fimsComp->handle_masking(bit_field_agg);
+    }
 
     // No need for Type_Managers->Asset_instance to process pub
     // Alarm values updated in process_asset() step for each Asset

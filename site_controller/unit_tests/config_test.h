@@ -19,7 +19,7 @@ cJSON* parseJSONConfig(std::string file_path) {
     std::ifstream file;
     try {
         file.open(file_path);
-    } catch (std::ifstream::failure e) {
+    } catch (std::ifstream::failure &e) {
         std::cerr << "Exception opening/reading file" << std::endl;
         return NULL;
     }

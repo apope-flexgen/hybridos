@@ -6,6 +6,7 @@
  */
 
 /* C Standard Library Dependencies */
+#include <cstdint>
 #include <cstring>
 /* C++ Standard Library Dependencies */
 /* External Dependencies */
@@ -860,4 +861,30 @@ bool Fims_Object::configure(const std::string& var_id, bool* p_flag, Input_Sourc
     }
     configured = true;
     return true;
+}
+
+/** 
+ * @breif use invert mask to flip selected bits pre &
+ * 1. find invert_mask_value (exclusive or of register)
+ * 2. & with value mask
+ * e.g 
+ *     value:       1110
+ *     invert_mask: 0100
+ *     mask:        0111
+ *
+ * @param new_value which is the value coming over from the component register.
+ */
+uint64_t Fims_Object::handle_masking(uint64_t new_value) const {
+    // e.g. 
+    // new_value:               1110
+    // invert_mask:         ^   0100
+    // ===============================
+    // invert_mask_value        1010
+    //
+    // invert_mask_value        1010
+    // value_and_mask       &   0111
+    // ==============================
+    // return                   0010
+    uint64_t invert_mask_value = this->value.invert_mask ^ new_value; // invert_mask_value = 1010
+    return this->value.value_and_mask & invert_mask_value; // And with the register's mask 0010
 }

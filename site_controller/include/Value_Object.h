@@ -41,7 +41,8 @@ public:
     std::string value_string;
     float value_float;
     uint64_t value_bit_field;
-    uint64_t value_mask;
+    uint64_t value_and_mask;
+    uint64_t invert_mask;
     bool value_bool;
 };
 

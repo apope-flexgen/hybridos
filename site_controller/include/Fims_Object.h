@@ -61,6 +61,7 @@ public:
     bool set_fims_bool(const char* uri_endpoint, bool body_bool);
     bool set_fims_bit_field(const char* uri_endpoint, uint64_t body_bit_field);
     bool set_fims_masked_int(const char* uri_endpoint, int body_int, uint64_t mask);
+    uint64_t handle_masking(uint64_t new_value) const;
     const char* get_component_uri() const;
     const char* get_register_id() const;
     const char* get_variable_id() const;

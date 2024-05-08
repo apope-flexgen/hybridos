@@ -21,7 +21,7 @@ Value_Object::Value_Object() {
     value_float = 0.0;
     value_bool = false;
     value_bit_field = 0;
-    value_mask = 0;
+    value_and_mask = 0;
 }
 
 Value_Object::Value_Object(int value) {
@@ -30,7 +30,7 @@ Value_Object::Value_Object(int value) {
     value_float = 0.0;
     value_bool = false;
     value_bit_field = 0;
-    value_mask = 0;
+    value_and_mask = 0;
     set(value);
 }
 
@@ -40,7 +40,7 @@ Value_Object::Value_Object(uint64_t value) {
     value_float = 0.0;
     value_bool = false;
     value_bit_field = 0;
-    value_mask = 0;
+    value_and_mask = 0;
     set(value);
 }
 
