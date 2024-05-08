@@ -4,11 +4,14 @@
 cd "${0%/*}"
 cd ../../
 
-# build dependencies
+# build dts
 ../package_utility/build.sh
 
 # set working directory to the directory of this file
 cd ./test/docker
+
+# build fims_simulator
+go build -o ./build/fims_simulator ./fims_simulator 
 
 # build docker images
 docker compose build

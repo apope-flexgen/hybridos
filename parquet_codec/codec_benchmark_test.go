@@ -1,4 +1,4 @@
-package fims_codec
+package parquet_codec
 
 import (
 	"log"
@@ -49,27 +49,7 @@ func BenchmarkEncodeDecode(b *testing.B) {
 		}
 	}
 
-	// decode bytes subbenchmark
-	decodeBytes := func(subB *testing.B) {
-		for i := 0; i < subB.N; i++ {
-			_, err := decodeBytesFromTestArchive(archiveFilePath)
-			if err != nil {
-				log.Panicf("Failed to encode with error %v.", err)
-			}
-		}
-	}
-
 	// run subbenchmarks
 	b.Run("encode", encode)
 	b.Run("decode", decode)
-	b.Run("decodeBytes", decodeBytes)
-}
-
-// Creates a deep copy of a map
-func deepCopy(src map[string]interface{}) map[string]interface{} {
-	dst := map[string]interface{}{}
-	for key, val := range src {
-		dst[key] = val
-	}
-	return dst
 }

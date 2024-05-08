@@ -20,7 +20,7 @@ type Config struct {
 	NumInfluxPrepareBatchesWorkers int                     `json:"num_influx_prepare_batches_workers"` // Number of workers preparing batch points in parallel in the influx writer
 	NumInfluxSendBatchesWorkers    int                     `json:"num_influx_send_batches_workers"`    // Number of workers sending batches in parallel to influx
 	DbHealthCheckDelayS            float64                 `json:"db_health_check_delay_seconds"`      // Delay in seconds between db client health checks when trying to write
-	Extension                      string                  `json:"ext"`                                // Extension of archives to look for
+	Extensions                     []string                `json:"ext"`                                // Extensions of archives to look for
 	InfluxAddr                     string                  `json:"influx_address"`                     // External IP:Port for influx -- optional (defaults to localhost:8086)
 	MongoAddr                      string                  `json:"mongo_address"`                      // External IP:Port for mongo -- optional (defaults to localhost:27017)
 	RetryConnectPeriodSeconds      float64                 `json:"retry_connect_period_seconds"`       // Period with which we retry connecting to databases
@@ -138,7 +138,7 @@ func validateConfig() error {
 	if len(GlobalConfig.FailedWritePath) == 0 {
 		return fmt.Errorf("write err path not specified")
 	}
-	if len(GlobalConfig.Extension) == 0 {
+	if len(GlobalConfig.Extensions) == 0 {
 		return fmt.Errorf("extension not specified")
 	}
 	if GlobalConfig.NumValidateWorkers <= 0 {
@@ -149,6 +149,13 @@ func validateConfig() error {
 	}
 	if GlobalConfig.RetryConnectPeriodSeconds <= 0 {
 		return fmt.Errorf("configured retry connection period is %f seconds, but it must be positive", GlobalConfig.DbHealthCheckDelayS)
+	}
+
+	// check that extensions are known
+	for _, ext := range GlobalConfig.Extensions {
+		if ext != ".tar.gz" && ext != ".parquet.gz" {
+			return fmt.Errorf("configured extension %s is unknown", ext)
+		}
 	}
 
 	// check that there is at most one default retention policy and retention policy names aren't duplicated

@@ -17,6 +17,7 @@ services:
       - ./config/:/home/config/
       - /usr/local/bin/:/usr/local/bin/
       - /usr/local/lib/:/usr/local/lib/
+      - ./build/fims_simulator:/home/fims_simulator
     restart: always
 
   dts_test_mongo:

@@ -123,14 +123,14 @@ func (writer *InfluxWriter) prepareBatches(data *archiveData) (*archiveBatches, 
 
 	// create metadata to accompany archive
 	metadata := map[string]interface{}{
-		"messages":         len(data.points.MsgBodies),
+		"messages":         len(data.msgBodies),
 		"archives":         1,
 		"archiveSizeBytes": data.archiveSize,
 	}
-	sourceUri := path.Base(data.points.Uri)
+	sourceTag := path.Base(data.dataSourceId)
 
 	log.Tracef("[influxdb_client make batches call] Beginning to make batches for file %s", data.archiveFilePath)
-	batches, err = writer.influxConn.MakeBatches(data.db, data.measurement, sourceUri, data.points.MsgTimestamps, data.points.MsgBodies, metadata) // write batch points
+	batches, err = writer.influxConn.MakeBatches(data.db, data.measurement, sourceTag, data.msgTimestamps, data.msgBodies, metadata) // write batch points
 	log.Tracef("[influxdb_client make batches call] Returned from making batches for file %s", data.archiveFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to make influx batches, err: %w", err)

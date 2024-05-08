@@ -71,7 +71,7 @@ func (monitor *ArchiveMonitor) monitorUntil(done <-chan struct{}) error {
 			if fileInfo.IsDir() { // ignoring directories
 				continue
 			}
-			if !strings.Contains(filenameWithPath, GlobalConfig.Extension) { // ignore archives that don't match the extension
+			if !hasExpectedExtension(filenameWithPath) { // ignore archives that don't match the extension
 				continue
 			}
 
@@ -117,12 +117,8 @@ func (monitor *ArchiveMonitor) readPreexistingArchives(group *errgroup.Group, gr
 		if file.IsDir() {
 			continue
 		}
-		// Don't process files that don't have our desired extension
-		matchesExtension, err := filepath.Match("*"+GlobalConfig.Extension, file.Name())
-		if err != nil {
-			return fmt.Errorf("[monitor] failed to create filename matcher from configured extension, err: %w", err)
-		}
-		if !matchesExtension {
+		// Don't process files that don't have our desired extensions
+		if !hasExpectedExtension(file.Name()) {
 			continue
 		}
 		relevantFiles = append(relevantFiles, file)
@@ -148,4 +144,14 @@ func (monitor *ArchiveMonitor) readPreexistingArchives(group *errgroup.Group, gr
 		return nil
 	})
 	return nil
+}
+
+// Returns true iff the filename has an expected file extension
+func hasExpectedExtension(fileName string) bool {
+	for _, ext := range GlobalConfig.Extensions {
+		if strings.HasSuffix(fileName, ext) {
+			return true
+		}
+	}
+	return false
 }

@@ -1,8 +1,32 @@
 {
     "1": {
-        "db_name": "test",
+        "db_name": "test_fims_codec",
         "period" : 10,
         "num_archive_workers": 1,
+        "archive": "/home/data",
+        "uris": [
+            {
+                "uri": "/test",
+                "destination": "influx",
+                "measurement": "test"
+            },
+            {
+                "uri": "/test_string",
+                "destination": "influx",
+                "measurement": "test"
+            },
+            {
+                "uri": "/events",
+                "destination": "mongo",
+                "measurement": "events"
+            }
+        ]
+    },
+    "2": {
+        "db_name": "test_parquet",
+        "period" : 10,
+        "num_archive_workers": 1,
+        "parquet": true,
         "archive": "/home/data",
         "uris": [
             {

@@ -3,7 +3,7 @@
     "failed_validate_path" : "/home/validate_error",
     "failed_write_path" : "/home/write_error",
     "forward" : "",
-    "ext"     : ".tar.gz",
+    "ext"     : [".tar.gz", ".parquet.gz"],
     "num_validate_workers": 4,
     "num_influx_prepare_batches_workers": 4,
     "num_influx_send_batches_workers": 4,

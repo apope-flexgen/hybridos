@@ -2,9 +2,30 @@ package dts
 
 import (
 	"encoding/json"
+	"os"
 	"testing"
 )
 
+// Test that the config used by default in containers is valid
+func TestDefaultContainerConfig(t *testing.T) {
+	defaultCfgFileBytes, err := os.ReadFile("../../config/dts.json")
+	if err != nil {
+		t.Errorf("Failed to open file: %v", err)
+	}
+
+	err = json.Unmarshal(defaultCfgFileBytes, &GlobalConfig)
+	if err != nil {
+		t.Errorf("Failed to unmarshal config: %v", err)
+	}
+	t.Logf("%+v", GlobalConfig)
+
+	err = validateConfig()
+	if err != nil {
+		t.Errorf("Invalid config: %v", err)
+	}
+}
+
+// Test unmarshalling and validation
 func TestUnmarshalAndValidateConfig(t *testing.T) {
 	testCfgString :=
 		`{
@@ -12,7 +33,7 @@ func TestUnmarshalAndValidateConfig(t *testing.T) {
 			"input_path": "/home/hybridos/historian/inbox",
 			"failed_validate_path": "/home/hybridos/historian/validate_error",
 			"failed_write_path": "/home/hybridos/historian/write_error",
-			"ext": ".tar.gz",
+			"ext": [".tar.gz", ".parquet.gz"],
 			"num_validate_workers": 3,
 			"num_influx_prepare_batches_workers": 3,
 			"num_influx_send_batches_workers": 3,
@@ -20,7 +41,10 @@ func TestUnmarshalAndValidateConfig(t *testing.T) {
 		}`
 
 	// test that default values are assigned properly.
-	json.Unmarshal([]byte(testCfgString), &GlobalConfig)
+	err := json.Unmarshal([]byte(testCfgString), &GlobalConfig)
+	if err != nil {
+		t.Errorf("Failed to unmarshal config: %v", err)
+	}
 	t.Logf("%+v", GlobalConfig)
 
 	if GlobalConfig.InfluxAddr != "localhost:8086" {
@@ -33,7 +57,7 @@ func TestUnmarshalAndValidateConfig(t *testing.T) {
 		t.Errorf("Retry connect period seconds was unexpected value %v", GlobalConfig.RetryConnectPeriodSeconds)
 	}
 
-	err := validateConfig()
+	err = validateConfig()
 	if err != nil {
 		t.Errorf("Invalid config: %v", err)
 	}
@@ -46,7 +70,7 @@ func TestUnmarshalAndValidateConfig(t *testing.T) {
 			"input_path": "/home/hybridos/historian/inbox",
 			"failed_validate_path": "/home/hybridos/historian/validate_error",
 			"failed_write_path": "/home/hybridos/historian/write_error",
-			"ext": ".tar.gz",
+			"ext": [".tar.gz"],
 			"num_validate_workers": 3,
 			"num_influx_prepare_batches_workers": 3,
 			"num_influx_send_batches_workers": 3,
@@ -85,7 +109,10 @@ func TestUnmarshalAndValidateConfig(t *testing.T) {
 		}`
 
 	// test that default values are assigned properly.
-	json.Unmarshal([]byte(testCfgString), &GlobalConfig)
+	err = json.Unmarshal([]byte(testCfgString), &GlobalConfig)
+	if err != nil {
+		t.Errorf("Failed to unmarshal config: %v", err)
+	}
 	t.Logf("%+v", GlobalConfig)
 
 	if GlobalConfig.InfluxAddr != "localhost:8086" {

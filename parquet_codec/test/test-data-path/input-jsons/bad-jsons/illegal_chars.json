@@ -1,0 +1,20 @@
+{
+    "char1": ";",
+    "char2": "\t",
+    "char3": "\n",
+    "mapslice":
+    [
+        {
+            "value": 0,
+            "string": ";"
+        },
+        {
+            "value": 1,
+            "string": "\t"
+        },
+        {
+            "value": 2,
+            "string": "\n"
+        }
+    ]
+}

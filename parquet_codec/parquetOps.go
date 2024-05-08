@@ -42,8 +42,19 @@ func CreateSchema(data []map[string]interface{}, rowMetadata map[string]interfac
 			if _, has := keymap[key]; has {
 				continue // key already has metadata created, skip.
 			}
+			// timestamp key is expected from modbus_client publishes and we do not care about this key. skip for efficiency
+			if strings.ToLower(key) == "timestamp" {
+				continue
+			}
 
-			// else, generate metadata for this key
+			// extract potential clothed value
+			val = extractEncodableValue(val)
+			// if value is null it can't be typed, so skip
+			if val == nil {
+				continue
+			}
+
+			// generate metadata for this key
 			if key == "time" { // protected field
 				key = "body__" + key
 			}
@@ -122,6 +133,17 @@ func CreateFilteredSchema(data []map[string]interface{}, filter_keylist []string
 
 				if _, has := keymap[key]; has {
 					continue // key already has metadata created, skip.
+				}
+				// timestamp key is expected from modbus_client publishes and we do not care about this key. skip for efficiency
+				if strings.ToLower(key) == "timestamp" {
+					continue
+				}
+
+				// extract potential clothed value
+				val = extractEncodableValue(val)
+				// if value is null it can't be typed, so skip
+				if val == nil {
+					continue
 				}
 
 				// else, generate metadata for this key
@@ -213,6 +235,7 @@ func Write(pqtwriter *writer.CSVWriter, pqtfile *source.ParquetFile, // parquet 
 			if !has { // if key DNE in data body
 				writeable[j+offset] = nil
 			} else {
+				val = extractEncodableValue(val)
 				writeable[j+offset] = val
 			}
 			delete(body, key) // remove inserted data
@@ -259,6 +282,7 @@ func WriteOne(pqtwriter *writer.CSVWriter, // parquet writing structs
 		if !has { // if key DNE in data body
 			writeable[j+offset] = nil
 		} else {
+			val = extractEncodableValue(val)
 			writeable[j+offset] = val
 		}
 		delete(body, key) // remove inserted data
@@ -381,6 +405,7 @@ func CreateGZipMemWriter(schem []string) (*writer.CSVWriter, *gzip.Writer, *byte
 	return csvWriter, gzipWriter, &buf, nil
 }
 
+// Generates a schema definition string for the key and value
 func generateCSV(key string, value interface{}) (string, error) {
 	var primitive string
 	var add_schema string
@@ -446,4 +471,22 @@ func estimateSizeOfMap(m map[string]interface{}) int {
 		size += estimateSizeOfValue(key) + estimateSizeOfValue(value)
 	}
 	return size
+}
+
+// Attempts to extract an encodable value from a non-encodable value,
+// may return nil if a value can't be extracted
+func extractEncodableValue(value interface{}) interface{} {
+	switch typedValue := value.(type) {
+	case map[string]interface{}:
+		// attempts to extract the value from a clothed value by searching for a "value" key
+		extractedVal, valueWrapped := typedValue["value"]
+		if !valueWrapped {
+			return nil
+		}
+		return extractedVal
+	case []interface{}:
+		// arrays are currently non-encodable
+		return nil
+	}
+	return value
 }

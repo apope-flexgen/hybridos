@@ -102,7 +102,7 @@ func (writer *MongoWriter) sendDataUntil(done <-chan struct{}) error {
 
 func (writer *MongoWriter) sendData(data *archiveData) error {
 	log.Tracef("[mongodb_client write call] Beginning to write to database for file %s", data.archiveFilePath)
-	err := writer.mongoConn.Write(data.db, data.measurement, data.points.MsgBodies) // attempt mongo write
+	err := writer.mongoConn.Write(data.db, data.measurement, data.msgBodies) // attempt mongo write
 	log.Tracef("[mongodb_client write call] Returned from write to database for file %s", data.archiveFilePath)
 	return err
 }

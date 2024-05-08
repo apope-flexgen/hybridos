@@ -1,0 +1,7 @@
+{
+    "float1": 12.5,
+    "string1": "This string is valid",
+    "char1": ";",
+    "char2": "\t",
+    "bool1": false
+}
