@@ -29,7 +29,7 @@ CPPFLAGS += -std=c++17
 CPPFLAGS += -Wall -Wpedantic -Werror 
 #CPPFLAGS += -Wextra
 #CPPFLAGS += -DSPDLOG_COMPILED_LIB
-CPPFLAGS += -DSERVER_DELAY
+# CPPFLAGS += -DSERVER_DELAY
 
 GITBRANCH  = $(shell git branch | grep \* | cut -d ' ' -f2)
 GITCOMMIT  = $(shell git log --pretty=format:'%h' -n 1)

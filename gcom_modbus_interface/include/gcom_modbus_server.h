@@ -17,11 +17,16 @@ typedef struct {
     int stop;
     int device_id;
     int reg_cnt;
+
+    #ifdef SERVER_DELAY
     int connect_delay;
     int server_delay;
-    int error_key;
+    int server_delay_count;
+    int single_delay;
     int exception;
     int mdebug;
+    #endif
+    
     bool debug;
     bool low_debug; 
 

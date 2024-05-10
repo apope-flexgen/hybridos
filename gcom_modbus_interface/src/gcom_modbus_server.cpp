@@ -243,7 +243,11 @@ int parse_system(cJSON *system, system_config *config)
         FPS_ERROR_PRINT("Failed to find system 'id' in JSON.\n");
         return -1;
     }
-    config->name = strdup(system_name->valuestring);
+    // strip leading '/' if we need to
+    int sysix = 0;
+    if (system_name->valuestring[0] == '/')
+        sysix = 1;
+    config->name = strdup(&system_name->valuestring[sysix]);
     if(config->name == NULL)
     {
         FPS_ERROR_PRINT("Allocation failed for name");
@@ -379,6 +383,7 @@ int parse_system(cJSON *system, system_config *config)
         config->device_id = slave_id->valueint;
     }
     // Add in debug server_delay needs compile option -DSERVER_DELAY
+    #ifdef SERVER_DELAY
     cJSON* server_delay = cJSON_GetObjectItem(system, "server_delay");
     if ((server_delay) && (cJSON_IsNumber(server_delay)))
     {
@@ -387,6 +392,9 @@ int parse_system(cJSON *system, system_config *config)
         config->server_delay = 0;
     }
     config->connect_delay = 0;
+    config->single_delay = 0;
+    config->server_delay_count = 0;
+    #endif
 
     // Add in bypass_init -DSERVER_DELAY
     cJSON* bypass_init = cJSON_GetObjectItem(system, "bypass_init");
@@ -1495,6 +1503,7 @@ bool process_fims_message(fims_message* msg, system_config* sys_cfg, bool* reloa
             *reload = true;
             return true;
         }
+        #ifdef SERVER_DELAY
         if (strcmp(msg->pfrags[msg->nfrags - 1], "_bug") == 0)
         {
             FPS_ERROR_PRINT("Found a bug uri\n");
@@ -1506,17 +1515,24 @@ bool process_fims_message(fims_message* msg, system_config* sys_cfg, bool* reloa
             cJSON* body_obj = cJSON_Parse(msg->body);
             if (!body_obj)
                 return false;
-            cJSON* cur_obj = cJSON_GetObjectItem(body_obj, "delay");
+            cJSON* cur_obj = cJSON_GetObjectItem(body_obj, "sdelay");
             if(cur_obj != NULL)
             {
-                FPS_ERROR_PRINT("Found a bug delay:%d  \n", cur_obj->valueint);
-                sys_cfg->server_delay = cur_obj->valueint;
+                FPS_ERROR_PRINT("Found a requested single delay:%d  \n", cur_obj->valueint);
+                sys_cfg->single_delay = cur_obj->valueint;
             } 
             cur_obj = cJSON_GetObjectItem(body_obj, "cdelay");
             if(cur_obj != NULL)
             {
-                FPS_ERROR_PRINT("Found a bug cdelay:%d  \n", cur_obj->valueint);
+                FPS_ERROR_PRINT("Found a requested cdelay:%d  \n", cur_obj->valueint);
                 sys_cfg->connect_delay = cur_obj->valueint;
+            } 
+            cur_obj = cJSON_GetObjectItem(body_obj, "delay");
+            if(cur_obj != NULL)
+            {
+                FPS_ERROR_PRINT("Found a requested delay:%d  \n", cur_obj->valueint);
+                sys_cfg->server_delay = cur_obj->valueint;
+                sys_cfg->server_delay_count = 0;
             } 
             cur_obj = cJSON_GetObjectItem(body_obj, "exception");
             if(cur_obj != NULL)
@@ -1532,6 +1548,7 @@ bool process_fims_message(fims_message* msg, system_config* sys_cfg, bool* reloa
 
             return true;
         }
+        #endif
 
         if(strcmp("set", msg->method) == 0)
         {
@@ -2097,6 +2114,13 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
+#if defined SERVER_DELAY
+                        if(sys_cfg.connect_delay > 0) {
+                            FPS_ERROR_PRINT("adding server connect delay %d ms.\n", sys_cfg.connect_delay);
+                            usleep(sys_cfg.connect_delay*1000);
+                            sys_cfg.connect_delay = 0;
+                        }
+#endif
                         char message[1024];
                         FD_SET(new_fd, &all_connections);
                         fd_max = (new_fd > fd_max) ? new_fd : fd_max;
@@ -2219,16 +2243,19 @@ int main(int argc, char *argv[])
                         }
  
 #if defined SERVER_DELAY
-                        if(sys_cfg.connect_delay > 0) {
-                            FPS_ERROR_PRINT("adding server connect delay %d ms.\n", sys_cfg.connect_delay);
-                            usleep(sys_cfg.connect_delay*1000);
-                            sys_cfg.connect_delay = 0;
-                        }
-
-                        else if(sys_cfg.server_delay > 0) {
-                            FPS_ERROR_PRINT("adding server delay %d ms.\n", sys_cfg.server_delay);
+                        if(sys_cfg.server_delay > 0) {
+                            if (sys_cfg.server_delay_count < 16)
+                            {
+                                FPS_ERROR_PRINT("adding server delay %d ms.\n", sys_cfg.server_delay);
+                                sys_cfg.server_delay_count++;
+                            }
                             usleep(sys_cfg.server_delay*1000);
-                            sys_cfg.server_delay = 0;
+//                            sys_cfg.server_delay = 0;
+                        }
+                        else if(sys_cfg.single_delay > 0) {
+                            FPS_ERROR_PRINT("adding server delay %d ms.\n", sys_cfg.server_delay);
+                            usleep(sys_cfg.single_delay*1000);
+                            sys_cfg.single_delay = 0;
                         }
                         else if(sys_cfg.exception > 0 && send_reply) {
                             if (sys_cfg.exception < 11 )

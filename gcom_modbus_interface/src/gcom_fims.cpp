@@ -177,7 +177,7 @@ bool gcom_recv_raw_message(fims &fims_gateway, std::shared_ptr<IO_Fims> io_fims)
         io_fims->error = err;
 
         // TODO handle other fims errors
-        if (err != 11)
+        if (err != EAGAIN)
             FPS_ERROR_LOG("Fims read err %d [%s]", err, strerror(err));
         // if (err == 22)
         //     close(connection);

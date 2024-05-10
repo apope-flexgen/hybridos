@@ -29,8 +29,9 @@
             "device_id": 2,
             "registers": [
                 {
-                    "type": "Holding", "starting_offset": 1400, "number_of_registers": 42,
+                    "type": "Holding", "starting_offset": 1399, "number_of_registers": 43,
                     "map": [ 
+                        { "id": "hold_0_0",          "offset": 1399, "name": "Hold_0_0"                                  },
                         { "id": "hold_1_1",          "offset": 1400, "name": "Hold_1_1"                                  },
                         { "id": "hold_1_2",          "offset": 1401, "name": "Hold_1_2", "size":2                        },
                         { "id": "hold_1_4",          "offset": 1403, "name": "Hold_1_4", "size":4                        },

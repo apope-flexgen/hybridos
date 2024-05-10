@@ -14,7 +14,6 @@
         "device protocol version": "6.0 WIP",
         "device id string": "sel_2440",
         "ip_address": "172.17.0.3",
-        "port": 502,
 	"max_num_connections":1
     },
     "components": [
