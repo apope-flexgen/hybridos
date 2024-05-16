@@ -322,10 +322,11 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
     double tNow = get_time_double();
     if (io_fims->method_view == "set")
     {
-            
+        
+        // could not parse message body and message body is required
         if (!ipOk && needs_body )
         {
-            std::string reply_message  = "{\"gcom\":\"Modbus Set Message\",\"status\":\"Failed to decode\"}";
+            std::string reply_message  = "{\"gcom\":\"Modbus Set Message\",\"status\":\"Could not parse message body\"}";
                             
             if (replyto != "" && reply_message != "")
             {
@@ -387,7 +388,6 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
 
         if (io_fims->uri_req.num_uris > 3)
         {
-            //std::cout << "We got a single set method; anyBody " << io_fims->anyBody.type().name() << " ";
 #ifdef FPS_DEBUG_MODE
             if (debug)
             {
@@ -559,16 +559,14 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                         bool send_to_server = ((io_point->register_type == cfg::Register_Types::Coil) || (io_point->register_type == cfg::Register_Types::Holding));
                         if (send_to_server || is_local_request)
                         {
-//#ifdef FPS_DEBUG_MODE
-                            debug = true;
-                            if (debug)
-                            {
+#ifdef FPS_DEBUG_MODE
+
                                 std::cout << " single var send_to_server [" << io_point->id
                                           << "] raw val :" << io_point->raw_val
                                           << " forced val :" << io_point->forced_val
                                           << std::endl;
                             }
-//#endif
+#endif
                             std::string mode("set");
 
                             std::shared_ptr<IO_Work> io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
@@ -610,24 +608,21 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                                 {
                                     uval = io_point->forced_val;
                                 }
-                                // io_point->raw_val = uval;
 
                                 set_reg16_from_uint64(io_point, uval, io_work_single->buf16);
-                                //std::cout << ">>>>" << __func__ << " HOLDING uval " << uval << std::endl;
                             }
 
                             setWork(io_work_single);
                         }
                         else
                         {
-                            std::cout << ">>>>" << __func__ << " not correct type to  send to server " << std::endl;
+                            FPS_DEBUG_LOG("Cannot send set to server for point [%s] (register type [%s])", io_point->id, io_point->register_type_str);
                         }
                         return true;
                     }
                     else
                     {
-                        std::cout << " io_point id [" << io_point->id << " ] skipped ... debounce " << std::endl;
-                        // continue;
+                        FPS_DEBUG_LOG("Cannot send set to server for point [%s] during debounce period", io_point->id);
                     }
 
                     // clearChan(true);
@@ -1349,6 +1344,7 @@ static bool runCollectFims(std::shared_ptr<IO_Fims> io_fims, struct cfg & myCfg,
     if (ok)
     {
 
+#ifdef FPS_DEBUG_MODE
         if (ok)
         {
             if (0)
@@ -1357,8 +1353,9 @@ static bool runCollectFims(std::shared_ptr<IO_Fims> io_fims, struct cfg & myCfg,
         }
         else
         {
-            printf("%s \"%s\": failed with a message len %d \n", __func__, name.c_str(), (int)io_fims->data_buf_len);
+            FPS_DEBUG_LOG("%s \"%s\": failed with a message len %d \n", __func__, name.c_str(), (int)io_fims->data_buf_len);
         }
+        #endif
     }
     else
     {
@@ -1391,7 +1388,7 @@ static bool runProcessFims(std::shared_ptr<IO_Fims> io_fims, struct cfg & myCfg,
     else
     {
         // TODO error reporting
-        printf("%s \"%s\": failed with a message len %d \n", __func__, name.c_str(), (int)io_fims->data_buf_len);
+        FPS_DEBUG_LOG("%s \"%s\": header parsing failed\n", __func__, name.c_str());
     }
 
     return true;

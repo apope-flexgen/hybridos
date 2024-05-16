@@ -12,12 +12,7 @@ services:
     tty: true
     volumes:
       - //c/Users/StephanieReynolds/.ssh:/tmp/.ssh:ro
-      - //c/flexgen/hybridos:/home/docker/hybridos
-      - //c/flexgen/hybridos/gcom_dnp3_interface/build/release/gcom_dnp3_client:/usr/local/bin/gcom_dnp3_client
-      - //c/flexgen/hybridos/gcom_dnp3_interface/build/release/gcom_dnp3_server:/usr/local/bin/gcom_dnp3_server
-      - //c/flexgen/hybridos/gcom_dnp3_interface/security_certificate_stuff/out:/usr/local/etc/certs/gcom_dnp3_interface
-      - //c/flexgen/hybridos/gcom_modbus_interface/build/release/gcom_modbus_client:/usr/local/bin/gcom_modbus_client
-      - //c/flexgen/hybridos/gcom_modbus_interface/build/release/gcom_modbus_server:/usr/local/bin/gcom_modbus_server
+      - //c/flexgen:/home/docker
 
   client_container:
     build: .
@@ -30,12 +25,7 @@ services:
     tty: true
     volumes:
       - //c/Users/StephanieReynolds/.ssh:/tmp/.ssh:ro
-      - //c/flexgen/hybridos:/home/docker/hybridos
-      - //c/flexgen/hybridos/gcom_dnp3_interface/build/release/gcom_dnp3_client:/usr/local/bin/gcom_dnp3_client
-      - //c/flexgen/hybridos/gcom_dnp3_interface/build/release/gcom_dnp3_server:/usr/local/bin/gcom_dnp3_server
-      - //c/flexgen/hybridos/gcom_dnp3_interface/security_certificate_stuff/out:/usr/local/etc/certs/gcom_dnp3_interface
-      - //c/flexgen/hybridos/gcom_modbus_interface/build/release/gcom_modbus_client:/usr/local/bin/gcom_modbus_client
-      - //c/flexgen/hybridos/gcom_modbus_interface/build/release/gcom_modbus_server:/usr/local/bin/gcom_modbus_server
+      - //c/flexgen:/home/docker
 
 networks:
   localnet:

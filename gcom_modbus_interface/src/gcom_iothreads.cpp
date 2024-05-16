@@ -945,7 +945,7 @@ int read_modbus_io_work(struct cfg &myCfg, int& io_tries, std::shared_ptr<IO_Thr
     }
     else
     {
-        io_work->good = result;
+        io_work->good = 1;
     }
 
     return result;
@@ -1069,6 +1069,8 @@ int write_modbus_io_work(struct cfg &myCfg, int& io_tries, std::shared_ptr<IO_Th
         }
         io_work->errors = io_work->num_registers;
         io_work->good = 0;
+    } else {
+        io_work->good = 1;
     }
 
     return result;
