@@ -58,21 +58,24 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 		_, last_uri_element_is_input := MetricsConfig.Inputs[msg.Frags[len(msg.Frags)-1]]
 		_, isEchoPublishUri := echoPublishUristoEchoNum[msg.Uri]
 		if outputNames, ok := uriToOutputNameMap[msg.Uri]; ok && len(outputNames) > 0 { // asking for all outputs associated with the given URI
-			anyOutputsClothed, outputVals := mapOutputNamesToMsgVars(outputNames)
-			// Construct the message body to go out over fims
-			// If multiple values are present they will be returned as an array
+			msgBody := make(map[string]interface{}, 0)
+			var tempMsgBody map[string]interface{}
+			interval_set := uriIsIntervalSet[msg.Uri]
+			_, direct_set := uriIsDirect["set"][msg.Uri]
+			_, direct_post := uriIsDirect["post"][msg.Uri]
+
+			for _, outputName := range outputNames {
+				tempMsgBody, _, _ = prepareSingleOutputVar(msg.Uri, outputName, false, false, true, interval_set, direct_set, direct_post)
+				msgBody[outputName] = tempMsgBody[outputName]
+			}
 			var responseBody interface{}
-			if anyOutputsClothed {
-				if len(outputVals) == 1 {
-					responseBody = map[string]interface{}{"value": outputVals[0]}
-				} else {
-					responseBody = map[string]interface{}{"value": outputVals}
-				}
+			if len(msgBody) > 1 {
+				responseBody = msgBody
 			} else {
-				if len(outputVals) == 1 {
-					responseBody = outputVals[0]
+				if len(outputNames) > 0 {
+					responseBody = msgBody[outputNames[0]]
 				} else {
-					responseBody = outputVals
+					responseBody = map[string]interface{}{}
 				}
 			}
 			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: responseBody})
@@ -171,6 +174,7 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 				}
 			}
 			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: outputVals})
+			outputScopeMutex.Unlock()
 		} else if len(msg.Frags) > 0 && msg.Frags[0] == "outputs" { // asking for all outputs
 			msgBody := make(map[string]interface{}, len(OutputScope))
 			outputScopeMutex.RLock()
@@ -273,39 +277,6 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 			elementValueMutex.Unlock()
 		}
 	}
-}
-
-// Get all the values associated with the list of input names.
-// Will return the list of values as well as whether any were clothed.
-// Uses the outputScopeMutex
-// outputNames: the list of names to check
-func mapOutputNamesToMsgVars(outputNames []string) (bool, []interface{}) {
-	outputScopeMutex.Lock()
-	// If there are multiple outputs and any of them are clothed, all of them must be clothed
-	anyOutputsClothed := false
-	outputVals := make([]interface{}, 0)
-	// Iterate over the values associated with the URI
-	// Generally, only a single value will be present, but multiple are possible
-	for _, outputVar := range outputNames {
-		output := OutputScope[outputVar]
-		var val interface{}
-		if len(output) > 1 {
-			val_list := make([]interface{}, len(output))
-			for g, union := range output {
-				val_list[g] = getValueFromUnion(&union)
-			}
-			val = val_list
-		} else if len(output) == 1 {
-			val = getValueFromUnion(&output[0])
-		} else {
-			val = 0
-		}
-		if stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "clothed") {
-			anyOutputsClothed = true
-		}
-		outputVals = append(outputVals, val)
-	}
-	return anyOutputsClothed, outputVals
 }
 
 func findValuesInMap(msg *fims.FimsMsgRaw, currentUri string, valuesToLookFor map[string]interface{}, iter *simdjson.Iter) {
