@@ -4,7 +4,7 @@ import { tableBoxSx } from './FleetDashboard.styles';
 
 const FleetDashboard = () => (
   <Box sx={tableBoxSx}>
-    <Typography text="Fleet Overview" variant="headingL" sx={{ paddingBottom: '20px' }} />
+    <Typography text="Fleet Overview" variant="bodyXLBold" sx={{ paddingBottom: '20px' }} />
     <TableDashboard />
   </Box>
 );

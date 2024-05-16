@@ -29,7 +29,7 @@ const Header = ({
   maintModeStatus: boolean;
 }) => (
   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-    <Typography variant="headingL" color="primary" text={headerText} />
+    <Typography variant="bodyXLBold" color="primary" text={headerText} />
     {maintModeStatus && (
       <Chip
         variant="outlined"
@@ -67,7 +67,7 @@ const StatusPointsDisplay = ({ statusComponents }: { statusComponents: ReactElem
           {statusComponents}
         </Grid>
       ) : (
-        <Box sx={{ height: '665px' }}>
+        <Box sx={{ height: '665px', width: '100%' }}>
           <EmptyContainer text={noStatusesToDisplayMessage} />
         </Box>
       )}

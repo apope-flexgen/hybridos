@@ -150,8 +150,9 @@ const FleetManagerConfig: React.FC<FleetManagerConfigProps> = ({
             <CardRow alignItems='center'>
               <Typography text={FMlabels.settings} variant='bodyLBold' />
             </CardRow>
-            <CardRow>
+            <CardRow styleOverrides={{ width: '100%' }}>
               <TextField
+                fullWidth
                 helperText={nameFieldMissing ? FMlabels.localSchedule.missingNameField : undefined}
                 label={FMlabels.localSchedule.name}
                 onChange={(event) =>

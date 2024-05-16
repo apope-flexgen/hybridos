@@ -41,7 +41,7 @@ export const resolveActiveAlertBannerSx = (theme: ThemeType) => ({
   padding: '15px',
   marginBottom: '20px',
   borderRadius: '8px',
-  backgroundColor: theme.fgc.table.color.alarmLight,
+  backgroundColor: `${theme.fgc.table.color.alarmLight}12`,
 });
 
 export const alertBannerIconSx = {

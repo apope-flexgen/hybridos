@@ -99,7 +99,7 @@ export const SCADASettingsSx = (theme: ThemeType) => ({
   boxRow: {
     display: 'flex',
     gap: theme.fgb.siteFleetConfig.sizing.padding,
-    width: '250px',
+    width: '100%',
   },
 });
 

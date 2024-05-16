@@ -1,4 +1,4 @@
-import { ThemeType } from '@flexgen/storybook';
+import { ThemeType, customMUIScrollbar } from '@flexgen/storybook';
 
 export const connectionRadiusBoxSx = {
   paddingTop: '16px',
@@ -26,7 +26,7 @@ export const connectionMethodBoxSx = (theme: ThemeType) => ({
   padding: '24px',
   flexDirection: 'column',
   gap: '8px',
-  backgroundColor: theme.fgd.primary.main_4p,
+  backgroundColor: theme.fgd.background.paper,
 });
 
 export const contentBoxSx = (theme: ThemeType) => ({
@@ -35,6 +35,7 @@ export const contentBoxSx = (theme: ThemeType) => ({
   backgroundColor: theme.fgd.background.paper,
   height: '100%',
   overflowY: 'auto',
+  ...customMUIScrollbar(theme),
 });
 
 export const titleBoxSx = {
@@ -42,4 +43,31 @@ export const titleBoxSx = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+};
+
+export const radiusSettingsContainerSx = (theme: ThemeType) => ({
+  display: 'flex',
+  gap: '16px',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  width: '60%',
+  padding: '24px',
+  backgroundColor: `${theme.fgd.primary.main}12`,
+});
+
+export const radiusTtitleSx = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  width: '100%',
+};
+
+export const radiusTestRequiredBadgeSx = { width: '10%', whiteSpace: 'nowrap' };
+
+export const radiusCardsContainerSx = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px',
+  width: '100%',
 };

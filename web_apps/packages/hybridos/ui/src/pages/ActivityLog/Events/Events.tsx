@@ -55,7 +55,7 @@ const Events = () => {
   const mainBoxSx = mainContentBoxSx(theme);
   return (
     <Box sx={mainBoxSx}>
-      <Box sx={headerBoxSx}>
+      <Box sx={headerBoxSx(theme)}>
         <EventsHeader
           filters={filters}
           setCurrentPage={setCurrentPage}

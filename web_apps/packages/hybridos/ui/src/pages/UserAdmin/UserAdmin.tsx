@@ -4,9 +4,10 @@ import {
   Box,
   CardContainer,
   DataTable,
+  Divider,
   IconButton,
-  MuiButton,
   PageLoadingIndicator,
+  ThemeType,
   Typography,
 } from '@flexgen/storybook';
 import { useCallback, useEffect, useState } from 'react';
@@ -16,13 +17,15 @@ import { PageProps } from 'src/pages/PageTypes';
 import { APP_SETTINGS_URL } from 'src/pages/SiteAdmin/SiteAdmin.constants';
 import {
   dataTableSx,
-  nonDataTableSx,
   pageSx,
   titleBoxSx,
+  dataTableAndTypographySx,
+  usersTablePaperSx,
 } from 'src/pages/UserAdmin/UserAdmin.styles';
 import { userColumns } from 'src/pages/UserAdmin/UserAdmin.constants';
 import AddUserRow from './AddUserRow';
 import EditUserRow from './EditUserRow';
+import { useTheme } from 'styled-components';
 
 const UserAdmin: React.FunctionComponent<PageProps> = ({ currentUser }: PageProps) => {
   const axiosInstance = useAxiosWebUIInstance(true);
@@ -31,10 +34,10 @@ const UserAdmin: React.FunctionComponent<PageProps> = ({ currentUser }: PageProp
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userData, setUserData] = useState<any>([]);
   const [userRows, setUserRows] = useState<any>([]);
-  const [showAddUser, setShowAddUser] = useState<boolean>(false);
   const [passwordSettings, setPasswordSetttings] =
     useState<PasswordOptions>(initialPasswordOptions);
   const [oldPasswords, setOldPasswords] = useState<number>(1);
+  const theme = useTheme() as ThemeType;
 
   const updateUserData = useCallback(async () => {
     try {
@@ -47,7 +50,7 @@ const UserAdmin: React.FunctionComponent<PageProps> = ({ currentUser }: PageProp
   }, [axiosInstance]);
 
   const editButton = ({ onClickEvent }: any) => (
-    <IconButton color='primary' icon='Edit' onClick={onClickEvent} size='small' />
+    <IconButton color='action' icon='EditOutlined' onClick={onClickEvent} size='small' />
   );
 
   const fetchPasswordData = useCallback(async () => {
@@ -98,38 +101,31 @@ const UserAdmin: React.FunctionComponent<PageProps> = ({ currentUser }: PageProp
     <Box sx={pageSx}>
       <PageLoadingIndicator isLoading={isLoading} type='primary' />
       <Box sx={titleBoxSx}>
-        <Typography text='User Admin' variant='headingL' />
+        <Typography text='User Admin' variant='bodyXLBold' />
       </Box>
-      <CardContainer direction='row'>
+      <CardContainer direction='row' styleOverrides={{ height: '100%' }}>
         <Box sx={dataTableSx}>
-          <Box sx={nonDataTableSx}>
-            <Typography text='MANAGE USERS' variant='headingS' />
-          </Box>
-          <DataTable
-            columns={userColumns}
-            expandable
-            pagination
-            rowsData={userRows}
-            showExpandableRowIcons={false}
+          <AddUserRow
+            showDeveloper={showDeveloper}
+            setIsLoading={setIsLoading}
+            updateUserData={updateUserData}
+            passwordOptions={passwordSettings}
+            oldPasswords={oldPasswords}
           />
-          <Box sx={nonDataTableSx}>
-            <MuiButton
-              label='Add New User'
-              onClick={() => setShowAddUser(!showAddUser)}
-              startIcon='Add'
-              sx={{ width: 'fit-content' }}
-              variant='outlined'
+          <Box sx={{ padding: '8px' }}>
+            <Divider variant='fullWidth' orientation='horizontal' />
+          </Box>
+          <Box sx={dataTableAndTypographySx}>
+            <Typography text='Active Users' variant='bodyLBold' sx={{ width: '20%' }} />
+            <DataTable
+              columns={userColumns}
+              expandable
+              pagination
+              rowsData={userRows}
+              showExpandableRowIcons={false}
+              headerColor='secondary'
+              paperSx={usersTablePaperSx(theme)}
             />
-            {showAddUser && (
-              <AddUserRow
-                showDeveloper={showDeveloper}
-                setIsLoading={setIsLoading}
-                setShowAddUser={setShowAddUser}
-                updateUserData={updateUserData}
-                passwordOptions={passwordSettings}
-                oldPasswords={oldPasswords}
-              />
-            )}
           </Box>
         </Box>
       </CardContainer>

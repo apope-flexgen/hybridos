@@ -1,4 +1,4 @@
-import { ThemeType } from '@flexgen/storybook';
+import { ThemeType, customMUIScrollbar } from '@flexgen/storybook';
 
 export const mainContentBoxSx = (theme: ThemeType) => ({
   display: 'flex',
@@ -12,7 +12,8 @@ export const mainContentBoxSx = (theme: ThemeType) => ({
   overflowY: 'auto',
   width: '100%',
   boxShadow: theme.fgb.pageHeader.sizing.boxShadow,
-  backgroundColor: theme.fgc.table.color.background,
+  backgroundColor: theme.fgd.background.paper,
+  ...customMUIScrollbar(theme),
 });
 
 export const tabBoxSx = {
@@ -30,6 +31,7 @@ export const eventsBoxSx = (theme: ThemeType) => ({
   display: 'flex',
   boxShadow: theme.fgb.pageHeader.sizing.boxShadow,
   borderRadius: '8px',
+  ...customMUIScrollbar(theme),
 });
 
 export const alertModalSx = {
@@ -45,7 +47,7 @@ export const alertBubbleSx = (theme: ThemeType) => ({
   alignItems: 'center',
   justifyContent: 'center',
   border: `1px solid ${theme.fgd.primary.main_50p}`,
-  backgroundColor: theme.fgd.primary.main_12p,
+  backgroundColor: `${theme.fgd.primary.main_12p}12`,
   borderRadius: 50,
   minWidth: '24px',
   minHeight: '24px',

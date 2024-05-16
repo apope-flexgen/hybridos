@@ -7,6 +7,7 @@ import {
   PageLoadingIndicator,
   Tab,
   Tabs,
+  ThemeType,
   Tooltip,
   Typography,
 } from '@flexgen/storybook';
@@ -29,6 +30,7 @@ import { ADD_NEW_DASHBOARD_CARD, DELETE_CARD, newDashboard, tabOptions } from '.
 import AddMuiButtonSX from './styles';
 import { NotifContext, NotifContextType } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
+import { useTheme } from 'styled-components';
 
 const DASHBOARDS_URL = '/dashboards';
 interface IDashboardsContext {
@@ -65,6 +67,7 @@ const Dashboards = () => {
   const [isLoading, setIsLoading] = useState(false);
   const notifCtx = useContext<NotifContextType | null>(NotifContext);
   const axiosInstance = useAxiosWebUIInstance();
+  const theme = useTheme() as ThemeType;
 
   const handleAddDashboard = useCallback(
     async (dashboard = newDashboard) => {
@@ -190,7 +193,7 @@ const Dashboards = () => {
   return (
     <DashboardsContext.Provider value={contextValue}>
       <TabContainer>
-        <Box sx={MainBoxSX}>
+        <Box sx={MainBoxSX(theme)}>
           <PageLoadingIndicator isLoading={isLoading} type='primary' />
           <Typography text='Dashboard Cards' variant='bodyLBold' />
           <ListContainer>
@@ -199,7 +202,6 @@ const Dashboards = () => {
               // eslint-disable-next-line react/no-array-index-key
               <Item key={index}>
                 <MuiButton
-                  color='inherit'
                   label={dashboard.info.name}
                   onClick={() => handleDashboardClick(dashboard, index)}
                   sx={MuiButtonSX}
@@ -223,7 +225,7 @@ const Dashboards = () => {
             />
           </ListContainer>
         </Box>
-        <Box sx={BoxSX}>
+        <Box sx={BoxSX(theme)}>
           {selectedDashboard && (
             <Toolbar>
               <Typography text={selectedDashboard.info.name} variant='bodyMBold' />

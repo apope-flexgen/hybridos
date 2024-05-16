@@ -1,4 +1,4 @@
-import { ThemeType } from '@flexgen/storybook';
+import { ThemeType, customMUIScrollbar } from '@flexgen/storybook';
 
 export enum ActivityLogTabs {
   Events = 'events',
@@ -29,6 +29,7 @@ export const mainContentBoxSx = (theme: ThemeType) => ({
   width: '100%',
   boxShadow: theme.fgb.pageHeader.sizing.boxShadow,
   backgroundColor: theme.fgc.table.color.background,
+  ...customMUIScrollbar(theme),
 });
 
 export const tabBoxSx = {

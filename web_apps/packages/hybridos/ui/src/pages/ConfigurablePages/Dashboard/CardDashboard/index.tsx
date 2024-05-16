@@ -4,6 +4,12 @@ import { CardContainer, CardHeader, CardRow } from '@flexgen/storybook';
 
 import { Box } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
+import {
+  dashCardContainerSx,
+  dashCardHeaderSx,
+  dashCardRowSx,
+  gridContainerSx,
+} from 'src/pages/ConfigurablePages/Dashboard/dashboard.styles';
 import ConfigurablePagesHOC, {
   ConfigurablePagesProps,
 } from 'src/pages/ConfigurablePages/configurablePages.hoc';
@@ -29,24 +35,20 @@ const CardDashboard = (props: CardDashboardProps) => {
 
       return (
         <Grid xs={getCardColumns(numDataPoints)} sx={getCardColumnSX(numDataPoints)}>
-          <CardContainer key={displayGroupID} styleOverrides={{ height: '100%', display: 'block' }}>
+          <CardContainer key={displayGroupID} styleOverrides={dashCardContainerSx}>
             <CardHeader
               heading={componentFunctions.displayName}
               icon={getDashboardIcon(componentFunctions.displayName)}
+              styleOverrides={dashCardHeaderSx}
             />
-            <Box sx={{ alignItems: 'flex-end' }}>
+            <Box sx={gridContainerSx}>
               <Grid container columnSpacing={0} rowSpacing={0} gridAutoRows="1fr">
                 <Grid xs={12}>
                   {componentFunctions.alarmFaultStatusFunction(componentState.dashboard)}
                 </Grid>
                 {componentFunctions.statusFunctions.map((fn, i) => (
                   <Grid xs={getDataPointColumns(numDataPoints)}>
-                    <CardRow
-                      key={i}
-                      alignItems="flex-end"
-                      paddingBottom="0.25rem" // TODO: remove this once styleOverrides are fixed by upcoming PR
-                      styleOverrides={{ height: '100%', paddingBottom: '0.25rem' }}
-                    >
+                    <CardRow key={i} alignItems="flex-end" styleOverrides={dashCardRowSx}>
                       {fn(componentState.dashboard)}
                     </CardRow>
                   </Grid>

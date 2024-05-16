@@ -1,7 +1,7 @@
 // TODO: fix lint
 /* eslint-disable max-lines */
 import {
-  ThemeType, Views, createTemplate, Calendar,
+  ThemeType, Views, createTemplate, Calendar, customMUIScrollbar,
 } from '@flexgen/storybook';
 import { Box } from '@mui/material';
 import { EventObject } from '@toast-ui/calendar/*';
@@ -156,7 +156,7 @@ const CalendarGroup: React.FC = () => {
         displayEvents={displayEvents}
         setDisplayEvents={setDisplayEvents}
       />
-      <Box>
+      <Box sx={{ ...customMUIScrollbar(theme) }}>
         <Calendar
           height={calendarHeight}
           calendarRef={calendarRef}

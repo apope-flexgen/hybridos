@@ -71,8 +71,8 @@ const WebUIAppBar = ({
       siteName={appData.app.appBar.appDisplayName}
       timeZone={appData.app.timeZone}
     >
-      <Avatar onClick={handleClick}>
-        <Icon src="AccountCircle" />
+      <Avatar onClick={handleClick} color="secondary" variant="circular">
+        <Icon src="Person" />
       </Avatar>
       <Box sx={{}}>
         <Menu anchorEl={anchorEl} onClose={handleClose} open={open}>

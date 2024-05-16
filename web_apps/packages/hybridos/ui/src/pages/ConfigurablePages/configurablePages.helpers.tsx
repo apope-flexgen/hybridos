@@ -97,7 +97,6 @@ export const getUpdatedStates: (
   const updatedComponentState: ConfigurablePageStateStructure = {};
   const updatedAlertState: AlertState = {};
   const updatedMaintModeState: MaintModeState = {};
-
   Object.entries(data).forEach(([displayGroupID, displayGroup]) => {
     updatedComponentState[displayGroupID] = {
       status: getStatusStateForDisplayGroup(
@@ -119,7 +118,10 @@ export const getUpdatedStates: (
     };
 
     updatedMaintModeState[displayGroupID] = {
-      value: Boolean(displayGroup?.control?.maint_mode?.state?.value) || false,
+      value:
+        displayGroup?.control?.maint_mode?.state?.value === '-'
+          ? false
+          : Boolean(displayGroup?.control?.maint_mode?.state?.value) || false,
     };
   });
 

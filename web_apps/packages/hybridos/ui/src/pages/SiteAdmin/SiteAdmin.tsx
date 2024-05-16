@@ -157,7 +157,7 @@ const SiteAdmin = () => {
     <Box sx={containerBoxSx}>
       <PageLoadingIndicator isLoading={isLoading} type="primary" />
       <Box sx={titleBoxSx}>
-        <Typography text={siteAdminLabels.siteAdminPageTitle} variant="headingL" />
+        <Typography text={siteAdminLabels.siteAdminPageTitle} variant="bodyXLBold" />
         <Box sx={buttonBoxSx}>
           <Box sx={saveCancelBoxSx}>
             <MuiButton
@@ -186,7 +186,7 @@ const SiteAdmin = () => {
       <CardContainer
         direction="row"
         styleOverrides={{
-          backgroundColor: theme.fgd.primary.main_4p,
+          backgroundColor: theme.fgd.background.paper,
           height: ' calc(100% - 72px)',
         }}
       >

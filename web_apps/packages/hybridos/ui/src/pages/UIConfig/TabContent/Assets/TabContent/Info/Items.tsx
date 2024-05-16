@@ -1,8 +1,17 @@
 // TODO: fix lint
 /* eslint-disable max-lines */
 import {
-  Checkbox, Divider, TextField, Typography,
+  Checkbox,
+  Divider,
+  Icon,
+  IconList,
+  Select,
+  TMenuItem,
+  TextField,
+  Typography,
+  ValidIconStrings,
 } from '@flexgen/storybook';
+import { SelectChangeEvent } from '@mui/material';
 import { ChangeEvent } from 'react';
 import { Asset } from 'shared/types/dtos/assets.dto';
 import { useAssetsContext } from 'src/pages/UIConfig/TabContent/Assets';
@@ -46,6 +55,21 @@ const Items = () => {
     );
   };
 
+  const handleSelectChangeEvent = (event: SelectChangeEvent, field: string) => {
+    const {
+      target: { value },
+    } = event;
+
+    setSelectedAsset(
+      (prevSelectedAsset) => ({
+        ...prevSelectedAsset,
+        info: {
+          ...prevSelectedAsset?.info,
+          [field]: value,
+        },
+      } as Asset),
+    );
+  };
   const handleTextFieldCommaSeparatedChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -78,6 +102,14 @@ const Items = () => {
       } as Asset),
     );
   };
+
+  console.log(selectedAsset?.info.icon);
+
+  const iconMenuItems: TMenuItem[] = ValidIconStrings.map((icon) => ({
+    name: icon,
+    value: icon,
+    component: <Icon src={icon as IconList} />,
+  }));
 
   return (
     <>
@@ -131,11 +163,12 @@ const Items = () => {
         <ColumnLeft>
           <Typography text={ICON} variant="bodyL" />
         </ColumnLeft>
-        <TextField
-          disableLabelAnimation
+        <Select
+          minWidth={300}
+          menuItems={iconMenuItems}
           id="icon"
           label={ICON}
-          onChange={handleTextFieldChange}
+          onChange={(e) => handleSelectChangeEvent(e, 'icon')}
           value={selectedAsset?.info.icon || ''}
         />
       </Row>

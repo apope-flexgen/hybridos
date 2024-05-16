@@ -31,19 +31,9 @@ const EventDateTime: FC<EventsDateTimeProps> = ({ filters, setFilters }: EventsD
 
   return (
     <>
-      <Box sx={datePickerSx}>
-        <DatePicker
-          label={datePickerLabel}
-          onChange={(newDate: dayjs.Dayjs | null) => {
-            setDateValue(newDate);
-            handleDateChange(newDate, setTimeFrame, filters, setFilters);
-          }}
-          size="small"
-          value={date}
-        />
-      </Box>
       <Select
         label={timeFrameLabel}
+        minWidth={200}
         menuItems={timeFrameOptions}
         onChange={(event: SelectChangeEvent<string>) => handleTimeFrameChange(
           event,
@@ -56,6 +46,18 @@ const EventDateTime: FC<EventsDateTimeProps> = ({ filters, setFilters }: EventsD
         )}
         value={timeFrame}
       />
+      <Box sx={datePickerSx}>
+        <DatePicker
+          label={datePickerLabel}
+          onChange={(newDate: dayjs.Dayjs | null) => {
+            setDateValue(newDate);
+            handleDateChange(newDate, setTimeFrame, filters, setFilters);
+          }}
+          size="small"
+          value={date}
+        />
+      </Box>
+
       <DualTimePicker
         disabled={timeFrame !== 'Custom' || date === null}
         error={checkIfStartBeforeEnd(startTime, endTime)}

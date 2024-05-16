@@ -15,6 +15,12 @@ import { FunctionComponent } from 'react';
 import { RadiusSettings } from 'shared/types/api/SiteAdmin.types';
 import { useTheme } from 'styled-components';
 import { siteAdminLabels } from './SiteAdmin.constants';
+import {
+  radiusCardsContainerSx,
+  radiusSettingsContainerSx,
+  radiusTestRequiredBadgeSx,
+  radiusTtitleSx,
+} from './styles';
 
 export interface RadiusSettingsProps {
   radiusSettings: RadiusSettings;
@@ -48,28 +54,10 @@ const RadiusSettingsFields: FunctionComponent<RadiusSettingsProps> = ({
       </CardRow>
       <CardRow alignItems="flex-start" justifyContent="space-between" width="100%">
         <Typography text={siteAdminLabels.radiusPageSubtitle} variant="bodyL" />
-        <Box
-          sx={{
-            display: 'flex',
-            gap: '16px',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            width: '60%',
-            padding: '24px',
-            backgroundColor: theme.fgd.primary.main_12p,
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
+        <Box sx={radiusSettingsContainerSx(theme)}>
+          <Box sx={radiusTtitleSx}>
             <Typography text={siteAdminLabels.radiusPageCardTitle} variant="bodyLBold" />
-            <Box sx={{ width: '10%', whiteSpace: 'nowrap' }}>
+            <Box sx={radiusTestRequiredBadgeSx}>
               <Badge
                 anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
                 badgeColor={!radiusTestSuccessful ? 'error' : 'success'}
@@ -82,14 +70,7 @@ const RadiusSettingsFields: FunctionComponent<RadiusSettingsProps> = ({
               />
             </Box>
           </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-              width: '100%',
-            }}
-          >
+          <Box sx={radiusCardsContainerSx}>
             <CardContainer
               direction="column"
               styleOverrides={{ padding: '16px', gap: '16px', boxSizing: 'border-box' }}

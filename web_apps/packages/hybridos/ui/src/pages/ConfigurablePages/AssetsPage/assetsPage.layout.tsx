@@ -1,5 +1,10 @@
+/* eslint-disable max-lines */
 import {
-  CardContainer, ResizableContainer, Tabs, ThemeType,
+  CardContainer,
+  ResizableContainer,
+  Tabs,
+  ThemeType,
+  customMUIScrollbar,
 } from '@flexgen/storybook';
 import { Box } from '@mui/material';
 import React from 'react';
@@ -30,18 +35,24 @@ export type AssetsPageLayoutProps = {
   assetKey?: string;
 };
 
-const Window = ({ children }: { children: React.ReactNode }) => (
-  <Box
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      overflow: 'auto',
-    }}
-  >
-    {children}
-  </Box>
-);
+const Window = ({ children }: { children: React.ReactNode }) => {
+  const theme = useTheme() as ThemeType;
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        overflow: 'auto',
+        backgroundColor: theme.fgc.assetsPageTemplate.statusContentBg,
+        ...customMUIScrollbar(theme),
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
 
 type TabsColumnProps = {
   tabComponents: React.ReactElement[];

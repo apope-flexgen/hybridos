@@ -21,7 +21,7 @@ export const numberValidationEnum = {
 };
 
 export const addEventLabels = {
-  title: { label: 'CREATE NEW EVENT' },
+  title: { label: 'Create New Event' },
   eventType: { label: 'Mode' },
   startDate: { label: 'Start' },
   endDate: { label: 'End' },
@@ -31,8 +31,8 @@ export const addEventLabels = {
     validationRegEx: 'positiveIntegers' as keyof typeof numberValidationEnum,
   },
   endOptionsRadios: { neverLabel: 'Never', onLabel: 'On', afterLabel: 'After' },
-  clearButton: { label: 'CLEAR', size: 'medium', variant: 'text' },
-  addEventButton: { label: 'ADD EVENT', size: 'medium', startIcon: 'Add' },
+  clearButton: { label: 'Clear', size: 'medium', variant: 'text' },
+  addEventButton: { label: 'Add Event', size: 'medium', startIcon: 'Add' },
   occurencesNumericInput: {
     label: 'Events',
     validationRegEx: 'positiveIntegers' as keyof typeof numberValidationEnum,
@@ -107,7 +107,7 @@ export const isOverlappingStartTime = (
   editEvent?: SchedulerEvent,
 ) => {
   let overlapping = false;
-  if (state.startTime !== '' && state.endTime !== '') {
+  if (state.date && state.endDate && state.startTime !== '' && state.endTime !== '') {
     const startTimeOfNewEvent = dayjs.tz(
       `${state.date?.format('YYYY-MM-DD')} ${state.startTime}`,
       timezone,

@@ -74,9 +74,9 @@ const SiteFleetConfig: React.FC<SiteFleetConfigProps> = ({
         <Box sx={headerSx(theme)}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             {configured ? (
-              <Typography text={siteName} variant="headingL" />
+              <Typography text={siteName} variant="bodyXLBold" />
             ) : (
-              <Typography text={labels.pageDescription.unconfigured} variant="headingL" />
+              <Typography text={labels.pageDescription.unconfigured} variant="bodyXLBold" />
             )}
             <Typography
               text={schedulerType === 'SC' ? labels.pageDescription.sc : labels.pageDescription.fm}

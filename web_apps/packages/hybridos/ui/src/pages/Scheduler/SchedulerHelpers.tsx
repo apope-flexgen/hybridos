@@ -204,7 +204,7 @@ export const getColorList = (theme: ThemeType) => ({
   orange: theme.fgc.scheduler.customColors.orange,
   lightGreen: theme.fgc.scheduler.customColors.lightGreen,
   teal: theme.fgc.scheduler.customColors.teal,
-  lightBlue: theme.fgc.scheduler.customColors.lightblue,
+  lightBlue: theme.fgc.scheduler.customColors.lightBlue,
   indigo: theme.fgc.scheduler.customColors.indigo,
   deepPurple: theme.fgc.scheduler.customColors.deepPurple,
   red: theme.fgc.scheduler.customColors.red,

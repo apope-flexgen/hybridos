@@ -116,7 +116,7 @@ const ViewDisplay: React.FC<ViewDisplayProps> = ({
         {/** FIXME: Use our typography when merged */}
         <Typography
           sx={{
-            fontFamily: 'Saira',
+            fontFamily: 'Inter',
             fontSize: 18,
             fontWeight: 600,
             color: theme.fgc.calendar.color.fonts.today,

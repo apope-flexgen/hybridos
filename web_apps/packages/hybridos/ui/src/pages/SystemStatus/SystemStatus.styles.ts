@@ -1,4 +1,4 @@
-import { ThemeType } from '@flexgen/storybook';
+import { customMUIScrollbar, ThemeType } from '@flexgen/storybook';
 
 export const mainContentBoxSx = (theme: ThemeType) => ({
   display: 'flex',
@@ -6,7 +6,8 @@ export const mainContentBoxSx = (theme: ThemeType) => ({
   flexDirection: 'column',
   width: '100%',
   boxShadow: theme.fgb.pageHeader.sizing.boxShadow,
-  backgroundColor: theme.fgc.table.color.background,
+  backgroundColor: theme.fgd.background.paper,
+  borderRadius: '0.25rem',
 });
 
 export const titleBoxSx = {
@@ -37,7 +38,12 @@ export const filterBoxSx = { display: 'flex', gap: '8px' };
 export const iconSize = { width: '30px', height: '30px' };
 export const actionBoxSx = { display: 'flex', gap: '6px', alignItems: 'center' };
 export const sortedTableHeaderSx = { display: 'flex', gap: '2px', alignItems: 'center' };
-export const headerBoxSx = { width: '100%', overflowY: 'auto' };
+export const headerBoxSx = (theme: ThemeType) => ({
+  width: '100%',
+  overflowY: 'auto',
+  marginBottom: '12px',
+  ...customMUIScrollbar(theme),
+});
 export const summaryStatusSx = { display: 'flex', flexDirection: 'column' };
 export const summaryStatusBoxSx = {
   display: 'flex',

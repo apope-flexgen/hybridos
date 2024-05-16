@@ -76,6 +76,7 @@ const PasswordExpirationExpandedContent: FC<PasswordExpirationExpandedContentPro
             onChange={intervalOnChange}
             validationRegEx="positiveIntegers"
             value={passwordExpirationIntervalNum.toString()}
+            fullWidth
           />
         </Box>
       </Box>

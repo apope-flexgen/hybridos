@@ -7,6 +7,7 @@ import {
   PageLoadingIndicator,
   Tab,
   Tabs,
+  ThemeType,
   Tooltip,
   Typography,
 } from '@flexgen/storybook';
@@ -30,6 +31,7 @@ import { tabOptions, ADD_NEW_ASSET, DELETE_ASSET, newAsset, ASSETS_URL } from '.
 import { Layout } from 'shared/types/dtos/layouts.dto';
 import { NotifContext, NotifContextType } from 'src/contexts/NotifContext';
 import { useAppContext } from 'src/App/App';
+import { useTheme } from 'styled-components';
 
 interface IAssetsContext {
   assets: Asset[];
@@ -64,7 +66,7 @@ const Assets = () => {
   const [selectedAsset, setSelectedAsset] = useState<null | Asset>(null);
   const [isLoading, setIsLoading] = useState(false);
   const notifCtx = useContext<NotifContextType | null>(NotifContext);
-
+  const theme = useTheme() as ThemeType;
   const { layouts } = useAppContext();
   const axiosInstance = useAxiosWebUIInstance();
 
@@ -216,7 +218,7 @@ const Assets = () => {
   return (
     <AssetsContext.Provider value={contextValue}>
       <TabContainer>
-        <Box sx={MainBoxSX}>
+        <Box sx={MainBoxSX(theme)}>
           <PageLoadingIndicator isLoading={isLoading} type='primary' />
           <Typography text='Assets' variant='bodyLBold' />
           <ListContainer>
@@ -225,7 +227,6 @@ const Assets = () => {
               // eslint-disable-next-line react/no-array-index-key
               <Item key={index}>
                 <MuiButton
-                  color='inherit'
                   label={asset.info.name}
                   onClick={() => handleAssetClick(asset, index)}
                   sx={MuiButtonSX}
@@ -255,7 +256,7 @@ const Assets = () => {
             />
           </ListContainer>
         </Box>
-        <Box sx={BoxSX}>
+        <Box sx={BoxSX(theme)}>
           {selectedAsset && (
             <Toolbar>
               <Typography text={selectedAsset.info?.name || ''} variant='bodyMBold' />

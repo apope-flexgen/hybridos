@@ -1,3 +1,4 @@
+import { ThemeType, customMUIScrollbar } from '@flexgen/storybook';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -41,20 +42,22 @@ export const TabContainer = styled.div`
   }
 `;
 
-export const MainBoxSX = {
+export const MainBoxSX = (theme: ThemeType) => ({
   width: '321px',
   background: 'rgba(0, 104, 119, 0.04)',
   padding: '16px',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
-};
+  ...customMUIScrollbar(theme),
+});
 
-export const BoxSX = {
+export const BoxSX = (theme: ThemeType) => ({
   width: '100%',
   padding: '24px',
   overflow: 'auto',
-};
+  ...customMUIScrollbar(theme),
+});
 
 export const MuiButtonSX = {
   display: 'block',

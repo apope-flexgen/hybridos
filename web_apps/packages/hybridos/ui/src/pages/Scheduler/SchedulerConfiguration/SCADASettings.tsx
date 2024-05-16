@@ -30,6 +30,7 @@ const SCADASettings: React.FC<SCADASettingsProps> = ({
     <Box sx={sx.box}>
       <Box sx={sx.boxRow}>
         <NumericInput
+          fullWidth
           label={labels.SCADA.stageSize}
           onChange={(event) => updateField('stage_size', event.target.value)}
           size="small"
@@ -37,6 +38,7 @@ const SCADASettings: React.FC<SCADASettingsProps> = ({
           validationRegEx="positiveIntegers"
         />
         <NumericInput
+          fullWidth
           label={labels.SCADA.maxEvents}
           onChange={(event) => updateField('max_num_events', event.target.value)}
           size="small"
@@ -46,12 +48,14 @@ const SCADASettings: React.FC<SCADASettingsProps> = ({
       </Box>
       <Box sx={sx.boxRow}>
         <NumericInput
+          fullWidth
           label={labels.SCADA.ints}
           onChange={(event) => updateField('num_ints', event.target.value)}
           value={settings?.num_ints?.toString() || ''}
           validationRegEx="positiveIntegers"
         />
         <NumericInput
+          fullWidth
           label={labels.SCADA.floats}
           onChange={(event) => updateField('num_floats', event.target.value)}
           value={settings?.num_floats?.toString() || ''}
@@ -60,6 +64,7 @@ const SCADASettings: React.FC<SCADASettingsProps> = ({
       </Box>
       <Box sx={sx.boxRow}>
         <NumericInput
+          fullWidth
           label={labels.SCADA.booleans}
           onChange={(event) => updateField('num_bools', event.target.value)}
           size="small"
@@ -67,6 +72,7 @@ const SCADASettings: React.FC<SCADASettingsProps> = ({
           validationRegEx="positiveIntegers"
         />
         <NumericInput
+          fullWidth
           label={labels.SCADA.strings}
           onChange={(event) => updateField('num_strings', event.target.value)}
           size="small"

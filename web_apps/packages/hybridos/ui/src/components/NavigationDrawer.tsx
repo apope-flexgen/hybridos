@@ -19,7 +19,7 @@ const NavigationDrawer = ({
       }: RouteProps, i) => (showDivider ? (
         <ThemeProvider theme={darkTheme}>
           <Box sx={{ padding: '8px' }}>
-            <Divider orientation="horizontal" variant="fullWidth" />
+            <Divider orientation="horizontal" variant="fullWidth" color="color" />
           </Box>
         </ThemeProvider>
       ) : (

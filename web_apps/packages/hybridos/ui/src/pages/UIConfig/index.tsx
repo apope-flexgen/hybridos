@@ -7,14 +7,14 @@ import TabContent from './TabContent';
 import { BoxSX, CardContainerSX, Container } from './styles';
 
 const UIConfig = ({ product }: PageProps) => {
-  const tabs = [<Tab label="ASSETS" value="assets" />, <Tab label="DASHBOARD" value="dashboard" />];
+  const tabs = [<Tab label="Assets" value="assets" />, <Tab label="Dashboard" value="dashboard" />];
 
   const initialTab = product === 'FM' ? 'dashboard' : 'assets';
   const [selectedTab, setSelectedTab] = useState(initialTab);
 
   return (
     <Container>
-      <Typography text="UI Settings" variant="headingL" />
+      <Typography text="UI Settings" variant="bodyXLBold" />
       <CardContainer direction="column" styleOverrides={CardContainerSX}>
         <Box sx={BoxSX}>
           <CardRow>

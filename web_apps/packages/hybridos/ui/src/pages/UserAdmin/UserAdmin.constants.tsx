@@ -43,6 +43,7 @@ export const userColumns = [
     id: 'expandRowButton',
     label: '',
     minWidth: 15,
+    maxWidth: 24,
     align: 'right' as const,
   },
 ];

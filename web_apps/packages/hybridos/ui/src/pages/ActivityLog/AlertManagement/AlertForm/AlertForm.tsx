@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
+import { Box, ThemeType, customMUIScrollbar } from '@flexgen/storybook';
 
 import React, {
   useCallback, useEffect, useMemo, useState,
@@ -13,6 +13,7 @@ import {
 
 import { dataTableBox } from 'src/pages/ActivityLog/Alerts/alerts.styles';
 import { AlertConfigurationObject, Organization } from 'src/pages/ActivityLog/activityLog.types';
+import { useTheme } from 'styled-components';
 import AlertInfo from './AlertInfo/AlertInfo';
 import Aliases from './Aliases/Aliases';
 import OrganizationsModal from './OrganizationsModal/OrganizationsModal';
@@ -43,6 +44,7 @@ const AlertForm = ({
   );
   const [orgModalOpen, setOrgModalOpen] = useState<boolean>(false);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const theme = useTheme() as ThemeType;
 
   const axiosInstance = useAxiosWebUIInstance();
 
@@ -98,7 +100,7 @@ const AlertForm = ({
         setOrganizations={setOrganizations}
         handleCancel={handleCancel}
       />
-      <Box sx={{ dataTableBox, overflowY: 'auto' }}>
+      <Box sx={{ dataTableBox, overflowY: 'auto', ...customMUIScrollbar(theme) }}>
         <AlertInfo />
         <Scope setOrgModalOpen={setOrgModalOpen} organizations={organizations} />
         <RequiredResponseTime />

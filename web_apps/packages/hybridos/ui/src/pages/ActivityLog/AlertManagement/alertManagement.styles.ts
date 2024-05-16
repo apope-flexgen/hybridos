@@ -1,4 +1,4 @@
-import { ThemeType } from '@flexgen/storybook';
+import { ThemeType, customMUIScrollbar } from '@flexgen/storybook';
 
 export const sitesBoxSx = {
   display: 'flex',
@@ -10,7 +10,7 @@ export const sitesBoxSx = {
 
 export const actionsBoxSx = { display: 'flex', gap: '8px' };
 
-export const extraPadding = { paddingTop: '16px', height: 'auto' };
+export const extraPadding = { paddingTop: '0px', height: 'auto' };
 
 export const externalFormRowBoxSx = {
   display: 'flex',
@@ -75,8 +75,9 @@ export const ruleBlockBoxSx = (theme: ThemeType) => ({
   padding: '24px',
   flexDirection: 'column',
   gap: '24px',
-  backgroundColor: theme.fgd.primary.main_8p,
+  backgroundColor: `${theme.fgd.primary.main_8p}12`,
 });
+
 export const setWidth = (width: number | string) => ({
   width: typeof width === 'string' ? width : `${width}px`,
 });
@@ -109,7 +110,8 @@ export const rightAlignedButton = {
   width: '100%',
   justifyContent: 'flex-end',
 };
-export const orgRowSx = {
+
+export const orgRowSx = (theme: ThemeType) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: '8px',
@@ -117,4 +119,5 @@ export const orgRowSx = {
   width: '100%',
   maxHeight: '250px',
   overflowY: 'auto',
-};
+  ...customMUIScrollbar(theme),
+});

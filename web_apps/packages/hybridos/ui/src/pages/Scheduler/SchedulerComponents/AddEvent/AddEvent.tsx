@@ -99,6 +99,7 @@ const AddEvent: React.FC = () => {
       || isDurationOver24Hours(state)
       || checkIfStartBeforeEnd(state)
       || checkIfStartOrEndInPast(state, timezone[0]),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [state, eventsForUi],
   );
 
@@ -141,7 +142,7 @@ const AddEvent: React.FC = () => {
 
   return (
     <Box sx={addEventSx}>
-      <Typography text={addEventLabels.title.label} variant="headingS" />
+      <Typography text={addEventLabels.title.label} variant="bodyLBold" />
       <Select
         fullWidth
         placeholder=""

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import {
-  Box, Divider, Modal, MuiButton, Typography,
+  Box, Divider, Modal, MuiButton, ThemeType, Typography,
 } from '@flexgen/storybook';
 import { useContext, useEffect, useState } from 'react';
 
@@ -22,6 +22,7 @@ import {
   saveButtonSx,
 } from 'src/pages/ActivityLog/activityLog.styles';
 import { Organization } from 'src/pages/ActivityLog/activityLog.types';
+import { useTheme } from 'styled-components';
 
 export interface EditOrganizationsModalProps {
   open: boolean;
@@ -42,6 +43,7 @@ const EditOrganizationsModal: React.FC<EditOrganizationsModalProps> = ({
   const [duplicateNamesError, setDuplicateNamesError] = useState<boolean>(false);
 
   const [updatedOrganizations, setUpdatedOrganizations] = useState<Organization[]>(organizations);
+  const theme = useTheme() as ThemeType;
 
   const generateOrganizationRows = () => updatedOrganizations
     .sort((a, b) => (a.id || '').toString().localeCompare(b.id || ''))
@@ -120,7 +122,7 @@ const EditOrganizationsModal: React.FC<EditOrganizationsModalProps> = ({
         <DeleteOrganizationsBanner />
         <Typography text={alertManagementHelperText.editOrganizations} variant="bodyS" />
         <Divider orientation="horizontal" variant="fullWidth" />
-        <Box sx={orgRowSx}>{organizationRows}</Box>
+        <Box sx={orgRowSx(theme)}>{organizationRows}</Box>
         <Box sx={formRowSx}>
           <MuiButton label="Add Organization" onClick={addNewRow} startIcon="Add" variant="text" />
         </Box>

@@ -56,7 +56,7 @@ const AssetControl = ({
   return (
     <>
       {batchControlsState && !isSummaryTab && (
-        <Box sx={{ paddingTop: '8px', backgroundColor: theme.fgd.text.reversed }}>
+        <Box sx={{ paddingTop: '8px', backgroundColor: theme.fgd.background.paper }}>
           <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)}>
             <Tab label='Asset' value={AssetTabs.asset} />
             <Tab label='Batch' value={AssetTabs.batch} />

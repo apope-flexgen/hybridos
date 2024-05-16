@@ -72,7 +72,7 @@ const SystemStatus: React.FunctionComponent = () => {
 
   return (
     <Box sx={mainBoxSx}>
-      <Box sx={headerBoxSx}>
+      <Box sx={headerBoxSx(theme)}>
         <SystemStatusHeader
           systemStatusData={systemStatusData}
           summarySystemData={summarySystemData}

@@ -7,6 +7,7 @@ import {
   Divider,
   ThemeType,
   MuiButton,
+  customMUIScrollbar,
 } from '@flexgen/storybook';
 import { useContext, useState } from 'react';
 import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
@@ -134,7 +135,7 @@ const AlertManagement = () => {
           />
         </Box>
       ) : (
-        <Box sx={{ ...tableBoxSx, overflowY: 'auto' }}>
+        <Box sx={{ ...tableBoxSx, overflowY: 'auto', ...customMUIScrollbar(theme) }}>
           <AlertForm
             setIsLoading={setIsLoading}
             alertValues={alertFormValues}

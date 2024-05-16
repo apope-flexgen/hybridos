@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { ThemeType } from '@flexgen/storybook';
+import { ThemeType, customMUIScrollbar } from '@flexgen/storybook';
 import { Box } from '@mui/material';
 
 export const FadeGradient = ({
@@ -71,7 +71,7 @@ export const getTabsContainerSx = (theme: ThemeType) => ({
   display: 'flex',
   flexDirection: 'column',
   width: 'min-content',
-  backgroundColor: theme.fgd.primary.main_12p,
+  backgroundColor: theme.fgd.background.paper,
   height: '100%',
 });
 
@@ -107,11 +107,12 @@ export const getControlOuterBoxSx = (theme: ThemeType) => ({
   overflowY: 'auto',
   width: '100%',
   height: '100%',
-  backgroundColor: theme.fgd.primary.main_12p,
+  backgroundColor: theme.fgc.assetsPageTemplate.expandableContainerBg,
   top: 0,
   right: 0,
   padding: '15px',
   paddingBottom: '52px',
+  ...customMUIScrollbar(theme),
 });
 
 export const getControlInnerBoxSx = (theme: ThemeType) => ({
@@ -129,7 +130,7 @@ export const getStatusOuterBoxSx = (theme: ThemeType) => ({
   display: 'flex',
   padding: '24px',
   flexDirection: 'column',
-  backgroundColor: theme.fgc.pageHeader.color.background,
+  backgroundColor: theme.fgc.assetsPageTemplate.statusContentBg,
 });
 
 export const getAllControlsBoxSx = (theme: ThemeType) => ({

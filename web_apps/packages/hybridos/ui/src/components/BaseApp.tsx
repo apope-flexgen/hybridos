@@ -146,7 +146,7 @@ const BaseApp = (): JSX.Element => {
         footer: {
           softwareName:
             siteConfiguration.product === FLEET_MANAGER ? FLEET_MANAGER_NAME : SITE_CONTROLLER_NAME,
-          version: '11',
+          version: '12',
         },
       };
     }

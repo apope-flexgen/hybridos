@@ -1,17 +1,23 @@
 // TODO: fix lint
 /* eslint-disable no-prototype-builtins */
-import { Box, MuiButton } from '@flexgen/storybook';
+import {
+  Box, MuiButton, ThemeType, Typography,
+} from '@flexgen/storybook';
 import { FunctionComponent, useContext, useState } from 'react';
 import { PasswordOptions } from 'shared/types/api/Users/Users.types';
 import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
-import { addUserRowButtonsSx, addUserRowSx } from 'src/pages/UserAdmin/UserAdmin.styles';
+import {
+  addUserRowButtonsSx,
+  addUserRowSx,
+  addUserAndTypographySx,
+} from 'src/pages/UserAdmin/UserAdmin.styles';
 import UserRow from 'src/pages/UserAdmin/UserRow';
+import { useTheme } from 'styled-components';
 
 export interface AddUserRowProps {
   updateUserData: () => void;
   setIsLoading: (state: boolean) => void;
-  setShowAddUser: (state: any) => void;
   showDeveloper?: boolean;
   passwordOptions: PasswordOptions;
   oldPasswords: number;
@@ -20,7 +26,6 @@ export interface AddUserRowProps {
 const AddUserRow: FunctionComponent<AddUserRowProps> = ({
   updateUserData,
   setIsLoading,
-  setShowAddUser,
   showDeveloper,
   passwordOptions,
   oldPasswords,
@@ -57,7 +62,7 @@ const AddUserRow: FunctionComponent<AddUserRowProps> = ({
       await axiosInstance.post('/users', userData);
       notifCtx?.notif('success', 'Successfully created user');
       updateUserData();
-      setShowAddUser(false);
+      setUserData({});
     } catch (axiosError: any) {
       notifCtx?.notif('error', `Error creating user: ${axiosError.response.data.message}`);
     } finally {
@@ -67,22 +72,26 @@ const AddUserRow: FunctionComponent<AddUserRowProps> = ({
 
   const cancel = () => {
     setUserData({});
-    setShowAddUser(false);
   };
 
+  const theme = useTheme() as ThemeType;
+
   return (
-    <Box sx={addUserRowSx}>
-      <UserRow
-        setUserData={setUserData}
-        setValidPassword={setValidPassword}
-        showDeveloper={showDeveloper}
-        userData={userData}
-        passwordOptions={passwordOptions}
-        oldPasswords={oldPasswords}
-      />
-      <Box sx={addUserRowButtonsSx}>
-        <MuiButton label="add user" onClick={addUser} variant="contained" />
-        <MuiButton label="cancel" onClick={cancel} variant="text" />
+    <Box sx={addUserAndTypographySx}>
+      <Typography text="Add User" variant="bodyLBold" sx={{ width: '20%' }} />
+      <Box sx={addUserRowSx(theme)}>
+        <UserRow
+          setUserData={setUserData}
+          setValidPassword={setValidPassword}
+          showDeveloper={showDeveloper}
+          userData={userData}
+          passwordOptions={passwordOptions}
+          oldPasswords={oldPasswords}
+        />
+        <Box sx={addUserRowButtonsSx}>
+          <MuiButton label="Cancel" onClick={cancel} variant="text" />
+          <MuiButton label="Add User" onClick={addUser} variant="contained" />
+        </Box>
       </Box>
     </Box>
   );
