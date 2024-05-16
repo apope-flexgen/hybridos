@@ -1,0 +1,246 @@
+{
+    "_doc": "site_diagram",
+    "baseURI": "/assets",
+    "assets": {
+        "grids": {
+            "grid": {
+                "name": "Grid"
+            }
+        },
+        "feeders": {
+            "baseURI": "/feeders",
+            "items": [
+                {
+                    "treeId": "{psm_id}",
+                    "name": "{title}",
+                    "uri": "/feed_#",
+                    "templates": [
+                        {
+                            "token": "{title}",
+                            "type": "list",
+                            "list": [
+                                "Shared POI",
+                                "BESS Aux Feeder",
+                                "Control Cabinet Feeder"
+                            ]
+                        },
+                        {
+                            "token": "{psm_id}",
+                            "type": "list",
+                            "list": [
+                                "psm_shared_poi",
+                                "psm_bess_aux",
+                                "psm_control_cabinet"
+                            ]
+                        },
+                        {
+                            "token": "#",
+                            "type": "sequential",
+                            "from": 1,
+                            "to": 3
+                        }
+                    ],
+                    "statuses": [
+                        {
+                            "name": "Active Power",
+                            "scalar": "1000",
+                            "units": "MW",
+                            "uri": "/active_power"
+                        },
+                        {
+                            "name": "Breaker",
+                            "uri": "/breaker_status",
+                            "type": "contactor"
+                        }
+                    ]
+                }
+            ]
+        },
+        "generators": {
+            "baseURI": "/generators",
+            "items": [
+                {
+                    "treeId": "psm_easygen_3500xt",
+                    "name": "Generator 1",
+                    "uri": "/gen_1",
+                    "statuses": [
+                        {
+                            "name": "Active Power",
+                            "scalar": "1000",
+                            "units": "MW",
+                            "uri": "/active_power"
+                        },
+                        {
+                            "name": "Breaker",
+                            "uri": "/status",
+                            "type": "contactor"
+                        }
+                    ]
+                }
+            ]
+        },
+        "ess": {
+            "baseURI": "/ess",
+            "items": [
+                {
+                    "treeId": "psm_ess_#",
+                    "name": "Battery #",
+                    "uri": "/ess_#",
+                    "templates": [
+                        {
+                            "token": "#",
+                            "type": "sequential",
+                            "from": 1,
+                            "to": 2
+                        }
+                    ],
+                    "statuses": [
+                        {
+                            "name": "Active Power",
+                            "scalar": "1000",
+                            "units": "MW",
+                            "uri": "/active_power"
+                        },
+                        {
+                            "name": "Active Power Setpoint",
+                            "scalar": "1000",
+                            "units": "MW",
+                            "uri": "/active_power_setpoint"
+                        },
+                        {
+                            "name": "SOC",
+                            "uri": "/soc",
+                            "type": "progress"
+                        },
+                        {
+                            "name": "Breaker",
+                            "uri": "/dc_contactors_closed",
+                            "type": "contactor"
+                        }
+                    ]
+                }
+            ]
+        },
+        "solar": {
+            "baseURI": "/solar",
+            "items": [
+                {
+                    "treeId": "psm_solar_1",
+                    "uri": "/solar_1",
+                    "name": "Solar 1",
+                    "statuses": [
+                        {
+                            "name": "Active Power",
+                            "scalar": "1000",
+                            "units": "MW",
+                            "uri": "/active_power"
+                        },
+                        {
+                            "name": "Breaker",
+                            "uri": "/component_connected",
+                            "type": "contactor"
+                        }
+                    ]
+                },
+                {
+                    "treeId": "psm_solar_2",
+                    "uri": "/solar_2",
+                    "name": "Solar 2",
+                    "statuses": [
+                        {
+                            "name": "Active Power",
+                            "scalar": "1000",
+                            "units": "MW",
+                            "uri": "/active_power"
+                        },
+                        {
+                            "name": "Breaker",
+                            "uri": "/component_connected",
+                            "type": "contactor"
+                        },
+                        {
+                            "name": "Faults Present",
+                            "uri": "/is_faulted"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "tree": {
+        "root": {
+            "id": "grid",
+            "asset_type": "grid",
+            "children": [
+                {
+                    "id": "psm_shared_poi",
+                    "asset_type": "feeder",
+                    "children": [
+                        {
+                            "id": "tx_grid",
+                            "asset_type": "feeder",
+                            "children": [
+                                {
+                                    "id": "biomass_plant_load",
+                                    "asset_type": "load"
+                                },
+                                {
+                                    "id": "psm_split_feeder",
+                                    "asset_type": "feeder",
+                                    "children": [
+                                        {
+                                            "id": "psm_ess_1",
+                                            "asset_type": "ess"
+                                        },
+                                        {
+                                            "id": "psm_ess_2",
+                                            "asset_type": "ess"
+                                        },
+                                        {
+                                            "id": "psm_pv_1",
+                                            "asset_type": "solar"
+                                        },
+                                        {
+                                            "id": "psm_pv_2",
+                                            "asset_type": "solar"
+                                        },
+                                        {
+                                            "id": "psm_easygen_3500xt",
+                                            "asset_type": "gen"
+                                        },
+                                        {
+                                            "id": "psm_bess_aux",
+                                            "asset_type": "feeder",
+                                            "children": [
+                                                {
+                                                    "id": "bess_aux_load",
+                                                    "asset_type": "load"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "id": "psm_control_cabinet",
+                                            "asset_type": "feeder",
+                                            "children": [
+                                                {
+                                                    "id": "tx_control_cabinet",
+                                                    "asset_type": "feeder",
+                                                    "children": [
+                                                        {
+                                                            "id": "control_cabinet_load",
+                                                            "asset_type": "load"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

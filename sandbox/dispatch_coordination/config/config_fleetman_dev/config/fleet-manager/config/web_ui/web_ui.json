@@ -18,6 +18,7 @@
     },
     "inspectorComponentsName": "test_controller",
     "alerting": true,
+    "site_diagram": true,
     "fleet_manager": true,
     "fleet_name": "ERCOT",
     "customer": {
