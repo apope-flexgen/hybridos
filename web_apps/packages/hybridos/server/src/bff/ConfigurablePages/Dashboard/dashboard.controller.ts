@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiDefaultResponse, ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { DashboardService } from './dashboard.service';
 import { DefaultApiError } from 'src/exceptions/defaultResponse.exception';
-import { SiteDiagramResponse } from './responses/dashboard.response';
+import { FleetSiteDiagramsResponse, SiteDiagramResponse } from './responses/dashboard.response';
 
 @ApiTags('dashboard')
 @ApiSecurity('bearerAuth')
@@ -14,5 +14,11 @@ export class DashboardController {
   @ApiOkResponse({ type: SiteDiagramResponse })
   async getSiteDiagram(): Promise<SiteDiagramResponse> {
     return await this.dashboardService.getSiteDiagramConfig();
+  }
+
+  @Get('/fleet-site-diagrams')
+  @ApiOkResponse({ type: FleetSiteDiagramsResponse })
+  async getFleetSiteDiagrams(): Promise<FleetSiteDiagramsResponse> {
+    return await this.dashboardService.getFleetSiteDiagrams();
   }
 }

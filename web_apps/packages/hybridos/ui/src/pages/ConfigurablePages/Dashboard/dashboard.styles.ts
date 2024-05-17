@@ -1,7 +1,7 @@
 export const dashboardBoxSx = {
   display: 'flex',
   flexDirection: 'column',
-  gap: '20px',
+  gap: '12px',
   overflow: 'hidden visible',
   width: '100%',
 
@@ -18,11 +18,13 @@ export const dashCardContainerSx = {
   display: 'block',
   borderRadius: '8px',
 };
+
 export const dashCardHeaderSx = {
   borderTopLeftRadius: '8px',
   borderTopRightRadius: '8px',
 };
 export const gridContainerSx = { alignItems: 'flex-end', paddingTop: '8px' };
+
 export const dashCardRowSx = {
   height: '100%',
   paddingBottom: '0.25rem',

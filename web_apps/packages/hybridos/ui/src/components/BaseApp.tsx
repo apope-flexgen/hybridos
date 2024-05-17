@@ -33,7 +33,6 @@ import {
   SiteAdmin,
   UserAdmin,
   ErcotOverride,
-  FleetManagerDashboard,
   SystemStatus,
 } from 'src/pages';
 import QueryService from 'src/services/QueryService';
@@ -48,7 +47,6 @@ const PageDictionary = {
   Solar,
   Scheduler,
   Dashboard,
-  FleetManagerDashboard,
   ActivityLog,
   Feeders,
   Generators,

@@ -223,11 +223,17 @@ def load_dbi(process_name: str, config_src, delete_existing_data=True, file_docu
     process_config_directory = os.path.join(config_src, process_name)
     file_names = os.listdir(process_config_directory)
     for file_name in file_names:
-        if not file_name.endswith('.json'):
+        file_path = os.path.join(process_config_directory, file_name)
+        if os.path.isdir(file_path):
+            sub_file_names = os.listdir(file_path)
+            for sub_file_name in sub_file_names:
+                document_name = file_document_renames[sub_file_name] if sub_file_name in file_document_renames else os.path.splitext(sub_file_name)[0]
+                dbi_uri = f'/dbi/{process_name}/{file_name}/{document_name}'      
+                run(['fims_send', '-m', 'set', '-u', dbi_uri, '-f', os.path.join(file_path, sub_file_name), '-r', f'/{pid}'], stdout=DEVNULL)
+        elif not file_name.endswith('.json'):
             continue
         document_name = file_document_renames[file_name] if file_name in file_document_renames else os.path.splitext(file_name)[0]
         dbi_uri = f'/dbi/{process_name}/{document_name}'
-        file_path = os.path.join(process_config_directory, file_name)
         # reply-to used to keep FIMS from getting clogged
         run(['fims_send', '-m', 'set', '-u', dbi_uri, '-f', file_path, '-r', f'/{pid}'], stdout=DEVNULL)
 

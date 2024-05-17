@@ -1,7 +1,6 @@
 // TODO: fix lint
 /* eslint-disable import/no-cycle */
 export { default as Dashboard } from './Dashboard';
-export { default as FleetManagerDashboard } from './Dashboard/FleetDashboard/FleetDashboard';
 export { default as AssetsPage } from './AssetsPage/AssetsPage';
 export { default as ESS } from './ESS/ESS';
 export { default as Feeders } from './Feeders/Feeders';

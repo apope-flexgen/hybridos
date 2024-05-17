@@ -23,6 +23,8 @@ export const formatNodelabel = (_label?: string): string => {
   label = label.replaceAll('psm_', '');
   label = label.replaceAll('_', ' ');
   label = label.replaceAll(/(?<!\w)ess/g, 'ESS');
+  label = label.replaceAll(/(?<!\w)pcs/g, 'PCS');
+  label = label.replaceAll(/(?<!\w)bms/g, 'BMS');
   label = label.replaceAll(/(?<!\w)poi/g, 'POI');
   label = label.replaceAll(/(?<!\w)pv/g, 'PV');
   label = label.replace(/\b\w/g, (char: string) => char.toUpperCase());

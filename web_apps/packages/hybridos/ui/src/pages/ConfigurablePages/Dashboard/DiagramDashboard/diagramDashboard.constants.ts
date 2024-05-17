@@ -1,5 +1,10 @@
+export const SITE_DIAGRAM_URL = '/dashboard/site-diagram';
+export const FLEET_SITE_DIAGRAMS_URL = '/dashboard/fleet-site-diagrams';
+
 export enum ASSET {
   ESS = 'ESS',
+  PCS = 'PCS',
+  BMS = 'BMS',
   Solar = 'Solar',
   Gen = 'Gen',
   Feeder = 'Feeder',
@@ -9,6 +14,8 @@ export enum ASSET {
 
 export const assetTypeMapping: { [key: string]: string[] } = {
   [ASSET.ESS]: ['ess', 'storage'],
+  [ASSET.PCS]: ['pcs'],
+  [ASSET.BMS]: ['bms'],
   [ASSET.Solar]: ['solar'],
   [ASSET.Gen]: ['gen', 'gens', 'generator', 'generators'],
   [ASSET.Feeder]: ['feed', 'feeds', 'feeder', 'feeders'],
@@ -17,6 +24,8 @@ export const assetTypeMapping: { [key: string]: string[] } = {
 
 export const assetIconMapping: { [key: string]: string } = {
   [ASSET.ESS]: 'BatteryHorizontal',
+  [ASSET.PCS]: 'Inverter',
+  [ASSET.BMS]: 'ElectricBolt',
   [ASSET.Solar]: 'SolarRounded',
   [ASSET.Gen]: 'Generator',
   [ASSET.Feeder]: 'FeederAlt',
@@ -24,3 +33,7 @@ export const assetIconMapping: { [key: string]: string } = {
 };
 
 export const layoutDirection = 'TB'; // Indicates top to bottom layout
+
+export const minZoom = 0.1; // Determines how far out the diagram can zoom
+
+export const resizeDiagramTimeout = 100; // Delay between diagram rerender being triggered and resize

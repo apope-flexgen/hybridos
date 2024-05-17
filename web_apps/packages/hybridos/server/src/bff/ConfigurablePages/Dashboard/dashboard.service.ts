@@ -112,11 +112,20 @@ export class DashboardService {
     return this.parseSiteDiagramConfig(data);
   }
 
+  async getFleetSiteDiagrams() {
+    return await this.dbiService.getFromDBI(DBI_URIs.UI_Config_Fleet_Site_Diagrams);
+  }
+
   private parseSiteDiagramConfig = (data): SiteDiagramResponse => {
+    const diagramTree = data.tree.root;
     const parsedData: SiteDiagramResponse = {
-      id: data?.root.id,
-      asset_type: data?.root.asset_type,
-      children: data?.root.children,
+      tree: {
+        root: {
+          id: diagramTree?.id,
+          asset_type: diagramTree?.asset_type,
+          children: diagramTree?.children,
+        },
+      },
     };
 
     return parsedData;

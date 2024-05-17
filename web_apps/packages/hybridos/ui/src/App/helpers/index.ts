@@ -16,7 +16,6 @@ export type SiteConfiguration = {
   site: boolean;
   events: boolean;
   control_cabinet: boolean;
-  fleet_manager_dashboard: boolean;
   system_status?: boolean;
   scheduler: boolean;
   product: string;
@@ -70,19 +69,12 @@ const getRoutes = (
     : [];
 
   const routes = [
-    siteConfiguration.product === 'FM'
-      ? {
-          componentName: 'FleetManagerDashboard',
-          icon: 'Dashboard',
-          itemName: 'Dashboard',
-          path: '/',
-        }
-      : {
-          componentName: 'Dashboard',
-          icon: 'Dashboard',
-          itemName: 'Dashboard',
-          path: '/',
-        },
+    {
+      componentName: 'Dashboard',
+      icon: 'Dashboard',
+      itemName: 'Dashboard',
+      path: '/',
+    },
     siteConfiguration.site && {
       componentName: 'Site',
       icon: 'Site',

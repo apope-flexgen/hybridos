@@ -168,71 +168,65 @@
         }
     },
     "tree": {
-        "root": {
+        "root":{
             "id": "grid",
-            "asset_type": "grid",
-            "children": [
+            "children":[
                 {
-                    "id": "psm_shared_poi",
-                    "asset_type": "feeder",
+                    "id": "transmission_line",
                     "children": [
                         {
-                            "id": "tx_grid",
-                            "asset_type": "feeder",
+                            "id": "twins_sel_735",
                             "children": [
                                 {
-                                    "id": "biomass_plant_load",
-                                    "asset_type": "load"
+                                    "id":"tx_ess_1",
+                                    "children":[
+                                        {
+                                            "id": "pcs_1",
+                                            "children":[
+                                                {
+                                                    "id": "bms_1"
+                                                }
+                                            ]
+                                        }
+                                    ]
                                 },
                                 {
-                                    "id": "psm_split_feeder",
-                                    "asset_type": "feeder",
-                                    "children": [
+                                    "id":"tx_ess_2",
+                                    "children":[
                                         {
-                                            "id": "psm_ess_1",
-                                            "asset_type": "ess"
-                                        },
-                                        {
-                                            "id": "psm_ess_2",
-                                            "asset_type": "ess"
-                                        },
-                                        {
-                                            "id": "psm_pv_1",
-                                            "asset_type": "solar"
-                                        },
-                                        {
-                                            "id": "psm_pv_2",
-                                            "asset_type": "solar"
-                                        },
-                                        {
-                                            "id": "psm_easygen_3500xt",
-                                            "asset_type": "gen"
-                                        },
-                                        {
-                                            "id": "psm_bess_aux",
-                                            "asset_type": "feeder",
-                                            "children": [
+                                            "id": "pcs_2",
+                                            "children":[
                                                 {
-                                                    "id": "bess_aux_load",
-                                                    "asset_type": "load"
+                                                    "id": "bms_2"
                                                 }
                                             ]
-                                        },
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id":"tx_ess_3",
+                                    "children":[
                                         {
-                                            "id": "psm_control_cabinet",
-                                            "asset_type": "feeder",
-                                            "children": [
+                                            "id": "pcs_3",
+                                            "children":[
                                                 {
-                                                    "id": "tx_control_cabinet",
-                                                    "asset_type": "feeder",
-                                                    "children": [
-                                                        {
-                                                            "id": "control_cabinet_load",
-                                                            "asset_type": "load"
-                                                        }
-                                                    ]
+                                                    "id": "bms_3"
                                                 }
                                             ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        
+                        },
+                        { 
+                            "id": "tx_aux",
+                            "children":[
+                                {
+                                    "id": "twins_acuvim",
+                                    "children":[
+                                        {
+                                            "id":"aux_load"
                                         }
                                     ]
                                 }
@@ -241,6 +235,6 @@
                     ]
                 }
             ]
-        }
+          }
     }
 }

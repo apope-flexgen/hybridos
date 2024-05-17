@@ -168,67 +168,132 @@
         }
     },
     "tree": {
-        "root": {
+        "root":{
             "id": "grid",
-            "asset_type": "grid",
-            "children": [
+            "children":[
                 {
-                    "id": "psm_shared_poi",
-                    "asset_type": "feeder",
+                    "id": "transmission_line",
                     "children": [
                         {
-                            "id": "tx_grid",
-                            "asset_type": "feeder",
+                            "id": "twins_sel_735",
                             "children": [
                                 {
-                                    "id": "biomass_plant_load",
-                                    "asset_type": "load"
-                                },
-                                {
-                                    "id": "psm_split_feeder",
-                                    "asset_type": "feeder",
-                                    "children": [
+                                    "id": "tx_gsu",
+                                    "children":[
                                         {
-                                            "id": "psm_ess_1",
-                                            "asset_type": "ess"
-                                        },
-                                        {
-                                            "id": "psm_ess_2",
-                                            "asset_type": "ess"
-                                        },
-                                        {
-                                            "id": "psm_pv_1",
-                                            "asset_type": "solar"
-                                        },
-                                        {
-                                            "id": "psm_pv_2",
-                                            "asset_type": "solar"
-                                        },
-                                        {
-                                            "id": "psm_easygen_3500xt",
-                                            "asset_type": "gen"
-                                        },
-                                        {
-                                            "id": "psm_bess_aux",
-                                            "asset_type": "feeder",
-                                            "children": [
+                                            "id": "twins_sel_351_1",
+                                            "children":[
                                                 {
-                                                    "id": "bess_aux_load",
-                                                    "asset_type": "load"
+                                                    "id": "pcs_1",
+                                                    "children":[
+                                                        {
+                                                            "id": "bms_1"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "id": "pcs_2",
+                                                    "children":[
+                                                        {
+                                                            "id": "bms_2"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "id": "pcs_3",
+                                                    "children":[
+                                                        {
+                                                            "id": "bms_3"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "id": "pcs_4",
+                                                    "children":[
+                                                        {
+                                                            "id": "bms_4"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "id": "pcs_5",
+                                                    "children":[
+                                                        {
+                                                            "id": "bms_5"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "id": "pcs_6",
+                                                    "children":[
+                                                        {
+                                                            "id": "bms_6"
+                                                        }
+                                                    ]
                                                 }
                                             ]
                                         },
                                         {
-                                            "id": "psm_control_cabinet",
-                                            "asset_type": "feeder",
+                                            "id": "twins_sel_351_2",
+                                            "children":[
+                                            {
+                                                "id": "pcs_7",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_7"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_8",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_8"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_9",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_9"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_10",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_10"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_11",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_11"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_12",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_12"
+                                                    }
+                                                ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "id": "twins_sel_487e_pri",
                                             "children": [
                                                 {
-                                                    "id": "tx_control_cabinet",
-                                                    "asset_type": "feeder",
-                                                    "children": [
+                                                    "id": "tx_aux",
+                                                    "children":[
                                                         {
-                                                            "id": "control_cabinet_load",
-                                                            "asset_type": "load"
+                                                            "id": "aux_load"
                                                         }
                                                     ]
                                                 }
@@ -241,6 +306,6 @@
                     ]
                 }
             ]
-        }
+          }
     }
 }

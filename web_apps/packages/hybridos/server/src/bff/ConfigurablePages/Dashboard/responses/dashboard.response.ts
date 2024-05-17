@@ -1,8 +1,24 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsObject, IsOptional, IsString } from 'class-validator';
 import { siteDiagramDescriptions } from '../dashboard.constants';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SiteDiagramResponse implements SiteDiagramNode {
+export class SiteDiagramResponse {
+  @ApiProperty({
+    description: siteDiagramDescriptions.tree,
+  })
+  @IsObject()
+  tree: DiagramTree;
+}
+
+export class FleetSiteDiagramsResponse {
+  @ApiProperty({
+    description: siteDiagramDescriptions.fleetDiagram,
+  })
+  @IsObject()
+  data: FleetDiagram;
+}
+
+export class SiteDiagramData implements SiteDiagramNode {
   @ApiProperty({
     description: siteDiagramDescriptions.id,
   })
@@ -22,10 +38,20 @@ export class SiteDiagramResponse implements SiteDiagramNode {
   })
   @IsArray()
   @IsOptional()
-  children?: SiteDiagramResponse[];
+  children?: SiteDiagramData[];
+}
+
+export interface FleetDiagram {
+  [siteName: string]: {
+    tree: DiagramTree;
+  };
 }
 
 export interface SiteDiagramNode {
   id?: string;
-  children?: SiteDiagramResponse[];
+  children?: SiteDiagramData[];
+}
+
+export interface DiagramTree {
+  root: SiteDiagramData;
 }
