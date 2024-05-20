@@ -1,0 +1,1 @@
+compact_json==1.6.1
