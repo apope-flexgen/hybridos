@@ -8,7 +8,8 @@
 #include <Slew_Object.h>
 
 features::Active_Power_Setpoint::Active_Power_Setpoint() {
-    feature_vars = std::vector<Fims_Object*>{ &enable_flag, &kW_cmd, &kW_slew_rate, &load_method, &absolute_mode_flag, &direction_flag, &maximize_solar_flag, &ess_charge_support_enable_flag };
+    feature_vars = std::vector<Fims_Object*>{ &enable_flag,        &kW_cmd,         &kW_slew_rate,        &load_method,
+                                              &absolute_mode_flag, &direction_flag, &maximize_solar_flag, &ess_charge_support_enable_flag };
 
     variable_ids = std::vector<std::pair<Fims_Object*, std::string>>{
         { &enable_flag, "active_power_setpoint_mode_enable_flag" },
@@ -22,11 +23,15 @@ features::Active_Power_Setpoint::Active_Power_Setpoint() {
     };
 }
 
-void features::Active_Power_Setpoint::execute(Asset_Cmd_Object& asset_cmd) {
-    External_Inputs feature_inputs = External_Inputs{
-        asset_cmd.solar_data.max_potential_kW,    asset_cmd.site_kW_load, asset_cmd.site_kW_demand, asset_cmd.ess_data.kW_request, asset_cmd.gen_data.kW_request, asset_cmd.solar_data.kW_request, asset_cmd.get_total_available_discharge_kW(),
-        asset_cmd.get_total_available_charge_kW()
-    };
+void features::Active_Power_Setpoint::execute(Asset_Cmd_Object& asset_cmd, float site_rated_discharge, float site_rated_charge) {
+    External_Inputs feature_inputs = External_Inputs{ asset_cmd.solar_data.max_potential_kW,
+                                                      asset_cmd.site_kW_load,
+                                                      asset_cmd.site_kW_demand,
+                                                      asset_cmd.ess_data.kW_request,
+                                                      asset_cmd.gen_data.kW_request,
+                                                      asset_cmd.solar_data.kW_request,
+                                                      site_rated_discharge,
+                                                      site_rated_charge };
 
     External_Outputs feature_outputs = execute_helper(feature_inputs);
     asset_cmd.solar_data.kW_request = feature_outputs.solar_kW_request;
@@ -55,7 +60,7 @@ features::Active_Power_Setpoint::External_Outputs features::Active_Power_Setpoin
 
     // Load must be included in the reference command and routed through the slewed target
     float intermediate_load_compensation = asset_cmd_utils::calculate_additional_load_compensation(  // clang-format off
-        load_compensation(load_method.value.value_int),
+        static_cast<load_compensation>(load_method.value.value_int),
         inputs.site_kW_load,
         inputs.site_kW_demand,
         inputs.ess_kW_request,
@@ -64,19 +69,23 @@ features::Active_Power_Setpoint::External_Outputs features::Active_Power_Setpoin
     );  // clang-format on
     local_kW_cmd += intermediate_load_compensation;
 
-    // Determine target of kW_slew and clamp within charge/discharge limits.
-    float limited_kW_cmd = kW_slew.get_slew_target(local_kW_cmd);
-    limited_kW_cmd = std::min(limited_kW_cmd, inputs.total_available_kW_discharge);
-    limited_kW_cmd = std::max(limited_kW_cmd, inputs.total_available_kW_charge);
-
+    float slewed_target_kW_cmd = kW_slew.get_slew_target(local_kW_cmd);
+   
+    // The way the slews behave is that you could in theory slew way beyond the values you could
+    // feasably push/pull. This will clamp the slew to something more reasonable.
+    // fprintf(stderr, "%f < %f < %f\n", inputs.site_rated_charge, slewed_target_kW_cmd, inputs.site_rated_discharge); // useful for debugging
+    slewed_target_kW_cmd = std::min(slewed_target_kW_cmd, inputs.site_rated_discharge);
+    slewed_target_kW_cmd = std::max(slewed_target_kW_cmd, inputs.site_rated_charge);
+    
     // Demand is simply current slewed kw value within dispatch limits.
-    float site_kW_demand = limited_kW_cmd;
+    float site_kW_demand = slewed_target_kW_cmd;
 
     // Update slew target to limited value.
-    kW_slew.update_slew_target(limited_kW_cmd);
+    kW_slew.update_slew_target(slewed_target_kW_cmd);
 
-    float additional_load_compensation = asset_cmd_utils::track_slewed_load(load_compensation(load_method.value.value_int), site_kW_demand, local_kW_cmd, intermediate_load_compensation, kW_slew);
-    return External_Outputs{ new_solar_kW_request, poi_cmd, load_compensation(load_method.value.value_int), additional_load_compensation, site_kW_demand };
+    float additional_load_compensation = asset_cmd_utils::track_slewed_load(static_cast<load_compensation>(load_method.value.value_int), site_kW_demand, local_kW_cmd,
+                                                                            intermediate_load_compensation, kW_slew);
+    return External_Outputs{ new_solar_kW_request, poi_cmd, static_cast<load_compensation>(load_method.value.value_int), additional_load_compensation, site_kW_demand };
 }
 
 void features::Active_Power_Setpoint::charge_support_execute(Asset_Cmd_Object& asset_cmd) {
@@ -88,20 +97,21 @@ void features::Active_Power_Setpoint::charge_support_execute(Asset_Cmd_Object& a
     asset_cmd.ess_data.kW_cmd = feature_outputs.ess_kW_cmd;
 }
 
-features::Active_Power_Setpoint::Charge_Support_External_Outputs features::Active_Power_Setpoint::charge_support_execute_helper(const Charge_Support_External_Inputs& feature_inputs) {
+features::Active_Power_Setpoint::Charge_Support_External_Outputs features::Active_Power_Setpoint::charge_support_execute_helper(
+    const Charge_Support_External_Inputs& feature_inputs) {
     // float temp_ess_kW = feature_inputs.ess_kW_cmd;  //used to calculate delta change
     // calculate the amount of power that is overloaded
-    // TODO: change to solve load formula for feeder instead, then determine if beyond poi limits?
-    float overload_kW = feature_inputs.gen_min_potential_kW + feature_inputs.solar_min_potential_kW + feature_inputs.ess_kW_cmd - zero_check(feature_inputs.site_kW_load - kW_cmd.value.value_float);
+    // TODO(hybridos): change to solve load formula for feeder instead, then determine if beyond poi limits?
+    float overload_kW = feature_inputs.gen_min_potential_kW + feature_inputs.solar_min_potential_kW + feature_inputs.ess_kW_cmd -
+                        zero_check(feature_inputs.site_kW_load - kW_cmd.value.value_float);
 
     // calculate unused ess charge kW
     float unused_ess_kW = feature_inputs.ess_kW_cmd - feature_inputs.ess_min_potential_kW;
     // if overloaded, charge ess as much as possible to support
     if (overload_kW > 0.0f && unused_ess_kW > 0.0f) {
         return Charge_Support_External_Outputs{ feature_inputs.ess_kW_cmd - std::min(overload_kW, unused_ess_kW) };
-    } else {
-        return Charge_Support_External_Outputs{ feature_inputs.ess_kW_cmd };
     }
+    return Charge_Support_External_Outputs{ feature_inputs.ess_kW_cmd };
 
     // FPS_DEBUG_LOG("OVERLOAD: %f, UNUSED: %f, DELTA: %f", overload_kW, unused_ess_kW, ess_data.kW_cmd - temp_ess_kW);
 }
@@ -112,8 +122,9 @@ void features::Active_Power_Setpoint::handle_fims_set(std::string uri_endpoint, 
         load_method.set_fims_int(uri_endpoint.c_str(), msg_value.valueint);
 
         // update slew rate internally if changed
-        if (kW_slew_rate.set_fims_int(uri_endpoint.c_str(), range_check(msg_value.valueint, 100000000, 1)))
+        if (kW_slew_rate.set_fims_int(uri_endpoint.c_str(), range_check(msg_value.valueint, MAX_SLEW, 1))) {
             kW_slew.set_slew_rate(kW_slew_rate.value.value_int);
+        }
     } else if (msg_value.type == cJSON_True || msg_value.type == cJSON_False) {
         bool value_bool = msg_value.type != cJSON_False;
         enable_flag.set_fims_bool(uri_endpoint.c_str(), value_bool);

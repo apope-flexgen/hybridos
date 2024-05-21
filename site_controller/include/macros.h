@@ -47,3 +47,4 @@
 #define SHORT_MSG_LEN (256)
 #define SHORT_MSG_LEN_COPY (255)  // make this one less than SHORT_MSG_LEN for using strncpy. We want null termination.
 #define STATE_MACHINE_INTERVAL_uS (10000)
+#define MAX_SLEW 100000000

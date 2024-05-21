@@ -32,7 +32,7 @@ public:
 
     Slew_Object kW_slew;
 
-    void execute(Asset_Cmd_Object&);                 // Executes feature logic on asset cmd data
+    void execute(Asset_Cmd_Object&, float, float);                 // Executes feature logic on asset cmd data
     void charge_support_execute(Asset_Cmd_Object&);  // Reduces ess command to shift load off of POI when an asset cannot ramp down fast enough
 
     void handle_fims_set(std::string uri_endpoint, const cJSON& msg_value) override;
@@ -45,8 +45,8 @@ private:
         float ess_kW_request;
         float gen_kW_request;
         float solar_kW_request;
-        float total_available_kW_discharge;
-        float total_available_kW_charge;
+        float site_rated_discharge;
+        float site_rated_charge;
     };
     struct External_Outputs {
         float solar_kW_request;

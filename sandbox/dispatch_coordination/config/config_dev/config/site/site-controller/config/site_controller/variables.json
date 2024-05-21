@@ -25,8 +25,7 @@
                 "active_power_setpoint_kW_slew_rate": {
                     "name": "Active Power Setpoint Slew Rate",
                     "ui_type": "none",
-                    "unit": "kW/s",
-                    "value": 1000000,
+                    "value": 10000,
                     "var_type": "Int"
                 },
                 "active_power_setpoint_load_method": {

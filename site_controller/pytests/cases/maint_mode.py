@@ -7,6 +7,7 @@ from pytests.pytest_framework import Site_Controller_Instance
 from pytests.assertion_framework import Assertion_Type, Flex_Assertion, Tolerance_Type
 from pytests.pytest_steps import Setup, Steps, Teardown
 from pytests.fims import fims_get, fims_set
+from pytest_utils.misc import set_bms_soc
 from subprocess import run
 
 def test_chargeable_power():
@@ -21,11 +22,6 @@ def test_dischargeable_power():
     charge = fims_get("/assets/ess/ess_01/system_dischargeable_power")
     Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_01/active_power", charge, 
                    tolerance_type=Tolerance_Type.abs, tolerance=300).make_assertion()
-
-def set_bms_soc(value: int):
-    for i in range(0, 9):
-        uri = "/components/bms_1/sbmu_" + str(i) + "_soc_value"
-        fims_set(uri, value, destination="psm")
 
 def disable_bms_faults():
     uri = "/components/bms_1/disablefault"

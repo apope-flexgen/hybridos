@@ -2943,7 +2943,7 @@ void Site_Manager::process_runmode1_kW_feature() {
     }
     // SITE EXPORT TARGET MODE takes a single power command that is distributed to solar and ess, using dispatch and charge control
     else if (active_power_setpoint_mode.enable_flag.value.value_bool) {
-        active_power_setpoint_mode.execute(asset_cmd);
+        active_power_setpoint_mode.execute(asset_cmd, this->total_site_kW_rated_discharge.value.value_float, this->total_site_kW_rated_charge.value.value_float);
     }
     // MANUAL MODE takes an ESS kW cmd, solar kW cmd, generator kW cmd, ESS slew rate, solar slew rate, and generator slew rate and routes those commands through dispatch and
     // charge control
@@ -2962,6 +2962,7 @@ void Site_Manager::process_runmode1_kW_feature() {
     }
 
     asset_cmd.calculate_feature_kW_demand(asset_priority_runmode1.value.value_int);
+
 }
 
 /**
