@@ -31,30 +31,39 @@ Input_Source::Input_Source(bool init_enabled) {
  * @param JSON_input_source Pointer to the cJSON object containing the configuration data.
  * @throws runtime_error if parsing fails.
  */
-void Input_Source::parse_json_obj(cJSON* JSON_input_source) {
+Config_Validation_Result Input_Source::parse_json_obj(cJSON* JSON_input_source) {
     // caller must not pass a NULL cJSON*
     if (JSON_input_source == NULL) {
-        throw std::runtime_error("JSON_input_source is NULL");
+        return Config_Validation_Result(false, "JSON_input_source is NULL");
     }
 
     // parse name string
     cJSON* JSON_name = cJSON_GetObjectItem(JSON_input_source, "name");
     if (JSON_name == NULL || JSON_name->valuestring == NULL) {
-        throw std::runtime_error("failed to parse name string from element of input_sources array");
+        return Config_Validation_Result(false, "failed to parse name string from element of input_sources array");
     }
     name = JSON_name->valuestring;
 
     // parse uri_suffix string
     cJSON* JSON_uri_suffix = cJSON_GetObjectItem(JSON_input_source, "uri_suffix");
     if (JSON_uri_suffix == NULL || JSON_uri_suffix->valuestring == NULL) {
-        throw std::runtime_error("failed to parse uri_suffix string from element " + name + " of input_sources array");
+        return Config_Validation_Result(false, "failed to parse uri_suffix string from element " + name + " of input_sources array");
     }
     uri_suffix = JSON_uri_suffix->valuestring;
 
+    // don't allow "brokenly long" uris
+    if (name.length() > MAX_VARIABLE_LENGTH) {
+        return Config_Validation_Result(false, "name is absurdly long shorten the variable. name is currently: " + name);
+    }
+    if (uri_suffix.length() > MAX_VARIABLE_LENGTH) {
+        return Config_Validation_Result(false, "uri_suffix is absurdly long shorten the variable. uri_suffix is currently: " + uri_suffix);
+    }
+
     // parse ui_type
-    cJSON* JSON_default_ui_type = cJSON_GetObjectItem(JSON_input_source, "ui_type");
+    // NOTE: use var_ui_type here because the "ui_type" is the ui_type for the control not the actual variable
+    cJSON* JSON_default_ui_type = cJSON_GetObjectItem(JSON_input_source, "var_ui_type");
     if (JSON_default_ui_type == NULL || JSON_default_ui_type->valuestring == NULL) {
-        throw std::runtime_error("failed to parse default ui_type from element " + name + " of input_sources array");
+        return Config_Validation_Result(false, "failed to parse default ui_type from element " + name + " of input_sources array. NOTE: This is the variable \"var_ui_type\".");
     }
     if (strcmp(JSON_default_ui_type->valuestring, "status") == 0) {
         ui_type = STATUS;
@@ -63,7 +72,22 @@ void Input_Source::parse_json_obj(cJSON* JSON_input_source) {
     } else if (strcmp(JSON_default_ui_type->valuestring, "none") == 0) {
         ui_type = NONE;
     } else {
-        throw std::runtime_error("parsed ui_type as " + std::string(JSON_default_ui_type->valuestring) + " which is not one of the possible ui_types status, control, or none");
+        return Config_Validation_Result(false, "parsed ui_type as " + std::string(JSON_default_ui_type->valuestring) + " which is not one of the possible ui_types status, control, or none");
+    }
+
+    // parse ui_type
+    cJSON* JSON_default_control_ui_type = cJSON_GetObjectItem(JSON_input_source, "ui_type");
+    if (JSON_default_control_ui_type == NULL || JSON_default_control_ui_type->valuestring == NULL) {
+        return Config_Validation_Result(false, "failed to parse default control_ui_type from element " + name + " of input_sources array");
+    }
+    if (strcmp(JSON_default_control_ui_type->valuestring, "status") == 0) {
+        control_ui_type = STATUS;
+    } else if (strcmp(JSON_default_control_ui_type->valuestring, "control") == 0) {
+        control_ui_type = CONTROL;
+    } else if (strcmp(JSON_default_control_ui_type->valuestring, "none") == 0) {
+        control_ui_type = NONE;
+    } else {
+        return Config_Validation_Result(false, "parsed control_ui_type as " + std::string(JSON_default_control_ui_type->valuestring) + " which is not one of the possible ui_types status, control, or none");
     }
 
     // parse alt ui types if there are any (optional)
@@ -74,13 +98,13 @@ void Input_Source::parse_json_obj(cJSON* JSON_input_source) {
             // parse the ID of the variable that wants an alternative UI type for this input source
             cJSON* JSON_var_id = cJSON_GetObjectItem(JSON_array_object, "var_id");
             if (JSON_var_id == NULL || JSON_var_id->valuestring == NULL) {
-                throw std::runtime_error("failed to parse var_id from an entry in the alt_ui_types array for input source " + name);
+                return Config_Validation_Result(false, "failed to parse var_id from an entry in the alt_ui_types array for input source " + name);
             }
 
             // parse the UI type that the variable wants to use instead for this input source
             cJSON* JSON_alt_ui_type = cJSON_GetObjectItem(JSON_array_object, "ui_type");
             if (JSON_alt_ui_type == NULL || JSON_alt_ui_type->valuestring == NULL) {
-                throw std::runtime_error("failed to parse ui_type from an entry in the alt_ui_types array for input source " + name);
+                return Config_Validation_Result(false, "failed to parse ui_type from an entry in the alt_ui_types array for input source " + name);
             }
 
             // alternative UI type can only be status or none
@@ -90,7 +114,7 @@ void Input_Source::parse_json_obj(cJSON* JSON_input_source) {
             } else if (strcmp(JSON_alt_ui_type->valuestring, "none") == 0) {
                 alt_ui_type = NONE;
             } else {
-                throw std::runtime_error("alt_ui_type entry for input source " + name + " has ui_type " + std::string(JSON_alt_ui_type->valuestring) + "but only status or none are allowed");
+                return Config_Validation_Result(false, "alt_ui_type entry for input source " + name + " has ui_type " + std::string(JSON_alt_ui_type->valuestring) + "but only status or none are allowed");
             }
 
             // add the ID-type pair to the alt_ui_types map
@@ -104,10 +128,11 @@ void Input_Source::parse_json_obj(cJSON* JSON_input_source) {
         enabled = false;  // default to false if not found
     } else {
         if (JSON_enabled->type > cJSON_True) {
-            throw std::runtime_error("value of 'enabled' for input_source " + name + " is not a boolean");
+            return Config_Validation_Result(false, "value of 'enabled' for input_source " + name + " is not a boolean");
         }
         enabled = JSON_enabled->type == cJSON_True;
     }
+    return Config_Validation_Result(true);
 }
 
 /**
@@ -151,7 +176,7 @@ std::string Input_Source::get_ui_type_of_var(std::string var_id) {
  * @returns A result describing whether or not the config is valid
  */
 Config_Validation_Result Input_Source_List::parse_json_obj(cJSON* JSON_input_sources) {
-    if (!cJSON_IsArray(JSON_input_sources)) {
+    if (cJSON_IsArray(JSON_input_sources) == 0) {
         return Config_Validation_Result(false, "parsed input_sources object is not an array");
     }
 
@@ -215,7 +240,7 @@ void Input_Source_List::add_to_JSON_buffer(fmt::memory_buffer& buf, const char* 
  */
 std::string Input_Source_List::set_source_enable_flag(std::string source_id, bool enable_flag) {
     // do not attempt to process SET to /site/input_sources/<input source id> if input_source array is empty
-    if (input_sources.size() == 0) {
+    if (input_sources.empty()) {
         FPS_ERROR_LOG("Site Manager received a FIMS SET to /site/input_sources/%s but input_sources array is empty! \n", source_id.c_str());
         return "";
     }

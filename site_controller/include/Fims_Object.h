@@ -53,6 +53,7 @@ public:
     void set_name(const char* _name);
     void set_unit(const char* _unit);
     void set_ui_type(const char* _ui_type);
+    void set_ui_type(UI_Type _ui_type);
     void set_value_type(valueType value_type);
     void set_type(const char* _type);
     void set_status_type(statusType _status_type);

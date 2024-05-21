@@ -30,6 +30,7 @@ from pytests.cases.automated_actions import test_completed_automated_action, tes
 from pytests.cases.soc_balancing_algorithm import test_battery_balancing_algorithm
 from pytests.cases.fims_api import test_fr_multiple_inputs, test_grid_mode_doesnt_spam
 from pytests.cases.watchdog import test_watchdog_when_in_maintenance, test_watchdog_fims_endpoints
+from pytests.cases.multiple_inputs import test_multiple_inputs
 
 # Test runner AKA main() for each individual test
 @ parametrize("current_test", [
@@ -116,7 +117,8 @@ from pytests.cases.watchdog import test_watchdog_when_in_maintenance, test_watch
     test_battery_balancing_algorithm,
     test_grid_mode_doesnt_spam,
     test_watchdog_when_in_maintenance, 
-    test_watchdog_fims_endpoints
+    test_watchdog_fims_endpoints,
+    test_multiple_inputs
     #
     # config_dev_slow_slews
     # TODO find a way to make these tests run automatically under different configs rather than just commenting out :(

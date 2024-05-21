@@ -43,6 +43,7 @@
 #define ONE_SECOND_IN_TERMS_OF_MS (1000)
 #define ONE_SECOND_IN_TERMS_OF_NS (1000000000)
 #define RESERVED_BOOL_FAULTS_OFFSET (15)
+#define MAX_VARIABLE_LENGTH (256)
 #define SHORT_MSG_LEN (256)
 #define SHORT_MSG_LEN_COPY (255)  // make this one less than SHORT_MSG_LEN for using strncpy. We want null termination.
 #define STATE_MACHINE_INTERVAL_uS (10000)

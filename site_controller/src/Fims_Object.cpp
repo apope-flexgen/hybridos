@@ -8,6 +8,7 @@
 /* C Standard Library Dependencies */
 #include <cstdint>
 #include <cstring>
+#include "Types.h"
 /* C++ Standard Library Dependencies */
 /* External Dependencies */
 /* System Internal Dependencies */
@@ -85,6 +86,26 @@ void Fims_Object::set_unit(const char* _unit) {
 
 void Fims_Object::set_ui_type(const char* _ui_type) {
     ui_type = _ui_type;
+}
+
+void Fims_Object::set_ui_type(UI_Type _ui_type) {
+    switch (_ui_type) {
+        case UI_Type::ALARM:
+            this->ui_type = "alarm"; 
+            break;
+        case UI_Type::FAULT:
+            this->ui_type = "fault";
+            break;
+        case UI_Type::STATUS:
+            this->ui_type = "status";
+            break;
+        case UI_Type::CONTROL:
+            this->ui_type = "control";
+            break;
+        case UI_Type::NONE:
+            this->ui_type = "none";
+            break;
+    }
 }
 
 void Fims_Object::set_value_type(valueType value_type) {

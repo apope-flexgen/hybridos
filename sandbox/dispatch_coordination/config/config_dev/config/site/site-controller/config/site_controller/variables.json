@@ -2772,6 +2772,7 @@
                     "alt_ui_types": [],
                     "enabled": true,
                     "name": "UI",
+                    "var_ui_type": "control",
                     "ui_type": "control",
                     "uri_suffix": "ui"
                 },
@@ -2779,20 +2780,23 @@
                     "alt_ui_types": [],
                     "enabled": false,
                     "name": "BRP DNP3",
-                    "ui_type": "status",
+                    "var_ui_type": "status",
+                    "ui_type": "control",
                     "uri_suffix": "dnp3"
                 },
                 {
                     "alt_ui_types": [],
                     "enabled": false,
                     "name": "CAISO ADS Schedule",
-                    "ui_type": "status",
+                    "var_ui_type": "status",
+                    "ui_type": "control",
                     "uri_suffix": "remote"
                 },
                 {
                     "alt_ui_types": [],
                     "name": "RIG",
-                    "ui_type": "status",
+                    "var_ui_type": "status",
+                    "ui_type": "control",
                     "uri_suffix": "local"
                 }
             ],

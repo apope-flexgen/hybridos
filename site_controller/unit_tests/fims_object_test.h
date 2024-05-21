@@ -19,13 +19,15 @@ TEST_F(fims_object_test, multiple_inputs_alt_ui_types) {
                 "name": "Local",
                 "uri_suffix": "local",
                 "ui_type": "control",
+                "var_ui_type": "control",
                 "alt_ui_types": [],
                 "enabled": false
             },
             {
                 "name": "Remote",
                 "uri_suffix": "remote",
-                "ui_type": "none",
+                "ui_type": "status",
+                "var_ui_type": "none",
                 "alt_ui_types": [
                     {"var_id": "dummy_var", "ui_type": "status"}
                 ],

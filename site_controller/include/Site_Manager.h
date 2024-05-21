@@ -51,6 +51,7 @@
 #include <Features/ESS_Calibration.h>
 #include <Features/Generator_Charge.h>
 #include <Features/Manual.h>
+#include "Asset.h"
 class Site_Manager {
     ////////////////////////////////////////////////////////////////////////////////////////
     //                              SITE MANAGER CONFIGURATION                            //
@@ -175,6 +176,16 @@ protected:
     ////////////////////////////////////////////////////////////////////////////////////////
 public:
     Input_Source_List input_sources;
+
+    // These contain the ui_control fims_objects for input_sources
+    // I'd try to package this into input_sources, but that will require a redesign
+    // this is good enough to function.
+    // TODO(JUD): Figure out a way to add fimsCtl to input sources.
+    //     you could:
+    //         1. predeclare class and use a pointer (not very clean)
+    //         2. rework headers to have fims classes declared before the input_sources
+    //         3. ???
+    std::vector<Fims_Object> input_sources_controls; 
 
 protected:
     std::vector<Fims_Object*> multi_input_command_vars;

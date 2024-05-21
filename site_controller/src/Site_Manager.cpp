@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 /* C++ Standard Library Dependencies */
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include <set>
@@ -299,8 +300,9 @@ void Site_Manager::build_JSON_features_standalone_power(fmt::memory_buffer& buf,
 }
 
 void Site_Manager::build_JSON_features_site_operation(fmt::memory_buffer& buf, const char* const var) {
-    if (var == NULL)
+    if (var == NULL) {
         bufJSON_StartObject(buf);  // JSON_object {
+    }
     bufJSON_AddStringCheckVar(buf, "name", "Site Operation Features", var);
 
     // site operation features feature variables
@@ -310,8 +312,9 @@ void Site_Manager::build_JSON_features_site_operation(fmt::memory_buffer& buf, c
     allow_gen_auto_restart.add_to_JSON_buffer(buf, var);
     add_feature_group_feature_vars_to_JSON_buffer(site_operation_features_list, buf, var);
 
-    if (var == NULL)
+    if (var == NULL) {
         bufJSON_EndObject(buf);  // } JSON_object
+    }
 }
 
 void Site_Manager::build_JSON_site(fmt::memory_buffer& buf) {
@@ -322,6 +325,8 @@ void Site_Manager::build_JSON_site(fmt::memory_buffer& buf) {
     build_JSON_site_operation(buf);
     bufJSON_AddId(buf, "configuration");
     build_JSON_site_configuration(buf);
+    bufJSON_AddId(buf, "input_sources");
+    build_JSON_site_input_sources(buf, nullptr);
 
     bufJSON_EndObject(buf);  // } JSON_object
 }
@@ -393,13 +398,15 @@ void Site_Manager::build_JSON_site_operation(fmt::memory_buffer& buf, const char
 }
 
 void Site_Manager::build_JSON_site_configuration(fmt::memory_buffer& buf, const char* const var) {
-    if (var == NULL)
+    if (var == NULL) {
         bufJSON_StartObject(buf);  // JSON_object {
+    }
     bufJSON_AddStringCheckVar(buf, "name", "Configuration", var);
 
     // config status
     // input source status
     input_source_status.add_to_JSON_buffer(buf, var);
+
     configured_primary.add_to_JSON_buffer(buf, var);
     // asset slews
     if (pAssets->get_num_ess_parsed() > 0) {
@@ -458,11 +465,25 @@ void Site_Manager::build_JSON_site_cops(fmt::memory_buffer& buf, const char* con
 }
 
 void Site_Manager::build_JSON_site_input_sources(fmt::memory_buffer& buf, const char* const var) {
-    if (var == NULL)
+    if (var == nullptr) {
         bufJSON_StartObject(buf);  // JSON_object {
-    input_sources.add_to_JSON_buffer(buf, var);
-    if (var == NULL)
+        bufJSON_AddStringCheckVar(buf, "name", "Input Sources", var);
+        for (auto& ctl : input_sources_controls) {
+            ctl.add_to_JSON_buffer(buf);
+        }
         bufJSON_EndObject(buf);  // } JSON_object
+    } else {
+        const size_t length = strnlen(var, MAX_VARIABLE_LENGTH);
+        if (length == MAX_VARIABLE_LENGTH) {
+            FPS_WARNING_LOG("Input Source variable id of longer than %d characters. This is not supported. Skipping.", MAX_VARIABLE_LENGTH);
+            return;
+        }
+        for (auto& ctl : input_sources_controls) {
+            if (strncmp(ctl.get_variable_id(), var, MAX_VARIABLE_LENGTH - 1) == 0) {
+                ctl.add_to_JSON_buffer(buf, var);
+            }
+        }
+    }
 }
 
 /**
@@ -665,9 +686,8 @@ bool Site_Manager::parse_variables(cJSON* variables_config_object) {
             // we cannot try to configure the rest of the variables if we have no field defaults
             // we should never hit this error, since field defaults should have valid default configuration
             return false;
-        } else {
-            is_default_JSON_field_defaults = true;
         }
+        is_default_JSON_field_defaults = true;
     }
 
     std::pair<Fims_Object, Config_Validation_Result> JSON_field_defaults_parse_result = parse_field_defaults(JSON_field_defaults);
@@ -693,9 +713,8 @@ bool Site_Manager::parse_variables(cJSON* variables_config_object) {
             // we cannot try to configure the rest of the variables if we don't know what the input sources list should be (even if it should be empty)
             // we should never hit this error, since input sources should have valid default configuration
             return false;
-        } else {
-            is_default_JSON_input_sources = true;
         }
+        is_default_JSON_input_sources = true;
     }
     Config_Validation_Result JSON_input_sources_parse_result = input_sources.parse_json_obj(JSON_input_sources);
     if (!JSON_input_sources_parse_result.is_valid_config) {
@@ -710,6 +729,58 @@ bool Site_Manager::parse_variables(cJSON* variables_config_object) {
         default_input_sources_description += "]";
         validation_result.INFO_details.push_back(
             Result_Details(fmt::format("Defaulting missing variable \"input_sources\" in variables.json configuration to: {}.", default_input_sources_description)));
+    }
+
+    // go ahead and resize the vector to be exactly what we need
+    input_sources_controls.resize(input_sources.input_sources.size());
+
+    // now that we have our input_sources we can configure the associated fims_objects
+    size_t i = 0;
+    for (const auto &in : input_sources.input_sources) {
+        std::string control_ui_type_str;
+        switch (in->control_ui_type) {
+            case UI_Type::ALARM:
+                control_ui_type_str = "alarm"; 
+                break;
+            case UI_Type::FAULT:
+                control_ui_type_str = "fault";
+                break;
+            case UI_Type::STATUS:
+                control_ui_type_str = "status";
+                break;
+            case UI_Type::CONTROL:
+                control_ui_type_str = "control";
+                break;
+            case UI_Type::NONE:
+                control_ui_type_str = "none";
+                break;
+        }
+        try {
+            auto buf = fmt::memory_buffer();
+            bufJSON_StartObject(buf);                                   // {
+            bufJSON_AddString(buf, "name", in->name.c_str());                   // "name": <name>,
+            bufJSON_AddString(buf, "type", "enum_slider");                      // "type": "enum_slider",
+            bufJSON_AddString(buf, "ui_type", control_ui_type_str.c_str());     // "ui_type": "control",
+            bufJSON_AddBool(buf, "value", in->enabled);                         // "value": <enabled>,
+            bufJSON_AddString(buf, "var_type", "Bool");                         // "var_type": "Bool",
+            bufJSON_AddBool(buf, "multiple_inputs", false);                     // "multiple_inputs": false 
+            bufJSON_EndObjectNoComma(buf);                              // }
+            input_sources_controls.at(i).set_ui_type(in->ui_type);
+            auto *cjson = cJSON_Parse(fmt::to_string(buf).c_str());
+            input_sources_controls.at(i).configure(
+                    in->uri_suffix, // this will become the variable id
+                    is_primary, 
+                    &input_sources, // not acutally used multiple_inputs is false
+                    cjson,
+                    field_defaults, 
+                    multi_input_command_vars // not acutally used multiple_inputs is false
+                    );
+            cJSON_Delete(cjson);
+        } catch (std::out_of_range &e) {
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Attempting to access out of bounds when configuring fimsctls for input_sources.")));
+            validation_result.is_valid_config = false;
+        }
+        i++;
     }
 
     // parse all feature-independent variables.json variables
@@ -1000,6 +1071,7 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         allow_ess_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
                         allow_solar_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
                         allow_gen_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
+
                     }
 
                     should_writeout_setpoint = true;
@@ -1069,12 +1141,21 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                             disable_flag.set_fims_bool(msg->pfrags[2], body_bool);
                             standby_flag.set_fims_bool(msg->pfrags[2], body_bool);
                             clear_faults_flag.set_fims_bool(msg->pfrags[2], body_bool);
+
                             // Support everything except clear faults
                             if (strncmp(msg->pfrags[2], "clear_faults_flag", strlen("clear_faults_flag")) != 0)
                                 should_writeout_setpoint = true;
                         }
-                    } else if (strncmp(msg->pfrags[1], "input_sources", strlen("input_sources")) == 0) {
-                        std::string new_selected_input = input_sources.set_source_enable_flag(msg->pfrags[2], body_bool);
+                    } 
+                    else if (strncmp(msg->pfrags[1], "input_sources", strlen("input_sources")) == 0) {
+                        std::string new_selected_input;
+                        new_selected_input = input_sources.set_source_enable_flag(msg->pfrags[2], body_bool);
+                        // sychronize the control bools
+                        for (size_t i = 0; i < input_sources.input_sources.size(); i++) {
+                            input_sources_controls.at(i).value.set(input_sources.input_sources.at(i)->enabled);
+                            FPS_DEBUG_LOG("input_sources_controls: %s: %d -- input_sources: %s: %d", input_sources_controls.at(i).get_name(), input_sources_controls.at(i).value.value_bool,
+                                    input_sources.input_sources.at(i)->name, input_sources.input_sources.at(i)->enabled);
+                        }
                         input_source_status.value.set(new_selected_input);
                         should_writeout_setpoint = true;
                     } else if ((strncmp(msg->pfrags[1], "configuration", strlen("configuration")) == 0)) {
@@ -1203,8 +1284,9 @@ void Site_Manager::send_FIMS(const char* method, const char* uri, const char* re
                 build_JSON_site_configuration(send_FIMS_buf, var);
             else if (strncmp(pfrags[1], "cops", strlen("cops")) == 0)
                 build_JSON_site_cops(send_FIMS_buf, var);
-            else if (strncmp(pfrags[1], "input_sources", strlen("input_sources")) == 0)
+            else if (strncmp(pfrags[1], "input_sources", strlen("input_sources")) == 0) {
                 build_JSON_site_input_sources(send_FIMS_buf, var);
+            }
         }
     }
     bufJSON_RemoveTrailingComma(send_FIMS_buf);
