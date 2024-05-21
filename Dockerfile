@@ -14,8 +14,8 @@ ARG verNum
 RUN yum makecache
 RUN yum clean all
 
-RUN yum install -y influxdb-1.8.10
-RUN yum install -y mongodb-org-6.0.4 mongodb-org-database-6.0.4 mongodb-org-database-tools-extras-6.0.4 mongodb-org-mongos-6.0.4 mongodb-org-server-6.0.4 mongodb-org-tools-6.0.4
+RUN yum install -y influxdb2-2.7.5
+RUN yum install -y mongodb-org-6.0.14 mongodb-org-database-6.0.14 mongodb-org-database-tools-extra-6.0.14 mongodb-org-mongos-6.0.14 mongodb-org-server-6.0.14 mongodb-org-tools-6.0.14
 RUN yum install -y $productName-$verNum
 # do not edit this <<<
 

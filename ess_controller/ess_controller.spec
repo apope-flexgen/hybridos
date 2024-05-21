@@ -1,3 +1,5 @@
+%define debug_package %{nil} # preserve debug information
+
 %define source %{_name}-%{_version}-%{_release}
 %define bin_dir /usr/local/bin
 %define lib_dir /usr/local/lib
