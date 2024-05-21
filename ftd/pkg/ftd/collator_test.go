@@ -1,6 +1,7 @@
 package ftd
 
 import (
+	"encoding/json"
 	"fims"
 	"reflect"
 	"testing"
@@ -331,6 +332,270 @@ func TestConformMessage(t *testing.T) {
 		}
 		if !reflect.DeepEqual(resultMsgBody, expectedResultMessages[i].Body) {
 			t.Errorf("Conformed message %v had unexpected body: %v", i, resultMsgBody)
+		}
+	}
+}
+
+func TestInsertBitStringBitFields(t *testing.T) {
+	uriCfg := UriConfig{
+		BitStringFields: []BitStringFieldConfig{
+			{
+				FieldName: "bms_faults",
+				BitStrings: []string{
+					"BMS_DC_Current_Max_Threshold_Exceeded",
+					"BMS_DC_Current_Min_Threshold_Exceeded",
+					"BMS_Max_Cell_Temperature_Threshold_Exceeded",
+					"BMS_Max_Cell_Voltage_Threshold_Exceeded",
+					"BMS_Min_Cell_Temperature_Threshold_Exceeded",
+					"BMS_Min_Cell_Voltage_Threshold_Exceeded",
+					"BMS_State_of_Health_Below_Threshold",
+					"BMS_DC_Voltage_Max_Threshold_Exceeded",
+					"BMS_DC_Voltage_Min_Threshold_Exceeded",
+					"BMS_SOC_Max_Threshold_Exceeded",
+					"BMS_SOC_Min_Threshold_Exceeded",
+					"BMS_Cell_Voltage_Delta_Max_Threshold_Exceeded",
+					"BMS_Cell_Temperature_Delta_Max_Threshold_Exceeded",
+					"BMS_Number_of_Racks_Online_Below_Min_Threshold",
+				},
+			},
+			{
+				FieldName: "status",
+				BitStrings: []string{
+					"StatusChange_Modifier",
+					"State_Online",
+					"State_On_Battery",
+					"State_Bypass",
+					"State_Output_Off",
+					"Fault_Alarm",
+					"Input_Bad",
+					"Test",
+					"Pending_Output_On",
+					"Pending_Output_Off",
+					"Commanded",
+					"Reserved_Address_0_Bit_11",
+					"Reserved_Address_0_Bit_12",
+					"High_Efficency",
+					"Informational_Alert",
+					"Fault",
+					"Reserved_Address_0_Bit_16",
+					"Reserved_Address_0_Bit_17",
+					"Reserved_Address_0_Bit_18",
+					"Mains_Bad_State",
+					"Fault_Recovery_State",
+					"Overload_State",
+					"Maintenance_Mode",
+				},
+			},
+			{
+				FieldName: "pcs_faults",
+				BitStrings: []string{
+					"PCS_Active_Power_Max_Threshold_Exceeded",
+					"PCS_DC_Voltage_Max_Threshold_Exceeded",
+					"PCS_DC_Voltage_Min_Threshold_Exceeded",
+				},
+			},
+			{
+				FieldName: "pcs_alarms",
+				BitStrings: []string{
+					"PCS_Active_Power_Max_Threshold_Exceeded",
+					"PCS_DC_Voltage_Max_Threshold_Exceeded",
+					"PCS_DC_Voltage_Min_Threshold_Exceeded",
+				},
+			},
+		},
+	}
+	testMessageBodyStrings := []string{
+		// message with no bitstrings
+		`{
+			"penguin": 341,
+			"name":    "Charon",
+			"gold":    41000
+		}`,
+		// message with modbus_client style bitstrings
+		`{
+			"penguin":    341,
+			"name":       "Charon",
+			"gold":       41000,
+			"bms_faults": [],
+			"status": [
+				{
+					"value":  22,
+					"string": "Maintenance Mode"
+				}
+			],
+			"pcs_faults": [
+				{
+					"value":  0,
+					"string": "PCS Active Power Max Threshold Exceeded"
+				},
+				{
+					"value":  1,
+					"string": "PCS DC Voltage Max Threshold Exceeded"
+				},
+				{
+					"value":  2,
+					"string": "PCS DC Voltage Min Threshold Exceeded"
+				}
+			]
+		}`,
+		// message with site_controller style bitstrings
+		`{
+			"penguin": 341,
+			"name":    "Charon",
+			"gold":    41000,
+			"bms_faults": {
+				"value":   4705,
+				"options": [
+					{
+						"name": "BMS DC Current Max Threshold Exceeded",
+						"return_value": 0
+					},
+					{
+						"name": "BMS Min Cell Voltage Threshold Exceeded",
+						"return_value": 5
+					},
+					{
+						"name": "BMS State of Health Below Threshold",
+						"return_value": 6
+					},
+					{
+						"name": "BMS SOC Max Threshold Exceeded",
+						"return_value": 9
+					},
+					{
+						"name": "BMS Cell Temperature Delta Max Threshold Exceeded",
+						"return_value": 12
+					}
+				]
+			},
+			"status": 0,
+			"pcs_faults": {
+				"value":   0,
+				"options": []
+			},
+			"pcs_alarms": {
+				"value":   6,
+				"options": [
+					{
+						"name": "PCS DC Voltage Max Threshold Exceeded",
+						"return_value": 1
+					},
+					{
+						"name": "PCS DC Voltage Min Threshold Exceeded",
+						"return_value": 2
+					}
+				]
+			}
+		}`,
+	}
+
+	// the new fields that are expected to have been added to the message bodies
+	expectedNewFields := []map[string]interface{}{
+		{
+			// none
+		},
+		{
+			"bms_faults__BMS_DC_Current_Max_Threshold_Exceeded":             float64(0),
+			"bms_faults__BMS_DC_Current_Min_Threshold_Exceeded":             float64(0),
+			"bms_faults__BMS_Max_Cell_Temperature_Threshold_Exceeded":       float64(0),
+			"bms_faults__BMS_Max_Cell_Voltage_Threshold_Exceeded":           float64(0),
+			"bms_faults__BMS_Min_Cell_Temperature_Threshold_Exceeded":       float64(0),
+			"bms_faults__BMS_Min_Cell_Voltage_Threshold_Exceeded":           float64(0),
+			"bms_faults__BMS_State_of_Health_Below_Threshold":               float64(0),
+			"bms_faults__BMS_DC_Voltage_Max_Threshold_Exceeded":             float64(0),
+			"bms_faults__BMS_DC_Voltage_Min_Threshold_Exceeded":             float64(0),
+			"bms_faults__BMS_SOC_Max_Threshold_Exceeded":                    float64(0),
+			"bms_faults__BMS_SOC_Min_Threshold_Exceeded":                    float64(0),
+			"bms_faults__BMS_Cell_Voltage_Delta_Max_Threshold_Exceeded":     float64(0),
+			"bms_faults__BMS_Cell_Temperature_Delta_Max_Threshold_Exceeded": float64(0),
+			"bms_faults__BMS_Number_of_Racks_Online_Below_Min_Threshold":    float64(0),
+			"status__StatusChange_Modifier":                                 float64(0),
+			"status__State_Online":                                          float64(0),
+			"status__State_On_Battery":                                      float64(0),
+			"status__State_Bypass":                                          float64(0),
+			"status__State_Output_Off":                                      float64(0),
+			"status__Fault_Alarm":                                           float64(0),
+			"status__Input_Bad":                                             float64(0),
+			"status__Test":                                                  float64(0),
+			"status__Pending_Output_On":                                     float64(0),
+			"status__Pending_Output_Off":                                    float64(0),
+			"status__Commanded":                                             float64(0),
+			"status__Reserved_Address_0_Bit_11":                             float64(0),
+			"status__Reserved_Address_0_Bit_12":                             float64(0),
+			"status__High_Efficency":                                        float64(0),
+			"status__Informational_Alert":                                   float64(0),
+			"status__Fault":                                                 float64(0),
+			"status__Reserved_Address_0_Bit_16":                             float64(0),
+			"status__Reserved_Address_0_Bit_17":                             float64(0),
+			"status__Reserved_Address_0_Bit_18":                             float64(0),
+			"status__Mains_Bad_State":                                       float64(0),
+			"status__Fault_Recovery_State":                                  float64(0),
+			"status__Overload_State":                                        float64(0),
+			"status__Maintenance_Mode":                                      float64(1),
+			"pcs_faults__PCS_Active_Power_Max_Threshold_Exceeded":           float64(1),
+			"pcs_faults__PCS_DC_Voltage_Max_Threshold_Exceeded":             float64(1),
+			"pcs_faults__PCS_DC_Voltage_Min_Threshold_Exceeded":             float64(1),
+		},
+		{
+			"bms_faults__BMS_DC_Current_Max_Threshold_Exceeded":             float64(1),
+			"bms_faults__BMS_DC_Current_Min_Threshold_Exceeded":             float64(0),
+			"bms_faults__BMS_Max_Cell_Temperature_Threshold_Exceeded":       float64(0),
+			"bms_faults__BMS_Max_Cell_Voltage_Threshold_Exceeded":           float64(0),
+			"bms_faults__BMS_Min_Cell_Temperature_Threshold_Exceeded":       float64(0),
+			"bms_faults__BMS_Min_Cell_Voltage_Threshold_Exceeded":           float64(1),
+			"bms_faults__BMS_State_of_Health_Below_Threshold":               float64(1),
+			"bms_faults__BMS_DC_Voltage_Max_Threshold_Exceeded":             float64(0),
+			"bms_faults__BMS_DC_Voltage_Min_Threshold_Exceeded":             float64(0),
+			"bms_faults__BMS_SOC_Max_Threshold_Exceeded":                    float64(1),
+			"bms_faults__BMS_SOC_Min_Threshold_Exceeded":                    float64(0),
+			"bms_faults__BMS_Cell_Voltage_Delta_Max_Threshold_Exceeded":     float64(0),
+			"bms_faults__BMS_Cell_Temperature_Delta_Max_Threshold_Exceeded": float64(1),
+			"bms_faults__BMS_Number_of_Racks_Online_Below_Min_Threshold":    float64(0),
+			"status__StatusChange_Modifier":                                 float64(0),
+			"status__State_Online":                                          float64(0),
+			"status__State_On_Battery":                                      float64(0),
+			"status__State_Bypass":                                          float64(0),
+			"status__State_Output_Off":                                      float64(0),
+			"status__Fault_Alarm":                                           float64(0),
+			"status__Input_Bad":                                             float64(0),
+			"status__Test":                                                  float64(0),
+			"status__Pending_Output_On":                                     float64(0),
+			"status__Pending_Output_Off":                                    float64(0),
+			"status__Commanded":                                             float64(0),
+			"status__Reserved_Address_0_Bit_11":                             float64(0),
+			"status__Reserved_Address_0_Bit_12":                             float64(0),
+			"status__High_Efficency":                                        float64(0),
+			"status__Informational_Alert":                                   float64(0),
+			"status__Fault":                                                 float64(0),
+			"status__Reserved_Address_0_Bit_16":                             float64(0),
+			"status__Reserved_Address_0_Bit_17":                             float64(0),
+			"status__Reserved_Address_0_Bit_18":                             float64(0),
+			"status__Mains_Bad_State":                                       float64(0),
+			"status__Fault_Recovery_State":                                  float64(0),
+			"status__Overload_State":                                        float64(0),
+			"status__Maintenance_Mode":                                      float64(0),
+			"pcs_faults__PCS_Active_Power_Max_Threshold_Exceeded":           float64(0),
+			"pcs_faults__PCS_DC_Voltage_Max_Threshold_Exceeded":             float64(0),
+			"pcs_faults__PCS_DC_Voltage_Min_Threshold_Exceeded":             float64(0),
+			"pcs_alarms__PCS_Active_Power_Max_Threshold_Exceeded":           float64(0),
+			"pcs_alarms__PCS_DC_Voltage_Max_Threshold_Exceeded":             float64(1),
+			"pcs_alarms__PCS_DC_Voltage_Min_Threshold_Exceeded":             float64(1),
+		},
+	}
+
+	for i, testMsgBodyString := range testMessageBodyStrings {
+		resultMsgBody := map[string]interface{}{}
+		json.Unmarshal([]byte(testMsgBodyString), &resultMsgBody)
+
+		expectedMsgBody := map[string]interface{}{}
+		json.Unmarshal([]byte(testMsgBodyString), &expectedMsgBody)
+		for key, val := range expectedNewFields[i] {
+			expectedMsgBody[key] = val
+		}
+
+		insertBitStringBitFields(&resultMsgBody, &uriCfg)
+		if !reflect.DeepEqual(resultMsgBody, expectedMsgBody) {
+			t.Errorf("Result message %v had unexpected body: %v", i, resultMsgBody)
 		}
 	}
 }

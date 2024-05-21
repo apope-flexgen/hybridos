@@ -32,7 +32,45 @@
             {
                 "uri": "/test",
                 "destination": "influx",
-                "measurement": "test"
+                "measurement": "test",
+                "bit_string_fields": [
+                    {
+                        "field": "bit_string_mc",
+                        "bit_strings": [
+                            "BMS_DC_Current_Max_Threshold_Exceeded",
+                            "BMS_DC_Current_Min_Threshold_Exceeded",
+                            "BMS_Max_Cell_Temperature_Threshold_Exceeded",
+                            "BMS_Max_Cell_Voltage_Threshold_Exceeded",
+                            "BMS_Min_Cell_Temperature_Threshold_Exceeded",
+                            "BMS_Min_Cell_Voltage_Threshold_Exceeded",
+                            "BMS_State_of_Health_Below_Threshold",
+                            "BMS_DC_Voltage_Max_Threshold_Exceeded",
+                            "BMS_DC_Voltage_Min_Threshold_Exceeded",
+                            "BMS_SOC_Max_Threshold_Exceeded",
+                            "BMS_SOC_Min_Threshold_Exceeded",
+                            "BMS_Cell_Voltage_Delta_Max_Threshold_Exceeded",
+                            "BMS_Cell_Temperature_Delta_Max_Threshold_Exceeded"
+                        ]
+                    },
+                    {
+                        "field": "bit_string_sc",
+                        "bit_strings": [
+                            "BMS_DC_Current_Max_Threshold_Exceeded",
+                            "BMS_DC_Current_Min_Threshold_Exceeded",
+                            "BMS_Max_Cell_Temperature_Threshold_Exceeded",
+                            "BMS_Max_Cell_Voltage_Threshold_Exceeded",
+                            "BMS_Min_Cell_Temperature_Threshold_Exceeded",
+                            "BMS_Min_Cell_Voltage_Threshold_Exceeded",
+                            "BMS_State_of_Health_Below_Threshold",
+                            "BMS_DC_Voltage_Max_Threshold_Exceeded",
+                            "BMS_DC_Voltage_Min_Threshold_Exceeded",
+                            "BMS_SOC_Max_Threshold_Exceeded",
+                            "BMS_SOC_Min_Threshold_Exceeded",
+                            "BMS_Cell_Voltage_Delta_Max_Threshold_Exceeded",
+                            "BMS_Cell_Temperature_Delta_Max_Threshold_Exceeded"
+                        ]
+                    }
+                ]
             },
             {
                 "uri": "/test_string",

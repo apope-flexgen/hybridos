@@ -215,7 +215,58 @@ func TestExtractRootConfiguration(t *testing.T) {
 						"status",
 						"voltage_l1_l2",
 						"voltage_l2_l3",
-						"voltage_l3_l1"
+						"voltage_l3_l1",
+						"bms_fault",
+						"pcs_fault",
+						"bms_alarms"
+					],
+					"bit_string_fields": [
+						{
+							"field": "bms_faults",
+							"bit_strings": [
+								"BMS_DC_Current_Max_Threshold_Exceeded",
+								"BMS_DC_Current_Min_Threshold_Exceeded",
+								"BMS_Max_Cell_Temperature_Threshold_Exceeded",
+								"BMS_Max_Cell_Voltage_Threshold_Exceeded",
+								"BMS_Min_Cell_Temperature_Threshold_Exceeded",
+								"BMS_Min_Cell_Voltage_Threshold_Exceeded",
+								"BMS_State_of_Health_Below_Threshold",
+								"BMS_DC_Voltage_Max_Threshold_Exceeded",
+								"BMS_DC_Voltage_Min_Threshold_Exceeded",
+								"BMS_SOC_Max_Threshold_Exceeded",
+								"BMS_SOC_Min_Threshold_Exceeded",
+								"BMS_Cell_Voltage_Delta_Max_Threshold_Exceeded",
+								"BMS_Cell_Temperature_Delta_Max_Threshold_Exceeded",
+								"BMS_Number_of_Racks_Online_Below_Min_Threshold"
+							]
+						},
+						{
+							"field": "pcs_faults",
+							"bit_strings": [
+								"PCS_Active_Power_Max_Threshold_Exceeded",
+                                "PCS_DC_Voltage_Max_Threshold_Exceeded",
+                                "PCS_DC_Voltage_Min_Threshold_Exceeded"
+							]
+						},
+						{
+							"field": "bms_alarms",
+							"bit_strings": [
+								"BMS_DC_Current_Max_Threshold_Exceeded",
+                                "BMS_DC_Current_Min_Threshold_Exceeded",
+                                "BMS_Max_Cell_Temperature_Threshold_Exceeded",
+                                "BMS_Max_Cell_Voltage_Threshold_Exceeded",
+                                "BMS_Min_Cell_Temperature_Threshold_Exceeded",
+                                "BMS_Min_Cell_Voltage_Threshold_Exceeded",
+                                "BMS_State_of_Health_Below_Threshold",
+                                "BMS_DC_Voltage_Max_Threshold_Exceeded",
+                                "BMS_DC_Voltage_Min_Threshold_Exceeded",
+                                "BMS_SOC_Max_Threshold_Exceeded",
+                                "BMS_SOC_Min_Threshold_Exceeded",
+                                "BMS_Cell_Voltage_Delta_Max_Threshold_Exceeded",
+                                "BMS_Cell_Temperature_Delta_Max_Threshold_Exceeded",
+                                "BMS_Number_of_Racks_Online_Below_Min_Threshold"
+							]
+						}
 					],
 					"group": "ess_group",
 					"destination": "influx",
@@ -322,5 +373,21 @@ func TestExtractRootConfiguration(t *testing.T) {
 	}
 	if cfg.Lane2.Uris[0].Fields[0] != "site_status" {
 		t.Error("Config lane 2 uris[0] fields[0] is not site_status")
+	}
+
+	// check that bit string configuration is parsed
+	for _, uriCfg := range cfg.Lane2.Uris {
+		if uriCfg.BaseUri == "/assets/ess" {
+			if len(uriCfg.BitStringFields) != 3 {
+				t.Errorf("Config lane 2 /assets/ess config does not have 3 bit string fields.")
+			} else if uriCfg.BitStringFields[2].FieldName != "bms_alarms" {
+				t.Errorf("Config lane 2 /assets/ess config 3rd bit string field is not bms_alarms.")
+			} else if len(uriCfg.BitStringFields[0].BitStrings) != 14 {
+				t.Errorf("Config lane 2 /assets/ess config 1st bit string field doesn't have 14 bitstrings.")
+			} else if uriCfg.BitStringFields[0].BitStrings[2] != "BMS_Max_Cell_Temperature_Threshold_Exceeded" {
+				t.Errorf("Config lane 2 /assets/ess config 1st bit string field 3rd bitstring is not expected value.")
+			}
+			break
+		}
 	}
 }

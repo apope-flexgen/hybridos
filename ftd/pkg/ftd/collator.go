@@ -107,6 +107,9 @@ func (collator *MsgCollator) collate(msg *fims.FimsMsg) {
 		bodyMap = newBody
 	}
 
+	// handle bitstring fields
+	insertBitStringBitFields(&bodyMap, uriFtdData.Config)
+
 	// get the codec either from group_method or the URI
 	encoder := uriFtdData.encoder
 	if len(uriFtdData.Config.Group) > 0 {
@@ -280,4 +283,76 @@ func conformMessage(msg *fims.FimsMsg) (conformedBody map[string]interface{}, co
 	}
 
 	return bodyMap, msg.Uri
+}
+
+// For each bit string field found in the mesage body, insert 1/0 integer fields corresponding to each configured bit
+func insertBitStringBitFields(msgBody *map[string]interface{}, uriCfg *UriConfig) {
+	for _, bitStringFieldCfg := range uriCfg.BitStringFields {
+		fieldValue, exists := (*msgBody)[bitStringFieldCfg.FieldName]
+		if exists {
+			// determine high bits
+			var bits uint64 = 0
+			switch typedFieldValue := fieldValue.(type) {
+			case []interface{}:
+				// handle modbus_client array format (array of {string, value} pairs)
+				for _, elem := range typedFieldValue {
+					elemMap, ok := elem.(map[string]interface{})
+					if !ok {
+						continue
+					}
+					elemValue, exists := elemMap["value"]
+					if !exists {
+						continue
+					}
+					floatElemValue, ok := elemValue.(float64) // this type cast may round
+					if !ok {
+						continue
+					}
+					intElemValue := int(floatElemValue)
+					bits |= (1 << (intElemValue % 64))
+				}
+			case float64:
+				// handle site_controller naked 0 format (just a 0)
+				bits = 0
+			case map[string]interface{}:
+				// handle site_controller options array format (options subfield array with {name, return_value} pairs)
+				options, exists := typedFieldValue["options"]
+				if !exists {
+					continue
+				}
+				optionsArray, ok := options.([]interface{})
+				if !ok {
+					continue
+				}
+				for _, elem := range optionsArray {
+					elemMap, ok := elem.(map[string]interface{})
+					if !ok {
+						continue
+					}
+					elemValue, exists := elemMap["return_value"]
+					if !exists {
+						continue
+					}
+					floatElemValue, ok := elemValue.(float64) // this type cast may round
+					if !ok {
+						continue
+					}
+					intElemValue := int(floatElemValue)
+					bits |= (1 << (intElemValue % 64))
+				}
+			default:
+				// if format is unrecognized then do not insert anything for this bitstring
+				continue
+			}
+
+			// insert bit fields (value has type float64 to conform with other numeric data)
+			for i, bitString := range bitStringFieldCfg.BitStrings {
+				if bits&(1<<i) != 0 {
+					(*msgBody)[bitStringFieldCfg.FieldName+"__"+bitString] = float64(1)
+				} else {
+					(*msgBody)[bitStringFieldCfg.FieldName+"__"+bitString] = float64(0)
+				}
+			}
+		}
+	}
 }

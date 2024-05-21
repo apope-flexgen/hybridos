@@ -484,9 +484,14 @@ func extractEncodableValue(value interface{}) interface{} {
 			return nil
 		}
 		return extractedVal
-	case []interface{}:
-		// arrays are currently non-encodable
+	case float64:
+		return value
+	case bool:
+		return value
+	case string:
+		return value
+	default:
+		// return nil for non-encodable values
 		return nil
 	}
-	return value
 }
