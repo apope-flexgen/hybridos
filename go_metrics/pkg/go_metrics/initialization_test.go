@@ -1675,6 +1675,100 @@ var CombineFlagsTestCase = []CombineFlagsTest{
 			},
 		},
 	},
+	{
+		outputName: "output9",
+		output: Output{
+			Name:  "output9",
+			Uri:   "/some/random/uri",
+			Flags: []string{"flat", "group4"},
+		},
+		publishUris: map[string][]string{
+			"/some/random/uri":          {"output1", "output3"},
+			"/some/random/uri[group1]":  {"output2"},
+			"/some/random/uri[output4]": {"output4"},
+			"/some/random/uri[group2]":  {"output5", "output6"},
+			"/some/random/uri[group3]":  {"output7", "output8"},
+			"/some/random/uri[group4]":  {"output9"},
+		},
+		pubUriFlags: map[string][]string{
+			"/some/random/uri":          {"clothed"},
+			"/some/random/uri[group1]":  {"clothed", "group1"},
+			"/some/random/uri[output4]": {"lonely"},
+			"/some/random/uri[group2]":  {"group2", "naked", "clothed"},
+			"/some/random/uri[group3]":  {"group3", "naked"},
+			"/some/random/uri[group4]":  {"group4", "flat"},
+		},
+		configErrors: []ErrorLocation{
+			{
+				[]JsonAccessor{
+					{
+						Key:   "outputs",
+						JType: simdjson.TypeObject,
+					},
+					{
+						Key:   "output6",
+						JType: simdjson.TypeObject,
+					},
+					{
+						Key:   "flags",
+						JType: simdjson.TypeArray,
+					},
+				},
+				fmt.Sprintf("output '%v' has format specified as both naked and clothed; defaulting to clothed", "output6"),
+			},
+			{
+				[]JsonAccessor{
+					{
+						Key:   "outputs",
+						JType: simdjson.TypeObject,
+					},
+					{
+						Key:   "output8",
+						JType: simdjson.TypeObject,
+					},
+					{
+						Key:   "flags",
+						JType: simdjson.TypeArray,
+					},
+				},
+				fmt.Sprintf("output '%v' has unspecified clothed/naked status; defaulting to naked (warning only)", "output8"),
+			},
+			{
+				[]JsonAccessor{
+					{
+						Key:   "outputs",
+						JType: simdjson.TypeObject,
+					},
+					{
+						Key:   "output1",
+						JType: simdjson.TypeObject,
+					},
+					{
+						Key:   "flags",
+						JType: simdjson.TypeArray,
+					},
+				},
+				fmt.Sprintf("output '%v' has unspecified clothed/naked status; defaulting to clothed (warning only)", "output1"),
+			},
+			{
+				[]JsonAccessor{
+					{
+						Key:   "outputs",
+						JType: simdjson.TypeObject,
+					},
+					{
+						Key:   "output9",
+						JType: simdjson.TypeObject,
+					},
+					{
+						Key:   "flags",
+						JType: simdjson.TypeArray,
+					},
+				},
+				fmt.Sprintf("output '%v' has missing flag 'lonely'; when using 'flat' the output must be 'lonely' as well; defaulting to nested formatting (warning only)", "output9"),
+			},
+		},
+	},
 }
 
 func TestCombineFlags(t *testing.T) {

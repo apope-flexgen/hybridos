@@ -3,8 +3,8 @@
         "input": { "uri": "/example/input", "type": "bool" }
     },
     "outputs": {
-        "output1": {"uri": "/some/output", "flags":["clothed", "post", "sparse", "no_heartbeat"], "attributes": {"source": "Alerts", "severity": 2}},
-        "output2": {"uri": "/some/output", "flags":["clothed", "post", "sparse", "no_heartbeat"], "attributes": {"something": "else"}}
+        "output1": {"uri": "/some/output", "flags":["clothed", "post", "sparse", "flat", "lonely", "no_heartbeat"], "attributes": {"source": "Alerts", "severity": 2}},
+        "output2": {"uri": "/some/output", "flags":["clothed", "post", "sparse", "flat", "lonely", "no_heartbeat"], "attributes": {"something": "else"}}
 	},
     "metrics": [
         {

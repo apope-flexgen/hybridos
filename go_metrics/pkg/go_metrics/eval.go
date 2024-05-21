@@ -1337,7 +1337,9 @@ func (exp *Expression) evaluateCallExpr(node *ast.CallExpr, state *map[string][]
 				}
 			}
 
-			result, err = Duration(expressionResult.b, durationArg.f, state)
+			// In case there are multiple duration functions, use the pointer value to create a unique id for this one
+			uniqueId := fmt.Sprintf("%p", node)
+			result, err = Duration(expressionResult.b, durationArg.f, state, uniqueId)
 			if err != nil {
 				return []Union{}, fmt.Errorf("failed to evaluate Duration function, %w", err)
 			}

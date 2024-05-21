@@ -7,26 +7,26 @@ Feature: subexpression_tracking
       """
       {"temp": 100}
       """
-    Then I expect a fims post to /some/output within 3 seconds containing
+    Then I expect a fims post to /some/output/output1 within 3 seconds containing
       """
-      {"output1":{"details":[{"message": "Temperature: 100 exceeded 90C", "timestamp":"any"}],"severity":2,"source":"Alerts","status":"active","value":true}}
+      {"details":[{"message": "Temperature: 100 exceeded 90C", "timestamp":"any"}],"name":"output1","severity":2,"source":"Alerts","status":"active","value":true}
       """
     When I send a fims pub to /example containing
       """
       {"high_temp_fault": true}
       """
-    Then I expect a fims post to /some/output within 3 seconds containing
+    Then I expect a fims post to /some/output/output1 within 3 seconds containing
       """
-      {"output1":{"details":[{"message": "There was a high temperature fault", "timestamp":"any"}],"severity":2,"source":"Alerts","status":"active","value":true}}
+      {"details":[{"message": "There was a high temperature fault", "timestamp":"any"}],"name":"output1","severity":2,"source":"Alerts","status":"active","value":true}
       """
     When I send a fims set to /some/output/output1 containing
       """
       {"reevaluate": true}
       """
     # Reevaluating causes both conditions to be triggered separately as new incidents
-    Then I expect a fims post to /some/output within 3 seconds containing
+    Then I expect a fims post to /some/output/output1 within 3 seconds containing
       """
-      {"output1":{"details":[{"message": "Temperature: 100 exceeded 90C", "timestamp":"any"}, {"message": "There was a high temperature fault", "timestamp":"any"}],"severity":2,"source":"Alerts","status":"active","value":true}}
+      {"details":[{"message": "Temperature: 100 exceeded 90C", "timestamp":"any"}, {"message": "There was a high temperature fault", "timestamp":"any"}],"name":"output1","severity":2,"source":"Alerts","status":"active","value":true}
       """
     When I send a fims pub to /example containing
       """
@@ -39,8 +39,8 @@ Feature: subexpression_tracking
       """
       {"high_temp_fault": false}
       """
-    Then I expect a fims post to /some/output within 3 seconds containing
+    Then I expect a fims post to /some/output/output1 within 3 seconds containing
       """
-      {"output1":{"details":[],"severity":2,"source":"Alerts","status":"inactive","value":false}}
+      {"details":[],"name":"output1","severity":2,"source":"Alerts","status":"inactive","value":false}
       """
     

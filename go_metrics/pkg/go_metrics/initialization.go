@@ -2543,6 +2543,9 @@ func checkMixedFlags(currentJsonLocation []JsonAccessor) []JsonAccessor {
 			} else if stringInSlice(PubUriFlags[uriGroup], "naked") && !stringInSlice(output.Flags, "clothed") && !stringInSlice(output.Flags, "naked") {
 				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("output '%v' has unspecified clothed/naked status; defaulting to naked (warning only)", outputName))
 			}
+			if stringInSlice(output.Flags, "flat") && !stringInSlice(output.Flags, "lonely") {
+				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("output '%v' has missing flag 'lonely'; when using 'flat' the output must be 'lonely' as well; defaulting to nested formatting (warning only)", outputName))
+			}
 		}
 		currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
 		currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)

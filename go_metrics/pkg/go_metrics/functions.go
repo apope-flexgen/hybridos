@@ -2061,25 +2061,30 @@ func In(compareVal Union, argVals []Union) (Union, error) {
 // expressionResult: The result of the expression to monitor
 // durationSecs: The duration for which the expression must be true
 // state: Any auxiliary data relevant to the metric
+// id: Unique id based on the pointer value of this duration. This is used in case multiple duration functions exists
 // Returns true/false Union and errors present
-func Duration(expressionResult bool, durationSecs float64, state *map[string][]Union) (Union, error) {
+func Duration(expressionResult bool, durationSecs float64, state *map[string][]Union, id string) (Union, error) {
 	if state == nil {
 		return Union{}, fmt.Errorf("do not have a defined state for Duration")
 	}
 
+	// Setup keys for previous value and trigger time using the unique id
+	previousValue := id + "previousValue"
+	firstTriggered := id + "firstTriggered"
+
 	// Ensure the previous value and timestamp exist
-	if len((*state)["previousValue"]) == 0 {
+	if len((*state)[previousValue]) == 0 {
 		// previousValue tracks the last value of the expression
-		(*state)["previousValue"] = []Union{{tag: BOOL, b: false}}
+		(*state)[previousValue] = []Union{{tag: BOOL, b: false}}
 	}
-	if len((*state)["firstTriggered"]) == 0 {
+	if len((*state)[firstTriggered]) == 0 {
 		// firstTriggered tracks the timestamp (uint milliseconds) when the expression was first true
-		(*state)["firstTriggered"] = []Union{{tag: INT, i: 0}}
+		(*state)[firstTriggered] = []Union{{tag: INT, i: 0}}
 	}
 
 	// Before exiting, always update the previous value with the current value
 	defer func() {
-		(*state)["previousValue"][0] = Union{tag: BOOL, b: expressionResult}
+		(*state)[previousValue][0] = Union{tag: BOOL, b: expressionResult}
 	}()
 
 	if !expressionResult {
@@ -2089,18 +2094,18 @@ func Duration(expressionResult bool, durationSecs float64, state *map[string][]U
 
 	// If the expression is true, check how long it has been true
 	// Reset the trigger time if the expression has changed value
-	if expressionResult != (*state)["previousValue"][0].b {
+	if expressionResult != (*state)[previousValue][0].b {
 		updated_timestamp, _ := CurrentTimeMilliseconds()
-		(*state)["firstTriggered"][0] = Union{tag: INT, i: updated_timestamp.i}
+		(*state)[firstTriggered][0] = Union{tag: INT, i: updated_timestamp.i}
 	}
 	// Compare the time difference (in milliseconds) to the given duration (in seconds)
-	time_since_trigger, err := MillisecondsSince((*state)["firstTriggered"][0])
+	time_since_trigger, err := MillisecondsSince((*state)[firstTriggered][0])
 	if err != nil {
 		attempted_resolution := ""
 		// If there is an overflow error, attempt to resolve by resetting the timestamp
 		if strings.Contains(err.Error(), "overflow") {
 			updated_timestamp, _ := CurrentTimeMilliseconds()
-			(*state)["firstTriggered"][0] = Union{tag: INT, i: updated_timestamp.i}
+			(*state)[firstTriggered][0] = Union{tag: INT, i: updated_timestamp.i}
 			attempted_resolution = " Manually reset trigger time for reevaluation"
 		}
 		return Union{}, fmt.Errorf("error checking Duration: %v.%s", err, attempted_resolution)
