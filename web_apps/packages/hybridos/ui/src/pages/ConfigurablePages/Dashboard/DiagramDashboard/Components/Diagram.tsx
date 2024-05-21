@@ -7,7 +7,7 @@ import {
 } from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.constants';
 import { DiagramProps } from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.types';
 
-const Diagram: React.FC<DiagramProps> = ({ site, nodes, edges }: DiagramProps) => {
+const Diagram: React.FC<DiagramProps> = ({ nodes, edges }: DiagramProps) => {
   const [diagramInstance, setDiagramInstance] = useState<ReactFlowInstance>();
 
   const nodeTypes = {
@@ -16,7 +16,7 @@ const Diagram: React.FC<DiagramProps> = ({ site, nodes, edges }: DiagramProps) =
 
   useEffect(() => {
     setTimeout(() => diagramInstance?.fitView(), resizeDiagramTimeout);
-  }, [site]);
+  }, [nodes]);
 
   return (
     <ReactFlow

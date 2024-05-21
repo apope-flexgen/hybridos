@@ -2552,78 +2552,6 @@
 				]
 			}
 		},
-		"/api/dashboard/site-diagram": {
-			"get": {
-				"operationId": "getSiteDiagram",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SiteDiagramResponse"
-								}
-							}
-						}
-					},
-					"default": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/DefaultApiError"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"dashboard"
-				],
-				"security": [
-					{
-						"bearerAuth": []
-					}
-				]
-			}
-		},
-		"/api/dashboard/fleet-site-diagrams": {
-			"get": {
-				"operationId": "getFleetSiteDiagrams",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/FleetSiteDiagramsResponse"
-								}
-							}
-						}
-					},
-					"default": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/DefaultApiError"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"dashboard"
-				],
-				"security": [
-					{
-						"bearerAuth": []
-					}
-				]
-			}
-		},
 		"/api/sitestatus": {
 			"get": {
 				"operationId": "getSiteStatus",
@@ -2981,6 +2909,35 @@
 				},
 				"tags": [
 					"system-status"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
+		"/api/site-diagram/fleet-site-ids": {
+			"get": {
+				"operationId": "getSiteDiagram",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"site-diagram"
 				],
 				"security": [
 					{
@@ -4791,30 +4748,6 @@
 				},
 				"required": [
 					"count",
-					"data"
-				]
-			},
-			"SiteDiagramResponse": {
-				"type": "object",
-				"properties": {
-					"tree": {
-						"type": "object",
-						"description": "Nested structure that describes the topology of the diagram"
-					}
-				},
-				"required": [
-					"tree"
-				]
-			},
-			"FleetSiteDiagramsResponse": {
-				"type": "object",
-				"properties": {
-					"data": {
-						"type": "object",
-						"description": "Diagrams for each site provided in configuration, indexed by site name"
-					}
-				},
-				"required": [
 					"data"
 				]
 			},

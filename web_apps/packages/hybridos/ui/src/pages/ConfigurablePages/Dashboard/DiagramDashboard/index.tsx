@@ -1,7 +1,13 @@
 import {
-  Box, CardContainer, CardRow, Select, ThemeType, Typography,
+  Box,
+  CardContainer,
+  CardRow,
+  PageLoadingIndicator,
+  Select,
+  ThemeType,
+  Typography,
 } from '@flexgen/storybook';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Edge, Node, ReactFlowProvider, useEdgesState, useNodesState,
 } from 'reactflow';
@@ -9,14 +15,13 @@ import { useAppContext } from 'src/App/App';
 import { FLEET_MANAGER } from 'src/components/BaseApp';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import Diagram from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/Components/Diagram';
-import {
-  FLEET_SITE_DIAGRAMS_URL,
-  SITE_DIAGRAM_URL,
-} from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.constants';
+import { FLEET_SITE_IDS_URL } from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.constants';
 import {
   generateDiagramNodes,
   getLayoutElements,
 } from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.helpers';
+import QueryService from 'src/services/QueryService';
+
 import { useTheme } from 'styled-components';
 import {
   boxSx, cardContainerSx, diagramBoxSx, titleSelectSx,
@@ -36,9 +41,10 @@ const DiagramDashboard = () => {
   const [diagramData, setDiagramData] = useState<DiagramItem>();
   const [nodes, setNodes] = useNodesState<Node[]>([]);
   const [edges, setEdges] = useEdgesState<Edge[]>([]);
-  const [siteConfigs, setSiteConfigs] = useState<FleetConfigs>({});
+  const [, setSiteConfigs] = useState<FleetConfigs>({});
   const [sitesMenu, setSitesMenu] = useState<string[]>([]);
   const [selectedSite, setSelectedSite] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const axiosInstance = useAxiosWebUIInstance();
   const theme = useTheme() as ThemeType;
@@ -46,30 +52,50 @@ const DiagramDashboard = () => {
 
   useEffect(() => {
     if (product === FLEET_MANAGER) {
-      axiosInstance.get(FLEET_SITE_DIAGRAMS_URL).then((res) => {
-        const formattedSiteNames = Object.keys(res.data)
+      axiosInstance.get(FLEET_SITE_IDS_URL).then((res) => {
+        const formattedSiteNames = res.data
           .sort((a, b) => a.localeCompare(b))
           .map((name: string) => name.replace(/\b\w/g, (char: string) => char.toUpperCase()));
         setSiteConfigs(res.data);
         setSitesMenu(formattedSiteNames);
         setSelectedSite(formattedSiteNames[0]);
       });
-    } else {
-      axiosInstance.get(SITE_DIAGRAM_URL).then((res) => {
-        setDiagramData(res.data.tree.root);
-      });
     }
-  }, [axiosInstance]);
+  }, [axiosInstance, product]);
+
+  const handleDataFromSocket = useCallback((newDataFromSocket: any) => {
+    if (newDataFromSocket.hasStatic) {
+      setDiagramData(newDataFromSocket.tree);
+    }
+    console.log(newDataFromSocket);
+  }, []);
 
   useEffect(() => {
-    setDiagramData(siteConfigs[selectedSite.toLocaleLowerCase()]?.tree.root);
+    if (product !== FLEET_MANAGER) {
+      QueryService.getSiteDiagram(null, handleDataFromSocket);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (product === FLEET_MANAGER && selectedSite) {
+      setIsLoading(true);
+      QueryService.getSiteDiagram(selectedSite, handleDataFromSocket);
+    }
   }, [selectedSite]);
+
+  useEffect(
+    () => () => {
+      QueryService.cleanupSocket();
+    },
+    [selectedSite],
+  );
 
   useEffect(() => {
     const { nodes: diagramNodes, edges: diagramEdges } = generateDiagramNodes(theme, diagramData);
     const layoutElements = getLayoutElements(diagramNodes, diagramEdges);
     setNodes(layoutElements.nodes);
     setEdges(layoutElements.edges);
+    setIsLoading(false);
   }, [diagramData]);
 
   return (
@@ -92,6 +118,7 @@ const DiagramDashboard = () => {
         </CardRow>
       )}
       <Box sx={product === FLEET_MANAGER ? diagramBoxSx(theme) : boxSx}>
+        <PageLoadingIndicator isLoading={isLoading} type="primary" />
         <ReactFlowProvider>
           <Diagram site={selectedSite} nodes={nodes} edges={edges} />
         </ReactFlowProvider>

@@ -56,6 +56,14 @@ class QueryService {
     this.realTimeService.send('dashboard', DashboardLayout.CARD, 'cardDashboard');
   };
 
+  getSiteDiagram: (siteId: string | null, listenerFunction: (data: any) => void) => void = async (
+    siteId: string | null,
+    listenerFunction: (data: any) => void,
+  ) => {
+    this.realTimeService.listen(listenerFunction, 'siteDiagram');
+    this.realTimeService.send('siteDiagram', siteId, 'siteDiagram');
+  };
+
   getSiteStatusBar: (listenerFunction: (data: any) => void) => void = async (
     listenerFunction: (data: any) => void,
   ) => {

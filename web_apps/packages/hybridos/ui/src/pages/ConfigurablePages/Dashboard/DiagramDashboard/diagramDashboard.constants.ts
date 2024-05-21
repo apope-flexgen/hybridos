@@ -1,5 +1,5 @@
 export const SITE_DIAGRAM_URL = '/dashboard/site-diagram';
-export const FLEET_SITE_DIAGRAMS_URL = '/dashboard/fleet-site-diagrams';
+export const FLEET_SITE_IDS_URL = '/site-diagram/fleet-site-ids';
 
 export enum ASSET {
   ESS = 'ESS',

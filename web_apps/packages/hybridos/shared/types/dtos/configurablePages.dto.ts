@@ -1,5 +1,6 @@
 export type ConfigurablePageDTO = {
   hasStatic: boolean;
+  tree?: TreeConfig;
   hasBatchControls?: boolean;
   hasMaintenanceActions?: boolean;
   assetKey?: string;
@@ -8,9 +9,21 @@ export type ConfigurablePageDTO = {
   };
 };
 
+export class TreeConfig implements TreeNode {
+  id?: string
+  asset_type?: string
+  children?: TreeConfig[]
+}
+
+export interface TreeNode {
+  id?: string;
+  children?: TreeConfig[];
+}
+
 export type DisplayGroupDTO = {
   displayName?: string;
   tabKey?: string;
+  treeId?: string;
   batteryViewStatus?: {
     [componentID: string]: StatusComponentDTO;
   };
@@ -71,6 +84,7 @@ export type StatusComponentDTO = {
     label?: string;
     unit?: string;
     variant?: DataPointVariantType;
+    type?: string;
   };
   state?: {
     value?: ValueType;

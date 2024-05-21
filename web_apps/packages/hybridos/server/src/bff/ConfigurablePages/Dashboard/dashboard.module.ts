@@ -3,11 +3,10 @@ import { DashboardGateway } from './dashboard.gateway';
 import { DashboardService } from './dashboard.service';
 import { FimsModule } from '../../../fims/fims.module';
 import { DBIModule } from 'src/dbi/dbi.module';
-import { DashboardController } from './dashboard.controller';
 
 @Module({
   imports: [FimsModule, DBIModule],
-  controllers: [DashboardController],
+  controllers: [],
   providers: [DashboardService, DashboardGateway],
 })
 export class DashboardModule {}

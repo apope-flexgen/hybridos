@@ -8,6 +8,7 @@ import { ErcotOverrideModule } from './ErcotOverride/ercotOverride.module';
 import { LayoutsModule } from './Layouts/layouts.module';
 import { SystemStatusModule } from './SystemStatus/systemStatus.module';
 import { AlertsModule } from './Alerts/alerts.module';
+import { SiteDiagramModule } from './ConfigurablePages/SiteDiagram/siteDiagram.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AlertsModule } from './Alerts/alerts.module';
     ErcotOverrideModule,
     LayoutsModule,
     SystemStatusModule,
+    SiteDiagramModule,
   ],
   controllers: [],
   providers: [],
