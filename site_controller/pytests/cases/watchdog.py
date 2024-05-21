@@ -84,6 +84,25 @@ def config_edit(grab_prior: bool):
     ]
     return edits
 
+def config_edit_test_2(grab_prior: bool):
+    global prior_config
+    if grab_prior:
+        prior_config = fims_get("/dbi/site_controller/sequences/sequences/Ready/paths/0/active_faults")
+    new_sequences_faults = [
+            {
+                "name": "/site/watchdog_alarm"
+            }
+        ]
+
+    edits: list[dict] = [
+        {
+            "uri": "/dbi/site_controller/sequences/sequences/Ready/paths/0/active_faults",
+            "up": new_sequences_faults,
+            "down": prior_config,
+        }
+    ]
+    return edits
+
 stdout = []
 def listen_within(min: int, max: int):
     """listen for all heartbeats and make sure it's within bounds"""
@@ -122,10 +141,15 @@ def listen_within(min: int, max: int):
             heartbeat_value = reply.body["heartbeat_counter"]["value"]
             assert(not (heartbeat_value > max or heartbeat_value < min))
 
+def clear_site_faults():
+    sleep(1.5)
+    fims_set("/site/operation/clear_faults_flag", True)
+    sleep(1.5)
+
 #####################################################################TESTS########################################################################
 
-@ fixture
-@ parametrize("test", [
+@fixture
+@parametrize("test", [
     # place all assets in maint_mode
     Setup(
         "Test maint mode interactions",
@@ -210,11 +234,57 @@ def test_watchdog_when_in_maintenance(test):
         {},
         [],
         post_lambda=[
-            lambda: Site_Controller_Instance.get_instance(
-            ).mig.download(config_edit(False)),
+            lambda: Site_Controller_Instance.get_instance().mig.download(config_edit(False)),
             lambda: Site_Controller_Instance.get_instance().restart_site_controller()
         ]
     )
 ])
 def test_watchdog_fims_endpoints(test):
+    return test
+
+@fixture
+@parametrize("test", [
+    # place all assets in maint_mode
+    Setup(
+        "test_watchdog_alarm_triggers_sequence_level_fault",
+        {
+
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/site/operation/active_faults", 0, wait_secs=10), # wait here is to avoid dbi replay thingy overwriting my later steps
+        ],
+        pre_lambda=[
+            lambda: Site_Controller_Instance.get_instance().mig.upload(config_edit_test_2(True)),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller(auto_restart=False)
+        ]
+    ),
+    Steps(
+        {
+            "/features/site_operation/watchdog_enable": True,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/site_operation/watchdog_enable", True, wait_secs=0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/site/operation/active_faults", 2, wait_secs=10),
+        ],
+        pre_lambda=[
+            lambda: pause_psm()
+        ]   
+    ),
+    Teardown(
+        {
+            "/features/site_operation/watchdog_enable": False,
+        },
+        [
+        ],
+        pre_lambda=[
+            lambda: resume_psm(),
+            lambda: clear_site_faults(), 
+        ],
+        post_lambda=[
+            lambda: Site_Controller_Instance.get_instance().mig.download(config_edit_test_2(False)),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller(),
+        ]
+    )
+])
+def test_watchdog_alarm_triggers_sequence_level_fault(test):
     return test

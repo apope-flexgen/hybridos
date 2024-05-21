@@ -102,7 +102,6 @@ public:
     float additional_load_compensation;  // Tracks load compensation not included in initial asset requests or feature demand
     float feature_kW_demand;             // Demand commanded from the active power feature. + means power flowing OUT of site. - means power flowing INTO site.
     float site_kW_demand;                // Demand after standalone feature modifications
-    float prev_site_kW_demand;           // Last unique site demand
     float uncorrected_site_kW_demand;    // Preserved reference to the demand prior to any POI corrections (CLC, watt-watt)
     float site_kVAR_demand;              // Demand kVAR for assets
     float total_potential_kVAR;

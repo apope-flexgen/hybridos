@@ -91,8 +91,21 @@ void Path::handle_site_check_alerts(alert_type type_of_alert) {
         // The following all use site fault 1 or site alarm 1, depending on alert type being checked
         else if (name_fragments.size() >= 2) {
             std::string asset_cmd = name_fragments[1];
-            // asset faults/alarms
-            if (name_fragments[0] == "assets") {
+            // site faults/alarms
+            if (name_fragments[0] == "site") {
+                if (name_fragments[1] == "watchdog_alarm") {
+                    if (site->get_active_alarms(4)) {
+                        num_active_alerts++;
+                        if (type_of_alert == FAULT_ALERT ? !site->get_active_faults(1) : !site->get_active_alarms(1)) {
+                            // print and raise alarm/fault based on type
+                            FPS_ERROR_LOG("watchdog_alarm %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: watchdog_alarm detected", alert_names_upper[type_of_alert]);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? site->set_faults(1) : site->set_alarms(1);
+                        }
+                    }
+                }
+            } else if (name_fragments[0] == "assets") { // asset faults/alarms
                 //
                 // ESS SECTION
                 //
