@@ -989,4 +989,3 @@ func new_send_bytes(fd int, method string, uri string, replyto string, process_n
 
 	return writevNB(fd, send_bufs[:send_amount])
 }
-

@@ -25,33 +25,35 @@ func delete_string_at_index(slice []string, index int) []string {
 }
 
 // extract filters
-func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
+func ExtractFilters(filters map[string]interface{}, new_filters []string, new_filters_starting_index int, new_inputs []string, overwrite_conflicting_configs bool, configId string) (map[string]Filter, bool) {
+	if len(FiltersList) == new_filters_starting_index {
+		return nil, false
+	}
 	wasError := false
 	discardFilter := false
 	output := make(map[string]Filter, len(filters))
 	if FilterScope == nil {
 		FilterScope = make(map[string][]string, 0)
 	}
-	for filter := range filters {
+	for _, filter := range new_filters {
 		FilterScope[filter] = []string{}
 	}
-	filtersListCopy := make([]string, len(FiltersList))
-	copy(filtersListCopy, FiltersList)
-	currentJsonLocation := make([]JsonAccessor, 0)
-	currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "filters", JType: simdjson.TypeObject})
+	filtersListCopy := make([]string, len(FiltersList)-new_filters_starting_index)
+	copy(filtersListCopy, FiltersList[new_filters_starting_index:])
+	configErrorLocs.addKey("filters", simdjson.TypeObject)
 	// get the filter expressions
 	for i, filter_name := range filtersListCopy {
 		filter := filters[filter_name]
-		currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: filter_name, JType: simdjson.TypeObject})
-		if _, ok := InputScope[filter_name]; ok {
-			logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("filter variable name '%s' already exists in scope; discarding filter", filter_name))
+		configErrorLocs.addKey(filter_name, simdjson.TypeObject)
+		if _, ok := InputScope[filter_name]; ok && !overwrite_conflicting_configs {
+			configErrorLocs.logError(fmt.Errorf("filter variable name '%s' already exists in scope; discarding filter", filter_name))
 			wasError = true
+			configErrorLocs.removeLevel()
 			continue
 		}
-		inputs := make([]string, 0)
-		for key := range InputScope {
-			inputs = append(inputs, key)
-		}
+		inputs := make([]string, len(new_inputs))
+		copy(inputs, new_inputs)
+
 		for key := range FilterScope {
 			if filter_name != key && !stringInSlice(inputs, key) {
 				inputs = append(inputs, key)
@@ -63,22 +65,22 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 		switch x := filter.(type) {
 		case string:
 			stringExpressions := strings.Split(x, " | ")
-			err := getFilterExpressions(stringExpressions, &filterObject)
+			err := getFilterExpressions(stringExpressions, &filterObject, configId)
 			if err != nil {
 				discardFilter = true
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; discarding filter", err))
+				configErrorLocs.logError(fmt.Errorf("%v; discarding filter", err))
 				wasError = true
 			}
 		case []string:
-			err := getFilterExpressions(x, &filterObject)
+			err := getFilterExpressions(x, &filterObject, configId)
 			if err != nil {
 				discardFilter = true
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; discarding filter", err))
+				configErrorLocs.logError(fmt.Errorf("%v; discarding filter", err))
 				wasError = true
 			}
 		default:
 			discardFilter = true
-			logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("unhandled filter expression; discarding filter"))
+			configErrorLocs.logError(fmt.Errorf("unhandled filter expression; discarding filter"))
 			wasError = true
 
 		} // end switch
@@ -86,8 +88,9 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 		if discardFilter {
 			delete(MetricsConfig.Filters, filter_name)
 			delete(FilterScope, filter_name)
-			delete_string_at_index(FiltersList, i)
+			FiltersList = delete_string_at_index(FiltersList, i+new_filters_starting_index)
 			discardFilter = false
+			configErrorLocs.removeLevel()
 			continue
 		}
 
@@ -96,17 +99,17 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 		// apply static filters where we can
 		for p, expression := range filterObject.StaticFilterExpressions {
 			if expression.IsRegex {
-				intermediateInputs, err = EvaluateRegexFilter(&expression, intermediateInputs)
+				intermediateInputs, err = EvaluateRegexFilter(&expression, intermediateInputs, configId)
 				if err != nil {
 					discardFilter = true
-					logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; discarding filter", err))
+					configErrorLocs.logError(fmt.Errorf("%v; discarding filter", err))
 					wasError = true
 					break
 				}
 			} else if expression.IsTypeFilter {
 				intermediateInputs, err = EvaluateTypeFilter(&expression, intermediateInputs)
 				if err != nil {
-					logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; discarding filter", err))
+					configErrorLocs.logError(fmt.Errorf("%v; discarding filter", err))
 					wasError = true
 					discardFilter = true
 					break
@@ -140,8 +143,9 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 		if discardFilter {
 			delete(MetricsConfig.Filters, filter_name)
 			delete(FilterScope, filter_name)
-			delete_string_at_index(FiltersList, i)
+			FiltersList = delete_string_at_index(FiltersList, i+new_filters_starting_index)
 			discardFilter = false
+			configErrorLocs.removeLevel()
 			continue
 		}
 
@@ -159,14 +163,15 @@ func ExtractFilters(filters map[string]interface{}) (map[string]Filter, bool) {
 		}
 		FilterScope[filter_name] = make([]string, len(intermediateInputs))
 		copy(FilterScope[filter_name], intermediateInputs)
-		currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+		configErrorLocs.removeLevel()
 	}
+	configErrorLocs.removeLevel()
 
 	return output, wasError
 }
 
 // get expressions
-func getFilterExpressions(stringExpressions []string, filterObject *Filter) error {
+func getFilterExpressions(stringExpressions []string, filterObject *Filter, configId string) error {
 	staticFilter := true
 	for _, exp := range stringExpressions {
 		var expression *Expression
@@ -174,22 +179,24 @@ func getFilterExpressions(stringExpressions []string, filterObject *Filter) erro
 			staticFilter = true
 			start := strings.Index(exp, "(")
 			end := strings.Index(exp, ")")
+			string_expression := exp[start+1 : end]
 			expression = &Expression{
-				String:  exp[start+1 : end],
+				String:  string_expression,
 				IsRegex: true,
 			}
 		} else if strings.Contains(strings.ToLower(exp), "type(") {
 			staticFilter = true
 			start := strings.Index(exp, "(")
 			end := strings.Index(exp, ")")
+			string_expression := exp[start+1 : end]
 			expression = &Expression{
-				String:       exp[start+1 : end],
+				String:       string_expression,
 				IsTypeFilter: true,
 			}
 		} else {
 			staticFilter = false
 			var err error
-			expression, err = Parse(exp)
+			expression, err = Parse(exp, configId)
 			if err != nil {
 				return err
 			}
@@ -204,7 +211,7 @@ func getFilterExpressions(stringExpressions []string, filterObject *Filter) erro
 }
 
 // string filters are for regexp only right now...
-func EvaluateRegexFilter(expression *Expression, inputs []string) ([]string, error) {
+func EvaluateRegexFilter(expression *Expression, inputs []string, configId string) ([]string, error) {
 	output := make([]string, 0)
 	regEx, err := regexp.Compile(expression.String)
 	if err != nil {
@@ -212,7 +219,11 @@ func EvaluateRegexFilter(expression *Expression, inputs []string) ([]string, err
 	}
 
 	for _, input := range inputs {
-		if match := regEx.FindString(input); len(match) > 0 {
+		inputWithoutSuffix := input
+		if len(configId) > 0 {
+			inputWithoutSuffix = strings.TrimSuffix(input, "_"+configId)
+		}
+		if match := regEx.FindString(inputWithoutSuffix); len(match) > 0 {
 			if _, ok := MetricsConfig.Attributes[input]; !ok {
 				output = append(output, input)
 			}
@@ -235,7 +246,7 @@ func EvaluateTypeFilter(expression *Expression, inputs []string) ([]string, erro
 	}
 	for _, input := range inputs {
 		if MetricsConfig.Inputs[input].Type == expression.String {
-			output = append(output, MetricsConfig.Inputs[input].Name)
+			output = append(output, input)
 		}
 	}
 	expression.Vars = make([]string, len(output))

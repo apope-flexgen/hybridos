@@ -1344,7 +1344,7 @@ func TestParse(t *testing.T) {
 	}
 	var err error
 	for _, test := range ParseTests {
-		output, err = Parse(test.equation)
+		output, err = Parse(test.equation, "")
 		if err == nil && test.errorExpected {
 			t.Errorf("%s: no error when there should have been\n", test.equation)
 			continue

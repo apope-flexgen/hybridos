@@ -175,7 +175,7 @@ func TestEvalFilter(t *testing.T) {
 	var output []string
 	var err error
 	for _, test := range EvalFilterTests {
-		exp, _ := Parse(test.inputExpression)
+		exp, _ := Parse(test.inputExpression, "")
 		output, err = EvaluateDynamicFilter(&(exp.Ast), inputs)
 		if err == nil && test.errorExpected {
 			t.Errorf("%s: no error when there should have been\n", test.inputExpression)

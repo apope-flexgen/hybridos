@@ -39,7 +39,7 @@ function updateGoMetricsConfig(alert, templates) {
     if (alert.deleted) {
         fims.send({
             method: 'del',
-            uri: `/go_metrics/alerts/configuration/${alert.id}`,
+            uri: `/go_metrics/configuration/${alert.id}`,
             replyto: null,
             body: null,
             username: null,
@@ -47,8 +47,9 @@ function updateGoMetricsConfig(alert, templates) {
         return;
     }
     const inputs = (alert.aliases || []).reduce((acc, entry) => {
-        acc[entry.alias.toLowerCase().replaceAll(' ', '_')] = {
-            uri: entry.uri, type: entry.type,
+        acc[entry.alias.replaceAll(' ', '_')] = {
+            // go_metrics requires a true/false string to be indicated as "bool" rather than "boolean"
+            uri: entry.uri, type: entry.type == 'boolean' ? 'bool' : entry.type,
         };
         return acc;
     }, {});
@@ -60,9 +61,9 @@ function updateGoMetricsConfig(alert, templates) {
             [alert.id]: {
                 uri: '/events/alerts',
                 flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat'],
+                attributes: { source: 'Alerts' },
             },
         },
-        attributes: { source: 'Alerts' },
         metrics: [],
     };
 
@@ -79,7 +80,7 @@ function updateGoMetricsConfig(alert, templates) {
     // send new configuration to go_metrics
     fims.send({
         method: 'set',
-        uri: `/go_metrics/alerts/configuration/${alert.id}`,
+        uri: `/go_metrics/configuration/${alert.id}`,
         replyto: null,
         body: JSON.stringify(goMetricsObj),
         username: null,

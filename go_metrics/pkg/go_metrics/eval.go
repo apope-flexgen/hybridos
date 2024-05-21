@@ -19,51 +19,94 @@ import (
 	log "github.com/flexgen-power/go_flexgen/logger"
 )
 
-func StartEvalsAndPubs(wg *sync.WaitGroup) {
-	defer wg.Done()
-	// connect to fims and subscribe to inputs
-	var err error
-	f, err = fims.Connect(ProcessName)
-	if err != nil {
-		log.Fatalf("Unable to connect to FIMS server: %s", err)
-	}
-	err = f.Subscribe(SubscribeUris...)
-	if err != nil {
-		log.Fatalf("Unable to subscribe to input URIs: %s", err)
-	}
-
-	sub_string := "Subscribed to:\n"
-
-	for _, subscribeUri := range SubscribeUris {
-		sub_string += "\t\t" + subscribeUri + "\n"
-	}
-	log.Infof(sub_string)
-
-	fimsMap = make(chan fims.FimsMsgRaw, 100)
-	// listen for messages
-	go f.ReceiveChannelRaw(fimsMap)
-
-	processFimsTiming.init()
-	evalExpressionsTiming.init()
-	go func() {
-		for {
-			if f.Connected() {
-				ProcessFims(<-fimsMap) // this is blocking, so we won't create a bajillion instances of the goroutine below
-			} else {
-				break
-			}
+func StartEchoPubs(new_metrics_info NewMetricsInfo) {
+	new_echo_starting_index := new_metrics_info.new_echo_starting_index
+	if new_echo_starting_index < len(MetricsConfig.Echo) {
+		for i := range MetricsConfig.Echo[new_echo_starting_index:] {
+			echoIdx := new_echo_starting_index + i
+			go func(echoIndex int) {
+				for {
+					<-MetricsConfig.Echo[echoIndex].Ticker.C
+					metricsConfigMutex.RLock()
+					if !f.Connected() {
+						break
+					}
+					echoMutex.RLock()
+					if len(MetricsConfig.Echo[echoIndex].Heartbeat) > 0 {
+						MetricsConfig.Echo[echoIndex].Echo[MetricsConfig.Echo[echoIndex].Heartbeat] = float64(time.Since(t0)) / 1000000000.0
+					}
+					if MetricsConfig.Echo[echoIndex].Format == "naked" {
+						echoMsgBodyMutex.Lock()
+						echoMsgBody = make(map[string]interface{}, 0)
+						for key, value := range MetricsConfig.Echo[echoIndex].Echo {
+							switch x := value.(type) {
+							case map[string]interface{}:
+								if value, ok := x["value"]; ok {
+									echoMsgBody[key] = value
+								} else {
+									echoMsgBody[key] = nil
+								}
+							default:
+								echoMsgBody[key] = value
+							}
+						}
+						f.Send(fims.FimsMsg{
+							Method: "pub",
+							Uri:    MetricsConfig.Echo[echoIndex].PublishUri,
+							Body:   echoMsgBody,
+						})
+						echoMsgBodyMutex.Unlock()
+					} else if MetricsConfig.Echo[echoIndex].Format == "clothed" {
+						echoMsgBodyMutex.Lock()
+						echoMsgBody = make(map[string]interface{}, 0)
+						for key, value := range MetricsConfig.Echo[echoIndex].Echo {
+							switch value.(type) {
+							case map[string]interface{}:
+								echoMsgBody[key] = value
+							default:
+								switch value.(type) {
+								case string:
+									var outputElementValue interface{}
+									json.Unmarshal([]byte(fmt.Sprintf("{\"value\":\"%v\"}", value)), &outputElementValue)
+									echoMsgBody[key] = outputElementValue
+								default:
+									var outputElementValue interface{}
+									json.Unmarshal([]byte(fmt.Sprintf("{\"value\":%v}", value)), &outputElementValue)
+									echoMsgBody[key] = outputElementValue
+								}
+							}
+						}
+						f.Send(fims.FimsMsg{
+							Method: "pub",
+							Uri:    MetricsConfig.Echo[echoIndex].PublishUri,
+							Body:   echoMsgBody,
+						})
+						echoMsgBodyMutex.Unlock()
+					} else {
+						f.Send(fims.FimsMsg{
+							Method: "pub",
+							Uri:    MetricsConfig.Echo[echoIndex].PublishUri,
+							Body:   MetricsConfig.Echo[echoIndex].Echo,
+						})
+					}
+					echoMutex.RUnlock()
+					metricsConfigMutex.RUnlock()
+				}
+			}(echoIdx)
 		}
-	}()
+	}
+}
 
-	t0 = time.Now()
-	MDOtick := time.NewTicker(10000 * time.Millisecond)
-	for j := 0; j < len(tickers); j += 1 {
+func StartNewEvalTickers(new_metrics_info NewMetricsInfo) {
+	new_tickers_starting_index := new_metrics_info.new_tickers_starting_index
+	for j := new_tickers_starting_index; j < len(tickers); j += 1 {
 		go func(tickerIndex int) {
 			for {
+				<-tickers[tickerIndex].C
+				metricsConfigMutex.RLock()
 				if !f.Connected() {
 					break
 				}
-				<-tickers[tickerIndex].C
 				EvaluateExpressions()
 				pubDataChangedMutex.Lock()
 				for _, pubUri := range tickerPubs[tickerIndex] {
@@ -94,17 +137,23 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 									if _, ok := MetricsConfig.Outputs[lonelyVarName]; ok && len(MetricsConfig.Outputs[lonelyVarName].Name) > 0 {
 										lonelyVarName = MetricsConfig.Outputs[lonelyVarName].Name
 									}
-									_, err = f.Send(fims.FimsMsg{
+									_, err := f.Send(fims.FimsMsg{
 										Method: "set",
 										Uri:    temp_uri + "/" + lonelyVarName,
 										Body:   directMsgBody[lonelyVarName],
 									})
+									if err != nil {
+										log.Errorf("received error when trying to send set: %v", err)
+									}
 								} else {
-									_, err = f.Send(fims.FimsMsg{
+									_, err := f.Send(fims.FimsMsg{
 										Method: "set",
 										Uri:    temp_uri,
 										Body:   directMsgBody,
 									})
+									if err != nil {
+										log.Errorf("received error when trying to send set: %v", err)
+									}
 								}
 							} else if len(directMsgBody) > 0 && (sendDirectSet || sendDirectPost) {
 								if uriIsLonely[uriGroup] {
@@ -134,19 +183,25 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 									// Lock and lower the direct message signal if the message is sent
 									directMsgMutex.Lock()
 									if sendDirectSet {
-										f.Send(fims.FimsMsg{
+										_, err := f.Send(fims.FimsMsg{
 											Method: "set",
 											Uri:    (temp_uri),
 											Body:   directMsgBody,
 										})
 										uriToDirectMsgActive["set"][uriGroup] = false
+										if err != nil {
+											log.Errorf("received error when trying to send set: %v", err)
+										}
 									} else if sendDirectPost {
-										f.Send(fims.FimsMsg{
+										_, err := f.Send(fims.FimsMsg{
 											Method: "post",
 											Uri:    (temp_uri),
 											Body:   directMsgBody,
 										})
 										uriToDirectMsgActive["post"][uriGroup] = false
+										if err != nil {
+											log.Errorf("received error when trying to send post: %v", err)
+										}
 									}
 									directMsgMutex.Unlock()
 								}
@@ -156,17 +211,23 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 									if _, ok := MetricsConfig.Outputs[lonelyVarName]; ok && len(MetricsConfig.Outputs[lonelyVarName].Name) > 0 {
 										lonelyVarName = MetricsConfig.Outputs[lonelyVarName].Name
 									}
-									_, err = f.Send(fims.FimsMsg{
+									_, err := f.Send(fims.FimsMsg{
 										Method: "pub",
 										Uri:    temp_uri + "/" + lonelyVarName,
 										Body:   pubMsgBody[lonelyVarName],
 									})
+									if err != nil {
+										log.Errorf("received error when trying to send pub: %v", err)
+									}
 								} else {
-									_, err = f.Send(fims.FimsMsg{
+									_, err := f.Send(fims.FimsMsg{
 										Method: "pub",
 										Uri:    temp_uri,
 										Body:   pubMsgBody,
 									})
+									if err != nil {
+										log.Errorf("received error when trying to send pub: %v", err)
+									}
 								}
 							}
 							pubDataChanged[uriGroup] = false
@@ -175,114 +236,91 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 					}
 				}
 				pubDataChangedMutex.Unlock()
-
+				metricsConfigMutex.RUnlock()
 			}
 		}(j)
 	}
+}
 
-	for echoIdx := range MetricsConfig.Echo {
-		go func(echoIndex int) {
-			for {
-				if !f.Connected() {
-					break
-				}
-				<-MetricsConfig.Echo[echoIndex].Ticker.C
-				echoMutex.RLock()
-				if len(MetricsConfig.Echo[echoIndex].Heartbeat) > 0 {
-					MetricsConfig.Echo[echoIndex].Echo[MetricsConfig.Echo[echoIndex].Heartbeat] = float64(time.Since(t0)) / 1000000000.0
-				}
-				if MetricsConfig.Echo[echoIndex].Format == "naked" {
-					echoMsgBodyMutex.Lock()
-					echoMsgBody = make(map[string]interface{}, 0)
-					for key, value := range MetricsConfig.Echo[echoIndex].Echo {
-						switch x := value.(type) {
-						case map[string]interface{}:
-							if value, ok := x["value"]; ok {
-								echoMsgBody[key] = value
-							} else {
-								echoMsgBody[key] = nil
-							}
-						default:
-							echoMsgBody[key] = value
-						}
-					}
-					f.Send(fims.FimsMsg{
-						Method: "pub",
-						Uri:    MetricsConfig.Echo[echoIndex].PublishUri,
-						Body:   echoMsgBody,
-					})
-					echoMsgBodyMutex.Unlock()
-				} else if MetricsConfig.Echo[echoIndex].Format == "clothed" {
-					echoMsgBodyMutex.Lock()
-					echoMsgBody = make(map[string]interface{}, 0)
-					for key, value := range MetricsConfig.Echo[echoIndex].Echo {
-						switch value.(type) {
-						case map[string]interface{}:
-							echoMsgBody[key] = value
-						default:
-							switch value.(type) {
-							case string:
-								var outputElementValue interface{}
-								json.Unmarshal([]byte(fmt.Sprintf("{\"value\":\"%v\"}", value)), &outputElementValue)
-								echoMsgBody[key] = outputElementValue
-							default:
-								var outputElementValue interface{}
-								json.Unmarshal([]byte(fmt.Sprintf("{\"value\":%v}", value)), &outputElementValue)
-								echoMsgBody[key] = outputElementValue
-							}
-						}
-					}
-					f.Send(fims.FimsMsg{
-						Method: "pub",
-						Uri:    MetricsConfig.Echo[echoIndex].PublishUri,
-						Body:   echoMsgBody,
-					})
-					echoMsgBodyMutex.Unlock()
-				} else {
-					f.Send(fims.FimsMsg{
-						Method: "pub",
-						Uri:    MetricsConfig.Echo[echoIndex].PublishUri,
-						Body:   MetricsConfig.Echo[echoIndex].Echo,
-					})
-				}
-				echoMutex.RUnlock()
-			}
-		}(echoIdx)
+func StartEvalsAndPubs(new_metrics_info NewMetricsInfo, wg *sync.WaitGroup) {
+	defer wg.Done()
+	// connect to fims and subscribe to inputs
+	var err error
+	if !f.Connected() {
+		f, err = fims.Connect(ProcessName)
+		if err != nil {
+			log.Fatalf("Unable to connect to FIMS server: %s", err)
+		}
 	}
 
-	for {
-		if !f.Connected() {
-			break
-		}
-		<-MDOtick.C
-		mdoBuf.Reset()
-		if len(MdoFile) > 0 {
-			var fd *os.File
-			if strings.Contains(MdoFile, ".json") {
-				fd, _ = os.OpenFile(MdoFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
-			} else {
-				fd, _ = os.OpenFile(MdoFile+".json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
-			}
-			Mdo.Meta["name"] = ProcessName
-			Mdo.Meta["timestamp"] = time.Now().Format(time.RFC3339)
-			inputScopeMutex.RLock()
-			for key := range Mdo.Inputs {
-				input := InputScope[key]
-				var val interface{}
-				if len(input) > 1 {
-					val_list := make([]interface{}, len(input))
-					for g, union := range input {
-						val_list[g] = getValueFromUnion(&union)
+	// subscribe to any new URIs
+	err = f.Subscribe(SubscribeUris...)
+	if err != nil {
+		log.Fatalf("Unable to subscribe to input URIs: %s", err)
+	}
+
+	sub_string := "Subscribed to:\n"
+
+	for _, subscribeUri := range SubscribeUris {
+		sub_string += "\t\t" + subscribeUri + "\n"
+	}
+	log.Infof(sub_string)
+
+	StartEchoPubs(new_metrics_info)
+	StartNewEvalTickers(new_metrics_info)
+
+	if !is_restarting {
+		// start up listening threads and MDO ticker if this is a new connection
+		fimsMap = make(chan fims.FimsMsgRaw, 100)
+		// listen for messages
+		go func() {
+			var msg fims.FimsMsgRaw
+			for f.Connected() {
+				msg, _ = f.ReceiveRaw()
+				if msg.Nfrags > 2 && msg.Frags[0] == ProcessName && msg.Frags[1] == "configuration" && (msg.Method == "set" || msg.Method == "pub" || msg.Method == "del") {
+					_, err := handleNewRuntimeConfiguration(&msg, msg.Frags[2])
+					if err != nil {
+						log.Errorf("Error handling runtime configuration %v", err)
 					}
-					val = val_list
-				} else if len(input) == 1 {
-					val = getValueFromUnion(&input[0])
 				} else {
-					val = 0
+					fimsMap <- msg
 				}
-				Mdo.Inputs[key]["value"] = val
-				for _, attribute := range MetricsConfig.Inputs[key].Attributes {
-					input := InputScope[key+"@"+attribute]
+			}
+		}()
+
+		processFimsTiming.init()
+		evalExpressionsTiming.init()
+		go func() {
+			for {
+				if f.Connected() {
+					ProcessFims(<-fimsMap) // this is blocking, so we won't create a bajillion instances of the goroutine below
+				} else {
+					return
+				}
+			}
+		}()
+
+		t0 = time.Now()                                     // base system time
+		MDOtick := time.NewTicker(10000 * time.Millisecond) // MDO Time
+		for {
+			<-MDOtick.C
+			metricsConfigMutex.RLock()
+			if !f.Connected() && !is_restarting {
+				break
+			}
+			mdoBuf.Reset()
+			if len(MdoFile) > 0 {
+				var fd *os.File
+				if strings.Contains(MdoFile, ".json") {
+					fd, _ = os.OpenFile(MdoFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+				} else {
+					fd, _ = os.OpenFile(MdoFile+".json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+				}
+				Mdo.Meta["name"] = ProcessName
+				Mdo.Meta["timestamp"] = time.Now().Format(time.RFC3339)
+				inputScopeMutex.RLock()
+				for key := range Mdo.Inputs {
+					input := InputScope[key]
 					var val interface{}
 					if len(input) > 1 {
 						val_list := make([]interface{}, len(input))
@@ -295,40 +333,41 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 					} else {
 						val = 0
 					}
-					Mdo.Inputs[key][attribute] = val
-				}
-			}
-			inputScopeMutex.RUnlock()
-			filtersMutex.RLock()
-			for key := range MetricsConfig.Filters {
-				if len(dynamicFilterExpressions[key].DynamicInputs) > 0 {
-					copy(Mdo.Filters[key], dynamicFilterExpressions[key].DynamicInputs[len(dynamicFilterExpressions[key].DynamicInputs)-1])
-				} else if len(staticFilterExpressions[key].DynamicInputs) > 0 {
-					copy(Mdo.Filters[key], staticFilterExpressions[key].DynamicInputs[len(staticFilterExpressions[key].DynamicInputs)-1])
-				} else {
-					Mdo.Filters[key] = make([]string, 0)
-				}
-			}
-			filtersMutex.RUnlock()
-			outputScopeMutex.RLock()
-			for key := range MetricsConfig.Outputs {
-				mdooutput = MetricsConfig.Outputs[key]
-				output := OutputScope[key]
-				var val interface{}
-				if len(output) > 1 {
-					val_list := make([]interface{}, len(output))
-					for g, union := range output {
-						val_list[g] = getValueFromUnion(&union)
+					Mdo.Inputs[key]["value"] = val
+					for _, attribute := range MetricsConfig.Inputs[key].Attributes {
+						input := InputScope[key+"@"+attribute]
+						var val interface{}
+						if len(input) > 1 {
+							val_list := make([]interface{}, len(input))
+							for g, union := range input {
+								val_list[g] = getValueFromUnion(&union)
+							}
+							val = val_list
+						} else if len(input) == 1 {
+							val = getValueFromUnion(&input[0])
+						} else {
+							val = 0
+						}
+						Mdo.Inputs[key][attribute] = val
 					}
-					val = val_list
-				} else if len(output) == 1 {
-					val = getValueFromUnion(&output[0])
-				} else {
-					val = 0
 				}
-				Mdo.Outputs[key]["value"] = val
-				for attribute := range mdooutput.Attributes {
-					output := OutputScope[key+"@"+attribute]
+				inputScopeMutex.RUnlock()
+				filtersMutex.RLock()
+				for key := range MetricsConfig.Filters {
+					if len(dynamicFilterExpressions[key].DynamicInputs) > 0 {
+						copy(Mdo.Filters[key], dynamicFilterExpressions[key].DynamicInputs[len(dynamicFilterExpressions[key].DynamicInputs)-1])
+					} else if len(staticFilterExpressions[key].DynamicInputs) > 0 {
+						copy(Mdo.Filters[key], staticFilterExpressions[key].DynamicInputs[len(staticFilterExpressions[key].DynamicInputs)-1])
+					} else {
+						Mdo.Filters[key] = make([]string, 0)
+					}
+				}
+				filtersMutex.RUnlock()
+				outputScopeMutex.RLock()
+				for key := range MetricsConfig.Outputs {
+					mdooutput = MetricsConfig.Outputs[key]
+					output := OutputScope[key]
+					var val interface{}
 					if len(output) > 1 {
 						val_list := make([]interface{}, len(output))
 						for g, union := range output {
@@ -340,58 +379,73 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 					} else {
 						val = 0
 					}
-					Mdo.Outputs[key][attribute] = val
-				}
-			}
-			outputScopeMutex.RUnlock()
-			for k := range MetricsConfig.Metrics {
-				metricsMutex[k].RLock()
-				if strings.Contains(strings.ToLower(MetricsConfig.Metrics[k].Expression), "overtimescale") && !strings.Contains(strings.ToLower(MetricsConfig.Metrics[k].Expression), "integrate") {
-					currentIndex := 0
-					if _, ok := MetricsConfig.Metrics[k].State["currentIndex"]; ok {
-						currentIndex = int(MetricsConfig.Metrics[k].State["currentIndex"][0].ui)
-					}
-					for stateVar, stateVal := range MetricsConfig.Metrics[k].State {
-						if stateVar == "alwaysEvaluate" || strings.Contains(stateVar, "index") {
-							continue
-						} else if stateVar == "timestamps" {
-							Mdo.Metrics[MetricsConfig.Metrics[k].Expression]["firstTimestamp"] = time.UnixMilli(stateVal[0].i).Format(time.RFC3339)
+					Mdo.Outputs[key]["value"] = val
+					for attribute := range mdooutput.Attributes {
+						output := OutputScope[key+"@"+attribute]
+						if len(output) > 1 {
+							val_list := make([]interface{}, len(output))
+							for g, union := range output {
+								val_list[g] = getValueFromUnion(&union)
+							}
+							val = val_list
+						} else if len(output) == 1 {
+							val = getValueFromUnion(&output[0])
 						} else {
-							if len(stateVal) > 1 {
-								Mdo.Metrics[MetricsConfig.Metrics[k].Expression][stateVar] = make([]interface{}, currentIndex+1)
-								for q := range stateVal[0:currentIndex] {
-									Mdo.Metrics[MetricsConfig.Metrics[k].Expression][stateVar].([]interface{})[q] = getValueFromUnion(&stateVal[q])
-								}
+							val = 0
+						}
+						Mdo.Outputs[key][attribute] = val
+					}
+				}
+				outputScopeMutex.RUnlock()
+				for k := range MetricsConfig.Metrics {
+					metricsMutex[k].RLock()
+					if strings.Contains(strings.ToLower(MetricsConfig.Metrics[k].Expression), "overtimescale") && !strings.Contains(strings.ToLower(MetricsConfig.Metrics[k].Expression), "integrate") {
+						currentIndex := 0
+						if _, ok := MetricsConfig.Metrics[k].State["currentIndex"]; ok {
+							currentIndex = int(MetricsConfig.Metrics[k].State["currentIndex"][0].ui)
+						}
+						for stateVar, stateVal := range MetricsConfig.Metrics[k].State {
+							if stateVar == "alwaysEvaluate" || strings.Contains(stateVar, "index") {
+								continue
+							} else if stateVar == "timestamps" {
+								Mdo.Metrics[MetricsConfig.Metrics[k].Expression]["firstTimestamp"] = time.UnixMilli(stateVal[0].i).Format(time.RFC3339)
 							} else {
-								Mdo.Metrics[MetricsConfig.Metrics[k].Expression][stateVar] = getValueFromUnion(&stateVal[0])
+								if len(stateVal) > 1 {
+									Mdo.Metrics[MetricsConfig.Metrics[k].Expression][stateVar] = make([]interface{}, currentIndex+1)
+									for q := range stateVal[0:currentIndex] {
+										Mdo.Metrics[MetricsConfig.Metrics[k].Expression][stateVar].([]interface{})[q] = getValueFromUnion(&stateVal[q])
+									}
+								} else {
+									Mdo.Metrics[MetricsConfig.Metrics[k].Expression][stateVar] = getValueFromUnion(&stateVal[0])
+								}
 							}
 						}
-					}
-				} else {
-					for stateVar, stateVal := range MetricsConfig.Metrics[k].State {
-						if stateVar == "alwaysEvaluate" {
-							continue
+					} else {
+						for stateVar, stateVal := range MetricsConfig.Metrics[k].State {
+							if stateVar == "alwaysEvaluate" {
+								continue
+							}
+							Mdo.Metrics[MetricsConfig.Metrics[k].Expression][stateVar] = getValueFromUnion(&stateVal[0])
 						}
-						Mdo.Metrics[MetricsConfig.Metrics[k].Expression][stateVar] = getValueFromUnion(&stateVal[0])
 					}
+					metricsMutex[k].RUnlock()
 				}
-				metricsMutex[k].RUnlock()
-			}
 
-			echoMutex.RLock()
-			for k := range MetricsConfig.Echo {
-				Mdo.Echo[MetricsConfig.Echo[k].PublishUri] = MetricsConfig.Echo[k].Echo
+				echoMutex.RLock()
+				for k := range MetricsConfig.Echo {
+					Mdo.Echo[MetricsConfig.Echo[k].PublishUri] = MetricsConfig.Echo[k].Echo
+				}
+				echoMutex.RUnlock()
+				err = mdoEncoder.Encode(Mdo)
+				if err == nil {
+					fd.Write(mdoBuf.Bytes())
+				} else {
+					log.Warnf("%v", err)
+				}
+				fd.Close()
 			}
-			echoMutex.RUnlock()
-			err = mdoEncoder.Encode(Mdo)
-			if err == nil {
-				fd.Write(mdoBuf.Bytes())
-			} else {
-				log.Warnf("%v", err)
-			}
-			fd.Close()
+			metricsConfigMutex.RUnlock()
 		}
-
 	}
 }
 
@@ -566,10 +620,16 @@ func storeAlertingAttributes(outputVar string, outputVals []Union, metricsObject
 	OutputScope[outputVar+"@activeMessages"] = make([]Union, 0)
 	OutputScope[outputVar+"@activeTimestamps"] = make([]Union, 0)
 	if expressionResult.b {
-		// If true, populate the details array with the timestamp and messages
+		// If true, populate the details array with the timestamp and messages that are active
 		// The two will be added together in the outputs, with each active message getting the latest timestamp
-		OutputScope[outputVar+"@activeMessages"] = append(OutputScope[outputVar+"@activeMessages"], (*metricsObject).State["activeMessages"]...)
-		OutputScope[outputVar+"@activeTimestamps"] = append(OutputScope[outputVar+"@activeTimestamps"], (*metricsObject).State["activeTimestamps"]...)
+		for index, messageUnion := range (*metricsObject).State["activeMessages"] {
+			// Store messages that are not empty
+			// If the timestamp is somehow out of sync and empty we still want to store it
+			if messageUnion.s != "" {
+				OutputScope[outputVar+"@activeMessages"] = append(OutputScope[outputVar+"@activeMessages"], messageUnion)
+				OutputScope[outputVar+"@activeTimestamps"] = append(OutputScope[outputVar+"@activeTimestamps"], (*metricsObject).State["activeTimestamps"][index])
+			}
+		}
 	}
 	outputScopeMutex.Unlock()
 	return nil
@@ -577,21 +637,15 @@ func storeAlertingAttributes(outputVar string, outputVals []Union, metricsObject
 
 // Return whether there are new active messages indicating the metric has changed
 func (metricsObject *MetricsObject) alertAttributesHaveChanged() bool {
-	return len(metricsObject.State["activeMessages"]) > 0
-}
-
-// Clear out the metricsObject state from the last iteration
-func (metricsObject *MetricsObject) clearAlertingState() {
 	if !metricsObject.Alert {
-		return
+		return false
 	}
 
-	if len(metricsObject.State["activeMessages"]) > 0 {
-		metricsObject.State["activeMessages"] = make([]Union, 0)
+	valuesChanged, ok := metricsObject.State["valuesChanged"]
+	if !ok || len(valuesChanged) == 0 {
+		return false
 	}
-	if len(metricsObject.State["activeTimestamps"]) > 0 {
-		metricsObject.State["activeTimestamps"] = make([]Union, 0)
-	}
+	return valuesChanged[0].b
 }
 
 func EvaluateExpressions() {
@@ -615,7 +669,6 @@ func EvaluateExpressions() {
 			// Clear out the previous state for alerting values that should not persist
 			metricsMutex[q].Lock()
 
-			metricsObjectPointer.clearAlertingState()
 			outputVals, err := Evaluate(&(metricsObject.ParsedExpression), &(metricsObjectPointer.State))
 			metricsMutex[q].Unlock()
 			if err != nil {
@@ -664,16 +717,14 @@ func EvaluateExpressions() {
 								if is_direct_set {
 									directMsgMutex.Lock()
 									// Mark the uri as holding an active set
-									uriToDirectMsgActive["set"][outputVar] = true
+									uriToDirectMsgActive["set"][outputToUriGroup[outputVar]] = true
 									directMsgMutex.Unlock()
-									constructAndSendDirectMsgs("set", outputToUriGroup[outputVar])
 								}
 								if is_direct_post {
 									directMsgMutex.Lock()
 									// Mark the uri as holding an active post
-									uriToDirectMsgActive["post"][outputVar] = true
+									uriToDirectMsgActive["post"][outputToUriGroup[outputVar]] = true
 									directMsgMutex.Unlock()
-									constructAndSendDirectMsgs("post", outputToUriGroup[outputVar])
 								}
 
 								pubDataChangedMutex.Lock()
@@ -694,7 +745,6 @@ func EvaluateExpressions() {
 						output := make([]Union, len(OutputScope[fullOutputName]))
 						copy(output, OutputScope[fullOutputName])
 						outputScopeMutex.Unlock()
-
 						directMsgMutex.RLock()
 						// Check for both methods of direct messages in determining whether to send messages
 						_, is_direct_set := uriIsDirect["set"][outputToUriGroup[fullOutputName]]
@@ -725,16 +775,14 @@ func EvaluateExpressions() {
 							if is_direct_set {
 								directMsgMutex.Lock()
 								// Mark the uri as holding an active set
-								uriToDirectMsgActive["set"][fullOutputName] = true
+								uriToDirectMsgActive["set"][outputToUriGroup[fullOutputName]] = true
 								directMsgMutex.Unlock()
-								constructAndSendDirectMsgs("set", outputToUriGroup[fullOutputName])
 							}
 							if is_direct_post {
 								directMsgMutex.Lock()
 								// Mark the uri as holding an active post
-								uriToDirectMsgActive["post"][fullOutputName] = true
+								uriToDirectMsgActive["post"][outputToUriGroup[fullOutputName]] = true
 								directMsgMutex.Unlock()
-								constructAndSendDirectMsgs("post", outputToUriGroup[fullOutputName])
 							}
 
 							pubDataChangedMutex.Lock()
@@ -829,7 +877,7 @@ func (exp *Expression) evaluate(node *ast.Node, state *map[string][]Union) (valu
 	if msgErr := exp.trackActiveSubexpressions(node, state, &values); msgErr != nil {
 		if err != nil {
 			// Combine errors
-			err = fmt.Errorf("%w, and error matching subexpression: %w", err, msgErr)
+			err = fmt.Errorf("%v, and error matching subexpression: %w", err, msgErr)
 		} else {
 			err = fmt.Errorf("error matching subexpression: %w", err)
 		}
@@ -890,7 +938,6 @@ func (exp *Expression) evaluateBinary(node *ast.BinaryExpr, state *map[string][]
 	lValue := lValues[0]
 	newNodeR := ast.Node(node.Y)
 	rValues, err := exp.evaluate(&newNodeR, state) // evaluate the right side before combining with the left
-
 	if err != nil {
 		return []Union{}, err
 	}
@@ -1452,7 +1499,7 @@ func (exp *Expression) trackActiveSubexpressions(node *ast.Node, state *map[stri
 		return fmt.Errorf("mismatch between message configuration: got %d expressions but %d strings", len((*state)["messageExpressions"]), len((*state)["messageStrings"]))
 	}
 
-	// Only proceed if the expression is true
+	// Only proceed if the expression can be determined
 	if len(*values) == 0 {
 		return nil
 	}
@@ -1472,19 +1519,33 @@ func (exp *Expression) trackActiveSubexpressions(node *ast.Node, state *map[stri
 	// Add any active messages that are currently matched if their value has gone from false to true
 	for index, subexpression := range (*state)["messageExpressions"] {
 		if exp.String[startingPos:endingPos] == subexpression.s {
-			if expressionIsTrue.b {
-				if index >= len((*state)["previousExpressionValues"]) {
-					return fmt.Errorf("failed to get previous expression value for expression %s. There is a problem with the code", exp.String)
+			if index >= len((*state)["previousExpressionValues"]) {
+				return fmt.Errorf("failed to get previous expression value for expression %s. There is a problem with the code", exp.String)
+			}
+			// Value has changed
+			if (*state)["previousExpressionValues"][index].b != expressionIsTrue.b {
+				if index >= len((*state)["activeMessages"]) || index >= len((*state)["messageStrings"]) {
+					return fmt.Errorf("failed to get active messages for expression %s. There is a problem with the code", exp.String)
 				}
-				// Value has changed from false to true
-				if !(*state)["previousExpressionValues"][index].b {
+				if expressionIsTrue.b {
+					// Value has changed from false to true
 					parsedMsg := replaceMessageVarsWithInputValues((*state)["messageStrings"][index].s)
 					// State holds a slice for each key rather than a map, so split the strings and timestamps into separate
 					// slices with corresponding indices
 					// The maps are cleared before each evaluation so these will not build up over time
-					(*state)["activeMessages"] = append((*state)["activeMessages"], Union{tag: STRING, s: parsedMsg})
-					(*state)["activeTimestamps"] = append((*state)["activeTimestamps"], Union{tag: STRING, s: time.Now().Format(time.RFC3339)})
+					(*state)["activeMessages"][index] = Union{tag: STRING, s: parsedMsg}
+					(*state)["activeTimestamps"][index] = Union{tag: STRING, s: time.Now().Format(time.RFC3339)}
+				} else {
+					// Value has changed from true to false
+					// Clear out the active values
+					(*state)["activeMessages"][index] = Union{tag: STRING, s: ""}
+					(*state)["activeTimestamps"][index] = Union{tag: STRING, s: ""}
 				}
+				// Mark that the value has changed
+				(*state)["valueChanged"][0].b = true
+			} else {
+				// Mark that the value has not changed
+				(*state)["valueChanged"][0].b = false
 			}
 			// Update previous value
 			(*state)["previousExpressionValues"][index] = expressionIsTrue

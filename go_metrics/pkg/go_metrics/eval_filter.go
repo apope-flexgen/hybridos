@@ -119,7 +119,7 @@ func evaluateFilterBinary(node *ast.BinaryExpr, inputList []string) ([]string, e
 		}
 	} else if len(lValues) == len(rValues) {
 		for i := range lValues {
-			expression, err := Parse(lValues[i] + node.Op.String() + rValues[i])
+			expression, err := Parse(lValues[i]+node.Op.String()+rValues[i], "")
 			if err != nil {
 				return outputs, err
 			}

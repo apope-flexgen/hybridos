@@ -110,6 +110,9 @@ module.exports = {
                 }
                 // last element is always the latest time-wise
 
+                if (!inst.details.length) {
+                    return;
+                } 
                 const triggerTime = inst.details[inst.details.length - 1].timestamp;
                 if (body.orgFilter) {
                     q.where('organizationId').in(orgs.find((o) => o.name === body.orgFilter).id);
@@ -152,28 +155,5 @@ module.exports = {
         }
         toReturn.rows = incidents;
         return toReturn;
-    },
-
-    // Run at startup of /events to fetch any existing alert incidents from go_metrics.
-    initializeAlerts() {
-        fims.send({
-            method: 'get',
-            uri: '/go_metrics/events/alerts',
-            replyto: '/events/refresh_alerts',
-            body: null,
-            username: null,
-        });
-        fims.receiveWithTimeout(500, (result) => {
-            if (result) {
-                // eslint-disable-next-line no-unused-vars
-                result.forEach((incident) => {
-                    // circular dep at present
-                    // handlePostAlerts({
-                    //     body: incident,
-                    //     replyto: '/events/debug',
-                    // });
-                });
-            }
-        });
     },
 };

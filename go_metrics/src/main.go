@@ -63,6 +63,9 @@ func main() {
 	metrics.MdoFile = mdo
 	metrics.ConfigErrorsFile = configErrors
 	metrics.ProcessName = processName
+	if len(processName) == 0 {
+		processName = "go_metrics"
+	}
 	if len(templateConfig) > 0 {
 		templateOutput = true
 	}
@@ -99,21 +102,25 @@ func main() {
 		}
 	}
 
-	err = getAndParseConfig()
+	var new_metrics_info metrics.NewMetricsInfo
+	new_metrics_info, err = getAndParseConfig()
 	if err != nil {
 		log.Fatalf("Configuration error: %v.", err)
 	}
 
 	// set up all of the publish tickers
-	metrics.GetPubTickers()
+	new_metrics_info = metrics.GetPubTickers(new_metrics_info)
 
 	// extract parent uris (so we know what to subscribe to)
 	// and also make an easy way to "fetch" data into our input Unions
-	metrics.GetSubscribeUris()
+	metrics.GetSubscribeUris(new_metrics_info)
+
+	// Get any additional configuration documents that may exist
+	go metrics.GetAdditionalConfigurations()
 
 	var wg sync.WaitGroup
 	wg.Add(1)
-	metrics.StartEvalsAndPubs(&wg)
+	metrics.StartEvalsAndPubs(new_metrics_info, &wg)
 	wg.Wait()
 }
 
@@ -166,27 +173,28 @@ func findConfigFilePath() (configFilePath string, err error) {
 
 // Retrieve and parse configuration based on the source provided
 // If no source is provided, try a number of alternatives before return an error to be reported to the user
-func getAndParseConfig() (err error) {
+func getAndParseConfig() (metrics.NewMetricsInfo, error) {
+	var err error
 	if configSource == "" {
 		configSource, err = findConfigFilePath()
 		if err != nil {
-			return err
+			return metrics.NewMetricsInfo{}, err
 		}
 	}
 
 	// Retrieve the configuration from the given source
 	cfgMap, err := cfgfetch.Retrieve(processName, configSource)
 	if err != nil {
-		return fmt.Errorf("error retrieving configuration from %s: %w", configSource, err)
+		return metrics.NewMetricsInfo{}, fmt.Errorf("error retrieving configuration from %s: %w", configSource, err)
 	}
 	// The retrieved value is required to be a map when received from fims
 	cfgBytes, err := json.Marshal(cfgMap)
 	if err != nil {
-		return fmt.Errorf("error parsing configuration: %w", err)
+		return metrics.NewMetricsInfo{}, fmt.Errorf("error parsing configuration: %w", err)
 	}
 
 	metrics.ConfigSource = configSource
-	metrics.UnmarshalConfig(cfgBytes)
+	new_metrics_info, _, _ := metrics.UnmarshalConfig(cfgBytes, "")
 
 	if templateOutput {
 		// Setup the destination of the generated template config
@@ -195,7 +203,7 @@ func getAndParseConfig() (err error) {
 			// We want to explicitly store a file even when dbi is being used
 			configFilePath, err = findConfigFilePath()
 			if err != nil {
-				return fmt.Errorf("error finding template config destination: %v", err)
+				return metrics.NewMetricsInfo{}, fmt.Errorf("error finding template config destination: %v", err)
 			}
 		}
 		outputFile, _ := json.MarshalIndent(metrics.MetricsConfig, "", "    ")
@@ -210,5 +218,5 @@ func getAndParseConfig() (err error) {
 			fd.Write(outputFile)
 		}
 	}
-	return nil
+	return new_metrics_info, nil
 }

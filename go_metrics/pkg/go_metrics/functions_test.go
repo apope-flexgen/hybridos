@@ -189,7 +189,7 @@ var AddTests = []TestCase{
 	{
 		testDescription: "len(inputs) = 2, inputs = FLOAT(5.3),STRING(\"hello\")",
 		inputs:          []Union{{tag: FLOAT, f: 5.3}, {tag: STRING, s: "hello"}},
-		expectedOutput:  Union{tag: STRING, s: fmt.Sprintf("%f", 5.3) + "hello"},
+		expectedOutput:  Union{tag: STRING, s: fmt.Sprintf("%.2f", 5.3) + "hello"},
 		errorExpected:   false,
 	},
 	{
@@ -213,7 +213,7 @@ var AddTests = []TestCase{
 	{
 		testDescription: "len(inputs) = 2, inputs = \"hello\",FLOAT(6.3)",
 		inputs:          []Union{{tag: STRING, s: "hello "}, {tag: FLOAT, f: 6.3}},
-		expectedOutput:  Union{tag: STRING, s: "hello " + fmt.Sprintf("%f", 6.3)},
+		expectedOutput:  Union{tag: STRING, s: "hello " + fmt.Sprintf("%.2f", 6.3)},
 		errorExpected:   false,
 	},
 	{

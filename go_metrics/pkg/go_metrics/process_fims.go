@@ -5,6 +5,7 @@ import (
 	"fims"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	log "github.com/flexgen-power/go_flexgen/logger"
@@ -13,36 +14,60 @@ import (
 )
 
 func ProcessFims(msg fims.FimsMsgRaw) {
+	metricsConfigMutex.RLock()
 	processFimsTiming.start()
+	go_metrics_prefix := false
 	if len(msg.Frags) > 0 && msg.Frags[0] == ProcessName {
 		msg.Uri = msg.Uri[len(ProcessName)+1:]
 		msg.Frags = msg.Frags[1:]
+		go_metrics_prefix = true
 	}
 	if msg.Method == "set" || msg.Method == "pub" {
-		if _, ok := UriElements[msg.Uri]; ok {
-			// if so, unmarshal the message body
-			var err error
-			pj, err = simdjson.Parse(msg.Body, pj)
-			if err != nil { // could be a single naked item, or it could be invalid json
-				if fmt.Sprintf("%s", err) == "Failed to find all structural indices for stage 1" {
-					elementValueMutex.Lock()
-					json.Unmarshal(msg.Body, &elementValue)
-					handleUriElement(&msg, msg.Uri, msg.Frags[len(msg.Frags)-1])
-					elementValueMutex.Unlock()
-				} else {
-					log.Warnf("problem with parsing message body into JSON: %v", err)
-					return
-				}
+		// if so, unmarshal the message body
+		var err error
+		pj, err = simdjson.Parse(msg.Body, pj)
+		if err != nil { // could be a single naked item, or it could be invalid json
+			if fmt.Sprintf("%s", err) == "Failed to find all structural indices for stage 1" {
+				elementValueMutex.Lock()
+				json.Unmarshal(msg.Body, &elementValue)
+				handleUriElement(&msg, msg.Uri, msg.Frags[len(msg.Frags)-1])
+				elementValueMutex.Unlock()
 			} else {
-				// extract the necessary values from the message body
-				iter = pj.Iter()
-				handleJsonMessage(&msg)
+				log.Warnf("problem with parsing message body into JSON: %v", err)
+				metricsConfigMutex.RUnlock()
+				return
 			}
+		} else {
+			// extract the necessary values from the message body
+			iter = pj.Iter()
+			handleJsonMessage(&msg)
+		}
 
-			//This set reply may be overly broad since while the set will be for
-			// a URI that metrics cares about (from the subscribes), it may be for a value
-			// that metrics is not responsible for (BUT THIS IS WHAT METRICS DOES SO THERE)
-			if msg.Method == "set" && len(msg.Replyto) > 0 {
+		// Set handling for URIs that we're certain should be owned by go_metrics
+		if msg.Method == "set" && len(msg.Replyto) > 0 {
+			// only reply if it's something we're responsible for
+			send_set := true
+			// either it's prefixed with 'go_metrics'
+			if !go_metrics_prefix {
+				for i := 0; i < len(msg.Frags) && send_set; i++ {
+					uri := "/" + strings.Join(msg.Frags, "/")
+					_, no_response := noGetResponse[uri]
+					_, is_input := uriToInputNameMap[uri]
+					_, is_echo_input := uriToEchoObjectInputMap[uri]
+					if no_response || is_echo_input || is_input {
+						send_set = false
+						break
+					}
+				}
+				// or it's an output that IS NOT "no response"
+				// (if it isn't in uriToOutputNameMap[msg.Uri], we're assuming it's not an output)
+				_, isOutputUri := PublishUris[msg.Uri]
+				_, isOutVarUri := uriToOutputNameMap[msg.Uri]
+				if !isOutputUri && !isOutVarUri {
+					send_set = false
+				}
+			}
+			if send_set {
 				msgBodyInMutex.Lock()
 				json.Unmarshal(msg.Body, &msgBodyIn)
 				f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: msgBodyIn})
@@ -50,7 +75,8 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 			}
 		}
 	} else if msg.Method == "get" && len(msg.Replyto) > 0 {
-		if _, no_response := noGetResponse[msg.Uri]; no_response {
+		if _, no_response := noGetResponse[msg.Uri]; no_response && !go_metrics_prefix {
+			metricsConfigMutex.RUnlock()
 			return
 		}
 		// find metric in outputs and set back out
@@ -59,23 +85,36 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 		_, isEchoPublishUri := echoPublishUristoEchoNum[msg.Uri]
 		if outputNames, ok := uriToOutputNameMap[msg.Uri]; ok && len(outputNames) > 0 { // asking for all outputs associated with the given URI
 			msgBody := make(map[string]interface{}, 0)
-			var tempMsgBody map[string]interface{}
-			interval_set := uriIsIntervalSet[msg.Uri]
-			_, direct_set := uriIsDirect["set"][msg.Uri]
-			_, direct_post := uriIsDirect["post"][msg.Uri]
+			var tmpDirectMsgBody map[string]interface{}
+			var tempPubMsgBody map[string]interface{}
 
 			for _, outputName := range outputNames {
-				tempMsgBody, _, _ = prepareSingleOutputVar(msg.Uri, outputName, false, false, true, interval_set, direct_set, direct_post)
-				msgBody[outputName] = tempMsgBody[outputName]
+				outputUri := outputToUriGroup[outputName]
+				interval_set := uriIsIntervalSet[outputUri]
+				_, direct_set := uriIsDirect["set"][outputUri]
+				_, direct_post := uriIsDirect["post"][outputUri]
+				_, tmpDirectMsgBody, tempPubMsgBody = prepareSingleOutputVar(outputUri, outputName, false, false, true, interval_set, direct_set, direct_post, true)
+				output, ok := MetricsConfig.Outputs[outputName]
+				if ok {
+					if interval_set || direct_set || direct_post {
+						msgBody[output.Name] = tmpDirectMsgBody[output.Name]
+					} else {
+						msgBody[output.Name] = tempPubMsgBody[output.Name]
+					}
+				}
 			}
 			var responseBody interface{}
 			if len(msgBody) > 1 {
 				responseBody = msgBody
-			} else {
-				if len(outputNames) > 0 {
-					responseBody = msgBody[outputNames[0]]
+			} else if len(outputNames) > 0 {
+				outputUri := outputToUriGroup[outputNames[0]]
+				if _, ok := PublishUris[outputUri]; !ok {
+					output, ok := MetricsConfig.Outputs[outputNames[0]]
+					if ok {
+						responseBody = msgBody[output.Name]
+					}
 				} else {
-					responseBody = map[string]interface{}{}
+					responseBody = msgBody
 				}
 			}
 			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: responseBody})
@@ -245,6 +284,7 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 	// 	}
 	// }
 	processFimsTiming.stop()
+	metricsConfigMutex.RUnlock()
 }
 
 // messages in the form of a json object can be
@@ -263,20 +303,26 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 //
 //   - single-valued clothed input WITH the word "value"     e.g. "/components/bms_1/max_current":    {"value": 3456, "enabled": true, "scale": 1000}
 //
+//   - configuration documents are also accepted if the message is specifically to the "/go_metrics/configuration" endpoint
+//
+
 // note that multiple options are possible for a single message
 func handleJsonMessage(msg *fims.FimsMsgRaw) {
-	if jsonPaths, ok := UriElements[(*msg).Uri]; ok {
-		switch jsonPaths2 := jsonPaths.(type) {
-		case map[string]interface{}:
-			iter.Advance()
-			findValuesInMap(msg, (*msg).Uri, jsonPaths2, &iter)
-		case interface{}:
-			elementValueMutex.Lock()
-			elementValue, _ = iter.Interface()
-			handleUriElement(msg, (*msg).Uri, (*msg).Frags[len((*msg).Frags)-1])
-			elementValueMutex.Unlock()
-		}
+	jsonPaths, ok := UriElements[(*msg).Uri]
+	if !ok {
+		return
 	}
+	switch jsonPaths2 := jsonPaths.(type) {
+	case map[string]interface{}:
+		iter.Advance()
+		findValuesInMap(msg, (*msg).Uri, jsonPaths2, &iter)
+	case interface{}:
+		elementValueMutex.Lock()
+		elementValue, _ = iter.Interface()
+		handleUriElement(msg, (*msg).Uri, (*msg).Frags[len((*msg).Frags)-1])
+		elementValueMutex.Unlock()
+	}
+
 }
 
 func findValuesInMap(msg *fims.FimsMsgRaw, currentUri string, valuesToLookFor map[string]interface{}, iter *simdjson.Iter) {
@@ -404,6 +450,68 @@ func handleReevaluationSignal(uri string, elementName string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+// handle new configuration fims messages received at runtime that should be appended to the configuration being used.
+// Wrapper function that handles fims messages and
+// msg: the message containing the doc
+// id: the unique id for the configuration
+// return whether the metric was updated
+func handleNewRuntimeConfiguration(msg *fims.FimsMsgRaw, id string) (bool, error) {
+	// Empty body received
+	if msg.Body == nil || string(msg.Body) == "null" {
+		if msg.Method != "del" {
+			return false, fmt.Errorf("received empty configuration")
+		}
+	} else if err := handleNewConfiguration(msg.Body, id); err != nil {
+		return false, err
+	}
+
+	// Backup the config to DBI if the configuration was handled successfully
+	// Always send a set unless the message is a deletion
+	fimsMethod := "set"
+	if (*msg).Method == "del" {
+		fimsMethod = "del"
+	}
+	f.SendRaw(fims.FimsMsgRaw{
+		Method: fimsMethod,
+		Uri:    "/dbi/go_metrics/" + id,
+		Body:   msg.Body,
+	})
+
+	return true, nil
+}
+
+// handle new configuration documents received in raw byte form
+// This can be either startup configuration or configuration received via fims messages at runtime
+// config: configuration document in raw byte form
+// id: unique id for the configuration
+// return whether any errors occurred
+func handleNewConfiguration(config []byte, id string) error {
+	// Ignore warnings as they will be reported during the config processing itself
+	new_metrics_info, _, wasError := UnmarshalConfig(config, id)
+	new_metrics_info = GetPubTickers(new_metrics_info)
+	GetSubscribeUris(new_metrics_info)
+
+	if wasError {
+		return fmt.Errorf("error handling configuration received from fims")
+	} else {
+		log.Infof("Received new configuration [%s] via FIMS", id)
+	}
+
+	// Start using new configuration
+	var wg sync.WaitGroup
+	wg.Add(1)
+	metricsConfigMutex.Lock()
+	is_restarting = true
+	f.Close()
+	// don't close the channel because that's still being used
+	StartEvalsAndPubs(new_metrics_info, &wg)
+	is_restarting = false
+	metricsConfigMutex.Unlock()
+	wg.Wait()
+
+	return nil
 }
 
 func handleUriElement(msg *fims.FimsMsgRaw, uri string, elementName string) {
@@ -710,5 +818,76 @@ func GetOutputMsgBody(uri string) interface{} {
 		}
 		echoMutex.RUnlock()
 		return outputMap
+	}
+}
+
+// Request a list of configurations that exist in dbi, then request any additional configurations from this
+// list that are not the base config and have not yet been processed.
+// This will run whether the base config source is dbi or a file path
+func GetAdditionalConfigurations() {
+	// Start a FIMS channel that will receive FIMS requests.
+	// connect to FIMS server
+	cfgConn, err := fims.Connect(ProcessName + "_config")
+	if err != nil {
+		log.Errorf("failed to connect to FIMS server: %v", err)
+		return
+	}
+	defer cfgConn.Close()
+	configUri := fmt.Sprintf("/cfg_%s", ProcessName)
+	err = cfgConn.Subscribe(configUri)
+	if err != nil {
+		log.Errorf("failed to subscribe to config reply uri %s: %v", configUri, err)
+	}
+	fimsReceive := make(chan fims.FimsMsg)
+	go cfgConn.ReceiveChannel(fimsReceive)
+	waitSeconds := 10
+	timeout := time.NewTicker(time.Duration(waitSeconds) * time.Second)
+	done := false
+	defer timeout.Stop()
+	// start request-receive cycle
+	for {
+		// TODO: better way to break from for+select?
+		if !cfgConn.Connected() || done {
+			break
+		}
+		// request DBI on every attempt, expecting data to be loaded to DBI
+		err := cfgConn.SendGet(fmt.Sprintf("/dbi/%s", ProcessName), configUri)
+		if err != nil {
+			delaySeconds := 2
+			log.Errorf("Error sending GET for configuration data to DBI: %s. Waiting %d seconds then trying again.", err.Error(), delaySeconds)
+			delay := time.NewTimer(time.Duration(delaySeconds) * time.Second)
+			<-delay.C
+			timeout.Reset(time.Duration(waitSeconds) * time.Second)
+		}
+		// wait for DBI to reply, and re-request if it takes too long
+		select {
+		case data := <-fimsReceive:
+			cfgMap, ok := data.Body.(map[string]interface{})
+			// TODO: file and no config response case
+			if !ok {
+				log.Errorf("Received invalid configuration map: %v", cfgMap)
+				done = true
+				break
+			}
+			// TODO: file and only additional config sources
+			if _, ok := cfgMap["configuration"]; !ok {
+				log.Errorf("Could not find base configuration in config document")
+			}
+			for configId, doc := range cfgMap {
+				// Skip the base configuration that was already configured
+				if configId == "configuration" {
+					continue
+				}
+				configBytes, err := json.Marshal(doc)
+				if err != nil {
+					log.Errorf("Could not process additional configuration document: %s, %v", configId, err)
+				}
+				handleNewConfiguration(configBytes, configId)
+			}
+			done = true
+		case <-timeout.C:
+			log.Errorf("Timed out after waiting %d seconds for configuration from DBI. Resending GET to DBI.", waitSeconds)
+			done = true
+		}
 	}
 }

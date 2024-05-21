@@ -280,12 +280,12 @@ var UnionToStringTests = []UnionToStringTestCase{
 	{
 		testDescription: "input = Union{tag:FLOAT,f:5.0}",
 		input:           Union{tag: FLOAT, f: 5.0},
-		expectedOutput:  fmt.Sprintf("%f", 5.0),
+		expectedOutput:  fmt.Sprintf("%.2f", 5.0),
 	},
 	{
 		testDescription: "input = Union{tag:FLOAT,f:5.3}",
 		input:           Union{tag: FLOAT, f: 5.3},
-		expectedOutput:  fmt.Sprintf("%f", 5.3),
+		expectedOutput:  fmt.Sprintf("%.2f", 5.3),
 	},
 }
 

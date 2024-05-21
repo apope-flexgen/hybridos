@@ -387,10 +387,10 @@ const outboundGetAlerts = {
     // TODO
 };
 
-// -> SET /go_metrics/alerts/configuration
+// -> SET /go_metrics/configuration/<id>
 const outboundSetManagement = {
     inputs: {
-        ess_2_soc: {
+        ESS_2_SOC: {
             uri: '/assets/ess/ess_2/soc',
             type: 'float',
         },
@@ -427,9 +427,9 @@ const outboundSetManagement = {
         '28beecbc-232f-431b-ac7d-8d29350e9000': {
             uri: '/events/alerts',
             flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat'],
+            attributes: { source: 'Alerts' },
         },
     },
-    attributes: { source: 'Alerts' },
     metrics: [
         {
             id: '28beecbc-232f-431b-ac7d-8d29350e9000',
@@ -452,7 +452,7 @@ const outboundSetManagement = {
 
 const outboundSetManagementNew = {
     inputs: {
-        ess_2_soc: {
+        ESS_2_SOC: {
             uri: '/assets/ess/ess_2/soc',
             type: 'float',
         },
@@ -489,9 +489,9 @@ const outboundSetManagementNew = {
         'mocked-new-uuid': {
             uri: '/events/alerts',
             flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat'],
+            attributes: { source: 'Alerts' },
         },
     },
-    attributes: { source: 'Alerts' },
     metrics: [
         {
             id: 'mocked-new-uuid',

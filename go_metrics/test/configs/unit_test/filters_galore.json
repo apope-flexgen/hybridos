@@ -19,7 +19,7 @@
             "from": 1,
             "to": 4,
             "step": 1,
-            "token": "@@"
+            "token": "**"
         },
         {
             "type": "sequential",
@@ -36,7 +36,7 @@
         "random_##PCS_ID##_flag_1" : { "uri": "/components/ess_01/random_##PCS_ID##_flag_1"        , "type": "int" },
         "random_##PCS_ID##_flag_2" : { "uri": "/components/ess_01/random_##PCS_ID##_flag_2"        , "type": "int" },
         "random_bitfield_3_!!": { "uri": "/components/ess_01/bitfield_3_!!"        , "type": "int" },
-        "random_bitfield_4_@@": { "uri": "/components/ess_01/bitfield_4_@@"        , "type": "int" },
+        "random_bitfield_4_**": { "uri": "/components/ess_01/bitfield_4_**"        , "type": "int" },
         "random_bitfield_5_$$": { "uri": "/components/ess_01/bitfield_5_$$"        , "type": "int" }
     },
     "filters": {

@@ -5,9 +5,11 @@ import time
 
 # Steps to run once before any test execution
 def before_all(context):
+    context.fims_already_running = False
     # Start fims_server if it's not already running
     try:
         subprocess.check_output(["pgrep", "fims_server"])
+        context.fims_already_running = True
         # If no exception then it's already running
     except subprocess.CalledProcessError:
         # Not running, start fims_server manually
@@ -16,8 +18,9 @@ def before_all(context):
 
 # Steps to run once after all tests have executed
 def after_all(context):
-    # Stop fims_server
-    subprocess.run(["pkill", "fims_server"])
+    # Stop fims_server if it wasn't running when we started
+    if not context.fims_already_running:
+        subprocess.run(["pkill", "fims_server"])
 
 
 def before_feature(context, feature):

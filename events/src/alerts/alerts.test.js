@@ -19,6 +19,7 @@ const {
     postManagementRequestDeletion,
 } = require('./alertExamples');
 const { initializeAlerts } = require('./alertsDb');
+const { handleInitAlerts } = require('./handlers/alertIncidents');
 
 jest.mock('@flexgen/fims');
 jest.mock('uuid');
@@ -140,7 +141,7 @@ describe('Alerts tests', () => {
                 body: JSON.stringify(outboundSetManagementNew),
                 method: 'set',
                 replyto: null,
-                uri: '/go_metrics/alerts/configuration/mocked-new-uuid',
+                uri: '/go_metrics/configuration/mocked-new-uuid',
                 username: null,
             },
             {
@@ -174,7 +175,7 @@ describe('Alerts tests', () => {
                 body: JSON.stringify(outboundSetManagement),
                 method: 'set',
                 replyto: null,
-                uri: '/go_metrics/alerts/configuration/28beecbc-232f-431b-ac7d-8d29350e9000',
+                uri: '/go_metrics/configuration/28beecbc-232f-431b-ac7d-8d29350e9000',
                 username: null,
             },
             {
@@ -208,7 +209,7 @@ describe('Alerts tests', () => {
                 body: null,
                 method: 'del',
                 replyto: null,
-                uri: '/go_metrics/alerts/configuration/28beecbc-232f-431b-ac7d-8d29350e9000',
+                uri: '/go_metrics/configuration/28beecbc-232f-431b-ac7d-8d29350e9000',
                 username: null,
             },
             {
@@ -304,8 +305,15 @@ describe('Alerts tests', () => {
     });
 
     test('go_metrics | Initialize alerts entries on startup', async () => {
-        // TODO make a test for this when the backend is ready
-        initializeAlerts();
+        await handleInitAlerts();
+        await sleep(sleepMs);
+        expectFimsSendHelper([{
+            body: null,
+            method: 'get',
+            replyto: '/events/refresh_alerts',
+            uri: '/go_metrics/events/alerts',
+            username: null,
+        }]);
     });
 
     test('UI | navigates to unresolved alerts page', async () => {

@@ -37,15 +37,20 @@ type ErrorLocation struct {
 
 func (e ErrorLocation) String() string {
 	str := "    {\n        \"Location\": ["
-	for _, accessor := range e.JsonLocation[0 : len(e.JsonLocation)-1] {
-		str += fmt.Sprintf("\"%v\", ", accessor)
+	if len(e.JsonLocation) > 0 {
+		for _, accessor := range e.JsonLocation[0 : len(e.JsonLocation)-1] {
+			str += fmt.Sprintf("\"%v\", ", accessor)
+		}
+		str += fmt.Sprintf("\"%v\"],\n        \"Error\": \"%v\"\n    }", e.JsonLocation[len(e.JsonLocation)-1], e.JsonError)
+	} else {
+		str += fmt.Sprintf("],\n        \"Error\": \"%v\"\n    }", e.JsonError)
 	}
-	str += fmt.Sprintf("\"%v\"],\n        \"Error\": \"%v\"\n    }", e.JsonLocation[len(e.JsonLocation)-1], e.JsonError)
 	return str
 }
 
 type ErrorLocations struct {
-	ErrorLocs []ErrorLocation
+	ErrorLocs           []ErrorLocation
+	currentJsonLocation []JsonAccessor
 }
 
 func (e ErrorLocations) String() string {
@@ -84,99 +89,199 @@ func (e ErrorLocations) String() string {
 	return allErrors
 }
 
+func (e *ErrorLocations) initialize() {
+	e.currentJsonLocation = make([]JsonAccessor, 0)
+	e.ErrorLocs = make([]ErrorLocation, 0)
+}
+
+func (e *ErrorLocations) addKey(id string, simdjType simdjson.Type) {
+	e.currentJsonLocation = append(e.currentJsonLocation, JsonAccessor{Key: id, JType: simdjType})
+}
+
+func (e *ErrorLocations) addIndex(index int, simdjType simdjson.Type) {
+	e.currentJsonLocation = append(e.currentJsonLocation, JsonAccessor{Index: index, JType: simdjType})
+}
+
+func (e *ErrorLocations) removeLevel() {
+	index := len(e.currentJsonLocation) - 1
+	if index >= 0 && len(e.currentJsonLocation)-1 >= index {
+		e.currentJsonLocation = append(e.currentJsonLocation[:index], e.currentJsonLocation[index+1:]...)
+	}
+}
+
+func (e *ErrorLocations) logError(err error) {
+	errStr := fmt.Sprintf("%v", err) // Store error message once since it's used multiple times
+	if errStr == "path not found" && len(e.currentJsonLocation) > 0 {
+		errStr = strings.Replace(errStr, "path", fmt.Sprintf("key '%v'", e.currentJsonLocation[len(e.currentJsonLocation)-1]), -1)
+		errStr = strings.ReplaceAll(errStr, "\"", "\\\"")
+		newError := ErrorLocation{JsonError: errStr, JsonLocation: make([]JsonAccessor, len(e.currentJsonLocation)-1)}
+		copy(newError.JsonLocation, e.currentJsonLocation)
+		e.ErrorLocs = append(e.ErrorLocs, newError)
+	} else if strings.Contains(errStr, "value is not") {
+		errStr = strings.Replace(errStr, "value is not", "expected value to be", -1)
+		errStr = strings.ReplaceAll(errStr, "\"", "\\\"")
+		newError := ErrorLocation{JsonError: errStr, JsonLocation: make([]JsonAccessor, len(e.currentJsonLocation))}
+		copy(newError.JsonLocation, e.currentJsonLocation)
+		e.ErrorLocs = append(e.ErrorLocs, newError)
+	} else {
+		errStr = strings.ReplaceAll(errStr, "\"", "\\\"")
+		newError := ErrorLocation{JsonError: errStr, JsonLocation: make([]JsonAccessor, len(e.currentJsonLocation))}
+		copy(newError.JsonLocation, e.currentJsonLocation)
+		e.ErrorLocs = append(e.ErrorLocs, newError)
+	}
+}
+
+func initializeMetricsConfig() {
+	if MetricsConfig.Meta == nil {
+		MetricsConfig.Meta = make(map[string]interface{}, 0)
+	}
+
+	MetricsConfig.Templates = make([]Template, 0)
+
+	if MetricsConfig.Inputs == nil {
+		MetricsConfig.Inputs = make(map[string]Input, 0)
+	}
+	if MetricsConfig.Attributes == nil {
+		MetricsConfig.Attributes = make(map[string]Attribute, 0)
+	}
+	if MetricsConfig.Filters == nil {
+		MetricsConfig.Filters = make(map[string]interface{}, 0)
+	}
+	if MetricsConfig.Outputs == nil {
+		MetricsConfig.Outputs = make(map[string]Output, 0)
+	}
+	if MetricsConfig.Metrics == nil {
+		MetricsConfig.Metrics = make([]MetricsObject, 0)
+	}
+	if MetricsConfig.Echo == nil {
+		MetricsConfig.Echo = make([]EchoObject, 0)
+	}
+}
+
+func parseMeta(i *simdjson.Iter) (tempMeta map[string]interface{}, wasWarning bool, wasError bool) {
+	// handle meta data (map[string]interface{}; optional)
+	element, internal_err := i.FindElement(nil, "meta")
+	if internal_err == nil {
+		configErrorLocs.addKey("meta", simdjson.TypeObject)
+		metaObject, internal_err := element.Iter.Object(nil)
+		if internal_err != nil {
+			configErrorLocs.logError(internal_err)
+			wasError = true
+		} else {
+			tempMeta, internal_err = metaObject.Map(tempMeta)
+			if internal_err != nil { // not sure if we can technically get here...
+				configErrorLocs.logError(internal_err)
+				wasError = true
+			} else {
+				for key, value := range tempMeta {
+					if _, ok := MetricsConfig.Meta[key]; !ok {
+						MetricsConfig.Meta[key] = value
+					} else if !stringInSlice([]string{"debug", "debug_inputs", "debug_outputs", "debug_filters"}, key) {
+						configErrorLocs.logError(fmt.Errorf("received duplicate field '%s' in \"meta\" object of incoming config; defaulting to original value", key))
+						wasWarning = true
+					}
+				}
+			}
+		}
+		configErrorLocs.removeLevel()
+	}
+	return
+}
+
 var configErrorLocs ErrorLocations
 
-func UnmarshalConfig(data []byte) {
-	currentJsonLocation := make([]JsonAccessor, 0)
-	configErrorLocs.ErrorLocs = make([]ErrorLocation, 0)
-	MetricsConfig = *new(MetricsFile)
-	MetricsConfig.Meta = make(map[string]interface{}, 0)
-	MetricsConfig.Inputs = make(map[string]Input, 0)
-	MetricsConfig.Attributes = make(map[string]Attribute, 0)
-	MetricsConfig.Filters = make(map[string]interface{}, 0)
-	MetricsConfig.Outputs = make(map[string]Output, 0)
-	MetricsConfig.Metrics = make([]MetricsObject, 0)
-	MetricsConfig.Echo = make([]EchoObject, 0)
+// Handle configuration processing based on the raw bytes received from file/dbi on startup or over fims
+// data: the configuration data to process
+// uniqueId: the uniqueId to use if there are collisions/duplicate values in the configuration
+//
+//	if empty, no collisions are allowed, else the unique id will help prevent collisions, and any that occur can safely use the latest value
+//
+// Return NewMetricsInfo struct containing updated values, as well as any warnings or errors that occurred
+func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) {
+	metricsConfigMutex.Lock()
+	overwrite_conflicting_configs := false
+	if len(configId) > 0 {
+		overwrite_conflicting_configs = true
+		// Use underscores in place of dashes throughout
+		configId = strings.ReplaceAll(configId, "-", "_")
+	}
+	configErrorLocs.initialize()
+	initializeMetricsConfig()
+	new_inputs := []string{}
+	new_filters := []string{}
+	new_filters_starting_index := len(FiltersList)
+	new_outputs := []string{}
+	new_metrics_starting_index := len(MetricsConfig.Metrics)
+	new_echo_starting_index := len(MetricsConfig.Echo)
 
 	pj, err := simdjson.Parse(data, nil)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
 
+	wasWarning := false
+	wasError := false
 	// this is where the main config processing happens
 	pj.ForEach(func(i simdjson.Iter) error {
-		wasError := false
 		if i.Type() != simdjson.TypeObject {
 			log.Fatalf("Unexpected JSON format for config. Must be a json object containing meta data, inputs, filters (optional), outputs, and expressions.")
 		}
 
-		// handle meta data (map[string]interface{}; optional)
-		element, internal_err := i.FindElement(nil, "meta")
-		if internal_err == nil {
-			currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "meta", JType: simdjson.TypeObject})
-			metaObject, internal_err := element.Iter.Object(nil)
-			if internal_err != nil {
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-				wasError = true
-			} else {
-				MetricsConfig.Meta, internal_err = metaObject.Map(MetricsConfig.Meta)
-				if internal_err != nil { // not sure if we can technically get here...
-					logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-					wasError = true
-				}
-			}
-			currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
-		}
-		setupConfigLogging()
+		tempMeta, tempWasWarning, tempWasError := parseMeta(&i)
+		wasWarning = wasWarning || tempWasWarning
+		wasError = wasError || tempWasError
+		tempWasWarning, tempWasError = setupConfigLogging(tempMeta, configId)
+		wasWarning = wasWarning || tempWasWarning
+		wasError = wasError || tempWasError
 
 		// handle templating ([]Template; optional)
-		element, internal_err = i.FindElement(nil, "templates")
+		element, internal_err := i.FindElement(nil, "templates")
 		if internal_err == nil {
 			MetricsConfig.Templates = make([]Template, 0)
-			currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "templates", JType: simdjson.TypeArray})
+			configErrorLocs.addKey("templates", simdjson.TypeArray)
 			templateArray, internal_err := element.Iter.Array(nil)
 			if internal_err != nil {
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+				configErrorLocs.logError(internal_err)
 				wasError = true
 			} else {
 				// for each template object
 				templateIndex := 0
 				templateArray.ForEach(func(templateIter simdjson.Iter) {
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: templateIndex, JType: simdjson.TypeObject})
+					configErrorLocs.addIndex(templateIndex, simdjson.TypeObject)
 					template := Template{}
 					_, internal_err = templateIter.Object(nil)
 					if internal_err != nil {
-						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+						configErrorLocs.logError(internal_err)
 						wasError = true
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+						configErrorLocs.removeLevel() // remove template index
 						templateIndex += 1
 						return
 					} else { // handle the template object
 						// get the value
 						element, internal_err = templateIter.FindElement(nil, "type")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "type", JType: simdjson.TypeString})
+						configErrorLocs.addKey("type", simdjson.TypeString)
 						if internal_err != nil {
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "type"
+							configErrorLocs.removeLevel() // remove "type"
 							// check if there's a "from" specifier, which indicates sequential templating
 							element, internal_err = templateIter.FindElement(nil, "from")
 							if internal_err != nil {
 								// check if there's a "list" specifier, which indicates list templating
 								element, internal_err = templateIter.FindElement(nil, "list")
 								if internal_err != nil {
-									logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("could not identify template type; need either from/to pair or list"))
+									configErrorLocs.logError(fmt.Errorf("could not identify template type; need either from/to pair or list"))
 									wasError = true
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+									configErrorLocs.removeLevel() // remove template index
 									templateIndex += 1
 									return
 								} else {
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "list", JType: simdjson.TypeArray})
+									configErrorLocs.addKey("list", simdjson.TypeArray)
 									var listArray *simdjson.Array
 									listArray, internal_err = element.Iter.Array(nil)
 									if internal_err != nil {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+										configErrorLocs.logError(internal_err)
 										wasError = true
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove list
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+										configErrorLocs.removeLevel() // remove list
+										configErrorLocs.removeLevel() // remove template index
 										templateIndex += 1
 										return
 									} else {
@@ -189,66 +294,66 @@ func UnmarshalConfig(data []byte) {
 											}
 										})
 									}
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+									configErrorLocs.removeLevel()
 								}
 							} else {
-								currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "from", JType: simdjson.TypeInt})
+								configErrorLocs.addKey("from", simdjson.TypeInt)
 								template.From, internal_err = element.Iter.Int()
 								if internal_err != nil {
-									logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+									configErrorLocs.logError(internal_err)
 									wasError = true
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "from"
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+									configErrorLocs.removeLevel() // remove "from"
+									configErrorLocs.removeLevel() // remove template index
 									templateIndex += 1
 									return
 								} else {
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "from"
+									configErrorLocs.removeLevel() // remove "from"
 									element, internal_err = templateIter.FindElement(nil, "to")
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "to", JType: simdjson.TypeInt})
+									configErrorLocs.addKey("to", simdjson.TypeInt)
 									if internal_err != nil {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+										configErrorLocs.logError(internal_err)
 										wasError = true
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "to"
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+										configErrorLocs.removeLevel() // remove "to"
+										configErrorLocs.removeLevel() // remove template index
 										templateIndex += 1
 										return
 									} else {
 										template.To, internal_err = element.Iter.Int()
 										if internal_err != nil {
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+											configErrorLocs.logError(internal_err)
 											wasError = true
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "to"
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+											configErrorLocs.removeLevel() // remove "to"
+											configErrorLocs.removeLevel() // remove template index
 											templateIndex += 1
 											return
 										} else {
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "to"
+											configErrorLocs.removeLevel() // remove "to"
 											element, internal_err = templateIter.FindElement(nil, "step")
-											currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "step", JType: simdjson.TypeInt})
+											configErrorLocs.addKey("step", simdjson.TypeInt)
 											if internal_err == nil {
 												template.Step, internal_err = element.Iter.Int()
 												if internal_err != nil {
-													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+													configErrorLocs.logError(internal_err)
 													wasError = true
-													currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "step"
-													currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+													configErrorLocs.removeLevel() // remove "step"
+													configErrorLocs.removeLevel() // remove template index
 													templateIndex += 1
 													return
 												} else if template.Step == 0 {
-													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("cannot have template step of 0; defaulting to a step of 1"))
+													configErrorLocs.logError(fmt.Errorf("cannot have template step of 0; defaulting to a step of 1"))
 													wasError = true
 													template.Step = 1
 												}
 											} else {
 												template.Step = 1
 											}
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "step"
+											configErrorLocs.removeLevel() // remove "step"
 											element, internal_err = templateIter.FindElement(nil, "format")
-											currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "format", JType: simdjson.TypeString})
+											configErrorLocs.addKey("format", simdjson.TypeString)
 											if internal_err == nil {
 												template.Format, internal_err = element.Iter.StringCvt()
 												if internal_err != nil {
-													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+													configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
 													wasError = true
 													template.Format = "%d"
 												}
@@ -262,14 +367,14 @@ func UnmarshalConfig(data []byte) {
 												}
 
 												if !valid {
-													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+													configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
 													wasError = true
 													template.Format = "%d"
 												}
 											} else {
 												template.Format = "%d"
 											}
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "format"
+											configErrorLocs.removeLevel() // remove "format"
 											template.List = make([]string, 0)
 											if (template.From < template.To && template.Step > 0) || (template.From > template.To && template.Step < 0) {
 												for p := template.From; p <= template.To; p += template.Step {
@@ -284,78 +389,78 @@ func UnmarshalConfig(data []byte) {
 						} else {
 							template.Type, internal_err = element.Iter.StringCvt()
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								configErrorLocs.logError(internal_err)
 								wasError = true
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove type
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+								configErrorLocs.removeLevel() // remove type
+								configErrorLocs.removeLevel() // remove template index
 								templateIndex += 1
 								return
 							} else {
 								if template.Type == "sequential" {
 									element, internal_err = templateIter.FindElement(nil, "from")
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "type"
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "from", JType: simdjson.TypeInt})
+									configErrorLocs.removeLevel() // remove "type"
+									configErrorLocs.addKey("from", simdjson.TypeInt)
 									if internal_err != nil {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+										configErrorLocs.logError(internal_err)
 										wasError = true
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "from"
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+										configErrorLocs.removeLevel() // remove "from"
+										configErrorLocs.removeLevel() // remove template index
 										templateIndex += 1
 										return
 									} else {
 										template.From, internal_err = element.Iter.Int()
 										if internal_err != nil {
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+											configErrorLocs.logError(internal_err)
 											wasError = true
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "from"
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+											configErrorLocs.removeLevel() // remove "from"
+											configErrorLocs.removeLevel() // remove template index
 											templateIndex += 1
 											return
 										} else {
 											element, internal_err = templateIter.FindElement(nil, "to")
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "from"
-											currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "to", JType: simdjson.TypeInt})
+											configErrorLocs.removeLevel() // remove "from"
+											configErrorLocs.addKey("to", simdjson.TypeInt)
 											if internal_err != nil {
-												logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+												configErrorLocs.logError(internal_err)
 												wasError = true
-												currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "to"
-												currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+												configErrorLocs.removeLevel() // remove "to"
+												configErrorLocs.removeLevel() // remove template index
 												templateIndex += 1
 												return
 											} else {
 												template.To, internal_err = element.Iter.Int()
 												if internal_err != nil {
-													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+													configErrorLocs.logError(internal_err)
 													wasError = true
-													currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "to"
-													currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+													configErrorLocs.removeLevel() // remove "to"
+													configErrorLocs.removeLevel() // remove template index
 													templateIndex += 1
 													return
 												} else {
 													element, internal_err = templateIter.FindElement(nil, "step")
-													currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "to"
-													currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "step", JType: simdjson.TypeInt})
+													configErrorLocs.removeLevel() // remove "to"
+													configErrorLocs.addKey("step", simdjson.TypeInt)
 													if internal_err == nil {
 														template.Step, internal_err = element.Iter.Int()
 														if internal_err != nil {
-															logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+															configErrorLocs.logError(internal_err)
 															wasError = true
 															template.Step = 1
 														} else if template.Step == 0 {
-															logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("cannot have template step of 0; defaulting to a step of 1"))
+															configErrorLocs.logError(fmt.Errorf("cannot have template step of 0; defaulting to a step of 1"))
 															wasError = true
 															template.Step = 1
 														}
 													} else {
 														template.Step = 1
 													}
-													currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "step"
+													configErrorLocs.removeLevel() // remove "step"
 													element, internal_err = templateIter.FindElement(nil, "format")
-													currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "format", JType: simdjson.TypeString})
+													configErrorLocs.addKey("format", simdjson.TypeString)
 													if internal_err == nil {
 														template.Format, internal_err = element.Iter.StringCvt()
 														if internal_err != nil {
-															logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+															configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
 															wasError = true
 															template.Format = "%d"
 														}
@@ -369,14 +474,14 @@ func UnmarshalConfig(data []byte) {
 														}
 
 														if !valid {
-															logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+															configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
 															wasError = true
 															template.Format = "%d"
 														}
 													} else {
 														template.Format = "%d"
 													}
-													currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "format"
+													configErrorLocs.removeLevel() // remove "format"
 													template.List = make([]string, 0)
 													if (template.From < template.To && template.Step > 0) || (template.From > template.To && template.Step < 0) {
 														for p := template.From; p <= template.To; p += template.Step {
@@ -389,20 +494,20 @@ func UnmarshalConfig(data []byte) {
 									}
 								} else if template.Type == "list" {
 									element, internal_err = templateIter.FindElement(nil, "list")
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "type"
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "list", JType: simdjson.TypeArray})
+									configErrorLocs.removeLevel() // remove "type"
+									configErrorLocs.addKey("list", simdjson.TypeArray)
 									if internal_err != nil {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+										configErrorLocs.logError(internal_err)
 										wasError = true
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "from"
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+										configErrorLocs.removeLevel() // remove "from"
+										configErrorLocs.removeLevel() // remove template index
 										templateIndex += 1
 										return
 									} else {
 										var listArray *simdjson.Array
 										listArray, internal_err = element.Iter.Array(nil)
 										if internal_err != nil {
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+											configErrorLocs.logError(internal_err)
 											wasError = true
 										} else {
 											template.List = make([]string, 0)
@@ -415,11 +520,11 @@ func UnmarshalConfig(data []byte) {
 											})
 										}
 									}
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "list"
+									configErrorLocs.removeLevel() // remove "list"
 								} else {
-									logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("unexpected template type %v: need \"sequential\" or \"list\"", template.Type))
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "type"
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+									configErrorLocs.logError(fmt.Errorf("unexpected template type %v: need \"sequential\" or \"list\"", template.Type))
+									configErrorLocs.removeLevel() // remove "type"
+									configErrorLocs.removeLevel() // remove template index
 									templateIndex += 1
 									return
 								}
@@ -428,162 +533,167 @@ func UnmarshalConfig(data []byte) {
 
 						// get the token (required)
 						element, internal_err = templateIter.FindElement(nil, "token")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "token", JType: simdjson.TypeString})
+						configErrorLocs.addKey("token", simdjson.TypeString)
 						if internal_err != nil {
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+							configErrorLocs.logError(internal_err)
 							wasError = true
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "token"
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+							configErrorLocs.removeLevel() // remove "token"
+							configErrorLocs.removeLevel() // remove template index
 							templateIndex += 1
 							return
 						} else {
 							template.Tok, internal_err = element.Iter.String()
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								configErrorLocs.logError(internal_err)
 								wasError = true
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "token"
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+								configErrorLocs.removeLevel() // remove "token"
+								configErrorLocs.removeLevel() // remove template index
 								templateIndex += 1
 								return
 							} else if strings.Contains(template.Tok, "@") {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("template tokens cannot contain '@' symbol; symbol is reserved for attributes"))
+								configErrorLocs.logError(fmt.Errorf("template tokens cannot contain '@' symbol; symbol is reserved for attributes"))
 								wasError = true
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "token"
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+								configErrorLocs.removeLevel() // remove "token"
+								configErrorLocs.removeLevel() // remove template index
 								templateIndex += 1
 								return
 							} else if len(template.Tok) == 0 {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("template tokens cannot be empty strings"))
+								configErrorLocs.logError(fmt.Errorf("template tokens cannot be empty strings"))
 								wasError = true
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "token"
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+								configErrorLocs.removeLevel() // remove "token"
+								configErrorLocs.removeLevel() // remove template index
 								templateIndex += 1
 								return
 							} else {
 								for other_template_index, other_template := range MetricsConfig.Templates {
 									if strings.Contains(other_template.Tok, template.Tok) {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("template %v contains template %v's token in its entirety; note that neither template may behave as desired", other_template_index, templateIndex))
+										configErrorLocs.logError(fmt.Errorf("template %v contains template %v's token in its entirety; note that neither template may behave as desired", other_template_index, templateIndex))
 										wasError = true
 									} else if strings.Contains(template.Tok, other_template.Tok) {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("template %v contains template %v's token in its entirety; note that neither template may behave as desired", templateIndex, other_template_index))
+										configErrorLocs.logError(fmt.Errorf("template %v contains template %v's token in its entirety; note that neither template may behave as desired", templateIndex, other_template_index))
 										wasError = true
 									}
 								}
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "token"
+						configErrorLocs.removeLevel() // remove "token"
 					}
 					MetricsConfig.Templates = append(MetricsConfig.Templates, template)
 					templateIndex += 1
-					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove template index
+					configErrorLocs.removeLevel() // remove template index
 				})
 			}
-			currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "templates"
+			configErrorLocs.removeLevel() // remove "templates"
 		}
 
 		// handle inputs (map[string]Input; technically optional, but it will probably be rare not to have any)
 		element, internal_err = i.FindElement(nil, "inputs")
 		if internal_err == nil {
-			currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "inputs", JType: simdjson.TypeObject})
+			configErrorLocs.addKey("inputs", simdjson.TypeObject)
 			inputObject, internal_err := element.Iter.Object(nil)
 			if internal_err != nil {
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+				configErrorLocs.logError(internal_err)
 				wasError = true
 			} else {
 				// for each input
 				inputObject.ForEach(func(key []byte, inputIter simdjson.Iter) {
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: string(key), JType: simdjson.TypeObject})
+					configErrorLocs.addKey(string(key), simdjson.TypeObject)
 					input := Input{}
-					input.Name = string(key)
+					if overwrite_conflicting_configs {
+						input.Name = string(key) + "_" + configId
+					} else {
+						input.Name = string(key)
+					}
 
 					// check for duplicate input names
 					// this shouldn't happen in a valid json document but it's good to check
-					if _, ok := MetricsConfig.Inputs[input.Name]; ok {
+					// BUT now that we can load multiple configs, we really need to be sure the key doesn't already exist
+					if _, ok := MetricsConfig.Inputs[input.Name]; ok && !overwrite_conflicting_configs {
 						// fatal error for input
-						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("duplicate input variable '%s'; only considering first occurence", input.Name))
-						wasError = true
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "input_var_name"
+						configErrorLocs.logError(fmt.Errorf("duplicate input variable '%s'; only considering first occurence", input.Name))
+						wasWarning = true
+						configErrorLocs.removeLevel() // remove "input_var_name"
 						return
 					}
 
 					// get the uri
 					element, internal_err = inputIter.FindElement(nil, "uri")
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "uri", JType: simdjson.TypeString})
+					configErrorLocs.addKey("uri", simdjson.TypeString)
 					if internal_err != nil {
 						// if there's no uri, check to see if it's an internal variable (we'll handle this later, so we're just checking for now...)
 						element, internal_err = inputIter.FindElement(nil, "internal")
 						if internal_err != nil {
 							// fatal error for input
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+							configErrorLocs.logError(internal_err)
 							wasError = true
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "uri"
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "input_var_name"
+							configErrorLocs.removeLevel() // remove "uri"
+							configErrorLocs.removeLevel() // remove "input_var_name"
 							return
 						}
 					} else {
 						input.Uri, internal_err = element.Iter.String()
 						if internal_err != nil {
 							// fatal error for input
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+							configErrorLocs.logError(internal_err)
 							wasError = true
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "uri"
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "input_var_name"
+							configErrorLocs.removeLevel() // remove "uri"
+							configErrorLocs.removeLevel() // remove "input_var_name"
 							return
 						}
 					}
-					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "uri"
+					configErrorLocs.removeLevel() // remove "uri"
 
 					// check if internal variable
 					element, internal_err = inputIter.FindElement(nil, "internal")
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "internal", JType: simdjson.TypeBool})
+					configErrorLocs.addKey("internal", simdjson.TypeBool)
 					if internal_err == nil {
 						input.Internal, internal_err = element.Iter.Bool()
 						if internal_err != nil {
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+							configErrorLocs.logError(internal_err)
 							wasError = true
 							if len(input.Uri) == 0 {
 								// fatal error for input
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "internal"
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "input_var_name"
+								configErrorLocs.removeLevel() // remove "internal"
+								configErrorLocs.removeLevel() // remove "input_var_name"
 								return
 							}
 						}
 						if !input.Internal && len(input.Uri) == 0 {
 							// fatal error for input
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("key 'internal' is specified as false but 'uri' field is empty; need one or the other"))
+							configErrorLocs.logError(fmt.Errorf("key 'internal' is specified as false but 'uri' field is empty; need one or the other"))
 							wasError = true
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "internal"
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "input_var_name"
+							configErrorLocs.removeLevel() // remove "internal"
+							configErrorLocs.removeLevel() // remove "input_var_name"
 							return
 						} else if input.Internal && len(input.Uri) > 0 {
 							// currently, my thinking that this is a better default if both are specified
 							// since someone might say "uri": "none"
 							// (not fatal)
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("key 'internal' is specified as true but 'uri' field contains a uri; defaulting to internally calculated value"))
-							wasError = true
+							configErrorLocs.logError(fmt.Errorf("key 'internal' is specified as true but 'uri' field contains a uri; defaulting to internally calculated value"))
+							wasWarning = true
 							input.Uri = ""
 						}
 					}
-					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "internal"
+					configErrorLocs.removeLevel() // remove "internal"
 
 					// get the data type
 					element, internal_err = inputIter.FindElement(nil, "type")
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "type", JType: simdjson.TypeString})
+					configErrorLocs.addKey("type", simdjson.TypeString)
 					if internal_err != nil {
 						// fatal error for input
-						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+						configErrorLocs.logError(internal_err)
 						wasError = true
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "type"
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "input_var_name"
+						configErrorLocs.removeLevel() // remove "type"
+						configErrorLocs.removeLevel() // remove "input_var_name"
 						return
 					} else {
 						input.Type, internal_err = element.Iter.String()
 						if internal_err != nil {
 							// fatal error for input
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+							configErrorLocs.logError(internal_err)
 							wasError = true
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "type"
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "input_var_name"
+							configErrorLocs.removeLevel() // remove "type"
+							configErrorLocs.removeLevel() // remove "input_var_name"
 							return
 						}
 						switch input.Type {
@@ -605,27 +715,27 @@ func UnmarshalConfig(data []byte) {
 							input.Value.tag = UINT
 						default:
 							// fatal error for input
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid data type %v specified for input; must be string, bool, float, int, or uint", input.Type))
+							configErrorLocs.logError(fmt.Errorf("invalid data type %v specified for input; must be string, bool, float, int, or uint", input.Type))
 							wasError = true
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "type"
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "input_var_name"
+							configErrorLocs.removeLevel() // remove "type"
+							configErrorLocs.removeLevel() // remove "input_var_name"
 							return
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "type"
+						configErrorLocs.removeLevel() // remove "type"
 
 						//the user can also specify an initial value
 						element, internal_err = inputIter.FindElement(nil, "default")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "default", JType: simdjson.TypeString})
+						configErrorLocs.addKey("default", simdjson.TypeString)
 						if internal_err == nil {
 							elementInterface, internal_err := element.Iter.Interface()
 							if internal_err != nil { // not sure if we can get here...
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								configErrorLocs.logError(internal_err)
 								wasError = true
 							} else {
 								input.Value = castValueToUnionType(elementInterface, input.Value.tag)
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "default"
+						configErrorLocs.removeLevel() // remove "default"
 					}
 
 					// get any attributes (optional)
@@ -633,11 +743,11 @@ func UnmarshalConfig(data []byte) {
 					if internal_err == nil {
 						var attributesArray *simdjson.Array
 						attributesArray, internal_err = element.Iter.Array(nil)
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "attributes", JType: simdjson.TypeArray})
+						configErrorLocs.addKey("attributes", simdjson.TypeArray)
 						if internal_err != nil {
 							// not fatal
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-							wasError = true
+							configErrorLocs.logError(internal_err)
+							wasWarning = true
 						} else {
 							input.Attributes = make([]string, 0)
 							input.AttributesMap = make(map[string]string)
@@ -645,10 +755,10 @@ func UnmarshalConfig(data []byte) {
 							attributesArray.ForEach(func(attributeIter simdjson.Iter) {
 								var attribute string
 								attribute, internal_err = attributeIter.String()
-								currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: attributeIndex, JType: simdjson.TypeString})
+								configErrorLocs.addIndex(attributeIndex, simdjson.TypeString)
 								if internal_err != nil {
-									logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-									wasError = true
+									configErrorLocs.logError(internal_err)
+									wasWarning = true
 								} else {
 									input.Attributes = append(input.Attributes, attribute)
 									input.AttributesMap[attribute] = input.Name + "@" + attribute
@@ -665,52 +775,59 @@ func UnmarshalConfig(data []byte) {
 									}
 									allPossibleAttributes[attribute] = append(allPossibleAttributes[attribute], input.Name+"@"+attribute)
 								}
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove specific attribute
+								configErrorLocs.removeLevel() // remove specific attribute
 								attributeIndex += 1
 							})
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "attributes"
+						configErrorLocs.removeLevel() // remove "attributes"
 					}
 
 					// get the fims method
 					element, internal_err = inputIter.FindElement(nil, "method")
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "method", JType: simdjson.TypeBool})
+					configErrorLocs.addKey("method", simdjson.TypeBool)
 					if internal_err == nil {
 						input.Method, internal_err = element.Iter.String()
 						if internal_err != nil {
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-							wasError = true
+							configErrorLocs.logError(internal_err)
+							wasWarning = true
 							input.Method = ""
 						} else if !(input.Method == "pub" || input.Method == "set" || input.Method == "both") {
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid fims input method; must be 'pub', 'set', or 'both'; defaulting to 'both'"))
-							wasError = true
+							configErrorLocs.logError(fmt.Errorf("invalid fims input method; must be 'pub', 'set', or 'both'; defaulting to 'both'"))
+							wasWarning = true
 							input.Method = ""
 						}
 					} else {
 						input.Method = ""
 					}
-					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "method"
-
-					MetricsConfig.Inputs[string(key)] = input
-					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+					configErrorLocs.removeLevel() // remove "method"
+					MetricsConfig.Inputs[input.Name] = input
+					new_inputs = append(new_inputs, input.Name)
+					configErrorLocs.removeLevel()
 				}, nil)
 			}
-			currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "inputs"
+			configErrorLocs.removeLevel() // remove "inputs"
 		}
-		handleInputsTemplates()
-		generateScope()
-		verifyInputConfigLogging()
+
+		new_inputs, tempWasWarning, tempWasError = handleInputsTemplates(new_inputs, overwrite_conflicting_configs)
+		wasWarning = wasWarning || tempWasWarning
+		wasError = wasError || tempWasError
+		generateScope(new_inputs)
+		tempWasWarning, tempWasError = verifyInputConfigLogging()
+		wasWarning = wasWarning || tempWasWarning
+		wasError = wasError || tempWasError
 
 		// handle filters (map[string]interface{}; optional)
 		element, internal_err = i.FindElement(nil, "filters")
 		if internal_err == nil {
-			currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "filters", JType: simdjson.TypeObject})
+			configErrorLocs.addKey("filters", simdjson.TypeObject)
 			filterObject, internal_err := element.Iter.Object(nil)
 			if internal_err != nil {
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+				configErrorLocs.logError(internal_err)
 				wasError = true
 			} else {
-				FiltersList = []string{}
+				if FiltersList == nil {
+					FiltersList = []string{}
+				}
 				nextFilter := simdjson.Iter{}
 				typ := simdjson.TypeObject
 				var err error
@@ -720,49 +837,73 @@ func UnmarshalConfig(data []byte) {
 					if typ == simdjson.TypeNone || err != nil {
 						break
 					}
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: name, JType: simdjson.TypeObject})
+					if overwrite_conflicting_configs {
+						name = name + "_" + configId
+					}
+					configErrorLocs.addKey(name, simdjson.TypeObject)
+
+					// remove filters so we don't repeat any in FiltersList (we'll add it back)
+					removed_filter := false
+					FiltersList, removed_filter = removeStringFromSlice(FiltersList, name)
+					if removed_filter {
+						new_filters_starting_index--
+					}
+
 					FiltersList = append(FiltersList, name) // todo: delete filter if not valid
 					filterInterface, internal_err := nextFilter.Interface()
 					if internal_err == nil {
 						MetricsConfig.Filters[name] = filterInterface
+						new_filters = append(new_filters, name)
 					} else {
-						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+						configErrorLocs.logError(internal_err)
 						wasError = true
 					}
-					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+					configErrorLocs.removeLevel()
 				}
 			}
-			currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+			configErrorLocs.removeLevel()
 		}
-		handleFiltersTemplates()
-		if getAndParseFilters() { // getAndParseFilters returns true if there was an error
+		new_filters, tempWasWarning, tempWasError = handleFiltersTemplates(new_filters, overwrite_conflicting_configs)
+		wasWarning = wasWarning || tempWasWarning
+		wasError = wasError || tempWasError
+		if getAndParseFilters(new_filters, new_filters_starting_index, new_inputs, overwrite_conflicting_configs, configId) { // getAndParseFilters returns true if there was an error
 			wasError = true
 		}
-		verifyFilterConfigLogging()
+		if verifyFilterConfigLogging() {
+			wasWarning = true
+		}
 
 		// handle outputs (map[string]Output; technically optional, but it will probably be rare not to have any)
 		element, internal_err = i.FindElement(nil, "outputs")
-		PublishUris = make(map[string][]string, 0)
-		pubDataChanged = make(map[string]bool, 0)
+		if PublishUris == nil {
+			PublishUris = make(map[string][]string, 0)
+		}
+		if pubDataChanged == nil {
+			pubDataChanged = make(map[string]bool, 0)
+		}
 		if internal_err == nil {
-			currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "outputs", JType: simdjson.TypeObject})
+			configErrorLocs.addKey("outputs", simdjson.TypeObject)
 			outputObject, internal_err := element.Iter.Object(nil)
 			if internal_err != nil {
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+				configErrorLocs.logError(internal_err)
 				wasError = true
 			} else {
 				// for each output
 				outputObject.ForEach(func(key []byte, outputIter simdjson.Iter) {
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: string(key), JType: simdjson.TypeObject})
+					configErrorLocs.addKey(string(key), simdjson.TypeObject)
 					output := Output{}
+					outputName := string(key)
+					if overwrite_conflicting_configs {
+						outputName = outputName + "_" + configId
+					}
 
 					// check for duplicate output names
 					// this shouldn't happen in a valid json document but it's good to check
-					if _, ok := MetricsConfig.Outputs[string(key)]; ok {
+					if _, ok := MetricsConfig.Outputs[outputName]; ok && !overwrite_conflicting_configs {
 						// fatal error for output
-						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("duplicate output variable '%s'; only considering first occurence", string(key)))
-						wasError = true
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "output_var_name"
+						configErrorLocs.logError(fmt.Errorf("duplicate output variable '%s'; only considering first occurence", outputName))
+						wasWarning = true
+						configErrorLocs.removeLevel() // remove "output_var_name"
 						return
 					}
 
@@ -772,22 +913,22 @@ func UnmarshalConfig(data []byte) {
 					if internal_err == nil {
 						var flagsArr *simdjson.Array
 						flagsArr, internal_err = element.Iter.Array(nil)
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "flags", JType: simdjson.TypeArray})
+						configErrorLocs.addKey("flags", simdjson.TypeArray)
 						if internal_err != nil {
 							// non-fatal error; just skip adding flags
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-							wasError = true
+							configErrorLocs.logError(internal_err)
+							wasWarning = true
 						} else {
 							flagIndex := 0
 							flagsArr.ForEach(func(flagIter simdjson.Iter) {
 								var flag string
 								flag, internal_err = flagIter.String()
-								currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: flagIndex, JType: simdjson.TypeString})
+								configErrorLocs.addIndex(flagIndex, simdjson.TypeString)
 								if internal_err != nil {
 									// non-fatal error; just skip adding this particular flag
-									logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-									wasError = true
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove flag index
+									configErrorLocs.logError(internal_err)
+									wasWarning = true
+									configErrorLocs.removeLevel() // remove flag index
 									return
 								} else {
 									validFlag := false
@@ -799,74 +940,75 @@ func UnmarshalConfig(data []byte) {
 									}
 									if !validFlag {
 										// non-fatal error; just skip adding this particular flag
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid output flag '%v'", flag))
-										wasError = true
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove flag index
+										configErrorLocs.logError(fmt.Errorf("invalid output flag '%v'", flag))
+										wasWarning = true
+										configErrorLocs.removeLevel() // remove flag index
 										return
 									}
 									output.Flags = append(output.Flags, flag)
 								}
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove flag index
+								configErrorLocs.removeLevel() // remove flag index
 								flagIndex += 1
 							})
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "flags"
+						configErrorLocs.removeLevel() // remove "flags"
 					}
 
 					// get the uri (required)
 					element, internal_err = outputIter.FindElement(nil, "uri")
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "uri", JType: simdjson.TypeString})
+					configErrorLocs.addKey("uri", simdjson.TypeString)
 					if internal_err != nil {
 						// fatal error for output
-						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+						configErrorLocs.logError(internal_err)
 						wasError = true
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "uri"
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "output_var_name"
+						configErrorLocs.removeLevel() // remove "uri"
+						configErrorLocs.removeLevel() // remove "output_var_name"
 						return
 					} else {
 						output.Uri, internal_err = element.Iter.String()
 						if internal_err != nil {
 							// fatal error for output
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+							configErrorLocs.logError(internal_err)
 							wasError = true
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "uri"
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "output_var_name"
+							configErrorLocs.removeLevel() // remove "uri"
+							configErrorLocs.removeLevel() // remove "output_var_name"
 							return
 						}
 					}
-					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "uri"
+					configErrorLocs.removeLevel() // remove "uri"
 
 					// get the name if there is one
 					element, internal_err = outputIter.FindElement(nil, "name")
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "name", JType: simdjson.TypeString})
+					configErrorLocs.addKey("name", simdjson.TypeString)
 					if internal_err == nil {
 						output.Name, internal_err = element.Iter.String()
 						if internal_err != nil {
 							// non-fatal error; just log it if there is one
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-							wasError = true
+							output.Name = string(key)
+							configErrorLocs.logError(internal_err)
+							wasWarning = true
 						}
 					} else {
 						output.Name = string(key)
 					}
-					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "name"
+					configErrorLocs.removeLevel() // remove "name"
 
 					// get the publishRate if there is one
 					element, internal_err = outputIter.FindElement(nil, "publishRate")
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "publishRate", JType: simdjson.TypeInt})
+					configErrorLocs.addKey("publishRate", simdjson.TypeInt)
 					if internal_err == nil {
 						output.PublishRate, internal_err = element.Iter.Int()
 						if internal_err != nil {
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-							wasError = true
+							configErrorLocs.logError(internal_err)
+							wasWarning = true
 						} else if output.PublishRate <= 0 {
 							// this default is applied later
 							output.PublishRate = 0
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("publish rate must be greater than 0; defaulting to global publish rate"))
-							wasError = true
+							configErrorLocs.logError(fmt.Errorf("publish rate must be greater than 0; defaulting to global publish rate"))
+							wasWarning = true
 						}
 					}
-					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "publishRate"
+					configErrorLocs.removeLevel() // remove "publishRate"
 
 					// add any attributes and their values
 					element, internal_err = outputIter.FindElement(nil, "attributes")
@@ -874,19 +1016,19 @@ func UnmarshalConfig(data []byte) {
 					if internal_err == nil {
 						var attributesObj *simdjson.Object
 						attributesObj, internal_err = element.Iter.Object(nil)
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "attributes", JType: simdjson.TypeObject})
+						configErrorLocs.addKey("attributes", simdjson.TypeObject)
 						if internal_err != nil {
 							// just ignore the attributes if there's an error reading them into an object
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-							wasError = true
+							configErrorLocs.logError(internal_err)
+							wasWarning = true
 						} else {
 							attributesObj.ForEach(func(attributeKey []byte, objIter simdjson.Iter) {
 								// if an error occurs, I believe that key will just show up as null in the message body
 								output.Attributes[string(attributeKey)], _ = objIter.Interface()
-								OutputScope[string(key)+"@"+string(attributeKey)] = []Union{getUnionFromValue(output.Attributes[string(attributeKey)])}
+								OutputScope[outputName+"@"+string(attributeKey)] = []Union{getUnionFromValue(output.Attributes[string(attributeKey)])}
 							}, nil)
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "attributes"
+						configErrorLocs.removeLevel() // remove "attributes"
 					}
 
 					// determine if the output is an enum
@@ -896,10 +1038,10 @@ func UnmarshalConfig(data []byte) {
 					if internal_err == nil && stringInSlice(output.Flags, "enum") {
 						var enumArray *simdjson.Array
 						enumArray, internal_err = element.Iter.Array(nil)
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "enum", JType: simdjson.TypeArray})
+						configErrorLocs.addKey("enum", simdjson.TypeArray)
 						if internal_err != nil {
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-							wasError = true
+							configErrorLocs.logError(internal_err)
+							wasWarning = true
 							flags_copy := make([]string, len(output.Flags))
 							copy(flags_copy, output.Flags)
 							fl_idx := 0
@@ -914,69 +1056,69 @@ func UnmarshalConfig(data []byte) {
 							var enumIndex int64
 							var positionIndex int
 							enumArray.ForEach(func(enumIter simdjson.Iter) {
-								currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: positionIndex, JType: simdjson.TypeObject})
+								configErrorLocs.addIndex(positionIndex, simdjson.TypeObject)
 								var enumObject EnumObject
 								var simdjsonEnumObject *simdjson.Object
 								simdjsonEnumObject, internal_err = enumIter.Object(nil)
 								if internal_err == nil {
 									element = simdjsonEnumObject.FindKey("value", nil)
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "value", JType: simdjson.TypeInt})
+									configErrorLocs.addKey("value", simdjson.TypeInt)
 									if element != nil {
 										enumObject.Value, internal_err = element.Iter.Int()
 										if internal_err != nil {
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; using default index of %d", internal_err, enumIndex))
-											wasError = true
+											configErrorLocs.logError(fmt.Errorf("%v; using default index of %d", internal_err, enumIndex))
+											wasWarning = true
 											enumObject.Value = enumIndex
 										} else {
 											enumIndex = enumObject.Value
 										}
 									} else {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("path not found; using default index of %d", enumIndex))
-										wasError = true
+										configErrorLocs.logError(fmt.Errorf("path not found; using default index of %d", enumIndex))
+										wasWarning = true
 										enumObject.Value = enumIndex
 									}
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+									configErrorLocs.removeLevel()
 
 									element = simdjsonEnumObject.FindKey("string", nil)
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "string", JType: simdjson.TypeString})
+									configErrorLocs.addKey("string", simdjson.TypeString)
 									if element != nil {
 										enumObject.String, internal_err = element.Iter.StringCvt()
 										if internal_err != nil {
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; using default string of \"Unknown\"", internal_err))
-											wasError = true
+											configErrorLocs.logError(fmt.Errorf("%v; using default string of \"Unknown\"", internal_err))
+											wasWarning = true
 											enumObject.String = "Unknown"
 										}
 									} else {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("path not found; using default string of \"Unknown\""))
-										wasError = true
+										configErrorLocs.logError(fmt.Errorf("path not found; using default string of \"Unknown\""))
+										wasWarning = true
 										enumObject.String = "Unknown"
 									}
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+									configErrorLocs.removeLevel()
 								} else {
 									enumObject.String, internal_err = enumIter.StringCvt()
 									enumObject.Value = enumIndex
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "string", JType: simdjson.TypeString})
+									configErrorLocs.addKey("string", simdjson.TypeString)
 									if internal_err != nil {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; using default index of %d and string of \"Unknown\"", internal_err, enumIndex))
-										wasError = true
+										configErrorLocs.logError(fmt.Errorf("%v; using default index of %d and string of \"Unknown\"", internal_err, enumIndex))
+										wasWarning = true
 										enumObject.String = "Unknown"
 									}
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+									configErrorLocs.removeLevel()
 								}
 								output.EnumMap[int(enumIndex)] = int(positionIndex)
 								enumIndex = enumObject.Value + 1
 								positionIndex += 1
 								output.Enum = append(output.Enum, enumObject)
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+								configErrorLocs.removeLevel()
 							})
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+						configErrorLocs.removeLevel()
 					} else if internal_err == nil && !stringInSlice(output.Flags, "enum") {
-						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("found 'enum' field, but no matching output flag"))
-						wasError = true
+						configErrorLocs.logError(fmt.Errorf("found 'enum' field, but no matching output flag"))
+						wasWarning = true
 					} else if stringInSlice(output.Flags, "enum") {
-						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("found 'enum' flag, but no matching 'enum' field"))
-						wasError = true
+						configErrorLocs.logError(fmt.Errorf("found 'enum' flag, but no matching 'enum' field"))
+						wasWarning = true
 						flags_copy := make([]string, len(output.Flags))
 						copy(flags_copy, output.Flags)
 						fl_idx := 0
@@ -995,10 +1137,10 @@ func UnmarshalConfig(data []byte) {
 					if internal_err == nil && stringInSlice(output.Flags, "bitfield") {
 						var enumArray *simdjson.Array
 						enumArray, internal_err = element.Iter.Array(nil)
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "bitfield", JType: simdjson.TypeArray})
+						configErrorLocs.addKey("bitfield", simdjson.TypeArray)
 						if internal_err != nil {
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-							wasError = true
+							configErrorLocs.logError(internal_err)
+							wasWarning = true
 							flags_copy := make([]string, len(output.Flags))
 							copy(flags_copy, output.Flags)
 							fl_idx := 0
@@ -1013,70 +1155,70 @@ func UnmarshalConfig(data []byte) {
 							var enumIndex int64
 							var positionIndex int
 							enumArray.ForEach(func(enumIter simdjson.Iter) {
-								currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: positionIndex, JType: simdjson.TypeObject})
+								configErrorLocs.addIndex(positionIndex, simdjson.TypeObject)
 								var enumObject EnumObject
 								var simdjsonEnumObject *simdjson.Object
 								simdjsonEnumObject, internal_err = enumIter.Object(nil)
 								if internal_err == nil {
 									element = simdjsonEnumObject.FindKey("value", nil)
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "value", JType: simdjson.TypeInt})
+									configErrorLocs.addKey("value", simdjson.TypeInt)
 									if element != nil {
 										enumObject.Value, internal_err = element.Iter.Int()
 										if internal_err != nil {
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; using default index of %d", internal_err, enumIndex))
-											wasError = true
+											configErrorLocs.logError(fmt.Errorf("%v; using default index of %d", internal_err, enumIndex))
+											wasWarning = true
 											enumObject.Value = enumIndex
 										} else if enumObject.Value != enumIndex {
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; using default index of %d", "cannot skip values for bitfields", enumIndex))
-											wasError = true
+											configErrorLocs.logError(fmt.Errorf("%v; using default index of %d", "cannot skip values for bitfields", enumIndex))
+											wasWarning = true
 											enumObject.Value = enumIndex
 										}
 									} else {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("path not found; using default index of %d", enumIndex))
-										wasError = true
+										configErrorLocs.logError(fmt.Errorf("path not found; using default index of %d", enumIndex))
+										wasWarning = true
 										enumObject.Value = enumIndex
 									}
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+									configErrorLocs.removeLevel()
 
 									element = simdjsonEnumObject.FindKey("string", nil)
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "string", JType: simdjson.TypeString})
+									configErrorLocs.addKey("string", simdjson.TypeString)
 									if element != nil {
 										enumObject.String, internal_err = element.Iter.StringCvt()
 										if internal_err != nil {
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; using default string of \"Unknown\"", internal_err))
-											wasError = true
+											configErrorLocs.logError(fmt.Errorf("%v; using default string of \"Unknown\"", internal_err))
+											wasWarning = true
 											enumObject.String = "Unknown"
 										}
 									} else {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("path not found; using default string of \"Unknown\""))
-										wasError = true
+										configErrorLocs.logError(fmt.Errorf("path not found; using default string of \"Unknown\""))
+										wasWarning = true
 										enumObject.String = "Unknown"
 									}
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+									configErrorLocs.removeLevel()
 								} else {
 									enumObject.String, internal_err = enumIter.StringCvt()
 									enumObject.Value = enumIndex
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "string", JType: simdjson.TypeString})
+									configErrorLocs.addKey("string", simdjson.TypeString)
 									if internal_err != nil {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; using default index of %d and string of \"Unknown\"", internal_err, enumIndex))
-										wasError = true
+										configErrorLocs.logError(fmt.Errorf("%v; using default index of %d and string of \"Unknown\"", internal_err, enumIndex))
+										wasWarning = true
 										enumObject.String = "Unknown"
 									}
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+									configErrorLocs.removeLevel()
 								}
 								enumIndex = enumObject.Value + 1
 								positionIndex += 1
 								output.Bitfield = append(output.Bitfield, enumObject)
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+								configErrorLocs.removeLevel()
 							})
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+						configErrorLocs.removeLevel()
 					} else if internal_err == nil && !stringInSlice(output.Flags, "bitfield") {
-						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("found 'bitfield' field, but no matching output flag"))
-						wasError = true
+						configErrorLocs.logError(fmt.Errorf("found 'bitfield' field, but no matching output flag"))
+						wasWarning = true
 					} else if stringInSlice(output.Flags, "bitfield") {
-						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("found 'bitfield' flag, but no matching 'bitfield' field"))
-						wasError = true
+						configErrorLocs.logError(fmt.Errorf("found 'bitfield' flag, but no matching 'bitfield' field"))
+						wasWarning = true
 						flags_copy := make([]string, len(output.Flags))
 						copy(flags_copy, output.Flags)
 						fl_idx := 0
@@ -1088,73 +1230,79 @@ func UnmarshalConfig(data []byte) {
 							fl_idx += 1
 						}
 					}
-					MetricsConfig.Outputs[string(key)] = output
-					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+					MetricsConfig.Outputs[outputName] = output
+					new_outputs = append(new_outputs, outputName)
+					configErrorLocs.removeLevel()
 				}, nil)
 
 			}
-			currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "outputs"
+			configErrorLocs.removeLevel() // remove "outputs"
 		}
-		handleOutputsTemplates()
-		for outputName, output := range MetricsConfig.Outputs {
+		new_outputs = handleOutputsTemplates(new_outputs)
+		for _, outputName := range new_outputs {
+			output := MetricsConfig.Outputs[string(outputName)]
 			combineFlags(outputName, &output)
 		}
-		checkMixedFlags(currentJsonLocation)
-		verifyOutputConfigLogging()
+		if checkMixedFlags() {
+			wasWarning = true
+		}
+		if verifyOutputConfigLogging() {
+			wasWarning = true
+		}
 
 		// handle metrics ([]MetricsObject)
 		element, internal_err = i.FindElement(nil, "metrics")
 		if internal_err == nil {
-			currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "metrics", JType: simdjson.TypeArray})
+			configErrorLocs.addKey("metrics", simdjson.TypeArray)
 			metricsArr, internal_err := element.Iter.Array(nil)
 			if internal_err != nil {
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+				configErrorLocs.logError(internal_err)
 				wasError = true
 			} else {
 				// for each metrics object
 				metricsIndex := 0
 				internal_vars := make([]string, 0) // keep track of internal vars so we know if they're calculated before they're used
 				metricsArr.ForEach(func(metricsIter simdjson.Iter) {
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: metricsIndex, JType: simdjson.TypeObject})
+					configErrorLocs.addIndex(metricsIndex, simdjson.TypeObject)
 					metric := MetricsObject{}
 					_, internal_err = metricsIter.Object(nil)
 					if internal_err != nil {
-						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+						configErrorLocs.logError(internal_err)
 						wasError = true
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "metricsIndex"
+						configErrorLocs.removeLevel() // remove "metricsIndex"
 						metricsIndex += 1
 						return
 					} else { // handle the metrics object
 
 						// get the id
 						element, internal_err = metricsIter.FindElement(nil, "id")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "id", JType: simdjson.TypeString})
+						configErrorLocs.addKey("id", simdjson.TypeString)
 						if internal_err != nil {
 							metric.Id = fmt.Sprintf("%d", metricsIndex)
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v (warning only)", internal_err))
-							wasError = true
+							configErrorLocs.logError(fmt.Errorf("%v (warning only)", internal_err))
+							wasWarning = true
 						} else {
 							metric.Id, internal_err = element.Iter.StringCvt()
 							if internal_err != nil { // not sure if we can get here...
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-								wasError = true
+								configErrorLocs.logError(internal_err)
+								wasWarning = true
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove id
+						configErrorLocs.removeLevel() // remove id
 
 						// get the value
 						element, internal_err = metricsIter.FindElement(nil, "type")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "type", JType: simdjson.TypeString})
+						configErrorLocs.addKey("type", simdjson.TypeString)
 						if internal_err != nil {
 							metric.Type = NIL
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-							wasError = true
+							configErrorLocs.logError(internal_err)
+							wasWarning = true
 						} else {
 							var typeString string
 							typeString, internal_err = element.Iter.StringCvt()
 							if internal_err != nil { // not sure if we can get here...
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-								wasError = true
+								configErrorLocs.logError(internal_err)
+								wasWarning = true
 							}
 							switch typeString {
 							case "string":
@@ -1171,15 +1319,15 @@ func UnmarshalConfig(data []byte) {
 								metric.Type = NIL
 							default:
 								metric.Type = NIL
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("unhandled output type %s; deferring to default output type", typeString))
-								wasError = true
+								configErrorLocs.logError(fmt.Errorf("unhandled output type %s; deferring to default output type", typeString))
+								wasWarning = true
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove type
+						configErrorLocs.removeLevel() // remove type
 
 						// Determine whether this is an alert (default false)
 						element, internal_err = metricsIter.FindElement(nil, "alert")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "alert", JType: simdjson.TypeString})
+						configErrorLocs.addKey("alert", simdjson.TypeString)
 						if internal_err != nil {
 							// alert field is optional, set false and continue
 							metric.Alert = false
@@ -1187,48 +1335,48 @@ func UnmarshalConfig(data []byte) {
 							// error if alert field was found but does not contain a boolean value
 							alertVal, internal_err := element.Iter.Bool()
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								configErrorLocs.logError(internal_err)
 								wasError = true
 							} else {
 								metric.Alert = alertVal
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "alert"
+						configErrorLocs.removeLevel() // remove "alert"
 
 						if metric.Alert {
 							element, internal_err = metricsIter.FindElement(nil, "messages")
 							// Messages are required for alerts, optional (unused) otherwise
 							if internal_err != nil || element == nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("message array required for alerts: %w", internal_err))
+								configErrorLocs.logError(fmt.Errorf("message array required for alerts: %w", internal_err))
 								wasError = true
 							} else {
 								var messageArray *simdjson.Array
 								messageArray, internal_err = element.Iter.Array(nil)
-								currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "messages", JType: simdjson.TypeArray})
+								configErrorLocs.addKey("messages", simdjson.TypeArray)
 								if internal_err != nil {
-									logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("failed to get alert message array: %w", internal_err))
+									configErrorLocs.logError(fmt.Errorf("failed to get alert message array: %w", internal_err))
 									wasError = true
 								} else {
 									metric.Messages = make(map[string]string)
 									var positionIndex int
 									messageArray.ForEach(func(messageItr simdjson.Iter) {
-										currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: positionIndex, JType: simdjson.TypeObject})
+										configErrorLocs.addIndex(positionIndex, simdjson.TypeObject)
 										var messageObj *simdjson.Object
 										messageObj, internal_err = messageItr.Object(nil)
 										if internal_err != nil {
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("failed to get message entry %d from alert message array: %w", positionIndex, internal_err))
+											configErrorLocs.logError(fmt.Errorf("failed to get message entry %d from alert message array: %w", positionIndex, internal_err))
 											wasError = true
 										} else {
 											messageMap := make(map[string]interface{})
 											_, internal_err = messageObj.Map(messageMap)
 											if internal_err != nil || len(messageMap) == 0 {
-												logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("failed to get message expression %d from alert message array: %w", positionIndex, internal_err))
+												configErrorLocs.logError(fmt.Errorf("failed to get message expression %d from alert message array: %w", positionIndex, internal_err))
 												wasError = true
 											} else {
 												for messageExpression, messageInterface := range messageMap {
 													messageString, ok := messageInterface.(string)
 													if !ok {
-														logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("failed to get message string %d from alert message array: %w", positionIndex, internal_err))
+														configErrorLocs.logError(fmt.Errorf("failed to get message string %d from alert message array: %w", positionIndex, internal_err))
 														wasError = true
 													} else {
 														metric.Messages[messageExpression] = messageString
@@ -1237,21 +1385,21 @@ func UnmarshalConfig(data []byte) {
 											}
 										}
 										positionIndex += 1
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove positionIndex
+										configErrorLocs.removeLevel() // remove positionIndex
 									})
 								}
-								currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "messages"
+								configErrorLocs.removeLevel() // remove "messages"
 							}
 						}
 
 						// get the outputs (at least one is required)
 						element, internal_err = metricsIter.FindElement(nil, "outputs")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "outputs", JType: simdjson.TypeArray})
+						configErrorLocs.addKey("outputs", simdjson.TypeArray)
 						if internal_err != nil {
 							//we can also theoretically have an internal_output, so we can check for that if we don't find a regular output
 							element, internal_err = metricsIter.FindElement(nil, "internal_output")
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								configErrorLocs.logError(internal_err)
 								wasError = true
 							}
 						} else {
@@ -1261,9 +1409,12 @@ func UnmarshalConfig(data []byte) {
 								var outputStr string
 								outputStr, internal_err = element.Iter.StringCvt()
 								if internal_err != nil { // not sure if we can get here...
-									logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-									wasError = true
+									configErrorLocs.logError(internal_err)
+									wasWarning = true
 								} else {
+									if overwrite_conflicting_configs {
+										outputStr = outputStr + "_" + configId
+									}
 									metric.Outputs = []string{outputStr}
 								}
 							} else {
@@ -1272,113 +1423,119 @@ func UnmarshalConfig(data []byte) {
 								outputsArr.ForEach(func(outputIter simdjson.Iter) {
 									var outputVar string
 									outputVar, internal_err = outputIter.String()
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: outputIndex, JType: simdjson.TypeString})
+									configErrorLocs.addIndex(outputIndex, simdjson.TypeString)
 									if internal_err != nil {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-										wasError = true
+										configErrorLocs.logError(internal_err)
+										wasWarning = true
 									} else {
+										if overwrite_conflicting_configs {
+											outputVar = outputVar + "_" + configId
+										}
 										metric.Outputs = append(metric.Outputs, outputVar)
 									}
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+									configErrorLocs.removeLevel()
 									outputIndex += 1
 								})
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove outputs
+						configErrorLocs.removeLevel() // remove outputs
 
 						// check if there's an internal output
 						element, internal_err = metricsIter.FindElement(nil, "internal_output")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "internal_output", JType: simdjson.TypeString})
+						configErrorLocs.addKey("internal_output", simdjson.TypeString)
 						if internal_err == nil {
 							var internalOutput string
 							internalOutput, internal_err = element.Iter.StringCvt()
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-								wasError = true
+								configErrorLocs.logError(internal_err)
+								wasWarning = true
 							} else {
+								if overwrite_conflicting_configs {
+									internalOutput = internalOutput + "_" + configId
+								}
 								metric.InternalOutput = internalOutput
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove internal_output
+						configErrorLocs.removeLevel() // remove internal_output
 
 						// get the expression
 						element, internal_err = metricsIter.FindElement(nil, "expression")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "expression", JType: simdjson.TypeString})
+						configErrorLocs.addKey("expression", simdjson.TypeString)
 						if internal_err != nil {
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+							configErrorLocs.logError(internal_err)
 							wasError = true
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "expression"
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "metricsIndex"
+							configErrorLocs.removeLevel() // remove "expression"
+							configErrorLocs.removeLevel() // remove "metricsIndex"
 							metricsIndex += 1
 							return
 						} else {
 							var expr string
 							expr, internal_err = element.Iter.String()
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								configErrorLocs.logError(internal_err)
 								wasError = true
 							} else {
 								metric.Expression = expr
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "expression"
+						configErrorLocs.removeLevel() // remove "expression"
 
 						// apply templating
 						metricsObjects := handleMetricsTemplates(metric)
 
 						// now that we've applied templating, check that the output vars are all valid
 						// remove them if they're not
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "outputs", JType: simdjson.TypeArray})
-						for idx, metric := range metricsObjects {
+						configErrorLocs.addKey("outputs", simdjson.TypeArray)
+						for idx := range metricsObjects {
 							outputIdx := 0
-							metricOutputsCopy := make([]string, len(metric.Outputs))
-							copy(metricOutputsCopy, metric.Outputs)
+							metricOutputsCopy := make([]string, len(metricsObjects[idx].Outputs))
+							copy(metricOutputsCopy, metricsObjects[idx].Outputs)
 							for _, outputVar := range metricOutputsCopy {
 								if _, ok := MetricsConfig.Outputs[outputVar]; !ok {
 									if strings.Contains(outputVar, "@") {
 										if _, ok := MetricsConfig.Outputs[strings.Split(outputVar, "@")[0]]; !ok {
 											metricsObjects[idx].Outputs = append(metricsObjects[idx].Outputs[:outputIdx], metricsObjects[idx].Outputs[outputIdx+1:]...)
 											outputIdx -= 1
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("output variable '%s' does not have a corresponding output config", outputVar))
+											configErrorLocs.logError(fmt.Errorf("output variable '%s' does not have a corresponding output config", outputVar))
 											wasError = true
 										}
 									} else {
 										metricsObjects[idx].Outputs = append(metricsObjects[idx].Outputs[:outputIdx], metricsObjects[idx].Outputs[outputIdx+1:]...)
 										outputIdx -= 1
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("output variable '%s' does not have a corresponding output config", outputVar))
+										configErrorLocs.logError(fmt.Errorf("output variable '%s' does not have a corresponding output config", outputVar))
 										wasError = true
 									}
 								}
 								outputIdx += 1
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "outputs"
+						configErrorLocs.removeLevel() // remove "outputs"
 
 						// now that we've applied templating, check that the internal output is valid
 						// remove it if not
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "internal_output", JType: simdjson.TypeString})
+						configErrorLocs.addKey("internal_output", simdjson.TypeString)
 						for idx, metric := range metricsObjects {
 							if len(metric.InternalOutput) > 0 {
 								if _, ok := MetricsConfig.Inputs[metric.InternalOutput]; !ok {
 									if strings.Contains(metric.InternalOutput, "@") {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("cannot map internal_output variable to attribute"))
+										configErrorLocs.logError(fmt.Errorf("cannot map internal_output variable to attribute"))
 										wasError = true
 									} else {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("internal_output variable '%s' does not have a corresponding input config", metric.InternalOutput))
+										configErrorLocs.logError(fmt.Errorf("internal_output variable '%s' does not have a corresponding input config", metric.InternalOutput))
 										wasError = true
 									}
 									metricsObjects[idx].InternalOutput = ""
 								}
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "internal_output"
+						configErrorLocs.removeLevel() // remove "internal_output"
 
 						metricsObjectsIterationCopy := make([]MetricsObject, len(metricsObjects))
 						copy(metricsObjectsIterationCopy, metricsObjects)
 						idx := 0
 						for _, metric := range metricsObjectsIterationCopy {
 							if len(metric.InternalOutput) == 0 && len(metric.Outputs) == 0 {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"))
+								configErrorLocs.logError(fmt.Errorf("after applying templating and variable checks, metric does not have valid internal_output or output variables; discarding metric"))
 								wasError = true
 								metricsObjects = append(metricsObjects[:idx], metricsObjects[idx+1:]...)
 								idx -= 1
@@ -1389,72 +1546,121 @@ func UnmarshalConfig(data []byte) {
 						// preprocess all of the expressions in the metrics document
 						// so that all we need to do is evaluate the expressions at runtime.
 						// currently modeling after https://github.com/crsmithdev/goexpr
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "expression", JType: simdjson.TypeString})
+						configErrorLocs.addKey("expression", simdjson.TypeString)
 						for _, metric := range metricsObjects {
 							var warning string
-							warning, internal_err = metric.getExpression(internal_vars, len(MetricsConfig.Metrics))
+							warning, internal_err = metric.getExpression(internal_vars, len(MetricsConfig.Metrics), configId)
 							if len(warning) > 0 {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v (warning only)", warning))
-								wasError = true
+								configErrorLocs.logError(fmt.Errorf("%v (warning only)", warning))
+								wasWarning = true
+							}
+							if overwrite_conflicting_configs {
+								messages_copy := make(map[string]string, 0)
+								for metricsSubexpression, messageString := range metric.Messages {
+									messages_copy[metricsSubexpression] = messageString
+								}
+								metric.Messages = make(map[string]string, 0)
+								for metricsSubexpression, messageString := range messages_copy {
+									for _, varName := range metric.ParsedExpression.Vars {
+										if !stringInSlice([]string{"true", "false", "nil", "attribute", "value"}, varName) {
+											varName = strings.TrimSuffix(varName, "_"+configId)
+											isAttribute := false
+											for attributeName := range allPossibleAttributes {
+												if attributeName == varName {
+													isAttribute = true
+												}
+											}
+											if !isAttribute {
+												regexpression := "\\b" + varName + "\\b"
+												compiled_expression, err := regexp.Compile(regexpression)
+												if err == nil {
+													expression_bytes := compiled_expression.ReplaceAll([]byte(metricsSubexpression), []byte(varName+"_"+configId))
+													metricsSubexpression = string(expression_bytes)
+													messageString = strings.ReplaceAll(messageString, "{"+varName+"}", "{"+varName+"_"+configId+"}")
+													metric.Messages[metricsSubexpression] = messageString
+												}
+											}
+										}
+									}
+								}
 							}
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("%v; excluding this metric from calculations", internal_err))
+								configErrorLocs.logError(fmt.Errorf("%v; excluding this metric from calculations", internal_err))
 								wasError = true
 							} else {
+								if overwrite_conflicting_configs {
+									for i, metricObject := range MetricsConfig.Metrics {
+										if metricObject.Id == metric.Id && new_metrics_starting_index > 0 {
+											MetricsConfig.Metrics = append(MetricsConfig.Metrics[:i], MetricsConfig.Metrics[i+1:]...)
+											if len(metricObject.InternalOutput) > 0 {
+												internal_vars, _ = removeStringFromSlice(internal_vars, metricObject.InternalOutput)
+											}
+											new_metrics_starting_index--
+											break
+										}
+									}
+								}
 								MetricsConfig.Metrics = append(MetricsConfig.Metrics, metric)
 								internal_vars = append(internal_vars, metric.InternalOutput)
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+						configErrorLocs.removeLevel()
 					}
 					metricsIndex += 1
-					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete metrics index
+					configErrorLocs.removeLevel() // delete metrics index
 				})
 
 			}
-			currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+			configErrorLocs.removeLevel()
 
 		}
-		checkUnusedOutputs()
-		currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "metrics", JType: simdjson.TypeArray})
-		warnings, errs := mapOutputsToMetrics()
+		if checkUnusedOutputs() {
+			wasError = true
+		}
+		configErrorLocs.addKey("metrics", simdjson.TypeArray)
+		if new_metrics_starting_index < 0 {
+			new_metrics_starting_index = 0
+		}
+		warnings, errs := mapOutputsToMetrics(new_metrics_starting_index)
 		for j, warning := range warnings {
 			if len(warning) > 0 {
-				currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: j, JType: simdjson.TypeObject})
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("had an issue mapping outputs to metrics: %v (warning only)", warning))
-				wasError = true
-				currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+				configErrorLocs.addIndex(j, simdjson.TypeObject)
+				configErrorLocs.addKey("expression", simdjson.TypeString)
+				configErrorLocs.logError(fmt.Errorf("had an issue mapping outputs to metrics: %v (warning only)", warning))
+				wasWarning = true
+				configErrorLocs.removeLevel()
+				configErrorLocs.removeLevel()
 			}
 		}
 		j := 0
 		for j, internal_err = range errs {
 			if internal_err != nil {
-				currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: j, JType: simdjson.TypeObject})
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("had an issue mapping outputs to metrics: %v; excluding this metric from calculations", internal_err))
+				configErrorLocs.addIndex(j, simdjson.TypeObject)
+				configErrorLocs.logError(fmt.Errorf("had an issue mapping outputs to metrics: %v; excluding this metric from calculations", internal_err))
 				wasError = true
-				currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+				configErrorLocs.removeLevel()
 			}
 		}
-		currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+		configErrorLocs.removeLevel()
 
 		// handle echos ([]EchoObject)
 		element, internal_err = i.FindElement(nil, "echo")
 		if internal_err == nil {
-			currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "echo", JType: simdjson.TypeArray})
+			configErrorLocs.addKey("echo", simdjson.TypeArray)
 			echoArr, internal_err := element.Iter.Array(nil)
 			if internal_err != nil {
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+				configErrorLocs.logError(internal_err)
 				wasError = true
 			} else {
 				// for each echo object
 				echoIndex := 0
 				echoArr.ForEach(func(echoIter simdjson.Iter) {
-					currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: echoIndex, JType: simdjson.TypeObject})
+					configErrorLocs.addIndex(echoIndex, simdjson.TypeObject)
 					echo := EchoObject{}
 
 					_, internal_err = echoIter.Object(nil)
 					if internal_err != nil {
-						logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+						configErrorLocs.logError(internal_err)
 						wasError = true
 					} else { // handle the echo object
 						// get the uri
@@ -1462,138 +1668,138 @@ func UnmarshalConfig(data []byte) {
 						echo.Inputs = make([]EchoInput, 0)
 						echo.Echo = make(map[string]interface{}, 0)
 						element, internal_err = echoIter.FindElement(nil, "uri")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "uri", JType: simdjson.TypeString})
+						configErrorLocs.addKey("uri", simdjson.TypeString)
 						if internal_err != nil {
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+							configErrorLocs.logError(internal_err)
 							wasError = true
 							fatalErr = true
 						} else {
 							echo.PublishUri, internal_err = element.Iter.StringCvt()
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								configErrorLocs.logError(internal_err)
 								wasError = true
 								fatalErr = true
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+						configErrorLocs.removeLevel()
 
 						// get the publish rate
 						element, internal_err = echoIter.FindElement(nil, "publishRate")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "publishRate", JType: simdjson.TypeString})
+						configErrorLocs.addKey("publishRate", simdjson.TypeString)
 						if internal_err != nil {
-							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+							configErrorLocs.logError(internal_err)
 							wasError = true
 							fatalErr = true
 						} else {
 							echo.PublishRate, internal_err = element.Iter.Int()
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								configErrorLocs.logError(internal_err)
 								wasError = true
 								fatalErr = true
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+						configErrorLocs.removeLevel()
 
 						// get the heartbeat (optional)
 						element, internal_err = echoIter.FindElement(nil, "heartbeat")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "heartbeat", JType: simdjson.TypeString})
+						configErrorLocs.addKey("heartbeat", simdjson.TypeString)
 						if internal_err == nil {
 							echo.Heartbeat, internal_err = element.Iter.StringCvt()
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-								wasError = true
+								configErrorLocs.logError(internal_err)
+								wasWarning = true
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+						configErrorLocs.removeLevel()
 
 						// get the format (optional)
 						element, internal_err = echoIter.FindElement(nil, "format")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "format", JType: simdjson.TypeString})
+						configErrorLocs.addKey("format", simdjson.TypeString)
 						if internal_err == nil {
 							echo.Format, internal_err = element.Iter.StringCvt()
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
-								wasError = true
+								configErrorLocs.logError(internal_err)
+								wasWarning = true
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+						configErrorLocs.removeLevel()
 
 						// get the null_value_default (optional)
 						var null_value_default interface{}
 						element, internal_err = echoIter.FindElement(nil, "null_value_default")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "null_value_default", JType: simdjson.TypeString})
+						configErrorLocs.addKey("null_value_default", simdjson.TypeString)
 						if internal_err == nil {
 							null_value_default, internal_err = element.Iter.Interface()
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								configErrorLocs.logError(internal_err)
 								wasError = true
 							}
 						}
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+						configErrorLocs.removeLevel()
 
 						// get the inputs
 						element, internal_err = echoIter.FindElement(nil, "inputs")
 						if internal_err == nil {
 							var inputsArr *simdjson.Array
 							inputsArr, internal_err = element.Iter.Array(nil)
-							currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "inputs", JType: simdjson.TypeArray})
+							configErrorLocs.addKey("inputs", simdjson.TypeArray)
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								configErrorLocs.logError(internal_err)
 								wasError = true
 							} else {
 								echo.Inputs = make([]EchoInput, 0)
 								inputIndex := 0
 								inputsArr.ForEach(func(inputIter simdjson.Iter) {
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Index: inputIndex, JType: simdjson.TypeObject})
+									configErrorLocs.addIndex(inputIndex, simdjson.TypeObject)
 									var echoInput EchoInput
 									echoInput.Registers = make(map[string]string, 0)
 									element, internal_err = inputIter.FindElement(nil, "uri")
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "uri", JType: simdjson.TypeString})
+									configErrorLocs.addKey("uri", simdjson.TypeString)
 									if internal_err != nil {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+										configErrorLocs.logError(internal_err)
 										wasError = true
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete uri
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete input index
+										configErrorLocs.removeLevel() // delete uri
+										configErrorLocs.removeLevel() // delete input index
 										return
 									} else {
 										echoInput.Uri, internal_err = element.Iter.StringCvt()
 										if internal_err != nil {
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+											configErrorLocs.logError(internal_err)
 											wasError = true
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete uri
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete input index
+											configErrorLocs.removeLevel() // delete uri
+											configErrorLocs.removeLevel() // delete input index
 											return
 										}
 									}
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete uri
+									configErrorLocs.removeLevel() // delete uri
 									element, internal_err = inputIter.FindElement(nil, "registers")
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "registers", JType: simdjson.TypeObject})
+									configErrorLocs.addKey("registers", simdjson.TypeObject)
 
 									if internal_err != nil {
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+										configErrorLocs.logError(internal_err)
 										wasError = true
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete uri
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete input index
+										configErrorLocs.removeLevel() // delete uri
+										configErrorLocs.removeLevel() // delete input index
 										return
 									} else {
 										var temp interface{}
 										temp, internal_err = element.Iter.Interface()
 
 										if internal_err != nil {
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+											configErrorLocs.logError(internal_err)
 											wasError = true
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete registers
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete input index
+											configErrorLocs.removeLevel() // delete registers
+											configErrorLocs.removeLevel() // delete input index
 											return
 										}
 										var ok bool
 										var tempInterface map[string]interface{}
 										tempInterface, ok = temp.(map[string]interface{})
 										if !ok {
-											logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("could not convert registers to map[string]interface{}"))
+											configErrorLocs.logError(fmt.Errorf("could not convert registers to map[string]interface{}"))
 											wasError = true
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete registers
-											currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete input index
+											configErrorLocs.removeLevel() // delete registers
+											configErrorLocs.removeLevel() // delete input index
 											return
 										}
 
@@ -1604,38 +1810,38 @@ func UnmarshalConfig(data []byte) {
 												echo.Echo[key] = null_value_default
 											case map[string]interface{}:
 												source, okSource := x["source"]
-												currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: key, JType: simdjson.TypeObject})
-												currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "source", JType: simdjson.TypeString})
+												configErrorLocs.addKey(key, simdjson.TypeObject)
+												configErrorLocs.addKey("source", simdjson.TypeString)
 												if !okSource {
-													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("path not found"))
+													configErrorLocs.logError(fmt.Errorf("path not found"))
 													wasError = true
-													currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete register key
-													currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete source
+													configErrorLocs.removeLevel() // delete register key
+													configErrorLocs.removeLevel() // delete source
 													continue
 												}
 												okStrSource := false
 												echoInput.Registers[key], okStrSource = source.(string)
 												if !okStrSource {
-													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("value is not string"))
+													configErrorLocs.logError(fmt.Errorf("value is not string"))
 													wasError = true
-													currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete register key
-													currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete source
+													configErrorLocs.removeLevel() // delete register key
+													configErrorLocs.removeLevel() // delete source
 													continue
 												}
-												currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete source
-												currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "default", JType: simdjson.TypeNone})
+												configErrorLocs.removeLevel() // delete source
+												configErrorLocs.addKey("default", simdjson.TypeNone)
 												defaultVal, okDefault := x["default"]
 												if !okDefault {
-													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("path not found"))
+													configErrorLocs.logError(fmt.Errorf("path not found"))
 													wasError = true
 													echo.Echo[key] = null_value_default
 												} else {
 													echo.Echo[key] = defaultVal
 												}
-												currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete default
-												currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete register key
+												configErrorLocs.removeLevel() // delete default
+												configErrorLocs.removeLevel() // delete register key
 											default:
-												logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("could not convert registers to map[string]string"))
+												configErrorLocs.logError(fmt.Errorf("could not convert registers to map[string]string"))
 												wasError = true
 												continue
 											}
@@ -1646,38 +1852,38 @@ func UnmarshalConfig(data []byte) {
 										for _, in := range echo.Inputs {
 											for key := range in.Registers {
 												if _, ok = echoInput.Registers[key]; ok {
-													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("echo output key %v appears in more than one input register; excluding this input", key))
-													wasError = true
+													configErrorLocs.logError(fmt.Errorf("echo output key %v appears in more than one input register; excluding this input", key))
+													wasWarning = true
 													delete(echoInput.Registers, key)
 												}
 											}
 										}
 									}
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete registers
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete input index
+									configErrorLocs.removeLevel() // delete registers
+									configErrorLocs.removeLevel() // delete input index
 									echo.Inputs = append(echo.Inputs, echoInput)
 									inputIndex += 1
 								})
 							}
-							currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete inputs
+							configErrorLocs.removeLevel() // delete inputs
 
 						}
 
 						// get the echo vars
 						element, internal_err = echoIter.FindElement(nil, "echo")
-						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "echo", JType: simdjson.TypeObject})
+						configErrorLocs.addKey("echo", simdjson.TypeObject)
 						if internal_err == nil {
 							var echoInterface interface{}
 							var echoMap map[string]interface{}
 							echoInterface, internal_err = element.Iter.Interface()
 							if internal_err != nil {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								configErrorLocs.logError(internal_err)
 								wasError = true
 							}
 							var ok bool
 							echoMap, ok = echoInterface.(map[string]interface{})
 							if !ok {
-								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("could not convert echo object to map[string]interface{}"))
+								configErrorLocs.logError(fmt.Errorf("could not convert echo object to map[string]interface{}"))
 								wasError = true
 							}
 							for key, value := range echoMap {
@@ -1687,10 +1893,10 @@ func UnmarshalConfig(data []byte) {
 									if echoValue == nil {
 										echo.Echo[key] = value // set the default based on this register
 									} else {
-										currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: key, JType: simdjson.TypeString})
-										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("found duplicate echo register; using the first occurence"))
-										wasError = true
-										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+										configErrorLocs.addKey(key, simdjson.TypeString)
+										configErrorLocs.logError(fmt.Errorf("found duplicate echo register; using the first occurence"))
+										wasWarning = true
+										configErrorLocs.removeLevel()
 									}
 								}
 							}
@@ -1699,16 +1905,16 @@ func UnmarshalConfig(data []byte) {
 						if null_value_default == nil {
 							for key, value := range echo.Echo {
 								if value == nil {
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: key, JType: simdjson.TypeString})
-									logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", key))
-									wasError = true
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+									configErrorLocs.addKey(key, simdjson.TypeString)
+									configErrorLocs.logError(fmt.Errorf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", key))
+									wasWarning = true
+									configErrorLocs.removeLevel()
 									echo.Echo[key] = int64(0)
 								}
 							}
 						}
 
-						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+						configErrorLocs.removeLevel()
 						if !fatalErr {
 							MetricsConfig.Echo = append(MetricsConfig.Echo, echo)
 						}
@@ -1716,16 +1922,16 @@ func UnmarshalConfig(data []byte) {
 					}
 
 					echoIndex += 1
-					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+					configErrorLocs.removeLevel()
 				})
 
 			}
-			currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
-			handleEchoTemplates()
+			configErrorLocs.removeLevel()
+			handleEchoTemplates(new_echo_starting_index)
 
 		}
 
-		if wasError {
+		if wasError || wasWarning {
 			return fmt.Errorf("")
 		}
 		return nil
@@ -1736,11 +1942,14 @@ func UnmarshalConfig(data []byte) {
 	if err == nil {
 		bytesInterface, ok := bytesDat.(map[string]interface{})
 		if ok {
+			configErrorLocs.addIndex(0, simdjson.TypeObject)
 			for key := range bytesInterface {
 				if !stringInSlice([]string{"meta", "templates", "inputs", "filters", "outputs", "metrics", "echo"}, key) {
-					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: configPathAndFile, JType: simdjson.TypeObject}}, fmt.Errorf("found unknown key '%s' in configuration document; ignoring config element", key))
+					wasWarning = true
+					configErrorLocs.logError(fmt.Errorf("found unknown key '%s' in configuration document; ignoring config element", key))
 				}
 			}
+			configErrorLocs.removeLevel()
 		}
 	}
 
@@ -1810,50 +2019,31 @@ func UnmarshalConfig(data []byte) {
 	mdoEncoder = json.NewEncoder(mdoBuf)
 	mdoEncoder.SetEscapeHTML(false)
 	mdoEncoder.SetIndent("", "    ")
-}
-
-func delete_at_index(slice []JsonAccessor, index int) []JsonAccessor {
-
-	// Append function used to append elements to a slice
-	// first parameter as the slice to which the elements
-	// are to be added/appended second parameter is the
-	// element(s) to be appended into the slice
-	// return value as a slice
-	if index >= 0 && len(slice)-1 >= index {
-		return append(slice[:index], slice[index+1:]...)
-	} else {
-		return slice
+	new_metrics_info := NewMetricsInfo{
+		new_inputs,
+		new_filters,
+		new_filters_starting_index,
+		new_outputs,
+		new_metrics_starting_index,
+		new_echo_starting_index,
+		0,
 	}
+	metricsConfigMutex.Unlock()
+	return new_metrics_info, wasWarning, wasError
 }
 
-func logError(errorLocs *[]ErrorLocation, currentJsonLocation []JsonAccessor, err error) {
-	var errStr string
-	if fmt.Sprintf("%v", err) == "path not found" {
-		errStr = strings.Replace(fmt.Sprintf("%v", err), "path", fmt.Sprintf("key '%v'", currentJsonLocation[len(currentJsonLocation)-1]), -1)
-		errStr = strings.ReplaceAll(errStr, "\"", "\\\"")
-		*errorLocs = append(*errorLocs, ErrorLocation{JsonError: errStr})
-		(*errorLocs)[len(*errorLocs)-1].JsonLocation = make([]JsonAccessor, len(currentJsonLocation)-1)
-		copy(configErrorLocs.ErrorLocs[len(configErrorLocs.ErrorLocs)-1].JsonLocation, currentJsonLocation)
-	} else if strings.Contains(fmt.Sprintf("%v", err), "value is not") {
-		errStr = strings.Replace(fmt.Sprintf("%v", err), "value is not", "expected value to be", -1)
-		errStr = strings.ReplaceAll(errStr, "\"", "\\\"")
-		*errorLocs = append(*errorLocs, ErrorLocation{JsonError: errStr})
-		(*errorLocs)[len(*errorLocs)-1].JsonLocation = make([]JsonAccessor, len(currentJsonLocation))
-		copy(configErrorLocs.ErrorLocs[len(configErrorLocs.ErrorLocs)-1].JsonLocation, currentJsonLocation)
-	} else {
-		*errorLocs = append(*errorLocs, ErrorLocation{JsonError: strings.ReplaceAll(fmt.Sprintf("%v", err), "\"", "\\\"")})
-		(*errorLocs)[len(*errorLocs)-1].JsonLocation = make([]JsonAccessor, len(currentJsonLocation))
-		copy(configErrorLocs.ErrorLocs[len(configErrorLocs.ErrorLocs)-1].JsonLocation, currentJsonLocation)
-	}
-
-}
-
-func handleInputsTemplates() {
+func handleInputsTemplates(new_inputs []string, overwrite_conflicting_configs bool) ([]string, bool, bool) {
+	wasWarning := false
+	wasError := false
 	if allPossibleAttributes == nil {
 		allPossibleAttributes = make(map[string][]string, 0)
 	}
 	for _, template := range MetricsConfig.Templates {
-		for inputName, input := range MetricsConfig.Inputs {
+		new_inputs_copy := make([]string, len(new_inputs))
+		copy(new_inputs_copy, new_inputs)
+		i := 0
+		for _, inputName := range new_inputs_copy {
+			input := MetricsConfig.Inputs[inputName]
 			// it only really makes sense for inputs to be templated by their variable name
 			// otherwise, we would have repeated variable names
 			if strings.Contains(inputName, template.Tok) {
@@ -1864,9 +2054,14 @@ func handleInputsTemplates() {
 
 					// check for duplicate input names
 					// this is much more likely to happen if we are careless with templating
-					if _, ok := MetricsConfig.Inputs[newInputName]; ok {
+					if _, ok := MetricsConfig.Inputs[newInputName]; ok && !overwrite_conflicting_configs {
 						// fatal error for input
-						logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "inputs", JType: simdjson.TypeObject}, {Key: newInputName, JType: simdjson.TypeObject}}, fmt.Errorf("duplicate input variable '%s' when unraveling template; only considering first occurence", newInputName))
+						configErrorLocs.addKey("inputs", simdjson.TypeObject)
+						configErrorLocs.addKey(newInputName, simdjson.TypeObject)
+						configErrorLocs.logError(fmt.Errorf("duplicate input variable '%s' when unraveling template; only considering first occurence", newInputName))
+						configErrorLocs.removeLevel()
+						configErrorLocs.removeLevel()
+						wasWarning = true
 						continue
 					}
 
@@ -1911,16 +2106,27 @@ func handleInputsTemplates() {
 						}
 					}
 					MetricsConfig.Inputs[newInputName] = newInput
+					new_inputs = append(new_inputs, newInputName)
 				}
 				delete(MetricsConfig.Inputs, inputName)
+				new_inputs = delete_string_at_index(new_inputs, i)
+				i--
 			}
+			i++
 		}
 	}
+	return new_inputs, wasWarning, wasError
 }
 
-func handleFiltersTemplates() {
+func handleFiltersTemplates(new_filters []string, overwrite_conflicting_configs bool) ([]string, bool, bool) {
+	wasWarning := false
+	wasError := false
 	for _, template := range MetricsConfig.Templates {
-		for filterName, filter := range MetricsConfig.Filters {
+		new_filters_copy := make([]string, len(new_filters))
+		copy(new_filters_copy, new_filters)
+		i := 0
+		for _, filterName := range new_filters_copy {
+			filter := MetricsConfig.Filters[filterName]
 			// it only really makes sense for filters to be templated by their variable name
 			// otherwise, we would have repeated variable names
 			if strings.Contains(filterName, template.Tok) {
@@ -1930,14 +2136,24 @@ func handleFiltersTemplates() {
 
 					// check for duplicate filter/input names
 					// this is much more likely to happen if we are careless with templating
-					if _, ok := MetricsConfig.Inputs[newFilterName]; ok {
+					if _, ok := MetricsConfig.Inputs[newFilterName]; ok && !overwrite_conflicting_configs {
 						// fatal error
-						logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "filters", JType: simdjson.TypeObject}, {Key: newFilterName, JType: simdjson.TypeObject}}, fmt.Errorf("templated filter variable '%s' also occurs as input variable; only considering input variable", newFilterName))
+						configErrorLocs.addKey("filters", simdjson.TypeObject)
+						configErrorLocs.addKey(newFilterName, simdjson.TypeObject)
+						configErrorLocs.logError(fmt.Errorf("templated filter variable '%s' also occurs as input variable; only considering input variable", newFilterName))
+						configErrorLocs.removeLevel()
+						configErrorLocs.removeLevel()
+						wasError = true
 						continue
 					}
-					if _, ok := MetricsConfig.Filters[newFilterName]; ok {
+					if _, ok := MetricsConfig.Filters[newFilterName]; ok && !overwrite_conflicting_configs {
 						// fatal error
-						logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "filters", JType: simdjson.TypeObject}, {Key: newFilterName, JType: simdjson.TypeObject}}, fmt.Errorf("duplicate filter variable '%s' when unraveling template; only considering first occurence", newFilterName))
+						configErrorLocs.addKey("filters", simdjson.TypeObject)
+						configErrorLocs.addKey(newFilterName, simdjson.TypeObject)
+						configErrorLocs.logError(fmt.Errorf("duplicate filter variable '%s' when unraveling template; only considering first occurence", newFilterName))
+						configErrorLocs.removeLevel()
+						configErrorLocs.removeLevel()
+						wasWarning = true
 						continue
 					}
 
@@ -1946,6 +2162,7 @@ func handleFiltersTemplates() {
 					case string:
 						newStrFilter := strings.ReplaceAll(x, template.Tok, replacement)
 						MetricsConfig.Filters[newFilterName] = newStrFilter
+						new_filters = append(new_filters, newFilterName)
 					case []interface{}:
 						newFilterArr := make([]interface{}, 0)
 						for filterIndex, subFilter := range x {
@@ -1954,13 +2171,21 @@ func handleFiltersTemplates() {
 								newStrFilter := strings.ReplaceAll(strFilter, template.Tok, replacement)
 								newFilterArr = append(newFilterArr, newStrFilter)
 							} else {
-								logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "filters", JType: simdjson.TypeObject}, {Key: newFilterName, JType: simdjson.TypeArray}, {Index: filterIndex, JType: simdjson.TypeString}}, fmt.Errorf("could not convert subfilter to string"))
+								configErrorLocs.addKey("filters", simdjson.TypeObject)
+								configErrorLocs.addKey(newFilterName, simdjson.TypeArray)
+								configErrorLocs.addIndex(filterIndex, simdjson.TypeString)
+								configErrorLocs.logError(fmt.Errorf("could not convert subfilter to string"))
 								wasErr = true
+								configErrorLocs.removeLevel()
+								configErrorLocs.removeLevel()
+								configErrorLocs.removeLevel()
+								wasError = true
 								break
 							}
 						}
 						if !wasErr {
 							MetricsConfig.Filters[newFilterName] = newFilterArr
+							new_filters = append(new_filters, newFilterName)
 						}
 					case []string:
 						newFilterArr := make([]string, 0)
@@ -1970,21 +2195,35 @@ func handleFiltersTemplates() {
 						}
 						if !wasErr {
 							MetricsConfig.Filters[newFilterName] = newFilterArr
+							new_filters = append(new_filters, newFilterName)
 						}
 					default:
-						logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "filters", JType: simdjson.TypeObject}, {Key: newFilterName, JType: simdjson.TypeObject}}, fmt.Errorf("invalid filter type %v", reflect.TypeOf(filter)))
+						configErrorLocs.addKey("filters", simdjson.TypeObject)
+						configErrorLocs.addKey(newFilterName, simdjson.TypeObject)
+						configErrorLocs.logError(fmt.Errorf("invalid filter type %v", reflect.TypeOf(filter)))
+						configErrorLocs.removeLevel()
+						configErrorLocs.removeLevel()
+						wasError = true
 						continue
 					}
 				}
 				delete(MetricsConfig.Filters, filterName)
+				new_filters = delete_string_at_index(new_filters, i)
+				i--
 			}
+			i++
 		}
 	}
+	return new_filters, wasWarning, wasError
 }
 
-func handleOutputsTemplates() {
+func handleOutputsTemplates(new_outputs []string) []string {
 	for _, template := range MetricsConfig.Templates {
-		for outputName, output := range MetricsConfig.Outputs {
+		new_outputs_copy := make([]string, len(new_outputs))
+		copy(new_outputs_copy, new_outputs)
+		i := 0
+		for _, outputName := range new_outputs_copy {
+			output := MetricsConfig.Outputs[outputName]
 			// it only really makes sense for outputs to be templated by their variable name
 			// otherwise, we would have repeated variable names
 			// we also need to be aware that the templating also needs to occur in the
@@ -2030,11 +2269,16 @@ func handleOutputsTemplates() {
 						}
 					}
 					MetricsConfig.Outputs[newOutputName] = newOutput
+					new_outputs = append(new_outputs, newOutputName)
 				}
 				delete(MetricsConfig.Outputs, outputName)
+				new_outputs = delete_string_at_index(new_outputs, i)
+				i--
 			}
+			i++
 		}
 	}
+	return new_outputs
 }
 
 func handleMetricsTemplates(metricTmp MetricsObject) []MetricsObject {
@@ -2088,12 +2332,15 @@ func handleMetricsTemplates(metricTmp MetricsObject) []MetricsObject {
 	return metricsObjects
 }
 
-func handleEchoTemplates() {
+func handleEchoTemplates(new_echo_starting_index int) {
+	if len(MetricsConfig.Echo) <= new_echo_starting_index {
+		return
+	}
 	for _, template := range MetricsConfig.Templates {
-		e := 0
+		e := new_echo_starting_index
 		echoCopy := make([]EchoObject, len(MetricsConfig.Echo))
 		copy(echoCopy, MetricsConfig.Echo)
-		for _, echoObject := range echoCopy {
+		for _, echoObject := range echoCopy[new_echo_starting_index:] {
 			// metrics can be templated by expression
 			// (e.g. if you want the same expression to apply to multiple inputs - then sent to multiple outputs)
 			// or by output (e.g. if you want the same value to get sent to multiple outputs)
@@ -2214,14 +2461,21 @@ func handleEchoTemplates() {
 }
 
 // first pass at generating the scope; excludes filters
-func generateScope() {
-	InputScope = make(map[string][]Union, 0)
-	OutputScope = make(map[string][]Union, 0)
-	for key, input := range MetricsConfig.Inputs {
-		InputScope[key] = []Union{input.Value}
-		if len(input.Attributes) > 0 {
-			for _, attributeLoc := range input.AttributesMap {
-				InputScope[attributeLoc] = []Union{MetricsConfig.Attributes[attributeLoc].Value}
+func generateScope(new_inputs []string) {
+	if InputScope == nil {
+		InputScope = make(map[string][]Union, 0)
+	}
+	if OutputScope == nil {
+		OutputScope = make(map[string][]Union, 0)
+	}
+	for _, key := range new_inputs {
+		input := MetricsConfig.Inputs[key]
+		if _, ok := InputScope[key]; !ok {
+			InputScope[key] = []Union{input.Value}
+			if len(input.Attributes) > 0 {
+				for _, attributeLoc := range input.AttributesMap {
+					InputScope[attributeLoc] = []Union{MetricsConfig.Attributes[attributeLoc].Value}
+				}
 			}
 		}
 	}
@@ -2235,7 +2489,7 @@ func generateScope() {
 // return: any configuration warnings or errors that occurred
 func configureStateAndOutputs(metricsObject *MetricsObject, netIndex int) (warning string, err error) {
 	// Setup locks
-	metricsAlreadyConfigured := len(metricsMutex) > 0
+	metricsAlreadyConfigured := len(metricsMutex) > 0 && netIndex < len(metricsMutex)
 	// Only lock if reconfiguring. Otherwise the lock will not have been configured and will not be usable yet
 	if metricsAlreadyConfigured {
 		metricsMutex[netIndex].Lock()
@@ -2259,7 +2513,7 @@ func configureStateAndOutputs(metricsObject *MetricsObject, netIndex int) (warni
 		strings.Contains(metricsObject.ParsedExpression.String, "Milliseconds") ||
 		strings.Contains(metricsObject.ParsedExpression.String, "Pulse") ||
 		strings.Contains(metricsObject.ParsedExpression.String, "Duration") {
-		metricsObject.State["alwaysEvaluate"] = []Union{Union{tag: BOOL, b: true}}
+		metricsObject.State["alwaysEvaluate"] = []Union{{tag: BOOL, b: true}}
 	} else {
 		metricsObject.State["alwaysEvaluate"] = []Union{{tag: BOOL, b: false}}
 	}
@@ -2300,12 +2554,15 @@ func configureStateAndOutputs(metricsObject *MetricsObject, netIndex int) (warni
 		metricsObject.State["previousExpressionValues"] = make([]Union, 0)
 		metricsObject.State["messageExpressions"] = make([]Union, 0)
 		metricsObject.State["messageStrings"] = make([]Union, 0)
+		metricsObject.State["valueChanged"] = append(metricsObject.State["valueChanged"], Union{tag: BOOL, b: false})
 		for messageExpression, messageString := range metricsObject.Messages {
 			// State holds a slice for each key rather than a map, so split the expressions, their values, and associated strings into separate
 			// slices with corresponding indices
 			metricsObject.State["previousExpressionValues"] = append(metricsObject.State["previousExpressionValues"], Union{tag: BOOL, b: false})
 			metricsObject.State["messageExpressions"] = append(metricsObject.State["messageExpressions"], Union{tag: STRING, s: messageExpression})
 			metricsObject.State["messageStrings"] = append(metricsObject.State["messageStrings"], Union{tag: STRING, s: messageString})
+			metricsObject.State["activeMessages"] = append(metricsObject.State["activeMessages"], Union{tag: STRING, s: ""})
+			metricsObject.State["activeTimestamps"] = append(metricsObject.State["activeTimestamps"], Union{tag: STRING, s: ""})
 		}
 	}
 
@@ -2313,6 +2570,7 @@ func configureStateAndOutputs(metricsObject *MetricsObject, netIndex int) (warni
 		output := MetricsConfig.Outputs[outputVar] // MetricsConfig.Outputs is a map[string]Output of output variable names to Output objects
 		output.Value = outputUnion
 		OutputScope[outputVar] = []Union{outputUnion}
+
 		MetricsConfig.Outputs[outputVar] = output
 		if stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "direct_set") ||
 			stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "post") {
@@ -2334,7 +2592,7 @@ func configureStateAndOutputs(metricsObject *MetricsObject, netIndex int) (warni
 // Preprocess all of the expressions in the metrics document
 // so that all we need to do is evaluate the expressions at runtime.
 // currently modeling after https://github.com/crsmithdev/goexpr
-func (metricsObject *MetricsObject) getExpression(internal_vars []string, netIndex int) (string, error) {
+func (metricsObject *MetricsObject) getExpression(internal_vars []string, netIndex int, configId string) (string, error) {
 	var warning string
 	if inputToMetricsExpression == nil {
 		inputToMetricsExpression = make(map[string][]int, 0)
@@ -2350,7 +2608,7 @@ func (metricsObject *MetricsObject) getExpression(internal_vars []string, netInd
 		OutputScope = make(map[string][]Union, 0)
 	}
 
-	exp, err := Parse((*metricsObject).Expression)
+	exp, err := Parse((*metricsObject).Expression, configId)
 	if err != nil {
 		return "", fmt.Errorf("could not parse expression: %w", err)
 	}
@@ -2383,7 +2641,7 @@ func (metricsObject *MetricsObject) getExpression(internal_vars []string, netInd
 	return warning, err
 }
 
-func getAndParseFilters() bool {
+func getAndParseFilters(new_filters []string, new_filters_starting_index int, new_inputs []string, overwrite_conflicting_configs bool, configId string) bool {
 	wasError := false
 	if inputToFilterExpression == nil {
 		inputToFilterExpression = make(map[string][]string, 0)
@@ -2399,7 +2657,7 @@ func getAndParseFilters() bool {
 	}
 
 	var filters map[string]Filter
-	filters, wasError = ExtractFilters(MetricsConfig.Filters)
+	filters, wasError = ExtractFilters(MetricsConfig.Filters, new_filters, new_filters_starting_index, new_inputs, overwrite_conflicting_configs, configId)
 	for key, filter := range filters {
 		if len(filter.StaticFilterExpressions) == 0 && len(filter.DynamicFilterExpressions) == 0 {
 			continue
@@ -2460,7 +2718,9 @@ func combineFlags(outputName string, output *Output) {
 	if uriIsLonely == nil {
 		uriIsLonely = make(map[string]bool, 0)
 	}
-	outputVarChanged[outputName] = true
+	if _, ok := outputVarChanged[outputName]; !ok {
+		outputVarChanged[outputName] = true
+	}
 	uriGroup := ""
 
 	if len(output.Uri) > 0 {
@@ -2480,7 +2740,9 @@ func combineFlags(outputName string, output *Output) {
 		if _, ok := PublishUris[uriGroup]; !ok {
 			PublishUris[uriGroup] = make([]string, 0)
 		}
-		PublishUris[uriGroup] = append(PublishUris[uriGroup], outputName)
+		if !stringInSlice(PublishUris[uriGroup], outputName) {
+			PublishUris[uriGroup] = append(PublishUris[uriGroup], outputName)
+		}
 
 		if _, ok := PubUriFlags[uriGroup]; !ok {
 			PubUriFlags[uriGroup] = make([]string, 0)
@@ -2490,7 +2752,7 @@ func combineFlags(outputName string, output *Output) {
 		if stringInSlice(PubUriFlags[uriGroup], "interval_set") {
 			uriIsIntervalSet[uriGroup] = true
 			noGetResponse[output.Uri] = true
-			noGetResponse[output.Uri+"/"+outputName] = true
+			noGetResponse[output.Uri+"/"+output.Name] = true
 		} else {
 			uriIsIntervalSet[uriGroup] = false
 		}
@@ -2508,24 +2770,24 @@ func combineFlags(outputName string, output *Output) {
 			uriIsDirect["set"][uriGroup] = true
 			uriToDirectMsgActive["set"][uriGroup] = false
 			noGetResponse[output.Uri] = true
-			noGetResponse[output.Uri+"/"+outputName] = true
+			noGetResponse[output.Uri+"/"+output.Name] = true
 		}
 		if stringInSlice(PubUriFlags[uriGroup], "post") {
 			uriIsDirect["post"][uriGroup] = true
 			uriToDirectMsgActive["post"][uriGroup] = false
 			noGetResponse[output.Uri] = true
-			noGetResponse[output.Uri+"/"+outputName] = true
+			noGetResponse[output.Uri+"/"+output.Name] = true
 		}
 	}
 
 }
 
-func checkMixedFlags(currentJsonLocation []JsonAccessor) []JsonAccessor {
+func checkMixedFlags() (wasWarning bool) {
 	uriGroup := ""
-	currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "outputs", JType: simdjson.TypeObject})
+	configErrorLocs.addKey("outputs", simdjson.TypeObject)
 	for outputName, output := range MetricsConfig.Outputs {
-		currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: outputName, JType: simdjson.TypeObject})
-		currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "flags", JType: simdjson.TypeArray})
+		configErrorLocs.addKey(outputName, simdjson.TypeObject)
+		configErrorLocs.addKey("flags", simdjson.TypeArray)
 		if len(output.Uri) > 0 {
 			if stringInSlice(output.Flags, "lonely") {
 				uriGroup = output.Uri + "[" + outputName + "]"
@@ -2537,54 +2799,77 @@ func checkMixedFlags(currentJsonLocation []JsonAccessor) []JsonAccessor {
 
 			if stringInSlice(output.Flags, "naked") && stringInSlice(output.Flags, "clothed") {
 				// this default is applied in main at runtime (because "clothed" appears first in the if-else statement)
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("output '%v' has format specified as both naked and clothed; defaulting to clothed", outputName))
+				wasWarning = true
+				configErrorLocs.logError(fmt.Errorf("output '%v' has format specified as both naked and clothed; defaulting to clothed", outputName))
 			} else if stringInSlice(PubUriFlags[uriGroup], "clothed") && !stringInSlice(output.Flags, "clothed") && !stringInSlice(output.Flags, "naked") {
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("output '%v' has unspecified clothed/naked status; defaulting to clothed (warning only)", outputName))
+				wasWarning = true
+				configErrorLocs.logError(fmt.Errorf("output '%v' has unspecified clothed/naked status; defaulting to clothed (warning only)", outputName))
 			} else if stringInSlice(PubUriFlags[uriGroup], "naked") && !stringInSlice(output.Flags, "clothed") && !stringInSlice(output.Flags, "naked") {
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("output '%v' has unspecified clothed/naked status; defaulting to naked (warning only)", outputName))
+				wasWarning = true
+				configErrorLocs.logError(fmt.Errorf("output '%v' has unspecified clothed/naked status; defaulting to naked (warning only)", outputName))
 			}
 			if stringInSlice(output.Flags, "flat") && !stringInSlice(output.Flags, "lonely") {
-				logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("output '%v' has missing flag 'lonely'; when using 'flat' the output must be 'lonely' as well; defaulting to nested formatting (warning only)", outputName))
+				wasWarning = true
+				configErrorLocs.logError(fmt.Errorf("output '%v' has missing flag 'lonely'; when using 'flat' the output must be 'lonely' as well; defaulting to nested formatting (warning only)", outputName))
+			}
+			if stringInSlice(output.Flags, "flat") && !stringInSlice(output.Flags, "lonely") {
+				wasWarning = true
+				configErrorLocs.logError(fmt.Errorf("output '%v' has missing flag 'lonely'; when using 'flat' the output must be 'lonely' as well; defaulting to nested formatting (warning only)", outputName))
 			}
 		}
-		currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
-		currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+		configErrorLocs.removeLevel()
+		configErrorLocs.removeLevel()
 	}
-	currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
-	return currentJsonLocation
+	configErrorLocs.removeLevel()
+	return
 }
 
-func GetPubTickers() {
-	tickers = make([](*time.Ticker), 0)
-	pubTickers = make(map[string]int, 0)
+func GetPubTickers(new_metrics_info NewMetricsInfo) NewMetricsInfo {
+	metricsConfigMutex.Lock()
+	new_outputs := new_metrics_info.new_outputs
+	new_echo_starting_index := new_metrics_info.new_echo_starting_index
+	first_initialization := false
+	if tickers == nil {
+		first_initialization = true
+		tickers = make([](*time.Ticker), 0)
+	}
+
+	new_metrics_info.new_tickers_starting_index = len(tickers)
+
+	if pubTickers == nil {
+		pubTickers = make(map[string]int, 0)
+	}
 	globalPubRate := int64(1000)
-	if pubRate, okPubRate := MetricsConfig.Meta["publishRate"]; okPubRate {
-		intPubRate, okInt := pubRate.(int64)
-		if !okInt {
-			floatPubRate, okFloat := pubRate.(float64)
-			if okFloat && floatPubRate > 0.0 {
-				globalPubTicker := time.NewTicker(time.Duration(int64(math.Round(floatPubRate * 1000000))))
-				globalPubRate = int64(math.Round(floatPubRate * 1000000))
+	if first_initialization {
+		if pubRate, okPubRate := MetricsConfig.Meta["publishRate"]; okPubRate {
+			intPubRate, okInt := pubRate.(int64)
+			if !okInt {
+				floatPubRate, okFloat := pubRate.(float64)
+				if okFloat && floatPubRate > 0.0 {
+					globalPubTicker := time.NewTicker(time.Duration(int64(math.Round(floatPubRate * 1000000))))
+					globalPubRate = int64(math.Round(floatPubRate * 1000000))
+					tickers = append(tickers, globalPubTicker)
+				} else {
+					globalPubTicker := time.NewTicker(time.Duration(1000) * time.Millisecond)
+					tickers = append(tickers, globalPubTicker)
+				}
+			} else if intPubRate > 0 {
+				globalPubTicker := time.NewTicker(time.Duration(intPubRate) * time.Millisecond)
+				globalPubRate = intPubRate
 				tickers = append(tickers, globalPubTicker)
 			} else {
 				globalPubTicker := time.NewTicker(time.Duration(1000) * time.Millisecond)
 				tickers = append(tickers, globalPubTicker)
 			}
-		} else if intPubRate > 0 {
-			globalPubTicker := time.NewTicker(time.Duration(intPubRate) * time.Millisecond)
-			globalPubRate = intPubRate
-			tickers = append(tickers, globalPubTicker)
 		} else {
 			globalPubTicker := time.NewTicker(time.Duration(1000) * time.Millisecond)
 			tickers = append(tickers, globalPubTicker)
 		}
-	} else {
-		globalPubTicker := time.NewTicker(time.Duration(1000) * time.Millisecond)
-		tickers = append(tickers, globalPubTicker)
 	}
 
 	uriGroup := ""
-	for outputName, output := range MetricsConfig.Outputs {
+	for _, outputName := range new_outputs {
+		output := MetricsConfig.Outputs[outputName]
 		if len(output.Uri) > 0 {
 			if stringInSlice(output.Flags, "lonely") {
 				PublishUris[output.Uri+"["+outputName+"]"] = []string{outputName}
@@ -2628,30 +2913,44 @@ func GetPubTickers() {
 			}
 		}
 	}
-	tickerPubs = make(map[int][]string)
+	if tickerPubs == nil {
+		tickerPubs = make(map[int][]string)
+	}
 	for pubUri, tickerIndex := range pubTickers {
 		if _, ok := tickerPubs[tickerIndex]; !ok {
 			tickerPubs[tickerIndex] = make([]string, 0)
 		}
-		tickerPubs[tickerIndex] = append(tickerPubs[tickerIndex], pubUri)
+		if !stringInSlice(tickerPubs[tickerIndex], pubUri) {
+			tickerPubs[tickerIndex] = append(tickerPubs[tickerIndex], pubUri)
+		}
 	}
 
 	// not directly related, but this will allow for multithreading with different metrics expressions
-	metricsMutex = make([]sync.RWMutex, len(MetricsConfig.Metrics))
-	for i := range MetricsConfig.Metrics {
-		metricsMutex[i] = *new(sync.RWMutex)
+	if metricsMutex == nil {
+		metricsMutex = make([]sync.RWMutex, 0)
+	}
+	for len(metricsMutex) < len(MetricsConfig.Metrics) {
+		metricsMutex = append(metricsMutex, *new(sync.RWMutex))
 	}
 
-	for echoIndex := range MetricsConfig.Echo {
-		MetricsConfig.Echo[echoIndex].Ticker = time.NewTicker(time.Duration(MetricsConfig.Echo[echoIndex].PublishRate) * time.Millisecond)
+	if new_echo_starting_index < len(MetricsConfig.Echo) {
+		echoIndex := new_echo_starting_index
+		for range MetricsConfig.Echo[new_echo_starting_index:] {
+			MetricsConfig.Echo[echoIndex].Ticker = time.NewTicker(time.Duration(MetricsConfig.Echo[echoIndex].PublishRate) * time.Millisecond)
+			echoIndex++
+		}
 	}
+
 	EvaluateExpressions()
+
 	for directMsgUriGroup := range uriToDirectMsgActive {
 		directMsgMutex.Lock()
 		uriToDirectMsgActive["set"][directMsgUriGroup] = false
 		uriToDirectMsgActive["post"][directMsgUriGroup] = false
 		directMsgMutex.Unlock()
 	}
+	metricsConfigMutex.Unlock()
+	return new_metrics_info
 }
 
 func joinMaps(interface1, interface2 interface{}) map[string]interface{} {
@@ -2704,6 +3003,7 @@ func addUriFrags(completeUri string, uriFragList []string, uriMap map[string]int
 	if _, ok := uriMap[uriFrag]; !ok {
 		uriMap[uriFrag] = map[string]interface{}{}
 	}
+
 	uriMap2, ok := uriMap[uriFrag].(map[string]interface{})
 	if ok && len(uriFragList) > 1 {
 		uriMap2 = addUriFrags(completeUri, uriFragList[1:], uriMap2)
@@ -2717,34 +3017,55 @@ func addUriFrags(completeUri string, uriFragList []string, uriMap map[string]int
 	return uriMap
 }
 
-func GetSubscribeUris() {
+func GetSubscribeUris(new_metrics_info NewMetricsInfo) {
+	metricsConfigMutex.Lock()
+	new_inputs := new_metrics_info.new_inputs
+	new_echo_starting_index := new_metrics_info.new_echo_starting_index
+	new_outputs := new_metrics_info.new_outputs
+	first_initialization := false
+
 	if MetricsConfig.Meta == nil { // shouldn't happen if things are properly initialized, but just in case...
 		MetricsConfig.Meta = make(map[string]interface{}, 0)
 	}
-	SubscribeUris = make([]string, 0)
-	if len(ProcessName) > 0 {
-		if ProcessName[0] == '/' {
-			ProcessName = ProcessName[1:]
-		}
-	} else if metrics_name_interface, ok := MetricsConfig.Meta["name"]; ok {
-		metrics_name, okStr := metrics_name_interface.(string)
-		if okStr && metrics_name[0] == '/' {
-			ProcessName = metrics_name[1:]
-		} else if okStr {
-			ProcessName = metrics_name
+
+	if SubscribeUris == nil {
+		first_initialization = true
+		SubscribeUris = make([]string, 0)
+	}
+	if first_initialization {
+
+		if len(ProcessName) > 0 {
+			if ProcessName[0] == '/' {
+				ProcessName = ProcessName[1:]
+			}
+		} else if metrics_name_interface, ok := MetricsConfig.Meta["name"]; ok {
+			metrics_name, okStr := metrics_name_interface.(string)
+			if okStr && metrics_name[0] == '/' {
+				ProcessName = metrics_name[1:]
+			} else if okStr {
+				ProcessName = metrics_name
+			} else {
+				ProcessName = "go_metrics"
+			}
 		} else {
 			ProcessName = "go_metrics"
 		}
-	} else {
-		ProcessName = "go_metrics"
+		MetricsConfig.Meta["name"] = ProcessName
+		SubscribeUris = append(SubscribeUris, "/"+ProcessName)
+
 	}
-	MetricsConfig.Meta["name"] = ProcessName
-	SubscribeUris = append(SubscribeUris, "/"+ProcessName)
 
 	// extract parent uris (so we know what to subscribe to)
 	// and also make an easy way to "fetch" data into our input Unions
-	uriToInputNameMap = make(map[string][]string, len(MetricsConfig.Inputs))
-	for key, input := range MetricsConfig.Inputs {
+	if uriToInputNameMap == nil {
+
+		uriToInputNameMap = make(map[string][]string, len(MetricsConfig.Inputs))
+
+	}
+	for _, key := range new_inputs {
+
+		input := MetricsConfig.Inputs[key]
+
 		if len(input.Uri) > 0 {
 			SubscribeUris = append(SubscribeUris, GetParentUri(input.Uri))
 			if _, ok := uriToInputNameMap[input.Uri]; !ok {
@@ -2755,39 +3076,69 @@ func GetSubscribeUris() {
 	}
 
 	// each echo input should have a uri to subscribe to
-	uriToEchoObjectInputMap = make(map[string]map[int]int, 0)
-	echoPublishUristoEchoNum = make(map[string]int, 0)
-	echoOutputToInputNum = make(map[string]int, 0)
-	for echoIndex, echoObject := range MetricsConfig.Echo {
-		for inputIndex, echoInput := range echoObject.Inputs {
-			if len(echoInput.Uri) > 0 {
-				SubscribeUris = append(SubscribeUris, echoInput.Uri)
-				if _, ok := uriToEchoObjectInputMap[echoInput.Uri]; !ok {
-					uriToEchoObjectInputMap[echoInput.Uri] = make(map[int]int, 0)
-				}
-				uriToEchoObjectInputMap[echoInput.Uri][echoIndex] = inputIndex
-				for echoRegister := range echoInput.Registers {
-					echoOutputToInputNum[echoObject.PublishUri+"/"+echoRegister] = inputIndex
+	if uriToEchoObjectInputMap == nil {
+		uriToEchoObjectInputMap = make(map[string]map[int]int, 0)
+	}
+	if echoPublishUristoEchoNum == nil {
+		echoPublishUristoEchoNum = make(map[string]int, 0)
+	}
+	if echoOutputToInputNum == nil {
+		echoOutputToInputNum = make(map[string]int, 0)
+	}
+
+	if new_echo_starting_index < len(MetricsConfig.Echo) {
+		for i, echoObject := range MetricsConfig.Echo[new_echo_starting_index:] {
+			echoIndex := new_echo_starting_index + i
+			for inputIndex, echoInput := range echoObject.Inputs {
+				if len(echoInput.Uri) > 0 {
+					SubscribeUris = append(SubscribeUris, echoInput.Uri)
+					if _, ok := uriToEchoObjectInputMap[echoInput.Uri]; !ok {
+						uriToEchoObjectInputMap[echoInput.Uri] = make(map[int]int, 0)
+					}
+					uriToEchoObjectInputMap[echoInput.Uri][echoIndex] = inputIndex
+					for echoRegister := range echoInput.Registers {
+						echoOutputToInputNum[echoObject.PublishUri+"/"+echoRegister] = inputIndex
+					}
 				}
 			}
-		}
-		if len(echoObject.PublishUri) > 0 {
-			SubscribeUris = append(SubscribeUris, echoObject.PublishUri)
-			echoPublishUristoEchoNum[echoObject.PublishUri] = echoIndex
+			if len(echoObject.PublishUri) > 0 {
+				SubscribeUris = append(SubscribeUris, echoObject.PublishUri)
+				echoPublishUristoEchoNum[echoObject.PublishUri] = echoIndex
+			}
 		}
 	}
 
 	// do the same for outputs so that we can respond to "gets"
-	uriToOutputNameMap = make(map[string][]string, len(MetricsConfig.Outputs))
-	for outputName, output := range MetricsConfig.Outputs {
+	if uriToOutputNameMap == nil {
+
+		uriToOutputNameMap = make(map[string][]string, len(MetricsConfig.Outputs))
+
+	}
+	for _, outputName := range new_outputs {
+
+		output := MetricsConfig.Outputs[outputName]
+
 		if len(output.Uri) > 0 {
 			if len(output.Name) > 0 {
 				// It's possible for multiple output names to map to a single uri.
 				// Store all of the collisions in a list so they can still be tracked rather than overwritten
+				if _, ok := uriToOutputNameMap[output.Uri+"/"+output.Name]; !ok {
+					uriToOutputNameMap[output.Uri+"/"+output.Name] = make([]string, 0)
+				}
 				uriToOutputNameMap[output.Uri+"/"+output.Name] = append(uriToOutputNameMap[output.Uri+"/"+output.Name], outputName)
 			}
 			// output.Name itself might be repeated, so we may overwrite another entry with this one due to the same URI being produced
+			if _, ok := uriToOutputNameMap[output.Uri+"/"+outputName]; !ok {
+				uriToOutputNameMap[output.Uri+"/"+outputName] = make([]string, 0)
+			}
 			uriToOutputNameMap[output.Uri+"/"+outputName] = append(uriToOutputNameMap[output.Uri+"/"+outputName], outputName)
+
+			// parent uri
+			if _, ok := uriToOutputNameMap[output.Uri]; !ok {
+				uriToOutputNameMap[output.Uri] = make([]string, 0)
+			}
+			uriToOutputNameMap[output.Uri] = append(uriToOutputNameMap[output.Uri], outputName)
+
 			SubscribeUris = append(SubscribeUris, output.Uri)
 		}
 	}
@@ -2818,10 +3169,41 @@ func GetSubscribeUris() {
 
 	// map each parent uri to its children components that we'll need to fetch
 	// from that parent uri
-	UriElements = make(map[string]interface{}, 0)
-	for _, input := range MetricsConfig.Inputs {
+
+	if UriElements == nil {
+		UriElements = make(map[string]interface{}, 0)
+	}
+
+	// Add hard-coded configuration endpoint
+	configFrags := strings.Split("/configuration", "/")
+	UriElements = addUriFrags("", configFrags, UriElements)
+
+	// TODO: fix this
+	// // quick add for quick startup
+	// for _, inputName := range new_inputs {
+	// 	input := MetricsConfig.Inputs[inputName]
+	// 	parentUri := GetParentUri(input.Uri)
+	// 	uriElement := GetUriElement(input.Uri)
+	// 	if parentUriElement, ok := UriElements[parentUri]; !ok {
+	// 		UriElements[parentUri] = map[string]interface{}{
+	// 			uriElement: map[string]interface{}{},
+	// 		}
+	// 	} else if parentMap, ok := parentUriElement.(map[string]interface{}); ok {
+	// 		if _, ok := parentMap[uriElement]; !ok {
+	// 			parentMap[uriElement] = map[string]interface{}{}
+	// 			UriElements[parentUri] = parentMap
+	// 		}
+	// 	}
+	// }
+	//
+
+	// slow add because this can take awhile
+	// go func(new_metrics_inputs []string) {
+	for _, inputName := range new_inputs {
+		input := MetricsConfig.Inputs[inputName]
 		uriFrags := strings.Split(input.Uri, "/")
 		UriElements = addUriFrags("", uriFrags, UriElements)
+
 		if len(input.Attributes) > 0 {
 			for _, attributeName := range input.Attributes {
 				uriFrags2 := append(uriFrags, attributeName)
@@ -2834,31 +3216,103 @@ func GetSubscribeUris() {
 			}
 		}
 	}
+	// }(new_inputs)
 
 	// do the same for echo inputs
-	for _, echoObject := range MetricsConfig.Echo {
-		publishUriFrags := strings.Split(echoObject.PublishUri, "/")
-		for _, echoInput := range echoObject.Inputs {
-			if len(echoInput.Uri) > 0 {
-				uriFrags := strings.Split(echoInput.Uri, "/")
-				for newVar, oldVar := range echoInput.Registers {
-					uriFrags2 := append(uriFrags, oldVar)
-					UriElements = addUriFrags("", uriFrags2, UriElements)
-					uriFrags3 := append(publishUriFrags, newVar)
-					UriElements = addUriFrags("", uriFrags3, UriElements)
+	if new_echo_starting_index < len(MetricsConfig.Echo) {
+
+		// TODO: Fix this
+		// // quick add for quick startup
+		// for _, echoObject := range MetricsConfig.Echo[new_echo_starting_index:] {
+		// 	parentUri := echoObject.PublishUri
+		// 	if parentUriElement, ok := UriElements[parentUri]; !ok {
+		// 		tempMap := map[string]interface{}{}
+		// 		for _, echoInput := range echoObject.Inputs {
+		// 			if len(echoInput.Uri) > 0 {
+		// 				for newVar := range echoInput.Registers {
+		// 					tempMap[newVar] = map[string]interface{}{}
+		// 				}
+		// 			}
+		// 		}
+		// 		for echoVar := range echoObject.Echo {
+		// 			tempMap[echoVar] = map[string]interface{}{}
+		// 		}
+		// 		UriElements[parentUri] = tempMap
+		// 	} else if parentMap, ok := parentUriElement.(map[string]interface{}); ok {
+		// 		for _, echoInput := range echoObject.Inputs {
+		// 			if len(echoInput.Uri) > 0 {
+		// 				for newVar := range echoInput.Registers {
+		// 					if _, ok := parentMap[newVar]; !ok {
+		// 						parentMap[newVar] = map[string]interface{}{}
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 		for echoVar := range echoObject.Echo {
+		// 			if _, ok := parentMap[echoVar]; !ok {
+		// 				parentMap[echoVar] = map[string]interface{}{}
+		// 			}
+		// 		}
+		// 		UriElements[parentUri] = parentMap
+
+		// 	}
+		// }
+
+		// slow add because this can take awhile
+		// go func(new_metrics_echo_starting_index int) {
+		for _, echoObject := range MetricsConfig.Echo[new_echo_starting_index:] {
+			publishUriFrags := strings.Split(echoObject.PublishUri, "/")
+			for _, echoInput := range echoObject.Inputs {
+				if len(echoInput.Uri) > 0 {
+					uriFrags := strings.Split(echoInput.Uri, "/")
+					for newVar, oldVar := range echoInput.Registers {
+						uriFrags2 := append(uriFrags, oldVar)
+
+						UriElements = addUriFrags("", uriFrags2, UriElements)
+
+						uriFrags3 := append(publishUriFrags, newVar)
+						UriElements = addUriFrags("", uriFrags3, UriElements)
+					}
 				}
 			}
+			for register := range echoObject.Echo {
+				uriFrags2 := append(publishUriFrags, register)
+				UriElements = addUriFrags("", uriFrags2, UriElements)
+			}
 		}
-		for register := range echoObject.Echo {
-			uriFrags2 := append(publishUriFrags, register)
-			UriElements = addUriFrags("", uriFrags2, UriElements)
-		}
+		// }(new_echo_starting_index)
 	}
 
+	// TODO: Fix this
 	// do the same for outputs
 	// map each parent uri to its children components that we'll need to fetch
 	// from that parent uri
-	for outputName, output := range MetricsConfig.Outputs {
+	// quick add for quick startup
+	// for _, outputName := range new_outputs {
+	// 	output := MetricsConfig.Outputs[outputName]
+	// 	parentUri := output.Uri
+	// 	uriElement := ""
+	// 	if len(output.Name) > 0 {
+	// 		uriElement = output.Name
+	// 	} else {
+	// 		uriElement = outputName
+	// 	}
+	// 	if parentUriElement, ok := UriElements[parentUri]; !ok {
+	// 		UriElements[parentUri] = map[string]interface{}{
+	// 			uriElement: map[string]interface{}{},
+	// 		}
+	// 	} else if parentMap, ok := parentUriElement.(map[string]interface{}); ok {
+	// 		if _, ok := parentMap[uriElement]; !ok {
+	// 			parentMap[uriElement] = map[string]interface{}{}
+	// 			UriElements[parentUri] = parentMap
+	// 		}
+	// 	}
+	// }
+
+	// slow add because this can take awhile
+	// go func(new_metrics_outputs []string) {
+	for _, outputName := range new_outputs {
+		output := MetricsConfig.Outputs[outputName]
 		if len(output.Uri) > 0 {
 			uriFrags := strings.Split(output.Uri, "/")
 			if len(output.Name) > 0 {
@@ -2867,6 +3321,7 @@ func GetSubscribeUris() {
 				uriFrags = append(uriFrags, outputName)
 			}
 			UriElements = addUriFrags("", uriFrags, UriElements)
+
 			if len(output.Attributes) > 0 {
 				for attributeName := range output.Attributes {
 					uriFrags = append(uriFrags, attributeName)
@@ -2875,103 +3330,170 @@ func GetSubscribeUris() {
 			}
 		}
 	}
+	// }(new_outputs)
 
-	iterMap = make(map[string]*simdjson.Iter, 0)
-	objMap = make(map[string]*simdjson.Object, 0)
-	elemMap = make(map[string]*simdjson.Iter, 0)
-
-	// //leaving this here in case we need it again (maybe a command-line option or query?)
-	// fmt.Println("Looking for elements:")
-	// for key := range UriElements {
-	// 	fmt.Printf("\t%s :", key)
-	// 	for _, element := range UriElements[key] {
-	// 		fmt.Printf("  %v", element)
-	// 	}
-	// 	fmt.Println()
-	// }
+	if first_initialization {
+		iterMap = make(map[string]*simdjson.Iter, 0)
+		objMap = make(map[string]*simdjson.Object, 0)
+		elemMap = make(map[string]*simdjson.Iter, 0)
+	}
+	metricsConfigMutex.Unlock()
 }
 
-func setupConfigLogging() {
+func setupConfigLogging(tempMeta map[string]interface{}, configId string) (wasWarning bool, wasError bool) {
 	if logFileLoc, ok := MetricsConfig.Meta["log_file"]; ok {
 		if len(log.ConfigFile) == 0 { // if it the location hasn't been set via command line options
 			log.ConfigFile, ok = logFileLoc.(string)
 			if !ok {
-				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "log_file", JType: simdjson.TypeString}}, fmt.Errorf("value is not string"))
+				configErrorLocs.addKey("meta", simdjson.TypeObject)
+				configErrorLocs.addKey("log_file", simdjson.TypeString)
+				configErrorLocs.logError(fmt.Errorf("value is not string"))
+				configErrorLocs.removeLevel()
+				configErrorLocs.removeLevel()
+				wasWarning = true
 			}
 		}
 	}
 
-	if debug_interface, ok := MetricsConfig.Meta["debug"]; ok {
-		log.SetLogLevel([]interface{}{"debug"})
+	if debug_interface, ok := tempMeta["debug"]; ok {
 		debug, ok = debug_interface.(bool)
 		if !ok {
-			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug", JType: simdjson.TypeBool}}, fmt.Errorf("value is not bool"))
+			configErrorLocs.addKey("meta", simdjson.TypeObject)
+			configErrorLocs.addKey("debug", simdjson.TypeBool)
+			configErrorLocs.logError(fmt.Errorf("value is not bool"))
+			configErrorLocs.removeLevel()
+			configErrorLocs.removeLevel()
+			wasWarning = true
+		} else {
+			MetricsConfig.Meta["debug"] = debug
+			if debug {
+				log.SetLogLevel([]interface{}{"debug"})
+			}
 		}
 	}
 
-	if debug_interface, ok := MetricsConfig.Meta["debug_inputs"]; ok {
+	if debug_inputs == nil {
+		debug_inputs = []string{}
+	}
+	if debug_interface, ok := tempMeta["debug_inputs"]; ok {
 		debug_inputs_interface, ok := debug_interface.([]interface{})
 		if !ok {
-			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_inputs", JType: simdjson.TypeArray}}, fmt.Errorf("value is not []string"))
-			MetricsConfig.Meta["debug_inputs"] = []string{}
+			configErrorLocs.addKey("meta", simdjson.TypeObject)
+			configErrorLocs.addKey("debug_inputs", simdjson.TypeArray)
+			configErrorLocs.logError(fmt.Errorf("value is not []string"))
+			configErrorLocs.removeLevel()
+			configErrorLocs.removeLevel()
+			wasWarning = true
 		} else {
-			debug_inputs = []string{}
 			for i, debug_input := range debug_inputs_interface {
 				input_str, ok_str := debug_input.(string)
 				if !ok_str {
-					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_inputs", JType: simdjson.TypeArray}, {Index: i, JType: simdjson.TypeString}}, fmt.Errorf("value is not string"))
+					configErrorLocs.addKey("meta", simdjson.TypeObject)
+					configErrorLocs.addKey("debug_inputs", simdjson.TypeArray)
+					configErrorLocs.addIndex(i, simdjson.TypeString)
+					configErrorLocs.logError(fmt.Errorf("value is not string"))
+					configErrorLocs.removeLevel()
+					configErrorLocs.removeLevel()
+					configErrorLocs.removeLevel()
+					wasWarning = true
 				} else {
+					if len(configId) > 0 {
+						input_str = input_str + "_" + configId
+					}
 					debug_inputs = append(debug_inputs, input_str)
 				}
 			}
+			MetricsConfig.Meta["debug_inputs"] = debug_inputs
 		}
 	}
 
-	if debug_interface, ok := MetricsConfig.Meta["debug_filters"]; ok {
+	if debug_filters == nil {
+		debug_filters = []string{}
+	}
+	if debug_interface, ok := tempMeta["debug_filters"]; ok {
 		debug_filters_interface, ok := debug_interface.([]interface{})
 		if !ok {
-			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_filters", JType: simdjson.TypeArray}}, fmt.Errorf("value is not []string"))
-			MetricsConfig.Meta["debug_filters"] = []string{}
+			configErrorLocs.addKey("meta", simdjson.TypeObject)
+			configErrorLocs.addKey("debug_filters", simdjson.TypeArray)
+			configErrorLocs.logError(fmt.Errorf("value is not []string"))
+			configErrorLocs.removeLevel()
+			configErrorLocs.removeLevel()
+			wasWarning = true
 		} else {
-			debug_filters = []string{}
-			for i, debug_filter := range debug_filters_interface {
-				filter_str, ok_str := debug_filter.(string)
+			for i, debug_input := range debug_filters_interface {
+				input_str, ok_str := debug_input.(string)
 				if !ok_str {
-					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_filters", JType: simdjson.TypeArray}, {Index: i, JType: simdjson.TypeString}}, fmt.Errorf("value is not string"))
+					configErrorLocs.addKey("meta", simdjson.TypeObject)
+					configErrorLocs.addKey("debug_filters", simdjson.TypeArray)
+					configErrorLocs.addIndex(i, simdjson.TypeString)
+					configErrorLocs.logError(fmt.Errorf("value is not string"))
+					configErrorLocs.removeLevel()
+					configErrorLocs.removeLevel()
+					configErrorLocs.removeLevel()
+					wasWarning = true
 				} else {
-					debug_filters = append(debug_filters, filter_str)
+					if len(configId) > 0 {
+						input_str = input_str + "_" + configId
+					}
+					debug_filters = append(debug_filters, input_str)
 				}
 			}
+			MetricsConfig.Meta["debug_filters"] = debug_filters
 		}
 	}
 
-	if debug_interface, ok := MetricsConfig.Meta["debug_outputs"]; ok {
+	if debug_outputs == nil {
+		debug_outputs = []string{}
+	}
+	if debug_interface, ok := tempMeta["debug_outputs"]; ok {
 		debug_outputs_interface, ok := debug_interface.([]interface{})
 		if !ok {
-			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_outputs", JType: simdjson.TypeArray}}, fmt.Errorf("value is not []string"))
-			MetricsConfig.Meta["debug_outputs"] = []string{}
+			configErrorLocs.addKey("meta", simdjson.TypeObject)
+			configErrorLocs.addKey("debug_outputs", simdjson.TypeArray)
+			configErrorLocs.logError(fmt.Errorf("value is not []string"))
+			configErrorLocs.removeLevel()
+			configErrorLocs.removeLevel()
+			wasWarning = true
 		} else {
-			debug_outputs = []string{}
-			for i, debug_output := range debug_outputs_interface {
-				output_str, ok_str := debug_output.(string)
+			for i, debug_input := range debug_outputs_interface {
+				input_str, ok_str := debug_input.(string)
 				if !ok_str {
-					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_outputs", JType: simdjson.TypeArray}, {Index: i, JType: simdjson.TypeString}}, fmt.Errorf("value is not string"))
+					configErrorLocs.addKey("meta", simdjson.TypeObject)
+					configErrorLocs.addKey("debug_outputs", simdjson.TypeArray)
+					configErrorLocs.addIndex(i, simdjson.TypeString)
+					configErrorLocs.logError(fmt.Errorf("value is not string"))
+					configErrorLocs.removeLevel()
+					configErrorLocs.removeLevel()
+					configErrorLocs.removeLevel()
+					wasWarning = true
 				} else {
-					debug_outputs = append(debug_outputs, output_str)
+					if len(configId) > 0 {
+						input_str = input_str + "_" + configId
+					}
+					debug_outputs = append(debug_outputs, input_str)
 				}
 			}
+			MetricsConfig.Meta["debug_outputs"] = debug_outputs
 		}
 	}
+	return
 }
 
-func verifyInputConfigLogging() {
+func verifyInputConfigLogging() (wasWarning bool, wasError bool) {
 	if _, ok := MetricsConfig.Meta["debug_inputs"]; ok && debug {
 		copy_debug_inputs := make([]string, len(debug_inputs))
 		copy(copy_debug_inputs, debug_inputs)
 		i := 0
 		for _, debug_input := range copy_debug_inputs {
 			if _, inputExists := MetricsConfig.Inputs[debug_input]; !inputExists {
-				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_inputs", JType: simdjson.TypeArray}, {Index: i, JType: simdjson.TypeString}}, fmt.Errorf("debug input '%s' does not exist; no debug info for this variable will be displayed", debug_input))
+				configErrorLocs.addKey("meta", simdjson.TypeObject)
+				configErrorLocs.addKey("debug_inputs", simdjson.TypeArray)
+				configErrorLocs.addIndex(i, simdjson.TypeString)
+				configErrorLocs.logError(fmt.Errorf("debug input '%s' does not exist; no debug info for this variable will be displayed", debug_input))
+				configErrorLocs.removeLevel()
+				configErrorLocs.removeLevel()
+				configErrorLocs.removeLevel()
+				wasWarning = true
 				if i >= 0 && len(debug_inputs)-1 >= i {
 					debug_inputs = append(debug_inputs[:i], debug_inputs[i+1:]...)
 					i -= 1
@@ -2980,16 +3502,26 @@ func verifyInputConfigLogging() {
 			i += 1
 		}
 	}
+	debug_inputs = removeDuplicateValues(debug_inputs)
+	MetricsConfig.Meta["debug_inputs"] = debug_inputs
+	return
 }
 
-func verifyFilterConfigLogging() {
+func verifyFilterConfigLogging() (wasWarning bool) {
 	if _, ok := MetricsConfig.Meta["debug_filters"]; ok && debug {
 		copy_debug_filters := make([]string, len(debug_filters))
 		copy(copy_debug_filters, debug_filters)
 		i := 0
 		for _, debug_filter := range copy_debug_filters {
 			if _, inputExists := MetricsConfig.Filters[debug_filter]; !inputExists {
-				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_filters", JType: simdjson.TypeArray}, {Index: i, JType: simdjson.TypeString}}, fmt.Errorf("debug filter '%s' does not exist; no debug info for this variable will be displayed", debug_filter))
+				configErrorLocs.addKey("meta", simdjson.TypeObject)
+				configErrorLocs.addKey("debug_filters", simdjson.TypeArray)
+				configErrorLocs.addIndex(i, simdjson.TypeString)
+				configErrorLocs.logError(fmt.Errorf("debug filter '%s' does not exist; no debug info for this variable will be displayed", debug_filter))
+				configErrorLocs.removeLevel()
+				configErrorLocs.removeLevel()
+				configErrorLocs.removeLevel()
+				wasWarning = true
 				if i >= 0 && len(debug_filters)-1 >= i {
 					debug_filters = append(debug_filters[:i], debug_filters[i+1:]...)
 					i -= 1
@@ -2998,16 +3530,27 @@ func verifyFilterConfigLogging() {
 			i += 1
 		}
 	}
+	debug_filters = removeDuplicateValues(debug_filters)
+	MetricsConfig.Meta["debug_filters"] = debug_filters
+	return
 }
 
-func verifyOutputConfigLogging() {
+func verifyOutputConfigLogging() (wasWarning bool) {
 	if _, ok := MetricsConfig.Meta["debug_outputs"]; ok && debug {
 		copy_debug_outputs := make([]string, len(debug_outputs))
 		copy(copy_debug_outputs, debug_outputs)
 		i := 0
 		for _, debug_output := range copy_debug_outputs {
 			if _, outputExists := MetricsConfig.Outputs[debug_output]; !outputExists {
-				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "meta", JType: simdjson.TypeObject}, {Key: "debug_outputs", JType: simdjson.TypeArray}, {Index: i, JType: simdjson.TypeString}}, fmt.Errorf("debug output '%s' does not exist; no debug info for this variable will be displayed", debug_output))
+
+				configErrorLocs.addKey("meta", simdjson.TypeObject)
+				configErrorLocs.addKey("debug_outputs", simdjson.TypeArray)
+				configErrorLocs.addIndex(i, simdjson.TypeString)
+				configErrorLocs.logError(fmt.Errorf("debug output '%s' does not exist; no debug info for this variable will be displayed", debug_output))
+				configErrorLocs.removeLevel()
+				configErrorLocs.removeLevel()
+				configErrorLocs.removeLevel()
+				wasWarning = true
 				if i >= 0 && len(debug_outputs)-1 >= i {
 					debug_outputs = append(debug_outputs[:i], debug_outputs[i+1:]...)
 					i -= 1
@@ -3016,9 +3559,12 @@ func verifyOutputConfigLogging() {
 			i += 1
 		}
 	}
+	debug_outputs = removeDuplicateValues(debug_outputs)
+	MetricsConfig.Meta["debug_outputs"] = debug_outputs
+	return
 }
 
-func checkUnusedOutputs() {
+func checkUnusedOutputs() (wasError bool) {
 	for outputName := range MetricsConfig.Outputs {
 		used := false
 		for i := range MetricsConfig.Metrics {
@@ -3028,17 +3574,27 @@ func checkUnusedOutputs() {
 			}
 		}
 		if !used {
-			logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{{Key: "outputs", JType: simdjson.TypeObject}, {Key: outputName, JType: simdjson.TypeObject}}, fmt.Errorf("output '%v' is never set by a metrics expression; excluding from published outputs", outputName))
+			configErrorLocs.addKey("outputs", simdjson.TypeObject)
+			configErrorLocs.addKey(outputName, simdjson.TypeObject)
+			configErrorLocs.logError(fmt.Errorf("output '%v' is never set by a metrics expression; excluding from published outputs", outputName))
+			configErrorLocs.removeLevel()
+			configErrorLocs.removeLevel()
+			wasError = true
 			delete(MetricsConfig.Outputs, outputName)
 		}
 	}
+	return
 }
 
 // Map the Output Variables to their associated metrics
 // Return any warning strings or errors that occurred
-func mapOutputsToMetrics() (warnings []string, errs []error) {
-	for i, metricsObject := range MetricsConfig.Metrics {
-		metricsObjectPointer := &MetricsConfig.Metrics[i]
+func mapOutputsToMetrics(new_metrics_starting_index int) (warnings []string, errs []error) {
+	if len(MetricsConfig.Metrics) == new_metrics_starting_index {
+		return
+	}
+	for i, metricsObject := range MetricsConfig.Metrics[new_metrics_starting_index:] {
+		idx := new_metrics_starting_index + i
+		metricsObjectPointer := &MetricsConfig.Metrics[idx]
 		// Map the expression to all of its associated outputs
 		for _, output := range (metricsObject).Outputs {
 			// Use the associated expression index (netIndex) to point to the expression
@@ -3046,7 +3602,7 @@ func mapOutputsToMetrics() (warnings []string, errs []error) {
 			outputToMetricsObject[output] = append(outputToMetricsObject[output], metricsObjectPointer)
 		}
 
-		warning, err := configureStateAndOutputs(metricsObjectPointer, i)
+		warning, err := configureStateAndOutputs(metricsObjectPointer, idx)
 		warnings = append(warnings, warning)
 		errs = append(errs, err)
 	}

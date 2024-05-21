@@ -38,6 +38,7 @@ var pubDataChangedMutex sync.RWMutex
 var echoMsgBodyMutex sync.RWMutex
 var directMsgMutex sync.RWMutex
 var elementValueMutex sync.Mutex
+var metricsConfigMutex sync.RWMutex
 
 // local variables used throughout the package
 // since we want to minimize garbage collection
@@ -77,9 +78,10 @@ var tickerPubs map[int][]string // a map of ticker index to publish uris
 // fims globals
 var f fims.Fims
 var fimsMap chan fims.FimsMsgRaw
+var is_restarting bool
+var close_listener bool
 
 // global globals
-var configPathAndFile string
 var debug bool
 var debug_inputs []string
 var debug_filters []string

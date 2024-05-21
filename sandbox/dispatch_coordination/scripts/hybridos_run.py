@@ -37,9 +37,9 @@ check_memory = False
 disable_comms = False
 service_to_debug = None
 # List of FPS-owned services
-hybridos_services = ["fims", "dbi", "metrics", "go_metrics", "events", "scheduler", 
-                    "site_controller", "modbus_interface", "overwatch", 
-                    "ftd", "cloud_sync", "dts", "cops", "web_ui", "fleet_manager", "dnp3_interface", "echo" ]
+hybridos_services = ["fims", "dbi", "metrics", "go_metrics", "events", "scheduler",
+                     "site_controller", "modbus_interface", "overwatch",
+                     "ftd", "cloud_sync", "dts", "cops", "web_ui", "fleet_manager", "dnp3_interface", "echo"]
 
 fps_services = ["site_controller", "cops", "scheduler", "ftd", "cloud_sync", "dts"]
 site_to_machine_to_config_dir = dict()
@@ -172,7 +172,8 @@ def check_environment():
         hybridos_image_tag = read_override_version(os.path.normpath(os.path.join(site_to_machine_to_config_dir[site_to_run]['psm'], '../psm-01.yml')))
     elif product == fleet_product:
         # for simplicity, assume the same tag is used across everything
-        hybridos_image_tag = read_override_version(os.path.normpath(os.path.join(site_to_machine_to_config_dir['fleet-manager']['fleet-manager'], '../fleet-manager-01.yml')))
+        hybridos_image_tag = read_override_version(os.path.normpath(os.path.join(
+            site_to_machine_to_config_dir['fleet-manager']['fleet-manager'], '../fleet-manager-01.yml')))
     # Determine if snapshot image based on whether the tag containers any of the following
     if any(e in hybridos_image_tag for e in ["rc", "alpha", "beta"]):
         hybridos_image_suffix = "-snapshot"
@@ -288,7 +289,7 @@ def start_fps_service(name: str, config_src, root=False, file_document_renames: 
         else:
             mcp_config = memcheck_config
     if systemd:
-        # Run via systemd 
+        # Run via systemd
         Popen(["sudo", "systemctl", "start", name])
     elif root:
         # Run with root privileges
@@ -311,20 +312,20 @@ def start_influx():
 def start_mongo():
     print("starting mongo")
     # stop mongod if it was enabled at startup
-    #Popen(["sudo", "systemctl", "stop", "mongod"])
+    # Popen(["sudo", "systemctl", "stop", "mongod"])
     # reset mongod every time, avoid failed states on VM restarts
     cmd = "sudo chown mongod:mongod /home/mongodb/* -R"
     run(cmd, shell=True)  # running a shell command.
     # Run mongod one time to initialize socket files
    # Popen(["sudo", "systemctl", "start", "mongod"])
     time.sleep(sleeptime)
-    #Popen(["sudo", "systemctl", "stop", "mongod"])
+    # Popen(["sudo", "systemctl", "stop", "mongod"])
     time.sleep(sleeptime)
     if systemd:
         Popen(["sudo", "systemctl", "restart", "mongod"])
     else:
         Popen(["sudo", "systemctl", "restart", "mongod"])
-        #Popen(['sudo', 'mongod', '--config', '/etc/mongod.conf'])
+        # Popen(['sudo', 'mongod', '--config', '/etc/mongod.conf'])
 
 
 def start_fims():
@@ -340,6 +341,7 @@ def start_fims():
 def start_dbi():
     if os.path.isdir(machine_config_dir_symlink + "/dbi"):
         print("starting dbi")
+
         if systemd:
             Popen(["sudo", "systemctl", "start", "dbi"])
         else:
@@ -350,6 +352,11 @@ def start_dbi():
 def start_events():
     if os.path.isdir(machine_config_dir_symlink + "/events"):
         print("starting events")
+        if reset_setpoints:
+            print("Resetting events alerting configurations")
+            command = "cd /home/hybridos/git/hybridos/events; npm run clearData"
+            # Clear out alerting data from mongo
+            Popen(command, shell=True)
         if systemd:
             Popen(["sudo", "systemctl", "start", "events"])
         else:
@@ -369,8 +376,7 @@ def start_go_metrics():
     if os.path.isdir(machine_config_dir_symlink + "/go_metrics"):
         print("starting go_metrics")
         # Load config
-        # TODO: when runtime endpoints are added to a separate endpoint, clear them here when the --init flag is provided
-        load_dbi("go_metrics", machine_config_dir_symlink)
+        load_dbi("go_metrics", machine_config_dir_symlink, delete_existing_data=reset_setpoints)
         if systemd:
             Popen(["sudo", "systemctl", "start", "go_metrics@configuration.json"])
         else:
@@ -379,7 +385,6 @@ def start_go_metrics():
 
 def start_scheduler():
     start_fps_service("scheduler", machine_config_dir_symlink)
-
 
 
 # LEVEL 3: start core product processes
@@ -425,7 +430,7 @@ def start_fleet_manager():
         return
 
     # launch site controller
-    num_sites = len(site_to_machine_to_config_dir) - 1 # subtract 1 entry used by fleet manager
+    num_sites = len(site_to_machine_to_config_dir) - 1  # subtract 1 entry used by fleet manager
     print("Starting {n:d} Site Controller container(s).".format(n=num_sites))
     launch_sites(num_sites, config_usecase_dir, hybridos_image_tag, hybridos_image_suffix)
     print("Waiting 15 seconds to give Site Controller container(s) time to boot.")
@@ -457,7 +462,7 @@ def start_modbus_clients():
         print("Modbus clients disabled for testing.")
     elif os.path.isdir(machine_config_dir_symlink + "/modbus_client"):
         if systemd:
-             # Launch modbus with systemd with dedicated instance names
+            # Launch modbus with systemd with dedicated instance names
             clients = os.listdir(machine_config_dir_symlink + "/modbus_client")
             for client in clients:
                 cmd = "sudo systemctl start modbus_client@" + client
@@ -479,7 +484,7 @@ def start_modbus_server():
         print("Modbus server disabled for testing.")
     elif os.path.isdir(machine_config_dir_symlink + "/modbus_server"):
         if systemd:
-             # Launch modbus servers with systemd with dedicated instance name
+            # Launch modbus servers with systemd with dedicated instance name
             servers = os.listdir(machine_config_dir_symlink + "/modbus_server")
             for server in servers:
                 cmd = "sudo systemctl start modbus_server@" + server
@@ -498,8 +503,9 @@ def start_site_controller():
     # start PSM container
     print("starting PSM Docker container")
     run(['sudo', 'docker', 'network', 'create', '--subnet=172.3.27.0/24', 'psm_network'])
-    launch_container_command = ["sudo", "docker", "run", "--name", "psm", "-dit", "-v", site_to_machine_to_config_dir[site_to_run]['psm'] +
-                                ":/home/config", "--net", "psm_network", "--ip", "172.3.27.2", "flexgen/psm" + hybridos_image_suffix + ":" + hybridos_image_tag]
+    launch_container_command = [
+        "sudo", "docker", "run", "--name", "psm", "-dit", "-v", site_to_machine_to_config_dir[site_to_run]['psm'] + ":/home/config", "--net",
+        "psm_network", "--ip", "172.3.27.2", "flexgen/psm" + hybridos_image_suffix + ":" + hybridos_image_tag]
     print(' '.join(launch_container_command))
     run(launch_container_command)
 
@@ -558,12 +564,14 @@ def start_web_ui():
 
 # Pull all current service files from hybridos/<product>/<product>.service
 # and place these files at /usr/lib/systemd/system
+
+
 def update_service_files():
-    # Always reset mongod permissions 
-    #Popen(["sudo", "systemctl", "stop", "mongod"])
-    #cmd = "sudo chown mongod:mongod /home/mongodb/* -R"
-    #run(cmd, shell=True)  # running a shell command.
-    #time.sleep(sleeptime)
+    # Always reset mongod permissions
+    # Popen(["sudo", "systemctl", "stop", "mongod"])
+    # cmd = "sudo chown mongod:mongod /home/mongodb/* -R"
+    # run(cmd, shell=True)  # running a shell command.
+    # time.sleep(sleeptime)
 
     # Update service files if necessary
     if update_services:
@@ -573,10 +581,10 @@ def update_service_files():
 
         # Iterate through hybridos and generate folder of files to copy
         for root, dirs, files in os.walk(hybridos_dir):
-            for dir in dirs: 
+            for dir in dirs:
                 # Check if our directory is a listed hybridos service
                 if dir in hybridos_services:
-                    folder = os.path.join(root, dir) 
+                    folder = os.path.join(root, dir)
                     files = os.listdir(folder)
                     if files:
                         service_files = [file for file in files if file.endswith('.service')]
@@ -593,6 +601,7 @@ def update_service_files():
         cmd = "sudo systemctl daemon-reload"
         run(cmd, shell=True)  # running a shell command.
         time.sleep(sleeptime)
+
 
 def run_hybridos():
     read_product()

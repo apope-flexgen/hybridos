@@ -6,11 +6,14 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	simdjson "github.com/minio/simdjson-go"
 )
 
 func TestGenerateScope(t *testing.T) {
+	InputScope = make(map[string][]Union, 0)
+	OutputScope = make(map[string][]Union, 0)
 	MetricsConfig.Inputs = map[string]Input{
 		"bool1":   {Type: "bool", Attributes: []string{"enabled", "scale"}, AttributesMap: map[string]string{"enabled": "bool1@enabled", "scale": "bool1@scale"}},
 		"bool2":   {Type: "bool"},
@@ -115,7 +118,11 @@ func TestGenerateScope(t *testing.T) {
 		},
 	}
 
-	generateScope()
+	new_inputs := []string{}
+	for inputName := range MetricsConfig.Inputs {
+		new_inputs = append(new_inputs, inputName)
+	}
+	generateScope(new_inputs)
 
 	if len(InputScope) != len(expectedScope) {
 		t.Errorf("%s: output scope length %v not equal to expected length %v\n", "generateScope()", len(InputScope), len(expectedScope))
@@ -139,44 +146,44 @@ func TestGenerateScope(t *testing.T) {
 	}
 }
 
-func TestDeleteAtIndex(t *testing.T) {
-	var jalist = []JsonAccessor{
-		{
-			Key:   "templates",
-			JType: simdjson.TypeArray,
-		},
-		{
-			Index: 2,
-			JType: simdjson.TypeObject,
-		},
-		{
-			Key:   "to",
-			JType: simdjson.TypeInt,
-		},
-	}
-	jalist = delete_at_index(jalist, 1)
-	if jalist[0].Key != "templates" || jalist[0].JType != simdjson.TypeArray {
-		t.Errorf("delete_at_index(): Json Accessor List element 0 is not what expected after deleting element from middle!")
-	}
-	if jalist[1].Key != "to" || jalist[1].JType != simdjson.TypeInt {
-		t.Errorf("delete_at_index(): Json Accessor List element 1 is not what expected after deleting element from middle! jalist[1] is %v", jalist[1])
-	}
-	jalist = delete_at_index(jalist, 1)
-	if jalist[0].Key != "templates" || jalist[0].JType != simdjson.TypeArray {
-		t.Errorf("delete_at_index(): Json Accessor List element 0 is not what expected after deleting element from end!")
-	}
-	if len(jalist) != 1 {
-		t.Errorf("delete_at_index(): Json Accessor List is not what expected after deleting element from end!")
-	}
-	jalist = delete_at_index(jalist, 1)
-	if len(jalist) != 1 {
-		t.Errorf("delete_at_index(): Json Accessor List is not what expected after trying to delete nonexistant element!")
-	}
-	jalist = delete_at_index(jalist, -1)
-	if len(jalist) != 1 {
-		t.Errorf("delete_at_index(): Json Accessor List is not what expected after trying to delete negative index element!")
-	}
-}
+// func TestDeleteAtIndex(t *testing.T) {
+// 	var jalist = []JsonAccessor{
+// 		{
+// 			Key:   "templates",
+// 			JType: simdjson.TypeArray,
+// 		},
+// 		{
+// 			Index: 2,
+// 			JType: simdjson.TypeObject,
+// 		},
+// 		{
+// 			Key:   "to",
+// 			JType: simdjson.TypeInt,
+// 		},
+// 	}
+// 	jalist = delete_at_index(jalist, 1)
+// 	if jalist[0].Key != "templates" || jalist[0].JType != simdjson.TypeArray {
+// 		t.Errorf("delete_at_index(): Json Accessor List element 0 is not what expected after deleting element from middle!")
+// 	}
+// 	if jalist[1].Key != "to" || jalist[1].JType != simdjson.TypeInt {
+// 		t.Errorf("delete_at_index(): Json Accessor List element 1 is not what expected after deleting element from middle! jalist[1] is %v", jalist[1])
+// 	}
+// 	jalist = delete_at_index(jalist, 1)
+// 	if jalist[0].Key != "templates" || jalist[0].JType != simdjson.TypeArray {
+// 		t.Errorf("delete_at_index(): Json Accessor List element 0 is not what expected after deleting element from end!")
+// 	}
+// 	if len(jalist) != 1 {
+// 		t.Errorf("delete_at_index(): Json Accessor List is not what expected after deleting element from end!")
+// 	}
+// 	jalist = delete_at_index(jalist, 1)
+// 	if len(jalist) != 1 {
+// 		t.Errorf("delete_at_index(): Json Accessor List is not what expected after trying to delete nonexistant element!")
+// 	}
+// 	jalist = delete_at_index(jalist, -1)
+// 	if len(jalist) != 1 {
+// 		t.Errorf("delete_at_index(): Json Accessor List is not what expected after trying to delete negative index element!")
+// 	}
+// }
 
 func compareMetricsFile(testName string, struct1, struct2 MetricsFile) (string, bool) {
 	outputErr := ""
@@ -663,7 +670,7 @@ var TemplateInputTestCase = TemplateInputTest{
 func TestInputTemplating(t *testing.T) {
 	//initial test: shouldn't crash
 	allPossibleAttributes = nil
-	handleInputsTemplates()
+	handleInputsTemplates([]string{}, false)
 
 	// setup
 	MetricsConfig.Templates = TestTemplates
@@ -677,7 +684,7 @@ func TestInputTemplating(t *testing.T) {
 	allPossibleAttributes = TemplateInputTestCase.initialAllPossibleAttributes
 
 	// run test
-	handleInputsTemplates()
+	handleInputsTemplates([]string{"replace_##_me", "var_name!!", "var_name_**"}, false)
 
 	if len(MetricsConfig.Inputs) != len(TemplateInputTestCase.expectedFinal) {
 		t.Errorf("templated input map size %d is not the expected size of %d\n", len(MetricsConfig.Inputs), len(TemplateInputTestCase.expectedFinal))
@@ -760,8 +767,18 @@ var TemplateFilterTestCase = TemplateFilterTest{
 func TestFilterTemplating(t *testing.T) {
 	MetricsConfig.Templates = TestTemplates
 	MetricsConfig.Filters = TemplateFilterTestCase.initial
-	handleFiltersTemplates()
+	keys := []string{
+		"var_name!!",
+		"filter##",
+		"filter_!!_**",
+		"filter_##_",
+		"filter_!!_",
+		"filter_##*",
+	}
+	handleFiltersTemplates(keys, false)
 	if len(MetricsConfig.Filters) != len(TemplateFilterTestCase.expectedFinal) {
+		fmt.Printf("%v\n", MetricsConfig.Filters)
+		fmt.Printf("%v\n", TemplateFilterTestCase.expectedFinal)
 		t.Errorf("templated filter map size is %d (expected %d)", len(MetricsConfig.Filters), len(TemplateFilterTestCase.expectedFinal))
 	} else {
 		for key, filterVal := range MetricsConfig.Filters {
@@ -946,7 +963,7 @@ func TestOutputTemplating(t *testing.T) {
 	MetricsConfig.Outputs = TemplateOutputTestCase.initial
 
 	// run test
-	handleOutputsTemplates()
+	handleOutputsTemplates([]string{"replace_##_me", "var_name!!", "var_name_**"})
 
 	if len(MetricsConfig.Outputs) != len(TemplateOutputTestCase.expectedFinal) {
 		t.Errorf("templated output map size %d is not the expected size of %d\n", len(MetricsConfig.Outputs), len(TemplateOutputTestCase.expectedFinal))
@@ -1325,7 +1342,7 @@ func TestEchoTemplating(t *testing.T) {
 	MetricsConfig.Echo = TemplateEchoTestCase.initial
 
 	// run test
-	handleEchoTemplates()
+	handleEchoTemplates(0)
 	if len(MetricsConfig.Echo) != len(TemplateEchoTestCase.expectedFinal) {
 		t.Errorf("templated echo list size %d is not the expected size of %d\n", len(MetricsConfig.Echo), len(TemplateEchoTestCase.expectedFinal))
 	} else {
@@ -1775,9 +1792,9 @@ func TestCombineFlags(t *testing.T) {
 	MetricsConfig.Outputs = make(map[string]Output, 0)
 	for _, test := range CombineFlagsTestCase {
 		MetricsConfig.Outputs[test.outputName] = test.output
-		configErrorLocs.ErrorLocs = make([]ErrorLocation, 0)
+		configErrorLocs.initialize()
 		combineFlags(test.outputName, &test.output)
-		checkMixedFlags([]JsonAccessor{})
+		checkMixedFlags()
 		if len(PublishUris) != len(test.publishUris) {
 			t.Errorf("%s: publish URIs is unexpected length of %d (expected %d) after running combineFlags for output\n", test.outputName, len(PublishUris), len(test.publishUris))
 		} else {
@@ -1919,9 +1936,11 @@ var CheckErrorLogTestCase = []CheckErrorLog{
 }
 
 func TestCheckLogErrors(t *testing.T) {
-	configErrorLocs.ErrorLocs = make([]ErrorLocation, 0)
+	configErrorLocs.initialize()
 	for p, test := range CheckErrorLogTestCase {
-		logError(&(configErrorLocs.ErrorLocs), test.currentJsonLocation, test.inputErr)
+		configErrorLocs.currentJsonLocation = make([]JsonAccessor, len(test.currentJsonLocation))
+		copy(configErrorLocs.currentJsonLocation, test.currentJsonLocation)
+		configErrorLocs.logError(test.inputErr)
 		if len(configErrorLocs.ErrorLocs) != len(test.expectedFinal) {
 			t.Errorf("%d: error report is unexpected length of %d (expected %d) after running combineFlags for output\n", p, len(configErrorLocs.ErrorLocs), len(test.expectedFinal))
 		} else {
@@ -1930,7 +1949,7 @@ func TestCheckLogErrors(t *testing.T) {
 				for q, testErrLoc := range test.expectedFinal {
 					correctErrorLoc := true
 					for j, jsonAccessor := range errLoc.JsonLocation {
-						if testErrLoc.JsonLocation[j] != jsonAccessor {
+						if len(testErrLoc.JsonLocation) <= j || testErrLoc.JsonLocation[j] != jsonAccessor {
 							correctErrorLoc = false
 							break
 						}
@@ -1941,7 +1960,7 @@ func TestCheckLogErrors(t *testing.T) {
 					}
 				}
 				for j, jsonAccessor := range errLoc.JsonLocation {
-					if test.expectedFinal[i].JsonLocation[j] != jsonAccessor || errLoc.JsonError != test.expectedFinal[i].JsonError {
+					if len(test.expectedFinal) <= i || len(test.expectedFinal[i].JsonLocation) <= j || test.expectedFinal[i].JsonLocation[j] != jsonAccessor || errLoc.JsonError != test.expectedFinal[i].JsonError {
 						matches = false
 						break
 					}
@@ -2434,7 +2453,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				"metrics expression produces possible result type int but gets cast to float (warning only)",
+				"had an issue mapping outputs to metrics: metrics expression produces possible result type int but gets cast to float (warning only)",
 			},
 			{
 				[]JsonAccessor{
@@ -4838,7 +4857,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				"cannot find variable banana in inputs or filters; excluding this metric from calculations",
+				"could not parse expression: cannot find variable banana in inputs or filters; excluding this metric from calculations",
 			},
 			{
 				[]JsonAccessor{
@@ -4992,7 +5011,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeString,
 					},
 				},
-				"cannot find variable banana in inputs or filters; excluding this metric from calculations",
+				"could not parse expression: cannot find variable banana in inputs or filters; excluding this metric from calculations",
 			},
 			{
 				[]JsonAccessor{
@@ -5595,21 +5614,26 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 }
 
 func TestUnmarshalConfig(t *testing.T) {
-	loud := Quiet()
-	defer loud()
+	// loud := Quiet()
+	// defer loud()
 	for _, test := range UnmarshalConfigTestCase {
-		configErrorLocs.ErrorLocs = []ErrorLocation{}
+		configErrorLocs.initialize()
 		MetricsConfig = MetricsFile{}
+		FiltersList = []string{}
+		InputScope = make(map[string][]Union, 0)
+		OutputScope = make(map[string][]Union, 0)
 		allPossibleAttributes = nil
 		data, err := os.ReadFile(test.inputFileLoc)
 		if err != nil {
 			t.Errorf("Error reading input json config file: %s", err)
 		}
-		UnmarshalConfig(data)
+		UnmarshalConfig(data, "")
 		if errMsg, pass := compareMetricsFile(test.inputFileLoc, MetricsConfig, test.expectedMetricsConfig); !pass {
 			t.Errorf("%s", errMsg)
 		}
 		if len(configErrorLocs.ErrorLocs) != len(test.expectedErrors) {
+			fmt.Printf("%v\n", configErrorLocs.ErrorLocs)
+			fmt.Printf("%v\n", test.expectedErrors)
 			t.Errorf("%s: error report is unexpected length of %d (expected %d) after running UnmarshalConfig for output\n", test.inputFileLoc, len(configErrorLocs.ErrorLocs), len(test.expectedErrors))
 		} else {
 			for _, errLoc := range configErrorLocs.ErrorLocs {
@@ -5659,7 +5683,7 @@ func TestConfigErrorOutput(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error reading input json config file: %s", err)
 	}
-	UnmarshalConfig(data)
+	UnmarshalConfig(data, "")
 	errorOut, err1 := os.ReadFile("../../test/configs/unmarshal/error_output_test15.json")
 	if err1 != nil {
 		t.Errorf("Could not open output file: %s", err1)
@@ -6215,7 +6239,11 @@ func TestGetPubTickers(t *testing.T) {
 		"/some/level2[level2_output]": -1,
 		"/some/status/output":         0,
 	}
-	GetPubTickers()
+	new_metrics_info := NewMetricsInfo{}
+	for output := range MetricsConfig.Outputs {
+		new_metrics_info.new_outputs = append(new_metrics_info.new_outputs, output)
+	}
+	GetPubTickers(new_metrics_info)
 	if len(tickers) != 5 {
 		t.Errorf("Expected %d tickers but got %d\n", 5, len(tickers))
 	}
@@ -6246,7 +6274,14 @@ func TestGetPubTickers(t *testing.T) {
 		},
 	}
 	testPubTickers = map[string]int{}
-	GetPubTickers()
+	pubTickers = nil
+	tickers = nil
+	metricsMutex = nil
+	new_metrics_info = NewMetricsInfo{}
+	for output := range MetricsConfig.Outputs {
+		new_metrics_info.new_outputs = append(new_metrics_info.new_outputs, output)
+	}
+	GetPubTickers(new_metrics_info)
 	if len(tickers) != 1 {
 		t.Errorf("Expected %d tickers but got %d\n", 1, len(tickers))
 	}
@@ -6261,8 +6296,15 @@ func TestGetPubTickers(t *testing.T) {
 			"publishRate": int64(-1),
 		},
 	}
+	new_metrics_info = NewMetricsInfo{}
+	for output := range MetricsConfig.Outputs {
+		new_metrics_info.new_outputs = append(new_metrics_info.new_outputs, output)
+	}
 	testPubTickers = map[string]int{}
-	GetPubTickers()
+	pubTickers = nil
+	tickers = nil
+	metricsMutex = nil
+	GetPubTickers(new_metrics_info)
 	if len(tickers) != 1 {
 		t.Errorf("Expected %d tickers but got %d\n", 1, len(tickers))
 	}
@@ -6278,7 +6320,14 @@ func TestGetPubTickers(t *testing.T) {
 		},
 	}
 	testPubTickers = map[string]int{}
-	GetPubTickers()
+	pubTickers = nil
+	tickers = nil
+	metricsMutex = nil
+	new_metrics_info = NewMetricsInfo{}
+	for output := range MetricsConfig.Outputs {
+		new_metrics_info.new_outputs = append(new_metrics_info.new_outputs, output)
+	}
+	GetPubTickers(new_metrics_info)
 	if len(tickers) != 1 {
 		t.Errorf("Expected %d tickers but got %d\n", 1, len(tickers))
 	}
@@ -6290,7 +6339,14 @@ func TestGetPubTickers(t *testing.T) {
 	}
 	MetricsConfig = MetricsFile{}
 	testPubTickers = map[string]int{}
-	GetPubTickers()
+	pubTickers = nil
+	tickers = nil
+	metricsMutex = nil
+	new_metrics_info = NewMetricsInfo{}
+	for output := range MetricsConfig.Outputs {
+		new_metrics_info.new_outputs = append(new_metrics_info.new_outputs, output)
+	}
+	GetPubTickers(new_metrics_info)
 	if len(tickers) != 1 {
 		t.Errorf("Expected %d tickers but got %d\n", 1, len(tickers))
 	}
@@ -7060,7 +7116,20 @@ func TestGetSubscribeUris(t *testing.T) {
 		"/some/output3/output3_lion/scale":    map[string]interface{}{},
 	}
 
-	GetSubscribeUris()
+	new_inputs := []string{}
+	for inputName := range MetricsConfig.Inputs {
+		new_inputs = append(new_inputs, inputName)
+	}
+	new_outputs := []string{}
+	for outputName := range MetricsConfig.Outputs {
+		new_outputs = append(new_outputs, outputName)
+	}
+	new_metrics_info := NewMetricsInfo{
+		new_inputs:  new_inputs,
+		new_outputs: new_outputs,
+	}
+	GetSubscribeUris(new_metrics_info)
+	time.Sleep(2 * time.Second)
 
 	if len(SubscribeUris) != len(expectedSubscribeUris) {
 		t.Errorf("Expected %d subscribe URIs but only got %d\n", len(expectedSubscribeUris), len(SubscribeUris))

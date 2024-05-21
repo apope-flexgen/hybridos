@@ -25,15 +25,20 @@ const useGenerateRows = () => {
     alertTitle: string,
   ) => (
     <Box sx={expandedRowBoxSx}>
-      {instances.map((instance) => (
-        <Box sx={expandedRowContentSx}>
-          <Typography text={instance.timestamp} variant="bodySBold" />
-          <Box sx={expandedRowSx}>
-            <Typography text={alertTitle ? `${alertTitle} -` : ''} variant="bodySBold" />
-            <Typography text={instance.message} variant="bodyS" />
+      {instances
+        .sort((a, b) => dayjs(b.timestamp).diff(a.timestamp))
+        .map((instance) => (
+          <Box sx={expandedRowContentSx}>
+            <Typography
+              text={dayjs(instance.timestamp).format('YYYY-MM-DD HH:mm:ss z')}
+              variant="bodySBold"
+            />
+            <Box sx={expandedRowSx}>
+              <Typography text={alertTitle ? `${alertTitle} -` : ''} variant="bodySBold" />
+              <Typography text={instance.message} variant="bodyS" />
+            </Box>
           </Box>
-        </Box>
-      ))}
+        ))}
     </Box>
   );
 
@@ -49,7 +54,7 @@ const useGenerateRows = () => {
       id: alert.id,
       severity: generateSeverityComponent(alert.severity),
       organization: alert.organization || '-',
-      alert: alert.details[0]?.message || '-',
+      alert: alert.details[alert.details.length - 1].message || '-',
       triggerTime: alert.trigger_time
         ? dayjs(alert.trigger_time).format('YYYY-MM-DD HH:mm:ss z')
         : '-',

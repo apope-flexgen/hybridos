@@ -304,6 +304,8 @@ def step_impl(context, uri):
                 else:
                     assert False, f"Extra key [{key}] found"
         else:
+            if body == expected_message:
+                return
             assert False, f"Error converting json message to python dictionary"
 
         for key, value in expected_message.items():

@@ -74,6 +74,12 @@ export class AlertsService {
     return { value, unit: 'second' };
   }
 
+  private parseComparatorLiteral(value: string): string {
+    if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false' || !isNaN(Number(value)))
+      return value;
+    return `"${value}"`;
+  }
+
   private parseExpressionToConditions(
     expression: string,
     aliases: Alias[],
@@ -117,12 +123,24 @@ export class AlertsService {
         const comparator2: Comparator = {
           type: comparator2Type,
           value:
-            comparator2Type === 'alias' ? this.parseAliasForUI(comparator2Value) : comparator2Value,
+            comparator2Type === 'alias'
+              ? this.parseAliasForUI(comparator2Value)
+              : comparator2Value.replaceAll(/['"]+/g, ''),
         };
 
         let connectionOperator = index !== 0 ? listOfConnectionOperators[index - 1] : null;
 
         const message = messages.find((message) => message[condition.trim()] !== undefined);
+        let messageToSend = message[condition.trim()] || '';
+
+        aliases.forEach((alias) => {
+          if (message[condition.trim()].includes(`{${alias.alias}}`)) {
+            messageToSend = message[condition.trim()].replaceAll(
+              `{${alias.alias}}`,
+              `{${this.parseAliasForUI(alias.alias)}}`,
+            );
+          }
+        });
 
         const mappedCondition: Expression = {
           index,
@@ -131,7 +149,7 @@ export class AlertsService {
           conditional,
           comparator2,
           duration: durationSeconds ? this.convertDurationToProperUnit(durationSeconds) : undefined,
-          message: message ? message[condition.trim()] : '',
+          message: messageToSend,
         };
 
         return mappedCondition;
@@ -154,10 +172,12 @@ export class AlertsService {
 
     sortedExpressions.forEach((expression) => {
       const comparator1Value = this.parseAliasForGoMetrics(expression.comparator1.value.toString());
+
       const comparator2Value =
         expression.comparator2.type === 'alias'
           ? this.parseAliasForGoMetrics(expression.comparator2.value.toString())
-          : expression.comparator2.value;
+          : this.parseComparatorLiteral(expression.comparator2.value.toString());
+
       const connectionOperator = expression.connectionOperator
         ? AlertConditionalsMapping[expression.connectionOperator]
         : '';
@@ -250,6 +270,7 @@ export class AlertsService {
     }));
     const deadlineInMinutes = this.convertToMinutes(deadline.value, deadline.unit);
     const { expression, messages } = this.parseConditionsToExpression(conditions, aliases);
+
     const newAlertConfig = {
       title,
       deadline: deadlineInMinutes,
@@ -296,6 +317,10 @@ export class AlertsService {
           type: alias.type === 'number' ? 'float' : alias.type,
         }))
       : null;
+    const aliasesWithProperFormatting = aliasesWithProperType.map((aliasObject) => ({
+      ...aliasObject,
+      alias: this.parseAliasForGoMetrics(aliasObject.alias),
+    }));
     const deadlineInMinutes = deadline
       ? this.convertToMinutes(deadline.value, deadline.unit)
       : null;
@@ -311,7 +336,7 @@ export class AlertsService {
       organization,
       templates,
       expression,
-      aliases: aliasesWithProperType,
+      aliases: aliasesWithProperFormatting,
       enabled,
       deleted,
     };

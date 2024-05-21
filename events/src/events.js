@@ -10,13 +10,13 @@ const {
     handleGetAlerts,
     handlePostAlerts,
     handleSetAlerts,
+    handleInitAlerts,
 } = require('./alerts/handlers/alertIncidents');
 const {
     handleGetAlertOrganizations,
     handlePostAlertOrganizations,
     handleDeleteAlertOrganizations,
 } = require('./alerts/handlers/alertOrganizations');
-const { initializeAlerts } = require('./alerts/alertsDb');
 
 fims.connect('events');
 fims.subscribeTo('/events');
@@ -153,7 +153,7 @@ if (process.env.NODE_ENV === 'dev') {
 }
 
 if (process.env.NODE_ENV !== 'test') {
-    initializeAlerts();
+    handleInitAlerts();
     fims.receiveWithTimeout(500, processEvent);
 }
 

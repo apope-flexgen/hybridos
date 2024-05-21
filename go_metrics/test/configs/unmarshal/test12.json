@@ -1,0 +1,67 @@
+{
+    "inputs": {
+        "v1": { "uri": "/components/feeder_52m1/v1", "type": "float" }
+    },
+    "outputs": {
+        "v1_times_5": { "uri": "/some/v1/output" }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": 5,
+            "expression": "v1 * 5"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "v1_times_5",
+            "expression": "banana * 5"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "internal_output": 5,
+            "expression": "v1 * 5"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "internal_output": "v1_times_5",
+            "expression": 5
+        },
+        {
+            "id": "dummy",
+            "internal_output": "v1",
+            "expression": "5"
+        },
+        {
+            "id": "dummy",
+            "type": "float",
+            "expression": "5"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": ["v1_times_5",[]],
+            "expression": "banana * 5"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "internal_output": [],
+            "expression": "5"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "internal_output": "v1"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "internal_output": "v1_times_5@enabled",
+            "expression": "5"
+        }
+    ]
+}

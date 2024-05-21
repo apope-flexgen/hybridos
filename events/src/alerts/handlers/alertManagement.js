@@ -67,7 +67,7 @@ module.exports = {
             id: old.id || uuidv4(),
             createdAt: old.createdAt || new Date(),
             updatedAt: new Date(),
-            version: (old.version || 0) + 1,
+            version: old.id ? old.version + 1 : 0,
             lastTriggered: old.lastTriggered,
 
             // settable from UI
@@ -80,9 +80,11 @@ module.exports = {
             organizationId: body.organizationId || old.organizationId,
             severity: body.severity || old.severity,
             title: body.title || old.title,
+            resolved: old.resolved || [],
+            unresolved: old.unresolved || [],
 
             // stuff former ui settable fields into history array except enabled
-            history: old ? ([...(old.history || []), old]).map((his) => ({
+            history: old.id ? ([...(old.history || []), old]).map((his) => ({
                 version: his.version,
 
                 aliases: his.aliases,
@@ -93,6 +95,7 @@ module.exports = {
                 organizationId: his.organizationId,
                 severity: his.severity,
                 title: his.title,
+                deprecatedAt: new Date().toISOString(),
             })) : [],
         };
 

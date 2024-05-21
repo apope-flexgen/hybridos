@@ -152,7 +152,7 @@ var EvalTests = []EvalTest{
 	},
 	{
 		inputExpression: "string1 + float2",
-		expectedOutput:  Union{tag: STRING, s: fmt.Sprintf("hello%f", 7.3)},
+		expectedOutput:  Union{tag: STRING, s: fmt.Sprintf("hello%.2f", 7.3)},
 		errorExpected:   false,
 	},
 	{
@@ -1160,7 +1160,7 @@ func TestEval(t *testing.T) {
 	var output []Union
 	var err error
 	for _, test := range EvalTests {
-		exp, _ := Parse(test.inputExpression)
+		exp, _ := Parse(test.inputExpression, "")
 		output, err = Evaluate(exp, &(test.state))
 		if err == nil && test.errorExpected {
 			t.Errorf("%s: no error when there should have been\n", test.inputExpression)
@@ -1214,7 +1214,7 @@ func TestTimeSensitiveEvals(t *testing.T) {
 	var err error
 	for _, test := range TimeSensitiveTests {
 		t0 := time.Now()
-		exp, _ := Parse(test.inputExpression)
+		exp, _ := Parse(test.inputExpression, "")
 		output, err = Evaluate(exp, &(test.state))
 		duration := time.Since(t0)
 		if testing.Verbose() {

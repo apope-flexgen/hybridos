@@ -47,21 +47,22 @@ const useGenerateActiveAlertRows = () => {
   const generateExpandRowContent = (
     instances: { message: string; timestamp: string }[],
     alertTitle: string,
-    alertStatus: string,
   ) => (
     <Box sx={expandedRowBoxSx}>
-      {instances.map((instance) => (
-        <Box sx={expandedRowContentSx}>
-          <Typography
-            text={dayjs(instance.timestamp).format('YYYY-MM-DD HH:mm:ss z')}
-            variant="bodySBold"
-          />
-          <Box sx={{ display: 'flex', gap: '2px' }}>
-            <Typography text={alertTitle ? `${alertTitle} -` : ''} variant="bodySBold" />
-            <Typography text={`${instance.message} (${alertStatus})`} variant="bodyS" />
+      {instances
+        .sort((a, b) => dayjs(b.timestamp).diff(a.timestamp))
+        .map((instance) => (
+          <Box sx={expandedRowContentSx}>
+            <Typography
+              text={dayjs(instance.timestamp).format('YYYY-MM-DD HH:mm:ss z')}
+              variant="bodySBold"
+            />
+            <Box sx={{ display: 'flex', gap: '2px' }}>
+              <Typography text={alertTitle ? `${alertTitle} -` : ''} variant="bodySBold" />
+              <Typography text={instance.message} variant="bodyS" />
+            </Box>
           </Box>
-        </Box>
-      ))}
+        ))}
     </Box>
   );
 
@@ -80,11 +81,11 @@ const useGenerateActiveAlertRows = () => {
         status: generateStatusBadge(alert.status),
         severity: generateSeverityComponent(alert.severity),
         organization: alert.organization,
-        alert: alert.details[0].message,
+        alert: alert.details[alert.details.length - 1].message,
         timestamp: dayjs(alert.trigger_time).format('YYYY-MM-DD HH:mm:ss z'),
         deadline: generateDeadline(alert.trigger_time, alert.deadline),
         resolve: generateResolveButton(alert),
-        expandRowContent: generateExpandRowContent(alert.details, alert.title, alert.status),
+        expandRowContent: generateExpandRowContent(alert.details, alert.title),
         rowHoverColor: rowHoverColorMapping[alert.severity],
       }));
 

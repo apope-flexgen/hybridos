@@ -35,9 +35,11 @@ func addAlertingAttributesToOutput(outputVar string, clothedOutputVal *map[strin
 	outputScopeMutex.RLock()
 	alertStatus, ok := OutputScope[outputVar+"@alertStatus"]
 	if !ok {
+		outputScopeMutex.RUnlock()
 		return true, fmt.Errorf("alert does not have a status attribute. There is an error in the code")
 	} else {
 		if len(alertStatus) != 1 || alertStatus[0].tag != BOOL {
+			outputScopeMutex.RUnlock()
 			return true, fmt.Errorf("invalid number of alert status values. Expected 1 but got %d. There is an error in the code", len(alertStatus))
 		}
 		// Update the alert status based on the value of the metric
@@ -53,6 +55,7 @@ func addAlertingAttributesToOutput(outputVar string, clothedOutputVal *map[strin
 	messagesList, messagesOk := OutputScope[outputVar+"@activeMessages"]
 	timestampsList, timestampsOk := OutputScope[outputVar+"@activeTimestamps"]
 	if !messagesOk || !timestampsOk || len(messagesList) != len(timestampsList) {
+		outputScopeMutex.RUnlock()
 		return true, fmt.Errorf("issue with alert details list. There is an error in the code")
 	} else {
 		// Create an array of all the trigger times for the alert.
@@ -72,11 +75,11 @@ func addAlertingAttributesToOutput(outputVar string, clothedOutputVal *map[strin
 	return true, nil
 }
 
-func prepareSingleOutputVar(outputUri, outputVar string, naked, clothed, checkFormat, interval_set, direct_set, direct_post bool) (map[string]interface{}, map[string]interface{}, map[string]interface{}) {
+func prepareSingleOutputVar(outputUri, outputVar string, naked, clothed, checkFormat, interval_set, direct_set, direct_post, is_get bool) (map[string]interface{}, map[string]interface{}, map[string]interface{}) {
 	msgBody := make(map[string]interface{}, 0)
 	tempDirectMsgBody := make(map[string]interface{}, 0)
 	tempPubMsgBody := make(map[string]interface{}, 0)
-	if !uriIsSparse[outputUri] || (uriIsSparse[outputUri] && outputVarChanged[outputVar]) {
+	if !uriIsSparse[outputUri] || (uriIsSparse[outputUri] && outputVarChanged[outputVar]) || is_get {
 		output := MetricsConfig.Outputs[outputVar]
 		clothedOutputVal := make(map[string]interface{}, len(output.Attributes))
 		var outputVal interface{}
@@ -102,9 +105,6 @@ func prepareSingleOutputVar(outputUri, outputVar string, naked, clothed, checkFo
 				clothed = false
 				naked = true
 			}
-		}
-		if len(output.Name) > 0 {
-			outputVar = output.Name
 		}
 		if len(output.Enum) > 0 {
 			if clothed {
@@ -138,22 +138,29 @@ func prepareSingleOutputVar(outputUri, outputVar string, naked, clothed, checkFo
 					}
 				}
 				outputScopeMutex.RUnlock()
-				msgBody[outputVar] = clothedOutputVal
+				// If the output has the "flat" and "lonely" flags, format its output with the name at the same level as the other fields
+				if stringInSlice(output.Flags, "flat") && stringInSlice(output.Flags, "lonely") {
+					clothedOutputVal["name"] = output.Name
+					msgBody = clothedOutputVal
+				} else {
+					// Otherwise the other fields will be nested under the name, which will be used as the key of the object
+					msgBody[output.Name] = clothedOutputVal
+				}
 			} else {
 				err := castUnionType(&outputVals[0], INT)
 				if err == nil {
 					enumIndex, okInt := getValueFromUnion(&outputVals[0]).(int64)
 					if okInt {
 						if pos, ok := output.EnumMap[int(enumIndex)]; ok {
-							msgBody[outputVar] = []EnumObject{output.Enum[pos]}
+							msgBody[output.Name] = []EnumObject{output.Enum[pos]}
 						} else {
-							msgBody[outputVar] = []EnumObject{{Value: enumIndex, String: "Unknown"}}
+							msgBody[output.Name] = []EnumObject{{Value: enumIndex, String: "Unknown"}}
 						}
 					} else {
-						msgBody[outputVar] = []EnumObject{{Value: enumIndex, String: "Unknown"}}
+						msgBody[output.Name] = []EnumObject{{Value: enumIndex, String: "Unknown"}}
 					}
 				} else {
-					msgBody[outputVar] = []EnumObject{{Value: -1, String: "Unknown"}}
+					msgBody[output.Name] = []EnumObject{{Value: -1, String: "Unknown"}}
 				}
 			}
 		} else if len(output.Bitfield) > 0 {
@@ -186,7 +193,14 @@ func prepareSingleOutputVar(outputUri, outputVar string, naked, clothed, checkFo
 				}
 				outputScopeMutex.RUnlock()
 				clothedOutputVal["value"] = outputList
-				msgBody[outputVar] = clothedOutputVal
+				// If the output has the "flat" and "lonely" flags, format its output with the name at the same level as the other fields
+				if stringInSlice(output.Flags, "flat") && stringInSlice(output.Flags, "lonely") {
+					clothedOutputVal["name"] = output.Name
+					msgBody = clothedOutputVal
+				} else {
+					// Otherwise the other fields will be nested under the name, which will be used as the key of the object
+					msgBody[output.Name] = clothedOutputVal
+				}
 			} else {
 				outputList := make([]EnumObject, 0)
 				err := castUnionType(&outputVals[0], INT)
@@ -200,7 +214,7 @@ func prepareSingleOutputVar(outputUri, outputVar string, naked, clothed, checkFo
 						}
 					}
 				}
-				msgBody[outputVar] = outputList
+				msgBody[output.Name] = outputList
 			}
 		} else {
 			if outputVal != nil {
@@ -221,9 +235,16 @@ func prepareSingleOutputVar(outputUri, outputVar string, naked, clothed, checkFo
 						}
 					}
 					outputScopeMutex.RUnlock()
-					msgBody[outputVar] = clothedOutputVal
+					// If the output has the "flat" and "lonely" flags, format its output with the name at the same level as the other fields
+					if stringInSlice(output.Flags, "flat") && stringInSlice(output.Flags, "lonely") {
+						clothedOutputVal["name"] = output.Name
+						msgBody = clothedOutputVal
+					} else {
+						// Otherwise the other fields will be nested under the name, which will be used as the key of the object
+						msgBody[output.Name] = clothedOutputVal
+					}
 				} else {
-					msgBody[outputVar] = outputVal
+					msgBody[output.Name] = outputVal
 				}
 			}
 		}
@@ -232,13 +253,31 @@ func prepareSingleOutputVar(outputUri, outputVar string, naked, clothed, checkFo
 		if isAlert, err := addAlertingAttributesToOutput(outputVar, &clothedOutputVal); err != nil {
 			log.Errorf("Error adding alerting attributes to output variable %s: %v.", outputVar, err)
 		} else if isAlert {
-			msgBody[outputVar] = clothedOutputVal
+			// If the output has the "flat" and "lonely" flags, format its output with the name at the same level as the other fields
+			if stringInSlice(output.Flags, "flat") && stringInSlice(output.Flags, "lonely") {
+				clothedOutputVal["name"] = output.Name
+				msgBody = clothedOutputVal
+			} else {
+				// Otherwise the other fields will be nested under the name, which will be used as the key of the object
+				msgBody[output.Name] = clothedOutputVal
+			}
 		}
-
 		if interval_set || direct_set || direct_post {
-			tempDirectMsgBody[outputVar] = msgBody[outputVar]
+			// If the output has the "flat" and "lonely" flags, format its output with the name at the same level as the other fields
+			if stringInSlice(output.Flags, "flat") && stringInSlice(output.Flags, "lonely") {
+				tempDirectMsgBody[output.Name] = msgBody
+			} else {
+				// Otherwise the other fields will be nested under the name, which will be used as the key of the object
+				tempDirectMsgBody[output.Name] = msgBody[output.Name]
+			}
 		} else {
-			tempPubMsgBody[outputVar] = msgBody[outputVar]
+			// If the output has the "flat" and "lonely" flags, format its output with the name at the same level as the other fields
+			if stringInSlice(output.Flags, "flat") {
+				tempPubMsgBody[output.Name] = msgBody
+			} else {
+				// Otherwise the other fields will be nested under the name, which will be used as the key of the object
+				tempPubMsgBody[output.Name] = msgBody[output.Name]
+			}
 		}
 	}
 	return msgBody, tempDirectMsgBody, tempPubMsgBody
@@ -269,13 +308,21 @@ func PrepareBody(outputUri string) map[string]interface{} {
 		checkFormat = true
 	}
 	for _, outputVar := range PublishUris[outputUri] {
-		tempMsgBody, tmpDirectMsgBody, tempPubMsgBody = prepareSingleOutputVar(outputUri, outputVar, naked, clothed, checkFormat, interval_set, direct_set, direct_post)
-		msgBody[outputVar] = tempMsgBody[outputVar]
-		if interval_set || direct_set || direct_post {
-			directMsgBody[outputVar] = tmpDirectMsgBody[outputVar]
-		} else {
-			pubMsgBody[outputVar] = tempPubMsgBody[outputVar]
+		tempMsgBody, tmpDirectMsgBody, tempPubMsgBody = prepareSingleOutputVar(outputUri, outputVar, naked, clothed, checkFormat, interval_set, direct_set, direct_post, false)
+		output, ok := MetricsConfig.Outputs[outputVar]
+		if ok {
+			msgBody[output.Name] = tempMsgBody[output.Name]
+			if interval_set || direct_set || direct_post {
+				directMsgBody[output.Name] = tmpDirectMsgBody[output.Name]
+			} else {
+				pubMsgBody[output.Name] = tempPubMsgBody[output.Name]
+			}
 		}
+	}
+
+	if msgBody == nil {
+		// Make sure we return something that's valid json if the body is nil
+		return map[string]interface{}{}
 	}
 	return msgBody
 }

@@ -6,6 +6,7 @@ import (
 	"go/parser"
 	"go/token"
 	"reflect"
+	"regexp"
 	"strings"
 )
 
@@ -18,7 +19,7 @@ import (
  * have been assigned to each of the variables.
  *
  */
-func Parse(expression string) (*Expression, error) {
+func Parse(expression string, configId string) (*Expression, error) {
 	// parse the expression into an AST
 	if strings.Contains(expression, "@") {
 		expression = strings.ReplaceAll(expression, "@", ".")
@@ -36,7 +37,30 @@ func Parse(expression string) (*Expression, error) {
 
 	// break the expression into nodes (as small as we can go)
 	// and spit out the variables in the expression
-	vars, resultType, err := extract(tree)
+	vars, resultType, err := extract(tree, configId)
+
+	if len(configId) > 0 {
+		for _, varName := range vars {
+			if !stringInSlice([]string{"true", "false", "nil", "attribute", "value"}, varName) {
+				isAttribute := false
+				for attributeName := range allPossibleAttributes {
+					if attributeName == varName {
+						isAttribute = true
+					}
+				}
+				if !isAttribute {
+					regexpression := "\\b" + varName + "\\b"
+					compiled_expression, err := regexp.Compile(regexpression)
+					if err == nil {
+						expression_bytes := compiled_expression.ReplaceAll([]byte(expression), []byte(varName+"_"+configId))
+						expression = string(expression_bytes)
+					}
+				}
+			}
+		}
+
+		return Parse(expression, "")
+	}
 
 	return &Expression{
 		String:     expression,
@@ -50,10 +74,13 @@ func Parse(expression string) (*Expression, error) {
 * This is a helper function that returns an array of the variables
 * that are present in an expression.
  */
-func extract(node ast.Node) (vars []string, resultType DataType, err error) {
+func extract(node ast.Node, configId string) (vars []string, resultType DataType, err error) {
 	switch node := node.(type) {
 	case *ast.Ident: // variables
 		vars = []string{node.Name}
+		if len(configId) > 0 && (!stringInSlice([]string{"true", "false", "nil", "attribute", "value"}, node.Name)) {
+			node.Name = node.Name + "_" + configId
+		}
 		if node.Name == "true" || node.Name == "false" || node.Name == "nil" {
 			resultType = BOOL
 		} else if _, ok := InputScope[node.Name]; ok {
@@ -79,13 +106,13 @@ func extract(node ast.Node) (vars []string, resultType DataType, err error) {
 			return []string{}, NIL, fmt.Errorf("cannot find variable %v in inputs or filters", node.Name)
 		}
 	case *ast.CallExpr: //function identifier
-		vars, resultType, err = extractFunc(node)
+		vars, resultType, err = extractFunc(node, configId)
 	case *ast.BinaryExpr: // like X + Y
-		vars, resultType, err = extractBinary(node)
+		vars, resultType, err = extractBinary(node, configId)
 	case *ast.ParenExpr: // nested functions...I think
-		vars, resultType, err = extract(node.X)
+		vars, resultType, err = extract(node.X, configId)
 	case *ast.UnaryExpr: // like !X
-		vars, resultType, err = extractUnary(node)
+		vars, resultType, err = extractUnary(node, configId)
 	case *ast.BasicLit:
 		switch node.Kind {
 		case token.INT:
@@ -100,7 +127,11 @@ func extract(node ast.Node) (vars []string, resultType DataType, err error) {
 			err = fmt.Errorf("unhandled imaginary number in basic literal expression")
 		}
 	case *ast.SelectorExpr:
-		vars = []string{node.X.(*ast.Ident).Name + "@" + node.Sel.Name}
+		name := node.X.(*ast.Ident).Name
+		if len(configId) > 0 {
+			name = name + "_" + configId
+		}
+		vars = []string{name + "@" + node.Sel.Name}
 		resultType = BOOL
 	default:
 		err = fmt.Errorf("unsupported node %+v (type %+v)", node, reflect.TypeOf(node))
@@ -110,7 +141,7 @@ func extract(node ast.Node) (vars []string, resultType DataType, err error) {
 }
 
 // get the arguments given to a function as a []string
-func extractFunc(node *ast.CallExpr) ([]string, DataType, error) {
+func extractFunc(node *ast.CallExpr, configId string) ([]string, DataType, error) {
 	var resultType DataType
 	stringArr := make([]string, 0)
 	tags := make([]DataType, 0)
@@ -118,7 +149,7 @@ func extractFunc(node *ast.CallExpr) ([]string, DataType, error) {
 	var tag DataType
 	var err error
 	for _, expr := range node.Args {
-		tmp, tag, err = extract(ast.Node(expr))
+		tmp, tag, err = extract(ast.Node(expr), configId)
 		if err != nil {
 			return stringArr, NIL, err
 		}
@@ -732,7 +763,7 @@ func extractFunc(node *ast.CallExpr) ([]string, DataType, error) {
 
 // get the left and right sides of an expression
 // evaluate them to their most basic form, then give back their variables
-func extractBinary(node *ast.BinaryExpr) ([]string, DataType, error) {
+func extractBinary(node *ast.BinaryExpr, configId string) ([]string, DataType, error) {
 
 	var vars []string
 
@@ -745,13 +776,13 @@ func extractBinary(node *ast.BinaryExpr) ([]string, DataType, error) {
 		return vars, NIL, fmt.Errorf("unsupported binary operation: %s", node.Op) // I don't think it's technically possible to get here...
 	}
 
-	lVars, lResultType, err := extract(node.X)
+	lVars, lResultType, err := extract(node.X, configId)
 
 	if err != nil {
 		return vars, NIL, err
 	}
 
-	rVars, rResultType, err := extract(node.Y)
+	rVars, rResultType, err := extract(node.Y, configId)
 
 	if err != nil {
 		return vars, NIL, err
@@ -824,7 +855,7 @@ func extractBinary(node *ast.BinaryExpr) ([]string, DataType, error) {
 
 // extract the operand of a unary expression and extract
 // the variables from the operand
-func extractUnary(node *ast.UnaryExpr) ([]string, DataType, error) {
+func extractUnary(node *ast.UnaryExpr, configId string) ([]string, DataType, error) {
 
 	var vars []string
 	var resultType DataType
@@ -837,7 +868,7 @@ func extractUnary(node *ast.UnaryExpr) ([]string, DataType, error) {
 		return vars, NIL, fmt.Errorf("unsupported unary operation: %s", node.Op)
 	}
 
-	vars, resultType, err = extract(node.X)
+	vars, resultType, err = extract(node.X, configId)
 	if resultType == STRING && node.Op != token.NOT {
 		return vars, NIL, fmt.Errorf("cannot perform unary operation %v on string value", node.Op)
 	}

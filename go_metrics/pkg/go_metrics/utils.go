@@ -84,6 +84,16 @@ type MDO struct {
 	Echo    map[string]map[string]interface{} `json:"echo,omitempty"`
 }
 
+type NewMetricsInfo struct {
+	new_inputs                 []string
+	new_filters                []string
+	new_filters_starting_index int
+	new_outputs                []string
+	new_metrics_starting_index int
+	new_echo_starting_index    int
+	new_tickers_starting_index int
+}
+
 // To prevent using interfaces, we use a Union
 // structure instead. It contains a "tag" that identifies
 // what data type the struct value stores.
@@ -844,4 +854,13 @@ func squashUris(uris []string) []string {
 		uriLength += 1
 	}
 	return uriOutput
+}
+
+func removeStringFromSlice(s []string, r string) ([]string, bool) {
+	for i, v := range s {
+		if v == r {
+			return append(s[:i], s[i+1:]...), true
+		}
+	}
+	return s, false
 }
