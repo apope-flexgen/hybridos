@@ -10,7 +10,6 @@ Jinja2==3.0.3
 lxml==4.9.1
 makefun==1.15.0
 MarkupSafe==2.0.1
-numpy==1.19.5
 packaging==21.3
 pandas==1.1.5
 pluggy==1.0.0

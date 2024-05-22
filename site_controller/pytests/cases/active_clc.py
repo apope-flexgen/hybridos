@@ -6,32 +6,36 @@ from ..pytest_framework import Site_Controller_Instance
 from ..pytest_steps import Setup, Steps, Teardown
 
 # Generate configs changes
+
+
 def make_it_2000():
     edits: list[dict] = [
         {
             "uri": "/dbi/site_controller/variables/variables/features/standalone_power/active_power_closed_loop_update_rate_ms",
-            "up": {"name":"Active Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":2000,"var_type":"Int"},
-            "down": {"name":"Active Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":10,"var_type":"Int"},
+            "up": {"name": "Active Power Frequency of Closed Loop Control Algorithm", "ui_type": "none", "unit": "ms", "value": 2000, "var_type": "Int"},
+            "down": {"name": "Active Power Frequency of Closed Loop Control Algorithm", "ui_type": "none", "unit": "ms", "value": 10, "var_type": "Int"},
         },
         {
             "uri": "/dbi/site_controller/variables/variables/features/standalone_power/reactive_power_closed_loop_update_rate_ms",
-            "up": {"name":"Reactive Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":2000,"var_type":"Int"},
-            "down": {"name":"Reactive Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":10,"var_type":"Int"},
+            "up": {"name": "Reactive Power Frequency of Closed Loop Control Algorithm", "ui_type": "none", "unit": "ms", "value": 2000, "var_type": "Int"},
+            "down": {"name": "Reactive Power Frequency of Closed Loop Control Algorithm", "ui_type": "none", "unit": "ms", "value": 10, "var_type": "Int"},
         },
         {
             "uri": "/dbi/site_controller/variables/variables/features/standalone_power/active_power_closed_loop_step_size_kW",
-            "up": {"name":"Reactive Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":10,"var_type":"Int"},
-            "down": {"name":"Reactive Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":1,"var_type":"Int"},
+            "up": {"name": "Reactive Power Frequency of Closed Loop Control Algorithm", "ui_type": "none", "unit": "ms", "value": 10, "var_type": "Int"},
+            "down": {"name": "Reactive Power Frequency of Closed Loop Control Algorithm", "ui_type": "none", "unit": "ms", "value": 1, "var_type": "Int"},
         },
         {
-            "uri": "/dbi/site_controller/variables/variables/features/standalone_power/reactive_power_closed_loop_step_size_kW",
-            "up": {"name":"Reactive Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":10,"var_type":"Int"},
-            "down": {"name":"Reactive Power Frequency of Closed Loop Control Algorithm","ui_type":"none","unit":"ms","value":1,"var_type":"Int"},
+            "uri": "/dbi/site_controller/variables/variables/features/standalone_power/reactive_power_closed_loop_step_size_kVAR",
+            "up": {"name": "Reactive Power Frequency of Closed Loop Control Algorithm", "ui_type": "none", "unit": "ms", "value": 10, "var_type": "Int"},
+            "down": {"name": "Reactive Power Frequency of Closed Loop Control Algorithm", "ui_type": "none", "unit": "ms", "value": 1, "var_type": "Int"},
         },
     ]
     return edits
 
 # Frequency Response with CLC
+
+
 @ fixture
 @ parametrize("test", [
     # Preconditions
@@ -675,7 +679,7 @@ def test_solar_tsoc_clc(test):
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 1000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 1550, wait_secs=10), 
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 1550, wait_secs=10),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -1000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 1550)
         ]
@@ -688,8 +692,8 @@ def test_solar_tsoc_clc(test):
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_total_correction", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 0), 
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 550),        
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 550),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 0)
         ]
     ),
@@ -701,49 +705,49 @@ def test_solar_tsoc_clc(test):
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 100),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_total_correction", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 100),         
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 100),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 450),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 100)
         ]
     ),
     Steps(
         {
-            # Reset for next test 
+            # Reset for next test
             "/features/active_power/active_power_setpoint_kW_cmd": 0
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_total_correction", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 0), 
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 550),        
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 550),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 0)
         ]
     ),
     Steps(
         {
-            # Test with a slow Active Power Setpoint slew rate 
+            # Test with a slow Active Power Setpoint slew rate
             "/features/active_power/active_power_setpoint_kW_slew_rate": 10,
             "/features/active_power/active_power_setpoint_kW_cmd": 100
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 100),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_total_correction", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 100, wait_secs=10),         
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 100, wait_secs=10),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 450),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 100)
         ]
     ),
     Steps(
         {
-            # Reset for next test 
+            # Reset for next test
             "/features/active_power/active_power_setpoint_kW_cmd": 0,
             "/features/active_power/active_power_setpoint_kW_slew_rate": 1000000
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_total_correction", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 0), 
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 550),        
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 550),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 0)
         ]
     ),
@@ -755,7 +759,7 @@ def test_solar_tsoc_clc(test):
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", -1000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", -1450, wait_secs=15), 
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", -1450, wait_secs=15),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 1000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -1450)
         ]
@@ -767,7 +771,7 @@ def test_solar_tsoc_clc(test):
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 0, wait_secs=10), 
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 0, wait_secs=10),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 0, tolerance=50),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 0)
         ]
@@ -779,7 +783,7 @@ def test_solar_tsoc_clc(test):
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", -450, tolerance=50, wait_secs=10), 
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", -450, tolerance=50, wait_secs=10),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 0, tolerance=50),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -450, tolerance=50)
         ]
@@ -807,6 +811,8 @@ def test_active_clc_zero_bypass(test):
     return test
 
 # vibe check no divide by zero
+
+
 @ fixture
 @ parametrize("test", [
     # Preconditions
@@ -837,10 +843,10 @@ def test_active_clc_zero_bypass(test):
     Steps(
         {},
         [],
-        post_lambda= [
+        post_lambda=[
             lambda: Site_Controller_Instance.get_instance().mig.upload(make_it_2000()),
             lambda: Site_Controller_Instance.get_instance().restart_site_controller()
-            ]
+        ]
     ),
     Steps(
         {
@@ -868,7 +874,8 @@ def test_active_clc_zero_bypass(test):
         [
             # Demand is modified around 15*10kw (aka once every 2 seconds at a 10kw step)
             # -5000 + 150 offset
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -4850, wait_secs=30, tolerance_type=Tolerance_Type.abs, tolerance=50),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -4850,
+                           wait_secs=30, tolerance_type=Tolerance_Type.abs, tolerance=50),
             # CLC closes in on the commanded value
             Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", 5900, tolerance_type=Tolerance_Type.abs, tolerance=50)
         ]
@@ -897,7 +904,8 @@ def test_active_clc_zero_bypass(test):
             # POI inaccurate
             Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", 1050, wait_secs=0),
             # Then make sure CLC closes in on the value as it did previously
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -4850, wait_secs=30, tolerance_type=Tolerance_Type.abs, tolerance=50),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -4850,
+                           wait_secs=30, tolerance_type=Tolerance_Type.abs, tolerance=50),
             # CLC closes in on the commanded value
             Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", 5900, tolerance_type=Tolerance_Type.abs, tolerance=50)
         ]
@@ -921,7 +929,6 @@ def test_active_clc_zero_bypass(test):
 ])
 def test_slow_clc_update_rate(test):
     return test
-
 
 
 # Ensure importing at POI limit signage is correct
@@ -959,7 +966,8 @@ def test_slow_clc_update_rate(test):
             # Assert ess value is allowed to exceed poi lim
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", -4000, wait_secs=30),
             # After 30 seconds total correction should have landed at -2000 out though continued to climb before DC-410 patch
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_total_correction", -2000, tolerance=200, tolerance_type=Tolerance_Type.abs),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_total_correction", -2000,
+                           tolerance=200, tolerance_type=Tolerance_Type.abs),
         ]
     ),
     # Cleanup
@@ -981,5 +989,3 @@ def test_slow_clc_update_rate(test):
 ])
 def test_active_clc_poi_lims(test):
     return test
-
-

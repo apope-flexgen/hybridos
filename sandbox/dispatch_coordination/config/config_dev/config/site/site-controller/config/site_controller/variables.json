@@ -635,6 +635,13 @@
                     "unit": "V",
                     "value": 375
                 },
+                "avr_kVAR_slew_rate": {
+                    "name": "Automatic Voltage Regulation kVAR response Slew Rate",
+                    "ui_type": "control",
+                    "unit": "kVAR/s",
+                    "value": 1000,
+                    "var_type": "Int"
+                },
                 "avr_over_deadband_volts": {
                     "name": "Deadband",
                     "ui_type": "control",
@@ -666,13 +673,6 @@
                     "ui_type": "status",
                     "value": false,
                     "var_type": "Bool"
-                },
-                "avr_kVAR_slew_rate": {
-                    "name": "Automatic Voltage Regulation kVAR response Slew Rate",
-                    "ui_type": "control",
-                    "unit": "kVAR/s",
-                    "value": 1000,
-                    "var_type": "Int"
                 },
                 "constant_power_factor_absolute_mode": {
                     "name": "Constant Power Factor Absolute Mode Enable",
@@ -890,6 +890,18 @@
                     "value": 1000,
                     "var_type": "Int"
                 },
+                "max_heartbeat": {
+                    "name": "Watchdog Max Heartbeat",
+                    "ui_type": "control",
+                    "value": 255,
+                    "var_type": "Int"
+                },
+                "min_heartbeat": {
+                    "name": "Watchdog Min Heartbeat",
+                    "ui_type": "control",
+                    "value": 0,
+                    "var_type": "Int"
+                },
                 "watchdog_duration_ms": {
                     "name": "Watchdog Timer Duration",
                     "ui_type": "none",
@@ -908,18 +920,6 @@
                     "name": "Watchdog Pet",
                     "ui_type": "none",
                     "value": 1,
-                    "var_type": "Int"
-                },
-                "min_heartbeat": {
-                    "name": "Watchdog Min Heartbeat",
-                    "ui_type": "control",
-                    "value": 0,
-                    "var_type": "Int"
-                },
-                "max_heartbeat": {
-                    "name": "Watchdog Max Heartbeat",
-                    "ui_type": "control",
-                    "value": 255,
                     "var_type": "Int"
                 }
             },
@@ -1108,6 +1108,13 @@
                     "unit": "%",
                     "value": 50.0
                 },
+                "fr_mode_enable_flag": {
+                    "name": "Enable Frequency Response",
+                    "type": "enum_slider",
+                    "ui_type": "control",
+                    "value": false,
+                    "var_type": "Bool"
+                },
                 "frequency_response": {
                     "components": [
                         {
@@ -1132,12 +1139,12 @@
                                 "value": 0,
                                 "var_type": "Int"
                             },
-                            "force_start": {
-                                "name": "Force Start",
-                                "type": "enum_slider",
+                            "cooldown_slew_rate_kw": {
+                                "name": "Cooldown Slew Rate",
+                                "scaler": 1,
                                 "ui_type": "control",
-                                "value": false,
-                                "var_type": "Bool"
+                                "value": 1000,
+                                "var_type": "Int"
                             },
                             "droop_bypass_flag": {
                                 "name": "Droop Bypass",
@@ -1164,6 +1171,13 @@
                                 "type": "enum_slider",
                                 "ui_type": "control",
                                 "value": true,
+                                "var_type": "Bool"
+                            },
+                            "force_start": {
+                                "name": "Force Start",
+                                "type": "enum_slider",
+                                "ui_type": "control",
+                                "value": false,
                                 "var_type": "Bool"
                             },
                             "freeze_active_cmd_flag": {
@@ -1228,13 +1242,6 @@
                                 "value": 1000,
                                 "var_type": "Int"
                             },
-                            "cooldown_slew_rate_kw": {
-                                "name": "Cooldown Slew Rate",
-                                "scaler": 1,
-                                "ui_type": "control",
-                                "value": 1000,
-                                "var_type": "Int"
-                            },
                             "trigger_duration_sec": {
                                 "name": "Response Duration",
                                 "ui_type": "none",
@@ -1255,13 +1262,6 @@
                                 "ui_type": "control",
                                 "unit": "kW",
                                 "value": 100.0
-                            },
-                            "force_start": {
-                                "name": "Force Start",
-                                "type": "enum_slider",
-                                "ui_type": "control",
-                                "value": false,
-                                "var_type": "Bool"
                             },
                             "active_response_status": {
                                 "name": "Active Response Status",
@@ -1302,6 +1302,13 @@
                                 "name": "Slew Override",
                                 "type": "enum_slider",
                                 "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "force_start": {
+                                "name": "Force Start",
+                                "type": "enum_slider",
+                                "ui_type": "control",
                                 "value": false,
                                 "var_type": "Bool"
                             },
@@ -1389,13 +1396,6 @@
                                 "unit": "kW",
                                 "value": 100.0
                             },
-                            "force_start": {
-                                "name": "Force Start",
-                                "type": "enum_slider",
-                                "ui_type": "control",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
                             "active_response_status": {
                                 "name": "Active Response Status",
                                 "ui_type": "status",
@@ -1436,6 +1436,13 @@
                                 "type": "enum_slider",
                                 "ui_type": "none",
                                 "value": true,
+                                "var_type": "Bool"
+                            },
+                            "force_start": {
+                                "name": "Force Start",
+                                "type": "enum_slider",
+                                "ui_type": "control",
+                                "value": false,
                                 "var_type": "Bool"
                             },
                             "freeze_active_cmd_flag": {
@@ -1770,19 +1777,19 @@
                     "value": -1000,
                     "var_type": "Int"
                 },
-                "reactive_power_closed_loop_regulation_deadband_kW": {
+                "reactive_power_closed_loop_regulation_deadband_kVAR": {
                     "name": "Reactive Power Closed Loop Control Regulation Deadband",
                     "ui_type": "status",
                     "unit": "kVAR",
                     "value": 5
                 },
-                "reactive_power_closed_loop_steady_state_deadband_kW": {
+                "reactive_power_closed_loop_steady_state_deadband_kVAR": {
                     "name": "Reactive Power Closed Loop Control Steady State Deadband",
                     "ui_type": "none",
                     "unit": "kVAR",
                     "value": 1
                 },
-                "reactive_power_closed_loop_step_size_kW": {
+                "reactive_power_closed_loop_step_size_kVAR": {
                     "name": "Reactive Power Closed Loop Control Step Size",
                     "ui_type": "none",
                     "unit": "kVAR",
@@ -1984,13 +1991,6 @@
                     ],
                     "type": "enum",
                     "ui_type": "none"
-                },
-                "fr_mode_enable_flag": {
-                    "name": "Enable Frequency Response",
-                    "type": "enum_slider",
-                    "ui_type": "control",
-                    "value": false,
-                    "var_type": "Bool"
                 }
             },
             "summary": {
@@ -2610,7 +2610,6 @@
                     "name": "Reactive Power Priority Flag",
                     "type": "enum_slider",
                     "ui_type": "none",
-                    "value": false,
                     "value": true,
                     "var_type": "Bool"
                 },

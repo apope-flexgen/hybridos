@@ -1792,19 +1792,19 @@
                     "value": -1000,
                     "var_type": "Int"
                 },
-                "reactive_power_closed_loop_regulation_deadband_kW": {
+                "reactive_power_closed_loop_regulation_deadband_kVAR": {
                     "name": "Reactive Power Closed Loop Control Regulation Deadband",
                     "ui_type": "status",
                     "unit": "kVAR",
                     "value": 5
                 },
-                "reactive_power_closed_loop_steady_state_deadband_kW": {
+                "reactive_power_closed_loop_steady_state_deadband_kVAR": {
                     "name": "Reactive Power Closed Loop Control Steady State Deadband",
                     "ui_type": "none",
                     "unit": "kVAR",
                     "value": 1
                 },
-                "reactive_power_closed_loop_step_size_kW": {
+                "reactive_power_closed_loop_step_size_kVAR": {
                     "name": "Reactive Power Closed Loop Control Step Size",
                     "ui_type": "none",
                     "unit": "kVAR",

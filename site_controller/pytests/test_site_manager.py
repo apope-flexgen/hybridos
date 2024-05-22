@@ -33,6 +33,8 @@ from pytests.cases.watchdog import test_watchdog_when_in_maintenance, test_watch
 from pytests.cases.multiple_inputs import test_multiple_inputs
 
 # Test runner AKA main() for each individual test
+
+
 @ parametrize("current_test", [
 
     #
@@ -46,6 +48,8 @@ from pytests.cases.multiple_inputs import test_multiple_inputs
     test_ess_dischargeable_derate,
     test_maint_active_power_rounding,
     test_maint_reactive_power_rounding,
+    test_reactive_power_setpoint,
+    test_reactive_poi_lims,
     test_alerts,
     test_default_local_mode,
     test_asset_bit_field_local_mode,
@@ -81,7 +85,7 @@ from pytests.cases.multiple_inputs import test_multiple_inputs
     test_avr_undervoltage_slew,
     test_avr_positive_poi_limits,
     test_avr_negative_poi_limits,
-    test_avr_voltage_setpoint_limits, 
+    test_avr_voltage_setpoint_limits,
     test_pfr_untracked_load,
     test_pfr_offset_load,
     test_pfr_minimum_load,
@@ -117,7 +121,7 @@ from pytests.cases.multiple_inputs import test_multiple_inputs
     test_scheduler_balancing,
     test_battery_balancing_algorithm,
     test_grid_mode_doesnt_spam,
-    test_watchdog_when_in_maintenance, 
+    test_watchdog_when_in_maintenance,
     test_watchdog_fims_endpoints,
     test_watchdog_alarm_triggers_sequence_level_fault,
     test_multiple_inputs
@@ -131,5 +135,5 @@ from pytests.cases.multiple_inputs import test_multiple_inputs
 def test_site_manager(request: pytest.FixtureRequest, current_test: Steps):
     # Extract the pytest id
     Site_Controller_Instance.get_instance()  # Lazy initialization
-    current_id = request.node.name[request.node.name.find("[")+1:request.node.name.find("]")]
+    current_id = request.node.name[request.node.name.find("[") + 1:request.node.name.find("]")]
     current_test.run_steps(current_id)

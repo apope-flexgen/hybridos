@@ -18,12 +18,12 @@ from ..pytest_steps import Setup, Steps, Teardown
             "/features/standalone_power/reactive_power_closed_loop_enable": False,
             "/features/site_operation/power_priority_flag": True,
             "/components/bess_aux/reactive_power_setpoint": -500,
-            "/features/standalone_power/reactive_power_closed_loop_step_size_kW": 5,  # Keep step size under asset slew rates
+            "/features/standalone_power/reactive_power_closed_loop_step_size_kVAR": 5,  # Keep step size under asset slew rates
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/runmode1_kVAR_mode_cmd", 2),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_enable", False),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_step_size_kW", 5),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_step_size_kVAR", 5),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/site_operation/power_priority_flag", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/reactive_power", 550),
         ]
@@ -125,11 +125,11 @@ from ..pytest_steps import Setup, Steps, Teardown
             "/features/standalone_power/reactive_power_closed_loop_enable": False,
             "/features/site_operation/power_priority_flag": False,
             "/features/reactive_power/runmode1_kVAR_mode_cmd": 5,
-            "/features/standalone_power/reactive_power_closed_loop_step_size_kW": 1,
+            "/features/standalone_power/reactive_power_closed_loop_step_size_kVAR": 1,
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_enable", False),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_step_size_kW", 1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_step_size_kVAR", 1),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/site_operation/power_priority_flag", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/runmode1_kVAR_mode_cmd", 5),
         ]

@@ -18,7 +18,7 @@ from ..pytest_steps import Setup, Steps, Teardown
             "/features/reactive_power/runmode1_kVAR_mode_cmd": 2,
             "/features/reactive_power/reactive_setpoint_kVAR_cmd": 0,
             "/features/standalone_power/reactive_power_closed_loop_enable": False,
-            "/features/standalone_power/reactive_power_closed_loop_step_size_kW": 5,  # Keep step size under asset slew rates
+            "/features/standalone_power/reactive_power_closed_loop_step_size_kVAR": 5,  # Keep step size under asset slew rates
             "/components/bess_aux/reactive_power_setpoint": -1000
         },
         [
@@ -27,7 +27,7 @@ from ..pytest_steps import Setup, Steps, Teardown
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/runmode1_kVAR_mode_cmd", 2),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/reactive_setpoint_kVAR_cmd", 0),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_enable", False),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_step_size_kW", 5),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_step_size_kVAR", 5),
             Flex_Assertion(Assertion_Type.approx_eq, "/components/bess_aux/reactive_power", 1000)
         ]
     ),
@@ -272,7 +272,7 @@ def test_reactive_setpoint_clc(test):
             "/features/standalone_power/reactive_power_closed_loop_enable": True,
             "/features/standalone_power/reactive_power_closed_loop_zero_bypass_enable": True,
             "/features/standalone_power/reactive_power_closed_loop_zero_bypass_deadband_kVAR": 300,
-            "/features/standalone_power/reactive_power_closed_loop_step_size_kW": 10,  # Large step size to speed up tests 
+            "/features/standalone_power/reactive_power_closed_loop_step_size_kVAR": 10,  # Large step size to speed up tests
             "/components/bess_aux/reactive_power_setpoint": -500
         },
         [
@@ -283,7 +283,7 @@ def test_reactive_setpoint_clc(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_enable", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_zero_bypass_enable", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_zero_bypass_deadband_kVAR", 300),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_step_size_kW", 10),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_step_size_kVAR", 10),
             Flex_Assertion(Assertion_Type.approx_eq, "/components/bess_aux/reactive_power", 500)
         ]
     ),
@@ -294,7 +294,7 @@ def test_reactive_setpoint_clc(test):
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/reactive_setpoint_kVAR_cmd", 1000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/ess_actual_kVAR", 1540, wait_secs=10), 
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/ess_actual_kVAR", 1540, wait_secs=10),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/feeder_actual_kVAR", -1000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/site_kVAR_demand", 1540)
         ]
@@ -307,8 +307,8 @@ def test_reactive_setpoint_clc(test):
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/reactive_setpoint_kVAR_cmd", 0),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_total_correction", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/ess_actual_kVAR", 0), 
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/feeder_actual_kVAR", 540),        
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/ess_actual_kVAR", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/feeder_actual_kVAR", 540),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/site_kVAR_demand", 0)
         ]
     ),
@@ -320,34 +320,34 @@ def test_reactive_setpoint_clc(test):
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/reactive_setpoint_kVAR_cmd", 100),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_total_correction", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/ess_actual_kVAR", 100),         
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/ess_actual_kVAR", 100),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/feeder_actual_kVAR", 440),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/site_kVAR_demand", 100)
         ]
     ),
     Steps(
         {
-            # Reset for next test 
+            # Reset for next test
             "/features/reactive_power/reactive_setpoint_kVAR_cmd": 0
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/reactive_setpoint_kVAR_cmd", 0),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_total_correction", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/ess_actual_kVAR", 0), 
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/feeder_actual_kVAR", 540),        
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/ess_actual_kVAR", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/feeder_actual_kVAR", 540),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/site_kVAR_demand", 0)
         ]
     ),
     Steps(
         {
-            # Test with a slow Reactive Power Setpoint slew rate 
+            # Test with a slow Reactive Power Setpoint slew rate
             "/features/reactive_power/reactive_setpoint_kVAR_slew_rate": 10,
             "/features/reactive_power/reactive_setpoint_kVAR_cmd": 100
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/reactive_setpoint_kVAR_cmd", 100),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_total_correction", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/ess_actual_kVAR", 100, wait_secs=10),         
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/ess_actual_kVAR", 100, wait_secs=10),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/feeder_actual_kVAR", 440),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/site_kVAR_demand", 100)
         ]
@@ -358,14 +358,14 @@ def test_reactive_setpoint_clc(test):
             **Steps.enable_solar_and_gen(),
             "/features/standalone_power/reactive_power_closed_loop_enable": False,
             "/features/standalone_power/reactive_power_closed_loop_zero_bypass_enable": False,
-            "/features/standalone_power/reactive_power_closed_loop_step_size_kW": 1,
+            "/features/standalone_power/reactive_power_closed_loop_step_size_kVAR": 1,
             "/features/reactive_power/reactive_setpoint_kVAR_slew_rate": 1000,
             "/features/reactive_power/reactive_setpoint_kVAR_cmd": 0
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_enable", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_zero_bypass_enable", False),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_step_size_kW", 1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/reactive_power_closed_loop_step_size_kVAR", 1),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/reactive_setpoint_kVAR_slew_rate", 1000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/reactive_setpoint_kVAR_cmd", 0)
         ]

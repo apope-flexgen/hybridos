@@ -10,3 +10,6 @@ output
 
 # .vscode
 **/.vscode/settings.json
+
+# ignore the updater logs
+updater-logs
