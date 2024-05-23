@@ -11,3 +11,5 @@ go/
 
 # pytest cache files
 *.pyc
+
+test_output

@@ -8,32 +8,32 @@ import (
 
 // Root configuration struct
 type Config struct {
-	Lane1 *LaneConfig `json:"1"` // Lowest priority lane configuration
-	Lane2 *LaneConfig `json:"2"`
-	Lane3 *LaneConfig `json:"3"`
-	Lane4 *LaneConfig `json:"4"`
-	Lane5 *LaneConfig `json:"5"` // Highest priority lane configuration
+	Lane1 *LaneConfig `json:"1,omitempty"` // Lowest priority lane configuration
+	Lane2 *LaneConfig `json:"2,omitempty"`
+	Lane3 *LaneConfig `json:"3,omitempty"`
+	Lane4 *LaneConfig `json:"4,omitempty"`
+	Lane5 *LaneConfig `json:"5,omitempty"` // Highest priority lane configuration
 }
 
 // Configuration specific to a data lane
 type LaneConfig struct {
-	DbName            string `json:"db_name"`
-	ArchivePeriod     int    `json:"period"`
-	ArchivePath       string `json:"archive"`
-	Parquet           bool   `json:"parquet"`
-	NumArchiveWorkers int    `json:"num_archive_workers"`
-	Uris              []UriConfig
+	DbName            string      `json:"db_name"`
+	ArchivePeriod     int         `json:"period"`
+	ArchivePath       string      `json:"archive"`
+	Parquet           bool        `json:"parquet,omitempty"`
+	NumArchiveWorkers int         `json:"num_archive_workers"`
+	Uris              []UriConfig `json:"uris"`
 }
 
 // Configuration specific to data from a particular uri
 type UriConfig struct {
 	BaseUri         string                 `json:"uri"`
-	Sources         []string               `json:"sources"`
-	Fields          []string               `json:"fields"`            // specifies fields to filter for, or empty if all fields should be captured
-	BitStringFields []BitStringFieldConfig `json:"bit_string_fields"` // configures fields which should be interpreted as bitstrings
-	Group           string                 `json:"group"`
-	Method          []string               `json:"message_methods"`
-	DestinationDb   string                 `json:"destination"` // "influx" or "mongo"
+	Sources         []string               `json:"sources,omitempty"`
+	Fields          []string               `json:"fields,omitempty"`            // specifies fields to filter for, or empty if all fields should be captured
+	BitStringFields []BitStringFieldConfig `json:"bit_string_fields,omitempty"` // configures fields which should be interpreted as bitstrings
+	Group           string                 `json:"group,omitempty"`
+	Method          []string               `json:"message_methods,omitempty"`
+	DestinationDb   string                 `json:"destination,omitempty"` // "influx" or "mongo"
 	Measurement     string                 `json:"measurement"`
 }
 

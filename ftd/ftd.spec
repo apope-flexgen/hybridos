@@ -29,6 +29,7 @@ install --directory %{buildroot}%{systemd_dir}
 
 install -m 0755 ftd %{buildroot}%{bin_dir}
 install -m 0755 fims_format_scan %{buildroot}%{bin_dir}
+install -m 0755 ftd_config_gen %{buildroot}%{bin_dir}
 
 install -m 0644 ftd.service %{buildroot}%{systemd_dir}
 
@@ -38,6 +39,7 @@ rm -rf %{buildroot}
 %files
 %{bin_dir}/ftd
 %{bin_dir}/fims_format_scan
+%{bin_dir}/ftd_config_gen
 %{systemd_dir}/ftd.service
 
 %changelog

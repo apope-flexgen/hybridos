@@ -31,6 +31,9 @@ function build()
 
     # build fims_format_scan
     ./cmd/fims_format_scan/build.sh $build_output/fims_format_scan
+
+    # build ftd_config_gen
+    ./cmd/ftd_config_gen/build.sh $build_output/ftd_config_gen
 }
 
 function postbuild()
@@ -42,12 +45,14 @@ function install()
 {
     sudo cp $build_output/$name $BIN_DIR/
     sudo cp $build_output/fims_format_scan $BIN_DIR/
+    sudo cp $build_output/ftd_config_gen $BIN_DIR/
 }
 
 function uninstall()
 {
-    sudo rm -rf $BIN_DIR/$name
-    sudo rm -rf $BIN_DIR/fims_format_scan
+    sudo rm -f $BIN_DIR/$name
+    sudo rm -f $BIN_DIR/fims_format_scan
+    sudo rm -f $BIN_DIR/ftd_config_gen
 }
 
 function test() # test.sh passes test binary as $1
