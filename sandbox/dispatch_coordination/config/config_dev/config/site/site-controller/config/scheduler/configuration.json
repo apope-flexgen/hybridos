@@ -19,7 +19,7 @@
     "scheduler_type": "SC",
     "web_sockets": {
         "server": {
-            "enabled": false,
+            "enabled": true,
             "port": 9000
         }
     }
