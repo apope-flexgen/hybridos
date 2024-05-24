@@ -390,8 +390,8 @@ importers:
         specifier: latest
         version: 1.1.2
       '@flexgen/storybook':
-        specifier: ^0.2.254
-        version: 0.2.254(@babel/plugin-syntax-flow@7.24.1(@babel/core@7.24.5))(@babel/plugin-transform-react-jsx@7.23.4(@babel/core@7.24.5))(@testing-library/dom@9.3.4)(@types/babel__core@7.20.5)(@types/react@18.3.1)(@types/styled-components@5.1.34)(@types/webpack@4.41.38)(eslint@8.57.0)(luxon@3.4.4)(ts-node@10.9.2(@types/node@18.19.31)(typescript@4.9.5))(type-fest@2.19.0)(typescript@4.9.5)
+        specifier: ^0.2.256
+        version: 0.2.257(@babel/plugin-syntax-flow@7.24.1(@babel/core@7.24.5))(@babel/plugin-transform-react-jsx@7.23.4(@babel/core@7.24.5))(@testing-library/dom@9.3.4)(@types/babel__core@7.20.5)(@types/react@18.3.1)(@types/styled-components@5.1.34)(@types/webpack@4.41.38)(eslint@8.57.0)(luxon@3.4.4)(ts-node@10.9.2(@types/node@18.19.31)(typescript@4.9.5))(type-fest@2.19.0)(typescript@4.9.5)
       '@mui/lab':
         specifier: ^5.0.0-alpha.117
         version: 5.0.0-alpha.170(@emotion/react@11.11.4(@types/react@18.3.1)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.1)(react@18.3.1))(@types/react@18.3.1)(react@18.3.1))(@mui/material@5.15.16(@emotion/react@11.11.4(@types/react@18.3.1)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.1)(react@18.3.1))(@types/react@18.3.1)(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -514,7 +514,7 @@ importers:
         version: 4.5.3(@types/node@18.19.31)(terser@5.31.0)
       vite-plugin-svgr:
         specifier: ^2.4.0
-        version: 2.4.0(rollup@3.29.4)(vite@4.5.3(@types/node@18.19.31)(terser@5.31.0))
+        version: 2.4.0(rollup@2.79.1)(vite@4.5.3(@types/node@18.19.31)(terser@5.31.0))
       vite-tsconfig-paths:
         specifier: ^4.0.7
         version: 4.3.2(typescript@4.9.5)(vite@4.5.3(@types/node@18.19.31)(terser@5.31.0))
@@ -1924,8 +1924,8 @@ packages:
   '@flexgen/storybook@0.2.250':
     resolution: {integrity: sha512-MlSWAToqZMYaUd8g4GeiQyrldlvth0GixlZuSq/dzgdWZ1ldDy3ttyZxvfWhp0Qsoo4hHu/wp7OMxivprszTUA==, tarball: https://flexgenpower.jfrog.io/artifactory/api/npm/flexgen-npm/@flexgen/storybook/-/@flexgen/storybook-0.2.250.tgz}
 
-  '@flexgen/storybook@0.2.254':
-    resolution: {integrity: sha512-ej8pMv3vRO2Yee1nXCxCZjqmPG96yvvGNuLEBDRU0VIf1qvCINFEoUFw1n2Ymot7K/5RniX1QaDyyAtESBvMWA==, tarball: https://flexgenpower.jfrog.io/artifactory/api/npm/flexgen-npm/@flexgen/storybook/-/@flexgen/storybook-0.2.254.tgz}
+  '@flexgen/storybook@0.2.257':
+    resolution: {integrity: sha512-fuMJHvsVFgFRCEqoBBROak3QuGRGRMNHtrttvuqmylfQRF0JSW0ZLmATeEZR+gh2l200IgSMhTAqeL/6xJfVVg==, tarball: https://flexgenpower.jfrog.io/artifactory/api/npm/flexgen-npm/@flexgen/storybook/-/@flexgen/storybook-0.2.257.tgz}
 
   '@floating-ui/core@1.6.1':
     resolution: {integrity: sha512-42UH54oPZHPdRHdw6BgoBD6cg/eVTmVrFcgeRDM3jbO7uxSoipVcmcIGFcA5jmOHO5apcyvBhkSKES3fQJnu7A==}
@@ -12567,7 +12567,7 @@ snapshots:
       - webpack-hot-middleware
       - webpack-plugin-serve
 
-  '@flexgen/storybook@0.2.254(@babel/plugin-syntax-flow@7.24.1(@babel/core@7.24.5))(@babel/plugin-transform-react-jsx@7.23.4(@babel/core@7.24.5))(@testing-library/dom@9.3.4)(@types/babel__core@7.20.5)(@types/react@18.3.1)(@types/styled-components@5.1.34)(@types/webpack@4.41.38)(eslint@8.57.0)(luxon@3.4.4)(ts-node@10.9.2(@types/node@18.19.31)(typescript@4.9.5))(type-fest@2.19.0)(typescript@4.9.5)':
+  '@flexgen/storybook@0.2.257(@babel/plugin-syntax-flow@7.24.1(@babel/core@7.24.5))(@babel/plugin-transform-react-jsx@7.23.4(@babel/core@7.24.5))(@testing-library/dom@9.3.4)(@types/babel__core@7.20.5)(@types/react@18.3.1)(@types/styled-components@5.1.34)(@types/webpack@4.41.38)(eslint@8.57.0)(luxon@3.4.4)(ts-node@10.9.2(@types/node@18.19.31)(typescript@4.9.5))(type-fest@2.19.0)(typescript@4.9.5)':
     dependencies:
       '@emotion/react': 11.11.4(@types/react@18.3.1)(react@18.3.1)
       '@emotion/styled': 11.11.5(@emotion/react@11.11.4(@types/react@18.3.1)(react@18.3.1))(@types/react@18.3.1)(react@18.3.1)
@@ -13988,13 +13988,13 @@ snapshots:
       picomatch: 2.3.1
       rollup: 2.79.1
 
-  '@rollup/pluginutils@5.1.0(rollup@3.29.4)':
+  '@rollup/pluginutils@5.1.0(rollup@2.79.1)':
     dependencies:
       '@types/estree': 1.0.5
       estree-walker: 2.0.2
       picomatch: 2.3.1
     optionalDependencies:
-      rollup: 3.29.4
+      rollup: 2.79.1
 
   '@rushstack/eslint-patch@1.10.2': {}
 
@@ -23736,9 +23736,9 @@ snapshots:
       core-util-is: 1.0.2
       extsprintf: 1.3.0
 
-  vite-plugin-svgr@2.4.0(rollup@3.29.4)(vite@4.5.3(@types/node@18.19.31)(terser@5.31.0)):
+  vite-plugin-svgr@2.4.0(rollup@2.79.1)(vite@4.5.3(@types/node@18.19.31)(terser@5.31.0)):
     dependencies:
-      '@rollup/pluginutils': 5.1.0(rollup@3.29.4)
+      '@rollup/pluginutils': 5.1.0(rollup@2.79.1)
       '@svgr/core': 6.5.1
       vite: 4.5.3(@types/node@18.19.31)(terser@5.31.0)
     transitivePeerDependencies:
