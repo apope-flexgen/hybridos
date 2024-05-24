@@ -155,8 +155,8 @@
                     "battery_rack_9_faults2",
                     "watchdog_fault"
                 ],
-                "hasAllControls": true,
-		"hasMaintenanceActions": true,
+                "hasBatchControls": true,
+                "hasMaintenanceActions": true,
                 "hasSummary": false,
                 "itemName": "",
                 "name": "ESS Block",
@@ -393,7 +393,7 @@
                 "faultFields": [
                     "faults"
                 ],
-                "hasAllControls": false,
+                "hasBatchControls": false,
                 "hasSummary": false,
                 "itemName": "POI Feeder",
                 "name": "",
@@ -563,7 +563,7 @@
                 "faultFields": [
                     "faults"
                 ],
-                "hasAllControls": false,
+                "hasBatchControls": false,
                 "hasSummary": false,
                 "itemName": "Aux Power Measurements",
                 "name": "",

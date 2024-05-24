@@ -155,9 +155,9 @@
                     "battery_rack_9_faults2",
                     "watchdog_fault"
                 ],
-                "hasAllControls": true,
+                "hasBatchControls": true,
+                "hasMaintenanceActions": true,
                 "hasSummary": false,
-		"hasMaintenanceActions": true,
                 "itemName": "",
                 "name": "ESS Block",
                 "numberOfItems": "12",
@@ -393,7 +393,7 @@
                 "faultFields": [
                     "faults"
                 ],
-                "hasAllControls": false,
+                "hasBatchControls": false,
                 "hasSummary": false,
                 "itemName": "POI Feeder",
                 "name": "",
@@ -563,7 +563,7 @@
                 "faultFields": [
                     "faults"
                 ],
-                "hasAllControls": false,
+                "hasBatchControls": false,
                 "hasSummary": false,
                 "itemName": "SEL-351-1 ESS Collection 1 (52F1)",
                 "name": "",
@@ -686,7 +686,7 @@
                 "faultFields": [
                     "faults"
                 ],
-                "hasAllControls": false,
+                "hasBatchControls": false,
                 "hasSummary": false,
                 "itemName": "SEL-351-2 ESS Collection 2 (52F2)",
                 "name": "",
@@ -809,7 +809,7 @@
                 "faultFields": [
                     "faults"
                 ],
-                "hasAllControls": false,
+                "hasBatchControls": false,
                 "hasSummary": false,
                 "itemName": "Aux Power Measurements",
                 "name": "",

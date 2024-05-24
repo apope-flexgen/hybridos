@@ -1,9 +1,23 @@
-version: 11.3.1.alpha.1
-
-modbus_server: 
+dnp3_server:
+  sel_411l_dnp3_server.json:
+    ip: 0.0.0.0
+    port: 20000
+  sel_487e_dnp3_server.json:
+    ip: 0.0.0.0
+    port: 20001
+modbus_server:
   apc_ups_modbus_server.json:
     ip: 0.0.0.0
     port: 10000
+  ess_10_modbus_server.json:
+    ip: 0.0.0.0
+    port: 10014
+  ess_11_modbus_server.json:
+    ip: 0.0.0.0
+    port: 10015
+  ess_12_modbus_server.json:
+    ip: 0.0.0.0
+    port: 10016
   ess_1_bms_modbus_server.json:
     ip: 0.0.0.0
     port: 5030
@@ -34,18 +48,6 @@ modbus_server:
   ess_9_modbus_server.json:
     ip: 0.0.0.0
     port: 10013
-  ess_10_modbus_server.json:
-    ip: 0.0.0.0
-    port: 10014
-  ess_11_modbus_server.json:
-    ip: 0.0.0.0
-    port: 10015
-  ess_12_modbus_server.json:
-    ip: 0.0.0.0
-    port: 10016
-  sel_351_1_modbus_server.json:
-    ip: 0.0.0.0
-    port: 10001
   sel_351_1_modbus_server.json:
     ip: 0.0.0.0
     port: 10002
@@ -61,3 +63,4 @@ dnp3_server:
   sel_487e_dnp3_server.json:
     ip: 0.0.0.0
     port: 20001
+version: 12.0.0.beta.1

@@ -1,15 +1,23 @@
 {
-    "input_path"    : "/home/hybridos/powercloud/inbox",
-    "failed_validate_path" : "/home/hybridos/powercloud/validate_error",
-    "failed_write_path" : "/home/hybridos/powercloud/write_error",
-    "forward" : "",
-    "ext"     : ".tar.gz",
-    "num_validate_workers": 3,
+    "db_health_check_delay_seconds": 0.05,
+    "ext": [
+        ".tar.gz",
+        ".parquet.gz"
+    ],
+    "failed_validate_path": "/home/hybridos/powercloud/validate_error",
+    "failed_write_path": "/home/hybridos/powercloud/write_error",
+    "forward": "",
+    "influx_address": "influx-container:8086",
+    "input_path": "/home/hybridos/powercloud/inbox",
+    "mongo_address": "mongo-container:27017",
     "num_influx_prepare_batches_workers": 3,
     "num_influx_send_batches_workers": 3,
-    "db_health_check_delay_seconds": 0.05,
-    "retention" : "",
-    "retention_name": "autogen",
-    "influx_address" : "influx-container:8086",
-    "mongo_address" : "mongo-container:27017"
+    "num_validate_workers": 3,
+    "retention_policies": [
+        {
+            "default": true,
+            "duration": "",
+            "name": "autogen"
+        }
+    ]
 }

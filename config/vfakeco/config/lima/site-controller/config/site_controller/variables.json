@@ -60,7 +60,7 @@
                 },
                 "available_features_runmode1_kW_mode": {
                     "name": "Available Feature Modes - Run Mode 1 Active Power",
-                    "num_options": 7,
+                    "num_options": 6,
                     "options": [
                         {
                             "name": "Energy Arbitrage",
@@ -89,7 +89,7 @@
                     ],
                     "type": "string",
                     "ui_type": "none",
-                    "value": "0x14",
+                    "value": "0x37",
                     "var_type": "String"
                 },
                 "charge_dispatch_feeder_enable_flag": {
@@ -3096,7 +3096,8 @@
                     "enabled": false,
                     "name": "UI",
                     "ui_type": "control",
-                    "uri_suffix": "ui"
+                    "uri_suffix": "ui",
+                    "var_ui_type": "control"
                 },
                 {
                     "alt_ui_types": [
@@ -3111,15 +3112,17 @@
                     ],
                     "enabled": false,
                     "name": "Scheduler",
-                    "ui_type": "status",
-                    "uri_suffix": "scheduler"
+                    "ui_type": "control",
+                    "uri_suffix": "scheduler",
+                    "var_ui_type": "status"
                 },
                 {
                     "alt_ui_types": [],
                     "enabled": true,
                     "name": "VFakeCo DNP3",
-                    "ui_type": "status",
-                    "uri_suffix": "dnp3"
+                    "ui_type": "control",
+                    "uri_suffix": "dnp3",
+                    "var_ui_type": "status"
                 }
             ],
             "operation": {

@@ -1,4 +1,3 @@
-version: '3'
 services:
   mongo-container:
     image: mongo:latest
@@ -27,7 +26,7 @@ services:
     depends_on:
     - influx-container
   vfakeco-fleet-manager-01:
-    image: flexgen/fleet_manager-snapshot:11.3.0.beta.4
+    image: flexgen/fleet_manager-snapshot:12.0.0.beta.1
     container_name: vfakeco-fleet-manager-01
     hostname: vfakeco-fleet-manager-01
     ports:
@@ -43,7 +42,7 @@ services:
     - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/.secret:/home/secret
     - ftd-data:/home/hybridos/powercloud/owner/fleetman01/archives
   lima-site-controller-01:
-    image: flexgen/site_controller-snapshot:11.3.1.alpha.1
+    image: flexgen/site_controller-snapshot:12.0.0.beta.1
     container_name: lima-site-controller-01
     hostname: lima-site-controller-01
     ports:
@@ -95,7 +94,7 @@ services:
     - /home/hybridos/git/hybridos/config/vfakeco/config/lima/psm/scripts:/home/utility
     - /home/hybridos/git/hybridos/config/vfakeco/config/lima/psm/.secret:/home/secret
   sudden_valley-site-controller-01:
-    image: flexgen/site_controller-snapshot:11.3.1.alpha.1
+    image: flexgen/site_controller-snapshot:12.0.0.beta.1
     container_name: sudden_valley-site-controller-01
     hostname: sudden_valley-site-controller-01
     ports:

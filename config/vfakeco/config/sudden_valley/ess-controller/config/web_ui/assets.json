@@ -14,21 +14,21 @@
                 }
             ],
             "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
                 "asset": "bms",
                 "assetKey": "bms",
                 "baseURI": "/bms",
                 "extension": "/rack_",
-                "itemName": "Rack",
-                "hasSummary": true,
-                "name": "CATL BMS",
-                "numberOfItems": "9",
-                "sourceURI": "/assets",
-                "alarmFields": [
-                    "alarms"
-                ],
                 "faultFields": [
                     "faults"
-                ]
+                ],
+                "hasSummary": true,
+                "itemName": "Rack",
+                "name": "CATL BMS",
+                "numberOfItems": "9",
+                "sourceURI": "/assets"
             },
             "statuses": [
                 {
@@ -341,21 +341,21 @@
                 }
             ],
             "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
                 "asset": "pcs",
                 "assetKey": "pcs",
                 "baseURI": "/pcs",
                 "extension": "/module_",
-                "itemName": "Module",
-                "hasSummary": true,
-                "name": "PE PCS",
-                "numberOfItems": "6",
-                "sourceURI": "/assets",
-                "alarmFields": [
-                    "alarms"
-                ],
                 "faultFields": [
                     "faults"
-                ]
+                ],
+                "hasSummary": true,
+                "itemName": "Module",
+                "name": "PE PCS",
+                "numberOfItems": "6",
+                "sourceURI": "/assets"
             },
             "statuses": [
                 {
