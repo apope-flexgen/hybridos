@@ -888,15 +888,6 @@ bool parseBodyServer(GcomSystem& sys, Meta_Data_Info& meta_data)
                 continue;
             }
 
-            auto curr_val = val.value_unsafe();
-            auto val_clothed = curr_val.get_object();
-            auto success = extractValueMulti(sys, val_clothed, curr_val, to_set);
-            if (!success)
-            {
-                ok = false;
-                continue;
-            }
-
             TMWSIM_POINT* dbPoint = getDbVar(sys, sys.fims_dependencies->uri_view, key_view);
             if (!dbPoint)
             {
@@ -911,6 +902,15 @@ bool parseBodyServer(GcomSystem& sys, Meta_Data_Info& meta_data)
             }
             else if (!((FlexPoint*)(dbPoint->flexPointHandle))->is_enabled)
             {
+                continue;
+            }
+
+            auto curr_val = val.value_unsafe();
+            auto val_clothed = curr_val.get_object();
+            auto success = extractValueMulti(sys, val_clothed, curr_val, to_set, key.value_unsafe());
+            if (!success)
+            {
+                ok = false;
                 continue;
             }
 

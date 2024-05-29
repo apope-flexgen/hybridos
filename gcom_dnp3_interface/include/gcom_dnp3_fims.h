@@ -103,7 +103,7 @@ struct UriRequest
 
         for (int idx = 0; idx < num; ++idx)
         {
-            if (uri_frags[idx].front() == '_')
+            if (!uri_frags[idx].empty() && uri_frags[idx].front() == '_')
             {
                 num_uri_frags--;
 
@@ -215,7 +215,9 @@ struct UriRequest
             start = end + 1;
             end = uri_view.find('/', start);
         }
-        uri_frags.emplace_back(uri_view.substr(start, end));
+        if (start < end) {
+            uri_frags.emplace_back(uri_view.substr(start, end));
+        }
         num_uri_frags = (int)uri_frags.size();
     }
 
@@ -339,7 +341,7 @@ bool fims_connect(GcomSystem& sys);
  * @pre val_clothed and curr_val contain the results from parsing a simdjson doc object down to a key-value pair
  */
 bool extractValueMulti(GcomSystem& sys, simdjson::simdjson_result<simdjson::fallback::ondemand::object>& val_clothed,
-                       simdjson::fallback::ondemand::value& curr_val, Jval_buif& to_set);
+                       simdjson::fallback::ondemand::value& curr_val, Jval_buif& to_set, std::string_view key);
 
 /**
  * @brief Parse the value in a single-item JSON message

@@ -1988,9 +1988,12 @@ int getNumBits(TMWSIM_POINT* dbPoint)
 /// @return
 int addBits(GcomSystem& sys, TMWSIM_POINT* dbPoint, cJSON* bits)
 {
+    if (dbPoint == nullptr || bits == nullptr || ((FlexPoint*)(dbPoint->flexPointHandle)) == nullptr){
+        return 0;
+    }
     int asiz = cJSON_GetArraySize(bits);
     int num_bits = getNumBits(dbPoint);
-    if (asiz > num_bits)
+    if (num_bits > 0 && asiz > num_bits)
     {
         asiz = num_bits;
     }
@@ -3214,19 +3217,21 @@ bool parse_message_body(GcomSystem& sys, std::string uri, const char* message_bo
             return false;
         }
 
-        auto curr_val = val.value_unsafe();
-        auto val_clothed = curr_val.get_object();
-        auto success = extractValueMulti(sys, val_clothed, curr_val, to_set);
-        if (!success)
-        {
-            continue;
-        }
-
         TMWSIM_POINT* dbPoint = getDbVar(sys, uri, key_view);
         if (!dbPoint)
         {
             continue;
         }
+
+        auto curr_val = val.value_unsafe();
+        auto val_clothed = curr_val.get_object();
+        auto success = extractValueMulti(sys, val_clothed, curr_val, to_set, key_view);
+        if (!success)
+        {
+            continue;
+        }
+
+        
 
         double value = jval_to_double(to_set);
 

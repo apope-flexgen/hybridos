@@ -33,7 +33,7 @@ TEST_CASE("Test addBits with non-empty bits array")
     cJSON_AddItemToArray(bits, cJSON_CreateString("Bit1"));
     cJSON_AddItemToArray(bits, cJSON_CreateString("Bit2"));
     int result = addBits(sys, &dbPoint, bits);
-    CHECK_EQ(result, 3);                   // Expect all bits to be added
+    CHECK(result == 3);                   // Expect all bits to be added
     CHECK_EQ(flexpoint.dbBits.size(), 3);  // Expect dbBits to have 3 elements
     CHECK_EQ(flexpoint.dbBits[0].first, "Bit0");
     CHECK_EQ(flexpoint.dbBits[1].first, "Bit1");

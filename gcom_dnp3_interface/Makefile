@@ -46,7 +46,7 @@ else ifeq ($(BUILD_MODE),test)
 	BINS = dnp3_test
 else
 	BUILD_MODE=release
-	CPPXFLAGS += -O2 -g
+	CPPXFLAGS += -O2
 endif
 
 BUILD_DIR = build/$(BUILD_MODE)/

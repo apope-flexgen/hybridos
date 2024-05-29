@@ -24,10 +24,10 @@ USE_LATEST_RELEASE = False
 
 # All you really need is the configs directory.
 # The other directories will be made for you.
-CONFIGS_DIR = "configs/crob_pulse"
-TEST_CONFIG_DIR = "test_configs/crob_pulse"
-TEST_OUTPUT_DIR = "test_output/crob_pulse"
-TEST_LOG_DIR = "logs/crob_pulse"
-TEST_CONSOLE_OUTPUT_DIR="console/crob_pulse"
-TEST_SCRIPT_DIR="test_scripts/crob_pulse"
+CONFIGS_DIR = "configs"
+TEST_CONFIG_DIR = "test_configs"
+TEST_OUTPUT_DIR = "test_output"
+TEST_LOG_DIR = "logs"
+TEST_CONSOLE_OUTPUT_DIR="console"
+TEST_SCRIPT_DIR="test_scripts"
 DIRS = [CONFIGS_DIR, TEST_CONFIG_DIR, TEST_OUTPUT_DIR, TEST_LOG_DIR, TEST_CONSOLE_OUTPUT_DIR, TEST_SCRIPT_DIR]

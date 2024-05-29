@@ -1075,14 +1075,6 @@ bool parseBodyClient(GcomSystem& sys, Meta_Data_Info& meta_data)
                 break;
             }
 
-            auto curr_val = val.value_unsafe();
-            auto val_clothed = curr_val.get_object();
-            auto success = extractValueMulti(sys, val_clothed, curr_val, to_set);
-            if (!success)
-            {
-                ok = false;
-                continue;
-            }
             // add event
             TMWSIM_POINT* dbPoint = getDbVar(sys, sys.fims_dependencies->uri_view, key_view);
             // u8 eventVariation = dbPoint->defaultEventVariation;
@@ -1113,6 +1105,16 @@ bool parseBodyClient(GcomSystem& sys, Meta_Data_Info& meta_data)
                 }
                 continue;
             }
+
+            auto curr_val = val.value_unsafe();
+            auto val_clothed = curr_val.get_object();
+            auto success = extractValueMulti(sys, val_clothed, curr_val, to_set, key_view);
+            if (!success)
+            {
+                ok = false;
+                continue;
+            }
+            
             double value = jval_to_double(to_set);
             std::memcpy(((FlexPoint*)(dbPoint->flexPointHandle))->last_update_process,
                         sys.fims_dependencies->process_name_view.data(),

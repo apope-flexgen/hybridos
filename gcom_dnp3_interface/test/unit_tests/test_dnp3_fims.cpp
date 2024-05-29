@@ -84,7 +84,7 @@ TEST_SUITE("dnp3_fims")
 
             auto json_val = val.value_unsafe();
             auto val_clothed = json_val.get_object();
-            bool result = extractValueMulti(sys, val_clothed, json_val, to_set);
+            bool result = extractValueMulti(sys, val_clothed, json_val, to_set, std::string_view("some_key"));
             CHECK(result == true);
             CHECK(to_set.get_uint() == 42);
         }
@@ -103,7 +103,7 @@ TEST_SUITE("dnp3_fims")
 
             auto json_val = val.value_unsafe();
             auto val_clothed = json_val.get_object();
-            bool result = extractValueMulti(sys, val_clothed, json_val, to_set);
+            bool result = extractValueMulti(sys, val_clothed, json_val, to_set, std::string_view("some_key"));
             CHECK(result == true);
             CHECK(to_set.get_int() == -42);
         }
@@ -122,7 +122,7 @@ TEST_SUITE("dnp3_fims")
 
             auto json_val = val.value_unsafe();
             auto val_clothed = json_val.get_object();
-            bool result = extractValueMulti(sys, val_clothed, json_val, to_set);
+            bool result = extractValueMulti(sys, val_clothed, json_val, to_set, std::string_view("some_key"));
             CHECK(result == true);
             CHECK(to_set.get_uint() == 1);
         }
@@ -141,7 +141,7 @@ TEST_SUITE("dnp3_fims")
 
             auto json_val = val.value_unsafe();
             auto val_clothed = json_val.get_object();
-            bool result = extractValueMulti(sys, val_clothed, json_val, to_set);
+            bool result = extractValueMulti(sys, val_clothed, json_val, to_set, std::string_view("some_key"));
             CHECK(result == true);
             CHECK(to_set.get_float() == 33.3);
         }
@@ -160,7 +160,7 @@ TEST_SUITE("dnp3_fims")
 
             auto json_val = val.value_unsafe();
             auto val_clothed = json_val.get_object();
-            bool result = extractValueMulti(sys, val_clothed, json_val, to_set);
+            bool result = extractValueMulti(sys, val_clothed, json_val, to_set, std::string_view("some_key"));
             CHECK(result == true);
             CHECK(to_set.get_uint() == 42);
         }
@@ -179,7 +179,7 @@ TEST_SUITE("dnp3_fims")
 
             auto json_val = val.value_unsafe();
             auto val_clothed = json_val.get_object();
-            bool result = extractValueMulti(sys, val_clothed, json_val, to_set);
+            bool result = extractValueMulti(sys, val_clothed, json_val, to_set, std::string_view("some_key"));
             CHECK(result == true);
             CHECK(to_set.get_int() == -42);
         }
@@ -198,7 +198,7 @@ TEST_SUITE("dnp3_fims")
 
             auto json_val = val.value_unsafe();
             auto val_clothed = json_val.get_object();
-            bool result = extractValueMulti(sys, val_clothed, json_val, to_set);
+            bool result = extractValueMulti(sys, val_clothed, json_val, to_set, std::string_view("some_key"));
             CHECK(result == true);
             CHECK(to_set.get_uint() == 1);
         }
@@ -217,7 +217,7 @@ TEST_SUITE("dnp3_fims")
 
             auto json_val = val.value_unsafe();
             auto val_clothed = json_val.get_object();
-            bool result = extractValueMulti(sys, val_clothed, json_val, to_set);
+            bool result = extractValueMulti(sys, val_clothed, json_val, to_set, std::string_view("some_key"));
             CHECK(result == true);
             CHECK(to_set.get_float() == 33.3);
         }
@@ -246,7 +246,7 @@ TEST_SUITE("dnp3_fims")
 
             auto json_val = val.value_unsafe();
             auto val_clothed = json_val.get_object();
-            bool result = extractValueMulti(sys, val_clothed, json_val, to_set);
+            bool result = extractValueMulti(sys, val_clothed, json_val, to_set, std::string_view("some_key"));
             CHECK(result == false);
         }
         free(json_str);
@@ -264,7 +264,7 @@ TEST_SUITE("dnp3_fims")
 
             auto json_val = val.value_unsafe();
             auto val_clothed = json_val.get_object();
-            bool result = extractValueMulti(sys, val_clothed, json_val, to_set);
+            bool result = extractValueMulti(sys, val_clothed, json_val, to_set, std::string_view("some_key"));
             CHECK(result == false);
         }
         free(json_str);
@@ -282,7 +282,7 @@ TEST_SUITE("dnp3_fims")
 
             auto json_val = val.value_unsafe();
             auto val_clothed = json_val.get_object();
-            bool result = extractValueMulti(sys, val_clothed, json_val, to_set);
+            bool result = extractValueMulti(sys, val_clothed, json_val, to_set, std::string_view("some_key"));
             CHECK(result == false);
         }
         free(json_str);
@@ -415,6 +415,7 @@ TEST_SUITE("dnp3_fims")
         GcomSystem sys = GcomSystem(Protocol::DNP3);
         sys.protocol_dependencies->who = DNP3_MASTER;
         sys.base_uri = strdup("/components/dnp3_client");
+        sys.local_uri = strdup("/local_client");
         Meta_Data_Info meta_data;
         std::string method = "get";
         std::string uri = "/components/dnp3_client/_timings";

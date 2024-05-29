@@ -792,7 +792,7 @@ bool processCmds(GcomSystem& sys, Meta_Data_Info& meta_data)
 /// @param to_set
 /// @return
 bool extractValueMulti(GcomSystem& sys, simdjson::simdjson_result<simdjson::fallback::ondemand::object>& val_clothed,
-                       simdjson::fallback::ondemand::value& curr_val, Jval_buif& to_set)
+                       simdjson::fallback::ondemand::value& curr_val, Jval_buif& to_set, std::string_view key)
 {
     if (const auto err = val_clothed.error();
         !(err == simdjson::error_code::SUCCESS || err == simdjson::error_code::INCORRECT_TYPE))
@@ -845,8 +845,8 @@ bool extractValueMulti(GcomSystem& sys, simdjson::simdjson_result<simdjson::fall
     {
         if (!spam_limit(&sys, sys.parse_errors))
         {
-            FPS_ERROR_LOG("only floats, uints, ints, and bools are supported, skipping this uri: %s",
-                          sys.fims_dependencies->uri_view);
+            FPS_ERROR_LOG("only floats, uints, ints, and bools are supported, skipping this point: uri [%s] io_point [%.*s]",
+                          sys.fims_dependencies->uri_view,  static_cast<int>(key.size()), key.data());
             FPS_LOG_IT("parsing_error");
         }
         return false;
