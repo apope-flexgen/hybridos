@@ -30,6 +30,7 @@ typedef struct maps_t{
     bool   random_enum_type;
     char ** bit_strings;
     std::map<int,char*> random_enum;
+    cJSON raw_val;
 
     int reg_type;
     bool byte_swap;
@@ -46,6 +47,7 @@ typedef struct maps_t{
         sign = floating_pt = is_bool = false;
         bit_field = individual_bits = enum_type = random_enum_type = false;
         data = 0;
+        raw_val.type = cJSON_NULL;
     }
     ~maps_t()
     {

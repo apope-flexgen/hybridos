@@ -152,7 +152,7 @@ void gcom_show_overrides()
     std::cout << "debug_fims:true        " << "       turn on fims debug options  "                           << std::endl;
     std::cout << "debug_pub:false        " << "       turn on pub  debug options  "                           << std::endl;
     std::cout << "debug_hb:false         " << "       turn on heartbeat debug options  "                      << std::endl;
-    std::cout << "pub_coil:false         " << "       turn pub output for coils  "                            << std::endl;
+    std::cout << "pub_coil:true         " << "       turn pub output for coils  "                            << std::endl;
     std::cout << "pub_holding:false      " << "       turn pub output for holding  "                          << std::endl;
     std::cout << "pub_input:true         " << "       turn pub output for input  "                            << std::endl;
     std::cout << "pub_sync:false         " << "       turn off pub sync  "                                    << std::endl;

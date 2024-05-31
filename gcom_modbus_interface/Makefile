@@ -82,6 +82,7 @@ BUILD_OBJS += $(OBJ_DIR)gcom_config_any.o
 BUILD_OBJS += $(OBJ_DIR)gcom_perf.o 
 BUILD_OBJS += $(OBJ_DIR)gcom_timer.o 
 BUILD_OBJS += $(OBJ_DIR)gcom_iothreads.o 
+BUILD_OBJS += $(OBJ_DIR)load_to_dbi_client.o
 BUILD_OBJS += $(OBJ_DIR)gcom_logger.o
 BUILD_OBJS += $(OBJ_DIR)gcom_modbus_pub.o
 BUILD_OBJS += $(OBJ_DIR)gcom_modbus_decode.o
@@ -100,7 +101,7 @@ all:	build  $(LIST)
 $(BUILD_DIR)modbus_server: $(OBJ_DIR)modbus_server.o $(OBJ_DIR)modbus_utils.o 
 	$(CXX) $^ $(INCLUDES) $(LIBS) -pthread -lcjson -lspdlog -o $@
 
-$(BUILD_DIR)gcom_modbus_server: $(OBJ_DIR)gcom_modbus_server.o $(OBJ_DIR)gcom_modbus_utils.o 
+$(BUILD_DIR)gcom_modbus_server: $(OBJ_DIR)gcom_modbus_server.o $(OBJ_DIR)gcom_modbus_utils.o $(OBJ_DIR)load_to_dbi_server.o 
 	$(CXX) $^ $(INCLUDES) $(LIBS) -pthread -lcjson -lspdlog -o $@
 
 $(BUILD_DIR)gcom_modbus_server_id: $(OBJ_DIR)gcom_modbus_server_id.o $(OBJ_DIR)gcom_modbus_utils.o 

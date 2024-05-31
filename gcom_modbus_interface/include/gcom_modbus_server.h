@@ -1,6 +1,8 @@
 #ifndef _MODBUS_SERVER_H_
 #define _MODBUS_SERVER_H_
 
+#include <cstring>
+#include <modbus/modbus.h>
 #include "gcom_modbus_utils.h"
 
 typedef struct {
@@ -17,6 +19,7 @@ typedef struct {
     int stop;
     int device_id;
     int reg_cnt;
+    int dbi_save_frequency; // how often to write values to dbi (in seconds)
 
     #ifdef SERVER_DELAY
     int connect_delay;

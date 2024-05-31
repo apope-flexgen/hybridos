@@ -26,6 +26,7 @@
 #include "gcom_config.h"
 #include "gcom_iothread.h"
 #include "gcom_fims.h"
+#include "load_to_dbi_client.h"
 #include "logger/logger.h"
 #include "shared_utils.h"
 
@@ -613,6 +614,13 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                             }
 
                             setWork(io_work_single);
+
+                            if (io_point->component->dbi_update_frequency > 0
+                                && (io_point->register_type == cfg::Register_Types::Holding ||
+                                io_point->register_type == cfg::Register_Types::Coil))
+                            {
+                                load_to_dbi_client(myCfg, io_point, io_fims->anyBody);
+                            }
                         }
                         else
                         {
@@ -740,6 +748,12 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
 
                             io_work_single->io_points.emplace_back(io_point);
                             work_vec.emplace_back(io_work_single);
+                        }
+
+                        if (io_point->component->dbi_update_frequency > 0
+                            && (io_point->register_type == cfg::Register_Types::Holding ||
+                                io_point->register_type == cfg::Register_Types::Coil)) {
+                            load_to_dbi_client(myCfg, io_point, key.second);
                         }
                     }
                 }

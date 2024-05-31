@@ -24,7 +24,9 @@
 #include <fims/fps_utils.h>
 #include <fims/libfims.h>
 #include <modbus/modbus.h>
+#include <chrono>
 #include "gcom_modbus_server.h"
+#include "load_to_dbi_server.h"
 
 #define MICROSECOND_TO_MILLISECOND 1000
 #define NANOSECOND_TO_MILLISECOND  1000000
@@ -412,6 +414,19 @@ int parse_system(cJSON *system, system_config *config)
     } else {
         config->low_debug = false;
     }
+
+    config->dbi_save_frequency = 0;
+    cJSON *dbi_save_frequency = cJSON_GetObjectItem(system, "dbi_save_frequency_seconds");
+    if(dbi_save_frequency) {
+        if(cJSON_IsNumber(dbi_save_frequency)) {
+            config->dbi_save_frequency = dbi_save_frequency->valueint;
+            if(config->dbi_save_frequency > 0)
+            {
+                config->bypass_init = true;
+            }
+        }
+    }
+
     return 0;
 }
 
@@ -1178,6 +1193,12 @@ void update_variable_value(modbus_mapping_t* map, bool* reg_type, maps** setting
             uint16_t* regs = (i == Holding_Register) ? map->tab_registers : map->tab_input_registers;
             update_holding_or_input_register_value(settings[i], value, regs, sys_cfg);
         }
+        if(obj){
+            settings[i]->raw_val = *obj;
+            settings[i]->raw_val.next = nullptr;
+            settings[i]->raw_val.prev = nullptr;
+            settings[i]->raw_val.child = nullptr;
+        }
     }
 }
 
@@ -1585,6 +1606,7 @@ bool process_fims_message(fims_message* msg, system_config* sys_cfg, bool* reloa
                         update_variable_value(current_mapping, body_it->second.reg_types, body_it->second.mappings, cur_obj, sys_cfg);
                     }
                 }
+                cJSON_Delete(body_obj);
             }
             else
             {
@@ -1665,13 +1687,18 @@ bool initialize_map(server_data* server_map, system_config* sys_cfg, bool is_mai
         }
     }
     // NOTE(WALKER): uncomment this if you are testing some server stuff then uncomment it before committing
-    return true;
+    // return true;
 
     char replyto[1024];
     for(uri_map::iterator it = uri_to_register.begin(); it != uri_to_register.end(); ++it)
     {
         snprintf(replyto, 1024, "%s/reply%s", base_uri, it->first);
-        p_fims->Send("get", it->first, replyto, NULL);
+        if(sys_cfg->dbi_save_frequency > 0){ // get from dbi
+            std::string dbi_uri = "/dbi/" + std::string(sys_cfg->name) + "/saved_registers" + std::string(it->first);
+            p_fims->Send("get", dbi_uri.c_str(), replyto, NULL);
+        } else {
+            p_fims->Send("get", it->first, replyto, NULL);
+        }
         timespec current_time, timeout;
         clock_gettime(CLOCK_MONOTONIC, &timeout);
         timeout.tv_sec += 2;
@@ -1813,6 +1840,7 @@ int main(int argc, char *argv[])
         }
 
         FPS_RELEASE_PRINT("System config complete: Setup register map.\n");
+        auto last_write_to_dbi = std::chrono::system_clock::now();
         
         if (cJSON_IsObject(registers)) {
             // 'registers' is a cJSON Object
@@ -2152,6 +2180,17 @@ int main(int argc, char *argv[])
                     {
                         process_fims_message(msg, &sys_cfg, &reload);
                         p_fims->free_message(msg);
+                        // Get the ending time point
+                        auto now = std::chrono::high_resolution_clock::now();
+
+                        // Calculate the duration between the two time points in milliseconds
+                        int64_t duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - last_write_to_dbi).count();
+
+                        if(sys_cfg.dbi_save_frequency > 0 && duration > sys_cfg.dbi_save_frequency*1000) {
+                            write_points_to_dbi_server(&sys_cfg, p_fims, &uri_to_register, server_map);
+                            last_write_to_dbi = now;
+                        }
+
                         if (reload)
                         {
                             running = false; 

@@ -120,6 +120,7 @@ struct cfg
         int frequency;
         int device_id;
         int debounce;  // in milliSecs
+        double dbi_update_frequency = 0;
         
     } inherited_fields;
 
@@ -138,7 +139,7 @@ struct cfg
 
         int offset;
         int size;
-        int gap = 0;
+        int gap = 0; // gap from the end of this register to the NEXT register of the same type
 
         int starting_bit_pos;
         int number_of_bits;
@@ -293,6 +294,8 @@ struct cfg
         int watchdog_time_to_recover;
         int watchdog_frequency; // monitoring frequency
 
+        double dbi_update_frequency = 0;
+
         Fims_Format format = Fims_Format::Undefined;
 
         std::vector<std::shared_ptr<register_group_struct>> register_groups;
@@ -441,6 +444,11 @@ struct cfg
             : name(name), help(help), reqfun(std::move(reqfun)) {}
     };
 
+    struct dbi_update_struct
+    {
+        std::string dbi_update_uri = "/dbi/gcom_modbus_client/saved_registers";
+        bool time_to_update = false;
+    };
 
     std::vector<std::shared_ptr<component_struct>> components;
     std::vector<std::string> subs;
@@ -471,8 +479,8 @@ struct cfg
 
     using Component_IO_point_map = std::map<std::string, std::map<std::string, std::map<std::string, std::shared_ptr<io_point_struct>>>>;
     using MapIdMap = std::map<int, std::map<Register_Types, std::map<int, io_point_struct *>>>;
-    Component_IO_point_map component_io_point_map;
-    MapIdMap idMap;
+    Component_IO_point_map component_io_point_map; // map of component_prefix->component_id->io_point_id->io_point
+    MapIdMap idMap; // map of device_id->register_type->io_point_offset->io_point
 
     /**
      * @brief Given a set of uri fragments, find the io_point map for a given component.
@@ -492,6 +500,7 @@ struct cfg
     std::string client_name;
     Stats fims_message_stats;
     std::string filename;
+    std::map<std::string, std::shared_ptr<dbi_update_struct>> dbi_update_map; // map of component uri to dbi update struct
 
     bool use_dbi = false;
     bool reload =  false;
@@ -511,7 +520,7 @@ struct cfg
     bool debug_hb = false;
     int set_idx = 0;
     int get_idx = 0;
-    bool pub_coil      = false;
+    bool pub_coil      = true;
     bool pub_holding   = true;
     bool pub_input     = true;
     bool pub_discrete  = true;
@@ -538,7 +547,10 @@ struct cfg
     int max_fims = 32;
     int max_fims_wait = 100;
 
-    bool allow_gaps = true; 
+    bool allow_gaps = false; // do we allow gaps between registers when doing a single read?
+                            // (e.g. We have [offset 100, size 1], and [offset 200, size 1]. Do we do a single read or two reads?)
+                            // setting this to false for now because allowing gaps was causing issues
+
 
     Version git_version_info;
 };
@@ -1078,6 +1090,7 @@ bool gcom_findCompVar(
 
 void printAny(std::any &value, int indent);
 void printMap(const std::map<std::string, std::any> &baseMap, int indent);
+void any_to_stringstream(std::stringstream &ss, std::any value);
 
 
 #ifdef FPS_DEBUG_MODE

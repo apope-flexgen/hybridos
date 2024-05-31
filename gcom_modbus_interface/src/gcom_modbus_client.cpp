@@ -22,6 +22,7 @@
 #include "gcom_stats.h"
 #include "gcom_timer.h"
 #include "gcom_utils.h"
+#include "load_to_dbi_client.h"
 #include "logger/logger.h"
 #include "shared_utils.h"
 #include "version.h"
@@ -144,6 +145,8 @@ int main(const int argc, const char *argv[]) noexcept {
     start_fims(myCfg.subs, myCfg);
     // 100 mS pause
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    load_points_from_dbi_client(myCfg);
 
     if (!myCfg.fims_running) {
       FPS_ERROR_LOG("Unable to start up fims, Quitting");

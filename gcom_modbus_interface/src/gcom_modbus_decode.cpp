@@ -1141,7 +1141,7 @@ bool modbus_decode(std::shared_ptr<cfg::io_point_struct> io_point, std::any &val
     {
         double dval = -12.3;
         float fval = -12.3;
-        double val;
+        double val = 0.0;
         if (testAnyVal(value, dval))
         {
             val = getAnyVal(value, dval);

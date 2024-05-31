@@ -1746,8 +1746,7 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
             {
                 if ( myCfg.fims_gateway.Connected() ) {
                     send_pub(myCfg.fims_gateway, uri, string_stream.str());
-                    myCfg.fims_connected = true;
-
+                    myCfg.fims_connected = true;                 
                 }
                 else
                 {

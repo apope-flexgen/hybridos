@@ -33,7 +33,6 @@
 #include "gcom_modbus_decode.h"
 #include "gcom_utils.h"
 
-
 using namespace std::string_view_literals;
 
 ///////////////////////////////////////
@@ -479,7 +478,7 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
     myCfg.client_name = myCfg.connection.name;
 
     // allow_gaps
-    ok &= getItemFromMap(jsonMapOfConfig, "connection.allow_gaps", myCfg.allow_gaps, true, true, true, false);
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.allow_gaps", myCfg.allow_gaps, false, true, true, false);
 
     // port
     ok &= getItemFromMap(jsonMapOfConfig, "connection.port", myCfg.connection.port, static_cast<int>(502), true, true, false);
@@ -558,19 +557,19 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
     ok &= getItemFromMap(jsonMapOfConfig, "connection.force_multi_gets", myCfg.force_multi_gets, false, true, true, false);
 
     // max_register_group_size
-    ok &= getItemFromMap(jsonMapOfConfig, "connection.max_register_group_size", myCfg.max_register_group_size, 124, true, true, false);
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.max_register_group_size", myCfg.max_register_group_size, 125, true, true, false);
     if (ok && myCfg.max_register_group_size <= 0)
     {
-        FPS_INFO_LOG("max register size must be greater than 0. Configured value is [%d]. Using default of 124.", myCfg.max_register_group_size);
-        myCfg.max_register_group_size = 124;
+        FPS_INFO_LOG("max register size must be greater than 0. Configured value is [%d]. Using default of 125.", myCfg.max_register_group_size);
+        myCfg.max_register_group_size = 125;
     }
 
     // max_bit_size
-    ok &= getItemFromMap(jsonMapOfConfig, "connection.max_bit_size", myCfg.max_bit_size, 124, true, true, false);
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.max_bit_size", myCfg.max_bit_size, 125, true, true, false);
     if (ok && myCfg.max_bit_size <= 0)
     {
-        FPS_INFO_LOG("max bit size must be greater than 0. Configured value is [%d]. Using default of 124.", myCfg.max_bit_size);
-        myCfg.max_bit_size = 124;
+        FPS_INFO_LOG("max bit size must be greater than 0. Configured value is [%d]. Using default of 125.", myCfg.max_bit_size);
+        myCfg.max_bit_size = 125;
     }
     // service
     std::string service;
@@ -686,6 +685,8 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
     // debounce
     ok &= getItemFromMap(jsonMapOfConfig, "connection.debounce", myCfg.inherited_fields.debounce, 0, true, true, false);
 
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.dbi_save_frequency_seconds", myCfg.inherited_fields.dbi_update_frequency, 0.0, true, true, false);
+
     // format
     std::string format_str;
     ok &= getItemFromMap(jsonMapOfConfig, "connection.format", format_str, std::string(""), true, true, false);
@@ -781,6 +782,8 @@ bool extract_components(std::map<std::string, std::any> jsonMapOfConfig, const s
             ok &= getItemFromMap(jsonComponentMap, "watchdog_recovery_timeout_ms", component->watchdog_recovery_timeout, 0, true, true, debug);
             ok &= getItemFromMap(jsonComponentMap, "watchdog_recovery_time_ms", component->watchdog_time_to_recover, 0, true, true, debug);
             ok &= getItemFromMap(jsonComponentMap, "watchdog_frequency_ms", component->watchdog_frequency, 1000, true, true, debug);
+
+            ok &= getItemFromMap(jsonComponentMap, "dbi_save_frequency_seconds", component->dbi_update_frequency, myCfg.inherited_fields.dbi_update_frequency, true, true, debug);
 
 
             // word_swap is actually the same as byte_swap?
@@ -2746,7 +2749,7 @@ void check_work_items(std::vector<std::shared_ptr<IO_Work>> &io_work_vec, std::v
             //#endif
             
             if (((offset + isize + gap) != io_point->offset) 
-                || ((offset + io_point->size - first_offset > max_item_size)) 
+                || ((io_point->offset + io_point->size - first_offset > max_item_size)) 
                 || (io_point->device_id != device_id) 
                 || (io_point->register_type != register_type) 
                 || (!io_point->is_enabled && io_point->is_forced))
@@ -2756,7 +2759,7 @@ void check_work_items(std::vector<std::shared_ptr<IO_Work>> &io_work_vec, std::v
                     continue;
                 }
                 io_work->offset = first_offset;
-                io_work->num_registers = num;
+                io_work->num_registers = num-gap; // we don't need to get the "gap" registers if there is no gap at the end
                 io_work_vec.emplace_back(io_work);
                 //#ifdef FPS_DEBUG_MODE
                 if (debug)
@@ -2798,7 +2801,7 @@ void check_work_items(std::vector<std::shared_ptr<IO_Work>> &io_work_vec, std::v
         std::cout << " >>>>>>>>>>>>>> After Check; offset : " << first_offset << " num : " << num << std::endl;
     #endif
     io_work->offset = first_offset;
-    io_work->num_registers = num;
+    io_work->num_registers = num - gap; // we don't need to get the "gap" registers if there is no gap at the end
     io_work->local = local;
 
     io_work_vec.emplace_back(io_work);
@@ -3102,5 +3105,46 @@ void printMap(const std::map<std::string, std::any> &baseMap, int indent = 0)
                 std::cout << "false"
                           << "\n";
         }
+    }
+}
+
+// ... (include the parseMessage function from the previous answer here)
+//
+// Utility function to print nested maps
+void any_to_stringstream(std::stringstream &ss, std::any value)
+{
+    if (value.type() == typeid(std::map<std::string, std::any>))
+        {
+            ss << "{";
+            for (auto key_val_pair : std::any_cast<std::map<std::string, std::any>>(value))
+            {
+                ss << "\"" << key_val_pair.first << "\":";
+                any_to_stringstream(ss, key_val_pair.second);
+            }
+            ss << "}";
+        }
+    else if (value.type() == typeid(int))
+    {
+        ss << std::any_cast<int>(value);
+    }
+    else if (value.type() == typeid(int64_t))
+    {
+        ss << std::any_cast<int64_t>(value);
+    }
+    else if (value.type() == typeid(double))
+    {
+        ss << std::any_cast<double>(value);
+    }
+    else if (value.type() == typeid(std::string))
+    {
+        ss << std::any_cast<std::string>(value);
+    }
+    else if (value.type() == typeid(bool))
+    {
+        auto val = std::any_cast<bool>(value);
+        if (val)
+            ss << "true";
+        else
+            ss << "false";
     }
 }
