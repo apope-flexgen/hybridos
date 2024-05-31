@@ -9,7 +9,7 @@ Feature: dynamic_attributes
       """
     Then I expect a fims post to /some/output/output1 within 3 seconds containing
       """
-      {"details":[{"timestamp":"any"}],"name":"output1","severity":2,"source":"Alerts","status":"active","value":true}
+      {"details":[{"message": "something", "timestamp":"any"}],"name":"output1","severity":2,"source":"Alerts","status":"active","value":true}
       """
     When I send a fims pub to /example containing
       """
@@ -27,7 +27,7 @@ Feature: dynamic_attributes
       """
     Then I expect a fims post to /some/output/output2 within 3 seconds containing
       """
-      {"output2":{"something":"else","value":true}}
+      {"name":"output2", "something":"else","value":true}
       """
     When I send a fims pub to /example containing
       """
@@ -35,6 +35,6 @@ Feature: dynamic_attributes
       """
     Then I expect a fims post to /some/output/output2 within 3 seconds containing
       """
-      {"output2":{"something":"else","value":false}}
+      {"name":"output2", "something":"else","value":false}
       """
     

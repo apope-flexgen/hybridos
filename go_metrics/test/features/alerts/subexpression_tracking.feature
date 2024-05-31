@@ -9,9 +9,10 @@ Feature: subexpression_tracking
       """
     Then I expect a fims post to /some/output/output1 within 3 seconds containing
       """
-      {"details":[{"message": "Temperature: 100 exceeded 90C", "timestamp":"any"}],"name":"output1","severity":2,"source":"Alerts","status":"active","value":true}
+      {"details":[{"message": "Temperature: 100.00 exceeded 90C", "timestamp":"any"}],"name":"output1","severity":2,"source":"Alerts","status":"active","value":true}
       """
-    When I send a fims pub to /example containing
+    When I clear the fims message list
+    And I send a fims pub to /example containing
       """
       {"high_temp_fault": true}
       """
@@ -19,16 +20,18 @@ Feature: subexpression_tracking
       """
       {"details":[{"message": "There was a high temperature fault", "timestamp":"any"}],"name":"output1","severity":2,"source":"Alerts","status":"active","value":true}
       """
-    When I send a fims set to /some/output/output1 containing
+    When I clear the fims message list
+    And I send a fims set to /some/output/output1 containing
       """
       {"reevaluate": true}
       """
     # Reevaluating causes both conditions to be triggered separately as new incidents
     Then I expect a fims post to /some/output/output1 within 3 seconds containing
       """
-      {"details":[{"message": "Temperature: 100 exceeded 90C", "timestamp":"any"}, {"message": "There was a high temperature fault", "timestamp":"any"}],"name":"output1","severity":2,"source":"Alerts","status":"active","value":true}
+      {"details":[{"message": "Temperature: 100.00 exceeded 90C", "timestamp":"any"}, {"message": "There was a high temperature fault", "timestamp":"any"}],"name":"output1","severity":2,"source":"Alerts","status":"active","value":true}
       """
-    When I send a fims pub to /example containing
+    When I clear the fims message list
+    And I send a fims pub to /example containing
       """
       {"temp": 80}
       """

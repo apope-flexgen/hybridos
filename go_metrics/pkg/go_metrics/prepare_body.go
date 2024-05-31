@@ -13,7 +13,7 @@ import (
 // outputVar: the current output variable being sent out on fims
 // clothedOutputVal: the current clothed fims object that has been constructed
 // return if the variable is an alert and any errors that occurred
-func addAlertingAttributesToOutput(outputVar string, clothedOutputVal *map[string]interface{}) (bool, error) {
+func addAlertingAttributesToOutput(outputVar string, clothedOutputVal *map[string]interface{}, is_get bool) (bool, error) {
 	// Check if the name can be mapped to a metrics expression and the expression is an alert
 	metricsObjects, ok := outputToMetricsObject[outputVar]
 	if !ok {
@@ -54,7 +54,8 @@ func addAlertingAttributesToOutput(outputVar string, clothedOutputVal *map[strin
 	// An empty list is acceptable and should be sent out if no message/timestamp pairs exist
 	messagesList, messagesOk := OutputScope[outputVar+"@activeMessages"]
 	timestampsList, timestampsOk := OutputScope[outputVar+"@activeTimestamps"]
-	if !messagesOk || !timestampsOk || len(messagesList) != len(timestampsList) {
+	valueChangedList, valueChangedOk := OutputScope[outputVar+"@alertAttributeChanged"]
+	if !messagesOk || !timestampsOk || !valueChangedOk || len(messagesList) != len(timestampsList) || len(messagesList) != len(valueChangedList) {
 		outputScopeMutex.RUnlock()
 		return true, fmt.Errorf("issue with alert details list. There is an error in the code")
 	} else {
@@ -65,7 +66,9 @@ func addAlertingAttributesToOutput(outputVar string, clothedOutputVal *map[strin
 		var details []map[string]interface{}
 		details = make([]map[string]interface{}, 0)
 		for index, activeMessage := range messagesList {
-			details = append(details, map[string]interface{}{"message": activeMessage.s, "timestamp": timestampsList[index].s})
+			if valueChangedList[index].b || is_get {
+				details = append(details, map[string]interface{}{"message": activeMessage.s, "timestamp": timestampsList[index].s})
+			}
 		}
 		// We still want to send an empty array if no entries are present
 		(*clothedOutputVal)["details"] = details
@@ -250,7 +253,7 @@ func prepareSingleOutputVar(outputUri, outputVar string, naked, clothed, checkFo
 		}
 
 		// Add the alerting attributes to the fims message if this is an alert
-		if isAlert, err := addAlertingAttributesToOutput(outputVar, &clothedOutputVal); err != nil {
+		if isAlert, err := addAlertingAttributesToOutput(outputVar, &clothedOutputVal, is_get); err != nil {
 			log.Errorf("Error adding alerting attributes to output variable %s: %v.", outputVar, err)
 		} else if isAlert {
 			// If the output has the "flat" and "lonely" flags, format its output with the name at the same level as the other fields
@@ -287,9 +290,9 @@ func PrepareBody(outputUri string) map[string]interface{} {
 	msgBody := make(map[string]interface{}, len(PublishUris[outputUri]))
 	directMsgBody = make(map[string]interface{}, 0)
 	pubMsgBody = make(map[string]interface{}, 0)
-	tempMsgBody := make(map[string]interface{}, 0)
-	tmpDirectMsgBody := make(map[string]interface{}, 0)
-	tempPubMsgBody := make(map[string]interface{}, 0)
+	var tempMsgBody map[string]interface{}
+	var tmpDirectMsgBody map[string]interface{}
+	var tempPubMsgBody map[string]interface{}
 	clothed := false
 	naked := false
 	checkFormat := false

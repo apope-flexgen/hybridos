@@ -189,11 +189,19 @@ func compareMetricsFile(testName string, struct1, struct2 MetricsFile) (string, 
 	outputErr := ""
 	matches := true
 	for key, val := range struct1.Meta {
-		if struct2.Meta[key] != val {
+		if struct2.Meta == nil {
+			outputErr += fmt.Sprintf("struct1.Meta[%s] (%v) != nil (%v)\n", key, val, key)
+		} else if val2, ok := struct2.Meta[key]; ok && !stringInSlice([]string{"debug_inputs", "debug_outputs", "debug_filters"}, key) && val != val2 {
 			if matches {
 				outputErr = fmt.Sprintf("%s:\t", testName)
 			}
 			outputErr += fmt.Sprintf("struct1.Meta[%s] (%v) != struct2.Meta[%s] (%v)\n", key, val, key, struct2.Meta[key])
+			matches = false
+		} else if !ok {
+			if matches {
+				outputErr = fmt.Sprintf("%s:\t", testName)
+			}
+			outputErr += fmt.Sprintf("struct1.Meta[%s] (%v) != struct2.Meta[%s] (%v)\n", key, val, key, nil)
 			matches = false
 		}
 	}
@@ -1814,6 +1822,8 @@ func TestCombineFlags(t *testing.T) {
 			}
 		}
 		if len(configErrorLocs.ErrorLocs) != len(test.configErrors) {
+			fmt.Println(configErrorLocs.ErrorLocs)
+			fmt.Println(test.configErrors)
 			t.Errorf("%s: error report is unexpected length of %d (expected %d) after running combineFlags for output\n", test.outputName, len(configErrorLocs.ErrorLocs), len(test.configErrors))
 		} else {
 			for i, errLoc := range configErrorLocs.ErrorLocs {
@@ -1984,7 +1994,10 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 		inputFileLoc: "../../test/configs/unmarshal/test1.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta: map[string]interface{}{
-				"publishRate": int64(2000),
+				"publishRate":   int64(2000),
+				"debug_inputs":  []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{},
 			},
 			Inputs: map[string]Input{
 				"v1": {
@@ -2036,8 +2049,11 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 		inputFileLoc: "../../test/configs/unmarshal/test2.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta: map[string]interface{}{
-				"note":        "all big fields (templates, inputs, filters, outputs, metrics, echo) are optional",
-				"publishRate": int64(2000),
+				"note":          "all big fields (templates, inputs, filters, outputs, metrics, echo) are optional",
+				"publishRate":   int64(2000),
+				"debug_inputs":  []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{},
 			},
 			Templates: []Template{
 				{
@@ -2683,8 +2699,11 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 		inputFileLoc: "../../test/configs/unmarshal/test3.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta: map[string]interface{}{
-				"note":        "all big fields (templates, inputs, filters, outputs, metrics, echo) are optional",
-				"publishRate": int64(2000),
+				"note":          "all big fields (templates, inputs, filters, outputs, metrics, echo) are optional",
+				"publishRate":   int64(2000),
+				"debug_inputs":  []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{},
 			},
 			Templates: []Template{
 				{
@@ -3267,8 +3286,11 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 		inputFileLoc: "../../test/configs/unmarshal/test4.json",
 		expectedMetricsConfig: MetricsFile{
 			Meta: map[string]interface{}{
-				"note":        "all big fields (templates, inputs, filters, outputs, metrics, echo) are optional",
-				"publishRate": int64(2000),
+				"note":          "all big fields (templates, inputs, filters, outputs, metrics, echo) are optional",
+				"publishRate":   int64(2000),
+				"debug_inputs":  []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{},
 			},
 			Templates: []Template{
 				{
@@ -3747,7 +3769,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 5
 		inputFileLoc: "../../test/configs/unmarshal/test5.json",
 		expectedMetricsConfig: MetricsFile{
-			Meta:    map[string]interface{}{},
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs:  map[string]Input{},
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{},
@@ -3769,7 +3793,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 6
 		inputFileLoc: "../../test/configs/unmarshal/test6.json",
 		expectedMetricsConfig: MetricsFile{
-			Meta:    map[string]interface{}{},
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs:  map[string]Input{},
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{},
@@ -3795,7 +3821,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 7
 		inputFileLoc: "../../test/configs/unmarshal/test7.json",
 		expectedMetricsConfig: MetricsFile{
-			Meta: map[string]interface{}{},
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs: map[string]Input{
 				"var_name5": {
 					Name:          "var_name5",
@@ -3991,7 +4019,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 8
 		inputFileLoc: "../../test/configs/unmarshal/test8.json",
 		expectedMetricsConfig: MetricsFile{
-			Meta:    map[string]interface{}{},
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs:  map[string]Input{},
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{},
@@ -4013,7 +4043,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 9
 		inputFileLoc: "../../test/configs/unmarshal/test9.json",
 		expectedMetricsConfig: MetricsFile{
-			Meta:    map[string]interface{}{},
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs:  map[string]Input{},
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{},
@@ -4035,7 +4067,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 10
 		inputFileLoc: "../../test/configs/unmarshal/test10.json",
 		expectedMetricsConfig: MetricsFile{
-			Meta:    map[string]interface{}{},
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs:  map[string]Input{},
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{},
@@ -4057,7 +4091,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 11
 		inputFileLoc: "../../test/configs/unmarshal/test11.json",
 		expectedMetricsConfig: MetricsFile{
-			Meta:    map[string]interface{}{},
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs:  map[string]Input{},
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{},
@@ -4783,6 +4819,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 12
 		inputFileLoc: "../../test/configs/unmarshal/test12.json",
 		expectedMetricsConfig: MetricsFile{
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs: map[string]Input{
 				"v1": {
 					Name:          "v1",
@@ -5104,6 +5143,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 13
 		inputFileLoc: "../../test/configs/unmarshal/test13.json",
 		expectedMetricsConfig: MetricsFile{
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs:  map[string]Input{},
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{},
@@ -5125,6 +5167,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 14
 		inputFileLoc: "../../test/configs/unmarshal/test14.json",
 		expectedMetricsConfig: MetricsFile{
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs:  map[string]Input{},
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{},
@@ -5150,6 +5195,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 15
 		inputFileLoc: "../../test/configs/unmarshal/test15.json",
 		expectedMetricsConfig: MetricsFile{
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs:  map[string]Input{},
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{},
@@ -5514,6 +5562,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 16
 		inputFileLoc: "../../test/configs/unmarshal/test16.json",
 		expectedMetricsConfig: MetricsFile{
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs:  map[string]Input{},
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{},
@@ -5589,6 +5640,9 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 	{ // test 17
 		inputFileLoc: "../../test/configs/unmarshal/test17.json",
 		expectedMetricsConfig: MetricsFile{
+			Meta: map[string]interface{}{"debug_inputs": []string{},
+				"debug_outputs": []string{},
+				"debug_filters": []string{}},
 			Inputs:  map[string]Input{},
 			Filters: map[string]interface{}{},
 			Outputs: map[string]Output{},
@@ -6758,18 +6812,23 @@ func TestGetSubscribeUris(t *testing.T) {
 		"/some/output1/output1_cheetah":       {"output1_cheetah"},
 		"/some/output1/output1_bobcat":        {"output1_bobcat"},
 		"/some/output1/output1_lion":          {"output1_lion"},
+		"/some/output1":                       {"output1_cheetah", "output1_bobcat", "output1_lion", "output1"},
 		"/some/output2/output2_cheetah":       {"output2_cheetah"},
 		"/some/output2/output2_bobcat":        {"output2_bobcat"},
 		"/some/output2/output2_lion":          {"output2_lion"},
+		"/some/output2":                       {"output2_cheetah", "output2_bobcat", "output2_lion", "output2"},
 		"/some/output3/output3_cheetah":       {"output3_cheetah"},
 		"/some/output3/output3_bobcat":        {"output3_bobcat"},
 		"/some/output3/output3_lion":          {"output3_lion"},
+		"/some/output3":                       {"output3_cheetah", "output3_bobcat", "output3_lion", "output3"},
 		"/some/output1/timestamp":             {"output1"},
 		"/some/output2/timestamp":             {"output2"},
 		"/some/output3/timestamp":             {"output3"},
 		"/some/level2/level2_output":          {"level2_output"},
+		"/some/level2":                        {"level2_output"},
 		"/some/status/output/status":          {"enum_output"},
 		"/some/status/output/status2":         {"bitfield_output"},
+		"/some/status/output":                 {"enum_output", "bitfield_output"},
 		"/some/output1/output1":               {"output1"},
 		"/some/output2/output2":               {"output2"},
 		"/some/output3/output3":               {"output3"},
@@ -6777,6 +6836,8 @@ func TestGetSubscribeUris(t *testing.T) {
 		"/some/status/output/bitfield_output": {"bitfield_output"},
 	}
 	expectedUriElements := map[string]interface{}{
+		"/configuration": map[string]interface{}{},
+		"configuration":  map[string]interface{}{},
 		"": map[string]interface{}{
 			"components": map[string]interface{}{
 				"bms_74b": map[string]interface{}{

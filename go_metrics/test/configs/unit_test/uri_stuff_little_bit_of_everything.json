@@ -20,7 +20,8 @@
         "var_name4": { "uri": "/some/output/uri/a", "type": "int"            },
         "var_name5": { "uri": "/some/output/uri", "type": "string", "attributes":["enabled", "scale"]          },
 		"var_name6": {"uri": "/some", "type": "string", "attributes":["enabled", "scale"]          },
-        "var_template##": {"uri": "/some/##", "type": "int"}
+        "var_template##": {"uri": "/some/##", "type": "int"},
+        "some_random_input": {"uri":"/this/is/a/uri", "type": "int"}
     },
     "filters": {
         "all_vars_enabled": "regex(var_name*) | attribute(enabled == true)",
@@ -40,7 +41,8 @@
         "h": { "uri": "/some/one"},
         "i": { "uri": "/some/one"},
         "j": { "uri": "/some/one"},
-        "k": { "uri": "/some/one"}
+        "k": { "uri": "/some/one"},
+        "l": {"uri": "/random/output/uri"}
 		    },
     "metrics": [
         {
@@ -108,6 +110,17 @@
             "type": "int",
             "outputs": "k",
             "expression": "var_name4_copy"
+        },
+        {
+            "id":"list_expression",
+            "type": "int",
+            "outputs": "l",
+            "expression": ["some",
+                            "_",
+                            "random_",
+                            "input",
+                            "+",
+                            " 5"]
         }
     ],
     "echo": [

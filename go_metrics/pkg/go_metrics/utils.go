@@ -197,6 +197,7 @@ type MetricsObject struct {
 	Expression       string             `json:"expression"`                // a string that represents an expression to evaluate
 	ParsedExpression Expression         `json:"-"`                         // an expression object after we've parsed everything
 	State            map[string][]Union `json:"-"`                         // values created after runtime that are necessary for certain functions to evaluate
+	Idx              int                `json:"-"`                         // this metrics expression's index in the big array of things
 }
 
 type EchoObject struct {

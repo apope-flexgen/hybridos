@@ -402,3 +402,17 @@ Scenario: uri_stuff_little_bit_of_everything, take 3
       """
       {"clothed_bobcat":{"scale":1000,"ui_type":"none","units":"degC","value":222},"clothed_cheetah":{"scale":1000,"ui_type":"none","units":"degC","value":222}}
       """
+
+  Scenario: list expression parsing
+    When I send a fims pub to /this/is/a/uri containing
+      """
+      25
+      """
+    Then I expect a fims pub to /random/output/uri containing
+      """
+      {"l":30}
+      """
+    Then a fims get to /random/output/uri should yield
+      """
+      {"l":30}
+      """

@@ -429,9 +429,9 @@ func handleReevaluationSignal(uri string, elementName string) (bool, error) {
 			return false, fmt.Errorf("failed to find the metric number associated with the given output: %s", outputName)
 		}
 		// Update all the expressions associated with the output (typically just 1)
-		for expNum, object := range metricsObjects {
+		for _, object := range metricsObjects {
 			// Also clear their output and state so they're evaluated as new
-			warn, err := configureStateAndOutputs(object, expNum)
+			warn, err := object.configureStateAndOutputs()
 			if warn != "" {
 				log.Warnf("Warning reconfiguring metric state and scope: %s", warn)
 			}
@@ -448,6 +448,7 @@ func handleReevaluationSignal(uri string, elementName string) (bool, error) {
 		OutputScope[outputName] = nil
 		outputScopeMutex.Unlock()
 	}
+	ProcessDirectMsgs()
 
 	return true, nil
 }

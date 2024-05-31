@@ -1469,14 +1469,37 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 							metricsIndex += 1
 							return
 						} else {
+							// expression can be string or array
+							// if array, concatenate all strings together
+							// else, just use the expression directly
 							var expr string
-							expr, internal_err = element.Iter.String()
+							expr_array, internal_err := element.Iter.Array(nil)
 							if internal_err != nil {
-								configErrorLocs.logError(internal_err)
-								wasError = true
+								expr, internal_err = element.Iter.String()
+								if internal_err != nil {
+									configErrorLocs.logError(internal_err)
+									wasError = true
+								} else {
+									metric.Expression = expr
+								}
 							} else {
-								metric.Expression = expr
+								expr_index := 0
+								expr_array.ForEach(func(expr_iter simdjson.Iter) {
+									configErrorLocs.addIndex(expr_index, simdjson.TypeString)
+									temp_expr, internal_err := expr_iter.String()
+									if internal_err != nil {
+										configErrorLocs.logError(internal_err)
+										wasError = true
+									} else {
+										expr += temp_expr
+									}
+									expr_index++
+								})
+								if len(expr) > 0 {
+									metric.Expression = expr
+								}
 							}
+
 						}
 						configErrorLocs.removeLevel() // remove "expression"
 
@@ -2487,8 +2510,9 @@ func generateScope(new_inputs []string) {
 // metricsObject: The MetricsObject to configure
 // netIndex: The index of the MetricsObject within the list of MetricsObjects
 // return: any configuration warnings or errors that occurred
-func configureStateAndOutputs(metricsObject *MetricsObject, netIndex int) (warning string, err error) {
+func (metricsObject *MetricsObject) configureStateAndOutputs() (warning string, err error) {
 	// Setup locks
+	netIndex := metricsObject.Idx
 	metricsAlreadyConfigured := len(metricsMutex) > 0 && netIndex < len(metricsMutex)
 	// Only lock if reconfiguring. Otherwise the lock will not have been configured and will not be usable yet
 	if metricsAlreadyConfigured {
@@ -2554,15 +2578,16 @@ func configureStateAndOutputs(metricsObject *MetricsObject, netIndex int) (warni
 		metricsObject.State["previousExpressionValues"] = make([]Union, 0)
 		metricsObject.State["messageExpressions"] = make([]Union, 0)
 		metricsObject.State["messageStrings"] = make([]Union, 0)
-		metricsObject.State["valueChanged"] = append(metricsObject.State["valueChanged"], Union{tag: BOOL, b: false})
+		metricsObject.State["valueChanged"] = make([]Union, 0)
 		for messageExpression, messageString := range metricsObject.Messages {
 			// State holds a slice for each key rather than a map, so split the expressions, their values, and associated strings into separate
 			// slices with corresponding indices
-			metricsObject.State["previousExpressionValues"] = append(metricsObject.State["previousExpressionValues"], Union{tag: BOOL, b: false})
+			metricsObject.State["previousExpressionValues"] = append(metricsObject.State["previousExpressionValues"], Union{tag: NIL})
 			metricsObject.State["messageExpressions"] = append(metricsObject.State["messageExpressions"], Union{tag: STRING, s: messageExpression})
 			metricsObject.State["messageStrings"] = append(metricsObject.State["messageStrings"], Union{tag: STRING, s: messageString})
 			metricsObject.State["activeMessages"] = append(metricsObject.State["activeMessages"], Union{tag: STRING, s: ""})
 			metricsObject.State["activeTimestamps"] = append(metricsObject.State["activeTimestamps"], Union{tag: STRING, s: ""})
+			metricsObject.State["valueChanged"] = append(metricsObject.State["valueChanged"], Union{tag: BOOL, b: false})
 		}
 	}
 
@@ -2596,9 +2621,6 @@ func (metricsObject *MetricsObject) getExpression(internal_vars []string, netInd
 	var warning string
 	if inputToMetricsExpression == nil {
 		inputToMetricsExpression = make(map[string][]int, 0)
-	}
-	if outputToMetricsObject == nil {
-		outputToMetricsObject = make(map[string][]*MetricsObject, 0)
 	}
 	if expressionNeedsEval == nil {
 		expressionNeedsEval = make(map[int]bool, len(MetricsConfig.Metrics))
@@ -2812,10 +2834,6 @@ func checkMixedFlags() (wasWarning bool) {
 				wasWarning = true
 				configErrorLocs.logError(fmt.Errorf("output '%v' has missing flag 'lonely'; when using 'flat' the output must be 'lonely' as well; defaulting to nested formatting (warning only)", outputName))
 			}
-			if stringInSlice(output.Flags, "flat") && !stringInSlice(output.Flags, "lonely") {
-				wasWarning = true
-				configErrorLocs.logError(fmt.Errorf("output '%v' has missing flag 'lonely'; when using 'flat' the output must be 'lonely' as well; defaulting to nested formatting (warning only)", outputName))
-			}
 		}
 		configErrorLocs.removeLevel()
 		configErrorLocs.removeLevel()
@@ -2877,8 +2895,10 @@ func GetPubTickers(new_metrics_info NewMetricsInfo) NewMetricsInfo {
 				uriGroup = output.Uri + "[" + outputName + "]"
 			} else if group, hasGroup := regexStringInSlice(output.Flags, `group\d+`); hasGroup {
 				if _, ok := PublishUris[output.Uri+"["+group+"]"]; ok {
-					PublishUris[output.Uri+"["+group+"]"] = append(PublishUris[output.Uri+"["+group+"]"], outputName)
 					uriGroup = output.Uri + "[" + group + "]"
+					if !stringInSlice(PublishUris[uriGroup], outputName) {
+						PublishUris[uriGroup] = append(PublishUris[uriGroup], outputName)
+					}
 				} else {
 					PublishUris[output.Uri+"["+group+"]"] = []string{outputName}
 					pubDataChanged[output.Uri+"["+group+"]"] = true
@@ -2888,7 +2908,9 @@ func GetPubTickers(new_metrics_info NewMetricsInfo) NewMetricsInfo {
 				if _, ok := PublishUris[output.Uri]; !ok {
 					PublishUris[output.Uri] = make([]string, 0)
 				}
-				PublishUris[output.Uri] = append(PublishUris[output.Uri], outputName)
+				if !stringInSlice(PublishUris[output.Uri], outputName) {
+					PublishUris[output.Uri] = append(PublishUris[output.Uri], outputName)
+				}
 				pubDataChanged[output.Uri] = true
 				uriGroup = output.Uri
 			}
@@ -3110,12 +3132,9 @@ func GetSubscribeUris(new_metrics_info NewMetricsInfo) {
 
 	// do the same for outputs so that we can respond to "gets"
 	if uriToOutputNameMap == nil {
-
 		uriToOutputNameMap = make(map[string][]string, len(MetricsConfig.Outputs))
-
 	}
 	for _, outputName := range new_outputs {
-
 		output := MetricsConfig.Outputs[outputName]
 
 		if len(output.Uri) > 0 {
@@ -3128,10 +3147,12 @@ func GetSubscribeUris(new_metrics_info NewMetricsInfo) {
 				uriToOutputNameMap[output.Uri+"/"+output.Name] = append(uriToOutputNameMap[output.Uri+"/"+output.Name], outputName)
 			}
 			// output.Name itself might be repeated, so we may overwrite another entry with this one due to the same URI being produced
-			if _, ok := uriToOutputNameMap[output.Uri+"/"+outputName]; !ok {
-				uriToOutputNameMap[output.Uri+"/"+outputName] = make([]string, 0)
+			if output.Name != outputName {
+				if _, ok := uriToOutputNameMap[output.Uri+"/"+outputName]; !ok {
+					uriToOutputNameMap[output.Uri+"/"+outputName] = make([]string, 0)
+				}
+				uriToOutputNameMap[output.Uri+"/"+outputName] = append(uriToOutputNameMap[output.Uri+"/"+outputName], outputName)
 			}
-			uriToOutputNameMap[output.Uri+"/"+outputName] = append(uriToOutputNameMap[output.Uri+"/"+outputName], outputName)
 
 			// parent uri
 			if _, ok := uriToOutputNameMap[output.Uri]; !ok {
@@ -3592,17 +3613,24 @@ func mapOutputsToMetrics(new_metrics_starting_index int) (warnings []string, err
 	if len(MetricsConfig.Metrics) == new_metrics_starting_index {
 		return
 	}
-	for i, metricsObject := range MetricsConfig.Metrics[new_metrics_starting_index:] {
-		idx := new_metrics_starting_index + i
-		metricsObjectPointer := &MetricsConfig.Metrics[idx]
+
+	outputToMetricsObject = make(map[string][]*MetricsObject, 0)
+	for i, metricsObject := range MetricsConfig.Metrics {
+		MetricsConfig.Metrics[i].Idx = i
+		metricsObjectPointer := &MetricsConfig.Metrics[i]
 		// Map the expression to all of its associated outputs
-		for _, output := range (metricsObject).Outputs {
+		for _, output := range metricsObject.Outputs {
 			// Use the associated expression index (netIndex) to point to the expression
 			// An expression can have multiple outputs and each output can have multiple expressions (but only one is used currently)
 			outputToMetricsObject[output] = append(outputToMetricsObject[output], metricsObjectPointer)
 		}
+	}
 
-		warning, err := configureStateAndOutputs(metricsObjectPointer, idx)
+	// only configure the state for the new metrics
+	for i := range MetricsConfig.Metrics[new_metrics_starting_index:] {
+		idx := new_metrics_starting_index + i
+		metricsObjectPointer := &MetricsConfig.Metrics[idx]
+		warning, err := metricsObjectPointer.configureStateAndOutputs()
 		warnings = append(warnings, warning)
 		errs = append(errs, err)
 	}

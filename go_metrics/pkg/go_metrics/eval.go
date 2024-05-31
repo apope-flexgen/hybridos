@@ -619,6 +619,7 @@ func storeAlertingAttributes(outputVar string, outputVals []Union, metricsObject
 	// Reset details and add the ones currently active
 	OutputScope[outputVar+"@activeMessages"] = make([]Union, 0)
 	OutputScope[outputVar+"@activeTimestamps"] = make([]Union, 0)
+	OutputScope[outputVar+"@alertAttributeChanged"] = make([]Union, 0)
 	if expressionResult.b {
 		// If true, populate the details array with the timestamp and messages that are active
 		// The two will be added together in the outputs, with each active message getting the latest timestamp
@@ -626,6 +627,7 @@ func storeAlertingAttributes(outputVar string, outputVals []Union, metricsObject
 			// Store messages that are not empty
 			// If the timestamp is somehow out of sync and empty we still want to store it
 			if messageUnion.s != "" {
+				OutputScope[outputVar+"@alertAttributeChanged"] = append(OutputScope[outputVar+"@alertAttributeChanged"], (*metricsObject).State["valueChanged"][index])
 				OutputScope[outputVar+"@activeMessages"] = append(OutputScope[outputVar+"@activeMessages"], messageUnion)
 				OutputScope[outputVar+"@activeTimestamps"] = append(OutputScope[outputVar+"@activeTimestamps"], (*metricsObject).State["activeTimestamps"][index])
 			}
@@ -641,11 +643,16 @@ func (metricsObject *MetricsObject) alertAttributesHaveChanged() bool {
 		return false
 	}
 
-	valuesChanged, ok := metricsObject.State["valuesChanged"]
+	valuesChanged, ok := metricsObject.State["valueChanged"]
 	if !ok || len(valuesChanged) == 0 {
 		return false
 	}
-	return valuesChanged[0].b
+	for _, val := range valuesChanged {
+		if val.b {
+			return true
+		}
+	}
+	return false
 }
 
 func EvaluateExpressions() {
@@ -668,9 +675,9 @@ func EvaluateExpressions() {
 			originalType := metricsObjectPointer.Type
 			// Clear out the previous state for alerting values that should not persist
 			metricsMutex[q].Lock()
-
 			outputVals, err := Evaluate(&(metricsObject.ParsedExpression), &(metricsObjectPointer.State))
 			metricsMutex[q].Unlock()
+
 			if err != nil {
 				log.Warnf("Error with metrics expression  [   %s   ]:\n%s\n", metricsObject.Expression, err)
 			}
@@ -698,19 +705,20 @@ func EvaluateExpressions() {
 								log.Errorf("Cannot generate alert for %s metric: %v", metricsObjectPointer.Id, err)
 							}
 
+							is_sparse := uriIsSparse[outputToUriGroup[outputVar]]
+							// Check if the values have changed from the last evaluation, then copy the new values into the OutputScope
+							valuesChanged := !unionListsMatch(OutputScope[fullOutputName], outputVals) || metricsObjectPointer.alertAttributesHaveChanged()
+
 							// Update the scope here to allow for direct messages to occur below
 							outputScopeMutex.Lock()
 							OutputScope[fullOutputName] = make([]Union, len(outputVals))
 							copy(OutputScope[fullOutputName], outputVals)
 							outputScopeMutex.Unlock()
 
-							is_sparse := uriIsSparse[outputToUriGroup[outputVar]]
-							// Check if the values have changed from the last evaluation, then copy the new values into the OutputScope
-							valuesChanged := !unionListsMatch(OutputScope[fullOutputName], outputVals) || metricsObjectPointer.alertAttributesHaveChanged()
-
 							if valuesChanged || ((is_direct_set || is_direct_post) && !is_sparse) {
 								pubDataChangedMutex.Lock()
 								outputVarChanged[outputVar] = true
+								pubDataChanged[outputToUriGroup[outputVar]] = true
 								pubDataChangedMutex.Unlock()
 
 								// Lock and raise the direct message flag
@@ -726,10 +734,6 @@ func EvaluateExpressions() {
 									uriToDirectMsgActive["post"][outputToUriGroup[outputVar]] = true
 									directMsgMutex.Unlock()
 								}
-
-								pubDataChangedMutex.Lock()
-								pubDataChanged[outputToUriGroup[outputVar]] = false
-								pubDataChangedMutex.Unlock()
 
 								if debug {
 									if stringInSlice(debug_outputs, outputVar) {
@@ -769,6 +773,7 @@ func EvaluateExpressions() {
 						if valuesChanged || ((is_direct_set || is_direct_post) && !is_sparse) {
 							pubDataChangedMutex.Lock()
 							outputVarChanged[fullOutputName] = true
+							pubDataChanged[outputToUriGroup[fullOutputName]] = true
 							pubDataChangedMutex.Unlock()
 
 							// Lock and raise the direct message flag
@@ -785,9 +790,6 @@ func EvaluateExpressions() {
 								directMsgMutex.Unlock()
 							}
 
-							pubDataChangedMutex.Lock()
-							pubDataChanged[outputToUriGroup[fullOutputName]] = false
-							pubDataChangedMutex.Unlock()
 							if debug {
 								if stringInSlice(debug_outputs, fullOutputName) {
 									log.Debugf("Output [%s] changed value to [%v]", fullOutputName, getValueFromUnion(&outputVals[0]))
@@ -879,7 +881,7 @@ func (exp *Expression) evaluate(node *ast.Node, state *map[string][]Union) (valu
 			// Combine errors
 			err = fmt.Errorf("%v, and error matching subexpression: %w", err, msgErr)
 		} else {
-			err = fmt.Errorf("error matching subexpression: %w", err)
+			err = fmt.Errorf("error matching subexpression: %w", msgErr)
 		}
 	}
 
@@ -1523,8 +1525,8 @@ func (exp *Expression) trackActiveSubexpressions(node *ast.Node, state *map[stri
 				return fmt.Errorf("failed to get previous expression value for expression %s. There is a problem with the code", exp.String)
 			}
 			// Value has changed
-			if (*state)["previousExpressionValues"][index].b != expressionIsTrue.b {
-				if index >= len((*state)["activeMessages"]) || index >= len((*state)["messageStrings"]) {
+			if (*state)["previousExpressionValues"][index].tag == NIL || (*state)["previousExpressionValues"][index].b != expressionIsTrue.b {
+				if index >= len((*state)["activeMessages"]) || index >= len((*state)["messageStrings"]) || index >= len((*state)["valueChanged"]) {
 					return fmt.Errorf("failed to get active messages for expression %s. There is a problem with the code", exp.String)
 				}
 				if expressionIsTrue.b {
@@ -1535,17 +1537,19 @@ func (exp *Expression) trackActiveSubexpressions(node *ast.Node, state *map[stri
 					// The maps are cleared before each evaluation so these will not build up over time
 					(*state)["activeMessages"][index] = Union{tag: STRING, s: parsedMsg}
 					(*state)["activeTimestamps"][index] = Union{tag: STRING, s: time.Now().Format(time.RFC3339)}
+					// Mark that the value has changed
+					(*state)["valueChanged"][index].b = true
 				} else {
 					// Value has changed from true to false
 					// Clear out the active values
 					(*state)["activeMessages"][index] = Union{tag: STRING, s: ""}
 					(*state)["activeTimestamps"][index] = Union{tag: STRING, s: ""}
+					// mark that the value has not changed because we don't want to print empty details if we're still active
+					(*state)["valueChanged"][index].b = false
 				}
-				// Mark that the value has changed
-				(*state)["valueChanged"][0].b = true
 			} else {
 				// Mark that the value has not changed
-				(*state)["valueChanged"][0].b = false
+				(*state)["valueChanged"][index].b = false
 			}
 			// Update previous value
 			(*state)["previousExpressionValues"][index] = expressionIsTrue
