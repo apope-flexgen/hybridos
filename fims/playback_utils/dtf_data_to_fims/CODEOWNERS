@@ -1,0 +1,15 @@
+# default repo owners
+*           @svflexgen
+
+# file system owners
+
+# file type owners
+*.cpp       @jcalcagni-flexgen
+*.h         @jcalcagni-flexgen
+*.js        @Thav @svflexgen
+#*.go        @Thav @svflexgen
+#*.py        @Thav @svflexgen
+Makefile    @akmuluku
+*.sh        @akmuluku
+*.spec      @akmuluku
+*.service   @akmuluku

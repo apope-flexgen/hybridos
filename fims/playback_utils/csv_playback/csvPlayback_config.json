@@ -1,0 +1,37 @@
+{
+    "command_columns": [
+        {
+            "column": "tmp",
+            "command_uri": "/dummy/uri"
+        }
+    ],
+    "feedback_columns": [
+        {
+            "feedback_column": "Rack_1_voltage_filtered",
+            "feedback_uri": "/control/actions_ess_BatteryRackBalancing_bms_1/rack_1/voltage"
+        },
+        {
+            "feedback_column": "Rack_1_voltage_unfiltered",
+            "feedback_uri": "/control/actions_ess_bwf_BWFilter/ButterworthFilter/input"
+        },
+        {
+            "feedback_column": "rack_1_current",
+            "feedback_uri": "/status/bms_1_rack_1/DCCurrent"
+        },
+        {
+            "feedback_column": "Pcs_1_power_command",
+            "feedback_uri": "/control/actions_ess_BatteryRackBalancing_bms_1/BatteryBalancing/PCmd"
+        }
+    ],
+    "feedback_file": "Labtest_filtered_7.csv",
+    "playback_period": 1,
+    "R0_Init": {
+        "value": 0.5,
+        "uri": "/control/e_kf_av_EKF/EKF_1/InitialR0"
+    },
+    "SOC_Init": {
+        "value": 0.93,
+        "uri": "/control/e_kf_av_EKF/EKF_1/InitialSOC"
+    },
+    "Fims_Timeout": 0.02
+}
