@@ -1,0 +1,13 @@
+[Unit]
+Description=Pluto
+Requires=
+After=
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/pluto
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

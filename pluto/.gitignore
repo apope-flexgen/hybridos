@@ -1,0 +1,14 @@
+build
+*~
+.idea/
+.vscode/
+GIT*
+*.o
+rpmbuild/
+.cache
+go/
+.config
+.gitconfig
+pluto
+*.pprof
+trace.out
