@@ -27,6 +27,7 @@ export const activeAlertsColumns = (): Column[] => {
     {
       id: 'alert',
       label: 'Alert',
+      maxWidth: '300px',
     },
     {
       id: 'timestamp',

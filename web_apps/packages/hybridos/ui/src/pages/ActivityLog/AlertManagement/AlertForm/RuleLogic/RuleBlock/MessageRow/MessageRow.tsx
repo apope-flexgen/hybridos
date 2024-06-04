@@ -1,13 +1,15 @@
 import {
-  Typography, TextField, MuiButton, Select, ThemeType,
+  Box, Typography, TextField, MuiButton, Select, ThemeType,
 } from '@flexgen/storybook';
-import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 import { useState, useEffect } from 'react';
 import { useAlertFormContext } from 'src/pages/ActivityLog/AlertManagement/AlertForm/contexts/AlertFormContext';
 import {
+  MAX_CHARS,
   alertManagementHelperText,
   generateExampleText,
   insertAtCursor,
+  fieldLengthHelperText,
+  fieldLengthValidator,
 } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import {
   accordionRowsSx,
@@ -46,7 +48,7 @@ const MessageRow = ({ expression }: MessageRowProps) => {
   };
 
   useEffect(() => {
-    if (!selectedTemplate) setSelectedTemplate(alertValues.templates?.[0]?.token);
+    if (!selectedTemplate) setSelectedTemplate(alertValues.templates?.[0]?.token || '');
   }, [alertValues.templates]);
 
   return (
@@ -57,7 +59,8 @@ const MessageRow = ({ expression }: MessageRowProps) => {
           required
           value={expression.message}
           onChange={(e) => handleMessageChange(e.target.value)}
-          helperText="Max width 100"
+          allowedCharacters={(value) => fieldLengthValidator(value, MAX_CHARS.large)}
+          helperText={fieldLengthHelperText(expression.message.length, MAX_CHARS.large)}
           label=""
           multiline
           minRows={3}
@@ -117,4 +120,5 @@ const MessageRow = ({ expression }: MessageRowProps) => {
     </Box>
   );
 };
+
 export default MessageRow;

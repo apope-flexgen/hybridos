@@ -83,6 +83,15 @@ export const generateExampleText = (alertValues: AlertConfigurationObject, messa
   return exampleMessage;
 };
 
+export const MAX_CHARS = {
+  small: 25,
+  medium: 50,
+  large: 100,
+};
+
+export const fieldLengthValidator = (value: string, length: number) => value.length <= length;
+export const fieldLengthHelperText = (currentLength: number, maxLength: number) => `${maxLength - currentLength} characters remaining (${maxLength} maximum)`;
+
 export const alertManagementHelperText = {
   aliasWildcard:
     'To configure a templated URI, place a wildcard from the list above in braces to denote where the replacement should occur.',

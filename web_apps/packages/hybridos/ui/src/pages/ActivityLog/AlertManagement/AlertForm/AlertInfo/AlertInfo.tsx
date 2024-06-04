@@ -4,7 +4,12 @@ import {
 
 import { useAlertFormContext } from 'src/pages/ActivityLog/AlertManagement/AlertForm/contexts/AlertFormContext';
 
-import { alertManagementHelperText } from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
+import {
+  MAX_CHARS,
+  alertManagementHelperText,
+  fieldLengthHelperText,
+  fieldLengthValidator,
+} from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import {
   formRowSx,
   formRowTitleAndDescriptionSx,
@@ -51,8 +56,10 @@ const AlertInfo = () => {
           <TextField
             required
             label="Title"
+            allowedCharacters={(value) => fieldLengthValidator(value, MAX_CHARS.medium)}
             value={alertValues.title || ''}
             onChange={(e) => handleFieldChange('title', e.target.value)}
+            helperText={fieldLengthHelperText(alertValues.title.length, MAX_CHARS.medium)}
           />
           <Select
             required

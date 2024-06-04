@@ -52,8 +52,9 @@ export const formRowContentsSx = {
   display: 'flex',
   width: '75%',
   gap: '16px',
-  alignItems: 'center',
-  minHeight: '60px',
+  alignItems: 'flex-start',
+  paddingTop: '12px',
+  minHeight: 'max-content',
 };
 
 export const formRowContentVerticalSx = {
@@ -96,8 +97,8 @@ export const ruleBlockBoxSx = (theme: ThemeType) => ({
   flexDirection: 'column',
   gap: '24px',
   width: 'max-content',
-  backgroundColor: `${theme.fgd.primary.main}08`,
   border: `1px solid ${theme.fgd.other.divider}`,
+  backgroundColor: `${theme.fgd.primary.main}12`,
 });
 
 export const setWidth = (width: number | string) => ({

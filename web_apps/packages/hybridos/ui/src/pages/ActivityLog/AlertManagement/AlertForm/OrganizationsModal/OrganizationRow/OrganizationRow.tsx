@@ -4,6 +4,11 @@ import { useContext, useState } from 'react';
 
 import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
+import {
+  MAX_CHARS,
+  fieldLengthHelperText,
+  fieldLengthValidator,
+} from 'src/pages/ActivityLog/AlertManagement/alertManagement.helpers';
 import { comparator1RowSx } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
 import { Organization } from 'src/pages/ActivityLog/activityLog.types';
 
@@ -66,6 +71,8 @@ const OrganizationRow = ({
         value={organization.name}
         onChange={(e) => handleValueFieldChange(e.target.value)}
         label=""
+        allowedCharacters={(value) => fieldLengthValidator(value, MAX_CHARS.small)}
+        helperText={fieldLengthHelperText(organization.name.length, MAX_CHARS.small)}
       />
       <Box sx={{ display: 'flex' }}>
         <IconButton
