@@ -29,6 +29,7 @@ install --directory %{buildroot}%{systemd_dir}
 install -m 0755 go_metrics %{buildroot}%{bin_dir}
 
 install -m 0644 go_metrics@.service %{buildroot}%{systemd_dir}
+install -m 0644 go_metrics_alerting.service %{buildroot}%{systemd_dir}
 
 %clean
 rm -rf %{buildroot}
@@ -36,5 +37,6 @@ rm -rf %{buildroot}
 %files
 %{bin_dir}/go_metrics
 %{systemd_dir}/go_metrics@.service
+%{systemd_dir}/go_metrics_alerting.service
 
 %changelog

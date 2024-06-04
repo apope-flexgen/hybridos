@@ -376,7 +376,7 @@ func findValuesInMap(msg *fims.FimsMsgRaw, currentUri string, valuesToLookFor ma
 							handleUriElement(msg, fullUri, name)
 							elementValueMutex.Unlock()
 						}
-					} else if strings.EqualFold(name, "reevaluate") {
+					} else if IsAlertingInstance && strings.EqualFold(name, "reevaluate") {
 						// Reevaluation case: all output uris accept a command to reevaluate their metric
 						elementValueMutex.Lock()
 						elementValue, _ = elemMap[currentUri].Interface()
@@ -398,6 +398,10 @@ func findValuesInMap(msg *fims.FimsMsgRaw, currentUri string, valuesToLookFor ma
 // uri: the output uri that should be mapped to the metric
 // return whether the metric was updated
 func handleReevaluationSignal(uri string, elementName string) (bool, error) {
+	if !IsAlertingInstance {
+		return false, nil
+	}
+
 	// We got here with a different set somehow
 	if elementName != "reevaluate" {
 		return false, nil
@@ -476,7 +480,7 @@ func handleNewRuntimeConfiguration(msg *fims.FimsMsgRaw, id string) (bool, error
 	}
 	f.SendRaw(fims.FimsMsgRaw{
 		Method: fimsMethod,
-		Uri:    "/dbi/go_metrics/" + id,
+		Uri:    fmt.Sprintf("/dbi/%s/%s", ProcessName, id),
 		Body:   msg.Body,
 	})
 
@@ -826,6 +830,10 @@ func GetOutputMsgBody(uri string) interface{} {
 // list that are not the base config and have not yet been processed.
 // This will run whether the base config source is dbi or a file path
 func GetAdditionalConfigurations() {
+	if !IsAlertingInstance {
+		// Only the instance of go_metrics that handles alerting will request additional configuration
+		return
+	}
 	// Start a FIMS channel that will receive FIMS requests.
 	// connect to FIMS server
 	cfgConn, err := fims.Connect(ProcessName + "_config")
@@ -864,15 +872,14 @@ func GetAdditionalConfigurations() {
 		select {
 		case data := <-fimsReceive:
 			cfgMap, ok := data.Body.(map[string]interface{})
-			// TODO: file and no config response case
 			if !ok {
-				log.Errorf("Received invalid configuration map: %v", cfgMap)
+				// Check to see if it's an error string
+				errString, ok := data.Body.(string)
+				if !ok || !strings.Contains(errString, "not found") {
+					log.Errorf("Received invalid configuration map: %v", cfgMap)
+				}
 				done = true
 				break
-			}
-			// TODO: file and only additional config sources
-			if _, ok := cfgMap["configuration"]; !ok {
-				log.Errorf("Could not find base configuration in config document")
 			}
 			for configId, doc := range cfgMap {
 				// Skip the base configuration that was already configured
@@ -887,7 +894,7 @@ func GetAdditionalConfigurations() {
 			}
 			done = true
 		case <-timeout.C:
-			log.Errorf("Timed out after waiting %d seconds for configuration from DBI. Resending GET to DBI.", waitSeconds)
+			log.Errorf("No alerting configurations available in DBI.")
 			done = true
 		}
 	}

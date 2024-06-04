@@ -13,3 +13,6 @@ output
 
 # ignore the updater logs
 updater-logs
+
+#pyfims build artifacts
+fims/pyfims/pyfims.egg-info/*

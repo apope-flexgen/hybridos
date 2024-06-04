@@ -1,4 +1,5 @@
 {
+    "meta": { "enable_alerting": true },
     "inputs": {
         "input": { "uri": "/example/input", "type": "bool" }
     },

@@ -229,7 +229,7 @@ def load_dbi(process_name: str, config_src, delete_existing_data=True, file_docu
             sub_file_names = os.listdir(file_path)
             for sub_file_name in sub_file_names:
                 document_name = file_document_renames[sub_file_name] if sub_file_name in file_document_renames else os.path.splitext(sub_file_name)[0]
-                dbi_uri = f'/dbi/{process_name}/{file_name}/{document_name}'      
+                dbi_uri = f'/dbi/{process_name}/{file_name}/{document_name}'
                 run(['fims_send', '-m', 'set', '-u', dbi_uri, '-f', os.path.join(file_path, sub_file_name), '-r', f'/{pid}'], stdout=DEVNULL)
         elif not file_name.endswith('.json'):
             continue
@@ -304,7 +304,7 @@ def start_influx():
         print("starting influx")
         redirDevnull = open(os.devnull, 'w')
         if systemd:
-            Popen(["sudo", "systemctl", "start", "influxd"],  stderr=redirDevnull)
+            Popen(["sudo", "systemctl", "start", "influxd"], stderr=redirDevnull)
         else:
             Popen(['sudo', 'influxd'], stderr=redirDevnull)
 
@@ -357,6 +357,7 @@ def start_events():
             command = "cd /home/hybridos/git/hybridos/events; npm run clearData"
             # Clear out alerting data from mongo
             Popen(command, shell=True)
+            time.sleep(0.1)
         if systemd:
             Popen(["sudo", "systemctl", "start", "events"])
         else:
@@ -377,10 +378,16 @@ def start_go_metrics():
         print("starting go_metrics")
         # Load config
         load_dbi("go_metrics", machine_config_dir_symlink, delete_existing_data=reset_setpoints)
+        if reset_setpoints:
+            # Manually reset alerting config. It doesn't not utilize config files so load_dbi() is not appropriate
+            run(['fims_send', '-m', 'del', '-u', f'/dbi/go_metrics_alerting', '-r', f'/{pid}'],
+                stdout=DEVNULL)  # reply-to used to keep FIMS from getting clogged
         if systemd:
             Popen(["sudo", "systemctl", "start", "go_metrics@configuration.json"])
         else:
             Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_go_metrics.json'])
+        # demo, start another go_metrics
+        Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_go_metrics_example.json'])
 
 
 def start_scheduler():
@@ -434,7 +441,7 @@ def start_fleet_manager():
     print("Starting {n:d} Site Controller container(s).".format(n=num_sites))
     launch_sites(num_sites, config_usecase_dir, hybridos_image_tag, hybridos_image_suffix)
     print("Waiting 15 seconds to give Site Controller container(s) time to boot.")
-    time.sleep(sleeptime*15)
+    time.sleep(sleeptime * 15)
     print("Done starting Site Controller container(s).")
 
     # TODO: rename fleet manager logging to "fleet_manager" for consistency

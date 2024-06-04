@@ -2,7 +2,7 @@
     "processes": [
         {
             "args": [
-                "-c=dbi", "-n=go_metrics_alerting", "--enable_alerting=true"
+                "-c=/usr/local/etc/config/go_metrics/configuration.json"
             ],
             "max_restarts": -1,
             "name": "/usr/local/bin/go_metrics"

@@ -93,6 +93,7 @@ var mdoBuf *bytes.Buffer
 var mdoEncoder *json.Encoder
 var containedInValChanged map[string]bool
 var inputYieldsDirectMsg map[string]bool
+var IsAlertingInstance bool
 
 // runtime parsing variables - for process_fims
 var pj *simdjson.ParsedJson

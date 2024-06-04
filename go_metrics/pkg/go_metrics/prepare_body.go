@@ -14,6 +14,10 @@ import (
 // clothedOutputVal: the current clothed fims object that has been constructed
 // return if the variable is an alert and any errors that occurred
 func addAlertingAttributesToOutput(outputVar string, clothedOutputVal *map[string]interface{}, is_get bool) (bool, error) {
+	if !IsAlertingInstance {
+		return false, nil
+	}
+
 	// Check if the name can be mapped to a metrics expression and the expression is an alert
 	metricsObjects, ok := outputToMetricsObject[outputVar]
 	if !ok {

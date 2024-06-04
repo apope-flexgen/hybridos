@@ -1,0 +1,13 @@
+[Unit]
+Description=Go_metrics - provides routines to manipulate incoming data and publish results
+Requires=fims.service dbi.service
+After=fims.service dbi.service
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/go_metrics -c dbi --name go_metrics_alerting --enable_alerting true
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

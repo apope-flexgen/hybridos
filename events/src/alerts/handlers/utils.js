@@ -39,7 +39,7 @@ function updateGoMetricsConfig(alert, templates) {
     if (alert.deleted) {
         fims.send({
             method: 'del',
-            uri: `/go_metrics/configuration/${alert.id}`,
+            uri: `/go_metrics_alerting/configuration/${alert.id}`,
             replyto: null,
             body: null,
             username: null,
@@ -80,7 +80,7 @@ function updateGoMetricsConfig(alert, templates) {
     // send new configuration to go_metrics
     fims.send({
         method: 'set',
-        uri: `/go_metrics/configuration/${alert.id}`,
+        uri: `/go_metrics_alerting/configuration/${alert.id}`,
         replyto: null,
         body: JSON.stringify(goMetricsObj),
         username: null,

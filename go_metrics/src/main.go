@@ -40,6 +40,7 @@ var templateOutput bool
 var templateConfig string
 var configSource string
 var defaultConfigFilePath = "/usr/local/etc/config/go_metrics"
+var enableAlerting bool
 
 func main() {
 	// Handle inital flag inputs for cli commands
@@ -58,6 +59,7 @@ func main() {
 	flag.StringVar(&templateConfig, "template_output_file", "", "save the templated config file to the specified location")
 	flag.StringVar(&configSource, "c", "", "source of configuration. Use \"dbi\" to read from DBI or provide a filepath to read from file\nUsage: go_metrics -c [config source]")
 	flag.StringVar(&configSource, "config", "", "source of configuration. Use \"dbi\" to read from DBI or provide a filepath to read from file\nUsage: go_metrics -c [config source]")
+	flag.BoolVar(&enableAlerting, "enable_alerting", false, "whether this instance of the service handles alerting")
 	flag.Parse()
 
 	metrics.MdoFile = mdo
@@ -70,13 +72,15 @@ func main() {
 		templateOutput = true
 	}
 
-	err := log.InitConfig("go_metrics").Init("go_metrics")
+	metrics.IsAlertingInstance = enableAlerting
+
+	err := log.InitConfig(processName).Init(processName)
 	if err != nil {
 		fmt.Printf("Error initializing logger for go_metrics: %s\n", err.Error())
 		os.Exit(-1)
 	}
-	log.Infof("Starting go_metrics")
-	defer log.Infof("Exiting go_metrics")
+	log.Infof("Starting %s", processName)
+	defer log.Infof("Exiting %s", processName)
 
 	if prof == "cpu" { //profiling argument, only works if flags are in front of config file
 		defer profile.Start(profile.CPUProfile, profile.ProfilePath(".")).Stop()
@@ -103,7 +107,10 @@ func main() {
 	}
 
 	var new_metrics_info metrics.NewMetricsInfo
-	new_metrics_info, err = getAndParseConfig()
+	// Alerting does not accept any configuration on its base configuration endpoint
+	// TODO: right now runtime alerting configs are stored in separate documents instead of being combined into the base configuration
+	// document. They could be merged into a single document in the future
+	new_metrics_info, err = getAndParseConfig(metrics.IsAlertingInstance)
 	if err != nil {
 		log.Fatalf("Configuration error: %v.", err)
 	}
@@ -173,24 +180,28 @@ func findConfigFilePath() (configFilePath string, err error) {
 
 // Retrieve and parse configuration based on the source provided
 // If no source is provided, try a number of alternatives before return an error to be reported to the user
-func getAndParseConfig() (metrics.NewMetricsInfo, error) {
+func getAndParseConfig(IsAlertingInstance bool) (metrics.NewMetricsInfo, error) {
+	// Default to empty config object which will be used if the instance is an alerting instance (no base config used in alerting case)
+	var cfgBytes = []byte("{}")
 	var err error
-	if configSource == "" {
-		configSource, err = findConfigFilePath()
-		if err != nil {
-			return metrics.NewMetricsInfo{}, err
+	if !IsAlertingInstance {
+		if configSource == "" {
+			configSource, err = findConfigFilePath()
+			if err != nil {
+				return metrics.NewMetricsInfo{}, err
+			}
 		}
-	}
 
-	// Retrieve the configuration from the given source
-	cfgMap, err := cfgfetch.Retrieve(processName, configSource)
-	if err != nil {
-		return metrics.NewMetricsInfo{}, fmt.Errorf("error retrieving configuration from %s: %w", configSource, err)
-	}
-	// The retrieved value is required to be a map when received from fims
-	cfgBytes, err := json.Marshal(cfgMap)
-	if err != nil {
-		return metrics.NewMetricsInfo{}, fmt.Errorf("error parsing configuration: %w", err)
+		// Retrieve the configuration from the given source
+		cfgMap, err := cfgfetch.Retrieve(processName, configSource)
+		if err != nil {
+			return metrics.NewMetricsInfo{}, fmt.Errorf("error retrieving configuration from %s: %w", configSource, err)
+		}
+		// The retrieved value is required to be a map when received from fims
+		cfgBytes, err = json.Marshal(cfgMap)
+		if err != nil {
+			return metrics.NewMetricsInfo{}, fmt.Errorf("error parsing configuration: %w", err)
+		}
 	}
 
 	metrics.ConfigSource = configSource

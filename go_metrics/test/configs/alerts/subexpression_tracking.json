@@ -1,4 +1,5 @@
 {
+    "meta": { "enable_alerting": true },
     "inputs": {
         "temp": { "uri": "/example/temp", "type": "float" },
         "high_temp_fault": { "uri": "/example/high_temp_fault", "type": "bool" }

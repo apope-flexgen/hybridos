@@ -159,7 +159,7 @@ async function handleSetAlerts(msg) {
         if (instance.status === 'active') {
             fims.send({
                 method: 'set',
-                uri: `/go_metrics/events/alerts/${alert.id}`,
+                uri: `/go_metrics_alerting/events/alerts/${alert.id}`,
                 replyto: null,
                 body: JSON.stringify({ reevaluate: true }),
                 username: null,
@@ -254,7 +254,7 @@ async function handleGetAlerts(msg) {
 async function handleInitAlerts() {
     fims.send({
         method: 'get',
-        uri: '/go_metrics/events/alerts',
+        uri: '/go_metrics_alerting/events/alerts',
         replyto: '/events/refresh_alerts',
         body: null,
         username: null,
@@ -270,7 +270,7 @@ async function handleInitAlerts() {
                 });
                 console.info(`Initialized with ${result.body.length} incidents from go_metrics`);
             } else {
-                console.warn('No valid response from /go_metrics/events/alerts on events startup');
+                console.warn('No valid response from /go_metrics_alerting/events/alerts on events startup');
             }
         } catch (e) {
             console.error(`Error initializing alert entries from go_metrics ${e}`);

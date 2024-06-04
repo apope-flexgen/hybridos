@@ -382,12 +382,12 @@ const getIncidentsResponseResolved = {
 
 // -> PUB /events/alerts (message varies)
 
-// -> GET /go_metrics/events/alerts
+// -> GET /go_metrics_alerting/events/alerts
 const outboundGetAlerts = {
     // TODO
 };
 
-// -> SET /go_metrics/configuration/<id>
+// -> SET /go_metrics_alerting/configuration/<id>
 const outboundSetManagement = {
     inputs: {
         ESS_2_SOC: {

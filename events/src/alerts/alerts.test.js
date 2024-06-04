@@ -141,7 +141,7 @@ describe('Alerts tests', () => {
                 body: JSON.stringify(outboundSetManagementNew),
                 method: 'set',
                 replyto: null,
-                uri: '/go_metrics/configuration/mocked-new-uuid',
+                uri: '/go_metrics_alerting/configuration/mocked-new-uuid',
                 username: null,
             },
             {
@@ -175,7 +175,7 @@ describe('Alerts tests', () => {
                 body: JSON.stringify(outboundSetManagement),
                 method: 'set',
                 replyto: null,
-                uri: '/go_metrics/configuration/28beecbc-232f-431b-ac7d-8d29350e9000',
+                uri: '/go_metrics_alerting/configuration/28beecbc-232f-431b-ac7d-8d29350e9000',
                 username: null,
             },
             {
@@ -209,7 +209,7 @@ describe('Alerts tests', () => {
                 body: null,
                 method: 'del',
                 replyto: null,
-                uri: '/go_metrics/configuration/28beecbc-232f-431b-ac7d-8d29350e9000',
+                uri: '/go_metrics_alerting/configuration/28beecbc-232f-431b-ac7d-8d29350e9000',
                 username: null,
             },
             {
@@ -311,7 +311,7 @@ describe('Alerts tests', () => {
             body: null,
             method: 'get',
             replyto: '/events/refresh_alerts',
-            uri: '/go_metrics/events/alerts',
+            uri: '/go_metrics_alerting/events/alerts',
             username: null,
         }]);
     });
@@ -371,7 +371,7 @@ describe('Alerts tests', () => {
                 body: JSON.stringify({ reevaluate: true }),
                 method: 'set',
                 replyto: null,
-                uri: '/go_metrics/events/alerts/28beecbc-232f-431b-ac7d-8d29350e9000',
+                uri: '/go_metrics_alerting/events/alerts/28beecbc-232f-431b-ac7d-8d29350e9000',
                 username: null,
             },
             {
@@ -405,7 +405,7 @@ describe('Alerts tests', () => {
                 body: JSON.stringify({ reevaluate: true }),
                 method: 'set',
                 replyto: null,
-                uri: '/go_metrics/events/alerts/28beecbc-232f-431b-ac7d-8d29350e9000',
+                uri: '/go_metrics_alerting/events/alerts/28beecbc-232f-431b-ac7d-8d29350e9000',
                 username: null,
             },
             {
