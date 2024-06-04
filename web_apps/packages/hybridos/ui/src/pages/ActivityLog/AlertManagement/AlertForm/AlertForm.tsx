@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, ThemeType, customMUIScrollbar } from '@flexgen/storybook';
 
 import React, {
@@ -20,6 +19,7 @@ import OrganizationsModal from './OrganizationsModal/OrganizationsModal';
 import RequiredResponseTime from './RequiredResponseTime/RequiredResponseTime';
 import RuleLogic from './RuleLogic/RuleLogic';
 import Scope from './Scope/Scope';
+import Templates from './Templates/Templates';
 
 import { AlertFormContext, AlertFormContextType } from './contexts/AlertFormContext';
 
@@ -44,6 +44,7 @@ const AlertForm = ({
   );
   const [orgModalOpen, setOrgModalOpen] = useState<boolean>(false);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
+
   const theme = useTheme() as ThemeType;
 
   const axiosInstance = useAxiosWebUIInstance();
@@ -53,14 +54,6 @@ const AlertForm = ({
       setSaveDisabled(checkRequiredAlertValues(updatedAlertValues));
     }
   }, [updatedAlertValues]);
-
-  useEffect(() => {
-    setIsLoading(true);
-    axiosInstance.get('/alerts/organizations').then((res) => {
-      setIsLoading(false);
-      setOrganizations(res.data.data);
-    });
-  }, []);
 
   const handleFieldChange = useCallback(
     (field: string, updatedValue: any, commaSeparatedList?: boolean) => {
@@ -83,6 +76,17 @@ const AlertForm = ({
     [setAlertFormValues],
   );
 
+  useEffect(() => {
+    setIsLoading(true);
+    axiosInstance.get('/alerts/organizations').then((orgResponse) => {
+      setOrganizations(orgResponse.data.data);
+      axiosInstance.get('/alerts/configuration').then((res) => {
+        handleFieldChange('templates', res.data.templates);
+        setIsLoading(false);
+      });
+    });
+  }, []);
+
   const contextValue: AlertFormContextType = useMemo(
     () => ({
       handleFieldChange,
@@ -104,8 +108,7 @@ const AlertForm = ({
         <AlertInfo />
         <Scope setOrgModalOpen={setOrgModalOpen} organizations={organizations} />
         <RequiredResponseTime />
-        {/*         <Templates />
-         */}
+        <Templates />
         <Aliases />
         <RuleLogic />
       </Box>

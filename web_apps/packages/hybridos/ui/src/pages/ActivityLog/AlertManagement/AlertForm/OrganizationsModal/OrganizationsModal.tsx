@@ -46,7 +46,7 @@ const EditOrganizationsModal: React.FC<EditOrganizationsModalProps> = ({
   const theme = useTheme() as ThemeType;
 
   const generateOrganizationRows = () => updatedOrganizations
-    .sort((a, b) => (a.id || '').toString().localeCompare(b.id || ''))
+    .sort((a, b) => (a.id || '').toString().localeCompare(b.id || '', undefined, { numeric: true }))
     .map((organization) => (
       <OrganizationRow
         organization={organization}

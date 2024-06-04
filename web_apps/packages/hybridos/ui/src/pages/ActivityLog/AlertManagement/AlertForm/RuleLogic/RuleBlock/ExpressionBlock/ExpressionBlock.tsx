@@ -63,11 +63,7 @@ const ExpressionBlock = ({
           handleFieldChange={handleFieldChange}
         />
       )}
-      <MessageRow
-        expression={expressionToUse}
-        allExpressions={expressions}
-        handleFieldChange={handleFieldChange}
-      />
+      <MessageRow expression={expressionToUse} />
       <Divider variant="fullWidth" orientation="horizontal" />
     </Box>
   );

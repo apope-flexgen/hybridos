@@ -25,6 +25,7 @@ const RuleLogic = () => {
         </Box>
         <Box sx={formRowContentsSx}>
           <RuleBlock
+            templates={alertValues.templates || []}
             conditions={alertValues.conditions}
             aliases={alertValues.aliases}
             handleFieldChange={handleFieldChange}

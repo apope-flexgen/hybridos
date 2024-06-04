@@ -33,16 +33,9 @@ const Aliases = () => {
   );
 
   const generateAliasRows = () => (alertValues.aliases && alertValues.aliases.length > 0
-    ? alertValues.aliases.sort((a, b) => a.id.toString().localeCompare(b.id))
+    ? alertValues.aliases.sort((a, b) => a.id.toString().localeCompare(b.id, undefined, { numeric: true }))
     : []
-  ).map((alias) => (
-    <AliasRow
-      alias={alias}
-      handleFieldChange={handleFieldChange}
-      removeRow={removeRow}
-      allAliases={alertValues.aliases || []}
-    />
-  ));
+  ).map((alias) => <AliasRow alias={alias} removeRow={removeRow} />);
 
   const [aliasRows, setAliasRows] = useState<JSX.Element[]>(generateAliasRows());
 
@@ -57,7 +50,7 @@ const Aliases = () => {
           <Typography text="Aliases" variant="bodyMBold" />
           <Box sx={expressionRowSx}>
             <Typography text={alertManagementHelperText.aliases} variant="bodyM" />
-            {/* <Typography text="To configure a templated URI, use a wildcard from the list above to denote where the replacement should occur." variant="bodyM" /> */}
+            <Typography text={alertManagementHelperText.aliasWildcard} variant="bodyM" />
           </Box>
         </Box>
         <Box sx={templateFieldsBoxSx}>

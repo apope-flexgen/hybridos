@@ -24,9 +24,6 @@ export type LogicalOperator = '==' | '!=' | '<' | '>=' | '>' | '<=';
 
 export interface AlertFilters {
   resolvedFilter?: boolean;
-  severityFilter?: number;
-  statusFilter?: string;
-  orgFilter?: string;
   limit?: number;
   page?: number;
   order?: number;
@@ -81,13 +78,13 @@ export interface Alias {
 }
 
 export interface Template {
-  id: string;
+  id?: string;
   type: 'list' | 'sequential' | 'range';
   list?: string[];
+  range?: string[];
   from?: number;
   to?: number;
   minWidth?: number;
-  separateAlerts: boolean;
   token: string;
 }
 

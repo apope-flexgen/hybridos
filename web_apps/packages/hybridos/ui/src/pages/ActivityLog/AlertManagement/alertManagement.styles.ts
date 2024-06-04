@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ThemeType, customMUIScrollbar } from '@flexgen/storybook';
 
 export const sitesBoxSx = {
@@ -11,6 +12,13 @@ export const sitesBoxSx = {
 export const actionsBoxSx = { display: 'flex', gap: '8px' };
 
 export const extraPadding = { paddingTop: '0px', height: 'auto' };
+
+export const alertTemplateValueBox = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '12px',
+  width: 'max-content',
+};
 
 export const externalFormRowBoxSx = {
   display: 'flex',
@@ -31,6 +39,8 @@ export const formRowTitleAndDescriptionSx = {
   flexDirection: 'column',
   gap: '2px',
 };
+
+export const displayFlex = { display: 'flex' };
 
 export const templateRowTitleAndDescriptionSx = {
   display: 'flex',
@@ -59,6 +69,16 @@ export const templateRowBoxSx = {
   gap: '16px',
 };
 
+export const aliasRowBoxSx = (theme: ThemeType) => ({
+  display: 'flex',
+  width: 'max-content',
+  gap: '8px',
+  padding: '16px',
+  border: `1px solid ${theme.fgd.other.divider}`,
+  backgroundColor: `${theme.fgd.primary.main}08`,
+  borderRadius: '4px',
+});
+
 export const accordionRowsSx = { display: 'flex', flexDirection: 'column', gap: '0px' };
 export const templateFieldsBoxSx = {
   display: 'flex',
@@ -75,19 +95,24 @@ export const ruleBlockBoxSx = (theme: ThemeType) => ({
   padding: '24px',
   flexDirection: 'column',
   gap: '24px',
-  backgroundColor: `${theme.fgd.primary.main_8p}12`,
+  width: 'max-content',
+  backgroundColor: `${theme.fgd.primary.main}08`,
+  border: `1px solid ${theme.fgd.other.divider}`,
 });
 
 export const setWidth = (width: number | string) => ({
   width: typeof width === 'string' ? width : `${width}px`,
 });
 
-export const messageBoxSx = {
-  width: '80%',
+export const messageBoxSx = (theme: ThemeType) => ({
   display: 'flex',
+  width: 'max-content',
   flexDirection: 'column',
-  gap: '4px',
-};
+  gap: '8px',
+  padding: '16px',
+  border: `1px solid ${theme.fgd.other.divider}`,
+  borderRadius: '4px',
+});
 
 export const durationRowSx = { display: 'flex', gap: '8px', alignItems: 'center' };
 
@@ -110,6 +135,8 @@ export const rightAlignedButton = {
   width: '100%',
   justifyContent: 'flex-end',
 };
+
+export const messageFieldsBoxSx = { display: 'flex', gap: '8px', width: '100%' };
 
 export const orgRowSx = (theme: ThemeType) => ({
   display: 'flex',

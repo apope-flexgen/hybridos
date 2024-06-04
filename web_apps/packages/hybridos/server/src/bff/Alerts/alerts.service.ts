@@ -7,11 +7,7 @@ import {
 import {
   AlertConfiguration,
   AlertConfigurationsResponse,
-  Alias,
-  Comparator,
   Deadline,
-  Duration,
-  Expression,
   Template,
 } from './responses/alertConfig.response';
 import { AlertsRequest } from './dtos/alerts.dto';
@@ -19,15 +15,23 @@ import { FimsMsg, FIMS_SERVICE, IFimsService } from '../../fims/interfaces/fims.
 import { Observable, map } from 'rxjs';
 import { AlertConfigDTO } from './dtos/alertConfig.dto';
 import { AlertsPostResponse } from './responses/alertPost.response';
-import { AlertURIs, AlertConditionalsMapping, LogicalOperators } from './alerts.constants';
+import { AlertURIs } from './alerts.constants';
 import { OrganizationsDTO } from './dtos/organizations.dto';
 import { Organization, OrganizationsResponse } from './responses/organizations.response';
+import {
+  parseAliasForUI,
+  parseConditionsToExpression,
+  parseExpressionToConditions,
+  parseAliasForGoMetrics,
+} from './alerts.parser';
 
 @Injectable()
 export class AlertsService {
   constructor(@Inject(FIMS_SERVICE) private readonly fimsService: IFimsService) {}
+
   private parseQueryToFilters(query: AlertsRequest) {
     const { resolvedFilter, severityFilter, limit, page } = query;
+
     const filter = {
       ...query,
       resolvedFilter: resolvedFilter ? `${resolvedFilter}`.toLowerCase() === 'true' : null,
@@ -53,165 +57,6 @@ export class AlertsService {
     return { data: rows, count };
   }
 
-  private convertToSeconds(value: number | string, unit: 'minute' | 'hour' | 'second') {
-    if (unit === 'minute') return Number(value) * 60;
-    if (unit === 'hour') return Number(value) * 3600;
-    return Number(value);
-  }
-
-  private parseAliasForGoMetrics(alias: string): string {
-    return alias.toString().replace(/ /g, '_');
-  }
-
-  private parseAliasForUI(alias: string): string {
-    const fragments = alias.split('_');
-    return fragments.join(' ');
-  }
-
-  private convertDurationToProperUnit(value: string | number): Duration {
-    if (Number(value) % 3600 === 0) return { value: Number(value) / 3600, unit: 'hour' };
-    if (Number(value) % 60 === 0) return { value: Number(value) / 60, unit: 'minute' };
-    return { value, unit: 'second' };
-  }
-
-  private parseComparatorLiteral(value: string): string {
-    if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false' || !isNaN(Number(value)))
-      return value;
-    return `"${value}"`;
-  }
-
-  private parseExpressionToConditions(
-    expression: string,
-    aliases: Alias[],
-    messages: string[],
-  ): Expression[] {
-    if (expression) {
-      const andOrRegEx = /[\||\&&]+/g;
-      const listOfConditions = expression.split(andOrRegEx);
-      const listOfConnectionOperators: ('or' | 'and')[] = [...expression.matchAll(andOrRegEx)].map(
-        (match) => (match[0] === '||' ? 'or' : 'and'),
-      );
-
-      const conditions: Expression[] = listOfConditions.map((condition, index) => {
-        let expressionWithoutDuration = condition;
-        let durationSeconds = '';
-        if (condition.includes('Duration')) {
-          const expressionWithoutParens = condition.split(/[\)\(]+/g)[1];
-          durationSeconds = expressionWithoutParens.split(',')[1];
-          const restOfExpression = expressionWithoutParens.split(',')[0];
-          expressionWithoutDuration = restOfExpression;
-        }
-
-        let conditional = '';
-        LogicalOperators.forEach((operator) => {
-          if (expressionWithoutDuration.includes(` ${operator} `)) conditional = operator;
-        });
-
-        const comparator1Value = expressionWithoutDuration.split(conditional)[0].trim();
-
-        const comparator1: Comparator = {
-          type: 'alias',
-          value: this.parseAliasForUI(comparator1Value),
-        };
-
-        const comparator2Value = expressionWithoutDuration.split(conditional)[1].trim();
-        const comparator2Type = aliases.some((alias) =>
-          comparator2Value.includes(this.parseAliasForGoMetrics(alias.alias)),
-        )
-          ? 'alias'
-          : 'literal';
-        const comparator2: Comparator = {
-          type: comparator2Type,
-          value:
-            comparator2Type === 'alias'
-              ? this.parseAliasForUI(comparator2Value)
-              : comparator2Value.replaceAll(/['"]+/g, ''),
-        };
-
-        let connectionOperator = index !== 0 ? listOfConnectionOperators[index - 1] : null;
-
-        const message = messages.find((message) => message[condition.trim()] !== undefined);
-        let messageToSend = message[condition.trim()] || '';
-
-        aliases.forEach((alias) => {
-          if (message[condition.trim()].includes(`{${alias.alias}}`)) {
-            messageToSend = message[condition.trim()].replaceAll(
-              `{${alias.alias}}`,
-              `{${this.parseAliasForUI(alias.alias)}}`,
-            );
-          }
-        });
-
-        const mappedCondition: Expression = {
-          index,
-          connectionOperator,
-          comparator1,
-          conditional,
-          comparator2,
-          duration: durationSeconds ? this.convertDurationToProperUnit(durationSeconds) : undefined,
-          message: messageToSend,
-        };
-
-        return mappedCondition;
-      });
-      return conditions;
-    }
-    return [];
-  }
-
-  private parseConditionsToExpression(
-    conditions: Expression[],
-    aliases: Alias[],
-  ): { expression: string; messages: { [key: string]: string }[] } {
-    const sortedExpressions = conditions.sort((expression1, expression2) => {
-      return expression1.index - expression2.index;
-    });
-
-    let expressionString = '';
-    let messages: { [key: string]: string }[] = [];
-
-    sortedExpressions.forEach((expression) => {
-      const comparator1Value = this.parseAliasForGoMetrics(expression.comparator1.value.toString());
-
-      const comparator2Value =
-        expression.comparator2.type === 'alias'
-          ? this.parseAliasForGoMetrics(expression.comparator2.value.toString())
-          : this.parseComparatorLiteral(expression.comparator2.value.toString());
-
-      const connectionOperator = expression.connectionOperator
-        ? AlertConditionalsMapping[expression.connectionOperator]
-        : '';
-
-      let newExpression = `${comparator1Value} ${expression.conditional} ${comparator2Value}`;
-      if (expression.duration) {
-        const durationInSeconds = this.convertToSeconds(
-          expression.duration.value,
-          expression.duration.unit,
-        );
-        newExpression = `Duration(${newExpression}, ${durationInSeconds})`;
-      }
-
-      // if the user formatted values for aliases to be displayed in the message
-      // parse the aliases correctly so go metrics can understand them
-      // proper formatting -> {ESS 2 SOC} -> {ess_2_soc}
-      const bracesRegex = /\{(.*?)\}/g;
-      let formattedMessage = '';
-      expression.message.split(bracesRegex).forEach((piece) => {
-        const alias = aliases.find((alias: Alias) => `${alias.alias}` === piece);
-        if (alias) formattedMessage += `{${this.parseAliasForGoMetrics(alias.alias)}}`;
-        else formattedMessage += `${piece}`;
-      });
-
-      messages.push({ [newExpression]: formattedMessage });
-
-      newExpression = ` ${connectionOperator} ${newExpression}`;
-
-      expressionString += newExpression;
-    });
-
-    return { expression: expressionString.trim(), messages };
-  }
-
   private convertDeadlineToProperUnit(value: string | number): Deadline {
     if (Number(value) % 60 === 0) return { value: Number(value) / 60, unit: 'hour' };
     return { value, unit: 'minute' };
@@ -225,11 +70,7 @@ export class AlertsService {
         severity: alert.severity,
         organization: alert.organization,
         deadline: this.convertDeadlineToProperUnit(alert.deadline),
-        conditions: this.parseExpressionToConditions(
-          alert.expression,
-          alert.aliases,
-          alert.messages,
-        ),
+        conditions: parseExpressionToConditions(alert.expression, alert.aliases, alert.messages),
         title: alert.title || '',
         enabled: alert.enabled,
         last_trigger_time: alert.lastTriggered || '',
@@ -238,11 +79,15 @@ export class AlertsService {
             ? alert.aliases.map((aliasObject, index) => ({
                 ...aliasObject,
                 id: index,
-                alias: this.parseAliasForUI(aliasObject.alias),
+                alias: parseAliasForUI(aliasObject.alias),
                 type:
                   aliasObject.type === 'float' || aliasObject.type === 'int'
                     ? 'number'
                     : aliasObject.type,
+                uri:
+                  aliasObject.uri.charAt(0) === '/'
+                    ? aliasObject.uri.substring(1)
+                    : aliasObject.uri,
               }))
             : alert.aliases,
       }));
@@ -254,35 +99,63 @@ export class AlertsService {
     return Number(value) * 60;
   }
 
+  private parseAlertConfigForPost(alertConfigDTO: AlertConfigDTO) {
+    const aliasesWithProperType = alertConfigDTO.aliases
+      ? alertConfigDTO.aliases.map((alias) => ({
+          ...alias,
+          type: alias.type === 'number' ? 'float' : alias.type,
+        }))
+      : null;
+    const aliasesWithProperFormatting = aliasesWithProperType.map((aliasObject) => ({
+      ...aliasObject,
+      alias: parseAliasForGoMetrics(aliasObject.alias),
+      uri: aliasObject.uri.charAt(0) === '/' ? aliasObject.uri : `/${aliasObject.uri}`,
+    }));
+    const deadlineInMinutes = alertConfigDTO.deadline
+      ? this.convertToMinutes(alertConfigDTO.deadline.value, alertConfigDTO.deadline.unit)
+      : null;
+    const { expression, messages } = alertConfigDTO.conditions
+      ? parseConditionsToExpression(
+          alertConfigDTO.conditions,
+          alertConfigDTO.aliases,
+          alertConfigDTO.templates || [],
+        )
+      : null;
+
+    const newAlertConfig = {
+      title: alertConfigDTO.title,
+      deadline: deadlineInMinutes,
+      messages,
+      severity: alertConfigDTO.severity,
+      organization: alertConfigDTO.organization,
+      templates: (alertConfigDTO.templates || []).map((template) => {
+        const clone = template;
+        if (template.id && template.id.includes('temp')) delete clone.id;
+        return {
+          ...clone,
+          token: `{${template.token}}`,
+        };
+      }),
+      expression,
+      aliases: aliasesWithProperFormatting,
+      enabled: alertConfigDTO.enabled,
+      deleted: alertConfigDTO.deleted,
+    };
+
+    Object.keys(newAlertConfig).forEach((key) =>
+      newAlertConfig[key] === undefined || newAlertConfig[key] === null
+        ? delete newAlertConfig[key]
+        : {},
+    );
+
+    return newAlertConfig;
+  }
+
   async addNewConfig(
     alertConfigDTO: AlertConfigDTO,
     username: string,
   ): Promise<AlertsPostResponse> {
-    const { title, deadline, severity, organization, aliases, templates, conditions, enabled } =
-      alertConfigDTO;
-    const aliasesWithProperType = aliases.map((alias) => ({
-      ...alias,
-      type: alias.type === 'number' ? 'float' : alias.type,
-    }));
-    const aliasesWithProperFormatting = aliasesWithProperType.map((aliasObject) => ({
-      ...aliasObject,
-      alias: this.parseAliasForGoMetrics(aliasObject.alias),
-    }));
-    const deadlineInMinutes = this.convertToMinutes(deadline.value, deadline.unit);
-    const { expression, messages } = this.parseConditionsToExpression(conditions, aliases);
-
-    const newAlertConfig = {
-      title,
-      deadline: deadlineInMinutes,
-      messages,
-      sites: [],
-      severity,
-      organization,
-      templates,
-      expression,
-      aliases: aliasesWithProperFormatting,
-      enabled,
-    };
+    const newAlertConfig = this.parseAlertConfigForPost(alertConfigDTO);
 
     const postNewAlertResponse = await this.fimsService.send({
       method: 'post',
@@ -299,53 +172,7 @@ export class AlertsService {
     alertConfigDTO: AlertConfigDTO,
     username: string,
   ): Promise<AlertsPostResponse> {
-    const {
-      title,
-      deadline,
-      severity,
-      organization,
-      aliases,
-      templates,
-      conditions,
-      enabled,
-      deleted,
-    } = alertConfigDTO;
-
-    const aliasesWithProperType = aliases
-      ? aliases.map((alias) => ({
-          ...alias,
-          type: alias.type === 'number' ? 'float' : alias.type,
-        }))
-      : null;
-    const aliasesWithProperFormatting = aliasesWithProperType.map((aliasObject) => ({
-      ...aliasObject,
-      alias: this.parseAliasForGoMetrics(aliasObject.alias),
-    }));
-    const deadlineInMinutes = deadline
-      ? this.convertToMinutes(deadline.value, deadline.unit)
-      : null;
-    const { expression, messages } = conditions
-      ? this.parseConditionsToExpression(conditions, aliases)
-      : null;
-
-    const newAlertConfig = {
-      title,
-      deadline: deadlineInMinutes,
-      messages,
-      severity,
-      organization,
-      templates,
-      expression,
-      aliases: aliasesWithProperFormatting,
-      enabled,
-      deleted,
-    };
-
-    Object.keys(newAlertConfig).forEach((key) =>
-      newAlertConfig[key] === undefined || newAlertConfig[key] === null
-        ? delete newAlertConfig[key]
-        : {},
-    );
+    const newAlertConfig = this.parseAlertConfigForPost(alertConfigDTO);
 
     const updatedConfig = {
       ...newAlertConfig,
@@ -367,8 +194,12 @@ export class AlertsService {
     const fimsResponse: FimsMsg = await this.fimsService.get(AlertURIs.ALERT_CONFIGS);
     const data = this.parseAlertConfigurationsFromEvents(fimsResponse.body.rows || []);
     const templates: Template[] = fimsResponse.body.templates;
+    const formattedTemplates = templates.map((template) => ({
+      ...template,
+      token: template.token.replaceAll('{', '').replaceAll('}', ''),
+    }));
 
-    return { data, templates };
+    return { data, templates: formattedTemplates };
   }
 
   getAlertingObservable = (): Observable<any> => {

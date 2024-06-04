@@ -45,7 +45,11 @@ const TemplateRow = ({
 
   return (
     <Accordion
-      heading={template.token}
+      heading={
+        template.token && !template.token.includes('{')
+          ? `{${template.token}}`
+          : template.token || '{}'
+      }
       expanded={expanded}
       onChange={(isExpanded) => {
         setExpanded(isExpanded);
@@ -66,17 +70,13 @@ const TemplateRow = ({
             range={template.type === 'range'}
           />
         )}
-        {/*         <SeparateAlerts
-          template={template}
-          handleTemplateFieldChange={handleTemplateFieldChange}
-        /> */}
         <Box sx={rightAlignedButton}>
           <MuiButton
             variant="text"
             startIcon="Close"
             color="error"
             label="Delete template"
-            onClick={() => removeRow(template.id)}
+            onClick={() => removeRow(template.id || '')}
           />
         </Box>
       </Box>

@@ -1,6 +1,4 @@
-import {
-  Typography, Divider, Switch, MuiButton,
-} from '@flexgen/storybook';
+import { Typography, Divider, MuiButton } from '@flexgen/storybook';
 import Box from '@flexgen/storybook/dist/components/Atoms/Box/Box';
 
 import { useState, useEffect } from 'react';
@@ -16,7 +14,6 @@ import {
   formRowTitleAndDescriptionSx,
   externalFormRowBoxSx,
   templateFieldsBoxSx,
-  templateSwitchSx,
   accordionRowsSx,
 } from 'src/pages/ActivityLog/AlertManagement/alertManagement.styles';
 import { Template } from 'src/pages/ActivityLog/activityLog.types';
@@ -28,18 +25,21 @@ const Templates = () => {
     const newTemplates = alertValues.templates?.filter(
       (template: Template) => template.id !== templateForRemoval,
     );
+
     handleFieldChange('templates', newTemplates);
   };
 
-  const initialTemplates = generateInitialTemplates(alertValues.templates || []);
+  const addNewRow = () => {
+    const initialTemplates = generateInitialTemplates(alertValues.templates || []);
 
-  const addNewRow = () => handleFieldChange(
-    'templates',
-    alertValues.templates ? [...alertValues.templates, ...initialTemplates] : initialTemplates,
-  );
+    handleFieldChange(
+      'templates',
+      alertValues.templates ? [...alertValues.templates, ...initialTemplates] : initialTemplates,
+    );
+  };
 
   const generateTemplateRows = () => (alertValues.templates && alertValues.templates.length > 0
-    ? alertValues.templates.sort((a, b) => a.id.toString().localeCompare(b.id))
+    ? alertValues.templates.sort((a, b) => (a.id || '').toString().localeCompare(b.id || '', undefined, { numeric: true }))
     : []
   ).map((template) => (
     <TemplateRow
@@ -50,19 +50,11 @@ const Templates = () => {
     />
   ));
 
-  const [showTemplateFields, setShowTemplateFields] = useState<boolean>(
-    alertValues.templates ? alertValues.templates.length > 0 : false,
-  );
   const [templateRows, setTemplateRows] = useState<JSX.Element[]>(generateTemplateRows());
 
   useEffect(() => {
     setTemplateRows(generateTemplateRows());
   }, [alertValues.templates]);
-
-  const handleToggleTemplatesOff = () => {
-    setShowTemplateFields(!showTemplateFields);
-    handleFieldChange('templates', []);
-  };
 
   return (
     <Box sx={externalFormRowBoxSx}>
@@ -72,14 +64,8 @@ const Templates = () => {
           <Typography text={alertManagementHelperText.templates} variant="bodyM" />
         </Box>
         <Box sx={templateFieldsBoxSx}>
-          <Box sx={templateSwitchSx}>
-            <Switch value={showTemplateFields} onChange={handleToggleTemplatesOff} />
-            <Typography text="Configure templates" variant="bodySBold" />
-          </Box>
-          <Box sx={accordionRowsSx}>{showTemplateFields && templateRows}</Box>
-          {showTemplateFields && (
-            <MuiButton variant="text" label="Add Template" startIcon="Add" onClick={addNewRow} />
-          )}
+          <Box sx={accordionRowsSx}>{templateRows}</Box>
+          <MuiButton variant="text" label="Add Template" startIcon="Add" onClick={addNewRow} />
         </Box>
       </Box>
       <Divider variant="fullWidth" orientation="horizontal" />

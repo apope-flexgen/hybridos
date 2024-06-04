@@ -6,10 +6,10 @@ export class Template {
   id: string;
   type: 'list' | 'sequential' | 'range';
   list?: string[];
+  range?: string[];
   from?: number;
   to?: number;
   minWidth?: number;
-  separateAlerts?: boolean;
   token: string;
 }
 export interface Alias {

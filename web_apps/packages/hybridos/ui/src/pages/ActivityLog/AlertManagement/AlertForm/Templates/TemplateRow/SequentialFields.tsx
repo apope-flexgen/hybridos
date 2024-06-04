@@ -60,6 +60,8 @@ const SequentialFields = ({ handleTemplateFieldChange, template }: SequentialFie
           validationRegEx="positiveIntegers"
           value={template.minWidth?.toString() || '1'}
           onChange={(e) => handleTemplateFieldChange('minWidth', Number(e.target.value))}
+          label="Min Width"
+          placeholder={1}
         />
       </Box>
     </Box>

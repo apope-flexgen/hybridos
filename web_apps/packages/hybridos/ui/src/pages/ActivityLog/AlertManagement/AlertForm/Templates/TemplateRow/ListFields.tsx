@@ -36,21 +36,31 @@ const ListFields = ({ handleTemplateFieldChange, template, range }: ListFieldsPr
           </>
         )}
       </Box>
-      <Box sx={templateFieldsBoxSx}>
-        <TextField
-          required
-          label="Replacement Values"
-          value={
-            template.type === 'list'
-              ? (template.list || []).join(',')
-              : `${template.from}..${template.to}`
-          }
-          onChange={(e) => handleTemplateFieldChange(
-            'list',
-            e.target.value.split(',').map((v) => v.replace(' ', '')),
-          )}
-        />
-      </Box>
+      {range ? (
+        <Box sx={templateFieldsBoxSx}>
+          <TextField
+            required
+            label="Replacement Values"
+            value={(template.range || []).join(',')}
+            onChange={(e) => handleTemplateFieldChange(
+              'range',
+              e.target.value.split(',').map((v) => v.replace(' ', '')),
+            )}
+          />
+        </Box>
+      ) : (
+        <Box sx={templateFieldsBoxSx}>
+          <TextField
+            required
+            label="Replacement Values"
+            value={(template.list || []).join(',')}
+            onChange={(e) => handleTemplateFieldChange(
+              'list',
+              e.target.value.split(',').map((v) => v.replace(' ', '')),
+            )}
+          />
+        </Box>
+      )}
     </Box>
     {range && (
       <>

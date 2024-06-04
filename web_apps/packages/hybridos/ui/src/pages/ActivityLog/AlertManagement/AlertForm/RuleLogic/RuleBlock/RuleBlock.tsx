@@ -22,7 +22,7 @@ const RuleBlock = ({ conditions, aliases, handleFieldChange }: RuleBlockProps) =
   const generateExpressionBlocks = (): JSX.Element | JSX.Element[] => {
     if (conditions.length > 0) {
       return conditions
-        .sort((a, b) => a.index.toString().localeCompare(b.index.toString()))
+        .sort((a, b) => a.index.toString().localeCompare(b.index.toString(), undefined, { numeric: true }))
         .map((expression) => (
           <ExpressionBlock
             expressions={conditions}
