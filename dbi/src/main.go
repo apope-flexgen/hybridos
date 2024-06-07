@@ -97,23 +97,27 @@ func main() {
 				Frags:  copsFrag,
 			})
 			if err != nil {
-				log.Errorf("could forward %s message to cops: %v", msg.Uri, err)
+				log.Errorf("could not forward %s message to cops: %v", msg.Uri, err)
 			}
 		}
-
+		var reply interface{}
 		frags := strings.SplitN(msg.Uri, "/", 5)[1:]
 
 		// SPECIAL CASE: frags[1] (collection) == "audit" (#BAD-186)
 		// expected format: /dbi/audit/audit_log_TIMESTAMP
 		//					^	^     ^
 		//			   ignore	db 	  document
+		if len(frags) < 2 {
+			log.Errorf("insufficient frags on URI: %v", msg.Uri)
+			reply = fmt.Sprintf("insufficient frags on URI: %v", msg.Uri)
+			continue
+		}
 		if frags[1] == "audit" {
 			frags[0] = "audit" // db
 			frags[1] = "log"   // collection
 			// frags[2] is still the document
 		}
 
-		var reply interface{}
 		switch msg.Method { // parse request type
 		case "get":
 			result, err := api.GET(frags)
