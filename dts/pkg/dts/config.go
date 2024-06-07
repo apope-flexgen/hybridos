@@ -3,7 +3,7 @@ package dts
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/flexgen-power/hybridos/go_flexgen/cfgfetch"
@@ -16,6 +16,7 @@ type Config struct {
 	FailedValidatePath             string                  `json:"failed_validate_path"`               // Path to which dts saves failed archives
 	FailedWritePath                string                  `json:"failed_write_path"`                  // Path to which archives that failed a write are moved
 	FwdPath                        string                  `json:"forward"`                            // Path to which dts saves successful archives
+	NumExtractWorkers              int                     `json:"num_extract_workers"`                // Number of workers extracting data files from archives running in parallel
 	NumValidateWorkers             int                     `json:"num_validate_workers"`               // Number of validation workers running in parallel
 	NumInfluxPrepareBatchesWorkers int                     `json:"num_influx_prepare_batches_workers"` // Number of workers preparing batch points in parallel in the influx writer
 	NumInfluxSendBatchesWorkers    int                     `json:"num_influx_send_batches_workers"`    // Number of workers sending batches in parallel to influx
@@ -74,7 +75,7 @@ func ParseConfig(cfgSource string) error {
 	} else {
 		log.MsgInfo("Config source set to read from a file")
 		// Read config from files
-		configBytes, err := ioutil.ReadFile(cfgSource)
+		configBytes, err := os.ReadFile(cfgSource)
 		if err != nil {
 			return fmt.Errorf("could not read config file: %w", err)
 		}
@@ -96,6 +97,7 @@ func (cfg *Config) UnmarshalJSON(data []byte) error {
 		RetryConnectPeriodSeconds: 1,
 		InfluxAddr:                "localhost:8086",
 		MongoAddr:                 "localhost:27017",
+		NumExtractWorkers:         1,
 	}
 
 	err := json.Unmarshal(data, tmpCfg)
@@ -153,7 +155,7 @@ func validateConfig() error {
 
 	// check that extensions are known
 	for _, ext := range GlobalConfig.Extensions {
-		if ext != ".tar.gz" && ext != ".parquet.gz" {
+		if ext != ".tar.gz" && ext != ".batchpqtgz" {
 			return fmt.Errorf("configured extension %s is unknown", ext)
 		}
 	}

@@ -27,8 +27,12 @@ type Pipeline struct {
 	Collators []*MsgCollator
 
 	// takes encoders from the collator and archives the encoded data
-	// into a .tar.gz file
+	// into data files
 	archivers []*MsgArchiver
+
+	// takes data files from archiver and batches them into a
+	// single compressed file per batch
+	batchers []*ArchiveBatcher
 }
 
 // Runs a complete pipeline for listening to messages and archiving them.
@@ -68,6 +72,7 @@ func (p *Pipeline) Run(cfg Config, group *errgroup.Group, groupContext context.C
 
 	p.Collators = make([]*MsgCollator, len(laneConfigsArray))
 	p.archivers = make([]*MsgArchiver, len(laneConfigsArray))
+	p.batchers = make([]*ArchiveBatcher, len(laneConfigsArray))
 	for i, lane := range laneConfigsArray {
 		if lane == nil {
 			continue
@@ -84,12 +89,20 @@ func (p *Pipeline) Run(cfg Config, group *errgroup.Group, groupContext context.C
 			return fmt.Errorf("failed to start encoder stage: %w", err)
 		}
 
-		// archiver receives batches of encoders and archives each one into a .tar.gz file
+		// archiver receives batches of encoders and archives each one into a data file
 		log.Debugf("Starting archiver for lane %d", i+1)
 		p.archivers[i] = NewMsgArchiver(*lane, fmt.Sprint(i+1), p.Collators[i].Out)
 		err = p.archivers[i].Start(group, groupContext)
 		if err != nil {
 			return fmt.Errorf("failed to start archiver stage: %w", err)
+		}
+
+		// batcher receives batches of archives and creates a single file per batch
+		log.Debugf("Starting batcher for lane %d", i+1)
+		p.batchers[i] = NewArchiveBatcher(cfg, *lane, fmt.Sprint(i+1), p.archivers[i].Out)
+		err = p.batchers[i].Start(group, groupContext)
+		if err != nil {
+			return fmt.Errorf("failed to start batcher stage: %w", err)
 		}
 	}
 

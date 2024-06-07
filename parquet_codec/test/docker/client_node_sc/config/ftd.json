@@ -1,0 +1,46 @@
+{
+    "client": "client",
+    "site": "site",
+    "1": {
+        "archive": "/home/archives_cold",
+        "db_name": "stress_test_sc",
+        "num_archive_workers": 1,
+        "batchpqtgz": true,
+        "period": 300,
+        "uris": [
+            {
+                "destination": "influx",
+                "group": "assets_ess_group",
+                "measurement": "ess",
+                "uri": "/assets/ess"
+            },
+            {
+                "destination": "influx",
+                "group": "components_flexgen_ess_group",
+                "measurement": "flexgen_ess",
+                "uri": "/components"
+            }
+        ]
+    },
+    "2": {
+        "archive": "/home/archives_warm",
+        "db_name": "stress_test_sc",
+        "num_archive_workers": 1,
+        "batchpqtgz": true,
+        "period": 60,
+        "uris": [
+            {
+                "destination": "influx",
+                "group": "assets_ess_group",
+                "measurement": "ess",
+                "uri": "/assets/ess"
+            },
+            {
+                "destination": "influx",
+                "group": "components_flexgen_ess_group",
+                "measurement": "flexgen_ess",
+                "uri": "/components"
+            }
+        ]
+    }
+}

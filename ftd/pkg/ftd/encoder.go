@@ -78,21 +78,32 @@ func (encoder *Encoder) Encode(bodyMap map[string]interface{}) error {
 	}
 }
 
-func (encoder *Encoder) CreateArchive(path, prefix string) error {
+// Create an archive and write it to local disk
+func (encoder *Encoder) CreateArchiveLocal(path, prefix string) error {
 	if encoder.isParquet {
-		_, err := encoder.pqt.CreateArchive(path, prefix, encoder.DataSourceId)
-		if err != nil {
-			return fmt.Errorf("FTD encoder parquet archive creation error: %w", err)
-		}
-
+		// Direct-to-disk archive creation not supported for fims_codec archives
+		return fmt.Errorf("tried to create .parquet.gz archive directly to disk even though that's not supported")
 	} else {
 		_, _, err := encoder.fims.CreateArchive(path, prefix)
 		if err != nil {
 			return fmt.Errorf("FTD encoder fims_codec archive creation error: %w", err)
 		}
+		return nil
 	}
+}
 
-	return nil
+// Create an archive in memory
+func (encoder *Encoder) CreateArchiveMem() (data []byte, err error) {
+	if encoder.isParquet {
+		data, err := encoder.pqt.CreateArchiveMem()
+		if err != nil {
+			return nil, fmt.Errorf("FTD encoder parquet archive creation error: %w", err)
+		}
+		return data, nil
+	} else {
+		// In-memory archive creation not supported for fims_codec archives
+		return nil, fmt.Errorf("tried to create in-memory archive with fims_codec even though that's not supported")
+	}
 }
 
 // returns message count as described by the proper encoder as uint16

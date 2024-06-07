@@ -1,0 +1,88 @@
+services:
+  powercloud_stress_test_client_sc:
+    build:
+      context: ./client_node_image
+      args:
+        imageName: rocky9
+        imageTag: devel
+    image:
+      flexgen/parquet_codec/test/docker/client_node:test
+    tty: true
+    volumes:
+      - ./client_node_sc/config/:/home/config/
+      - /usr/local/bin/:/usr/local/bin/
+      - /usr/local/lib/:/usr/local/lib/
+      - ./build/fims_simulator:/home/fims_simulator
+      - ./client_node_sc/run.sh:/home/scripts/run.sh
+    secrets:
+      - client_id_rsa
+      - client_id_rsa.pub
+    cap_add:
+      - NET_ADMIN
+
+  powercloud_stress_test_client_ec:
+    build:
+      context: ./client_node_image
+      args:
+        imageName: rocky9
+        imageTag: devel
+    image:
+      flexgen/parquet_codec/test/docker/client_node:test
+    deploy:
+      replicas: 1
+    tty: true
+    volumes:
+      - ./client_node_ec/config/:/home/staging/
+      - /usr/local/bin/:/usr/local/bin/
+      - /usr/local/lib/:/usr/local/lib/
+      - ./build/fims_simulator:/home/fims_simulator
+      - ./client_node_ec/run.sh:/home/scripts/run.sh
+    secrets:
+      - client_id_rsa
+      - client_id_rsa.pub
+    cap_add:
+      - NET_ADMIN
+
+  powercloud_stress_test_server:
+    build:
+      context: ./server_node
+      args:
+        imageName: rocky9
+        imageTag: devel
+    image:
+      flexgen/parquet_codec/test/docker/server_node:test
+    hostname:
+      powercloud_server
+    tty: true
+    volumes:
+      - ./server_node/config/:/home/config/
+      - /usr/local/bin/:/usr/local/bin/
+      - ./server_node/run.sh:/home/scripts/run.sh
+    secrets:
+      - client_id_rsa.pub
+    cap_add:
+      - NET_ADMIN
+
+  powercloud_stress_test_mongo:
+    image: mongo:latest
+    hostname: mongo-container
+    ports:
+    - 27017:27017
+
+  powercloud_stress_test_influx:
+    image: influxdb:1.8
+    hostname: influx-container
+    ports:
+    - 8086:8086
+
+  powercloud_stress_test_grafana:
+    image: grafana/grafana-oss
+    container_name: influx-ui
+    ports:
+    - 3000:3000
+
+secrets:
+  client_id_rsa:
+    file: ./build/client_ssh/id_rsa
+  client_id_rsa.pub:
+    file: ./build/client_ssh/id_rsa.pub

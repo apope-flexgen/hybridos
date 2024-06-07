@@ -11,7 +11,7 @@ import (
 )
 
 type MongoWriter struct {
-	in    <-chan *archiveData
+	in    <-chan *decodedDataFileData
 	DbUrl string // Address of the mongo server
 
 	WriteCnt    int
@@ -22,7 +22,7 @@ type MongoWriter struct {
 }
 
 // Allocates a new db writer stage to the given destination
-func NewMongoWriter(inputChannel <-chan *archiveData) *MongoWriter {
+func NewMongoWriter(inputChannel <-chan *decodedDataFileData) *MongoWriter {
 	return &MongoWriter{
 		in: inputChannel,
 	}
@@ -67,28 +67,18 @@ func (writer *MongoWriter) sendDataUntil(done <-chan struct{}) error {
 		case <-done:
 			return nil
 		case data := <-writer.in:
-			writer.curFileName = data.archiveFilePath
+			writer.curFileName = data.dataFileName
 
 			err := writer.sendData(data) // initiate write sequence
 			if err == nil {
 				//happy path
-				log.Debugf("Successfully written to %s for archive %s", "mongo", data.archiveFilePath)
+				log.Debugf("Successfully written to %s for archive %s", "mongo", data.dataFileName)
 
-				err := removeArchive(data.archiveFilePath, false, "")
-				if err != nil {
-					log.Errorf("Unable to remove archive %s", data.archiveFilePath)
-				}
 				writer.WriteCnt++
-				log.Debugf("[%s writer] Removed successfully written file %s", "mongo", data.archiveFilePath)
+				log.Debugf("[%s writer] Removed successfully written file %s", "mongo", data.dataFileName)
 			} else {
-				log.Errorf("Error writing to database for file %s with error: %v", data.archiveFilePath, err)
+				log.Errorf("Error writing to database for file %s with error: %v", data.dataFileName, err)
 				writer.FailCnt++
-
-				log.Warnf("Write failed for archive %s, removing it", data.archiveFilePath)
-				err := removeArchive(data.archiveFilePath, true, GlobalConfig.FailedWritePath)
-				if err != nil {
-					log.Errorf("Unable to remove failed write archive %s, continuing without deleting, err: %v", data.archiveFilePath, err)
-				}
 
 				// if we fail to ping the database, terminate the writer
 				err = writer.mongoConn.Ping()
@@ -100,10 +90,10 @@ func (writer *MongoWriter) sendDataUntil(done <-chan struct{}) error {
 	}
 }
 
-func (writer *MongoWriter) sendData(data *archiveData) error {
-	log.Tracef("[mongodb_client write call] Beginning to write to database for file %s", data.archiveFilePath)
+func (writer *MongoWriter) sendData(data *decodedDataFileData) error {
+	log.Tracef("[mongodb_client write call] Beginning to write to database for file %s", data.dataFileName)
 	err := writer.mongoConn.Write(data.db, data.measurement, data.msgBodies) // attempt mongo write
-	log.Tracef("[mongodb_client write call] Returned from write to database for file %s", data.archiveFilePath)
+	log.Tracef("[mongodb_client write call] Returned from write to database for file %s", data.dataFileName)
 	return err
 }
 

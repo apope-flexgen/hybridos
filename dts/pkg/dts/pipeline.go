@@ -14,8 +14,11 @@ type Pipeline struct {
 	// Monitors input path for archives to process
 	monitor *ArchiveMonitor
 
-	// Carries the filepaths of archives noticed by the monitor to be decoded by the validator
+	// Carries the filepaths of archive files noticed by the monitor to be extracted by the extractor
 	archiveQueue buffman.BufferManager
+
+	// Extracts data files from archive files
+	extractor *ArchiveExtractor
 
 	// Decodes and validates archive data
 	Validator *ArchiveValidator
@@ -36,12 +39,20 @@ func (p *Pipeline) Run(group *errgroup.Group, groupContext context.Context) erro
 		return fmt.Errorf("failed to start monitor stage: %w", err)
 	}
 
-	// open buffer manager for validator work
+	// open buffer manager for extractor work
 	p.archiveQueue = buffman.New(buffman.Stack, GlobalConfig.NumValidateWorkers, p.monitor.Out)
+
+	// start extractor stage
+	log.MsgDebug("Starting extractor")
+	p.extractor = NewArchiveExtractor(p.archiveQueue.Out())
+	err = p.extractor.Start(group, groupContext)
+	if err != nil {
+		return fmt.Errorf("failed to start extractor stage: %w", err)
+	}
 
 	// start thread for validator
 	log.MsgDebug("Starting validator")
-	p.Validator = NewArchiveValidator(p.archiveQueue.Out())
+	p.Validator = NewArchiveValidator(p.extractor.Out)
 	err = p.Validator.Start(group, groupContext)
 	if err != nil {
 		return fmt.Errorf("failed to start validator stage: %w", err)

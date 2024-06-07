@@ -8,11 +8,13 @@ import (
 
 // Root configuration struct
 type Config struct {
-	Lane1 *LaneConfig `json:"1,omitempty"` // Lowest priority lane configuration
-	Lane2 *LaneConfig `json:"2,omitempty"`
-	Lane3 *LaneConfig `json:"3,omitempty"`
-	Lane4 *LaneConfig `json:"4,omitempty"`
-	Lane5 *LaneConfig `json:"5,omitempty"` // Highest priority lane configuration
+	ClientName string      `json:"client"`      // Name of client whose data we're gathering
+	SiteName   string      `json:"site"`        // Name of site whose data we're gathering
+	Lane1      *LaneConfig `json:"1,omitempty"` // Lowest priority lane configuration
+	Lane2      *LaneConfig `json:"2,omitempty"`
+	Lane3      *LaneConfig `json:"3,omitempty"`
+	Lane4      *LaneConfig `json:"4,omitempty"`
+	Lane5      *LaneConfig `json:"5,omitempty"` // Highest priority lane configuration
 }
 
 // Configuration specific to a data lane
@@ -20,7 +22,7 @@ type LaneConfig struct {
 	DbName            string      `json:"db_name"`
 	ArchivePeriod     int         `json:"period"`
 	ArchivePath       string      `json:"archive"`
-	Parquet           bool        `json:"parquet,omitempty"`
+	BatchParquetGZ    bool        `json:"batchpqtgz,omitempty"`
 	NumArchiveWorkers int         `json:"num_archive_workers"`
 	Uris              []UriConfig `json:"uris"`
 }
@@ -121,8 +123,8 @@ func (cfg *LaneConfig) UnmarshalJSON(data []byte) error {
 
 	// default values
 	tmpCfg := &MethodlessConfigAlias{
-		Parquet:     false,
-		ArchivePath: "/home/hybridos/data",
+		BatchParquetGZ: false,
+		ArchivePath:    "/home/hybridos/data",
 	}
 
 	err := json.Unmarshal(data, tmpCfg)

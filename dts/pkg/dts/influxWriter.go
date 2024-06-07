@@ -15,7 +15,7 @@ import (
 )
 
 type InfluxWriter struct {
-	in                   <-chan *archiveData
+	in                   <-chan *decodedDataFileData
 	preparedBatchesQueue chan *archiveBatches
 	DbUrl                string // Address of the influx server
 
@@ -41,7 +41,7 @@ var retryableErrors []error = []error{
 }
 
 // Allocates a new db writer stage to the given destination
-func NewInfluxWriter(inputChannel <-chan *archiveData) *InfluxWriter {
+func NewInfluxWriter(inputChannel <-chan *decodedDataFileData) *InfluxWriter {
 	return &InfluxWriter{
 		in:                   inputChannel,
 		preparedBatchesQueue: make(chan *archiveBatches),
@@ -95,18 +95,10 @@ func (writer *InfluxWriter) prepareBatchesUntil(done <-chan struct{}) error {
 			preparedBatches, err := writer.prepareBatches(data)
 			if err != nil {
 				log.Errorf("Failed to make batches for influx writing, err: %v", err)
-				err := removeArchive(data.archiveFilePath, true, GlobalConfig.FailedWritePath)
-				if err != nil {
-					log.Errorf("Unable to move archive %s to failure path after failing to prepare its data batches: %v. Continuing without moving the archive.", data.archiveFilePath, err)
-				}
 				continue
 			}
 			select {
 			case <-done:
-				err := removeArchive(data.archiveFilePath, true, GlobalConfig.FailedWritePath)
-				if err != nil {
-					log.Errorf("Unable to move archive %s to failure path after cancellation: %v. Continuing without moving the archive.", data.archiveFilePath, err)
-				}
 				return nil
 			case writer.preparedBatchesQueue <- preparedBatches:
 			}
@@ -114,7 +106,7 @@ func (writer *InfluxWriter) prepareBatchesUntil(done <-chan struct{}) error {
 	}
 }
 
-func (writer *InfluxWriter) prepareBatches(data *archiveData) (*archiveBatches, error) {
+func (writer *InfluxWriter) prepareBatches(data *decodedDataFileData) (*archiveBatches, error) {
 	var batches []influx.BatchPoints
 	err := writer.ensureDB(data.db, GlobalConfig.RetentionPolicies, GlobalConfig.ContinuousQueries) // set up database if it isn't already
 	if err != nil {
@@ -129,13 +121,13 @@ func (writer *InfluxWriter) prepareBatches(data *archiveData) (*archiveBatches, 
 	}
 	sourceTag := path.Base(data.dataSourceId)
 
-	log.Tracef("[influxdb_client make batches call] Beginning to make batches for file %s", data.archiveFilePath)
+	log.Tracef("[influxdb_client make batches call] Beginning to make batches for file %s", data.dataFileName)
 	batches, err = writer.influxConn.MakeBatches(data.db, data.measurement, sourceTag, data.msgTimestamps, data.msgBodies, metadata) // write batch points
-	log.Tracef("[influxdb_client make batches call] Returned from making batches for file %s", data.archiveFilePath)
+	log.Tracef("[influxdb_client make batches call] Returned from making batches for file %s", data.dataFileName)
 	if err != nil {
 		return nil, fmt.Errorf("failed to make influx batches, err: %w", err)
 	}
-	return &archiveBatches{archiveFilePath: data.archiveFilePath, batches: batches}, nil
+	return &archiveBatches{archiveFilePath: data.dataFileName, batches: batches}, nil
 }
 
 // sends batches to a database until told to stop
@@ -155,20 +147,11 @@ func (writer *InfluxWriter) sendBatchesUntil(done <-chan struct{}) error {
 				//happy path
 				log.Debugf("Successfully written to %s for archive %s", "influx", archiveFilePath)
 
-				err := removeArchive(archiveFilePath, false, "")
-				if err != nil {
-					log.Errorf("Unable to remove archive %s", archiveFilePath)
-				}
 				atomic.AddUint64(&writer.WriteCnt, 1)
 				log.Debugf("[%s writer] Removed successfully written file %s", "influx", archiveFilePath)
 			} else {
 				log.Errorf("Error writing to database for file %s with error: %v. Moving it to garbage folder.", archiveFilePath, err)
 				atomic.AddUint64(&writer.FailCnt, 1)
-
-				err := removeArchive(archiveFilePath, true, GlobalConfig.FailedWritePath)
-				if err != nil {
-					log.Errorf("Unable to remove failed write archive %s, continuing without deleting, err: %v", archiveFilePath, err)
-				}
 
 				// if we fail to ping the database, terminate the writer
 				err = writer.influxConn.Ping()

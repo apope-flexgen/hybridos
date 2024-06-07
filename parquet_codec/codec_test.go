@@ -207,7 +207,7 @@ func encodeToTestArchive(uriName string, messages []map[string]interface{}) (arc
 	}
 
 	// call the archive creation API
-	archiveFilePath, err = encoder.CreateArchive(testOutputsDirectoryPath,
+	archiveFilePath, err = encoder.CreateArchiveLocal(testOutputsDirectoryPath,
 		encoder.Metadata["database"]+"_"+encoder.Metadata["measurement"], dataSourceId)
 	if err != nil {
 		return "", fmt.Errorf("error creating archive: %w", err)

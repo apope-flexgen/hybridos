@@ -24,12 +24,16 @@ func generateConfigFromConfigurators(configurators map[string]*uriConfigurator) 
 	cfg = ftd.Config{}
 	report = []string{}
 
+	// root configuration
+	cfg.ClientName = "ansible_should_overwrite_client_name"
+	cfg.SiteName = "ansible_should_overwrite_site_name"
+
 	// lane-wide configuration
 	cfg.Lane1 = &ftd.LaneConfig{
 		DbName:            "ansible_should_overwrite_db_name",
 		ArchivePeriod:     300,
 		ArchivePath:       "/home/hybridos/powercloud/archives_cold",
-		Parquet:           true,
+		BatchParquetGZ:    true,
 		NumArchiveWorkers: 1,
 		Uris:              []ftd.UriConfig{},
 	}
@@ -37,7 +41,7 @@ func generateConfigFromConfigurators(configurators map[string]*uriConfigurator) 
 		DbName:            "ansible_should_overwrite_db_name",
 		ArchivePeriod:     60,
 		ArchivePath:       "/home/hybridos/powercloud/archives_warm",
-		Parquet:           true,
+		BatchParquetGZ:    true,
 		NumArchiveWorkers: 1,
 		Uris:              []ftd.UriConfig{},
 	}

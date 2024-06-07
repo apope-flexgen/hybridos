@@ -1,0 +1,452 @@
+{
+    "client": "client",
+    "site": "site",
+    "1": {
+        "db_name": "stress_test_ec_<HOSTNAME>",
+        "period": 300,
+        "archive": "/home/archives_cold",
+        "batchpqtgz": true,
+        "num_archive_workers": 1,
+        "uris": [
+            {
+                "uri": "/assets/bms",
+                "message_methods": [
+                    "set"
+                ],
+                "destination": "influx",
+                "measurement": "assets_bms_sets"
+            },
+            {
+                "uri": "/assets/bms",
+                "sources": [
+                    "rack_1",
+                    "rack_2",
+                    "rack_3",
+                    "rack_4",
+                    "rack_5",
+                    "rack_6",
+                    "rack_7",
+                    "rack_8",
+                    "rack_9"
+                ],
+                "group": "assets_bms_racks_group_0",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "assets_bms_racks"
+            },
+            {
+                "uri": "/assets/bms",
+                "sources": [
+                    "summary"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "assets_bms_summary"
+            },
+            {
+                "uri": "/assets/pcs",
+                "message_methods": [
+                    "set"
+                ],
+                "destination": "influx",
+                "measurement": "assets_pcs_sets"
+            },
+            {
+                "uri": "/assets/pcs",
+                "sources": [
+                    "module_1",
+                    "module_2",
+                    "module_3",
+                    "module_4",
+                    "module_5",
+                    "module_6"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "assets_pcs_instances"
+            },
+            {
+                "uri": "/assets/pcs",
+                "sources": [
+                    "summary"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "assets_pcs_summary"
+            },
+            {
+                "uri": "/components",
+                "sources": [
+                    "catl_rack_1",
+                    "catl_rack_2",
+                    "catl_rack_3",
+                    "catl_rack_4",
+                    "catl_rack_5",
+                    "catl_rack_6",
+                    "catl_rack_7",
+                    "catl_rack_8",
+                    "catl_rack_9"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "ess_bms_racks"
+            },
+            {
+                "uri": "/components",
+                "sources": [
+                    "bms",
+                    "catl_bms_ems_r",
+                    "catl_ems_bms_rw",
+                    "catl_mbmu_stat_r",
+                    "catl_mbmu_sum_r",
+                    "catl_mbmu_summary_r",
+                    "pcs",
+                    "pcs_registers_fast",
+                    "pcs_registers_slow"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "ess_info"
+            },
+            {
+                "uri": "/events",
+                "sources": [
+                    ""
+                ],
+                "message_methods": [
+                    "post"
+                ],
+                "destination": "mongo",
+                "measurement": "events"
+            },
+            {
+                "uri": "/site",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "site_ess"
+            },
+            {
+                "uri": "/systemstats/cpu",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "cpustats"
+            },
+            {
+                "uri": "/systemstats/disk",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "diskstats"
+            },
+            {
+                "uri": "/systemstats/mem",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "memstats"
+            },
+            {
+                "uri": "/systemstats/net",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "netstats"
+            },
+            {
+                "uri": "/systemstats/process",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "processstats"
+            }
+        ]
+    },
+    "2": {
+        "db_name": "stress_test_ec_<HOSTNAME>",
+        "period": 60,
+        "archive": "/home/archives_warm",
+        "batchpqtgz": true,
+        "num_archive_workers": 1,
+        "uris": [
+            {
+                "uri": "/assets/bms",
+                "sources": [
+                    "summary"
+                ],
+                "fields": [
+                    "dischargeable_energy",
+                    "chargeable_energy",
+                    "soc",
+                    "max_cell_voltage_in_the_system",
+                    "max_cell_temp",
+                    "max_cell_voltage",
+                    "min_cell_temp",
+                    "min_cell_voltage"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "assets_bms_summary"
+            },
+            {
+                "uri": "/assets/bms",
+                "sources": [
+                    "rack_1",
+                    "rack_2",
+                    "rack_3",
+                    "rack_4",
+                    "rack_5",
+                    "rack_6",
+                    "rack_7",
+                    "rack_8",
+                    "rack_9"
+                ],
+                "fields": [
+                    "system_current",
+                    "dc_current",
+                    "system_voltage",
+                    "dc_voltage",
+                    "system_power",
+                    "dc_power",
+                    "soc",
+                    "soh",
+                    "min_cell_voltage",
+                    "max_cell_voltage",
+                    "avg_cell_voltage",
+                    "cell_temp_delta",
+                    "cell_voltage_delta",
+                    "max_cell_temp",
+                    "min_cell_temp",
+                    "avg_cell_temp",
+                    "system_state",
+                    "status",
+                    "dc_contactor_status",
+                    "dc_closed_status",
+                    "discharge_power_limit",
+                    "charge_power_limit",
+                    "source",
+                    "rack_soc",
+                    "rack_soh",
+                    "rack_current",
+                    "rack_voltage",
+                    "rack_power"
+                ],
+                "group": "assets_bms_racks_group_0",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "assets_bms_racks"
+            },
+            {
+                "uri": "/assets/bms",
+                "message_methods": [
+                    "set"
+                ],
+                "destination": "influx",
+                "measurement": "assets_bms_sets"
+            },
+            {
+                "uri": "/assets/pcs",
+                "message_methods": [
+                    "set"
+                ],
+                "destination": "influx",
+                "measurement": "assets_pcs_sets"
+            },
+            {
+                "uri": "/assets/pcs",
+                "sources": [
+                    "summary"
+                ],
+                "fields": [
+                    "active_power"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "assets_pcs_summary"
+            },
+            {
+                "uri": "/components",
+                "sources": [
+                    "bms",
+                    "catl_bms_ems_r",
+                    "catl_ems_bms_rw",
+                    "catl_mbmu_stat_r",
+                    "catl_mbmu_sum_r",
+                    "catl_mbmu_summary_r",
+                    "pcs",
+                    "pcs_registers_fast",
+                    "pcs_registers_slow"
+                ],
+                "fields": [
+                    "system_min_cell_temperature",
+                    "system_min_temp_cell_id",
+                    "system_min_temp_cell's_rack_id",
+                    "system_min_temp_cell's_slave_id",
+                    "system_min_vol_cell_id",
+                    "system_min_vol_cell's_rack_id",
+                    "system_min_vol_cell's_slave_id",
+                    "system_max_cell_temperature",
+                    "system_max_temp_cell_id",
+                    "system_max_temp_cell's_rack_id",
+                    "system_max_temp_cell's_slave_id",
+                    "system_max_vol_cell_id",
+                    "system_max_vol_cell's_rack_id",
+                    "system_max_vol_cell's_slave_id",
+                    "hvac_compressor_state",
+                    "hvac_condensation_temp",
+                    "hvac_heat_coil_temp",
+                    "hvac_exterior_fan_state",
+                    "hvac_interior_fan_state",
+                    "hvac_interior_temp",
+                    "hvac_cooling_setpoint_upper_limit",
+                    "hvac_heating_setpoint_lower_limit",
+                    "hvac_heat_temp_setting",
+                    "hvac_temp_setting",
+                    "hvac_humidity",
+                    "hvac_gen_sys_state",
+                    "min_cell_voltage_in_the_system",
+                    "max_cell_voltage_in_the_system",
+                    "system_soc",
+                    "watt_demand_3_phase_received",
+                    "watt_demand_3_phase_delivered",
+                    "dischargeable_energy",
+                    "dischargeable_power",
+                    "chargeable_energy",
+                    "chargeable_power"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "ess_info"
+            },
+            {
+                "uri": "/components",
+                "sources": [
+                    "catl_rack_1",
+                    "catl_rack_2",
+                    "catl_rack_3",
+                    "catl_rack_4",
+                    "catl_rack_5",
+                    "catl_rack_6",
+                    "catl_rack_7",
+                    "catl_rack_8",
+                    "catl_rack_9"
+                ],
+                "fields": [
+                    "max_single_cell_temperature_position",
+                    "min_single_cell_temperature_position",
+                    "max_single_cell_voltage_position",
+                    "min_single_cell_voltage_position",
+                    "max_cell_temp_num",
+                    "max_cell_temp_slave_num",
+                    "max_cell_voltage_num",
+                    "max_cell_voltage_slave_num",
+                    "min_cell_slave_num",
+                    "min_cell_temp_num",
+                    "min_cell_voltage_num",
+                    "min_cell_voltage_slave_num",
+                    "air_con_heating_band",
+                    "air_con_heating_stop_point",
+                    "air_con_high_humidity_point",
+                    "air_con_high_temp_point",
+                    "air_con_indoor_temp",
+                    "air_con_internal_fan_stop_point",
+                    "air_con_low_temp_point",
+                    "air_con_refrigeration_band",
+                    "air_con_refrigeration_stop_point",
+                    "air_con_running_status",
+                    "max_cell_voltage",
+                    "min_cell_voltage",
+                    "max_cell_temp",
+                    "min_cell_temp",
+                    "soc"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "ess_bms_racks"
+            },
+            {
+                "uri": "/events",
+                "sources": [
+                    ""
+                ],
+                "message_methods": [
+                    "post"
+                ],
+                "destination": "mongo",
+                "measurement": "events"
+            },
+            {
+                "uri": "/systemstats/cpu",
+                "fields": [
+                    "uptimesec",
+                    "loadavg_5m"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "cpustats"
+            },
+            {
+                "uri": "/systemstats/disk",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "diskstats"
+            },
+            {
+                "uri": "/systemstats/mem",
+                "fields": [
+                    "activeKB",
+                    "freeKB"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "memstats"
+            },
+            {
+                "uri": "/systemstats/net",
+                "fields": [
+                    "fims_status"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "netstats"
+            }
+        ]
+    }
+}

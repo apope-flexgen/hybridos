@@ -3,7 +3,7 @@
     "input_path": "/home/hybridos/historian/inbox",
     "failed_validate_path": "/home/hybridos/historian/validate_error",
     "failed_write_path": "/home/hybridos/historian/write_error",
-    "ext": [".tar.gz", ".parquet.gz"],
+    "ext": [".tar.gz", ".batchpqtgz"],
     "num_validate_workers": 3,
     "num_influx_prepare_batches_workers": 3,
     "num_influx_send_batches_workers": 3,

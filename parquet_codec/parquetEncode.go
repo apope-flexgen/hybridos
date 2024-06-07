@@ -75,8 +75,8 @@ func (encoder *Encoder) Encode(bodyMap map[string]interface{}) error {
 	return nil
 }
 
-// Dump encoder contents into an archive file
-func (encoder *Encoder) CreateArchive(path, prefix, dataSourceId string) (archiveFilePath string, err error) {
+// Dump encoder contents into an archive file on disk
+func (encoder *Encoder) CreateArchiveLocal(path, prefix, dataSourceId string) (archiveFilePath string, err error) {
 	AddKeyValueMetaData(encoder.Writer, encoder.Metadata) // finalize metadata
 
 	// close writers
@@ -102,4 +102,23 @@ func (encoder *Encoder) CreateArchive(path, prefix, dataSourceId string) (archiv
 	}
 
 	return archiveFilePath, nil
+}
+
+// Dump encoder contents into an archive file in memory
+func (encoder *Encoder) CreateArchiveMem() (data []byte, err error) {
+	AddKeyValueMetaData(encoder.Writer, encoder.Metadata) // finalize metadata
+
+	// close writers
+	err = CloseWriter(encoder.Writer)
+	if err != nil {
+		return nil, fmt.Errorf("could not close encoder writer: %w", err)
+	}
+	err = encoder.Zipper.Close()
+	if err != nil {
+		return nil, fmt.Errorf("could not close encoder zipper: %w", err)
+	}
+
+	data = encoder.Buf.Bytes() // extract data from buffer
+
+	return data, nil
 }

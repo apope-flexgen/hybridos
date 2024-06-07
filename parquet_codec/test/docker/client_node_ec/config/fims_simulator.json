@@ -1,0 +1,153 @@
+[
+    {
+        "period_ms": 1000,
+        "templated_duplicates": 1,
+        "uri": "/assets/ess/ess_1",
+        "message_body": {
+            "alarms": {
+                "value": 1,
+                "options": [
+                    {
+                        "name": "[heartbeat_to_ess] value [0] is not changing for 10.00 seconds at 05/03/2024 14:20:05",
+                        "return_value": 0
+                    }
+                ]
+            },
+            "build": {
+                "value": "v11.2.4-alpha.1-268",
+                "enabled": true
+            },
+            "comms_ok": {
+                "value": false,
+                "enabled": true
+            },
+            "curr_real_mem": {
+                "value": 13760,
+                "enabled": true
+            },
+            "faults": {
+                "value": 1,
+                "options": [
+                    {
+                        "name": "[heartbeat_to_ess] value [0] is not changing for 10.00 seconds at 05/03/2024 14:20:05",
+                        "return_value": 0
+                    }
+                ]
+            },
+            "max_apparent_power": {
+                "value": 2100,
+                "enabled": true
+            },
+            "max_charge_power": {
+                "value": 0,
+                "enabled": true
+            },
+            "max_discharge_power": {
+                "value": 0,
+                "enabled": true
+            },
+            "max_reactive_power": {
+                "value": 2100,
+                "enabled": true
+            },
+            "peak_real_mem": {
+                "value": 14324,
+                "enabled": true
+            },
+            "system_temp": {
+                "value": 0,
+                "enabled": true
+            }
+        }
+    },
+    {
+        "period_ms": 100,
+        "templated_duplicates": 1,
+        "uri": "/site/ess",
+        "message_body": {"active_power_ramp_rate":0,"active_power_setpoint":0,"bms_alarm_active":true,"bms_avg_cell_temp":0,"bms_avg_cell_voltage":0,"bms_cell_temp_delta":0,"bms_cell_voltage_delta":0,"bms_chargeable_energy":0,"bms_close_contactors_enabled":0,"bms_comms_ok":false,"bms_control_alarms":0,"bms_current_before_stop_is_ok":true,"bms_dc_charging":false,"bms_dc_contactor_control":0,"bms_dc_contactors_closed":false,"bms_dc_current":0,"bms_dc_discharging":false,"bms_dc_power":0,"bms_dc_voltage":0,"bms_dischargeable_energy":0,"bms_fault_active":true,"bms_fire_fault_active":false,"bms_max_cell_temp":0,"bms_max_cell_voltage":0,"bms_max_charge_current":0,"bms_max_charge_power":0,"bms_max_discharge_current":0,"bms_max_discharge_power":0,"bms_min_cell_temp":0,"bms_min_cell_voltage":0,"bms_monitor_alarms":0,"bms_monitor_faults":0,"bms_num_racks_online":0,"bms_num_racks_total":9,"bms_open_contactors_enabled":0,"bms_soc":0,"bms_soh":0,"bms_status":"INIT","clear_faults":0,"comms_faults":3,"ess_alarm_active":true,"ess_fault_active":true,"ess_max_charge_power":0,"ess_max_discharge_power":0,"frequency_setpoint":0,"heartbeat_from_ess":33,"heartbeat_to_ess":0,"on_off_grid_mode_setting":0,"pcs_active_power":0,"pcs_active_power_ramp_rate_feedback":0,"pcs_active_power_setpoint_feedback":0,"pcs_alarm_active":true,"pcs_apparent_power":0,"pcs_avg_line_voltage":0,"pcs_comms_ok":false,"pcs_control_alarms":2048,"pcs_dc_current":0,"pcs_dc_power":0,"pcs_dc_voltage":0,"pcs_fault_active":true,"pcs_frequency":0,"pcs_frequency_setpoint_feedback":0,"pcs_grid_mode":0,"pcs_is_running":0,"pcs_l1_current":0,"pcs_l1_l2_voltage":0,"pcs_l2_current":0,"pcs_l2_l3_voltage":0,"pcs_l3_current":0,"pcs_l3_l1_voltage":0,"pcs_max_charge_power":-4200,"pcs_max_discharge_power":4200,"pcs_max_igbt_temperature":0,"pcs_monitor_alarms":0,"pcs_monitor_faults":0,"pcs_num_modules_online":0,"pcs_num_modules_total":6,"pcs_power_factor":0,"pcs_rated_active_power":0,"pcs_rated_apparent_power":4200,"pcs_rated_reactive_power":0,"pcs_reactive_power":0,"pcs_reactive_power_ramp_rate_feedback":0,"pcs_reactive_power_setpoint_feedback":0,"pcs_standby_enabled":0,"pcs_start_enabled":0,"pcs_status":"INIT","pcs_stop_enabled":0,"pcs_system_state":0,"pcs_voltage_setpoint_feedback":0,"reactive_power_ramp_rate":0,"reactive_power_setpoint":0,"start_stop_standby_command":0,"voltage_setpoint":0}
+    },
+    {
+        "period_ms": 1000,
+        "templated_duplicates": 1,
+        "uri": "/assets/bms/summary",
+        "message_body": {"alarms":{"value":1,"options":[{"name":"[HeartbeatRead] received [BMS Communication Failure] at [05/03/2024 14:20:04]","return_value":"BMS Communication Failure"}]},"avg_cell_temp":{"value":0,"enabled":true},"avg_cell_voltage":{"value":0,"enabled":true},"cell_temp_delta":{"value":0,"enabled":true},"cell_voltage_delta":{"value":0,"enabled":true},"chargeable_energy":{"value":0,"enabled":true},"clear_faults":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":false},"close_contactors":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":false},"comms_ok":{"value":false,"enabled":true},"dc_charging":{"value":false,"enabled":true},"dc_contactors_closed":{"value":false,"enabled":true},"dc_current":{"value":0,"enabled":true},"dc_discharging":{"value":false,"enabled":true},"dc_power":{"value":0,"enabled":true},"dc_voltage":{"value":0,"enabled":true},"dischargeable_energy":{"value":0,"enabled":true},"faults":{"value":1,"options":[{"name":"[HeartbeatRead] received [BMS Communication Failure] at [05/03/2024 14:20:09]","return_value":"BMS Communication Failure"}]},"maint_mode":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":true},"max_cell_temp":{"value":0,"enabled":true},"max_cell_voltage":{"value":0,"enabled":true},"max_charge_current":{"value":0,"enabled":true},"max_charge_power":{"value":0,"enabled":true},"max_discharge_current":{"value":0,"enabled":true},"max_discharge_power":{"value":0,"enabled":true},"min_cell_temp":{"value":0,"enabled":true},"min_cell_voltage":{"value":0,"enabled":true},"num_racks_online":{"value":0,"enabled":true},"num_racks_total":{"value":9,"enabled":true},"open_contactors":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":false},"soc":{"value":0,"enabled":true},"soh":{"value":0,"enabled":true},"status":{"value":"INIT","enabled":true}}
+    },
+    {
+        "period_ms": 1000,
+        "templated_duplicates": 9,
+        "uri": "/assets/bms/rack_#",
+        "message_body": {"alarms":{"value":0,"options":[],"enabled":true},"avg_cell_temp":{"value":0,"enabled":true},"avg_cell_voltage":{"value":0,"enabled":true},"cell_temp_delta":{"value":0,"enabled":true},"cell_voltage_delta":{"value":0,"enabled":true},"clear_faults":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":false},"dc_contactors_closed":{"value":false,"enabled":true},"dc_current":{"value":0,"enabled":true},"dc_power":{"value":0,"enabled":true},"dc_voltage":{"value":0,"enabled":true},"faults":{"value":0,"options":[],"enabled":true},"maint_mode":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":true},"max_cell_temp":{"value":0,"enabled":true},"max_cell_voltage":{"value":0,"enabled":true},"max_charge_current":{"value":0,"enabled":true},"max_charge_power":{"value":0,"enabled":true},"max_discharge_current":{"value":0,"enabled":true},"max_discharge_power":{"value":0,"enabled":true},"min_cell_temp":{"value":0,"enabled":true},"min_cell_voltage":{"value":0,"enabled":true},"soc":{"value":0,"enabled":true},"soh":{"value":0,"enabled":true},"status":{"value":"INIT","enabled":true}}
+    },
+    {
+        "period_ms": 1000,
+        "templated_duplicates": 1,
+        "uri": "/assets/pcs/summary",
+        "message_body": {"active_power":{"value":0,"enabled":true},"active_power_ramp_rate":{"value":0,"enabled":true},"active_power_ramp_rate_feedback":{"value":0,"enabled":true},"active_power_setpoint":{"value":0,"enabled":true},"active_power_setpoint_feedback":{"value":0,"enabled":true},"alarms":{"value":1,"options":[{"name":"[HeartbeatRead] received [PCS Communication Failure] at [05/03/2024 14:20:05]","return_value":"PCS Communication Failure"},{"name":"[Stop] received [PCS Stop - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details] at [05/03/2024 14:20:08]","return_value":"PCS Stop - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details"}]},"apparent_power":{"value":0,"enabled":true},"clear_faults":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":false},"comms_ok":{"value":false,"enabled":true},"dc_current":{"value":0,"enabled":true},"dc_power":{"value":0,"enabled":true},"dc_voltage":{"value":0,"enabled":true},"faults":{"value":1,"options":[{"name":"[HeartbeatRead] received [PCS Communication Failure] at [05/03/2024 14:20:10]","return_value":"PCS Communication Failure"}]},"frequency":{"value":0,"enabled":true},"frequency_setpoint":{"value":0,"enabled":true},"frequency_setpoint_feedback":{"value":0,"enabled":true},"grid_follow_pq":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":false},"grid_form_vf":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":false},"grid_form_vsg":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":false},"grid_mode":{"value":"INIT","enabled":true},"l1_current":{"value":0,"enabled":true},"l1_l2_voltage":{"value":0,"enabled":true},"l2_current":{"value":0,"enabled":true},"l2_l3_voltage":{"value":0,"enabled":true},"l3_current":{"value":0,"enabled":true},"l3_l1_voltage":{"value":0,"enabled":true},"maint_mode":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":true},"max_charge_power":{"value":-4200,"enabled":true},"max_discharge_power":{"value":4200,"enabled":true},"max_igbt_temperature":{"value":0,"enabled":true},"num_modules_online":{"value":0,"enabled":true},"num_modules_total":{"value":6,"enabled":true},"power_factor":{"value":0,"enabled":true},"rated_active_power":{"value":0,"enabled":true},"rated_apparent_power":{"value":4200,"enabled":true},"rated_power_factor":{"value":0.8,"enabled":true},"rated_reactive_power":{"value":0,"enabled":true},"reactive_power":{"value":0,"enabled":true},"reactive_power_ramp_rate":{"value":0,"enabled":true},"reactive_power_ramp_rate_feedback":{"value":0,"enabled":true},"reactive_power_setpoint":{"value":0,"enabled":true},"reactive_power_setpoint_feedback":{"value":0,"enabled":true},"standby":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":false},"start":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":false},"status":{"value":"INIT","enabled":true},"stop":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":false},"system_state":{"value":"INIT","enabled":true},"voltage_setpoint":{"value":0,"enabled":true},"voltage_setpoint_feedback":{"value":0,"enabled":true}}
+    },
+    {
+        "period_ms": 1000,
+        "templated_duplicates": 6,
+        "uri": "/assets/pcs/module_#",
+        "message_body": {"active_power":{"value":0,"enabled":true},"alarms":{"value":0,"options":[],"enabled":true},"apparent_power":{"value":0,"enabled":true},"clear_faults":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":false},"dc_current":{"value":0,"enabled":true},"dc_power":{"value":0,"enabled":true},"dc_voltage":{"value":0,"enabled":true},"faults":{"value":0,"options":[],"enabled":true},"l1_current":{"value":0,"enabled":true},"l2_current":{"value":0,"enabled":true},"l3_current":{"value":0,"enabled":true},"maint_mode":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":true},"max_igbt_temperature":{"value":0,"enabled":true},"reactive_power":{"value":0,"enabled":true},"status":{"value":"INIT","enabled":true}}
+    },
+    {
+        "period_ms": 1000,
+        "templated_duplicates": 1,
+        "uri": "/components/bms",
+        "message_body": {"heartbeat_write":{"value":15}}
+    },
+    {
+        "period_ms": 1000,
+        "templated_duplicates": 1,
+        "uri": "/components/pcs",
+        "message_body": {"heartbeat_write":{"value":3}}
+    },
+    {
+        "period_ms": 1000,
+        "templated_duplicates": 1,
+        "uri": "/components/catl_bms_ems_r",
+        "message_body": {"bms_heartbeat":3764,"bms_poweron":1,"bms_status":0,"num_hv_subsystem":9,"bms_remain_charge_energy":8960,"bms_remain_discharge_energy":8955,"bms_max_discharge_allowed":5750,"bms_max_charge_allowed":5750,"bms_limit_charge_hv":0,"bms_limit_discharge_hv":0,"Timestamp":"05-03-2024 15:08:34.371519"}
+    },
+    {
+        "period_ms": 1000,
+        "templated_duplicates": 1,
+        "uri": "/components/catl_mbmu_sum_r",
+        "message_body": {"mbmu_warning_1":0,"mbmu_warning_21":0,"mbmu_warning_22":0,"Timestamp":"05-03-2024 16:04:36.528805"}
+    },
+    {
+        "period_ms": 100,
+        "templated_duplicates": 1,
+        "uri": "/components/catl_mbmu_summary_r",
+        "message_body": {"mbmu_voltage":1306.2,"mbmu_current":0,"mbmu_soc":49.9,"mbmu_soh":100,"mbmu_max_cell_voltage":3.454,"mbmu_min_cell_voltage":3.42,"mbmu_avg_cell_voltage":3.437,"mbmu_max_cell_temperature":51,"mbmu_min_cell_temperature":49,"mbmu_avg_cell_temperature":50,"mbmu_max_charge_current":-4401,"mbmu_max_discharge_current":4401,"mbmu_power":0,"Timestamp":"05-03-2024 16:05:01.51846"}
+    },
+    {
+        "period_ms": 100,
+        "templated_duplicates": 1,
+        "uri": "/components/catl_mbmu_stat_r",
+        "message_body": {"mbmu_status":0,"Timestamp":"05-03-2024 16:06:15.656653"}
+    },
+    {
+        "period_ms": 1000,
+        "templated_duplicates": 1,
+        "uri": "/components/catl_ems_bms_rw",
+        "message_body": {"ems_heartbeat":0,"ems_cmd":0,"ems_status":0,"ems_rtc_year":2024,"ems_rtc_month":5,"ems_rtc_day":3,"ems_rtc_hour":16,"ems_rtc_minute":7,"ems_rtc_second":16,"fault_clear_cmd":0,"Timestamp":"05-03-2024 16:07:17.530080"}
+    },
+    {
+        "period_ms": 2000,
+        "templated_duplicates": 9,
+        "uri": "/components/catl_rack_#",
+        "message_body": {"sbmu_warning_1":0,"sbmu_warning_21":0,"sbmu_warning_22":0,"sbmu_warning_23":0,"sbmu_precharge_status":0,"sbmu_master_positive":1,"sbmu_master_negative":1,"sbmu_balance_status":0,"sbmu_voltage":1306.2,"sbmu_current":0,"sbmu_soc":49.9,"sbmu_soh":100,"sbmu_max_cell_voltage":3.451,"sbmu_min_cell_voltage":3.427,"sbmu_avg_cell_voltage":3.437,"sbmu_max_cell_temp":51,"sbmu_min_cell_temp":49,"sbmu_avg_cell_temp":50,"sbmu_max_charge_current":489.1,"sbmu_max_discharge_current":489.1,"sbmu_max_cell_voltage_position":0,"sbmu_min_cell_voltage_position":0,"sbmu_max_cell_temp_position":0,"sbmu_min_cell_temp_position":0,"sbmu_sum_cells":0,"sbmu_tms_mode_command":0,"sbmu_tms_temp_setting":0,"sbmu_tms_real_mode":0,"sbmu_ambient_temp":0,"sbmu_tms_demand_power":0,"sbmu_tms_fault_code":0,"sbmu_door_state":0,"sbmu_fan_in_box":0,"Timestamp":"05-03-2024 16:08:11.536497"}
+    },
+    {
+        "period_ms": 200,
+        "templated_duplicates": 1,
+        "uri": "/components/pcs_registers_fast",
+        "message_body": {"seconds":13,"p_limit":257.12,"q_limit":257.12,"p_q_priority":0,"s_limit":569.21,"p_algo_pri":0,"p_control_mode":0,"q_control_mode":0,"p_p_reference":0,"p_id_reference":0,"q_cosphi_reference":0,"q_iq_reference":0,"q_q_reference":0,"q_v_reference":0,"start":0,"stop":0,"reset":0,"e_stop":0,"ppc_watchdog_ref":0,"ppc_watchdog_refs_reset_time":0,"ppc_watchdog_comms_fault_time":0,"ppc_watchdog_home_p_ref":0,"ppc_watchdog_home_q_ref":0,"grid_voltage_rs":352,"grid_voltage_st":352,"grid_voltage_tr":352,"grid_current_1":0,"grid_current_2":0,"grid_current_3":0,"active_power":-1,"reactive_power":0,"apparent_power":1,"cosphi":-1,"grid_frequency":60,"grid_voltage_rs_lv":0,"grid_voltage_st_lv":0,"grid_voltage_tr_lv":0,"dc_p_input":0,"dc_total_i_input":0,"current_fault":0,"current_warning":0,"current_status":1,"current_fault_module":0,"num_running_modules":6,"module_1_status":0,"module_1_current_r":0,"module_1_current_s":0,"module_1_current_t":0,"module_1_dc_current":0,"module_1_dc_voltage_p":0,"module_1_dc_voltage_n":0,"module_1_dc_voltage":1306,"module_1_p":-0.2833333333333333,"module_1_q":0,"module_1_ambient_temp":0,"module_1_max_temp":0,"module_1_i_o_status":0,"module_1_temp_r1":0,"module_1_temp_r2":0,"module_1_temp_r3":0,"module_1_temp_s1":0,"module_1_temp_s2":0,"module_1_temp_s3":0,"module_1_temp_t1":0,"module_1_temp_t2":0,"module_1_temp_t3":0,"module_2_status":0,"module_2_current_r":0,"module_2_current_s":0,"module_2_current_t":0,"module_2_dc_current":0,"module_2_dc_voltage_p":0,"module_2_dc_voltage_n":0,"module_2_dc_voltage":1306,"module_2_p":-0.2833333333333333,"module_2_q":0,"module_2_ambient_temp":0,"module_2_max_temp":0,"module_2_i_o_status":0,"module_2_temp_r1":0,"module_2_temp_r2":0,"module_2_temp_r3":0,"module_2_temp_s1":0,"module_2_temp_s2":0,"module_2_temp_s3":0,"module_2_temp_t1":0,"module_2_temp_t2":0,"module_2_temp_t3":0,"module_3_status":0,"module_3_current_r":0,"module_3_current_s":0,"module_3_current_t":0,"module_3_dc_current":0,"module_3_dc_voltage_p":0,"module_3_dc_voltage_n":0,"module_3_dc_voltage":1306,"module_3_p":-0.2833333333333333,"module_3_q":0,"module_3_ambient_temp":0,"module_3_max_temp":0,"module_3_i_o_status":0,"module_3_temp_r1":0,"module_3_temp_r2":0,"module_3_temp_r3":0,"module_3_temp_s1":0,"module_3_temp_s2":0,"module_3_temp_s3":0,"module_3_temp_t1":0,"module_3_temp_t2":0,"module_3_temp_t3":0,"module_4_status":0,"module_4_current_r":0,"module_4_current_s":0,"module_4_current_t":0,"module_4_dc_current":0,"module_4_dc_voltage_p":0,"module_4_dc_voltage_n":0,"module_4_dc_voltage":1306,"module_4_p":-0.2833333333333333,"module_4_q":0,"module_4_ambient_temp":0,"module_4_max_temp":0,"module_4_i_o_status":0,"module_4_temp_r1":0,"module_4_temp_r2":0,"module_4_temp_r3":0,"module_4_temp_s1":0,"module_4_temp_s2":0,"module_4_temp_s3":0,"module_4_temp_t1":0,"module_4_temp_t2":0,"module_4_temp_t3":0,"module_5_status":0,"module_5_current_r":0,"module_5_current_s":0,"module_5_current_t":0,"module_5_dc_current":0,"module_5_dc_voltage_p":0,"module_5_dc_voltage_n":0,"module_5_dc_voltage":1306,"module_5_p":-0.2833333333333333,"module_5_q":0,"module_5_ambient_temp":0,"module_5_max_temp":0,"module_5_i_o_status":0,"module_5_temp_r1":0,"module_5_temp_r2":0,"module_5_temp_r3":0,"module_5_temp_s1":0,"module_5_temp_s2":0,"module_5_temp_s3":0,"module_5_temp_t1":0,"module_5_temp_t2":0,"module_5_temp_t3":0,"module_6_status":0,"module_6_current_r":0,"module_6_current_s":0,"module_6_current_t":0,"module_6_dc_current":0,"module_6_dc_voltage_p":0,"module_6_dc_voltage_n":0,"module_6_dc_voltage":1306,"module_6_p":-0.2833333333333333,"module_6_q":0,"module_6_ambient_temp":0,"module_6_max_temp":0,"module_6_i_o_status":0,"module_6_temp_r1":0,"module_6_temp_r2":0,"module_6_temp_r3":0,"module_6_temp_s1":0,"module_6_temp_s2":0,"module_6_temp_s3":0,"module_6_temp_t1":0,"module_6_temp_t2":0,"module_6_temp_t3":0,"vdc_bus_1":1306,"Timestamp":"05-03-2024 16:09:14.124230"}
+    },
+    {
+        "period_ms": 10000,
+        "templated_duplicates": 1,
+        "uri": "/components/pcs_registers_slow",
+        "message_body": {"start_grad_p_enable":0,"start_grad_p":0,"start_grad_q_enable":0,"start_grad_q":0,"rise_grad_p_enable":0,"rise_grad_p":0,"rise_grad_q_enable":0,"rise_grad_q":0,"drop_grad_p_enable":0,"drop_grad_p":0,"drop_grad_q_enable":0,"drop_grad_q":0,"stop_grad_p_enable":0,"stop_grad_p":0,"stop_grad_q_enable":0,"stop_grad_q":0,"selector_config":0,"start_control_mode":0,"selector_status":0,"daily_energy_msb":0,"daily_energy_lsb":0,"total_energy_msb":0,"total_energy_lsb":0,"consum_daily_energy_msb":0,"consum_daily_energy_lsb":0,"consum_total_energy_msb":0,"consum_total_energy_lsb":0,"module_1_hw_version":0,"module_1_sw_version":0,"module_2_hw_version":0,"module_2_sw_version":0,"module_3_hw_version":0,"module_3_sw_version":0,"module_4_hw_version":0,"module_4_sw_version":0,"module_5_hw_version":0,"module_5_sw_version":0,"module_6_hw_version":0,"module_6_sw_version":0,"Timestamp":"05-03-2024 16:09:42.515668"}
+    }
+]

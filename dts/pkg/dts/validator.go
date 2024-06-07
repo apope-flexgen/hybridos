@@ -3,9 +3,7 @@ package dts
 import (
 	"context"
 	"fmt"
-	"os"
 	"strings"
-	"sync/atomic"
 
 	"github.com/flexgen-power/hybridos/fims_codec"
 	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
@@ -14,19 +12,19 @@ import (
 )
 
 type ArchiveValidator struct {
-	in        <-chan string
-	InfluxOut chan *archiveData
-	MongoOut  chan *archiveData
+	in        <-chan dataFile
+	InfluxOut chan *decodedDataFileData
+	MongoOut  chan *decodedDataFileData
 
-	mapDestinationToOut map[string]chan *archiveData // maps destination strings to output channels
-	FailCt              uint64                       // Modifications must be atomic
+	mapDestinationToOut map[string]chan *decodedDataFileData // maps destination strings to output channels
+	FailCt              uint64                               // Modifications must be atomic
 }
 
-type archiveData struct {
-	archiveFilePath string
-	archiveSize     int64
-	db              string
-	measurement     string
+type decodedDataFileData struct {
+	dataFileName string
+	archiveSize  int64
+	db           string
+	measurement  string
 
 	dataSourceId   string
 	msgTimestamps  []uint64
@@ -35,13 +33,13 @@ type archiveData struct {
 }
 
 // Allocates a new archive validator stage and the needed output channels based on the given destination names
-func NewArchiveValidator(inputChannel <-chan string) *ArchiveValidator {
+func NewArchiveValidator(inputChannel <-chan dataFile) *ArchiveValidator {
 	validator := ArchiveValidator{
 		in:        inputChannel,
-		InfluxOut: make(chan *archiveData),
-		MongoOut:  make(chan *archiveData),
+		InfluxOut: make(chan *decodedDataFileData),
+		MongoOut:  make(chan *decodedDataFileData),
 	}
-	validator.mapDestinationToOut = map[string]chan *archiveData{
+	validator.mapDestinationToOut = map[string]chan *decodedDataFileData{
 		"influx": validator.InfluxOut,
 		"mongo":  validator.MongoOut,
 	}
@@ -65,78 +63,66 @@ func (validator *ArchiveValidator) validateUntil(done <-chan struct{}) error {
 		select {
 		case <-done:
 			goto termination
-		case archiveFilePath := <-validator.in:
-			log.Debugf("[validate] received file %s from channel", archiveFilePath)
-			log.Debugf("[validate] decoding archive %s", archiveFilePath)
+		case df := <-validator.in:
+			dataFileName := df.name
+			log.Debugf("[validate] received file %s from channel", dataFileName)
+			log.Debugf("[validate] decoding archive %s", dataFileName)
 
 			// get size of archive
-			info, err := os.Stat(archiveFilePath)
-			if err != nil {
-				log.Errorf("failed to get info for file %s, err: %v", archiveFilePath, err)
-				continue
-			}
-			archiveSize := info.Size()
+			archiveSize := len(df.data)
 
 			// decode message
-			data := archiveData{}
-			if strings.HasSuffix(archiveFilePath, ".parquet.gz") {
-				decodeResult, err := parquet_codec.DecodeLocalGZippedParquet(archiveFilePath)
+			data := decodedDataFileData{}
+			if strings.HasSuffix(dataFileName, ".parquet.gz") {
+				decodeResult, err := parquet_codec.DecodeMemGZippedParquet(df.data)
 				if err != nil {
-					log.Errorf("decode failed for file %s, err: %v", archiveFilePath, err)
-					validator.cleanUpInvalidArchive(archiveFilePath)
+					log.Errorf("decode failed for file %s, err: %v", dataFileName, err)
 					continue
 				}
-				data = archiveData{
-					archiveFilePath: archiveFilePath,
-					archiveSize:     archiveSize,
-					db:              decodeResult.Metadata["database"],
-					measurement:     decodeResult.Metadata["measurement"],
-					dataSourceId:    decodeResult.Metadata["data_source_id"],
-					msgTimestamps:   decodeResult.MsgTimestamps,
-					msgBodies:       decodeResult.MsgBodies,
-					additionalData:  decodeResult.Metadata,
+				data = decodedDataFileData{
+					dataFileName:   dataFileName,
+					archiveSize:    int64(archiveSize),
+					db:             decodeResult.Metadata["database"],
+					measurement:    decodeResult.Metadata["measurement"],
+					dataSourceId:   decodeResult.Metadata["data_source_id"],
+					msgTimestamps:  decodeResult.MsgTimestamps,
+					msgBodies:      decodeResult.MsgBodies,
+					additionalData: decodeResult.Metadata,
 				}
 			} else {
 				// assume fims_codec encoding if not parquet
-				decodeResult, err := fims_codec.Decode(archiveFilePath)
+				decodeResult, err := fims_codec.DecodeBytes(df.data)
 				if err != nil {
-					log.Errorf("decode failed for file %s, err: %v", archiveFilePath, err)
-					validator.cleanUpInvalidArchive(archiveFilePath)
+					log.Errorf("decode failed for file %s, err: %v", dataFileName, err)
 					continue
 				}
-				data = archiveData{
-					archiveFilePath: archiveFilePath,
-					archiveSize:     archiveSize,
-					db:              decodeResult.AdditionalData["database"],
-					measurement:     decodeResult.AdditionalData["measurement"],
-					dataSourceId:    decodeResult.Uri,
-					msgTimestamps:   decodeResult.MsgTimestamps,
-					msgBodies:       decodeResult.MsgBodies,
-					additionalData:  decodeResult.AdditionalData,
+				data = decodedDataFileData{
+					dataFileName:   dataFileName,
+					archiveSize:    int64(archiveSize),
+					db:             decodeResult.AdditionalData["database"],
+					measurement:    decodeResult.AdditionalData["measurement"],
+					dataSourceId:   decodeResult.Uri,
+					msgTimestamps:  decodeResult.MsgTimestamps,
+					msgBodies:      decodeResult.MsgBodies,
+					additionalData: decodeResult.AdditionalData,
 				}
 			}
 
 			// gather additional info
-			err = validator.validateAddInfo(archiveFilePath, data.additionalData)
+			err := validator.validateAddInfo(dataFileName, data.additionalData)
 			if err != nil {
 				if err.Error() == "secondary" {
 					log.Debugf("archive marked secondary, not writing to database")
-					err := removeArchive(archiveFilePath, false, "")
-					if err != nil {
-						log.Errorf("unable to delete archive %s", archiveFilePath)
-					}
 					continue
 				}
-				log.Errorf("[validate] invalid additional data for %s --- %s", archiveFilePath, data.additionalData)
-				validator.cleanUpInvalidArchive(archiveFilePath)
+				log.Errorf("[validate] invalid additional data for %s --- %s", dataFileName, data.additionalData)
 				continue
 			}
 
 			// send to the marked destination's writer
 			out, exists := validator.mapDestinationToOut[data.additionalData["destination"]]
 			if !exists {
-				log.Errorf("unknown destination: %s for archive %s, removing invalid archive", data.additionalData["destination"], archiveFilePath)
-				validator.cleanUpInvalidArchive(archiveFilePath)
+				log.Errorf("unknown destination: %s for archive %s, removing invalid archive", data.additionalData["destination"], dataFileName)
 				continue
 			}
 
@@ -145,7 +131,7 @@ func (validator *ArchiveValidator) validateUntil(done <-chan struct{}) error {
 			case <-done:
 				goto termination
 			case out <- &data:
-				log.Debugf("[validator] sent %s to writer %s", archiveFilePath, data.additionalData["destination"])
+				log.Debugf("[validator] sent %s to writer %s", dataFileName, data.additionalData["destination"])
 			}
 		}
 	}
@@ -199,16 +185,4 @@ func (validator *ArchiveValidator) validateAddInfo(archiveName string, addInfo m
 	}
 
 	return nil
-}
-
-// Remove an archive that was found invalid along with its associated data
-func (validator *ArchiveValidator) cleanUpInvalidArchive(archiveName string) {
-	err := removeArchive(archiveName, true, GlobalConfig.FailedValidatePath)
-	if err != nil {
-		log.Errorf("[validate] Continuing without removing invalid archive: could not clean invalid archive %s: %v", archiveName, err)
-	} else {
-		log.Debugf("[validate] Cleaned failed archive %s", archiveName)
-	}
-
-	atomic.AddUint64(&validator.FailCt, 1)
 }

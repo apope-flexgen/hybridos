@@ -124,7 +124,7 @@ func (collator *MsgCollator) collate(msg *fims.FimsMsg) {
 		log.Errorf("Failed to append msg for URI %s with error: %v", msg.Uri, err)
 	}
 	// if fims encoder is now full, flush all encoders immediately
-	if !collator.laneCfg.Parquet && encoder.GetNumMessages() == fims_codec.MaxMessageCount {
+	if !collator.laneCfg.BatchParquetGZ && encoder.GetNumMessages() == fims_codec.MaxMessageCount {
 		collator.flush()
 	}
 
@@ -152,14 +152,14 @@ func (collator *MsgCollator) getFtdData(uri string, method string, conformedUri 
 		_, exist := collator.groups[uriCfg.Group+"_"+method]
 		if !exist {
 			log.Infof("Creating codec for group %s and method %s", uriCfg.Group, method)
-			groupEncoder := NewEncoderFromConfig(conformedUri, collator.laneCfg.DbName, collator.laneName, method, uriCfg, collator.laneCfg.Parquet)
+			groupEncoder := NewEncoderFromConfig(conformedUri, collator.laneCfg.DbName, collator.laneName, method, uriCfg, collator.laneCfg.BatchParquetGZ)
 			collator.groups[uriCfg.Group+"_"+method] = groupEncoder
 		}
 		encoder = nil
 	} else {
 		// Create an individual codec
 		log.Infof("Creating codec for uri %s and method %s", uri, method)
-		encoder = NewEncoderFromConfig(conformedUri, collator.laneCfg.DbName, collator.laneName, method, uriCfg, collator.laneCfg.Parquet)
+		encoder = NewEncoderFromConfig(conformedUri, collator.laneCfg.DbName, collator.laneName, method, uriCfg, collator.laneCfg.BatchParquetGZ)
 	}
 
 	// final product

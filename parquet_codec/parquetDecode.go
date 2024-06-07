@@ -1,6 +1,7 @@
 package parquet_codec
 
 import (
+	"bytes"
 	"compress/gzip"
 	"fmt"
 	"io"
@@ -29,6 +30,30 @@ func DecodeLocalGZippedParquet(archiveFilePath string) (data *DecodedData, err e
 
 	// create decompressing file reader
 	gzReader, err := gzip.NewReader(archiveFile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create archive gzip reader: %w", err)
+	}
+	defer gzReader.Close()
+
+	// attempt to decompress the entire gzipped file into buffer
+	buf, err := io.ReadAll(gzReader)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decompress contents into buffer: %w", err)
+	}
+
+	// decode from byte buffer
+	data, err = DecodeParquetBytes(buf)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode from buffer: %w", err)
+	}
+
+	return data, nil
+}
+
+// Decodes an in-memory gzipped parquet file
+func DecodeMemGZippedParquet(dataFileBytes []byte) (data *DecodedData, err error) {
+	// create decompressing file reader
+	gzReader, err := gzip.NewReader(bytes.NewReader(dataFileBytes))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create archive gzip reader: %w", err)
 	}

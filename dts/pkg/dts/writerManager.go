@@ -11,13 +11,13 @@ import (
 
 // Manages database writers and routes data to the correct writer
 type WriterManager struct {
-	influxIn       <-chan *archiveData // channel for data routed to influx
-	mongoIn        <-chan *archiveData // channel for data routed to mongo
+	influxIn       <-chan *decodedDataFileData // channel for data routed to influx
+	mongoIn        <-chan *decodedDataFileData // channel for data routed to mongo
 	writerToInflux *InfluxWriter
 	writerToMongo  *MongoWriter
 
-	influxWriterInput chan *archiveData
-	mongoWriterInput  chan *archiveData
+	influxWriterInput chan *decodedDataFileData
+	mongoWriterInput  chan *decodedDataFileData
 }
 
 // Manages the runtime properties of a writer
@@ -30,7 +30,7 @@ type writerRunner struct {
 	isDown               bool
 	restartTimer         *time.Timer
 	restartTimerChan     <-chan time.Time // channel which is either the restart timer channel or nil if timer is inactive
-	writerInput          chan *archiveData
+	writerInput          chan *decodedDataFileData
 	asyncStartResultChan chan error // channel which either indicates the result of an asynchronous start call or nil if there is no such call
 }
 
@@ -41,14 +41,14 @@ type writerStage interface {
 }
 
 // Allocates a new writer manager stage
-func NewWriterManager(influxInput <-chan *archiveData, mongoInput <-chan *archiveData) *WriterManager {
+func NewWriterManager(influxInput <-chan *decodedDataFileData, mongoInput <-chan *decodedDataFileData) *WriterManager {
 	manager := WriterManager{
 		influxIn: influxInput,
 		mongoIn:  mongoInput,
 	}
-	manager.influxWriterInput = make(chan *archiveData)
+	manager.influxWriterInput = make(chan *decodedDataFileData)
 	manager.writerToInflux = NewInfluxWriter(manager.influxWriterInput)
-	manager.mongoWriterInput = make(chan *archiveData)
+	manager.mongoWriterInput = make(chan *decodedDataFileData)
 	manager.writerToMongo = NewMongoWriter(manager.mongoWriterInput)
 
 	return &manager
@@ -201,21 +201,12 @@ func (runner *writerRunner) handleContextCancel() {
 }
 
 // Handle incoming data by sending or discarding it and return true if handling the data was cancelled by the parent context
-func (runner *writerRunner) handleIncomingData(data *archiveData, parentContext context.Context) (parentCancelled bool) {
-	if runner.isDown {
-		err := removeArchive(data.archiveFilePath, true, GlobalConfig.FailedWritePath)
-		if err != nil {
-			log.Errorf("Unable to move archive %s to failure path after mongo being unavailable: %v. Continuing without moving the archive.", data.archiveFilePath, err)
-		}
-	} else {
+func (runner *writerRunner) handleIncomingData(data *decodedDataFileData, parentContext context.Context) (parentCancelled bool) {
+	if !runner.isDown {
 		select { // cancellably send data
 		case <-parentContext.Done():
 			return true
 		case <-runner.contextDone:
-			err := removeArchive(data.archiveFilePath, true, GlobalConfig.FailedWritePath)
-			if err != nil {
-				log.Errorf("Unable to move archive %s to failure path after mongo writer being unavailable: %v. Continuing without moving the archive.", data.archiveFilePath, err)
-			}
 			runner.handleContextCancel()
 		case runner.writerInput <- data:
 			// deliberately empty case

@@ -1,0 +1,36 @@
+{
+    "clients": {
+        "archives_cold" : {
+            "directory" : "/home/archives_cold",
+            "extension" : ".batchpqtgz",
+            "servers" : [ "destination_cold", "backup_cold" ]
+        },
+        "archives_warm" : {
+            "directory" : "/home/archives_warm",
+            "extension" : ".batchpqtgz",
+            "servers" : [ "destination_warm", "backup_warm" ]
+        }
+    },
+    "servers": {
+        "destination_cold": {
+            "directory" : "/home/data_cold"
+        },
+        "backup_cold": {
+            "directory" : "/home/backup_cold",
+            "sorted" : true,
+            "sorted_retention_days": 1
+        },
+        "destination_warm": {
+            "directory" : "/home/data_warm"
+        },
+        "backup_warm": {
+            "directory" : "/home/backup_warm",
+            "sorted" : true,
+            "sorted_retention_days": 1
+        }
+    },
+    "db_directory" : "/home/.cloud_sync/db",
+    "retry_limit" : 1,
+    "sleep_limit_seconds" : 4,
+    "buffer_size" : 100000
+}

@@ -2,6 +2,7 @@
     "1": {
         "db_name": "test_cold",
         "period" : 1,
+        "batchpqtgz": true,
         "num_archive_workers": 1,
         "archive": "/home/hybridos/ftd_pytest/cold",
         "uris": [
@@ -21,6 +22,7 @@
     "2": {
         "db_name": "test_warm",
         "period" : 1,
+        "batchpqtgz": true,
         "num_archive_workers": 1,
         "archive": "/home/hybridos/ftd_pytest/warm",
         "uris": [

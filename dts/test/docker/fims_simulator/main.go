@@ -17,7 +17,42 @@ func main() {
 	for {
 		fimsObj.Send(fims.FimsMsg{
 			Method: "pub",
-			Uri:    "/test",
+			Uri:    "/test_a",
+			Body: map[string]interface{}{
+				"random_walk": val,
+				"bit_string_mc": generateBitStringModbusClientStyle(
+					int(time.Now().UnixMicro()/200000)%(1<<14),
+					[]string{
+						"BMS DC Current Max Threshold Exceeded",
+						"BMS DC Current Min Threshold Exceeded",
+						"BMS Max Cell Temperature Threshold Exceeded",
+						"BMS Max Cell Voltage Threshold Exceeded",
+						"BMS Min Cell Temperature Threshold Exceeded",
+						"BMS Min Cell Voltage Threshold Exceeded",
+						"BMS State of Health Below Threshold",
+						"BMS DC Voltage Max Threshold Exceeded",
+						"BMS DC Voltage Min Threshold Exceeded",
+						"BMS SOC Max Threshold Exceeded",
+						"BMS SOC Min Threshold Exceeded",
+						"BMS Cell Voltage Delta Max Threshold Exceeded",
+						"BMS Cell Temperature Delta Max Threshold Exceeded",
+						"BMS Number of Racks Online Below Min Threshold",
+					},
+				),
+				"bit_string_sc": generateBitStringSiteControllerStyle(
+					int(time.Now().UnixMicro()/200000)%(1<<2),
+					[]string{
+						"BMS DC Current Max Threshold Exceeded",
+						"BMS DC Current Min Threshold Exceeded",
+					},
+				),
+				"on_off": rand.Intn(2) == 0,
+				"bagel":  "tasty",
+			},
+		})
+		fimsObj.Send(fims.FimsMsg{
+			Method: "pub",
+			Uri:    "/test_b",
 			Body: map[string]interface{}{
 				"random_walk": val,
 				"bit_string_mc": generateBitStringModbusClientStyle(

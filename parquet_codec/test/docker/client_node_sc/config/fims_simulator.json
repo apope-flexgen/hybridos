@@ -1,0 +1,305 @@
+[
+    {
+        "period_ms": 500,
+        "templated_duplicates": 100,
+        "uri": "/assets/ess/ess_#",
+        "message_body": {
+            "name": "ESS Block 12",
+            "lock_mode": {
+                "value": false,
+                "enabled": false,
+                "options": [
+                    {
+                        "name": "No",
+                        "return_value": false
+                    },
+                    {
+                        "name": "Yes",
+                        "return_value": true
+                    }
+                ]
+            },
+            "maint_mode": {
+                "value": false,
+                "enabled": true,
+                "options": [
+                    {
+                        "name": "No",
+                        "return_value": false
+                    },
+                    {
+                        "name": "Yes",
+                        "return_value": true
+                    }
+                ]
+            },
+            "start": {
+                "enabled": false,
+                "options": [
+                    {
+                        "name": "On",
+                        "return_value": true
+                    },
+                    {
+                        "name": "Off",
+                        "return_value": false
+                    }
+                ]
+            },
+            "stop": {
+                "enabled": false,
+                "options": [
+                    {
+                        "name": "On",
+                        "return_value": true
+                    },
+                    {
+                        "name": "Off",
+                        "return_value": false
+                    }
+                ]
+            },
+            "enter_standby": {
+                "enabled": false,
+                "options": [
+                    {
+                        "name": "On",
+                        "return_value": true
+                    },
+                    {
+                        "name": "Off",
+                        "return_value": false
+                    }
+                ]
+            },
+            "exit_standby": {
+                "enabled": false,
+                "options": [
+                    {
+                        "name": "On",
+                        "return_value": true
+                    },
+                    {
+                        "name": "Off",
+                        "return_value": false
+                    }
+                ]
+            },
+            "clear_faults": {
+                "enabled": false,
+                "options": [
+                    {
+                        "name": "Clear Faults",
+                        "return_value": true
+                    }
+                ]
+            },
+            "limits_override": {
+                "value": false,
+                "enabled": false,
+                "options": [
+                    {
+                        "name": "On",
+                        "return_value": true
+                    },
+                    {
+                        "name": "Off",
+                        "return_value": false
+                    }
+                ]
+            },
+            "maint_active_power_setpoint": {
+                "value": 0,
+                "enabled": false,
+                "options": []
+            },
+            "maint_reactive_power_setpoint": {
+                "value": 0,
+                "enabled": false,
+                "options": []
+            },
+            "open_dc_contactors": {
+                "enabled": false,
+                "options": [
+                    {
+                        "name": "On",
+                        "return_value": true
+                    },
+                    {
+                        "name": "Off",
+                        "return_value": false
+                    }
+                ]
+            },
+            "close_dc_contactors": {
+                "enabled": false,
+                "options": [
+                    {
+                        "name": "On",
+                        "return_value": true
+                    },
+                    {
+                        "name": "Off",
+                        "return_value": false
+                    }
+                ]
+            },
+            "active_power": -1,
+            "active_power_setpoint_component_ctrl_cmd": 0,
+            "active_power_setpoint": 0,
+            "alarms": 0,
+            "apparent_power": 1,
+            "bms_alarms": 0,
+            "bms_avg_cell_voltage": 3.4395999908447266,
+            "bms_avg_temp": 50,
+            "bms_faults": 0,
+            "bms_max_cell_voltage": 3.4567999839782715,
+            "bms_max_temp": 51,
+            "bms_min_cell_voltage": 3.4233999252319336,
+            "bms_min_temp": 49,
+            "bms_racks_in_service": 9,
+            "com_status": 0,
+            "component_connected": true,
+            "current_dc": 0,
+            "dc_contactors_closed": true,
+            "ems_alarms": 0,
+            "ess_status": 0,
+            "faults": 0,
+            "frequency": 60,
+            "is_alarmed": false,
+            "is_faulted": false,
+            "pcs_alarms": 0,
+            "pcs_current_l1": 0,
+            "pcs_current_l2": 0,
+            "pcs_current_l3": 0,
+            "pcs_faults": 0,
+            "pcs_modules_in_service": 0,
+            "pcs_voltage_l1_l2": 35234,
+            "pcs_voltage_l2_l3": 35234,
+            "pcs_voltage_l3_l1": 35234,
+            "power_dc": 0,
+            "reactive_power": 0,
+            "reactive_power_setpoint_component_ctrl_cmd": 0,
+            "reactive_power_setpoint": 0,
+            "soc": 50.43010711669922,
+            "soh": 100,
+            "status": "Stop",
+            "system_chargeable_energy": 8089,
+            "system_chargeable_power": 4200,
+            "system_dischargeable_energy": 8216,
+            "system_dischargeable_power": 4200,
+            "voltage_dc": 1307,
+            "watchdog_fault": {
+                "value": 0,
+                "name": "Watchdog Connection Fault",
+                "unit": "",
+                "scaler": 1,
+                "enabled": true,
+                "type": "Int",
+                "ui_type": "fault",
+                "options": []
+            },
+            "watchdog_heartbeat": 71,
+            "watchdog_status": true
+        }
+    },
+    {
+        "period_ms": 100,
+        "templated_duplicates": 100,
+        "uri": "/components/flexgen_ess_#",
+        "message_body": {
+            "active_power_ramp_rate": 0,
+            "active_power_setpoint": 0,
+            "bms_dc_contactor_control": 0,
+            "clear_faults": 0,
+            "frequency_setpoint": 0,
+            "heartbeat_to_ess": 14,
+            "on_off_grid_mode_setting": 0,
+            "reactive_power_ramp_rate": 0,
+            "reactive_power_setpoint": 0,
+            "start_stop_standby_command": 0,
+            "voltage_setpoint": 0,
+            "bms_alarm_active": false,
+            "bms_avg_cell_temp": 50,
+            "bms_avg_cell_voltage": 3.4904,
+            "bms_cell_temp_delta": 0,
+            "bms_cell_voltage_delta": 0,
+            "bms_chargeable_energy": 2149,
+            "bms_comms_ok": false,
+            "bms_control_alarms": [],
+            "bms_dc_charging": false,
+            "bms_dc_contactors_closed": true,
+            "bms_dc_current": 0,
+            "bms_dc_discharging": false,
+            "bms_dc_power": 0,
+            "bms_dc_voltage": 1326.3,
+            "bms_dischargeable_energy": 15766,
+            "bms_fault_active": false,
+            "bms_fire_fault_active": false,
+            "bms_max_cell_temp": 51,
+            "bms_max_cell_voltage": 3.5074,
+            "bms_max_charge_current": 0,
+            "bms_max_charge_power": 0,
+            "bms_max_discharge_current": 0,
+            "bms_max_discharge_power": 0,
+            "bms_min_cell_temp": 49,
+            "bms_min_cell_voltage": 3.4736,
+            "bms_monitor_alarms": [],
+            "bms_monitor_faults": [],
+            "bms_num_racks_online": 9,
+            "bms_num_racks_total": 0,
+            "bms_soc": 87.9,
+            "bms_soh": 100,
+            "comms_faults": [],
+            "ess_alarm_active": false,
+            "ess_fault_active": false,
+            "ess_max_charge_power": 5749,
+            "ess_max_discharge_power": 5749,
+            "heartbeat_from_ess": 5,
+            "pcs_active_power": -1,
+            "pcs_active_power_ramp_rate_feedback": 0,
+            "pcs_active_power_setpoint_feedback": 0,
+            "pcs_alarm_active": false,
+            "pcs_apparent_power": 1,
+            "pcs_avg_line_voltage": 0,
+            "pcs_comms_ok": false,
+            "pcs_control_alarms": [],
+            "pcs_dc_current": 0,
+            "pcs_dc_power": 0,
+            "pcs_dc_voltage": 0,
+            "pcs_fault_active": false,
+            "pcs_frequency": 60,
+            "pcs_frequency_setpoint_feedback": 0,
+            "pcs_grid_mode": [],
+            "pcs_is_running": false,
+            "pcs_l1_current": 0,
+            "pcs_l1_l2_voltage": 35237,
+            "pcs_l2_current": 0,
+            "pcs_l2_l3_voltage": 35237,
+            "pcs_l3_current": 0,
+            "pcs_l3_l1_voltage": 35237,
+            "pcs_max_charge_power": 0,
+            "pcs_max_discharge_power": 0,
+            "pcs_max_igbt_temperature": 0,
+            "pcs_monitor_alarms": [],
+            "pcs_monitor_faults": [],
+            "pcs_power_factor": -1,
+            "pcs_rated_active_power": 0,
+            "pcs_rated_apparent_power": 0,
+            "pcs_rated_reactive_power": 0,
+            "pcs_reactive_power": 0,
+            "pcs_reactive_power_ramp_rate_feedback": 0,
+            "pcs_reactive_power_setpoint_feedback": 0,
+            "pcs_system_state": [
+                {
+                    "value": 0,
+                    "string": "Stop"
+                }
+            ],
+            "pcs_voltage_setpoint_feedback": 0,
+            "modbus_heartbeat": 5,
+            "component_connected": true,
+            "Timestamp": "05-03-2024 11:51:50.270350"
+        }
+    }
+]
