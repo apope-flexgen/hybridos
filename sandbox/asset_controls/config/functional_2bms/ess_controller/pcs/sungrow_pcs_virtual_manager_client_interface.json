@@ -1,0 +1,117 @@
+{
+    "/components/pcs": {
+        "grid_mode": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "FollowPQ",
+                                "uri": "/status/pcs:GridMode"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "FormVF",
+                                "uri": "/status/pcs:GridMode"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "FormVSG",
+                                "uri": "/status/pcs:GridMode"
+                            },
+                            {
+                                "enable": "/config/pcs:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/pcs:grid_mode@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "ifChanged": false,
+            "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        },
+        "status": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "TODO: add output value to set to uri",
+                                "uri": "/status/pcs:Status"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "Stop",
+                                "uri": "/status/pcs:SystemState"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "Standby",
+                                "uri": "/status/pcs:SystemState"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "Run",
+                                "uri": "/status/pcs:SystemState"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "Fault",
+                                "uri": "/status/pcs:SystemState"
+                            },
+                            {
+                                "enable": "/config/pcs:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/pcs:status@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "ifChanged": false,
+            "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        }
+    },
+    "/sched/pcs": {
+        "checkInputs_pcs": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": false,
+                                "uri": "/components/pcs:status@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/pcs:grid_mode@ifChanged"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/pcs:enable",
+            "note": "Sets ifChanged to false to process inputs for various interface variables with actions regardless of value change",
+            "value": 0
+        }
+    },
+    "/vlinks/pcs": {
+        "heartbeat_read": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/pcs:heartbeat_read",
+            "vlink": "/status/pcs:HeartbeatRead"
+        }
+    }
+}

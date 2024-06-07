@@ -1,0 +1,123 @@
+{
+    "/system/commands": {
+        "ForwardCommand_CloseContactors_from_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Forwards CloseContactors command to bms(s)",
+            "options": [
+                {
+                    "uri": "/assets/bms/##BMS_ID##:close_contactors@enabled",
+                    "value": true
+                },
+                {
+                    "uri": "/assets/bms/##BMS_ID##:close_contactors",
+                    "value": true
+                },
+                {
+                    "uri": "/assets/bms/##BMS_ID##:close_contactors@enabled",
+                    "value": false
+                }
+            ],
+            "value": false
+        }
+    },
+    "/controls/##BMS_ID##": {
+        "ClearFaults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "note": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "useExpr": false,
+            "value": 1
+        },
+        "CloseContactors": {
+            "value": 2,
+            "cmdVar": "/components/##BMS_ID##_info:contactor_control",
+            "maxCmdTries": 5,
+            "checkCmdTimeout": 2,
+            "checkCmdHoldTimeout": 0,
+            "amap": "##BMS_ID##"
+        },
+        "OpenContactors": {
+            "value": 3,
+            "cmdVar": "/components/##BMS_ID##_info:contactor_control",
+            "maxCmdTries": 2,
+            "checkCmdTimeout": 2,
+            "checkCmdHoldTimeout": 0
+        },
+        "VerifyCloseContactors": {
+            "value": 0,
+            "enableAlert": false,
+            "numVars": 1,
+            "variable1": "/status/##BMS_ID##:DCClosed",
+            "useExpr": true,
+            "expression": "{1}",
+            "sendCmdTimeout": 5
+        },
+        "VerifyOpenContactors": {
+            "value": 0,
+            "enableAlert": false,
+            "numVars": 1,
+            "variable1": "/status/##BMS_ID##:DCClosed",
+            "useExpr": true,
+            "expression": "not {1}",
+            "sendCmdTimeout": 5
+        }
+    },
+    "/schedule/wake_monitor/##BMS_ID##": {
+        "/controls/##BMS_ID##:ClearFaults": {
+            "amap": "##BMS_ID##",
+            "func": "HandleCmd"
+        }
+    },
+    "/status/##BMS_ID##": {
+        "ClearFaultsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "BMS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##BMS_ID##:ClearFaults"
+                            },
+                            {
+                                "outValue": "Clear",
+                                "uri": "/faults/##BMS_ID##:clear_faults"
+                            },
+                            {
+                                "outValue": "Clear",
+                                "uri": "/alarms/##BMS_ID##:clear_alarms"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "note": "When this variable is set, /faults/##BMS_ID##:clear_faults and /alarms/##BMS_ID##:clear_alarms will be set to Clear",
+            "value": false
+        }
+    }
+}

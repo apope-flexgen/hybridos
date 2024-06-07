@@ -1,0 +1,369 @@
+{
+    "/assets/bms/summary": {
+        "alarms": {
+            "options": [],
+            "value": 0
+        },
+        "avg_cell_temp": {
+            "value": 0
+        },
+        "avg_cell_voltage": {
+            "value": 0
+        },
+        "cell_temp_delta": {
+            "value": 0
+        },
+        "cell_voltage_delta": {
+            "value": 0
+        },
+        "chargeable_energy": {
+            "value": 0
+        },
+        "clear_faults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/bms:ClearFaults@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/bms:ClearFaults"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to initiate clear faults command routine",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "close_contactors": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to initiate close contactors command routine",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "comms_ok": {
+            "value": false
+        },
+        "dc_charging": {
+            "value": false
+        },
+        "dc_contactors_closed": {
+            "value": false
+        },
+        "dc_current": {
+            "value": 0
+        },
+        "dc_discharging": {
+            "value": false
+        },
+        "dc_power": {
+            "value": 0
+        },
+        "dc_voltage": {
+            "value": 0
+        },
+        "dischargeable_energy": {
+            "value": 0
+        },
+        "faults": {
+            "options": [],
+            "value": 0
+        },
+        "maint_mode": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/bms/summary:clear_faults@enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note": "UI control variable used to set the current asset in maintenance mode",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "max_cell_temp": {
+            "value": 0
+        },
+        "max_cell_voltage": {
+            "value": 0
+        },
+        "max_charge_current": {
+            "value": 0
+        },
+        "max_charge_power": {
+            "value": 0
+        },
+        "max_discharge_current": {
+            "value": 0
+        },
+        "max_discharge_power": {
+            "value": 0
+        },
+        "min_cell_temp": {
+            "value": 0
+        },
+        "min_cell_voltage": {
+            "value": 0
+        },
+        "num_racks_online": {
+            "value": 0
+        },
+        "num_racks_total": {
+            "value": 0
+        },
+        "open_contactors": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/bms:OpenContactors@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/bms:OpenContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to initiate open contactors command routine",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "soc": {
+            "value": 0
+        },
+        "soh": {
+            "value": 0
+        },
+        "status": {
+            "value": "INIT"
+        }
+    },
+    "/vlinks/bms": {
+        "ui_avg_cell_temp": {
+            "default": 0,
+            "value": "/assets/bms/summary:avg_cell_temp",
+            "vlink": "/status/bms:AvgCellTemp"
+        },
+        "ui_avg_cell_voltage": {
+            "default": 0,
+            "value": "/assets/bms/summary:avg_cell_voltage",
+            "vlink": "/status/bms:AvgCellVoltage"
+        },
+        "ui_cell_temp_delta": {
+            "default": 0,
+            "value": "/assets/bms/summary:cell_temp_delta",
+            "vlink": "/status/bms:CellTempDelta"
+        },
+        "ui_cell_voltage_delta": {
+            "default": 0,
+            "value": "/assets/bms/summary:cell_voltage_delta",
+            "vlink": "/status/bms:CellVoltageDelta"
+        },
+        "ui_chargeable_energy": {
+            "default": 0,
+            "value": "/assets/bms/summary:chargeable_energy",
+            "vlink": "/status/bms:ChargeableEnergy"
+        },
+        "ui_comms_ok": {
+            "default": false,
+            "value": "/assets/bms/summary:comms_ok",
+            "vlink": "/status/bms:CommsOK"
+        },
+        "ui_dc_charging": {
+            "default": false,
+            "value": "/assets/bms/summary:dc_charging",
+            "vlink": "/status/bms:DCCharging"
+        },
+        "ui_dc_contactors_closed": {
+            "default": false,
+            "value": "/assets/bms/summary:dc_contactors_closed",
+            "vlink": "/status/bms:DCClosed"
+        },
+        "ui_dc_current": {
+            "default": 0,
+            "value": "/assets/bms/summary:dc_current",
+            "vlink": "/status/bms:DCCurrent"
+        },
+        "ui_dc_discharging": {
+            "default": false,
+            "value": "/assets/bms/summary:dc_discharging",
+            "vlink": "/status/bms:DCDischarging"
+        },
+        "ui_dc_power": {
+            "default": 0,
+            "value": "/assets/bms/summary:dc_power",
+            "vlink": "/status/bms:DCPower"
+        },
+        "ui_dc_voltage": {
+            "default": 0,
+            "value": "/assets/bms/summary:dc_voltage",
+            "vlink": "/status/bms:DCVoltage"
+        },
+        "ui_dischargeable_energy": {
+            "default": 0,
+            "value": "/assets/bms/summary:dischargeable_energy",
+            "vlink": "/status/bms:DischargeableEnergy"
+        },
+        "ui_max_cell_temp": {
+            "default": 0,
+            "value": "/assets/bms/summary:max_cell_temp",
+            "vlink": "/status/bms:MaxCellTemp"
+        },
+        "ui_max_cell_voltage": {
+            "default": 0,
+            "value": "/assets/bms/summary:max_cell_voltage",
+            "vlink": "/status/bms:MaxCellVoltage"
+        },
+        "ui_max_charge_current": {
+            "default": 0,
+            "value": "/assets/bms/summary:max_charge_current",
+            "vlink": "/limits/bms:ChargeCurrentLimit"
+        },
+        "ui_max_charge_power": {
+            "default": 0,
+            "value": "/assets/bms/summary:max_charge_power",
+            "vlink": "/limits/bms:ChargePowerLimit"
+        },
+        "ui_max_discharge_current": {
+            "default": 0,
+            "value": "/assets/bms/summary:max_discharge_current",
+            "vlink": "/limits/bms:DischargeCurrentLimit"
+        },
+        "ui_max_discharge_power": {
+            "default": 0,
+            "value": "/assets/bms/summary:max_discharge_power",
+            "vlink": "/limits/bms:DischargePowerLimit"
+        },
+        "ui_min_cell_temp": {
+            "default": 0,
+            "value": "/assets/bms/summary:min_cell_temp",
+            "vlink": "/status/bms:MinCellTemp"
+        },
+        "ui_min_cell_voltage": {
+            "default": 0,
+            "value": "/assets/bms/summary:min_cell_voltage",
+            "vlink": "/status/bms:MinCellVoltage"
+        },
+        "ui_num_racks_online": {
+            "default": 0,
+            "value": "/assets/bms/summary:num_racks_online",
+            "vlink": "/status/bms:NumRacksOnline"
+        },
+        "ui_num_racks_total": {
+            "default": 0,
+            "value": "/assets/bms/summary:num_racks_total",
+            "vlink": "/status/bms:NumRacksTotal"
+        },
+        "ui_soc": {
+            "default": 0,
+            "value": "/assets/bms/summary:soc",
+            "vlink": "/status/bms:SOC"
+        },
+        "ui_soh": {
+            "default": 0,
+            "value": "/assets/bms/summary:soh",
+            "vlink": "/status/bms:SOH"
+        },
+        "ui_status": {
+            "default": "INIT",
+            "value": "/assets/bms/summary:status",
+            "vlink": "/status/bms:Status"
+        }
+    }
+}

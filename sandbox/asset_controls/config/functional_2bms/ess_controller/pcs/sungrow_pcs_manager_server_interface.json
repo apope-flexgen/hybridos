@@ -1,0 +1,50 @@
+{
+    "/site/ess": {
+        "pcs_##PCS_ID##_control_alarms": {
+            "bit0": "PCS ActivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit1": "PCS ActivePowerRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit10": "PCS Start - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit11": "PCS Stop - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit12": "PCS VerifyActivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+            "bit13": "PCS VerifyActivePowerRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+            "bit14": "PCS VerifyFrequencySetpoint - Command was sent, but the expected result was not observed before timeout",
+            "bit15": "PCS VerifyGridFollowPQ - Command was sent, but the expected result was not observed before timeout",
+            "bit16": "PCS VerifyGridFormVF - Command was sent, but the expected result was not observed before timeout",
+            "bit17": "PCS VerifyGridFormVSG - Command was sent, but the expected result was not observed before timeout",
+            "bit18": "PCS VerifyReactivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+            "bit19": "PCS VerifyReactivePowerRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+            "bit2": "PCS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit20": "PCS VerifyStandby - Command was sent, but the expected result was not observed before timeout",
+            "bit21": "PCS VerifyStart - Command was sent, but the expected result was not observed before timeout",
+            "bit22": "PCS VerifyStop - Command was sent, but the expected result was not observed before timeout",
+            "bit23": "PCS VerifyVoltageSetpoint - Command was sent, but the expected result was not observed before timeout",
+            "bit24": "PCS VoltageSetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit3": "PCS FrequencySetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit4": "PCS GridFollowPQ - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit5": "PCS GridFormVF - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit6": "PCS GridFormVSG - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit7": "PCS ReactivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit8": "PCS ReactivePowerRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit9": "PCS Standby - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "name": "PCS Control Alarms",
+            "type": "bitfield",
+            "value": 0
+        },
+        "pcs_##PCS_ID##_monitor_alarms": {
+            "bit0": "PCS ActivePower - Max Threshold Exceeded",
+            "bit1": "PCS DCVoltage - Max Threshold Exceeded",
+            "bit2": "PCS DCVoltage - Min Threshold Exceeded",
+            "name": "PCS Monitor Alarms",
+            "type": "bitfield",
+            "value": 0
+        },
+        "pcs_##PCS_ID##_monitor_faults": {
+            "bit0": "PCS ActivePower - Max Threshold Exceeded",
+            "bit1": "PCS DCVoltage - Max Threshold Exceeded",
+            "bit2": "PCS DCVoltage - Min Threshold Exceeded",
+            "name": "PCS Monitor Faults",
+            "type": "bitfield",
+            "value": 0
+        }
+    }
+}

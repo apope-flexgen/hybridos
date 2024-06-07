@@ -1,0 +1,291 @@
+{
+    "/controls/bms": {
+        "ClearFaults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "note": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "useExpr": false,
+            "value": 0
+        },
+        "CloseContactors": {
+            "checkCmdTimeout": 3,
+            "sendCmdTimeout": 3,
+            "value": 0
+        },
+        "CloseContactorsEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/bms/summary:close_contactors@enabled"
+                            },
+                            {
+                                "uri": "/status/bms:CloseContactorsEnabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "expression": "not {1} and {2} and not {3}",
+            "note": "Enable Close Contactors UI control if DC Contactors are opened, the BMS is not faulted, and the BMS is in maintenance mode",
+            "numVars": 3,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/bms:DCClosed",
+            "variable2": "/assets/bms/summary:maint_mode",
+            "variable3": "/status/bms:IsFaulted"
+        },
+        "OpenContactors": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "expression": "{1} and ({2} == Stop or {2} == Fault)",
+            "note1": "Open DC contactors command to send to BMS if DC contactors are closed and the PCS is in Stop or Fault",
+            "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "numVars": 2,
+            "sendCmdTimeout": 3,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/bms:DCClosed",
+            "variable2": "/status/pcs:SystemState"
+        },
+        "OpenContactorsEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/bms/summary:open_contactors@enabled"
+                            },
+                            {
+                                "uri": "/status/bms:OpenContactorsEnabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "expression": "{1} and not {2} and {3}",
+            "note": "Enable Open Contactors UI control if DC Contactors are closed and the BMS is in maintenance mode",
+            "numVars": 3,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/bms:DCClosed",
+            "variable2": "/status/pcs:DCClosed",
+            "variable3": "/assets/bms/summary:maint_mode"
+        },
+        "VerifyCloseContactors": {
+            "enableAlert": false,
+            "expression": "{1}",
+            "numVars": 1,
+            "sendCmdTimeout": 10,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/bms:DCClosed"
+        },
+        "VerifyOpenContactors": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "not {1}",
+            "numVars": 1,
+            "sendCmdTimeout": 10,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/bms:DCClosed"
+        }
+    },
+    "/schedule/wake_monitor/bms": {
+        "/controls/bms:ClearFaults": {
+            "amap": "bms",
+            "func": "HandleCmd"
+        },
+        "/controls/bms:CloseContactorsEnable": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/controls/bms:OpenContactors": {
+            "amap": "bms",
+            "func": "HandleCmd"
+        },
+        "/controls/bms:OpenContactorsEnable": {
+            "amap": "bms",
+            "func": "CalculateVar"
+        },
+        "/controls/bms:VerifyOpenContactors": {
+            "amap": "bms",
+            "func": "HandleCmd"
+        }
+    },
+    "/status/bms": {
+        "ClearFaultsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "BMS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/bms:ClearFaults"
+                            },
+                            {
+                                "outValue": "Clear",
+                                "uri": "/faults/bms:clear_faults"
+                            },
+                            {
+                                "outValue": "Clear",
+                                "uri": "/alarms/bms:clear_alarms"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "note": "When this variable is set, /faults/bms:clear_faults and /alarms/bms:clear_alarms will be set to Clear",
+            "value": false
+        },
+        "CloseContactorsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/system/commands:ForwardCommand_CloseContactors_from_bms"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/bms:VerifyCloseContactors@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/bms:VerifyCloseContactors"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": "BMS CloseContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/bms:CloseContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "note": "If the close contactors command has been successfully sent to the BMS, verify that DC contactors are closed. Otherwise, send an alarm",
+            "value": false
+        },
+        "OpenContactorsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/bms:VerifyOpenContactors@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/bms:VerifyOpenContactors"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": "BMS OpenContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/bms:OpenContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "note": "If the open contactors command has been successfully sent to the BMS, verify that DC contactors are opened. Otherwise, send an alarm",
+            "value": false
+        },
+        "VerifyCloseContactorsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "BMS VerifyCloseContactors - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/bms:VerifyCloseContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "note": "If the BMS failed to close contactors after an elasped time, send an alarm",
+            "value": false
+        },
+        "VerifyOpenContactorsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "BMS VerifyOpenContactors - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/bms:VerifyOpenContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "note": "If the BMS failed to open contactors after an elasped time, send an alarm",
+            "value": false
+        }
+    }
+}

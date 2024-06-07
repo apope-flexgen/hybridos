@@ -1,0 +1,249 @@
+{
+    "/components/##PCS_ID##": {
+        "grid_mode": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "FollowPQ",
+                                "uri": "/status/##PCS_ID##:GridMode"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "FormVF",
+                                "uri": "/status/##PCS_ID##:GridMode"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "FormVSG",
+                                "uri": "/status/##PCS_ID##:GridMode"
+                            },
+                            {
+                                "enable": "/config/##PCS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:grid_mode@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        },
+        "status": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "TODO: add output value to set to uri",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "Stop",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "Standby",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "Run",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": "TODO: add input value to compare against value field or remove remap entry",
+                                "outValue": "Fault",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "enable": "/config/##PCS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:status@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        }
+    },
+    "/sched/##PCS_ID##": {
+        "checkInputs_##PCS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": false,
+                                "uri": "/components/##PCS_ID##:status@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##PCS_ID##:grid_mode@ifChanged"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "note": "Sets ifChanged to false to process inputs for various interface variables with actions regardless of value change",
+            "value": 0
+        }
+    },
+    "/vlinks/##PCS_ID##": {
+        "active_power": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:active_power",
+            "vlink": "/status/##PCS_ID##:ActivePower"
+        },
+        "active_power_ramp_rate_feedback": {
+            "default": 0,
+            "note1": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "note2": "TODO: If the feedback variable is also used as the control variable, then remove the _feedback suffix from the ID",
+            "value": "/components/##PCS_ID##:active_power_ramp_rate_feedback",
+            "vlink": "/status/##PCS_ID##:ActivePowerRampRateFeedback"
+        },
+        "active_power_setpoint_feedback": {
+            "default": 0,
+            "note1": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "note2": "TODO: If the feedback variable is also used as the control variable, then remove the _feedback suffix from the ID",
+            "value": "/components/##PCS_ID##:active_power_setpoint_feedback",
+            "vlink": "/status/##PCS_ID##:ActivePowerSetpointFeedback"
+        },
+        "apparent_power": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:apparent_power",
+            "vlink": "/status/##PCS_ID##:ApparentPower"
+        },
+        "dc_current": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:dc_current",
+            "vlink": "/status/##PCS_ID##:DCCurrent"
+        },
+        "dc_power": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:dc_power",
+            "vlink": "/status/##PCS_ID##:DCPower"
+        },
+        "dc_voltage": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:dc_voltage",
+            "vlink": "/status/##PCS_ID##:DCVoltage"
+        },
+        "frequency": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:frequency",
+            "vlink": "/status/##PCS_ID##:Frequency"
+        },
+        "frequency_setpoint_feedback": {
+            "default": 0,
+            "note1": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "note2": "TODO: If the feedback variable is also used as the control variable, then remove the _feedback suffix from the ID",
+            "value": "/components/##PCS_ID##:frequency_setpoint_feedback",
+            "vlink": "/status/##PCS_ID##:FrequencySetpointFeedback"
+        },
+        "heartbeat_read": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:heartbeat_read",
+            "vlink": "/status/##PCS_ID##:HeartbeatRead"
+        },
+        "l1_current": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:l1_current",
+            "vlink": "/status/##PCS_ID##:L1Current"
+        },
+        "l1_l2_voltage": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:l1_l2_voltage",
+            "vlink": "/status/##PCS_ID##:L1L2Voltage"
+        },
+        "l2_current": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:l2_current",
+            "vlink": "/status/##PCS_ID##:L2Current"
+        },
+        "l2_l3_voltage": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:l2_l3_voltage",
+            "vlink": "/status/##PCS_ID##:L2L3Voltage"
+        },
+        "l3_current": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:l3_current",
+            "vlink": "/status/##PCS_ID##:L3Current"
+        },
+        "l3_l1_voltage": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:l3_l1_voltage",
+            "vlink": "/status/##PCS_ID##:L3L1Voltage"
+        },
+        "power_factor": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:power_factor",
+            "vlink": "/status/##PCS_ID##:PowerFactor"
+        },
+        "rated_apparent_power": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:rated_apparent_power",
+            "vlink": "/limits/##PCS_ID##:RatedApparentPower"
+        },
+        "reactive_power": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:reactive_power",
+            "vlink": "/status/##PCS_ID##:ReactivePower"
+        },
+        "reactive_power_ramp_rate_feedback": {
+            "default": 0,
+            "note1": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "note2": "TODO: If the feedback variable is also used as the control variable, then remove the _feedback suffix from the ID",
+            "value": "/components/##PCS_ID##:reactive_power_ramp_rate_feedback",
+            "vlink": "/status/##PCS_ID##:ReactivePowerRampRateFeedback"
+        },
+        "reactive_power_setpoint_feedback": {
+            "default": 0,
+            "note1": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "note2": "TODO: If the feedback variable is also used as the control variable, then remove the _feedback suffix from the ID",
+            "value": "/components/##PCS_ID##:reactive_power_setpoint_feedback",
+            "vlink": "/status/##PCS_ID##:ReactivePowerSetpointFeedback"
+        },
+        "voltage_setpoint_feedback": {
+            "default": 0,
+            "note1": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "note2": "TODO: If the feedback variable is also used as the control variable, then remove the _feedback suffix from the ID",
+            "value": "/components/##PCS_ID##:voltage_setpoint_feedback",
+            "vlink": "/status/##PCS_ID##:VoltageSetpointFeedback"
+        }
+    }
+}

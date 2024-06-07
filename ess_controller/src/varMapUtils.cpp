@@ -3794,10 +3794,10 @@ void VarMapUtils::processMsgSetPub(varsmap& vmap, const char* method, const char
         {
             av = setValfromCj(vmap, my.Uri, cjname->string, cjname, uiObject);
 
-            // Rescue an orphan. Do not rescue if av already has an am
-            if (av && am && !av->am)
+            // Rescue an orphan. Undoing Do not rescue if av already has an am
+            if (am && av)
                 av->am = am;
-            if (av && ai && !av->ai)
+            if (ai && av)
                 av->ai = ai;
 
             if (av)
@@ -3869,10 +3869,10 @@ void VarMapUtils::processMsgSetPub(varsmap& vmap, const char* method, const char
 
             if (av)
             {
-                // Rescue an orphan. Do not rescue if av already has an am
-                if (am && !av->am)
+                // Rescue an orphan. Undoing Do not rescue if av already has an am
+                if (am)
                     av->am = am;
-                if (ai && !av->ai)
+                if (ai)
                     av->ai = ai;
 
                 if (alist && newAv)

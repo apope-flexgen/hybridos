@@ -1,0 +1,39 @@
+{
+    "/config/load": {
+        "ess_controller": {
+            "aname": "ess",
+            "file": "ess_controller",
+            "final": "ess_final",
+            "new_options": [
+                {
+                    "aname": "ess",
+                    "file": "ess_controller_server_interface",
+                    "pname": "ess"
+                },
+                {
+                    "aname": "ess",
+                    "file": "ess_controller_ui",
+                    "pname": "ess"
+                },
+                {
+                    "aname": "ess",
+                    "file": "ess_controller_faults",
+                    "pname": "ess"
+                },
+                {
+                    "aname": "bms",
+                    "load": "catl_bms_init",
+                    "pname": "ess"
+                },
+                {
+                    "aname": "pcs",
+                    "load": "sungrow_pcs_init",
+                    "pname": "ess"
+                }
+            ],
+            "note1": "Loads ess_controller first. Then, configs defined in new_options, if any, are loaded next",
+            "note2": "Once all files are loaded, then ess_final is loaded",
+            "value": false
+        }
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "/site/ess": {
+        "bms_##BMS_ID##_control_alarms": {
+            "bit0": "BMS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit1": "BMS CloseContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit2": "BMS OpenContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit3": "BMS VerifyCloseContactors - Command was sent, but the expected result was not observed before timeout",
+            "bit4": "BMS VerifyOpenContactors - Command was sent, but the expected result was not observed before timeout",
+            "name": "BMS Control Alarms",
+            "type": "bitfield",
+            "value": 0
+        },
+        "bms_##BMS_ID##_monitor_alarms": {
+            "bit0": "BMS CellTempDelta - Max Threshold Exceeded",
+            "bit1": "BMS CellVoltageDelta - Max Threshold Exceeded",
+            "bit10": "BMS NumRacksOnline - Min Threshold Exceeded",
+            "bit11": "BMS SOC - Max Threshold Exceeded",
+            "bit12": "BMS SOC - Min Threshold Exceeded",
+            "bit13": "BMS SOH - Min Threshold Exceeded",
+            "bit2": "BMS DCCurrent - Max Threshold Exceeded",
+            "bit3": "BMS DCCurrent - Min Threshold Exceeded",
+            "bit4": "BMS DCVoltage - Max Threshold Exceeded",
+            "bit5": "BMS DCVoltage - Min Threshold Exceeded",
+            "bit6": "BMS MaxCellTemp - Max Threshold Exceeded",
+            "bit7": "BMS MaxCellVoltage - Max Threshold Exceeded",
+            "bit8": "BMS MinCellTemp - Min Threshold Exceeded",
+            "bit9": "BMS MinCellVoltage - Min Threshold Exceeded",
+            "name": "BMS Monitor Alarms",
+            "type": "bitfield",
+            "value": 0
+        },
+        "bms_##BMS_ID##_monitor_faults": {
+            "bit0": "BMS CellTempDelta - Max Threshold Exceeded",
+            "bit1": "BMS CellVoltageDelta - Max Threshold Exceeded",
+            "bit10": "BMS NumRacksOnline - Min Threshold Exceeded",
+            "bit11": "BMS SOC - Max Threshold Exceeded",
+            "bit12": "BMS SOC - Min Threshold Exceeded",
+            "bit13": "BMS SOH - Min Threshold Exceeded",
+            "bit2": "BMS DCCurrent - Max Threshold Exceeded",
+            "bit3": "BMS DCCurrent - Min Threshold Exceeded",
+            "bit4": "BMS DCVoltage - Max Threshold Exceeded",
+            "bit5": "BMS DCVoltage - Min Threshold Exceeded",
+            "bit6": "BMS MaxCellTemp - Max Threshold Exceeded",
+            "bit7": "BMS MaxCellVoltage - Max Threshold Exceeded",
+            "bit8": "BMS MinCellTemp - Min Threshold Exceeded",
+            "bit9": "BMS MinCellVoltage - Min Threshold Exceeded",
+            "name": "BMS Monitor Faults",
+            "type": "bitfield",
+            "value": 0
+        },
+        "bms_##BMS_ID##_num_racks_online": {
+            "name": "BMS Number of Racks Online",
+            "size": 1,
+            "type": "status",
+            "value": 0
+        },
+        "bms_##BMS_ID##_num_racks_total": {
+            "name": "BMS Number of Racks Total",
+            "size": 1,
+            "type": "status",
+            "value": 0
+        }
+    },
+    "/vlinks/##BMS_ID##": {
+        "site_bms_##BMS_ID##_num_racks_online": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_num_racks_online",
+            "vlink": "/status/##BMS_ID##:NumRacksOnline"
+        },
+        "site_bms_##BMS_ID##_num_racks_total": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_num_racks_total",
+            "vlink": "/status/##BMS_ID##:NumRacksTotal"
+        }
+    }
+}
