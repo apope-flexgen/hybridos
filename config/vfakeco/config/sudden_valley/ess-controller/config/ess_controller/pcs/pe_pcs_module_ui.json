@@ -126,7 +126,7 @@
         },
         "ui_apparent_power": {
             "value": "/assets/pcs/##MODULE_ID##:apparent_power",
-            "vlink": "/status/##MODULE_ID##:ApparentPower"
+            "vlink": "/status/##MODULE_ID##:ApparentPower_Calculated"
         },
         "ui_dc_current": {
             "value": "/assets/pcs/##MODULE_ID##:dc_current",

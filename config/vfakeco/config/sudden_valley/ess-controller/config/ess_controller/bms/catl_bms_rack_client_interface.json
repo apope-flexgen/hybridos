@@ -9,7 +9,10 @@
         "min_cell_temp"    : { "value": "/components/catl_##RACK_ID##:sbmu_min_cell_temp"    , "vlink": "/status/##RACK_ID##:MinCellTemp"    },
         "max_cell_voltage" : { "value": "/components/catl_##RACK_ID##:sbmu_max_cell_voltage" , "vlink": "/status/##RACK_ID##:MaxCellVoltage" },
         "avg_cell_voltage" : { "value": "/components/catl_##RACK_ID##:sbmu_avg_cell_voltage" , "vlink": "/status/##RACK_ID##:AvgCellVoltage" },
-        "min_cell_voltage" : { "value": "/components/catl_##RACK_ID##:sbmu_min_cell_voltage" , "vlink": "/status/##RACK_ID##:MinCellVoltage" }
+        "min_cell_voltage" : { "value": "/components/catl_##RACK_ID##:sbmu_min_cell_voltage" , "vlink": "/status/##RACK_ID##:MinCellVoltage" },
+        "max_charge_current" : { "value": "/components/catl_##RACK_ID##:sbmu_max_charge_current" , "vlink": "/status/##RACK_ID##:ChargeCurrentLimit" },
+        "max_discharge_power" : { "value": "/components/catl_##RACK_ID##:sbmu_max_discharge_current" , "vlink": "/status/##RACK_ID##:DischargeCurrentLimit" },
+        "dc_power" : { "value": "/components/catl_##RACK_ID##:sbmu_pdc" , "vlink": "/status/##RACK_ID##:DCPower" }
     },
     "/components/catl_##RACK_ID##": {
         "sbmu_master_negative": {

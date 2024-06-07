@@ -716,7 +716,7 @@
         },
         "ui_rated_active_power": {
             "value": "/assets/pcs/summary:rated_active_power",
-            "vlink": "/limits/pcs:RatedActivePower"
+            "vlink": "/config/pcs:RatedActivePower"
         },
         "ui_rated_apparent_power": {
             "value": "/assets/pcs/summary:rated_apparent_power",
@@ -728,7 +728,7 @@
         },
         "ui_rated_reactive_power": {
             "value": "/assets/pcs/summary:rated_reactive_power",
-            "vlink": "/limits/pcs:RatedReactivePower"
+            "vlink": "/config/pcs:RatedReactivePower"
         },
         "ui_reactive_power": {
             "value": "/assets/pcs/summary:reactive_power",

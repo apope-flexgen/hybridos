@@ -186,19 +186,19 @@
         },
         "ui_max_charge_current": {
             "value": "/assets/bms/##RACK_ID##:max_charge_current",
-            "vlink": "/limits/##RACK_ID##:ChargeCurrentLimit"
+            "vlink": "/status/##RACK_ID##:ChargeCurrentLimit"
         },
         "ui_max_charge_power": {
             "value": "/assets/bms/##RACK_ID##:max_charge_power",
-            "vlink": "/limits/##RACK_ID##:ChargePowerLimit"
+            "vlink": "/status/##RACK_ID##:ChargePowerLimit_Calculated"
         },
         "ui_max_discharge_current": {
             "value": "/assets/bms/##RACK_ID##:max_discharge_current",
-            "vlink": "/limits/##RACK_ID##:DischargeCurrentLimit"
+            "vlink": "/status/##RACK_ID##:DischargeCurrentLimit"
         },
         "ui_max_discharge_power": {
             "value": "/assets/bms/##RACK_ID##:max_discharge_power",
-            "vlink": "/limits/##RACK_ID##:DischargePowerLimit"
+            "vlink": "/status/##RACK_ID##:DischargePowerLimit_Calculated"
         },
         "ui_min_cell_temp": {
             "value": "/assets/bms/##RACK_ID##:min_cell_temp",
@@ -220,5 +220,6 @@
             "value": "/assets/bms/##RACK_ID##:status",
             "vlink": "/status/##RACK_ID##:Status"
         }
+        
     }
 }

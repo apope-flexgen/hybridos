@@ -448,6 +448,12 @@
                 "name": "Battery Subsystem Max Discharge"
               },
               {
+                "id": "sbmu_pdc",
+                "scale": 10,
+                "offset": 1069,
+                "name": "Battery Subsystem DC Power"
+              },
+              {
                 "id": "sbmu_max_cell_voltage_position",
                 "offset": 1072,
                 "name": "Battery Subsystem Max Cell Voltage Positions"
@@ -674,6 +680,12 @@
                 "name": "Battery Subsystem Min Cell Temp Positions"
               },
               {
+                "id": "sbmu_pdc",
+                "scale": 10,
+                "offset": 2100,
+                "name": "Battery Subsystem DC Power"
+              },
+              {
                 "id": "sbmu_sum_cells",
                 "offset": 2103,
                 "name": "Battery Subsystem Sum Cell"
@@ -794,6 +806,12 @@
                 "offset": 3104,
                 "scale": 10,
                 "name": "Battery Subsystem Voltage"
+              },
+              {
+                "id": "sbmu_pdc",
+                "scale": 10,
+                "offset": 3105,
+                "name": "Battery Subsystem DC Power"
               },
               {
                 "id": "sbmu_current",
@@ -1000,6 +1018,12 @@
                 "offset": 4128,
                 "scale": 10,
                 "name": "Battery Subsystem Voltage"
+              },
+              {
+                "id": "sbmu_pdc",
+                "scale": 10,
+                "offset": 4129,
+                "name": "Battery Subsystem DC Power"
               },
               {
                 "id": "sbmu_current",
@@ -1272,6 +1296,12 @@
                 "name": "Battery Subsystem Max Discharge"
               },
               {
+                "id": "sbmu_pdc",
+                "scale": 10,
+                "offset": 5165,
+                "name": "Battery Subsystem DC Power"
+              },
+              {
                 "id": "sbmu_max_cell_voltage_position",
                 "offset": 5168,
                 "name": "Battery Subsystem Max Cell Voltage Positions"
@@ -1476,6 +1506,12 @@
                 "scale": 10,
                 "offset": 6188,
                 "name": "Battery Subsystem Max Discharge"
+              },
+              {
+                "id": "sbmu_pdc",
+                "scale": 10,
+                "offset": 6189,
+                "name": "Battery Subsystem DC Power"
               },
               {
                 "id": "sbmu_max_cell_voltage_position",
@@ -1704,6 +1740,12 @@
                 "name": "Battery Subsystem Min Cell Temp Positions"
               },
               {
+                "id": "sbmu_pdc",
+                "scale": 10,
+                "offset": 7220,
+                "name": "Battery Subsystem DC Power"
+              },
+              {
                 "id": "sbmu_sum_cells",
                 "offset": 7223,
                 "name": "Battery Subsystem Sum Cell"
@@ -1915,6 +1957,12 @@
                 "name": "Battery Subsystem Sum Cell"
               },
               {
+                "id": "sbmu_pdc",
+                "scale": 10,
+                "offset": 8248,
+                "name": "Battery Subsystem DC Power"
+              },
+              {
                 "id": "sbmu_tms_mode_command",
                 "offset": 8266,
                 "name": "Battery Subsystem TMS Mode Cmd"
@@ -2030,6 +2078,12 @@
                 "offset": 9248,
                 "scale": 10,
                 "name": "Battery Subsystem Voltage"
+              },
+              {
+                "id": "sbmu_pdc",
+                "scale": 10,
+                "offset": 9249,
+                "name": "Battery Subsystem DC Power"
               },
               {
                 "id": "sbmu_current",

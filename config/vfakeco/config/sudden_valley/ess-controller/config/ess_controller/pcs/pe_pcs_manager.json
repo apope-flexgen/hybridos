@@ -214,7 +214,7 @@
             },
             "ifChanged": true,
             "note1": "Contains the PCS's current grid mode, which can be one of the following: FollowPQ, FormVF, FormVSG",
-            "value": "INIT"
+            "value": "Follow PQ"
         },
         "HeartbeatWrite": {
             "actions": {
@@ -336,6 +336,24 @@
                                 "note": "Bit 3 - Standby",
                                 "outValue": 8,
                                 "uri": "/site/ess:pcs_system_state"
+                            },
+                            {
+                                "uri": "/status/module_1:Status"
+                            },
+                            {
+                                "uri": "/status/module_2:Status"
+                            },
+                            {
+                                "uri": "/status/module_3:Status"
+                            },
+                            {
+                                "uri": "/status/module_4:Status"
+                            },
+                            {
+                                "uri": "/status/module_5:Status"
+                            },
+                            {
+                                "uri": "/status/module_6:Status"
                             }
                         ]
                     }
@@ -345,6 +363,10 @@
             "note1": "Contains the PCS's current state, which can be one of the following: Stop, Run, Fault, Standby",
             "note2": "Updates various PCS status variables depending on this variable's value",
             "value": "INIT"
+        },
+        "MaxIGBTTemperature":
+        {
+            "value": 20
         }
     },
     "/system/commands": {

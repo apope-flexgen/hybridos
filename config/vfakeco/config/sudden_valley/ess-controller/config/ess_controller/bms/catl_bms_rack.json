@@ -69,7 +69,16 @@
         "/status/##RACK_ID##:CellVoltageDelta_Calculated": {
             "amap": "##RACK_ID##",
             "func": "CalculateVar"
+        },
+        "/status/##RACK_ID##:ChargePowerLimit_Calculated": {
+            "amap": "##RACK_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##RACK_ID##:DischargePowerLimit_Calculated": {
+            "amap": "##RACK_ID##",
+            "func": "CalculateVar"
         }
+
     },
     "/status/##RACK_ID##": {
         "CellTempDelta_Calculated": {
@@ -133,7 +142,26 @@
             "note3": "TODO: Decode or calculate DC contactors closed status and remap/link value to this variable",
             "value": false
         },
-        "Status": "INIT"
+        "Status": "INIT",
+        "ChargePowerLimit_Calculated":{
+            "expression": "{2} * {1} * 0.001",
+            "note": "Calculates the Charge power",
+            "numVars": 2,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##RACK_ID##:DCVoltage",
+            "variable2": "/status/##RACK_ID##:ChargeCurrentLimit"
+        },
+
+        "DischargePowerLimit_Calculated":{
+            "expression": "{2} * {1} * 0.001",
+            "note": "Calculates the Discharge power",
+            "numVars": 2,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##RACK_ID##:DCVoltage",
+            "variable2": "/status/##RACK_ID##:DischargeCurrentLimit"
+        }
     },
     "/system/commands": {
         "runOpts_rack": {

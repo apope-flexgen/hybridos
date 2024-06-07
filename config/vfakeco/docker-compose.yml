@@ -37,9 +37,9 @@ services:
         ipv4_address: 10.10.1.5
     tty: true
     volumes:
-    - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/config:/home/staging
-    - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/scripts:/home/utility
-    - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/.secret:/home/secret
+    - ./config/fleet-manager/config:/home/staging
+    - ./config/fleet-manager/scripts:/home/utility
+    - ./config/fleet-manager/.secret:/home/secret
     - ftd-data:/home/hybridos/powercloud/owner/fleetman01/archives
   lima-site-controller-01:
     image: flexgen/site_controller-snapshot:12.0.0.beta.1
@@ -55,9 +55,9 @@ services:
         ipv4_address: 10.10.1.10
     tty: true
     volumes:
-    - /home/hybridos/git/hybridos/config/vfakeco/config/lima/site-controller/config:/home/staging
-    - /home/hybridos/git/hybridos/config/vfakeco/config/lima/site-controller/scripts:/home/utility
-    - /home/hybridos/git/hybridos/config/vfakeco/config/lima/site-controller/.secret:/home/secret
+    - ./config/lima/site-controller/config:/home/staging
+    - ./config/lima/site-controller/scripts:/home/utility
+    - ./config/lima/site-controller/.secret:/home/secret
     - ftd-data:/home/hybridos/powercloud/owner/lima/archives
   lima-ess-controller-01:
     image: flexgen/ess_controller-snapshot:11.3.1.alpha.1
@@ -73,9 +73,9 @@ services:
         ipv4_address: 192.168.11.10
     tty: true
     volumes:
-    - /home/hybridos/git/hybridos/config/vfakeco/config/lima/ess-controller/config:/home/staging
-    - /home/hybridos/git/hybridos/config/vfakeco/config/lima/ess-controller/scripts:/home/utility
-    - /home/hybridos/git/hybridos/config/vfakeco/config/lima/ess-controller/.secret:/home/secret
+    - ./config/lima/ess-controller/config:/home/staging
+    - ./config/lima/ess-controller/scripts:/home/utility
+    - ./config/lima/ess-controller/.secret:/home/secret
     - ftd-data:/home/hybridos/powercloud/archives
   lima-psm-01:
     image: flexgen/psm-snapshot:11.3.1.alpha.1
@@ -90,9 +90,9 @@ services:
         ipv4_address: 192.168.10.250
     tty: true
     volumes:
-    - /home/hybridos/git/hybridos/config/vfakeco/config/lima/psm/config:/home/staging
-    - /home/hybridos/git/hybridos/config/vfakeco/config/lima/psm/scripts:/home/utility
-    - /home/hybridos/git/hybridos/config/vfakeco/config/lima/psm/.secret:/home/secret
+    - ./config/lima/psm/config:/home/staging
+    - ./config/lima/psm/scripts:/home/utility
+    - ./config/lima/psm/.secret:/home/secret
   sudden_valley-site-controller-01:
     image: flexgen/site_controller-snapshot:12.0.0.beta.1
     container_name: sudden_valley-site-controller-01
@@ -107,9 +107,9 @@ services:
         ipv4_address: 10.10.1.11
     tty: true
     volumes:
-    - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/site-controller/config:/home/staging
-    - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/site-controller/scripts:/home/utility
-    - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/site-controller/.secret:/home/secret
+    - ./config/sudden_valley/site-controller/config:/home/staging
+    - ./config/sudden_valley/site-controller/scripts:/home/utility
+    - ./config/sudden_valley/site-controller/.secret:/home/secret
     - ftd-data:/home/hybridos/powercloud/owner/sudden_valley/archives
   sudden_valley-ess-controller-01:
     image: flexgen/ess_controller-snapshot:11.3.1.alpha.1
@@ -125,9 +125,9 @@ services:
         ipv4_address: 192.168.13.10
     tty: true
     volumes:
-    - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/ess-controller/config:/home/staging
-    - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/ess-controller/scripts:/home/utility
-    - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/ess-controller/.secret:/home/secret
+    - ./config/sudden_valley/ess-controller/config:/home/staging
+    - ./config/sudden_valley/ess-controller/scripts:/home/utility
+    - ./config/sudden_valley/ess-controller/.secret:/home/secret
     - ftd-data:/home/hybridos/powercloud/archives
   sudden_valley-psm-01:
     image: flexgen/psm-snapshot:11.3.1.alpha.1
@@ -142,9 +142,9 @@ services:
         ipv4_address: 192.168.12.250
     tty: true
     volumes:
-    - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/psm/config:/home/staging
-    - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/psm/scripts:/home/utility
-    - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/psm/.secret:/home/secret
+    - ./config/sudden_valley/psm/config:/home/staging
+    - ./config/sudden_valley/psm/scripts:/home/utility
+    - ./config/sudden_valley/psm/.secret:/home/secret
   vfakeco-powercloud-01:
     image: flexgen/dts-snapshot:11.3.0.beta.5
     container_name: vfakeco-powercloud-01
@@ -154,9 +154,9 @@ services:
     - mongo-container
     - influx-container
     volumes:
-    - /home/hybridos/git/hybridos/config/vfakeco/config/powercloud/config:/home/staging
-    - /home/hybridos/git/hybridos/config/vfakeco/config/powercloud/scripts:/home/utility
-    - /home/hybridos/git/hybridos/config/vfakeco/config/powercloud/.secret:/home/secret
+    - ./config/powercloud/config:/home/staging
+    - ./config/powercloud/scripts:/home/utility
+    - ./config/powercloud/.secret:/home/secret
     - ftd-data:/home/hybridos/powercloud/inbox
     - dts-failed-validate:/home/hybridos/powercloud/validate_error
     - dts-failed-write:/home/hybridos/powercloud/write_error

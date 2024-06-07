@@ -47,8 +47,23 @@
             "value": 1
         }
     },
+    "/schedule/wake_monitor/##MODULE_ID##": {
+        "/status/##MODULE_ID##:ApparentPower_Calculated": {
+            "amap": "##MODULE_ID##",
+            "func": "CalculateVar"
+        }
+    },
     "/status/##MODULE_ID##": {
-        "Status": "INIT"
+        "Status": "INIT",
+        "ApparentPower_Calculated":{
+            "expression": "sqrt({1} ** 2 + {2} ** 2)",
+            "note": "Calculates the Apparent power",
+            "numVars": 2,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##MODULE_ID##:ActivePower",
+            "variable2": "/status/##MODULE_ID##:ReactivePower"
+        }
     },
     "/system/commands": {
         "runOpts_module": {

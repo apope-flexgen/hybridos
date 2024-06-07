@@ -131,7 +131,7 @@
 				"id": "mbmu_soh",
 				"name": "SOH",
 				"offset": 35,
-				"scale": 1000,
+				"scale": 10,
 				"uri": "/components/catl_mbmu_summary_r"
 			},
 			{
@@ -190,6 +190,14 @@
 				"scale": 1,
 				"uri": "/components/catl_mbmu_summary_r"
 			},
+			{
+                "id": "mbmu_power",
+                "offset": 44,
+                "scale": 1,
+                "signed": true,
+                "name": "System Power",
+				"uri": "/components/catl_mbmu_summary_r"
+            },
 			{
 				"id": "bms_heartbeat",
 				"name": "BMS heartbeat",
@@ -331,7 +339,7 @@
 				"id": "sbmu_soh",
 				"name": "Battery Subsystem SOH",
 				"offset": 1060,
-				"scale": 1000,
+				"scale": 10,
 				"uri": "/components/catl_rack_1"
 			},
 			{
@@ -384,6 +392,13 @@
 				"id": "sbmu_max_discharge_current",
 				"name": "Battery Subsystem Max Discharge",
 				"offset": 1068,
+				"scale": 10,
+				"uri": "/components/catl_rack_1"
+			},
+			{
+				"id": "sbmu_pdc",
+				"name": "Battery Subsystem DC power",
+				"offset": 1069,
 				"scale": 10,
 				"uri": "/components/catl_rack_1"
 			},
@@ -539,7 +554,7 @@
 				"id": "sbmu_soh",
 				"name": "Battery Subsystem SOH",
 				"offset": 2084,
-				"scale": 1000,
+				"scale": 10,
 				"uri": "/components/catl_rack_2"
 			},
 			{
@@ -617,6 +632,13 @@
 				"id": "sbmu_min_cell_temp_position",
 				"name": "Battery Subsystem Min Cell Temp Positions",
 				"offset": 2099,
+				"uri": "/components/catl_rack_2"
+			},
+			{
+				"id": "sbmu_pdc",
+				"name": "Battery Subsystem DC power",
+				"offset": 2100,
+				"scale": 10,
 				"uri": "/components/catl_rack_2"
 			},
 			{
@@ -729,6 +751,13 @@
 				"uri": "/components/catl_rack_3"
 			},
 			{
+				"id": "sbmu_pdc",
+				"name": "Battery Subsystem DC power",
+				"offset": 3105,
+				"scale": 10,
+				"uri": "/components/catl_rack_3"
+			},
+			{
 				"id": "sbmu_current",
 				"name": "Battery Subsystem Current",
 				"offset": 3106,
@@ -747,7 +776,7 @@
 				"id": "sbmu_soh",
 				"name": "Battery Subsystem SOH",
 				"offset": 3108,
-				"scale": 1000,
+				"scale": 10,
 				"uri": "/components/catl_rack_3"
 			},
 			{
@@ -937,6 +966,13 @@
 				"uri": "/components/catl_rack_4"
 			},
 			{
+				"id": "sbmu_pdc",
+				"name": "Battery Subsystem DC power",
+				"offset": 4129,
+				"scale": 10,
+				"uri": "/components/catl_rack_4"
+			},
+			{
 				"id": "sbmu_current",
 				"name": "Battery Subsystem Current",
 				"offset": 4130,
@@ -955,7 +991,7 @@
 				"id": "sbmu_soh",
 				"name": "Battery Subsystem SOH",
 				"offset": 4132,
-				"scale": 1000,
+				"scale": 10,
 				"uri": "/components/catl_rack_4"
 			},
 			{
@@ -1163,7 +1199,7 @@
 				"id": "sbmu_soh",
 				"name": "Battery Subsystem SOH",
 				"offset": 5156,
-				"scale": 1000,
+				"scale": 10,
 				"uri": "/components/catl_rack_5"
 			},
 			{
@@ -1216,6 +1252,13 @@
 				"id": "sbmu_max_discharge_current",
 				"name": "Battery Subsystem Max Discharge",
 				"offset": 5164,
+				"scale": 10,
+				"uri": "/components/catl_rack_5"
+			},
+			{
+				"id": "sbmu_pdc",
+				"name": "Battery Subsystem DC power",
+				"offset": 5165,
 				"scale": 10,
 				"uri": "/components/catl_rack_5"
 			},
@@ -1371,7 +1414,7 @@
 				"id": "sbmu_soh",
 				"name": "Battery Subsystem SOH",
 				"offset": 6180,
-				"scale": 1000,
+				"scale": 10,
 				"uri": "/components/catl_rack_6"
 			},
 			{
@@ -1417,6 +1460,13 @@
 				"id": "sbmu_max_charge_current",
 				"name": "Battery Subsystem Max Charge",
 				"offset": 6187,
+				"scale": 10,
+				"uri": "/components/catl_rack_6"
+			},
+			{
+				"id": "sbmu_pdc",
+				"name": "Battery Subsystem DC power",
+				"offset": 6189,
 				"scale": 10,
 				"uri": "/components/catl_rack_6"
 			},
@@ -1579,7 +1629,7 @@
 				"id": "sbmu_soh",
 				"name": "Battery Subsystem SOH",
 				"offset": 7204,
-				"scale": 1000,
+				"scale": 10,
 				"uri": "/components/catl_rack_7"
 			},
 			{
@@ -1657,6 +1707,13 @@
 				"id": "sbmu_min_cell_temp_position",
 				"name": "Battery Subsystem Min Cell Temp Positions",
 				"offset": 7219,
+				"uri": "/components/catl_rack_7"
+			},
+			{
+				"id": "sbmu_pdc",
+				"name": "Battery Subsystem DC power",
+				"offset": 7220,
+				"scale": 10,
 				"uri": "/components/catl_rack_7"
 			},
 			{
@@ -1787,7 +1844,7 @@
 				"id": "sbmu_soh",
 				"name": "Battery Subsystem SOH",
 				"offset": 8228,
-				"scale": 1000,
+				"scale": 10,
 				"uri": "/components/catl_rack_8"
 			},
 			{
@@ -1871,6 +1928,13 @@
 				"id": "sbmu_sum_cells",
 				"name": "Battery Subsystem Sum Cell",
 				"offset": 8247,
+				"uri": "/components/catl_rack_8"
+			},
+			{
+				"id": "sbmu_pdc",
+				"name": "Battery Subsystem DC power",
+				"offset": 8248,
+				"scale": 10,
 				"uri": "/components/catl_rack_8"
 			},
 			{
@@ -1977,6 +2041,13 @@
 				"uri": "/components/catl_rack_9"
 			},
 			{
+				"id": "sbmu_pdc",
+				"name": "Battery Subsystem DC power",
+				"offset": 9249,
+				"scale": 10,
+				"uri": "/components/catl_rack_9"
+			},
+			{
 				"id": "sbmu_current",
 				"name": "Battery Subsystem Current",
 				"offset": 9250,
@@ -1995,7 +2066,7 @@
 				"id": "sbmu_soh",
 				"name": "Battery Subsystem SOH",
 				"offset": 9252,
-				"scale": 1000,
+				"scale": 10,
 				"uri": "/components/catl_rack_9"
 			},
 			{

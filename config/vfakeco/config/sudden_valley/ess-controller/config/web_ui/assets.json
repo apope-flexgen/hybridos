@@ -25,18 +25,11 @@
                     "faults"
                 ],
                 "hasSummary": true,
-                "itemName": "Rack",
-                "name": "CATL BMS",
+                "name": "BMS",
                 "numberOfItems": "9",
                 "sourceURI": "/assets"
             },
             "statuses": [
-                {
-                    "name": "Battery Status",
-                    "scalar": "0",
-                    "units": "",
-                    "uri": "/status"
-                },
                 {
                     "name": "DC Contactors Closed",
                     "scalar": "0",
@@ -352,8 +345,7 @@
                     "faults"
                 ],
                 "hasSummary": true,
-                "itemName": "Module",
-                "name": "PE PCS",
+                "name": "PCS",
                 "numberOfItems": "6",
                 "sourceURI": "/assets"
             },

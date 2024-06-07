@@ -20,13 +20,6 @@
             },
             "status": [
                 {
-                    "name": "Version",
-                    "scalar": "0",
-                    "sourceURI": "/assets",
-                    "units": "",
-                    "uri": "/build"
-                },
-                {
                     "name": "Comms OK",
                     "scalar": "0",
                     "sourceURI": "/assets",
@@ -129,7 +122,7 @@
                         "uri": "/bms/rack_9"
                     }
                 ],
-                "name": "CATL BMS",
+                "name": "BMS",
                 "sourceURIs": [
                     "/assets"
                 ]
@@ -172,7 +165,7 @@
                 },
                 {
                     "name": "DC Power",
-                    "scalar": "1",
+                    "scalar": "1000",
                     "sourceURI": "/assets",
                     "units": "kW",
                     "uri": "/dc_power"
@@ -242,7 +235,7 @@
                 },
                 {
                     "name": "Max Discharge Power",
-                    "scalar": "1",
+                    "scalar": "1000",
                     "sourceURI": "/assets",
                     "units": "kW",
                     "uri": "/max_discharge_power"
@@ -296,7 +289,7 @@
                         "uri": "/pcs/module_6"
                     }
                 ],
-                "name": "PE PCS",
+                "name": "PCS",
                 "sourceURIs": [
                     "/assets"
                 ]

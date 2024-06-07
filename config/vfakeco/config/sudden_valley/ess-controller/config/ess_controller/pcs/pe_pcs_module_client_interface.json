@@ -1,17 +1,17 @@
 {
     "/schedule/wake_monitor/##MODULE_ID##":{
-        "/status/##MODULE_ID##:PCSDCPower"     : {"func": "CalculateVar"},
+        "/status/##MODULE_ID##:DCPower"     : {"func": "CalculateVar"},
         "/status/##MODULE_ID##:CurrentWarning" : {"func": "CalculateVar"},
         "/status/##MODULE_ID##:CurrentFault"   : {"func": "CalculateVar"}
     },
     "/status/##MODULE_ID##": {
-        "PCSDCPower": {
+        "DCPower": {
             "value": 0,
             "useExpr": true,
             "numVars": 2,
-            "variable1": "/status/##MODULE_ID##:PCSDCVoltage",
-            "variable2": "/status/##MODULE_ID##:PCSDCCurrent",
-            "expression": "{1} * {2}"
+            "variable1": "/status/##MODULE_ID##:DCVoltage",
+            "variable2": "/status/##MODULE_ID##:DCCurrent",
+            "expression": "{1} * {2} * 0.001"
         },
         "CurrentWarning": {
             "value": 0,
@@ -35,8 +35,8 @@
         "active_power"         :{ "value": "/components/pcs_registers_fast:##MODULE_ID##_p"            , "vlink": "/status/##MODULE_ID##:ActivePower"        },
         "reactive_power"       :{ "value": "/components/pcs_registers_fast:##MODULE_ID##_q"            , "vlink": "/status/##MODULE_ID##:ReactivePower"      },
         "apparent_power"       :{ "value": "/components/pcs_registers_fast:##MODULE_ID##_dc_voltage_p" , "vlink": "/status/##MODULE_ID##:ApparentPower"      },
-        "pcs_dc_voltage"       :{ "value": "/components/pcs_registers_fast:##MODULE_ID##_dc_voltage"   , "vlink": "/status/##MODULE_ID##:PCSDCVoltage"       },
-        "pcs_dc_current"       :{ "value": "/components/pcs_registers_fast:##MODULE_ID##_dc_current"   , "vlink": "/status/##MODULE_ID##:PCSDCCurrent"       },
+        "pcs_dc_voltage"       :{ "value": "/components/pcs_registers_fast:##MODULE_ID##_dc_voltage"   , "vlink": "/status/##MODULE_ID##:DCVoltage"       },
+        "pcs_dc_current"       :{ "value": "/components/pcs_registers_fast:##MODULE_ID##_dc_current"   , "vlink": "/status/##MODULE_ID##:DCCurrent"       },
         "max_igbt_temperature" :{ "value": "/components/pcs_registers_fast:##MODULE_ID##_max_temp"     , "vlink": "/status/##MODULE_ID##:MaxIGBTTemperature" }
     }
 }
