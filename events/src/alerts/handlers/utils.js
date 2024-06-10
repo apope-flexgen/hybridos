@@ -46,36 +46,68 @@ function updateGoMetricsConfig(alert, templates) {
         });
         return;
     }
+
+    let metricsId = alert.id;
+    const aliasMap = {};
+
+    // INPUTS
     const inputs = (alert.aliases || []).reduce((acc, entry) => {
-        acc[entry.alias.replaceAll(' ', '_')] = {
+        // format input key
+        let inputKey = entry.alias;
+        for (const tmp of templates) {
+            if (entry.uri.includes(tmp.token)) {
+                if (!inputKey.includes(tmp.token)) {
+                    inputKey = `${inputKey}_${tmp.token}`;
+                }
+                if (!metricsId.includes(tmp.token)) {
+                    metricsId = `${metricsId}_${tmp.token}`;
+                }
+            }
+        }
+        inputKey = inputKey.replaceAll(' ', '_');
+        aliasMap[entry.alias] = inputKey;
+        acc[inputKey] = {
             // go_metrics requires a true/false string to be indicated as "bool" rather than "boolean"
-            uri: entry.uri, type: entry.type == 'boolean' ? 'bool' : entry.type,
+            uri: entry.uri, type: entry.type === 'boolean' ? 'bool' : entry.type,
         };
         return acc;
     }, {});
-    // send updated configuration to go_metrics
-    const goMetricsObj = {
-        inputs,
-        templates,
-        outputs: {
-            [alert.id]: {
-                uri: '/events/alerts',
-                flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat'],
-                attributes: { source: 'Alerts' },
-            },
+
+    // OUTPUTS
+    const outputs = {
+        [metricsId]: {
+            uri: '/events/alerts',
+            flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat'],
+            attributes: { source: 'Alerts', config_id: alert.id },
         },
-        metrics: [],
     };
 
-    goMetricsObj.metrics.push({
-        id: alert.id,
+    // METRICS
+    function mapAliases(str) {
+        return Object.entries(aliasMap).reduce((acc, [key, value]) => acc.replaceAll(key, value),
+            str);
+    }
+
+    const metrics = [{
+        id: metricsId,
         type: 'bool',
-        outputs: alert.id,
-        expression: alert.expression,
+        outputs: metricsId,
+        expression: mapAliases(alert.expression),
         alert: true,
-        messages: alert.messages,
+        messages: alert.messages.map((obj) => Object.keys(obj).reduce((acc, key) => ({
+            ...acc,
+            [mapAliases(key)]: mapAliases(obj[key]),
+        }), {})),
         enabled: alert.enabled,
-    });
+    }];
+
+    // send updated configuration to go_metrics
+    const goMetricsObj = {
+        templates,
+        inputs,
+        outputs,
+        metrics,
+    };
 
     // send new configuration to go_metrics
     fims.send({

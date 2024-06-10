@@ -51,7 +51,7 @@ const alertDatabaseEntry = {
     // sorted by trigger time inherently, when resolved the item is sliced out.
     unresolved: [
         {
-            id: 'dummy_incident_id3',
+            id: '28beecbc-232f-431b-ac7d-8d29350e9000.lima',
             status: 'active',
             version: 2,
             details: [
@@ -69,7 +69,7 @@ const alertDatabaseEntry = {
     // sorted by resolution_time
     resolved: [
         {
-            id: 'dummy_incident_id',
+            id: '28beecbc-232f-431b-ac7d-8d29350e9000.sudden_valley',
             resolution_message: 'Cell voltage has returned to normal levels - noted and resolved',
             resolution_time: times.hours_ago(3),
             version: 2,
@@ -87,10 +87,10 @@ const alertDatabaseEntry = {
     ],
     history: [
         {
-            version: 1, title: 'VFakeCo - WH & JC Cell Voltage', deadline: 30, expression: 'Minimum Cell Voltage: > 3.22V OR Cell Voltage Delta: >.25V', organizationId: 'org_id1', severity: 0, updatedAt: times.days_ago(15),
+            version: 1, aliases: [], title: 'VFakeCo - WH & JC Cell Voltage', deadline: 30, expression: 'Minimum Cell Voltage: > 3.22V OR Cell Voltage Delta: >.25V', organizationId: 'org_id1', severity: 0, updatedAt: times.days_ago(15),
         },
         {
-            version: 2, title: 'VFakeCo - WH & JC Cell Voltage', deadline: 20, expression: 'Minimum Cell Voltage: > 3.22V OR Cell Voltage Delta: >.25V', organizationId: 'org_id1', severity: 0, updatedAt: times.days_ago(14),
+            version: 2, aliases: [], title: 'VFakeCo - WH & JC Cell Voltage', deadline: 20, expression: 'Minimum Cell Voltage: > 3.22V OR Cell Voltage Delta: >.25V', organizationId: 'org_id1', severity: 0, updatedAt: times.days_ago(14),
         },
     ],
 };
@@ -160,42 +160,39 @@ const postManagementRequest = {
     deadline: 30,
     deleted: false,
     enabled: true, // not tracked in history
-    expression: 'Minimum Cell Voltage: > 3.22V OR Cell Voltage Delta: >.25V',
+    expression: 'ess_faults == true || ess_watchdog == true',
     organization: 'VFakeCo',
     severity: 0,
     title: 'VFakeCo - WH & JC Cell Voltage',
-    messages: [
-        {
-            'temp > 90': 'Temperature: temp exceeded 451F',
-        },
-        {
-            'high_temp_fault == true': 'There was a high temperature fault',
-        },
-    ],
     aliases: [
         {
-            alias: 'ESS 2 SOC',
-            uri: '/assets/ess/ess_2/soc',
-            type: 'float',
+            alias: 'ess_faults',
+            uri: '/{site}/ess_{ess}/is_faulted',
+            type: 'bool',
+        },
+        {
+            alias: 'ess_watchdog',
+            uri: '/{site}/ess_{ess}/watchdog_status',
+            type: 'bool',
+        },
+    ],
+    messages: [
+        {
+            'ess_faults == true': 'ESS {ess} faults present. Value is {ess_faults}',
+            'ess_watchdog == true': 'ESS {ess} watchdog timed out. Value is {ess_watchdog}',
         },
     ],
     templates: [
         {
-            type: 'sequential',
             from: 1,
-            to: 16,
-            step: 3,
-            token: '##',
+            to: 2,
+            token: '{ess}',
+            type: 'sequential',
         },
         {
-            id: 'existing_template_id1',
+            list: ['lima', 'sudden_valley'],
+            token: '{site}',
             type: 'list',
-            list: [
-                'bobcat',
-                'cheetah',
-                'lion',
-            ],
-            token: 'qq',
         },
     ],
 };
@@ -204,6 +201,7 @@ const postManagementRequest = {
 const postManagementRequestDeletion = {
     id: '28beecbc-232f-431b-ac7d-8d29350e9000',
     deleted: true,
+    templates: [], // delete all templates
 };
 
 // GET /events/alerts/management
@@ -212,98 +210,171 @@ const getManagementRequest = {
     page: 1,
     sort: 1,
 };
-const getManagementResponse = {
-    templates: templateEntries,
-    rows: [
-        {
-            id: '71d291ea-d2b6-498b-ae7c-b2e97684acd2',
-            updatedAt: '2020-07-07T12:00:00.000Z',
-            expression: 'SOC > 95',
-            aliases: [
-                {
-                    alias: 'SOC',
-                    uri: '/assets/ess/ess_2/soc',
-                    type: 'float',
-                },
-            ],
-            messages: [
-                { 'SOC > 95': 'SOC: State of Charge is Dangerously High' },
-            ],
-            enabled: true,
-            deleted: false,
-            deadline: 30,
-            lastTriggered: '2020-07-07T12:00:00.000Z',
-            organization: 'VRealCo',
-            severity: 5,
-            title: 'Basic alert without any violations yet',
-            version: 1,
-            history: [],
-        },
-        {
-            id: '28beecbc-232f-431b-ac7d-8d29350e9000',
-            updatedAt: '2020-07-07T12:00:00.000Z',
-            expression: 'temp > 90 || high_temp_fault == true',
-            aliases: [
-                {
-                    alias: 'temp',
-                    uri: '/assets/ess/ess_2/max_temp',
-                    type: 'float',
-                },
-                {
-                    alias: 'high_temp_fault',
-                    uri: '/assets/ess/ess_2/is_faulted',
-                    type: 'boolean',
-                },
-            ],
-            messages: [
-                { 'temp > 90': 'Temperature: temp exceeded 90C' },
-                { 'high_temp_fault == true': 'There was a high temperature fault' },
-            ],
-            enabled: true,
-            deleted: false,
-            deadline: 30,
-            lastTriggered: '2020-07-07T12:00:00.000Z',
-            organization: 'VFakeCo',
-            severity: 0,
-            title: 'VFakeCo - WH & JC Cell Voltage',
-            version: 3,
-            history: [
-                {
-                    aliases: [],
-                    messages: [],
-                    deadline: 30,
-                    expression: 'Minimum Cell Voltage: > 3.22V OR Cell Voltage Delta: >.25V',
-                    organization: 'VFakeCo',
-                    severity: 0,
-                    title: 'VFakeCo - WH & JC Cell Voltage',
-                    version: 1,
-                },
-                {
-                    aliases: [],
-                    messages: [],
-                    deadline: 20,
-                    expression: 'Minimum Cell Voltage: > 3.22V OR Cell Voltage Delta: >.25V',
-                    organization: 'VFakeCo',
-                    severity: 0,
-                    title: 'VFakeCo - WH & JC Cell Voltage',
-                    version: 2,
-                },
-            ],
-        },
-    ],
-};
+
+const getManagementResponses = (() => {
+    const base = {
+        templates: templateEntries,
+        rows: [
+            {
+                id: '71d291ea-d2b6-498b-ae7c-b2e97684acd2',
+                updatedAt: '2020-07-07T12:00:00.000Z',
+                expression: 'SOC > 95',
+                aliases: [
+                    {
+                        alias: 'SOC',
+                        uri: '/assets/ess/ess_2/soc',
+                        type: 'float',
+                    },
+                ],
+                messages: [
+                    { 'SOC > 95': 'SOC: State of Charge is Dangerously High' },
+                ],
+                enabled: true,
+                deleted: false,
+                deadline: 30,
+                lastTriggered: '2020-07-07T12:00:00.000Z',
+                organization: 'VRealCo',
+                severity: 5,
+                title: 'Basic alert without any violations yet',
+                version: 1,
+                history: [],
+            },
+            {
+                id: '28beecbc-232f-431b-ac7d-8d29350e9000',
+                updatedAt: '2020-07-07T12:00:00.000Z',
+                expression: 'temp > 90 || high_temp_fault == true',
+                aliases: [
+                    {
+                        alias: 'temp',
+                        uri: '/assets/ess/ess_2/max_temp',
+                        type: 'float',
+                    },
+                    {
+                        alias: 'high_temp_fault',
+                        uri: '/assets/ess/ess_2/is_faulted',
+                        type: 'boolean',
+                    },
+                ],
+                messages: [
+                    { 'temp > 90': 'Temperature: temp exceeded 90C' },
+                    { 'high_temp_fault == true': 'There was a high temperature fault' },
+                ],
+                enabled: true,
+                deleted: false,
+                deadline: 30,
+                lastTriggered: '2020-07-07T12:00:00.000Z',
+                organization: 'VFakeCo',
+                severity: 0,
+                title: 'VFakeCo - WH & JC Cell Voltage',
+                version: 3,
+                history: [
+                    {
+                        aliases: [],
+                        messages: [],
+                        deadline: 30,
+                        expression: 'Minimum Cell Voltage: > 3.22V OR Cell Voltage Delta: >.25V',
+                        organization: 'VFakeCo',
+                        severity: 0,
+                        title: 'VFakeCo - WH & JC Cell Voltage',
+                        version: 1,
+                    },
+                    {
+                        aliases: [],
+                        messages: [],
+                        deadline: 20,
+                        expression: 'Minimum Cell Voltage: > 3.22V OR Cell Voltage Delta: >.25V',
+                        organization: 'VFakeCo',
+                        severity: 0,
+                        title: 'VFakeCo - WH & JC Cell Voltage',
+                        version: 2,
+                    },
+                ],
+            },
+        ],
+    };
+    const afterInsert = {
+        rows: [
+            base.rows[0],
+            base.rows[1],
+            {
+                id: 'mocked-new-uuid',
+                updatedAt: '2020-07-07T12:00:00.000Z',
+                aliases: [
+                    {
+                        alias: 'ess_faults',
+                        uri: '/{site}/ess_{ess}/is_faulted',
+                        type: 'bool',
+                    },
+                    {
+                        alias: 'ess_watchdog',
+                        uri: '/{site}/ess_{ess}/watchdog_status',
+                        type: 'bool',
+                    },
+                ],
+                messages: [
+                    {
+                        'ess_faults == true': 'ESS {ess} faults present. Value is {ess_faults}',
+                        'ess_watchdog == true': 'ESS {ess} watchdog timed out. Value is {ess_watchdog}',
+                    },
+                ],
+                enabled: true,
+                deleted: false,
+                deadline: 30,
+                expression: 'ess_faults == true || ess_watchdog == true',
+                lastTriggered: null,
+                severity: null,
+                title: 'VFakeCo - WH & JC Cell Voltage',
+                version: 0,
+                history: [],
+                organization: 'VFakeCo',
+            },
+        ],
+        templates: JSON.parse(JSON.stringify(postManagementRequest.templates)),
+    };
+    afterInsert.templates[0].id = 'mocked-new-template-uuid-0';
+    afterInsert.templates[1].id = 'mocked-new-template-uuid-1';
+    const {
+        history, id, lastTriggered, updatedAt, enabled, deleted, ...historyEntry
+    } = afterInsert.rows[1];
+    const afterUpdate = {
+        rows: [
+            base.rows[0],
+            {
+                ...afterInsert.rows[2],
+                id: '28beecbc-232f-431b-ac7d-8d29350e9000',
+                version: 4,
+                lastTriggered: '2020-07-07T12:00:00.000Z',
+                history: [
+                    base.rows[1].history[0],
+                    base.rows[1].history[1],
+                    historyEntry,
+                ],
+            },
+        ],
+        // deep clone
+        templates: JSON.parse(JSON.stringify(afterInsert.templates)),
+    };
+    return {
+        base,
+        afterUpdate,
+        afterInsert,
+    };
+})();
 
 // POST /events/alerts
 const postIncidentRequest = {
     details: [
         {
             message: 'Site discharge 11000.00kW exceeded max POI limit 10000.00kW',
-            timestamp: '2024-04-29T13:09:45-04:00',
+            timestamp: '2020-07-07T12:00:00.000Z',
         },
     ],
-    name: '28beecbc-232f-431b-ac7d-8d29350e9000',
+    name: 'doesnt-matter',
     status: 'active',
     value: true,
+    source: 'Alerts',
+    config_id: '28beecbc-232f-431b-ac7d-8d29350e9000',
+    incident_id: '28beecbc-232f-431b-ac7d-8d29350e9000.lima',
 };
 
 // SET /events/alerts
@@ -333,7 +404,7 @@ const getIncidentsResponseUnresolved = {
             severity: 0,
             deadline: 30,
             title: 'VFakeCo - WH & JC Cell Voltage',
-            id: 'dummy_incident_id3',
+            id: '28beecbc-232f-431b-ac7d-8d29350e9000.lima',
             status: 'active',
             trigger_time: '2020-07-07T12:00:00.000Z',
             details: [
@@ -361,7 +432,7 @@ const getIncidentsResponseResolved = {
             severity: 0,
             deadline: 20,
             title: 'VFakeCo - WH & JC Cell Voltage',
-            id: 'dummy_incident_id',
+            id: '28beecbc-232f-431b-ac7d-8d29350e9000.sudden_valley',
             resolved: true,
             trigger_time: '2020-07-07T12:00:00.000Z',
             details: [
@@ -389,125 +460,79 @@ const outboundGetAlerts = {
 
 // -> SET /go_metrics_alerting/configuration/<id>
 const outboundSetManagement = {
-    inputs: {
-        ESS_2_SOC: {
-            uri: '/assets/ess/ess_2/soc',
-            type: 'float',
-        },
-    },
     templates: [
         {
-            id: 'existing_template_id1',
-            type: 'list',
-            list: [
-                'bobcat',
-                'cheetah',
-                'lion',
-            ],
-            token: 'qq',
-        },
-        {
-            id: 'existing_template_id2',
-            type: 'sequential',
+            id: 'mocked-new-template-uuid-0',
             from: 1,
-            to: 10,
-            minWidth: 2,
+            to: 2,
             token: '{ess}',
+            type: 'sequential',
         },
         {
-            id: 'mocked-new-template-uuid',
-            type: 'sequential',
-            from: 1,
-            to: 16,
-            step: 3,
-            token: '##',
+            id: 'mocked-new-template-uuid-1',
+            list: ['lima', 'sudden_valley'],
+            token: '{site}',
+            type: 'list',
         },
     ],
+    inputs: {
+        'ess_faults_{ess}_{site}': {
+            uri: '/{site}/ess_{ess}/is_faulted',
+            type: 'bool',
+        },
+        'ess_watchdog_{ess}_{site}': {
+            uri: '/{site}/ess_{ess}/watchdog_status',
+            type: 'bool',
+        },
+    },
     outputs: {
-        '28beecbc-232f-431b-ac7d-8d29350e9000': {
+        '28beecbc-232f-431b-ac7d-8d29350e9000_{ess}_{site}': {
             uri: '/events/alerts',
             flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat'],
-            attributes: { source: 'Alerts' },
+            attributes: { source: 'Alerts', config_id: '28beecbc-232f-431b-ac7d-8d29350e9000' },
         },
     },
     metrics: [
         {
-            id: '28beecbc-232f-431b-ac7d-8d29350e9000',
-            outputs: '28beecbc-232f-431b-ac7d-8d29350e9000',
+            id: '28beecbc-232f-431b-ac7d-8d29350e9000_{ess}_{site}',
             type: 'bool',
+            outputs: '28beecbc-232f-431b-ac7d-8d29350e9000_{ess}_{site}',
+            expression: 'ess_faults_{ess}_{site} == true || ess_watchdog_{ess}_{site} == true',
             alert: true,
-            expression: 'Minimum Cell Voltage: > 3.22V OR Cell Voltage Delta: >.25V',
-            enabled: true,
             messages: [
                 {
-                    'temp > 90': 'Temperature: temp exceeded 451F',
-                },
-                {
-                    'high_temp_fault == true': 'There was a high temperature fault',
+                    'ess_faults_{ess}_{site} == true': 'ESS {ess} faults present. Value is {ess_faults_{ess}_{site}}',
+                    'ess_watchdog_{ess}_{site} == true': 'ESS {ess} watchdog timed out. Value is {ess_watchdog_{ess}_{site}}',
                 },
             ],
+            enabled: true,
         },
     ],
 };
-
 const outboundSetManagementNew = {
-    inputs: {
-        ESS_2_SOC: {
-            uri: '/assets/ess/ess_2/soc',
-            type: 'float',
-        },
-    },
-    templates: [
-        {
-            id: 'existing_template_id1',
-            type: 'list',
-            list: [
-                'bobcat',
-                'cheetah',
-                'lion',
-            ],
-            token: 'qq',
-        },
-        {
-            id: 'existing_template_id2',
-            type: 'sequential',
-            from: 1,
-            to: 10,
-            minWidth: 2,
-            token: '{ess}',
-        },
-        {
-            id: 'mocked-new-uuid',
-            type: 'sequential',
-            from: 1,
-            to: 16,
-            step: 3,
-            token: '##',
-        },
-    ],
+    templates: outboundSetManagement.templates,
+    inputs: outboundSetManagement.inputs,
     outputs: {
-        'mocked-new-uuid': {
+        'mocked-new-uuid_{ess}_{site}': {
             uri: '/events/alerts',
             flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat'],
-            attributes: { source: 'Alerts' },
+            attributes: { source: 'Alerts', config_id: 'mocked-new-uuid' },
         },
     },
     metrics: [
         {
-            id: 'mocked-new-uuid',
-            outputs: 'mocked-new-uuid',
+            id: 'mocked-new-uuid_{ess}_{site}',
             type: 'bool',
+            outputs: 'mocked-new-uuid_{ess}_{site}',
+            expression: 'ess_faults_{ess}_{site} == true || ess_watchdog_{ess}_{site} == true',
             alert: true,
-            expression: 'Minimum Cell Voltage: > 3.22V OR Cell Voltage Delta: >.25V',
-            enabled: true,
             messages: [
                 {
-                    'temp > 90': 'Temperature: temp exceeded 451F',
-                },
-                {
-                    'high_temp_fault == true': 'There was a high temperature fault',
+                    'ess_faults_{ess}_{site} == true': 'ESS {ess} faults present. Value is {ess_faults_{ess}_{site}}',
+                    'ess_watchdog_{ess}_{site} == true': 'ESS {ess} watchdog timed out. Value is {ess_watchdog_{ess}_{site}}',
                 },
             ],
+            enabled: true,
         },
     ],
 };
@@ -526,7 +551,7 @@ module.exports = {
     postManagementRequest, // from the UI
     postManagementRequestDeletion, // from the UI
     getManagementRequest, // from the UI
-    getManagementResponse, // to the UI
+    getManagementResponses, // to the UI
 
     // incidents
     postIncidentRequest, // from go_metrics

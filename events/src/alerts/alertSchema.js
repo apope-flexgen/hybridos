@@ -67,12 +67,14 @@ const alertSchema = mongoose.Schema({
  */
 const alertTemplateSchema = mongoose.Schema({
     id: String,
-    type: String,
-    list: [String],
     from: Number,
-    to: Number,
+    list: [String],
     minWidth: Number,
+    range: [String],
+    step: Number,
+    to: Number,
     token: String,
+    type: String,
 });
 
 /**

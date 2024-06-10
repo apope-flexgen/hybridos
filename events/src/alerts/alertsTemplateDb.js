@@ -16,12 +16,14 @@ module.exports = {
             const docs = await q.exec();
             const docsMapped = docs.map((doc) => ({
                 id: doc.id,
-                type: doc.type,
                 from: doc.from,
-                to: doc.to,
                 minWidth: doc.minWidth,
+                step: doc.step,
+                to: doc.to,
                 token: doc.token,
+                type: doc.type,
                 ...(doc.list && doc.list.length ? {list: doc.list} : {}),
+                ...(doc.range && doc.range.length ? {range: doc.range} : {}),
             }));
             docsMapped.sort((a, b) => a.id < b.id ? -1 : 1)
             return docsMapped;
@@ -46,4 +48,16 @@ module.exports = {
             return 'Error updating Alert Template entry in database';
         }
     },
+
+    async deleteAlertTemplates(idsToDelete) {
+        try {
+            await AlertTemplate.deleteMany({
+                id: { $in: idsToDelete}
+            });
+            return null;
+        } catch (err) {
+            console.log(`mongoDB query error: ${err}`);
+            return 'Error updating Alert Template entry in database';
+        }
+    }
 };

@@ -14,11 +14,11 @@ const { pubToUI, genericReply } = require('./utils');
 async function handlePostAlerts(msg) {
     const validation = validateAlert(msg, {
         requiredGroups: [[
-            'name',
+            'config_id',
             'status',
             'details',
         ]],
-        optional: ['value'],
+        optional: ['value', 'name', 'incident_id'],
     });
     if (!validation.success) {
         if (msg.replyto) {
@@ -34,10 +34,9 @@ async function handlePostAlerts(msg) {
     }
     const { body } = msg;
 
-    // the "name" field is being used as the alert ID
-    const alerts = await getAlertManagement({ id: body.name });
+    const alerts = await getAlertManagement({ id: body.config_id });
     if (alerts.length <= 0) {
-        genericReply(msg, `No alert entry found for id ${body.name}.`);
+        genericReply(msg, `No alert config entry found for id ${body.config_id}.`);
         return;
     }
     const [alert] = alerts;
@@ -56,10 +55,12 @@ async function handlePostAlerts(msg) {
         alert.lastTriggered = body.details[body.details.length - 1].timestamp || null;
     }
 
-    if (alert.unresolved.length === 0) {
-        // INSERT as a new incident
+    let incidentIndex = alert.unresolved.findIndex((inst) => inst.id === body.incident_id);
+    // if there isn't an entry with this incident_id, make a new one
+    if (incidentIndex < 0) {
+        incidentIndex = alert.unresolved.length;
         alert.unresolved.push({
-            id: uuidv4(),
+            id: body.incident_id || uuidv4(),
             version: alert.version,
             status: body.status,
             details: [],
@@ -67,8 +68,8 @@ async function handlePostAlerts(msg) {
     }
 
     // UPDATE status and APPEND details
-    alert.unresolved[0].status = body.status;
-    alert.unresolved[0].details.push(...body.details);
+    alert.unresolved[incidentIndex].status = body.status;
+    alert.unresolved[incidentIndex].details.push(...body.details);
 
     // changes were made right on the object, so we send the same obj back.
     const err = await upsertAlertManagement(alert);

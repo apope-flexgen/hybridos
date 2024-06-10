@@ -7,7 +7,7 @@ const {
     orgNamesToIds,
 } = require('./utils');
 const { getAlertOrganizations } = require('../alertsOrgDb');
-const { getAlertTemplates, upsertAlertTemplates } = require('../alertsTemplateDb');
+const { getAlertTemplates, upsertAlertTemplates, deleteAlertTemplates } = require('../alertsTemplateDb');
 
 module.exports = {
     /**
@@ -41,7 +41,9 @@ module.exports = {
         // use THIS URI and shape req like { body: { enabled: true }}
         let { body } = msg;
         const orgs = await getAlertOrganizations();
-        [body] = orgNamesToIds([body], orgs);
+        if (body.organization) {
+            [body] = orgNamesToIds([body], orgs);
+        }
         const alerts = await getAlertManagement(body);
         let old = {};
         if (body.id) {
@@ -99,9 +101,9 @@ module.exports = {
             })) : [],
         };
 
-        // if we're only sending certain keys, don't append more history or change updatedAt
+        // if we're only requesting from among these keys, don't append more history or change updatedAt
         if (Object.keys(body).every((key) => [
-            'id', 'enabled',
+            'id', 'enabled', 'deleted', 'templates',
         ].includes(key))) {
             newAlert = {
                 ...newAlert,
@@ -112,30 +114,27 @@ module.exports = {
         }
 
         // join included templates with existing templates
-        const templates = await getAlertTemplates();
-        (body.templates || []).forEach((newTemp) => {
-            if (newTemp.id) {
-                const matchIndex = templates.findIndex((x) => x.id === newTemp.id);
-                if (matchIndex > -1) {
-                    // update existing template entry
-                    templates[matchIndex] = {
-                        ...templates[matchIndex],
-                        ...newTemp,
-                    };
-                    return;
+        const oldTemplates = await getAlertTemplates();
+        let templates = Object.keys(body).includes('templates') ? body.templates : oldTemplates;
+
+        templates = templates.map((template) => ({
+            // eslint-disable-next-line no-param-reassign
+            ...template,
+            id: template.id || uuidv4(),
+        }));
+        templates.sort((a, b) => (a.token < b.token ? -1 : 1));
+        if (Object.keys(body).includes('templates')) {
+            const templatesToDel = oldTemplates.reduce((acc, curr) => {
+                if (!templates.find((tem) => tem.id === curr.id)) {
+                    return [...acc, curr.id];
                 }
-                console.log(`No match found for entry with id ${newTemp.id}, inserting as a new template.`);
-            }
+                return acc;
+            }, []);
 
-            // insert new template template
-            templates.push({
-                id: uuidv4(),
-                ...newTemp,
-            });
-        });
-        templates.sort((a, b) => (a.id < b.id ? -1 : 1));
-
-        await upsertAlertTemplates(templates);
+            await upsertAlertTemplates(templates);
+            await deleteAlertTemplates(templatesToDel);
+        }
+        templates.sort((a, b) => (a.token < b.token ? -1 : 1));
         updateGoMetricsConfig(newAlert, templates);
 
         // Upsert mongo

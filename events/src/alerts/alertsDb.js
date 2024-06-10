@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const fims = require('@flexgen/fims');
 const { alertSchema } = require('./alertSchema');
 const { getAlertOrganizations } = require('./alertsOrgDb');
 const { orgIdsToNames: mapOrganizations } = require('./handlers/utils');
@@ -112,7 +111,7 @@ module.exports = {
 
                 if (!inst.details.length) {
                     return;
-                } 
+                }
                 const triggerTime = inst.details[inst.details.length - 1].timestamp;
                 if (body.orgFilter) {
                     q.where('organizationId').in(orgs.find((o) => o.name === body.orgFilter).id);

@@ -9,7 +9,7 @@ const { loadAlerts } = require('../loadDatabase');
 
 const {
     genericSuccessResponse,
-    getManagementRequest, getManagementResponse,
+    getManagementRequest, getManagementResponses,
     postManagementRequest, outboundSetManagement,
     setIncidentRequest, setIncidentResponse,
     postIncidentRequest,
@@ -17,8 +17,8 @@ const {
     outboundSetManagementNew,
     organizationEntries,
     postManagementRequestDeletion,
+    templateEntries,
 } = require('./alertExamples');
-const { initializeAlerts } = require('./alertsDb');
 const { handleInitAlerts } = require('./handlers/alertIncidents');
 
 jest.mock('@flexgen/fims');
@@ -26,7 +26,8 @@ jest.mock('uuid');
 const mockedUuidv4 = jest.fn();
 uuidv4.mockImplementation(mockedUuidv4);
 
-const sleepMs = 1000;
+// Generic amount of time to wait for processing
+const sleepMs = 200;
 function sleep(ms) { return new Promise((resolve) => setTimeout(resolve, ms)); }
 
 /**
@@ -126,7 +127,9 @@ describe('Alerts tests', () => {
      * Alert management
      */
     test('UI | Creates a new alerting rule configuration', async () => {
-        mockedUuidv4.mockReturnValue('mocked-new-uuid');
+        mockedUuidv4.mockReturnValueOnce('mocked-new-uuid');
+        mockedUuidv4.mockReturnValueOnce('mocked-new-template-uuid-0');
+        mockedUuidv4.mockReturnValueOnce('mocked-new-template-uuid-1');
         const {id, ...body} = postManagementRequest;
         processEvent({
             uri: '/events/alerts/management',
@@ -135,7 +138,14 @@ describe('Alerts tests', () => {
             replyto: 'dummy_replyto',
         });
         await sleep(sleepMs);
-        // go_metrics call
+        await sleep(sleepMs);
+        processEvent({
+            uri: '/events/alerts/management',
+            method: 'get',
+            body: getManagementRequest,
+            replyto: 'dummy_replyto',
+        });
+        await sleep(sleepMs);
         expectFimsSendHelper([
             {
                 body: JSON.stringify(outboundSetManagementNew),
@@ -157,16 +167,31 @@ describe('Alerts tests', () => {
                 replyto: null,
                 uri: 'dummy_replyto',
                 username: null,
+            },
+            {
+                body: JSON.stringify(getManagementResponses.afterInsert),
+                method: 'set',
+                replyto: null,
+                uri: 'dummy_replyto',
+                username: null
             }
         ]);
     });
 
     test('UI | Updates an existing alerting rule configuration', async () => {
-        mockedUuidv4.mockReturnValue('mocked-new-template-uuid');
+        mockedUuidv4.mockReturnValueOnce('mocked-new-template-uuid-0');
+        mockedUuidv4.mockReturnValueOnce('mocked-new-template-uuid-1');
         processEvent({
             uri: '/events/alerts/management',
             method: 'post',
             body: postManagementRequest,
+            replyto: 'dummy_replyto',
+        });
+        await sleep(sleepMs);
+        processEvent({
+            uri: '/events/alerts/management',
+            method: 'get',
+            body: getManagementRequest,
             replyto: 'dummy_replyto',
         });
         await sleep(sleepMs);
@@ -191,6 +216,13 @@ describe('Alerts tests', () => {
                 replyto: null,
                 uri: 'dummy_replyto',
                 username: null,
+            },
+            {
+                body: JSON.stringify(getManagementResponses.afterUpdate),
+                method: 'set',
+                replyto: null,
+                uri: 'dummy_replyto',
+                username: null
             }
         ]);
     });
@@ -204,6 +236,16 @@ describe('Alerts tests', () => {
             replyto: 'dummy_replyto',
         });
         await sleep(sleepMs);
+        processEvent({
+            uri: '/events/alerts/management',
+            method: 'get',
+            body: getManagementRequest,
+            replyto: 'dummy_replyto',
+        });
+        await sleep(sleepMs);
+        const expectedGetResponse = JSON.parse(JSON.stringify(getManagementResponses.base));
+        expectedGetResponse.rows[1].deleted = true;
+        expectedGetResponse.templates = [];
         expectFimsSendHelper([
             {
                 body: null,
@@ -225,6 +267,13 @@ describe('Alerts tests', () => {
                 replyto: null,
                 uri: 'dummy_replyto',
                 username: null,
+            },
+            {
+                body: JSON.stringify(expectedGetResponse),
+                method: 'set',
+                replyto: null,
+                uri: 'dummy_replyto',
+                username: null
             }
         ]);
     });
@@ -239,7 +288,7 @@ describe('Alerts tests', () => {
         await sleep(sleepMs);
         expectFimsSendHelper([
             {
-                body: JSON.stringify(getManagementResponse),
+                body: JSON.stringify(getManagementResponses.base),
                 method: 'set',
                 replyto: null,
                 uri: 'dummy_replyto',
@@ -271,9 +320,9 @@ describe('Alerts tests', () => {
         await sleep(sleepMs);
 
         // deep clone
-        const incidentsWithNewDetails = JSON.parse(JSON.stringify(getIncidentsResponseUnresolved))
+        const incidentWithNewDetails = JSON.parse(JSON.stringify(getIncidentsResponseUnresolved))
         
-        incidentsWithNewDetails.rows[0].details.push(
+        incidentWithNewDetails.rows[0].details.push(
             {
                 message: 'Site discharge 11000.00kW exceeded max POI limit 10000.00kW',
                 timestamp: '2020-07-07T12:00:00.000Z',
@@ -295,7 +344,65 @@ describe('Alerts tests', () => {
                 username: null,
             },
             {
-                body: JSON.stringify(incidentsWithNewDetails),
+                body: JSON.stringify(incidentWithNewDetails),
+                method: 'set',
+                replyto: null,
+                uri: 'dummy_replyto',
+                username: null,
+            }
+        ]);
+    });
+
+    test('go_metrics | A second alerting incident is triggered', async () => {
+        processEvent({
+            uri: '/events/alerts',
+            method: 'post',
+            body: {
+                ...postIncidentRequest,
+                incident_id: "unseen-incident-id"
+            },
+            replyto: 'dummy_replyto',
+        });
+        await sleep(sleepMs);
+        processEvent({
+            uri: '/events/alerts',
+            method: 'get',
+            body: {
+                ...getIncidentsRequest,
+                resolvedFilter: false,
+            },
+            replyto: 'dummy_replyto',
+        });
+        await sleep(sleepMs);
+
+        // deep clone
+        const alertWithNewIncident = JSON.parse(JSON.stringify(getIncidentsResponseUnresolved))
+        
+        alertWithNewIncident.rows = [
+            {
+                ...alertWithNewIncident.rows[0],
+                details: postIncidentRequest.details,
+                id: "unseen-incident-id"
+            },
+            ...alertWithNewIncident.rows,
+        ];
+        expectFimsSendHelper([
+            {
+                body: JSON.stringify({ message: 'A new alert incident has been triggered' }),
+                method: 'pub',
+                replyto: null,
+                uri: '/events/alerts',
+                username: null,
+            },
+            {
+                body: JSON.stringify(genericSuccessResponse),
+                method: 'set',
+                replyto: null,
+                uri: 'dummy_replyto',
+                username: null,
+            },
+            {
+                body: JSON.stringify(alertWithNewIncident),
                 method: 'set',
                 replyto: null,
                 uri: 'dummy_replyto',
@@ -359,7 +466,7 @@ describe('Alerts tests', () => {
 
     test('UI | user resolves an inactive alert', async () => {
         processEvent({
-            uri: '/events/alerts/dummy_incident_id3',
+            uri: '/events/alerts/28beecbc-232f-431b-ac7d-8d29350e9000.lima',
             method: 'set',
             replyto: 'dummy_replyto',
             body: setIncidentRequest,
@@ -393,7 +500,7 @@ describe('Alerts tests', () => {
 
     test('UI | user resolves an active alert', async () => {
         processEvent({
-            uri: '/events/alerts/dummy_incident_id3',
+            uri: '/events/alerts/28beecbc-232f-431b-ac7d-8d29350e9000.lima',
             method: 'set',
             replyto: 'dummy_replyto',
             body: setIncidentRequest,
@@ -427,7 +534,7 @@ describe('Alerts tests', () => {
 
     test('UI | user edits an already resolved alert', async () => {
         processEvent({
-            uri: '/events/alerts/dummy_incident_id',
+            uri: '/events/alerts/28beecbc-232f-431b-ac7d-8d29350e9000.sudden_valley',
             method: 'set',
             replyto: 'dummy_replyto',
             body: setIncidentRequest,
@@ -581,8 +688,8 @@ describe('Alerts tests', () => {
         await sleep(sleepMs);
         const expectedOrgs = organizationEntries.filter((org) => org.id !== orgId);
         const expectedConfigs = {
-            templates: getManagementResponse.templates,
-            rows: getManagementResponse.rows.map((x) => {
+            templates: getManagementResponses.base.templates,
+            rows: getManagementResponses.base.rows.map((x) => {
                 if (x.organization === orgName) {
                     return {
                         ...x,
