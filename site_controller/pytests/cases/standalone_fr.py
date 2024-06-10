@@ -688,7 +688,7 @@ def test_pfr_asymmetric_configs(test):
             # 1MW active power command, 1MW load 
             "/features/active_power/active_power_setpoint_kW_cmd": 1000,
             "/components/bess_aux/active_power_setpoint": -1000, # active_power_setpoint will cover
-            "/features/standalone_power/uf_pfr_droop_bypass_flag": True, # bypass droop to make test simple
+            "/features/standalone_power/uf_pfr_droop_bypass_flag": False,
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 1000),
@@ -745,7 +745,6 @@ def test_pfr_asymmetric_configs(test):
             "/features/standalone_power/active_power_poi_limits_enable": False,
             "/features/standalone_power/active_power_poi_limits_min_kW": -10000,
             "/features/standalone_power/active_power_poi_limits_max_kW": 10000,
-            "/features/standalone_power/uf_pfr_droop_bypass_flag": False, # reinstate droop
             **Steps.config_dev_remove_solar_from_maint(),
             **Steps.config_dev_remove_gen_from_maint(),
         },
@@ -769,6 +768,8 @@ def test_pfr_force_start(test):
 @ fixture
 @ parametrize("test", [
     # Preconditions 
+    # NOTE: USING DROOP BYPASS
+    #    used to show we can still push power when we leave force_start
     Setup(
         "pfr_force_start_pulse",
         {},
@@ -923,7 +924,6 @@ def test_pfr_force_start_pulse(test):
             # 1MW active power command, 1MW load 
             "/features/active_power/active_power_setpoint_kW_cmd": 1000,
             "/components/bess_aux/active_power_setpoint": -1000, # active_power_setpoint will cover
-            "/features/standalone_power/uf_pfr_droop_bypass_flag": True, # bypass droop to make test simple
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 1000),
@@ -1006,7 +1006,6 @@ def test_pfr_force_start_pulse(test):
             "/features/standalone_power/active_power_poi_limits_enable": False,
             "/features/standalone_power/active_power_poi_limits_min_kW": -10000,
             "/features/standalone_power/active_power_poi_limits_max_kW": 10000,
-            "/features/standalone_power/uf_pfr_droop_bypass_flag": False, # reinstate droop
             **Steps.config_dev_remove_solar_from_maint(),
             **Steps.config_dev_remove_gen_from_maint(),
         },
@@ -1033,6 +1032,8 @@ def test_pfr_force_start_graph_1(test):
     # demonstrate that the trigger_duration_sec will be obeyed
     # event will start again as soon as cooldown is over
     # follow this link and look at second graph mentioning force_start https://flexgen.atlassian.net/wiki/spaces/API/pages/10223652/SRM1+-+Frequency+Response#Over-Frequency-Response-Graph
+    # NOTE: USING DROOP BYPASS
+    #    used to demonstrate the recovery behavior when using droop bypass and therefore the recovery_freq_hz (without the only recovery is the instant_recovery)
     Setup(
         "pfr_force_start_graph_2",
         {},
@@ -1205,7 +1206,6 @@ def test_pfr_force_start_graph_2(test):
             # 5MW active power command, 1MW load 
             "/features/active_power/active_power_setpoint_kW_cmd": 1000,
             "/components/bess_aux/active_power_setpoint": -1000, # active_power_setpoint will cover
-            "/features/standalone_power/uf_pfr_droop_bypass_flag": True, # bypass droop to make test simple
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 1000),
@@ -1259,7 +1259,6 @@ def test_pfr_force_start_graph_2(test):
             "/features/standalone_power/active_power_poi_limits_enable": False,
             "/features/standalone_power/active_power_poi_limits_min_kW": -10000,
             "/features/standalone_power/active_power_poi_limits_max_kW": 10000,
-            "/features/standalone_power/uf_pfr_droop_bypass_flag": False, # reinstate droop
             **Steps.config_dev_remove_solar_from_maint(),
             **Steps.config_dev_remove_gen_from_maint(),
         },

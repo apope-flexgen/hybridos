@@ -119,7 +119,7 @@ void Freq_Resp_Component::update_state(timespec current_time, float site_frequen
     if (!droop_bypass_flag.value.value_bool) {
         // are we trying to use force_start because that would be strange
         if (force_start.value.value_bool) {
-            FPS_WARNING_LOG("Trying to use droop when force starting a FR. Is this intended?");
+            FPS_WARNING_LOG("Force Start issued when droop_bypass_flag is false. Force Start will output the maximum response until disabled.");
         }
         return;
     }
@@ -158,7 +158,10 @@ float Freq_Resp_Component::calculate_kw_output(float current_frequency) {
         return inactive_cmd_kw.value.value_float;
     }
     // if no droop used, always respond with configured command
-    if (droop_bypass_flag.value.value_bool) {
+    // When using force_start always act as if droop_bypass is true.
+    // IMPORTANT: When mid response and you set force_start false behavior will 
+    // return to "drooped" behavior if droop bypass is false.
+    if (droop_bypass_flag.value.value_bool || force_start.value.value_bool) {
         return signed_active_cmd_kw;
     }
     // if droop being used, measure how much of the configured command with which to respond
