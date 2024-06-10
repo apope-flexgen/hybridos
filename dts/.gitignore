@@ -22,3 +22,6 @@ rpmbuild/
 go/
 .cache/
 .gitconfig
+
+# pytest output
+__pycache__/

@@ -148,7 +148,6 @@ func (writer *InfluxWriter) sendBatchesUntil(done <-chan struct{}) error {
 				log.Debugf("Successfully written to %s for archive %s", "influx", archiveFilePath)
 
 				atomic.AddUint64(&writer.WriteCnt, 1)
-				log.Debugf("[%s writer] Removed successfully written file %s", "influx", archiveFilePath)
 			} else {
 				log.Errorf("Error writing to database for file %s with error: %v. Moving it to garbage folder.", archiveFilePath, err)
 				atomic.AddUint64(&writer.FailCnt, 1)

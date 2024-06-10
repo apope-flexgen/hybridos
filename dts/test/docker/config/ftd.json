@@ -18,7 +18,7 @@
             {
                 "uri": "/test_string",
                 "destination": "influx",
-                "measurement": "test"
+                "measurement": "test_a"
             },
             {
                 "uri": "/events",
@@ -123,7 +123,7 @@
             {
                 "uri": "/test_string",
                 "destination": "influx",
-                "measurement": "test"
+                "measurement": "test_a"
             },
             {
                 "uri": "/events",

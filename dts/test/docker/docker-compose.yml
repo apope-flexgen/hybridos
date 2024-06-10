@@ -7,9 +7,6 @@ services:
         imageTag: devel
     image:
       flexgen/dts/test/docker:test
-    networks:
-      dts_test_network:
-        ipv4_address: 1.1.2.0
     tty: true
     volumes:
       - ./config/:/home/config/
@@ -23,22 +20,9 @@ services:
     hostname: mongo-container
     ports:
     - "27017:27017"
-    networks:
-      dts_test_network:
-        ipv4_address: 1.1.2.1
 
   dts_test_influx:
     image: influxdb:1.8
     hostname: influx-container
     ports:
     - "8086:8086"
-    networks:
-      dts_test_network:
-        ipv4_address: 1.1.2.2
-
-networks:
-  dts_test_network:
-    ipam:
-      driver: default
-      config:
-        - subnet: 1.0.0.0/8

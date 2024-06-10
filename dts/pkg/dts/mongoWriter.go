@@ -75,7 +75,6 @@ func (writer *MongoWriter) sendDataUntil(done <-chan struct{}) error {
 				log.Debugf("Successfully written to %s for archive %s", "mongo", data.dataFileName)
 
 				writer.WriteCnt++
-				log.Debugf("[%s writer] Removed successfully written file %s", "mongo", data.dataFileName)
 			} else {
 				log.Errorf("Error writing to database for file %s with error: %v", data.dataFileName, err)
 				writer.FailCnt++

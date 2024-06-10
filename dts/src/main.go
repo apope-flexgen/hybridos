@@ -77,25 +77,9 @@ func initConfig() {
 
 // Ensure that all directories necessary for the program to run exist
 func initDirectories() error {
-	var err error
-	err = fileops.EnsureDirectoryExists(dts.GlobalConfig.InputPath, os.ModePerm)
+	err := fileops.EnsureDirectoryExists(dts.GlobalConfig.InputPath, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("failed to ensure input path exists: %w", err)
-	}
-	err = fileops.EnsureDirectoryExists(dts.GlobalConfig.FailedValidatePath, os.ModePerm)
-	if err != nil {
-		return fmt.Errorf("failed to ensure validate error path exists: %w", err)
-	}
-	err = fileops.EnsureDirectoryExists(dts.GlobalConfig.FailedWritePath, os.ModePerm)
-	if err != nil {
-		return fmt.Errorf("failed to ensure write error path exists: %w", err)
-	}
-	// Forward path may be empty
-	if len(dts.GlobalConfig.FwdPath) > 0 {
-		err = fileops.EnsureDirectoryExists(dts.GlobalConfig.FwdPath, os.ModePerm)
-		if err != nil {
-			return fmt.Errorf("failed to ensure forward path exists: %w", err)
-		}
 	}
 	return nil
 }

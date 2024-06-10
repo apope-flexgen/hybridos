@@ -6,7 +6,4 @@ sleep 1
 
 /home/fims_simulator &
 
-# Enable the following pub to get a type conflict write error when writing to influx
-# watch -n 1 "fims_send -m pub -u /test_string '{\"value\":\"test string\"}'" > /dev/null &
-
 /usr/local/bin/dts --c=/home/config/dts.json --logCfg=/home/config/dts_verbose.json

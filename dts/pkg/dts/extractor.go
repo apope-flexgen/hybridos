@@ -58,7 +58,7 @@ func (extractor *ArchiveExtractor) extractUntil(done <-chan struct{}) error {
 				extractedDataFiles, err := extract(archiveFilePath)
 				if err != nil {
 					log.Errorf("Failed to extract data files from batched archive %s: %v", archiveFilePath, err)
-					err = removeArchive(archiveFilePath, true, GlobalConfig.FailedValidatePath)
+					err = removeArchive(archiveFilePath)
 					if err != nil {
 						log.Errorf("Failed to remove archive %s: %v", archiveFilePath, err)
 					}
@@ -70,7 +70,7 @@ func (extractor *ArchiveExtractor) extractUntil(done <-chan struct{}) error {
 				df, err := readDataFile(archiveFilePath)
 				if err != nil {
 					log.Errorf("Failed to read archive %s: %v", archiveFilePath, err)
-					err = removeArchive(archiveFilePath, true, GlobalConfig.FailedValidatePath)
+					err = removeArchive(archiveFilePath)
 					if err != nil {
 						log.Errorf("Failed to remove archive %s: %v", archiveFilePath, err)
 					}
@@ -80,7 +80,7 @@ func (extractor *ArchiveExtractor) extractUntil(done <-chan struct{}) error {
 			}
 
 			// remove archive now that it has been read
-			err := removeArchive(archiveFilePath, false, GlobalConfig.FailedValidatePath)
+			err := removeArchive(archiveFilePath)
 			if err != nil {
 				log.Errorf("Failed to remove archive %s: %v", archiveFilePath, err)
 			}

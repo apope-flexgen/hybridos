@@ -13,9 +13,6 @@ import (
 // structure to store config file
 type Config struct {
 	InputPath                      string                  `json:"input_path"`                         // Path at which dts looks for archives
-	FailedValidatePath             string                  `json:"failed_validate_path"`               // Path to which dts saves failed archives
-	FailedWritePath                string                  `json:"failed_write_path"`                  // Path to which archives that failed a write are moved
-	FwdPath                        string                  `json:"forward"`                            // Path to which dts saves successful archives
 	NumExtractWorkers              int                     `json:"num_extract_workers"`                // Number of workers extracting data files from archives running in parallel
 	NumValidateWorkers             int                     `json:"num_validate_workers"`               // Number of validation workers running in parallel
 	NumInfluxPrepareBatchesWorkers int                     `json:"num_influx_prepare_batches_workers"` // Number of workers preparing batch points in parallel in the influx writer
@@ -133,12 +130,6 @@ func (cfg *ContinuousQueryConfig) UnmarshalJSON(data []byte) error {
 func validateConfig() error {
 	if len(GlobalConfig.InputPath) == 0 {
 		return fmt.Errorf("input path not specified")
-	}
-	if len(GlobalConfig.FailedValidatePath) == 0 {
-		return fmt.Errorf("validate err path not specified")
-	}
-	if len(GlobalConfig.FailedWritePath) == 0 {
-		return fmt.Errorf("write err path not specified")
 	}
 	if len(GlobalConfig.Extensions) == 0 {
 		return fmt.Errorf("extension not specified")
