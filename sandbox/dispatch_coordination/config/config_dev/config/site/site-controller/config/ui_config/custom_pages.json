@@ -94,6 +94,13 @@
                     "uri": "/maint_reactive_power_setpoint"
                 },
                 {
+                    "inputType": "number",
+                    "name": "Maintenance Slew Rate",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/maint_active_power_slew_rate"
+                },
+                {
                     "inputType": "button",
                     "name": "Close DC Contactors",
                     "scalar": "1",
@@ -430,6 +437,13 @@
                 },
                 {
                     "inputType": "number",
+                    "name": "Maintenance Slew Rate",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/maint_active_power_slew_rate"
+                },
+                {
+                    "inputType": "number",
                     "name": "Reactive Power Setpoint",
                     "scalar": "1000",
                     "units": "MW",
@@ -597,6 +611,13 @@
                     "scalar": "1000",
                     "units": "MW",
                     "uri": "/maint_active_power_setpoint"
+                },
+                {
+                    "inputType": "number",
+                    "name": "Maintenance Slew Rate",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/maint_active_power_slew_rate"
                 },
                 {
                     "inputType": "number",

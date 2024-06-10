@@ -564,7 +564,7 @@ def start_web_ui():
         # The web UI dashboard config is UI editable, meaning it is only overwritten if the --init flag is sent
         if reset_setpoints == True:
             print("loading web_ui config into dbi")
-            load_dbi('ui_config', machine_config_dir_symlink, file_document_renames={'CA_configs.json': 'assets', 'layout_configs.json': 'layout'})
+            load_dbi('ui_config', machine_config_dir_symlink, file_document_renames={'custom_pages.json': 'assets', 'layout_configs.json': 'layout'})
 
         print("starting web_server")
         Popen(['sudo', bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_web_server.json'])

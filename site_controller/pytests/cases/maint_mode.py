@@ -821,3 +821,235 @@ def test_maint_cell_volt_limits(test):
 ])
 def test_maint_rack_volt_limits(test):
     return test
+
+# This test will test the behavior of configurable maint_mode slew rates
+# on config_dev ess is configured to have configured slew rates
+# other assets are not
+@ fixture
+@ parametrize("test", [
+    # Place all assets into maint
+    Setup(
+        "maint_mode_slew",
+        {
+            "/components/ess_psm/bms_soc": 50, # set soc to 50%
+            "/components/bess_aux/active_power_setpoint": 0,  # No load
+            "/components/bess_aux/reactive_power_setpoint": 0,  # No load
+            # Default is 1.21 gigawatts, but asserting it here in case of weirdness
+            "/assets/solar/solar_1/maint_active_power_slew_rate": 1210000,
+            "/assets/ess/ess_1/maint_active_power_slew_rate": 1210000,
+            "/assets/generators/gen_1/maint_active_power_slew_rate": 1210000,
+        },
+        [],
+        pre_lambda=[
+            lambda: Steps.place_assets_in_maint_dynamic(ess=True, solar=True, gen=True), 
+        ]    
+    ),
+    # When ESS are in maint make sure that when you modify the slew it slews at a different rate
+    Steps(
+        {
+            # set a charge command it should instantly reach the full charge. Default slew is 1.21 gigawatts
+            # be advised there is a psm slew. You can't just push 1.21 gigawatts
+            "/assets/ess/ess_1/maint_active_power_setpoint": -1000000,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/active_power", -5500, wait_secs=1),
+        ]
+    ),
+    # decrease the slew rate and watch it go down slow
+    # note this proves you can update the slew while running. 
+    # TODO: do this for the actual slew rate
+    Steps(
+        {
+            "/assets/ess/ess_1/maint_active_power_slew_rate": 100,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/maint_active_power_slew_rate", 100),
+        ]
+    ),
+    # note this proves you can update the slew while running. 
+    # TODO: do this for the actual slew rate
+    Steps(
+        {
+            "/assets/ess/ess_1/maint_active_power_setpoint": 0,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/active_power", -5400, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/active_power", -5300, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/active_power", -5200, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/active_power", -5100, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/ess_1/active_power", -5000, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),
+        ]
+    ),
+    # release the asset and ensure it moves at the asset_slew (on config_dev this is FAST)
+    Steps(
+        {
+            # running APS push all the power you can 
+            # only asset running is 1 ESS 
+            "/features/active_power/active_power_setpoint_kW_cmd": 10000000,
+            "/assets/ess/ess_1/maint_mode": False,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 5500, wait_secs=7, tolerance_type=Tolerance_Type.abs, tolerance=75), # note this is way faster than the 100 kW slew in maint
+        ],
+        post_lambda=[
+            lambda: Steps.place_assets_in_maint_dynamic(ess=True, solar=True, gen=True), 
+        ]
+    ),
+    # When Gen are in maint make sure that when you modify the slew it slews at a different rate
+    Steps(
+        {
+            # set a discharge command it should instantly reach the full discharge. Default slew is 1.21 gigawatts
+            # be advised there is a psm slew. You can't just push 1.21 gigawatts
+            "/assets/generators/gen_1/maint_active_power_setpoint": 1000000,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/gen_1/active_power", 10000, wait_secs=10, tolerance_type=Tolerance_Type.abs, tolerance=75), # twins slew is slooooow
+        ]
+    ),
+    # decrease the slew rate and watch it go down slow
+    Steps(
+        {
+            "/assets/generators/gen_1/maint_active_power_slew_rate": 10,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/gen_1/maint_active_power_slew_rate", 10),
+        ]
+    ),
+    # note this proves you can update the slew while running. 
+    # TODO: do this for the actual slew rate
+    Steps(
+        {
+            "/assets/generators/gen_1/maint_active_power_setpoint": 0,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/gen_1/active_power", 10000, wait_secs=0, tolerance_type=Tolerance_Type.abs, tolerance=75), # note while the five second wait in prior step is sad
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/gen_1/active_power", 9990, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),  # this is muuuuch slower showing the slew does work
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/gen_1/active_power", 9980, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/gen_1/active_power", 9970, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/gen_1/active_power", 9960, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),
+        ]
+    ),
+    # release the asset and ensure it moves at the asset_slew (on config_dev this is FAST)
+    Steps(
+        {
+            # running APS push no power only asset running is 1 gen 
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+            "/assets/generators/gen_1/maint_mode": False,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/gen_actual_kW", 0, wait_secs=10, tolerance_type=Tolerance_Type.abs, tolerance=75), # note this is way faster than the 100 kW slew in maint
+        ],
+        post_lambda=[
+            lambda: Steps.place_assets_in_maint_dynamic(ess=True, solar=True, gen=True), 
+        ]
+    ),
+    # When Solar are in maint make sure that when you modify the slew it slews at a different rate
+    Steps(
+        {
+            # set a discharge command it should instantly reach the full discharge. Default slew is 1.21 gigawatts
+            # be advised there is a psm slew. You can't just push 1.21 gigawatts
+            "/assets/solarerators/solar_1/maint_active_power_setpoint": 1000000,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_1/active_power", 2500, wait_secs=3, tolerance_type=Tolerance_Type.abs, tolerance=75),
+        ]
+    ),
+    # decrease the slew rate and watch it go down slow
+    Steps(
+        {
+            "/assets/solar/solar_1/maint_active_power_slew_rate": 100,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_1/maint_active_power_slew_rate", 100),
+        ]
+    ),
+    # note this proves you can update the slew while running. 
+    # TODO: do this for the actual slew rate
+    Steps(
+        {
+            "/assets/solar/solar_1/maint_active_power_setpoint": 0,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_1/active_power", 2500, wait_secs=0, tolerance_type=Tolerance_Type.abs, tolerance=75),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_1/active_power", 2400, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_1/active_power", 2300, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_1/active_power", 2200, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/solar_1/active_power", 2100, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=75),
+        ]
+    ),
+    # release the asset and ensure it moves at the asset_slew (on config_dev this is FAST)
+    Steps(
+        {
+            # running APS push no power only asset running is 1 solar 
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+            "/assets/solar/solar_1/maint_mode": False,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/solar_actual_kW", 0, wait_secs=5, tolerance_type=Tolerance_Type.abs, tolerance=75), # note this is way faster than the 100 kW slew in maint
+        ],
+        post_lambda=[
+            lambda: Steps.place_assets_in_maint_dynamic(ess=True, solar=True, gen=True), 
+        ]
+    ),
+    # get manual mode to zero then push up and ensure feature slew is correct
+    Steps(
+        {
+            "/features/active_power/runmode1_kW_mode_cmd": 3, # manual mode
+            "/features/active_power/manual_ess_kW_slew_rate": 1000, # 1 MW slew last set to maint_slew (asset_level) was 100 kW (this is faster)
+                                                                    # therefore this will fail badly if it's using the maint slew rate
+            "/features/active_power/manual_ess_kW_cmd": 0, # get to zero 
+            "/assets/ess/ess_1/maint_mode": False,
+            "/assets/ess/ess_2/maint_mode": False,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 0, wait_secs=5, tolerance_type=Tolerance_Type.abs, tolerance=50),
+        ]
+    ),
+    # release the asset
+    Steps(
+        {
+            "/features/active_power/manual_ess_kW_cmd": 6000,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 0, wait_secs=0, tolerance_type=Tolerance_Type.abs, tolerance=50),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 1000, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.less_than_eq, "/features/active_power/ess_actual_kW", 1000, wait_secs=0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 2000, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.less_than_eq, "/features/active_power/ess_actual_kW", 2000, wait_secs=0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 3000, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.less_than_eq, "/features/active_power/ess_actual_kW", 3000, wait_secs=0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 4000, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.less_than_eq, "/features/active_power/ess_actual_kW", 4000, wait_secs=0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 5000, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.less_than_eq, "/features/active_power/ess_actual_kW", 5000, wait_secs=0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 6000, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 6000, wait_secs=2), 
+            # I cannot figure out why but the slew does not tightly track actual power. The rate of change is correct, but it tends to lag behind for some reason.
+        ],
+        post_lambda=[
+            lambda: Steps.place_assets_in_maint_dynamic(ess=True, solar=True, gen=True), 
+        ]
+    ),
+
+    # Remove assets from maint
+    # Re-add load
+    Teardown(
+        {
+            "/features/active_power/runmode1_kW_mode_cmd": 2, # APS seems like default for most tests
+            "/features/active_power/manual_ess_kW_cmd": 0, # Put back at 0
+            "/features/active_power/manual_ess_kW_slew_rate": 1210000, # put back fast
+            "/components/bess_aux/active_power_setpoint": -500,  # load
+            "/components/bess_aux/reactive_power_setpoint": -50,  # load
+            "/assets/solar/solar_1/maint_active_power_slew_rate": 1210000,
+            "/assets/ess/ess_1/maint_active_power_slew_rate": 1210000,
+            "/assets/generators/gen_1/maint_active_power_slew_rate": 1210000,
+        },
+        [
+        ],
+        pre_lambda=[
+            lambda: Steps.remove_all_assets_from_maint_dynamic(), 
+        ]
+    )
+])
+def test_maint_mode_slew(test):
+    return test

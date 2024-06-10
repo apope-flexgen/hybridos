@@ -28,6 +28,7 @@
 #include "Asset_Generator.h"
 #include "Fims_Object.h"
 #include "Step.h"
+#include "macros.h"
 
 extern Data_Endpoint* data_endpoint;
 
@@ -49,6 +50,10 @@ Asset::Asset() {
     inMaintenance = false;
     inStandby = false;
     newly_faulted = false;
+
+    // slews
+    slew_rate = MAX_SLEW; 
+    maint_slew_rate = MAX_SLEW;
 
     // Control variables
     clearFaultsControlEnable = false;
@@ -737,8 +742,10 @@ Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Config
             validation_result.is_valid_config = false;
             validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: failed to find slew_rate in config.", name)));
         }
-    } else
-        active_power_slew.set_slew_rate(slew_rate->valueint);
+    } else {
+        this->slew_rate = slew_rate->valueint;
+        active_power_slew.set_slew_rate(this->slew_rate); // by default always use the non-maintenance slew rate.
+    }
 
     cJSON* throttle_timeout_fast = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "throttle_timeout_fast_ms");
     if (throttle_timeout_fast != NULL)
@@ -1735,6 +1742,10 @@ bool Asset::handle_generic_asset_controls_set(std::string uri, cJSON& body) {
             inMaintenance = true;
             inLockdown = false;
             lock_mode.enabled = true;
+            // Slew by either the maintenance mode rate or the "running" rate.
+            if (maint_active_power_slew_rate_ctl.configured) {
+                this->active_power_slew.set_slew_rate(this->maint_slew_rate);
+            }
         } else if (inMaintenance && !maint_mode_set && !inLockdown) {
             FPS_INFO_LOG("Switching %s asset %s out of maintenance mode.", get_asset_type(), get_name());
             snprintf(event_msg, MEDIUM_MSG_LEN, "Maintenance Mode exited: %s asset: %s", get_asset_type(), get_name().c_str());
@@ -1742,6 +1753,10 @@ bool Asset::handle_generic_asset_controls_set(std::string uri, cJSON& body) {
             inMaintenance = false;
             inLockdown = false;
             lock_mode.enabled = false;
+            // Slew by either the maintenance mode rate or the "running" rate.
+            if (maint_active_power_slew_rate_ctl.configured) {
+                this->active_power_slew.set_slew_rate(this->slew_rate);
+            }
         } else if (inMaintenance && !maint_mode_set && inLockdown) {
             FPS_INFO_LOG("Cannot switch %s asset %s out of maintenance mode due to lockdown.", get_asset_type(), get_name());
             snprintf(event_msg, MEDIUM_MSG_LEN, "Cannot switch %s asset out of maintenance mode due to lockdown: %s", get_asset_type(), get_name().c_str());
@@ -3101,4 +3116,82 @@ bool Asset::check_fims_timeout(void) {
         }
     }
     return fims_timeout;
+}
+
+/**
+ * Quickly configure a control
+ * @param json (the json)
+ * @param key_value (the string to search for)
+ * @param control (the associated fimsCtl)
+ * @param flag (the associated bool)
+ * @param name_str (name of the component)
+ * @param validation_result (higher level config validation)
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+void Asset::quick_config_slider(const cJSON* json, const std::string key_value, fimsCtl& control, bool& flag, const std::string name_str, Config_Validation_Result& validation_result) {
+    cJSON* ctrl_obj;
+    Config_Validation_Result control_result;
+    ctrl_obj = cJSON_GetObjectItem(json, key_value.c_str());
+    if (ctrl_obj != NULL) {
+        control_result = control.configure(ctrl_obj, onOffOption, &flag, Bool, sliderStr, false);
+        if (!control_result.is_valid_config) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure {} UI control.", name_str, key_value)));
+        }
+        validation_result.absorb(control_result);
+    }
+}
+
+/**
+ * Quickly configure a control
+ * @param json (the json)
+ * @param key_value (the string to search for)
+ * @param control (the associated fimsCtl)
+ * @param float_var (the associated float)
+ * @param name_str (name of the component)
+ * @param validation_result (higher level config validation)
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+void Asset::quick_config_numeric(const cJSON* json, std::string key_value, fimsCtl& control, float& float_var, std::string name_str, Config_Validation_Result& validation_result) {
+    cJSON* ctrl_obj;
+    Config_Validation_Result control_result;
+    ctrl_obj = cJSON_GetObjectItem(json, key_value.c_str());
+    if (ctrl_obj != NULL) {
+        control_result = control.configure(ctrl_obj, nullJson, &float_var, Float, numberStr, false);
+        if (!control_result.is_valid_config) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure {} UI control.", name_str, key_value)));
+        }
+        validation_result.absorb(control_result);
+    }
+}
+
+/**
+ * Quickly configure a control
+ * @param json (the json)
+ * @param key_value (the string to search for)
+ * @param control (the associated fimsCtl)
+ * @param float_var (the associated float)
+ * @param name_str (name of the component)
+ * @param validation_result (higher level config validation)
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+void Asset::quick_config_button(const cJSON* json, std::string key_value, fimsCtl& control, std::string compName, std::string& built_uri, std::string name_str, Config_Validation_Result& validation_result, bool useResetOption = false) {
+    cJSON* ctrl_obj;
+    Config_Validation_Result control_result;
+    ctrl_obj = cJSON_GetObjectItem(json, key_value.c_str());
+    if (ctrl_obj != NULL) {
+        if (useResetOption) {
+            control_result = control.configure(ctrl_obj, resetOption, NULL, Bool, buttonStr, false);
+        } else {
+            control_result = control.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+        }
+        if (!control_result.is_valid_config) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure {} UI control.", name_str, key_value)));
+        } else {
+            built_uri = build_uri(compName, control.reg_name);
+        }
+        validation_result.absorb(control_result);
+    }
 }

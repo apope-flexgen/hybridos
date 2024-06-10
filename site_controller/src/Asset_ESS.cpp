@@ -526,84 +526,6 @@ Config_Validation_Result Asset_ESS::configure_typed_asset_instance_vars(Type_Con
 }
 
 /**
- * Quickly configure a control
- * @param json (the json)
- * @param key_value (the string to search for)
- * @param control (the associated fimsCtl)
- * @param flag (the associated bool)
- * @param name_str (name of the component)
- * @param validation_result (higher level config validation)
- * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
- */
-void Asset_ESS::quick_config_slider(const cJSON* json, const std::string key_value, fimsCtl& control, bool& flag, const std::string name_str, Config_Validation_Result& validation_result) {
-    cJSON* ctrl_obj;
-    Config_Validation_Result control_result;
-    ctrl_obj = cJSON_GetObjectItem(json, key_value.c_str());
-    if (ctrl_obj != NULL) {
-        control_result = control.configure(ctrl_obj, onOffOption, &flag, Bool, sliderStr, false);
-        if (!control_result.is_valid_config) {
-            validation_result.is_valid_config = false;
-            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure {} UI control.", name_str, key_value)));
-        }
-        validation_result.absorb(control_result);
-    }
-}
-
-/**
- * Quickly configure a control
- * @param json (the json)
- * @param key_value (the string to search for)
- * @param control (the associated fimsCtl)
- * @param float_var (the associated float)
- * @param name_str (name of the component)
- * @param validation_result (higher level config validation)
- * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
- */
-void Asset_ESS::quick_config_numeric(const cJSON* json, std::string key_value, fimsCtl& control, float& float_var, std::string name_str, Config_Validation_Result& validation_result) {
-    cJSON* ctrl_obj;
-    Config_Validation_Result control_result;
-    ctrl_obj = cJSON_GetObjectItem(json, key_value.c_str());
-    if (ctrl_obj != NULL) {
-        control_result = control.configure(ctrl_obj, nullJson, &float_var, Float, numberStr, false);
-        if (!control_result.is_valid_config) {
-            validation_result.is_valid_config = false;
-            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure {} UI control.", name_str, key_value)));
-        }
-        validation_result.absorb(control_result);
-    }
-}
-
-/**
- * Quickly configure a control
- * @param json (the json)
- * @param key_value (the string to search for)
- * @param control (the associated fimsCtl)
- * @param float_var (the associated float)
- * @param name_str (name of the component)
- * @param validation_result (higher level config validation)
- * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
- */
-void Asset_ESS::quick_config_button(const cJSON* json, std::string key_value, fimsCtl& control, std::string compName, std::string& built_uri, std::string name_str, Config_Validation_Result& validation_result, bool useResetOption = false) {
-    cJSON* ctrl_obj;
-    Config_Validation_Result control_result;
-    ctrl_obj = cJSON_GetObjectItem(json, key_value.c_str());
-    if (ctrl_obj != NULL) {
-        if (useResetOption) {
-            control_result = control.configure(ctrl_obj, resetOption, NULL, Bool, buttonStr, false);
-        } else {
-            control_result = control.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
-        }
-        if (!control_result.is_valid_config) {
-            validation_result.is_valid_config = false;
-            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure {} UI control.", name_str, key_value)));
-        } else {
-            built_uri = build_uri(compName, control.reg_name);
-        }
-        validation_result.absorb(control_result);
-    }
-}
-
-/**
  * Configure ui_controls provided in the asset's components array
  * @param configurator The Type_Configurator used to configure this asset
  * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
@@ -638,35 +560,35 @@ Config_Validation_Result Asset_ESS::configure_ui_controls(Type_Configurator* con
         // when adding a new UI control, make sure to add it to the list of valid UI controls in Asset_Manager.cpp
         // TODO: Move these all to the base class (quick_config_slider quick_config_numeric quick_config_button)
         // SLIDERS
-        quick_config_slider(ui_controls, "maint_mode", maint_mode, inMaintenance, name, validation_result);
-        quick_config_slider(ui_controls, "lock_mode", lock_mode, inLockdown, name, validation_result);
-        quick_config_slider(ui_controls, "maint_soc_protection_buffers_disable", maint_soc_protection_buffers_disable_ctl, maint_soc_protection_buffers_disable_flag, name, validation_result);
-        quick_config_slider(ui_controls, "maint_soc_limits_enable", maint_soc_limits_enable_ctl, maint_soc_limits_enable_flag, name, validation_result);
-        quick_config_slider(ui_controls, "maint_cell_voltage_limits_enable", maint_cell_voltage_limits_enable_ctl, maint_cell_voltage_limits_enable_flag, name, validation_result);
-        quick_config_slider(ui_controls, "maint_rack_voltage_limits_enable", maint_rack_voltage_limits_enable_ctl, maint_rack_voltage_limits_enable_flag, name, validation_result);
-
-        quick_config_slider(ui_controls, "maint_min_charge_discharge_enable", maint_min_charge_discharge_enable_ctl, maint_min_charge_discharge_enable_flag, name, validation_result);
+        Asset::quick_config_slider(ui_controls, "maint_mode", maint_mode, inMaintenance, name, validation_result);
+        Asset::quick_config_slider(ui_controls, "lock_mode", lock_mode, inLockdown, name, validation_result);
+        Asset::quick_config_slider(ui_controls, "maint_soc_protection_buffers_disable", maint_soc_protection_buffers_disable_ctl, maint_soc_protection_buffers_disable_flag, name, validation_result);
+        Asset::quick_config_slider(ui_controls, "maint_soc_limits_enable", maint_soc_limits_enable_ctl, maint_soc_limits_enable_flag, name, validation_result);
+        Asset::quick_config_slider(ui_controls, "maint_cell_voltage_limits_enable", maint_cell_voltage_limits_enable_ctl, maint_cell_voltage_limits_enable_flag, name, validation_result);
+        Asset::quick_config_slider(ui_controls, "maint_rack_voltage_limits_enable", maint_rack_voltage_limits_enable_ctl, maint_rack_voltage_limits_enable_flag, name, validation_result);
+        Asset::quick_config_slider(ui_controls, "maint_min_charge_discharge_enable", maint_min_charge_discharge_enable_ctl, maint_min_charge_discharge_enable_flag, name, validation_result);
 
         // NUMBERS
-        quick_config_numeric(ui_controls, "maint_active_power_setpoint", maint_active_power_setpoint_ctl, maint_active_power_setpoint, name, validation_result);
-        quick_config_numeric(ui_controls, "maint_reactive_power_setpoint", maint_reactive_power_setpoint_ctl, maint_reactive_power_setpoint, name, validation_result);
-        quick_config_numeric(ui_controls, "maint_chargeable_min_limit", maint_chargeable_min_limit_ctl, maint_chargeable_min_limit, name, validation_result);
-        quick_config_numeric(ui_controls, "maint_dischargeable_min_limit", maint_dischargeable_min_limit_ctl, maint_dischargeable_min_limit, name, validation_result);
-        quick_config_numeric(ui_controls, "maint_min_soc_limit", maint_min_soc_limit_ctl, maint_min_soc_limit, name, validation_result);
-        quick_config_numeric(ui_controls, "maint_max_soc_limit", maint_max_soc_limit_ctl, maint_max_soc_limit, name, validation_result);
-        quick_config_numeric(ui_controls, "maint_min_cell_voltage_limit", maint_min_cell_voltage_limit_ctl, maint_min_cell_voltage_limit, name, validation_result);
-        quick_config_numeric(ui_controls, "maint_max_cell_voltage_limit", maint_max_cell_voltage_limit_ctl, maint_max_cell_voltage_limit, name, validation_result);
-        quick_config_numeric(ui_controls, "maint_min_rack_voltage_limit", maint_min_rack_voltage_limit_ctl, maint_min_rack_voltage_limit, name, validation_result);
-        quick_config_numeric(ui_controls, "maint_max_rack_voltage_limit", maint_max_rack_voltage_limit_ctl, maint_max_rack_voltage_limit, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_active_power_setpoint", maint_active_power_setpoint_ctl, maint_active_power_setpoint, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_reactive_power_setpoint", maint_reactive_power_setpoint_ctl, maint_reactive_power_setpoint, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_chargeable_min_limit", maint_chargeable_min_limit_ctl, maint_chargeable_min_limit, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_dischargeable_min_limit", maint_dischargeable_min_limit_ctl, maint_dischargeable_min_limit, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_min_soc_limit", maint_min_soc_limit_ctl, maint_min_soc_limit, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_max_soc_limit", maint_max_soc_limit_ctl, maint_max_soc_limit, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_min_cell_voltage_limit", maint_min_cell_voltage_limit_ctl, maint_min_cell_voltage_limit, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_max_cell_voltage_limit", maint_max_cell_voltage_limit_ctl, maint_max_cell_voltage_limit, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_min_rack_voltage_limit", maint_min_rack_voltage_limit_ctl, maint_min_rack_voltage_limit, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_max_rack_voltage_limit", maint_max_rack_voltage_limit_ctl, maint_max_rack_voltage_limit, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_active_power_slew_rate", maint_active_power_slew_rate_ctl, maint_slew_rate, name, validation_result);
 
         // BUTTONS
-        quick_config_button(ui_controls, "clear_faults", clear_faults_ctl, compNames[i], uri_clear_faults, name, validation_result, true);  // use true here because resetOption
-        quick_config_button(ui_controls, "start", start_ctl, compNames[i], uri_start, name, validation_result);
-        quick_config_button(ui_controls, "stop", stop_ctl, compNames[i], uri_stop, name, validation_result);
-        quick_config_button(ui_controls, "enter_standby", enter_standby_ctl, compNames[i], uri_enter_standby, name, validation_result);
-        quick_config_button(ui_controls, "exit_standby", exit_standby_ctl, compNames[i], uri_exit_standby, name, validation_result);
-        quick_config_button(ui_controls, "open_dc_contactors", open_dc_contactors_ctl, compNames[i], uri_open_dc_contacts, name, validation_result);
-        quick_config_button(ui_controls, "close_dc_contactors", close_dc_contactors_ctl, compNames[i], uri_close_dc_contacts, name, validation_result);
+        Asset::quick_config_button(ui_controls, "clear_faults", clear_faults_ctl, compNames[i], uri_clear_faults, name, validation_result, true);  // use true here because resetOption
+        Asset::quick_config_button(ui_controls, "start", start_ctl, compNames[i], uri_start, name, validation_result, false);
+        Asset::quick_config_button(ui_controls, "stop", stop_ctl, compNames[i], uri_stop, name, validation_result, false);
+        Asset::quick_config_button(ui_controls, "enter_standby", enter_standby_ctl, compNames[i], uri_enter_standby, name, validation_result, false);
+        Asset::quick_config_button(ui_controls, "exit_standby", exit_standby_ctl, compNames[i], uri_exit_standby, name, validation_result, false);
+        Asset::quick_config_button(ui_controls, "open_dc_contactors", open_dc_contactors_ctl, compNames[i], uri_open_dc_contacts, name, validation_result, false);
+        Asset::quick_config_button(ui_controls, "close_dc_contactors", close_dc_contactors_ctl, compNames[i], uri_close_dc_contacts, name, validation_result, false);
 
         // If one of the autobalancing controls is provided, the other must be provided as well
         cJSON* enable_ctrl_obj = cJSON_GetObjectItem(ui_controls, "autobalancing_enable");
@@ -678,7 +600,7 @@ Config_Validation_Result Asset_ESS::configure_ui_controls(Type_Configurator* con
         }
 
         // can use quick config for only one side
-        quick_config_button(ui_controls, "autobalancing_enable", autobalancing_enable_ctl, compNames[i], uri_set_autobalancing, name, validation_result);
+        quick_config_button(ui_controls, "autobalancing_enable", autobalancing_enable_ctl, compNames[i], uri_set_autobalancing, name, validation_result, false);
 
         // leaving below logic explicit because it's a bit novel
         if (disable_ctrl_obj != NULL) {
@@ -876,6 +798,12 @@ bool Asset_ESS::handle_set(std::string uri, cJSON& body) {
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_rack_voltage_limit")) != nullptr) {
         maint_max_rack_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_active_power_slew_rate")) != nullptr) {
+        maint_slew_rate = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
+        persistent_setpoint = true;
+        if (inMaintenance) {
+            active_power_slew.set_slew_rate(maint_slew_rate);
+        }
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "open_dc_contactors")) != nullptr) {
         open_bms_contactors();
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "close_dc_contactors")) != nullptr) {
@@ -1005,6 +933,9 @@ bool Asset_ESS::generate_asset_ui(fmt::memory_buffer& buf, const char* const var
     // Close contactors only if stopped (not faulted) and contactors are not closed
     close_dc_contactors_ctl.enabled = inMaintenance && !isRunning && !inStandby && !dc_contactors_closed.value.value_bool && !is_in_local_mode();
     goodBody = close_dc_contactors_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    maint_active_power_slew_rate_ctl.enabled = inMaintenance && isRunning && !is_in_local_mode();
+    goodBody = maint_active_power_slew_rate_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // Only need to maintain the maint_actions_select_ctl if there are any actions
     // (TODO: JUD) Might could get away with not pubbing this info at all.
@@ -1181,7 +1112,16 @@ void Asset_ESS::update_asset(void) {
     if (inMaintenance) {
         set_power_mode(powerMode::REACTIVEPWR);  // only allow reactive power mode while in maintenance
 
-        set_active_power_setpoint(maint_active_power_setpoint, true);
+        if (this->maint_active_power_slew_rate_ctl.configured) {
+            auto slewed_cmd = maint_active_power_setpoint;
+            // Essentially this is 
+            // slewed_cmd = min_limited_active_power < maint_active_power_setpoint < max_limited_active_power;
+            slewed_cmd = std::max(slewed_cmd, this->min_limited_active_power);
+            slewed_cmd = std::min(slewed_cmd, this->max_limited_active_power);
+            set_active_power_setpoint(slewed_cmd, true); // <-- WE HAVE A RAW SET HERE UNLIMITED. WE SLAM.
+        } else {
+            set_active_power_setpoint(maint_active_power_setpoint, true); // <-- lEGACY BEHAVIOR
+        }
         set_reactive_power_setpoint(maint_reactive_power_setpoint);
     }
 }
@@ -1281,7 +1221,16 @@ bool Asset_ESS::call_action_functions(const char* cmd, Value_Object* value, int 
         stop();
     } else if (strcmp(cmd, "set_maint_mode") == 0) {
         FPS_DEBUG_LOG("You have reached the set_maint_mode function for ess in asset.cpp");
-        inMaintenance = value->value_bool;
+        if (inMaintenance != value->value_bool) {
+            inMaintenance = value->value_bool;
+            if (maint_active_power_slew_rate_ctl.configured) {
+                if (inMaintenance) {
+                    this->active_power_slew.set_slew_rate(this->maint_slew_rate);
+                } else {
+                    this->active_power_slew.set_slew_rate(this->slew_rate);
+                }
+            }
+        }
     } else if (strcmp(cmd, "set_maint_active_power_setpoint") == 0) {
         FPS_DEBUG_LOG("You have reached the set_maint_active_power function for ess in asset.cpp");
         maint_active_power_setpoint = value->value_float;

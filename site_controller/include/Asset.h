@@ -103,6 +103,11 @@ public:
     const char* get_asset_type(void) const;
     const std::string get_comp_name(int) const;
 
+    // configuration functions
+    static void quick_config_numeric(const cJSON* json, std::string key_value, fimsCtl& control, float& float_var, std::string name_str, Config_Validation_Result& validation_result);
+    static void quick_config_slider(const cJSON* json, std::string key_value, fimsCtl& control, bool& flag, std::string name_str, Config_Validation_Result& validation_result);
+    static void quick_config_button(const cJSON* json, std::string key_value, fimsCtl& control, std::string compName, std::string& built_uri, std::string name_str, Config_Validation_Result& validation_result, bool useResetOption);
+
     // actions status
     Action_Status action_status;
     Action* quick_action_access;
@@ -287,7 +292,12 @@ protected:
     // control
     fimsCtl maint_mode;
     fimsCtl lock_mode;
+    fimsCtl maint_active_power_slew_rate_ctl;
+
+    // slew variables
     Slew_Object active_power_slew;
+    float slew_rate;
+    float maint_slew_rate;
 
     // status
     bool isAvail;

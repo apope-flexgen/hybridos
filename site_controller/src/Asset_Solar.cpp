@@ -205,113 +205,26 @@ Config_Validation_Result Asset_Solar::configure_ui_controls(Type_Configurator* c
 
         // UI controls are optional
         cJSON* ui_controls = cJSON_GetObjectItem(component, "ui_controls");
-        if (ui_controls == NULL)
+        if (ui_controls == NULL) {
             continue;
-
-        Config_Validation_Result control_result;
-
-        // when adding a new UI control, make sure to add it to the list of valid UI controls in Asset_Manager.cpp
-        cJSON* ctrl_obj;
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_mode");
-        if (ctrl_obj != NULL) {
-            control_result = maint_mode.configure(ctrl_obj, yesNoOption, &inMaintenance, Bool, sliderStr, true);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_mode UI control.", name)));
-            }
-            validation_result.absorb(control_result);
         }
 
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "lock_mode");
-        if (ctrl_obj != NULL) {
-            control_result = lock_mode.configure(ctrl_obj, yesNoOption, &inLockdown, Bool, sliderStr, true);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure lock_mode UI control.", name)));
-            }
-            validation_result.absorb(control_result);
-        }
+        // SLIDERS
+        Asset::quick_config_slider(ui_controls, "maint_mode", maint_mode, inMaintenance, name, validation_result);
+        Asset::quick_config_slider(ui_controls, "lock_mode", lock_mode, inLockdown, name, validation_result);
+        // NUMBERS
+        Asset::quick_config_numeric(ui_controls, "maint_active_power_setpoint", maint_active_power_setpoint_ctl, maint_active_power_setpoint, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_reactive_power_setpoint", maint_reactive_power_setpoint_ctl, maint_reactive_power_setpoint, name, validation_result);
+        Asset::quick_config_numeric(ui_controls, "maint_active_power_slew_rate", maint_active_power_slew_rate_ctl, maint_slew_rate, name, validation_result);
 
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "clear_faults");
-        if (ctrl_obj != NULL) {
-            control_result = clear_faults_ctl.configure(ctrl_obj, resetOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure clear_faults UI control.", name)));
-            } else {
-                uri_clear_faults = build_uri(compNames[i], clear_faults_ctl.reg_name);
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "start");
-        if (ctrl_obj != NULL) {
-            control_result = start_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure start asset UI control.", name)));
-            } else {
-                uri_start = build_uri(compNames[i], start_ctl.reg_name);
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "stop");
-        if (ctrl_obj != NULL) {
-            control_result = stop_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure stop asset UI control.", name)));
-            } else {
-                uri_stop = build_uri(compNames[i], stop_ctl.reg_name);
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "enter_standby");
-        if (ctrl_obj != NULL) {
-            control_result = enter_standby_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure enter_standby UI control.", name)));
-            } else {
-                uri_enter_standby = build_uri(compNames[i], enter_standby_ctl.reg_name);
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "exit_standby");
-        if (ctrl_obj != NULL) {
-            control_result = exit_standby_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure exit_standby UI control.", name)));
-            } else {
-                uri_exit_standby = build_uri(compNames[i], exit_standby_ctl.reg_name);
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_active_power_setpoint");
-        if (ctrl_obj != NULL) {
-            control_result = maint_active_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_active_power_setpoint, Float, numberStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_active_power_setpoint UI control.", name)));
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_reactive_power_setpoint");
-        if (ctrl_obj != NULL) {
-            control_result = maint_reactive_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_reactive_power_setpoint, Float, numberStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_reactive_power_setpoint UI control.", name)));
-            }
-            validation_result.absorb(control_result);
-        }
+        // BUTTONS
+        Asset::quick_config_button(ui_controls, "clear_faults", clear_faults_ctl, compNames[i], uri_clear_faults, name, validation_result, true);  // use true here because resetOption
+        Asset::quick_config_button(ui_controls, "start", start_ctl, compNames[i], uri_start, name, validation_result, false);
+        Asset::quick_config_button(ui_controls, "stop", stop_ctl, compNames[i], uri_stop, name, validation_result, false);
+        Asset::quick_config_button(ui_controls, "enter_standby", enter_standby_ctl, compNames[i], uri_enter_standby, name, validation_result, false);
+        Asset::quick_config_button(ui_controls, "exit_standby", exit_standby_ctl, compNames[i], uri_exit_standby, name, validation_result, false);
     }
+
     return validation_result;
 }
 
@@ -373,6 +286,9 @@ bool Asset_Solar::generate_asset_ui(fmt::memory_buffer& buf, const char* const v
     maint_reactive_power_setpoint_ctl.enabled = (inMaintenance && isRunning && !inStandby) && !is_in_local_mode();
     goodBody = maint_reactive_power_setpoint_ctl.makeJSONObject(buf, var, true) && goodBody;
 
+    maint_active_power_slew_rate_ctl.enabled = inMaintenance && isRunning && !is_in_local_mode();
+    goodBody = maint_active_power_slew_rate_ctl.makeJSONObject(buf, var, true) && goodBody;
+
     return (goodBody);
 }
 
@@ -397,6 +313,12 @@ bool Asset_Solar::handle_set(std::string uri, cJSON& body) {
         value = cJSON_GetObjectItem(current_setpoint, "value");
         maint_reactive_power_setpoint = value->valuedouble;
         persistent_setpoint = true;
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_active_power_slew_rate")) != nullptr) {
+        maint_slew_rate = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
+        persistent_setpoint = true;
+        if (inMaintenance) {
+            active_power_slew.set_slew_rate(maint_slew_rate);
+        }
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "stop"))) {
         stop();
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "start"))) {
@@ -471,7 +393,17 @@ void Asset_Solar::update_asset(void) {
     // override setpoints in maintenance mode
     if (inMaintenance) {
         set_power_mode(powerMode::REACTIVEPWR);  // only allow reactive power mode while in maintenance
-        set_active_power_setpoint(maint_active_power_setpoint);
+
+        if (this->maint_active_power_slew_rate_ctl.configured) {
+            auto slewed_cmd = maint_active_power_setpoint;
+            // Essentially this is 
+            // slewed_cmd = min_limited_active_power < maint_active_power_setpoint < max_limited_active_power;
+            slewed_cmd = std::max(slewed_cmd, this->min_limited_active_power);
+            slewed_cmd = std::min(slewed_cmd, this->max_limited_active_power);
+            set_active_power_setpoint(slewed_cmd); // <-- WE HAVE A RAW SET HERE UNLIMITED. WE SLAM.
+        } else {
+            set_active_power_setpoint(maint_active_power_setpoint); // <-- lEGACY BEHAVIOR
+        }
         set_reactive_power_setpoint(maint_reactive_power_setpoint);
     }
 }

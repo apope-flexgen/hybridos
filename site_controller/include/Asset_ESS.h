@@ -72,11 +72,6 @@ public:
 
     gridMode get_grid_mode(void) const;
 
-    // configuration
-    static void quick_config_numeric(const cJSON* json, std::string key_value, fimsCtl& control, float& float_var, std::string name_str, Config_Validation_Result& validation_result);
-    static void quick_config_slider(const cJSON* json, std::string key_value, fimsCtl& control, bool& flag, std::string name_str, Config_Validation_Result& validation_result);
-    static void quick_config_button(const cJSON* json, std::string key_value, fimsCtl& control, std::string compName, std::string& built_uri, std::string name_str, Config_Validation_Result& validation_result, bool useResetOption);
-
     // internal functions
     void process_asset();
     void set_raw_status() override;

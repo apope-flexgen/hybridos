@@ -107,7 +107,7 @@ def test_manual_solar_slew_rate_1(test):
             "/features/active_power/manual_solar_kW_slew_rate": 1000
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/manual_solar_kW_slew_rate", 1000)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/manual_solar_kW_slew_rate", 1000, wait_secs=1),
         ]
     ),
     Steps(
@@ -115,7 +115,7 @@ def test_manual_solar_slew_rate_1(test):
             "/features/active_power/manual_solar_kW_cmd": 5000
         },
         [
-            Flex_Assertion(Assertion_Type.less_than_eq, "/features/active_power/solar_kW_cmd", 5000, wait_secs=1),
+            Flex_Assertion(Assertion_Type.less_than_eq, "/features/active_power/solar_kW_cmd", 1000, wait_secs=1),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/solar_kW_cmd", 5000, wait_secs=4)
         ]
     ),
@@ -256,8 +256,11 @@ def test_manual_ess_slew_rate_1(test):
             "/features/active_power/manual_ess_kW_cmd": 5000
         },
         [
-            Flex_Assertion(Assertion_Type.less_than_eq, "/features/active_power/ess_kW_cmd", 5000, wait_secs=1),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 5000, wait_secs=4)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 1000, wait_secs=1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 2000, wait_secs=1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 3000, wait_secs=1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 4000, wait_secs=1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 5000, wait_secs=1)
         ]
     ),
     Teardown(
@@ -303,7 +306,7 @@ def test_manual_ess_slew_rate_2(test):
             "/features/active_power/manual_ess_kW_cmd": 1000000
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 1000000, wait_secs=1)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 11000, wait_secs=1) # limited to 11MW
         ]
     ),
     Teardown(
@@ -442,7 +445,7 @@ def test_manual_gen_slew_rate_2(test):
             "/features/active_power/manual_gen_kW_cmd": 1000000
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/gen_kW_cmd", 1000000, wait_secs=1)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/gen_kW_cmd", 5000, wait_secs=1) # slew rate is 5000 in assets.json
         ]
     ),
     Teardown(

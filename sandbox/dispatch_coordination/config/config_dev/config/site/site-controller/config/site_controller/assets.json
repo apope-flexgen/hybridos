@@ -40,9 +40,10 @@
                                     "type": "Bool"
                                 },
                                 "maint_active_power_setpoint": {
-                                    "name": "Active Power Setpoint",
-                                    "scaler": 1000,
-                                    "unit": "W"
+                                    "name": "Active Power Setpoint"
+                                },
+                                "maint_active_power_slew_rate": {
+                                    "name": "Active Power Slew Rate"
                                 },
                                 "maint_cell_voltage_limits_enable": {
                                     "name": "Enable Maintenance Cell Voltage limits",
@@ -380,7 +381,7 @@
                     "rated_capacity": 2300,
                     "rated_reactive_power_kvar": 5500.0,
                     "running_status_mask": "0x01",
-                    "slew_rate": 125000,
+                    "slew_rate": 1210000,
                     "start_value": 207,
                     "status_type": "random_enum",
                     "stop_value": 206,
@@ -434,6 +435,9 @@
                                     "name": "Active Power Setpoint",
                                     "scaler": 1000,
                                     "unit": "W"
+                                },
+                                "maint_active_power_slew_rate": {
+                                    "name": "Active Power Slew Rate"
                                 },
                                 "maint_cell_voltage_limits_enable": {
                                     "name": "Enable Maintenance Cell Voltage limits",
@@ -1055,6 +1059,9 @@
                                     "scaler": 1000,
                                     "unit": "W"
                                 },
+                                "maint_active_power_slew_rate": {
+                                    "name": "Active Power Slew Rate"
+                                },
                                 "maint_mode": {
                                     "name": "Maintenance Mode",
                                     "type": "Bool"
@@ -1215,6 +1222,9 @@
                                     "name": "Active Power Setpoint",
                                     "scaler": 1000,
                                     "unit": "W"
+                                },
+                                "maint_active_power_slew_rate": {
+                                    "name": "Active Power Slew Rate"
                                 },
                                 "maint_mode": {
                                     "name": "Maintenance Mode",
@@ -1414,6 +1424,9 @@
                                     "name": "Active Power Setpoint",
                                     "scaler": 1000,
                                     "unit": "W"
+                                },
+                                "maint_active_power_slew_rate": {
+                                    "name": "Active Power Slew Rate"
                                 },
                                 "maint_mode": {
                                     "name": "Maintenance Mode",
