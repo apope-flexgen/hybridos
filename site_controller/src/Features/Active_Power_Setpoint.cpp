@@ -42,6 +42,14 @@ void features::Active_Power_Setpoint::execute(Asset_Cmd_Object& asset_cmd, float
 }
 
 features::Active_Power_Setpoint::External_Outputs features::Active_Power_Setpoint::execute_helper(const External_Inputs& inputs) {
+    // When in multiple inputs it can be annoying monitoring slew rates
+    // While there is probably a more elegant solution simply checking at the start of 
+    // each execution if it's different will suffice for now.
+    // TODO(Jud): Do something smarter.
+    if (kW_slew.get_slew_rate() != kW_slew_rate.value.value_int) {
+        kW_slew.set_slew_rate(kW_slew_rate.value.value_int);
+    }
+
     float local_kW_cmd = kW_cmd.value.value_float;
     if (absolute_mode_flag.value.value_bool) {
         local_kW_cmd = fabsf(local_kW_cmd) * (direction_flag.value.value_bool ? -1 : 1);

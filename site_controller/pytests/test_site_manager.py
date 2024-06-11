@@ -15,7 +15,7 @@ from pytests.cases.site_state import test_site_state
 from pytests.cases.sequences import test_init, test_watchdog_fault, test_num_ess_transitions, test_auto_restart_prevention, test_auto_restart_prevention_agt, test_agt_sequences
 from pytests.cases.alerts import test_alerts
 from pytests.cases.ldss import test_ldss
-from pytests.cases.active_power import test_ess_chargeable_derate, test_ess_dischargeable_derate, test_maint_active_power_rounding, test_maint_reactive_power_rounding
+from pytests.cases.active_power import test_ess_chargeable_derate, test_ess_dischargeable_derate, test_maint_active_power_rounding, test_maint_reactive_power_rounding, test_aps_feat_slew_updates
 from pytests.cases.agt_runmode1 import test_agt_runmode1
 from pytests.cases.manual_mode import test_manual_solar_slew_rate_1, test_manual_solar_slew_rate_2, test_manual_ess_slew_rate_1, test_manual_ess_slew_rate_2, test_manual_ess_slew_rate_3, test_manual_gen_slew_rate_1, test_manual_gen_slew_rate_2, test_manual_gen_slew_rate_3
 from pytests.cases.templating_revamp import test_ranged, test_traditional
@@ -48,6 +48,7 @@ from pytests.cases.multiple_inputs import test_multiple_inputs
     test_ess_dischargeable_derate,
     test_maint_active_power_rounding,
     test_maint_reactive_power_rounding,
+    test_aps_feat_slew_updates,
     test_reactive_power_setpoint,
     test_reactive_poi_lims,
     test_alerts,

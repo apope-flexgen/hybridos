@@ -582,15 +582,15 @@ TEST_F(site_manager_test, active_power_setpoint_1) {
     array[2] = { LOAD_OFFSET, -2000.0f, LOAD_OFFSET, -2000.0f };
     array[3] = { LOAD_OFFSET, 2000.0f, LOAD_OFFSET, 2000.0f };
 
-    // add potential to allow demand to inc/dec
-    asset_cmd.ess_data.min_potential_kW = -2000;
-    asset_cmd.gen_data.max_potential_kW = 2000;
+    // provide faked rated values for execute function
+    const float mocked_rated = 2000;
 
     // increment export target cmd slew prior to test
-    active_power_setpoint_mode.kW_slew.set_slew_rate(1000000);  // 1000MW/s
-    active_power_setpoint_mode.kW_slew.update_slew_target(0);   // call once to set time vars
-    usleep(10000);                                              // wait 10ms (total range +/-10MW)
-    active_power_setpoint_mode.kW_slew.update_slew_target(0);   // call again to get delta time for non-zero slew range
+    active_power_setpoint_mode.kW_slew.set_slew_rate(1000000);          // 1000MW/s
+    active_power_setpoint_mode.kW_slew_rate.value.value_int = 1000000;  // 1000MW/s
+    active_power_setpoint_mode.kW_slew.update_slew_target(0);           // call once to set time vars
+    usleep(10000);                                                      // wait 10ms (total range +/-10MW)
+    active_power_setpoint_mode.kW_slew.update_slew_target(0);           // call again to get delta time for non-zero slew range
 
     // iterate through each test case and get results
     for (int i = 0; i < num_tests; i++) {
@@ -606,7 +606,7 @@ TEST_F(site_manager_test, active_power_setpoint_1) {
         active_power_setpoint_mode.absolute_mode_flag.value.value_bool = false;
         active_power_setpoint_mode.direction_flag.value.value_bool = false;
         active_power_setpoint_mode.maximize_solar_flag.value.value_bool = false;
-        active_power_setpoint_mode.execute(asset_cmd);
+        active_power_setpoint_mode.execute(asset_cmd, mocked_rated, -1 * mocked_rated);
         errorLog << "active_power_setpoint_1() test #" << i + 1 << " of " << num_tests << std::endl;
         // failure conditions
         failure = asset_cmd.site_kW_demand != array[i].expected_site_demand || asset_cmd.get_site_kW_load_inclusion() != array[i].expected_load_strategy;
@@ -707,9 +707,8 @@ TEST_F(site_manager_test, active_power_setpoint_2) {
     array[6] = { 500.0f, 1000.0f, -500.0f, 0.0f, true, true, false };     // direction_flag = true. kw_cmd interpreted as -1000.0
     array[7] = { 500.0f, 1000.0f, 1500.0f, 300.0f, false, false, true };  // maximize_solar = true. potential hardwired to 300.0
 
-    // add potential to allow demand to inc/dec
-    asset_cmd.ess_data.min_potential_kW = -1500;
-    asset_cmd.gen_data.max_potential_kW = 1500;
+    // provide faked rated values for execute function
+    const float mocked_rated = 2000;
 
     // iterate through each test case and get results
     for (int i = 0; i < num_tests; i++) {
@@ -729,7 +728,7 @@ TEST_F(site_manager_test, active_power_setpoint_2) {
         active_power_setpoint_mode.absolute_mode_flag.value.value_bool = array[i].absolute_mode;
         active_power_setpoint_mode.direction_flag.value.value_bool = array[i].absolute_direction;
         active_power_setpoint_mode.maximize_solar_flag.value.value_bool = array[i].prioritize_solar;
-        active_power_setpoint_mode.execute(asset_cmd);
+        active_power_setpoint_mode.execute(asset_cmd, mocked_rated, -1 * mocked_rated);
         bool failure = (asset_cmd.site_kW_demand != array[i].expected_site_demand || asset_cmd.get_site_kW_load_inclusion() != true ||  // always tracks load
                         asset_cmd.solar_data.kW_request != array[i].expected_solar_kW_request);
         EXPECT_EQ(asset_cmd.site_kW_demand, array[i].expected_site_demand);

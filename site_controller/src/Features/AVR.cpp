@@ -92,7 +92,7 @@ features::AVR::External_Outputs features::AVR::execute_helper(const External_Inp
         under_rated_kVAR.value.set(fabsf(under_rated_kVAR.value.value_float));
     }
     // Ensure slew rate is in range
-    kVAR_slew_rate.value.set(range_check(kVAR_slew_rate.value.value_int, 100000000, 1));
+    kVAR_slew_rate.value.set(range_check(kVAR_slew_rate.value.value_int, MAX_SLEW, 1));
     kVAR_slew.set_slew_rate(kVAR_slew_rate.value.value_int);
 
     // ensure nominal voltage command is within limits

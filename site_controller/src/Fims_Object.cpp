@@ -139,13 +139,17 @@ bool Fims_Object::set_fims_float(const char* uri_endpoint, float body_float) {
         try {
             uint input_source_index = parse_input_source_index(uri_endpoint);
             inputs[input_source_index].set(body_float);
+            // if you are sending a set to the current selected input source set your value as well
+            if (input_source_settings->get_selected_input_source_index() == input_source_index) {
+                value.set(body_float);
+            }
             return true;
         } catch (const std::exception& e) {
             FPS_ERROR_LOG("Failed to process target URI of SET to Multiple Inputs variable %s: %s.\n", variable_id.c_str(), e.what());
             return false;
         }
     } else {
-        if (variable_id.compare(uri_endpoint) == 0) {
+        if (variable_id == uri_endpoint) {
             value.set(body_float);
             return true;
         }
@@ -171,13 +175,17 @@ bool Fims_Object::set_fims_int(const char* uri_endpoint, int body_int) {
         try {
             uint input_source_index = parse_input_source_index(uri_endpoint);
             inputs[input_source_index].set(body_int);
+            // if you are sending a set to the current selected input source set your value as well
+            if (input_source_settings->get_selected_input_source_index() == input_source_index) {
+                value.set(body_int);
+            }
             return true;
         } catch (const std::exception& e) {
             FPS_ERROR_LOG("Failed to process target URI of SET to Multiple Inputs variable %s: %s.\n", variable_id.c_str(), e.what());
             return false;
         }
     } else {
-        if (variable_id.compare(uri_endpoint) == 0) {
+        if (variable_id == uri_endpoint) {
             value.set(body_int);
             return true;
         }
@@ -195,13 +203,17 @@ bool Fims_Object::set_fims_bool(const char* uri_endpoint, bool body_bool) {
         try {
             uint input_source_index = parse_input_source_index(uri_endpoint);
             inputs[input_source_index].set(body_bool);
+            // if you are sending a set to the current selected input source set your value as well
+            if (input_source_settings->get_selected_input_source_index() == input_source_index) {
+                value.set(body_bool);
+            }
             return true;
         } catch (const std::exception& e) {
             FPS_ERROR_LOG("Failed to process target URI of SET to Multiple Inputs variable %s: %s.\n", variable_id.c_str(), e.what());
             return false;
         }
     } else {
-        if (variable_id.compare(uri_endpoint) == 0) {
+        if (variable_id == uri_endpoint) {
             value.set(body_bool);
             return true;
         }
@@ -210,7 +222,7 @@ bool Fims_Object::set_fims_bool(const char* uri_endpoint, bool body_bool) {
 }
 
 bool Fims_Object::set_fims_bit_field(const char* uri_endpoint, uint64_t body_bit_field) {
-    if (variable_id.compare(uri_endpoint) == 0) {
+    if (variable_id == uri_endpoint) {
         value.set(body_bit_field);
         return true;
     }
@@ -218,7 +230,7 @@ bool Fims_Object::set_fims_bit_field(const char* uri_endpoint, uint64_t body_bit
 }
 
 bool Fims_Object::set_fims_masked_int(const char* uri_endpoint, int body_int, uint64_t mask) {
-    if (mask & get_int_from_bit_position(body_int))  // check int against mask
+    if ((mask & get_int_from_bit_position(body_int)) != 0)  // check int against mask
     {
         if (multiple_inputs) {
             // if the endpoint does not match this variable's ID, the edit is meant for another variable
@@ -229,13 +241,17 @@ bool Fims_Object::set_fims_masked_int(const char* uri_endpoint, int body_int, ui
             try {
                 uint input_source_index = parse_input_source_index(uri_endpoint);
                 inputs[input_source_index].set(body_int);
+                // if you are sending a set to the current selected input source set your value as well
+                if (input_source_settings->get_selected_input_source_index() == input_source_index) {
+                    value.set(body_int);
+                }
                 return true;
             } catch (const std::exception& e) {
                 FPS_ERROR_LOG("Failed to process target URI of SET to Multiple Inputs variable %s: %s.\n", variable_id.c_str(), e.what());
                 return false;
             }
         } else {
-            if (variable_id.compare(uri_endpoint) == 0) {
+            if (variable_id == uri_endpoint) {
                 value.set(body_int);
                 return true;
             }

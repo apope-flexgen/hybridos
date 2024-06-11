@@ -1,6 +1,7 @@
 import logging
 import subprocess
-from pytests.fims import no_fims_msgs
+from pytests.fims import no_fims_msgs, fims_set, fims_get
+from pytests.pytest_framework import Site_Controller_Instance
 from unittest.result import failfast
 from pytest_cases import parametrize, fixture
 from pytests.assertion_framework import Assertion_Type, Flex_Assertion, Tolerance_Type
@@ -296,3 +297,154 @@ def test_maint_active_power_rounding(test):
 ])
 def test_maint_reactive_power_rounding(test):
     return test
+
+apskWslew = {}
+APS_kW_slew_uri = "/dbi/site_controller/variables/variables/features/active_power/active_power_setpoint_kW_slew_rate"
+
+def modify_variable():
+    global apskWslew
+
+    apskWslew = fims_get(APS_kW_slew_uri)
+    apskWslewcopy = apskWslew
+    apskWslewcopy['multiple_inputs'] = True
+
+    config_edits: list[dict] = [
+        {
+            "uri": APS_kW_slew_uri,
+            "up": apskWslewcopy
+        }
+    ]
+    return config_edits
+
+def restore_original():
+    fims_set(APS_kW_slew_uri, apskWslew)
+
+# Test real time feature slew updates
+@ fixture
+@ parametrize("test", [
+    # Preconditions
+    Setup(
+        "aps_feat_slew_updates",
+        {
+            "/features/active_power/runmode1_kW_mode_cmd": 2,
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+            "/features/active_power/active_power_setpoint_load_method": 0,
+            "/components/bess_aux/active_power_setpoint": 0
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 2),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/bess_aux/active_power_setpoint", 0),
+        ],
+        pre_lambda=[
+            lambda: Site_Controller_Instance.get_instance().mig.upload(modify_variable()),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller(True),
+        ], 
+        post_lambda=[
+            lambda: Steps.place_assets_in_maint_dynamic(ess=True,gen=True,solar=True)
+        ]
+    ),
+    # ensure slew is at zero
+    Steps(
+        {
+            "/assets/ess/ess_1/maint_mode": False,
+            "/assets/ess/ess_2/maint_mode": False,
+            "/features/active_power/active_power_setpoint_kW_slew_rate_ui": 10000,
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_slew_rate", 10000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
+        ]
+    ),
+    # apply slower rate
+    Steps(
+        {
+            "/features/active_power/active_power_setpoint_kW_slew_rate_ui": 100,
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_slew_rate", 100),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
+        ]
+    ),
+    Steps(
+        {
+            "/features/active_power/active_power_setpoint_kW_cmd": 500,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 100, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=10),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 200, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=10),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 300, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=10),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 400, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=10),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 500, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=10),
+        ]
+    ),
+    # apply faster rate
+    Steps(
+        {
+            "/features/active_power/active_power_setpoint_kW_slew_rate_ui": 1000,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_slew_rate", 1000),
+        ]
+    ),
+    Steps(
+        {
+            "/features/active_power/active_power_setpoint_kW_cmd": 5500,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 500, wait_secs=0, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 1500, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 2500, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 3500, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 4500, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=100),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 5500, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=100),
+        ]
+    ),
+    # apply sloooooow rate
+    Steps(
+        {
+            "/features/active_power/active_power_setpoint_kW_slew_rate_ui": 1,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_slew_rate", 1),
+        ]
+    ),
+    Steps(
+        {
+            "/features/active_power/active_power_setpoint_kW_slew_rate_ui": 1,
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 5500, wait_secs=0, tolerance_type=Tolerance_Type.abs, tolerance=1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 5499, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 5498, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 5497, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 5496, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_kW_cmd", 5495, wait_secs=1, tolerance_type=Tolerance_Type.abs, tolerance=1),
+        ]
+    ),
+    # Cleanup
+    Teardown(
+        {
+            "/features/active_power/active_power_setpoint_kW_slew_rate_ui": 100000,
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_slew_rate", 100000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
+        ], 
+        pre_lambda=[
+            lambda: Steps.remove_all_assets_from_maint_dynamic()
+        ],
+        post_lambda=[
+            lambda: restore_original(),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller(True)
+        ]
+    )
+])
+def test_aps_feat_slew_updates(test):
+    return test
+
