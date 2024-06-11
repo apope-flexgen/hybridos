@@ -6,6 +6,7 @@
     "events": true,
     "product": "FM",
     "scheduler": true,
+    "alerting": true,
     "fleet_manager": true,
     "units": {
         "W": "M",

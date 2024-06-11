@@ -4,28 +4,34 @@
 			"type": "sequential",
 			"from": 1,
 			"to": 3,
-			"step": 1,
+			"step": 2,
 			"token": "##"
         },
 		{
 			"type": "list",
 			"list": ["bobcat", "cheetah", "lion"],
 			"token": "qq"
+        },
+        {
+            "type": "range",
+            "range": ["2", "4..6"],
+            "token": "{vv}"
         }
-	],
+    ],
     "inputs": {
-        "input##": { "uri": "/example/input##", "type": "bool" },
-        "inputqq": { "uri": "/example/inputqq", "type": "bool" }
+        "input##": { "uri": "/example/input", "type": "bool" },
+        "inputqq": { "uri": "/example/input", "type": "bool" },
+        "input{vv}": { "uri": "/example/input_{vv}", "type": "bool"}
     },
     "outputs": {
-        "output##qq": {"uri": "/some/output", "flags":["clothed"]}
+        "output##qq{vv}": {"uri": "/some/output", "flags":["clothed"]}
 	},
     "metrics": [
         {
-            "id": "output##qq",
+            "id": "output##qq{vv}",
             "type": "bool", 
-            "outputs": "output##qq",
-            "expression": "input## || inputqq"
+            "outputs": "output##qq{vv}",
+            "expression": "input## || inputqq || input{vv}"
         }
     ]
 }

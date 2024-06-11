@@ -1,0 +1,23 @@
+{
+    "templates": [
+		{
+			"type": "range",
+			"range": ["1..3","5","9..10"],
+			"token": "##"
+        }
+	],
+    "inputs": {
+        "input##": { "uri": "/example/input##", "type": "bool" }
+    },
+    "outputs": {
+        "output##": {"uri": "/some/output", "flags":["clothed"]}
+	},
+    "metrics": [
+        {
+            "id": "output##",
+            "type": "bool", 
+            "outputs": "output##",
+            "expression": "input##"
+        }
+    ]
+}

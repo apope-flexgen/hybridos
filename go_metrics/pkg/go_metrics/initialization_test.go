@@ -3344,7 +3344,7 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 						JType: simdjson.TypeObject,
 					},
 				},
-				"could not identify template type; need either from/to pair or list",
+				"could not identify template type; need one of: from/to pair, list, or range array",
 			},
 			{
 				[]JsonAccessor{

@@ -271,11 +271,97 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 								// check if there's a "list" specifier, which indicates list templating
 								element, internal_err = templateIter.FindElement(nil, "list")
 								if internal_err != nil {
-									configErrorLocs.logError(fmt.Errorf("could not identify template type; need either from/to pair or list"))
-									wasError = true
-									configErrorLocs.removeLevel() // remove template index
-									templateIndex += 1
-									return
+									// check if there's a "range" specifier, which indicates range-based templating
+									element, internal_err = templateIter.FindElement(nil, "range")
+									if internal_err != nil {
+										configErrorLocs.logError(fmt.Errorf("could not identify template type; need one of: from/to pair, list, or range array"))
+										wasError = true
+										configErrorLocs.removeLevel() // remove template index
+										templateIndex += 1
+										return
+									} else {
+										// Handle range based templating which gives multiple ranges of number that should be included in the form of an array
+										// e.g. [1..2, 4, 6-10] would produce numbers: 1,2,4,6,7,8,9,10
+										configErrorLocs.addKey("range", simdjson.TypeArray)
+										var listArray *simdjson.Array
+										template.List = make([]string, 0)
+										listArray.ForEach(func(listIter simdjson.Iter) {
+											var item interface{}
+											item, internal_err = listIter.Interface()
+											if internal_err != nil {
+												configErrorLocs.removeLevel()
+												configErrorLocs.logError(fmt.Errorf("failed to find range array %w", internal_err))
+												wasError = true
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+												return
+											}
+											// Try to split up the range and iterate over it. This will handle a single value as well
+											itemString, ok := item.(string)
+											if !ok {
+												configErrorLocs.removeLevel()
+												configErrorLocs.logError(fmt.Errorf("range must be given as an array of strings. Got %T instead", item))
+												wasError = true
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+											}
+											rangeItemArray := strings.Split(itemString, "..")
+											if len(rangeItemArray) == 0 {
+												configErrorLocs.removeLevel()
+												configErrorLocs.logError(fmt.Errorf("failed to parse any items from range array entry %v", item))
+												wasError = true
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+											}
+											// Parse the first and last indices as ints. If only one value is present, these will be the same value
+											startingIndex, err := strconv.Atoi(rangeItemArray[0])
+											if err != nil {
+												configErrorLocs.removeLevel()
+												configErrorLocs.logError(fmt.Errorf("failed to parse integer value from range array entry %v", item))
+												wasError = true
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+											}
+											endingIndex, err := strconv.Atoi(rangeItemArray[len(rangeItemArray)-1])
+											if err != nil {
+												configErrorLocs.removeLevel()
+												configErrorLocs.logError(fmt.Errorf("failed to parse integer value from range array entry %v", item))
+												wasError = true
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+											}
+											// Iterate including the starting and ending values
+											for i := startingIndex; i <= endingIndex; i++ {
+												template.List = append(template.List, fmt.Sprintf("%v", i))
+											}
+										})
+										element, internal_err = templateIter.FindElement(nil, "format")
+										configErrorLocs.addKey("format", simdjson.TypeString)
+										if internal_err == nil {
+											template.Format, internal_err = element.Iter.StringCvt()
+											if internal_err != nil {
+												configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+												wasError = true
+												template.Format = "%d"
+											}
+											format_specifiers := []string{"%d", `%(0??)(\d+)d`, "%c", "%U"}
+											valid := false
+											for _, format_specifier := range format_specifiers {
+												if match, _ := regexp.MatchString(format_specifier, template.Format); match {
+													valid = true
+													break
+												}
+											}
+
+											if !valid {
+												configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+												wasError = true
+												template.Format = "%d"
+											}
+										} else {
+											template.Format = "%d"
+										}
+									}
 								} else {
 									configErrorLocs.addKey("list", simdjson.TypeArray)
 									var listArray *simdjson.Array
@@ -605,6 +691,103 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 										}
 									}
 									configErrorLocs.removeLevel() // remove "list"
+								} else if template.Type == "range" {
+									// Handle range based templating which gives multiple ranges of number that should be included in the form of an array
+									// e.g. [1..2, 4, 6-10] would produce numbers: 1,2,4,6,7,8,9,10
+									element, internal_err = templateIter.FindElement(nil, "range")
+									configErrorLocs.removeLevel() // remove "type"
+									configErrorLocs.addKey("range", simdjson.TypeArray)
+									if internal_err != nil {
+										configErrorLocs.removeLevel()
+										configErrorLocs.logError(fmt.Errorf("failed to find range array %w", internal_err))
+										wasError = true
+										configErrorLocs.removeLevel() // remove template index
+										templateIndex += 1
+										return
+									}
+									var listArray *simdjson.Array
+									listArray, internal_err = element.Iter.Array(nil)
+									if internal_err != nil {
+										configErrorLocs.logError(fmt.Errorf("failed to make range array %w", internal_err))
+										wasError = true
+									} else {
+										listArray.ForEach(func(listIter simdjson.Iter) {
+											var item interface{}
+											item, internal_err = listIter.Interface()
+											if internal_err != nil {
+												configErrorLocs.removeLevel()
+												configErrorLocs.logError(fmt.Errorf("failed to parse range array %w", internal_err))
+												wasError = true
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+												return
+											}
+											// Try to split up the range and iterate over it. This will handle a single value as well
+											itemString, ok := item.(string)
+											if !ok {
+												configErrorLocs.removeLevel()
+												configErrorLocs.logError(fmt.Errorf("range must be given as an array of strings. Got %T instead", item))
+												wasError = true
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+											}
+											rangeItemArray := strings.Split(itemString, "..")
+											if len(rangeItemArray) == 0 {
+												configErrorLocs.removeLevel()
+												configErrorLocs.logError(fmt.Errorf("failed to parse any items from range array entry %v", item))
+												wasError = true
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+											}
+											// Parse the first and last indices as ints. If only one value is present, these will be the same value
+											startingIndex, err := strconv.Atoi(rangeItemArray[0])
+											if err != nil {
+												configErrorLocs.removeLevel()
+												configErrorLocs.logError(fmt.Errorf("failed to parse integer value from range array entry %v", item))
+												wasError = true
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+											}
+											endingIndex, err := strconv.Atoi(rangeItemArray[len(rangeItemArray)-1])
+											if err != nil {
+												configErrorLocs.removeLevel()
+												configErrorLocs.logError(fmt.Errorf("failed to parse integer value from range array entry %v", item))
+												wasError = true
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+											}
+											// Iterate including the starting and ending values
+											for i := startingIndex; i <= endingIndex; i++ {
+												template.List = append(template.List, fmt.Sprintf("%v", i))
+											}
+										})
+									}
+									element, internal_err = templateIter.FindElement(nil, "format")
+									configErrorLocs.addKey("format", simdjson.TypeString)
+									if internal_err == nil {
+										template.Format, internal_err = element.Iter.StringCvt()
+										if internal_err != nil {
+											configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+											wasError = true
+											template.Format = "%d"
+										}
+										format_specifiers := []string{"%d", `%(0??)(\d+)d`, "%c", "%U"}
+										valid := false
+										for _, format_specifier := range format_specifiers {
+											if match, _ := regexp.MatchString(format_specifier, template.Format); match {
+												valid = true
+												break
+											}
+										}
+
+										if !valid {
+											configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+											wasError = true
+											template.Format = "%d"
+										}
+									} else {
+										template.Format = "%d"
+									}
 								} else {
 									configErrorLocs.logError(fmt.Errorf("unexpected template type %v: need \"sequential\" or \"list\"", template.Type))
 									configErrorLocs.removeLevel() // remove "type"
