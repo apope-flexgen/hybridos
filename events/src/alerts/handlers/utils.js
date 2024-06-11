@@ -65,7 +65,7 @@ function updateGoMetricsConfig(alert, templates) {
             }
         }
         inputKey = inputKey.replaceAll(' ', '_');
-        aliasMap[entry.alias] = inputKey;
+        aliasMap[entry.alias] = `${inputKey}`;
         acc[inputKey] = {
             // go_metrics requires a true/false string to be indicated as "bool" rather than "boolean"
             uri: entry.uri, type: entry.type === 'boolean' ? 'bool' : entry.type,
@@ -77,15 +77,20 @@ function updateGoMetricsConfig(alert, templates) {
     const outputs = {
         [metricsId]: {
             uri: '/events/alerts',
-            flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat'],
+            flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat', 'generate_uuid'],
             attributes: { source: 'Alerts', config_id: alert.id },
         },
     };
 
     // METRICS
-    function mapAliases(str) {
-        return Object.entries(aliasMap).reduce((acc, [key, value]) => acc.replaceAll(key, value),
-            str);
+    function mapAliases(str, onlyBracketed = false) {
+        return Object.entries(aliasMap).reduce((acc, [key, value]) => {
+            if (onlyBracketed) {
+                return acc.replaceAll(`{${key}}`, `{${value}}`);
+            }
+            return acc.replaceAll(key, value);
+        },
+        str);
     }
 
     const metrics = [{
@@ -96,7 +101,7 @@ function updateGoMetricsConfig(alert, templates) {
         alert: true,
         messages: alert.messages.map((obj) => Object.keys(obj).reduce((acc, key) => ({
             ...acc,
-            [mapAliases(key)]: mapAliases(obj[key]),
+            [mapAliases(key)]: mapAliases(obj[key], true),
         }), {})),
         enabled: alert.enabled,
     }];

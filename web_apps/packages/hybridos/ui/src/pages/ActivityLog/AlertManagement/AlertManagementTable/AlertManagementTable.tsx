@@ -43,7 +43,11 @@ const AlertManagementTable = ({
     const alertConfigurationURL = '/alerts/configuration';
 
     axiosInstance.get(alertConfigurationURL).then((res) => {
-      setAlertConfigurationData(res.data.data);
+      const alertsWithTemplates = res.data.data.map((alert) => ({
+        ...alert,
+        templates: res.data.templates,
+      }));
+      setAlertConfigurationData(alertsWithTemplates);
       setIsLoading(false);
     });
   };

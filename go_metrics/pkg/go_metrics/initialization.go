@@ -2,17 +2,20 @@ package go_metrics
 
 import (
 	"bytes"
+	"crypto/md5"
 	"encoding/json"
 	"fmt"
 	"math"
 	"os"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
 
 	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/google/uuid"
 	simdjson "github.com/minio/simdjson-go"
 )
 
@@ -300,25 +303,182 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 								configErrorLocs.addKey("from", simdjson.TypeInt)
 								template.From, internal_err = element.Iter.Int()
 								if internal_err != nil {
+									// Try to parse int from string
+									str_result, str_err := element.Iter.String()
+									if str_err != nil {
+										configErrorLocs.logError(internal_err)
+										wasError = true
+										configErrorLocs.removeLevel() // remove "from"
+										configErrorLocs.removeLevel() // remove template index
+										templateIndex += 1
+										return
+									}
+									int_result, int_err := strconv.ParseInt(str_result, 10, 64)
+									if int_err != nil {
+										configErrorLocs.logError(internal_err)
+										wasError = true
+										configErrorLocs.removeLevel() // remove "from"
+										configErrorLocs.removeLevel() // remove template index
+										templateIndex += 1
+										return
+									}
+									template.From = int_result
+								}
+
+								configErrorLocs.removeLevel() // remove "from"
+								element, internal_err = templateIter.FindElement(nil, "to")
+								configErrorLocs.addKey("to", simdjson.TypeInt)
+								if internal_err != nil {
 									configErrorLocs.logError(internal_err)
 									wasError = true
-									configErrorLocs.removeLevel() // remove "from"
+									configErrorLocs.removeLevel() // remove "to"
 									configErrorLocs.removeLevel() // remove template index
 									templateIndex += 1
 									return
 								} else {
-									configErrorLocs.removeLevel() // remove "from"
-									element, internal_err = templateIter.FindElement(nil, "to")
-									configErrorLocs.addKey("to", simdjson.TypeInt)
+									template.To, internal_err = element.Iter.Int()
+									if internal_err != nil {
+										// Try to parse int from string
+										str_result, str_err := element.Iter.String()
+										if str_err != nil {
+											configErrorLocs.logError(internal_err)
+											wasError = true
+											configErrorLocs.removeLevel() // remove "to"
+											configErrorLocs.removeLevel() // remove template index
+											templateIndex += 1
+											return
+										}
+										int_result, int_err := strconv.ParseInt(str_result, 10, 64)
+										if int_err != nil {
+											configErrorLocs.logError(internal_err)
+											wasError = true
+											configErrorLocs.removeLevel() // remove "to"
+											configErrorLocs.removeLevel() // remove template index
+											templateIndex += 1
+											return
+										}
+										template.To = int_result
+									}
+
+									configErrorLocs.removeLevel() // remove "to"
+									element, internal_err = templateIter.FindElement(nil, "step")
+									configErrorLocs.addKey("step", simdjson.TypeInt)
+									if internal_err == nil {
+										template.Step, internal_err = element.Iter.Int()
+										if internal_err != nil {
+											// Try to parse int from string
+											str_result, str_err := element.Iter.String()
+											if str_err != nil {
+												configErrorLocs.logError(internal_err)
+												wasError = true
+												configErrorLocs.removeLevel() // remove "step"
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+												return
+											}
+											int_result, int_err := strconv.ParseInt(str_result, 10, 64)
+											if int_err != nil {
+												configErrorLocs.logError(internal_err)
+												wasError = true
+												configErrorLocs.removeLevel() // remove "step"
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+												return
+											}
+											template.Step = int_result
+										} else if template.Step == 0 {
+											configErrorLocs.logError(fmt.Errorf("cannot have template step of 0; defaulting to a step of 1"))
+											wasError = true
+											template.Step = 1
+										}
+									} else {
+										template.Step = 1
+									}
+									configErrorLocs.removeLevel() // remove "step"
+									element, internal_err = templateIter.FindElement(nil, "format")
+									configErrorLocs.addKey("format", simdjson.TypeString)
+									if internal_err == nil {
+										template.Format, internal_err = element.Iter.StringCvt()
+										if internal_err != nil {
+											configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+											wasError = true
+											template.Format = "%d"
+										}
+										format_specifiers := []string{"%d", `%(0??)(\d+)d`, "%c", "%U"}
+										valid := false
+										for _, format_specifier := range format_specifiers {
+											if match, _ := regexp.MatchString(format_specifier, template.Format); match {
+												valid = true
+												break
+											}
+										}
+
+										if !valid {
+											configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+											wasError = true
+											template.Format = "%d"
+										}
+									} else {
+										template.Format = "%d"
+									}
+									configErrorLocs.removeLevel() // remove "format"
+									template.List = make([]string, 0)
+									if (template.From < template.To && template.Step > 0) || (template.From > template.To && template.Step < 0) {
+										for p := template.From; p <= template.To; p += template.Step {
+											template.List = append(template.List, fmt.Sprintf(template.Format, p))
+										}
+									}
+								}
+							}
+						} else {
+							template.Type, internal_err = element.Iter.StringCvt()
+							if internal_err != nil {
+								configErrorLocs.logError(internal_err)
+								wasError = true
+								configErrorLocs.removeLevel() // remove type
+								configErrorLocs.removeLevel() // remove template index
+								templateIndex += 1
+								return
+							} else {
+								if template.Type == "sequential" {
+									element, internal_err = templateIter.FindElement(nil, "from")
+									configErrorLocs.removeLevel() // remove "type"
+									configErrorLocs.addKey("from", simdjson.TypeInt)
 									if internal_err != nil {
 										configErrorLocs.logError(internal_err)
 										wasError = true
-										configErrorLocs.removeLevel() // remove "to"
+										configErrorLocs.removeLevel() // remove "from"
 										configErrorLocs.removeLevel() // remove template index
 										templateIndex += 1
 										return
 									} else {
-										template.To, internal_err = element.Iter.Int()
+										template.From, internal_err = element.Iter.Int()
+										if internal_err != nil {
+											// Try to parse int from string
+											str_result, str_err := element.Iter.String()
+											if str_err != nil {
+												configErrorLocs.logError(internal_err)
+												wasError = true
+												configErrorLocs.removeLevel() // remove "from"
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+												return
+											}
+											int_result, int_err := strconv.ParseInt(str_result, 10, 64)
+											if int_err != nil {
+												configErrorLocs.logError(internal_err)
+												wasError = true
+												configErrorLocs.removeLevel() // remove "from"
+												configErrorLocs.removeLevel() // remove template index
+												templateIndex += 1
+												return
+											}
+											template.From = int_result
+										}
+
+										element, internal_err = templateIter.FindElement(nil, "to")
+										configErrorLocs.removeLevel() // remove "from"
+										configErrorLocs.addKey("to", simdjson.TypeInt)
 										if internal_err != nil {
 											configErrorLocs.logError(internal_err)
 											wasError = true
@@ -327,18 +487,51 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 											templateIndex += 1
 											return
 										} else {
-											configErrorLocs.removeLevel() // remove "to"
+											template.To, internal_err = element.Iter.Int()
+											if internal_err != nil {
+												// Try to parse int from string
+												str_result, str_err := element.Iter.String()
+												if str_err != nil {
+													configErrorLocs.logError(internal_err)
+													wasError = true
+													configErrorLocs.removeLevel() // remove "to"
+													configErrorLocs.removeLevel() // remove template index
+													templateIndex += 1
+													return
+												}
+												int_result, int_err := strconv.ParseInt(str_result, 10, 64)
+												if int_err != nil {
+													configErrorLocs.logError(internal_err)
+													wasError = true
+													configErrorLocs.removeLevel() // remove "to"
+													configErrorLocs.removeLevel() // remove template index
+													templateIndex += 1
+													return
+												}
+												template.To = int_result
+											}
+
 											element, internal_err = templateIter.FindElement(nil, "step")
+											configErrorLocs.removeLevel() // remove "to"
 											configErrorLocs.addKey("step", simdjson.TypeInt)
 											if internal_err == nil {
 												template.Step, internal_err = element.Iter.Int()
 												if internal_err != nil {
-													configErrorLocs.logError(internal_err)
-													wasError = true
-													configErrorLocs.removeLevel() // remove "step"
-													configErrorLocs.removeLevel() // remove template index
-													templateIndex += 1
-													return
+													// Try to parse int from string
+													str_result, str_err := element.Iter.String()
+													if str_err != nil {
+														configErrorLocs.logError(internal_err)
+														wasError = true
+														template.Step = 1
+													}
+													int_result, int_err := strconv.ParseInt(str_result, 10, 64)
+													if int_err != nil {
+														configErrorLocs.logError(internal_err)
+														wasError = true
+														template.Step = 1
+													} else {
+														template.Step = int_result
+													}
 												} else if template.Step == 0 {
 													configErrorLocs.logError(fmt.Errorf("cannot have template step of 0; defaulting to a step of 1"))
 													wasError = true
@@ -379,115 +572,6 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 											if (template.From < template.To && template.Step > 0) || (template.From > template.To && template.Step < 0) {
 												for p := template.From; p <= template.To; p += template.Step {
 													template.List = append(template.List, fmt.Sprintf(template.Format, p))
-												}
-											}
-										}
-									}
-
-								}
-							}
-						} else {
-							template.Type, internal_err = element.Iter.StringCvt()
-							if internal_err != nil {
-								configErrorLocs.logError(internal_err)
-								wasError = true
-								configErrorLocs.removeLevel() // remove type
-								configErrorLocs.removeLevel() // remove template index
-								templateIndex += 1
-								return
-							} else {
-								if template.Type == "sequential" {
-									element, internal_err = templateIter.FindElement(nil, "from")
-									configErrorLocs.removeLevel() // remove "type"
-									configErrorLocs.addKey("from", simdjson.TypeInt)
-									if internal_err != nil {
-										configErrorLocs.logError(internal_err)
-										wasError = true
-										configErrorLocs.removeLevel() // remove "from"
-										configErrorLocs.removeLevel() // remove template index
-										templateIndex += 1
-										return
-									} else {
-										template.From, internal_err = element.Iter.Int()
-										if internal_err != nil {
-											configErrorLocs.logError(internal_err)
-											wasError = true
-											configErrorLocs.removeLevel() // remove "from"
-											configErrorLocs.removeLevel() // remove template index
-											templateIndex += 1
-											return
-										} else {
-											element, internal_err = templateIter.FindElement(nil, "to")
-											configErrorLocs.removeLevel() // remove "from"
-											configErrorLocs.addKey("to", simdjson.TypeInt)
-											if internal_err != nil {
-												configErrorLocs.logError(internal_err)
-												wasError = true
-												configErrorLocs.removeLevel() // remove "to"
-												configErrorLocs.removeLevel() // remove template index
-												templateIndex += 1
-												return
-											} else {
-												template.To, internal_err = element.Iter.Int()
-												if internal_err != nil {
-													configErrorLocs.logError(internal_err)
-													wasError = true
-													configErrorLocs.removeLevel() // remove "to"
-													configErrorLocs.removeLevel() // remove template index
-													templateIndex += 1
-													return
-												} else {
-													element, internal_err = templateIter.FindElement(nil, "step")
-													configErrorLocs.removeLevel() // remove "to"
-													configErrorLocs.addKey("step", simdjson.TypeInt)
-													if internal_err == nil {
-														template.Step, internal_err = element.Iter.Int()
-														if internal_err != nil {
-															configErrorLocs.logError(internal_err)
-															wasError = true
-															template.Step = 1
-														} else if template.Step == 0 {
-															configErrorLocs.logError(fmt.Errorf("cannot have template step of 0; defaulting to a step of 1"))
-															wasError = true
-															template.Step = 1
-														}
-													} else {
-														template.Step = 1
-													}
-													configErrorLocs.removeLevel() // remove "step"
-													element, internal_err = templateIter.FindElement(nil, "format")
-													configErrorLocs.addKey("format", simdjson.TypeString)
-													if internal_err == nil {
-														template.Format, internal_err = element.Iter.StringCvt()
-														if internal_err != nil {
-															configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
-															wasError = true
-															template.Format = "%d"
-														}
-														format_specifiers := []string{"%d", `%(0??)(\d+)d`, "%c", "%U"}
-														valid := false
-														for _, format_specifier := range format_specifiers {
-															if match, _ := regexp.MatchString(format_specifier, template.Format); match {
-																valid = true
-																break
-															}
-														}
-
-														if !valid {
-															configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
-															wasError = true
-															template.Format = "%d"
-														}
-													} else {
-														template.Format = "%d"
-													}
-													configErrorLocs.removeLevel() // remove "format"
-													template.List = make([]string, 0)
-													if (template.From < template.To && template.Step > 0) || (template.From > template.To && template.Step < 0) {
-														for p := template.From; p <= template.To; p += template.Step {
-															template.List = append(template.List, fmt.Sprintf(template.Format, p))
-														}
-													}
 												}
 											}
 										}
@@ -2325,7 +2409,15 @@ func handleMetricsTemplates(metricTmp MetricsObject) []MetricsObject {
 					}
 					newMetric.InternalOutput = strings.ReplaceAll(metric.InternalOutput, template.Tok, replacement)
 					newMetric.Expression = strings.ReplaceAll(metric.Expression, template.Tok, replacement)
+					// Replace all messages which may have a corresponding templated value as well
+					newMetric.Messages = make(map[string]string, len(metric.Messages))
+					for subexpression, message := range metric.Messages {
+						newSubexpression := strings.ReplaceAll(subexpression, template.Tok, replacement)
+						newMessage := strings.ReplaceAll(message, template.Tok, replacement)
+						newMetric.Messages[newSubexpression] = newMessage
+					}
 					newMetric.Type = metric.Type
+					newMetric.Alert = metric.Alert
 					newMetric.Outputs = make([]string, len(metric.Outputs))
 					for p, output := range metric.Outputs {
 						newOutput := strings.ReplaceAll(output, template.Tok, replacement)
@@ -2771,10 +2863,17 @@ func combineFlags(outputName string, output *Output) {
 		}
 		PubUriFlags[uriGroup] = append(PubUriFlags[uriGroup], output.Flags...)
 		PubUriFlags[uriGroup] = removeDuplicateValues(PubUriFlags[uriGroup])
+		// The name may be hashed into a uuid as well
+		var uuid4 string
+		if stringInSlice(output.Flags, "generate_uuid") {
+			// If so, map the uuid4 uri endpoint to the output name as well
+			uuid4 = uuid.NewHash(md5.New(), [16]byte{}, []byte(output.Name), 4).String()
+		}
 		if stringInSlice(PubUriFlags[uriGroup], "interval_set") {
 			uriIsIntervalSet[uriGroup] = true
 			noGetResponse[output.Uri] = true
 			noGetResponse[output.Uri+"/"+output.Name] = true
+			noGetResponse[output.Uri+"/"+uuid4] = true
 		} else {
 			uriIsIntervalSet[uriGroup] = false
 		}
@@ -2793,12 +2892,14 @@ func combineFlags(outputName string, output *Output) {
 			uriToDirectMsgActive["set"][uriGroup] = false
 			noGetResponse[output.Uri] = true
 			noGetResponse[output.Uri+"/"+output.Name] = true
+			noGetResponse[output.Uri+"/"+uuid4] = true
 		}
 		if stringInSlice(PubUriFlags[uriGroup], "post") {
 			uriIsDirect["post"][uriGroup] = true
 			uriToDirectMsgActive["post"][uriGroup] = false
 			noGetResponse[output.Uri] = true
 			noGetResponse[output.Uri+"/"+output.Name] = true
+			noGetResponse[output.Uri+"/"+uuid4] = true
 		}
 	}
 
@@ -3153,6 +3254,15 @@ func GetSubscribeUris(new_metrics_info NewMetricsInfo) {
 				}
 				uriToOutputNameMap[output.Uri+"/"+outputName] = append(uriToOutputNameMap[output.Uri+"/"+outputName], outputName)
 			}
+			// The name may be hashed into a uuid as well
+			if stringInSlice(output.Flags, "generate_uuid") {
+				// If so, map the uuid4 uri endpoint to the output name as well
+				uuid4 := uuid.NewHash(md5.New(), [16]byte{}, []byte(output.Name), 4).String()
+				if _, ok := uriToOutputNameMap[output.Uri+"/"+uuid4]; !ok {
+					uriToOutputNameMap[output.Uri+"/"+outputName] = make([]string, 0)
+				}
+				uriToOutputNameMap[output.Uri+"/"+uuid4] = append(uriToOutputNameMap[output.Uri+"/"+uuid4], outputName)
+			}
 
 			// parent uri
 			if _, ok := uriToOutputNameMap[output.Uri]; !ok {
@@ -3335,18 +3445,30 @@ func GetSubscribeUris(new_metrics_info NewMetricsInfo) {
 	for _, outputName := range new_outputs {
 		output := MetricsConfig.Outputs[outputName]
 		if len(output.Uri) > 0 {
-			uriFrags := strings.Split(output.Uri, "/")
+			baseUriFrags := strings.Split(output.Uri, "/")
+			var fullUriFrags []string
 			if len(output.Name) > 0 {
-				uriFrags = append(uriFrags, output.Name)
+				fullUriFrags = append(baseUriFrags, output.Name)
 			} else {
-				uriFrags = append(uriFrags, outputName)
+				fullUriFrags = append(baseUriFrags, outputName)
 			}
-			UriElements = addUriFrags("", uriFrags, UriElements)
+			UriElements = addUriFrags("", fullUriFrags, UriElements)
+
+			// Also add the uuid hashed from the name if present
+			if stringInSlice(output.Flags, "generate_uuid") {
+				// Hash the uuid based on the name
+				// Reflect that only the name field of the output is used when hashing the uuid in prepareSingleOutputVar()
+				uuid4 := uuid.NewHash(md5.New(), [16]byte{}, []byte(output.Name), 4).String()
+				// Add the uuid at the end of the base uri
+				fullUriFrags = append(baseUriFrags, uuid4)
+				UriElements = addUriFrags("", fullUriFrags, UriElements)
+			}
 
 			if len(output.Attributes) > 0 {
 				for attributeName := range output.Attributes {
-					uriFrags = append(uriFrags, attributeName)
-					UriElements = addUriFrags("", uriFrags, UriElements)
+					// Add the attributes at the end of the full uri
+					fullUriFrags = append(fullUriFrags, attributeName)
+					UriElements = addUriFrags("", fullUriFrags, UriElements)
 				}
 			}
 		}

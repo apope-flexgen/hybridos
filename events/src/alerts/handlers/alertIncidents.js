@@ -18,7 +18,7 @@ async function handlePostAlerts(msg) {
             'status',
             'details',
         ]],
-        optional: ['value', 'name', 'incident_id'],
+        optional: ['value', 'name', 'uuid'],
     });
     if (!validation.success) {
         if (msg.replyto) {
@@ -55,12 +55,12 @@ async function handlePostAlerts(msg) {
         alert.lastTriggered = body.details[body.details.length - 1].timestamp || null;
     }
 
-    let incidentIndex = alert.unresolved.findIndex((inst) => inst.id === body.incident_id);
-    // if there isn't an entry with this incident_id, make a new one
+    let incidentIndex = alert.unresolved.findIndex((inst) => inst.id === body.uuid);
+    // if there isn't an entry with this uuid, make a new one
     if (incidentIndex < 0) {
         incidentIndex = alert.unresolved.length;
         alert.unresolved.push({
-            id: body.incident_id || uuidv4(),
+            id: body.uuid || uuidv4(),
             version: alert.version,
             status: body.status,
             details: [],
@@ -144,7 +144,7 @@ async function handleSetAlerts(msg) {
         const { alert, instance } = unresolvedSearch;
         // append entry to resolved
         alert.resolved.push({
-            id: instance.id,
+            id: uuidv4(),
             site: instance.site,
             version: instance.version,
             details: instance.details,
@@ -160,7 +160,7 @@ async function handleSetAlerts(msg) {
         if (instance.status === 'active') {
             fims.send({
                 method: 'set',
-                uri: `/go_metrics_alerting/events/alerts/${alert.id}`,
+                uri: `/go_metrics_alerting/events/alerts/${instance.id}`,
                 replyto: null,
                 body: JSON.stringify({ reevaluate: true }),
                 username: null,

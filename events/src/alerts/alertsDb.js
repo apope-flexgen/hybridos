@@ -83,13 +83,13 @@ module.exports = {
         }
         let incidents = [];
         const docs = await q.exec();
+        const resolved = !!body.resolvedFilter;
         docs.forEach((alertEntry) => {
             // never show incidents from a deleted alert config.
             if (alertEntry.deleted) {
                 return;
             }
             // consider using lastIncident
-            const resolved = !!body.resolvedFilter;
             // const resolved = true;
             const instances = resolved ? alertEntry.resolved : alertEntry.unresolved;
 
@@ -121,6 +121,7 @@ module.exports = {
                 if (!resolved && body.statusFilter && body.statusFilter !== inst.status) {
                     return;
                 }
+
                 incidents.push({
                     // config inherited fields
                     organizationId: config.organizationId,
@@ -143,7 +144,11 @@ module.exports = {
             });
         });
         // default sort new => old
-        incidents = incidents.sort((a, b) => (a.trigger_time < b.trigger_time ? 1 : -1));
+        if (resolved) {
+            incidents = incidents.sort((a, b) => (a.resolution_time < b.resolution_time ? 1 : -1));
+        } else {
+            incidents = incidents.sort((a, b) => (a.trigger_time < b.trigger_time ? 1 : -1));
+        }
         incidents = mapOrganizations(incidents, orgs);
         const toReturn = {
             count: incidents.length, // total incidents which match the filters captured here

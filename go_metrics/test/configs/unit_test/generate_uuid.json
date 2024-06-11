@@ -18,7 +18,7 @@
         "inputqq": { "uri": "/example/inputqq", "type": "bool" }
     },
     "outputs": {
-        "output##qq": {"uri": "/some/output", "flags":["clothed"]}
+        "output##qq": {"uri": "/some/output", "flags":["clothed", "generate_uuid"]}
 	},
     "metrics": [
         {

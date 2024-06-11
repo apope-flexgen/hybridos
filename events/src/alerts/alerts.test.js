@@ -13,11 +13,10 @@ const {
     postManagementRequest, outboundSetManagement,
     setIncidentRequest, setIncidentResponse,
     postIncidentRequest,
-    getIncidentsRequest, getIncidentsResponseUnresolved, getIncidentsResponseResolved,
+    getIncidentsRequest, getIncidentsResponseUnresolved, getIncidentsResponseResolved, getIncidentsResponseAfterResolution,
     outboundSetManagementNew,
     organizationEntries,
     postManagementRequestDeletion,
-    templateEntries,
 } = require('./alertExamples');
 const { handleInitAlerts } = require('./handlers/alertIncidents');
 
@@ -359,7 +358,7 @@ describe('Alerts tests', () => {
             method: 'post',
             body: {
                 ...postIncidentRequest,
-                incident_id: "unseen-incident-id"
+                uuid: "unseen-incident-id"
             },
             replyto: 'dummy_replyto',
         });
@@ -465,11 +464,22 @@ describe('Alerts tests', () => {
     });
 
     test('UI | user resolves an inactive alert', async () => {
+        mockedUuidv4.mockReturnValue('mocked-new-resolved-alert-uuid');
         processEvent({
             uri: '/events/alerts/28beecbc-232f-431b-ac7d-8d29350e9000.lima',
             method: 'set',
             replyto: 'dummy_replyto',
             body: setIncidentRequest,
+        });
+        await sleep(sleepMs);
+        processEvent({
+            uri: '/events/alerts',
+            method: 'get',
+            body: {
+                ...getIncidentsRequest,
+                resolvedFilter: true,
+            },
+            replyto: 'dummy_replyto',
         });
         await sleep(sleepMs);
         expectFimsSendHelper([
@@ -478,7 +488,7 @@ describe('Alerts tests', () => {
                 body: JSON.stringify({ reevaluate: true }),
                 method: 'set',
                 replyto: null,
-                uri: '/go_metrics_alerting/events/alerts/28beecbc-232f-431b-ac7d-8d29350e9000',
+                uri: '/go_metrics_alerting/events/alerts/28beecbc-232f-431b-ac7d-8d29350e9000.lima',
                 username: null,
             },
             {
@@ -490,6 +500,13 @@ describe('Alerts tests', () => {
             },
             {
                 body: JSON.stringify(setIncidentResponse),
+                method: 'set',
+                replyto: null,
+                uri: 'dummy_replyto',
+                username: null,
+            },
+            {
+                body: getIncidentsResponseAfterResolution,
                 method: 'set',
                 replyto: null,
                 uri: 'dummy_replyto',
@@ -512,7 +529,7 @@ describe('Alerts tests', () => {
                 body: JSON.stringify({ reevaluate: true }),
                 method: 'set',
                 replyto: null,
-                uri: '/go_metrics_alerting/events/alerts/28beecbc-232f-431b-ac7d-8d29350e9000',
+                uri: '/go_metrics_alerting/events/alerts/28beecbc-232f-431b-ac7d-8d29350e9000.lima',
                 username: null,
             },
             {
@@ -731,6 +748,7 @@ describe('Alerts tests', () => {
     });
 
     afterAll(async () => {
+        await clearDatabase();
         await sleep(1000);
         await mongoose.disconnect();
         global.Date = realDate;

@@ -1,9 +1,11 @@
 package go_metrics
 
 import (
+	"crypto/md5"
 	"fmt"
 
 	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/google/uuid"
 )
 
 // Adds the alerting attributes to the fims object if the variable is an alert.
@@ -254,6 +256,13 @@ func prepareSingleOutputVar(outputUri, outputVar string, naked, clothed, checkFo
 					msgBody[output.Name] = outputVal
 				}
 			}
+		}
+
+		if stringInSlice(output.Flags, "generate_uuid") {
+			// Add a unique id to the output. This unique id is generated based on the hash of the current name, and will always be consistent
+			// It's used primarily for templated outputs to ensure each of them has a unique id of a known format of uuid4
+			uuid4 := uuid.NewHash(md5.New(), [16]byte{}, []byte(output.Name), 4)
+			clothedOutputVal["uuid"] = uuid4.String()
 		}
 
 		// Add the alerting attributes to the fims message if this is an alert

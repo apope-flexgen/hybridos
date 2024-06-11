@@ -12,6 +12,7 @@ require (
 
 require (
 	github.com/buger/jsonparser v1.1.1 // indirect
+	github.com/google/uuid v1.6.0
 	github.com/klauspost/compress v1.15.15 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.3 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect

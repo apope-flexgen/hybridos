@@ -42,7 +42,7 @@ var metricsConfigMutex sync.RWMutex
 
 // local variables used throughout the package
 // since we want to minimize garbage collection
-var allOutputFlags = []string{"naked", "clothed", `group\d+`, "interval_set", "enum", "bitfield", "sparse", "flat", "no_heartbeat", "direct_set", "post", "lonely"}
+var allOutputFlags = []string{"naked", "clothed", `group\d+`, "interval_set", "enum", "bitfield", "sparse", "flat", "no_heartbeat", "direct_set", "post", "lonely", "generate_uuid"}
 var uriIsSparse map[string]bool
 var uriIsIntervalSet map[string]bool
 var uriIsLonely map[string]bool

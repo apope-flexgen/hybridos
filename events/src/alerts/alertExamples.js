@@ -374,7 +374,7 @@ const postIncidentRequest = {
     value: true,
     source: 'Alerts',
     config_id: '28beecbc-232f-431b-ac7d-8d29350e9000',
-    incident_id: '28beecbc-232f-431b-ac7d-8d29350e9000.lima',
+    uuid: '28beecbc-232f-431b-ac7d-8d29350e9000.lima',
 };
 
 // SET /events/alerts
@@ -428,11 +428,11 @@ const getIncidentsResponseResolved = {
     count: 1,
     rows: [
         {
+            id: '28beecbc-232f-431b-ac7d-8d29350e9000.sudden_valley',
             organization: 'VFakeCo',
             severity: 0,
             deadline: 20,
             title: 'VFakeCo - WH & JC Cell Voltage',
-            id: '28beecbc-232f-431b-ac7d-8d29350e9000.sudden_valley',
             resolved: true,
             trigger_time: '2020-07-07T12:00:00.000Z',
             details: [
@@ -448,6 +448,34 @@ const getIncidentsResponseResolved = {
             resolution_time: '2020-07-07T12:00:00.000Z',
             resolution_message: 'Cell voltage has returned to normal levels - noted and resolved',
         },
+    ],
+};
+
+const getIncidentsResponseAfterResolution = {
+    count: 2,
+    rows: [
+        {
+            id: 'mocked-new-resolved-alert-uuid',
+            organization: 'VFakeCo',
+            severity: 0,
+            deadline: 20,
+            title: 'VFakeCo - WH & JC Cell Voltage',
+            trigger_time: '2020-07-07T12:00:00.000Z',
+            details: [
+                {
+                    message: 'Minimum Cell Voltage: > 3.22V',
+                    timestamp: '2020-07-07T12:00:00.000Z',
+                },
+                {
+                    message: 'Cell Voltage Delta: >.25V',
+                    timestamp: '2020-07-07T12:00:00.000Z',
+                },
+            ],
+            resolved: true,
+            resolution_time: '2020-07-07T12:00:00.000Z',
+            resolution_message: 'Cell voltage has returned to normal levels!!!',
+        },
+        getIncidentsResponseResolved.rows[0],
     ],
 };
 
@@ -488,7 +516,7 @@ const outboundSetManagement = {
     outputs: {
         '28beecbc-232f-431b-ac7d-8d29350e9000_{ess}_{site}': {
             uri: '/events/alerts',
-            flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat'],
+            flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat', 'generate_uuid'],
             attributes: { source: 'Alerts', config_id: '28beecbc-232f-431b-ac7d-8d29350e9000' },
         },
     },
@@ -515,24 +543,15 @@ const outboundSetManagementNew = {
     outputs: {
         'mocked-new-uuid_{ess}_{site}': {
             uri: '/events/alerts',
-            flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat'],
+            flags: ['clothed', 'post', 'sparse', 'flat', 'lonely', 'no_heartbeat', 'generate_uuid'],
             attributes: { source: 'Alerts', config_id: 'mocked-new-uuid' },
         },
     },
     metrics: [
         {
+            ...outboundSetManagement.metrics[0],
             id: 'mocked-new-uuid_{ess}_{site}',
-            type: 'bool',
             outputs: 'mocked-new-uuid_{ess}_{site}',
-            expression: 'ess_faults_{ess}_{site} == true || ess_watchdog_{ess}_{site} == true',
-            alert: true,
-            messages: [
-                {
-                    'ess_faults_{ess}_{site} == true': 'ESS {ess} faults present. Value is {ess_faults_{ess}_{site}}',
-                    'ess_watchdog_{ess}_{site} == true': 'ESS {ess} watchdog timed out. Value is {ess_watchdog_{ess}_{site}}',
-                },
-            ],
-            enabled: true,
         },
     ],
 };
@@ -560,6 +579,7 @@ module.exports = {
     getIncidentsRequest, // from the UI
     getIncidentsResponseUnresolved, // to the UI
     getIncidentsResponseResolved, // to the UI
+    getIncidentsResponseAfterResolution, // to the UI
 
     // outbound events requests
     outboundGetAlerts, // to go_metrics
