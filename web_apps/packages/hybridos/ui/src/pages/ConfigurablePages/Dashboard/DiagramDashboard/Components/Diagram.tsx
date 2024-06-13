@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ReactFlow, { ReactFlowInstance } from 'reactflow';
+import ReactFlow, { ReactFlowInstance, useNodesInitialized } from 'reactflow';
 import AssetNode from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/Components/AssetNode';
 import {
   minZoom,
@@ -7,16 +7,24 @@ import {
 } from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.constants';
 import { DiagramProps } from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.types';
 
-const Diagram: React.FC<DiagramProps> = ({ nodes, edges }: DiagramProps) => {
-  const [diagramInstance, setDiagramInstance] = useState<ReactFlowInstance>();
+const nodeTypes = {
+  assetNode: AssetNode,
+};
 
-  const nodeTypes = {
-    assetNode: AssetNode,
-  };
+const Diagram: React.FC<DiagramProps> = ({
+  nodes, edges, site, setIsLoading,
+}: DiagramProps) => {
+  const [diagramInstance, setDiagramInstance] = useState<ReactFlowInstance>();
+  const nodesInitialized = useNodesInitialized();
 
   useEffect(() => {
-    setTimeout(() => diagramInstance?.fitView(), resizeDiagramTimeout);
-  }, [nodes]);
+    if (nodesInitialized) {
+      setTimeout(() => {
+        diagramInstance?.fitView();
+        setIsLoading(false);
+      }, resizeDiagramTimeout);
+    }
+  }, [site, nodesInitialized]);
 
   return (
     <ReactFlow

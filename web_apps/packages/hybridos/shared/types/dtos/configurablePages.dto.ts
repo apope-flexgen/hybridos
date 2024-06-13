@@ -24,6 +24,7 @@ export type DisplayGroupDTO = {
   displayName?: string;
   tabKey?: string;
   treeId?: string;
+  uri?: string;
   batteryViewStatus?: {
     [componentID: string]: StatusComponentDTO;
   };

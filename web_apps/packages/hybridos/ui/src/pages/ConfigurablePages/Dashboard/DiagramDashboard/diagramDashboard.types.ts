@@ -10,6 +10,7 @@ export type DiagramItem = {
 // Props passed to Diagram component
 export interface DiagramProps {
   nodes: Node[];
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   edges: Edge[];
   site: string;
 }
@@ -19,6 +20,8 @@ export interface AssetNodeProps {
   assetType: string;
   label: string;
   hasParent: boolean;
+  statuses: Status;
+  staticStatusData: StaticStatusData;
 }
 
 // Valid icon options to be displayed in the diagram
@@ -36,4 +39,24 @@ export type FleetConfigs = {
       root: DiagramItem;
     };
   };
+};
+
+export type Status = {
+  [key: string]: {
+    state?: {
+      value: string;
+    };
+  };
+};
+
+export type StaticStatusData = {
+  [key: string]: {
+    static?: StaticStatusObject;
+  };
+};
+
+export type StaticStatusObject = {
+  label?: string;
+  type?: string;
+  unit?: string;
 };

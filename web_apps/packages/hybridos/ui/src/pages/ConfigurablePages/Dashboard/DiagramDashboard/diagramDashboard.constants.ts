@@ -36,4 +36,4 @@ export const layoutDirection = 'TB'; // Indicates top to bottom layout
 
 export const minZoom = 0.1; // Determines how far out the diagram can zoom
 
-export const resizeDiagramTimeout = 100; // Delay between diagram rerender being triggered and resize
+export const resizeDiagramTimeout = 200; // Delay between diagram rerender being triggered and resize

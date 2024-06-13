@@ -1,38 +1,18 @@
 {
     "_doc": "site_diagram",
-    "baseURI": "/assets",
+    "baseURI": "/fleet",
     "assets": {
-        "grids": {
-            "grid": {
-                "name": "Grid"
-            }
-        },
-        "feeders": {
-            "baseURI": "/feeders",
+        "grids": {},
+        "feeders": {},
+        "generators": {},
+        "ess": {
+            "baseURI": "/sites",
             "items": [
                 {
-                    "treeId": "{psm_id}",
-                    "name": "{title}",
-                    "uri": "/feed_#",
+                    "treeId": "tx_ess_#",
+                    "name": "Battery #",
+                    "uri": "/hoth",
                     "templates": [
-                        {
-                            "token": "{title}",
-                            "type": "list",
-                            "list": [
-                                "Shared POI",
-                                "BESS Aux Feeder",
-                                "Control Cabinet Feeder"
-                            ]
-                        },
-                        {
-                            "token": "{psm_id}",
-                            "type": "list",
-                            "list": [
-                                "psm_shared_poi",
-                                "psm_bess_aux",
-                                "psm_control_cabinet"
-                            ]
-                        },
                         {
                             "token": "#",
                             "type": "sequential",
@@ -48,124 +28,20 @@
                             "uri": "/active_power"
                         },
                         {
-                            "name": "Breaker",
-                            "uri": "/breaker_status",
-                            "type": "contactor"
-                        }
-                    ]
-                }
-            ]
-        },
-        "generators": {
-            "baseURI": "/generators",
-            "items": [
-                {
-                    "treeId": "psm_easygen_3500xt",
-                    "name": "Generator 1",
-                    "uri": "/gen_1",
-                    "statuses": [
-                        {
-                            "name": "Active Power",
-                            "scalar": "1000",
-                            "units": "MW",
-                            "uri": "/active_power"
-                        },
-                        {
-                            "name": "Breaker",
-                            "uri": "/status",
-                            "type": "contactor"
-                        }
-                    ]
-                }
-            ]
-        },
-        "ess": {
-            "baseURI": "/ess",
-            "items": [
-                {
-                    "treeId": "psm_ess_#",
-                    "name": "Battery #",
-                    "uri": "/ess_#",
-                    "templates": [
-                        {
-                            "token": "#",
-                            "type": "sequential",
-                            "from": 1,
-                            "to": 2
-                        }
-                    ],
-                    "statuses": [
-                        {
-                            "name": "Active Power",
-                            "scalar": "1000",
-                            "units": "MW",
-                            "uri": "/active_power"
-                        },
-                        {
-                            "name": "Active Power Setpoint",
-                            "scalar": "1000",
-                            "units": "MW",
-                            "uri": "/active_power_setpoint"
-                        },
-                        {
-                            "name": "SOC",
-                            "uri": "/soc",
+                            "name": "Average ESS SOC",
+                            "units": "%",
+                            "uri": "/ess_average_soc",
                             "type": "progress"
                         },
                         {
-                            "name": "Breaker",
-                            "uri": "/dc_contactors_closed",
-                            "type": "contactor"
+                            "name": "ESS Chargeable Power",
+                            "uri": "/ess_chargeable_power"
                         }
                     ]
                 }
             ]
         },
-        "solar": {
-            "baseURI": "/solar",
-            "items": [
-                {
-                    "treeId": "psm_solar_1",
-                    "uri": "/solar_1",
-                    "name": "Solar 1",
-                    "statuses": [
-                        {
-                            "name": "Active Power",
-                            "scalar": "1000",
-                            "units": "MW",
-                            "uri": "/active_power"
-                        },
-                        {
-                            "name": "Breaker",
-                            "uri": "/component_connected",
-                            "type": "contactor"
-                        }
-                    ]
-                },
-                {
-                    "treeId": "psm_solar_2",
-                    "uri": "/solar_2",
-                    "name": "Solar 2",
-                    "statuses": [
-                        {
-                            "name": "Active Power",
-                            "scalar": "1000",
-                            "units": "MW",
-                            "uri": "/active_power"
-                        },
-                        {
-                            "name": "Breaker",
-                            "uri": "/component_connected",
-                            "type": "contactor"
-                        },
-                        {
-                            "name": "Faults Present",
-                            "uri": "/is_faulted"
-                        }
-                    ]
-                }
-            ]
-        }
+        "solar": {}
     },
     "tree": {
         "root":{

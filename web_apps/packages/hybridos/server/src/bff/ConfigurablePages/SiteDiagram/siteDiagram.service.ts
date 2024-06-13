@@ -109,11 +109,12 @@ export class SiteDiagramService implements ISiteDiagramService {
               displayName: templatedItem.name,
               treeId: templatedItem.treeId,
               status: this.parseStaticAssetStatuses(item.statuses),
+              uri: topLevelBaseURI + assetLevelBaseURI + templatedItem.uri,
             };
 
             displayGroups = {
               ...displayGroups,
-              [topLevelBaseURI + assetLevelBaseURI + templatedItem.uri]: displayGroupEntry,
+              [templatedItem.treeId]: displayGroupEntry,
             };
           });
         }
@@ -128,11 +129,12 @@ export class SiteDiagramService implements ISiteDiagramService {
             displayName: item.name,
             treeId: item.treeId,
             status: this.parseStaticAssetStatuses(item.statuses),
+            uri: topLevelBaseURI + assetLevelBaseURI + item.uri,
           };
 
           displayGroups = {
             ...displayGroups,
-            [topLevelBaseURI + assetLevelBaseURI + item.uri]: displayGroupEntry,
+            [item.treeId]: displayGroupEntry,
           };
         }
       });
@@ -149,7 +151,16 @@ export class SiteDiagramService implements ISiteDiagramService {
   parseStaticAssetStatuses = (statuses: Status[]): DisplayGroupDTO['status'] => {
     const statusDTOs: DisplayGroupDTO['status'] = {};
 
-    statuses?.forEach((status) => {
+    // contactor at the top
+    // progress at the bottom
+    // everything else in the middle
+    const sortedStatuses = statuses.sort((a, b) => {
+      if (a.type && a.type === 'contactor') return -1;
+      if (a.type && a.type === 'progress') return 1;
+      return 0;
+    });
+
+    sortedStatuses?.forEach((status) => {
       const { name, units, uri, type } = status;
       const uriWithOpeningSlashRemoved = uri.replace(/^\//, '');
 
@@ -205,12 +216,10 @@ export class SiteDiagramService implements ISiteDiagramService {
   };
 
   getMergedStream = (data: ConfigurablePageDTO): Observable<ConfigurablePageDTO> => {
-    const uris = Object.keys(data.displayGroups);
-
     const staticObservable: Observable<ConfigurablePageDTO> = this.getStaticObservable(data);
 
-    const dataStreamObservables = uris.map((uri) =>
-      this.subscribeToUri(uri, data.displayGroups[uri]),
+    const dataStreamObservables = Object.values(data.displayGroups).map((displayGroup) =>
+      this.subscribeToUri(displayGroup.uri, displayGroup),
     );
 
     const merged: Observable<ConfigurablePageDTO> = merge(
@@ -239,9 +248,10 @@ export class SiteDiagramService implements ISiteDiagramService {
         const transformed: ConfigurablePageDTO = {
           hasStatic: false,
           displayGroups: {
-            [uri]: {
+            [staticData.treeId]: {
               displayName: staticData.displayName,
               treeId: staticData.treeId,
+              uri,
               status: {},
             },
           },
@@ -265,7 +275,7 @@ export class SiteDiagramService implements ISiteDiagramService {
 
           const { value: realValue } = this.computeRealValue(value, uri, key);
 
-          transformed.displayGroups[uri].status[key] = {
+          transformed.displayGroups[staticData.treeId].status[key] = {
             state: {
               value: realValue,
             },

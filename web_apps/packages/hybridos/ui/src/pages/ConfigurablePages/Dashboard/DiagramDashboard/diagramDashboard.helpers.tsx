@@ -1,13 +1,16 @@
+/* eslint-disable max-lines */
 import Dagre from '@dagrejs/dagre';
-import { ThemeType } from '@flexgen/storybook';
+import { Progress, ThemeType, DataPoint } from '@flexgen/storybook';
 import { Edge, Node } from 'reactflow';
+import Contactor from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/Components/Contactor';
 import {
   ASSET,
   assetTypeMapping,
   layoutDirection,
 } from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.constants';
 import { edgeSx } from 'src/pages/ConfigurablePages/Dashboard/DiagramDashboard/diagramDashboard.styles';
-import { DiagramItem } from './diagramDashboard.types';
+
+import { DiagramItem, StaticStatusObject, Status } from './diagramDashboard.types';
 
 /**
  * Format a label for node in site diagram
@@ -91,6 +94,9 @@ export const generateDiagramNodes = (
   if (hasParent) {
     edges.push({
       type: 'smoothstep',
+      pathOptions: {
+        borderRadius: 0,
+      },
       id: `${parentId}-${item.id}`,
       source: parentId,
       target: item.id,
@@ -138,7 +144,7 @@ export const getLayoutElements = (
   // add nodes and edges to layouting graph
   nodes.forEach((node) => {
     // TODO: use dynamic node width and height in layouting; will be completed as part of DC-505
-    graph.setNode(node.id, { width: 200, height: 50 });
+    graph.setNode(node.id, { width: node.width || 225, height: node.height || 100 });
   });
   edges.forEach((edge) => graph.setEdge(edge.source, edge.target));
 
@@ -151,4 +157,79 @@ export const getLayoutElements = (
     }),
     edges,
   };
+};
+
+/**
+ * Generates a component based on the props passed in
+ *
+ * @param key key from staticStatusData map, used to map between status static data and status value
+ * @param status object containing static data about the status component
+ * @param stateStatusData an object containing state data about this status component (used for value)
+ * @returns A formatted component that correctly represents this status
+ */
+export const generateStatusComponent = (
+  key: string,
+  status: { static?: StaticStatusObject },
+  statuses: Status,
+) => {
+  if (!status.static?.type) {
+    return (
+      <DataPoint
+        label={status.static?.label || ''}
+        value={statuses[key]?.state?.value || '-'}
+        unit={status.static?.unit || ''}
+        allowWrap
+        variant="horizontal"
+      />
+    );
+  }
+  switch (status.static?.type.toLowerCase()) {
+    case 'progress':
+      return (
+        <Progress
+          variant="secondary"
+          value={statuses[key]?.state?.value || 0}
+          showPercentage
+          orientation="horizontal"
+          height={8}
+          label={status.static?.label || ''}
+          fullWidth
+        />
+      );
+    // TODO: change icon that contactor uses to actual contactor icons, once in storybook
+    case 'contactor':
+      return (
+        <Contactor
+          icon="Generator"
+          label={`${status.static?.label || 'Breaker'} ${statuses[key]?.state?.value ?? 'Present'}`}
+        />
+      );
+    default:
+      return <></>;
+  }
+};
+
+/**
+ * Generates the nodes and edges for a static tree diagram
+ *
+ * @param newDataFromSocket static data from socket regarding statuses, labels, etc.
+ * @param setNodes setter for nodes to display on diagram
+ * @param setEdges setter for edges to display on diagram
+ * @param theme  Current theme being used
+ */
+export const generateStaticElements = (
+  newDataFromSocket: any,
+  setNodes: React.Dispatch<React.SetStateAction<Node<Node[], string | undefined>[]>>,
+  setEdges: React.Dispatch<React.SetStateAction<Edge<Edge[]>[]>>,
+  theme: ThemeType,
+) => {
+  const { nodes: diagramNodes, edges: diagramEdges } = generateDiagramNodes(
+    theme,
+    newDataFromSocket.tree,
+  );
+
+  const layoutElements = getLayoutElements(diagramNodes, diagramEdges);
+
+  setNodes(layoutElements.nodes);
+  setEdges(layoutElements.edges);
 };
