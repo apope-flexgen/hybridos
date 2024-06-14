@@ -122,6 +122,7 @@ protected:
     ////////////////////////////////////////////////////////////////////////////////////////
 public:
     void process_state();
+    alt_states get_alternate_site_state() const;
 
     // Sequence functions and helpers
     bool call_sequence_functions(const char* target_asset, const char* asset_cmd, Value_Object* value, int tolerance_percent);
@@ -204,7 +205,7 @@ protected:
     Fims_Object enable_flag, disable_flag, standby_flag, clear_faults_flag;
     Fims_Object faults, active_faults;
     Fims_Object alarms, active_alarms;
-    Fims_Object site_state, site_state_enum, site_status;
+    Fims_Object site_state, site_state_enum, alt_site_state_enum, site_status;
     Fims_Object running_status_flag, alarm_status_flag, fault_status_flag;
     Fims_Object exit_timer;                                        // timeout for failed sequence step in ms
     Fims_Object asset_priority_runmode1, asset_priority_runmode2;  // Enumeratred integer indiciating the priority of the assets in meeting the demand
@@ -494,6 +495,7 @@ protected:
         { &active_alarms, "active_alarms" },
         { &site_state, "site_state" },
         { &site_state_enum, "site_state_enum" },
+        { &alt_site_state_enum, "alt_site_state_enum" },
         { &site_status, "site_status" },
         { &running_status_flag, "running_status_flag" },
         { &alarm_status_flag, "alarm_status_flag" },

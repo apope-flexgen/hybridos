@@ -340,6 +340,7 @@ void Site_Manager::build_JSON_site_summary(fmt::memory_buffer& buf, bool clothed
     // ops status
     site_state.add_to_JSON_buffer(buf, var, clothed);
     site_state_enum.add_to_JSON_buffer(buf, var, clothed);
+    alt_site_state_enum.add_to_JSON_buffer(buf, var, clothed);
     site_status.add_to_JSON_buffer(buf, var, clothed);
     input_source_status.add_to_JSON_buffer(buf, var, clothed);
     disable_flag.add_to_JSON_buffer(buf, var, clothed);
@@ -382,6 +383,7 @@ void Site_Manager::build_JSON_site_operation(fmt::memory_buffer& buf, const char
     // ops status
     site_state.add_to_JSON_buffer(buf, var);
     site_state_enum.add_to_JSON_buffer(buf, var);
+    alt_site_state_enum.add_to_JSON_buffer(buf, var);
     site_status.add_to_JSON_buffer(buf, var);
     running_status_flag.add_to_JSON_buffer(buf, var);
     disable_flag.add_to_JSON_buffer(buf, var);
@@ -2488,6 +2490,32 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
     return return_value;
 }
 
+alt_states Site_Manager::get_alternate_site_state() const {
+    switch (site_state_enum.value.value_int) {  
+        case states::Init:
+            return alt_states::TRANSIENT_INIT;
+        case states::Ready:
+            return alt_states::READY;
+        case states::Startup:
+            return alt_states::STARTUP;
+        case states::RunMode1:
+            return alt_states::RUNNING_FOLLOWING;
+        case states::RunMode2:
+            return alt_states::RUNNING_FORMING;
+        case states::Standby:
+            return alt_states::STANDBY_ERROR;
+        case states::Shutdown:
+            if (this->get_faults()) {
+                return alt_states::FAULTED_STATE;
+            } else {
+                return alt_states::SHUTDOWN;
+            }
+        default:
+            // unknown state
+            return alt_states::STANDBY_ERROR;
+    }
+}
+
 void Site_Manager::check_state(void) {
     Sequence& current_sequence = sequences[sequences_status.current_state];
     Path& current_path = current_sequence.paths[current_sequence.current_path_index];
@@ -2519,6 +2547,10 @@ void Site_Manager::check_state(void) {
         site_state_enum.value.set(sequences_status.current_state);
         sequences_status.sequence_reset = true;
     }
+
+    // the only difference in the site_state_enum and the alt_site_state_enum is the faulted state
+    // a faulted state is a substate of shutdown since any site lvl fault will place you in shutdown
+    alt_site_state_enum.value.set(get_alternate_site_state());
 }
 
 void Site_Manager::process_state(void) {

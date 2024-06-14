@@ -24,6 +24,21 @@ enum states  // states used for site control
   Shutdown,
   Error };
 
+// the following is cringe, but integration sold out the other state enum
+// via metrics so this one complies with their expected enum. The other 
+// can be used internally.
+enum alt_states  // states used for site controller 
+{ 
+  TRANSIENT_INIT = 0,
+  SHUTDOWN,
+  READY,
+  STARTUP,
+  RUNNING_FOLLOWING,
+  FAULTED_STATE,
+  RUNNING_FORMING,
+  STANDBY_ERROR 
+};
+
 enum uriType { uriError, features_uri, asset, uriError2, site_uri };
 
 // array of strings for displaying state names as strings

@@ -2891,6 +2891,13 @@
                     "value": 0,
                     "var_type": "Int"
                 },
+                "alt_site_state_enum": {
+                    "name": "Alt Site Controller State Enum",
+                    "type": "enum",
+                    "ui_type": "none",
+                    "value": 0,
+                    "var_type": "Int"
+                },
                 "site_status": {
                     "name": "Site Controller Status",
                     "type": "string",
