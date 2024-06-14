@@ -9,6 +9,7 @@
 #include "gcom_timer.h"
 #include "logger/logger.h"
 #include "gcom_modbus_utils.h"
+#include "gcom_utils.h"
 
 
 
@@ -26,7 +27,7 @@ void hbSendWrite(cfg::heartbeat_struct *myhb)
         auto raw_val = io_write_point->raw_val + 1 ;
         if (io_write_point->is_enabled)
         {
-            auto io_work = make_work(io_write_point->register_type, io_write_point->device_id, io_write_point->offset,  io_write_point->off_by_one,
+            auto io_work = make_work(io_write_point->component, io_write_point->register_type, io_write_point->device_id, io_write_point->offset,  io_write_point->off_by_one,
                     io_write_point->size,
                 io_write_point->reg16, io_write_point->reg8, strToWorkType(smode, false));
             io_work->wtype = WorkTypes::Set;
@@ -234,7 +235,7 @@ void hbCallback(std::shared_ptr<TimeObject> t, void *p)
                     << std::endl;
 
             // we'll have to do a special read
-            auto io_work = make_work(io_read_point->register_type, io_read_point->device_id, io_read_point->offset,  io_read_point->off_by_one, io_read_point->size,
+            auto io_work = make_work(io_read_point->component, io_read_point->register_type, io_read_point->device_id, io_read_point->offset,  io_read_point->off_by_one, io_read_point->size,
                     io_read_point->reg16, io_read_point->reg8, strToWorkType(gmode, false));
             io_work->wtype = WorkTypes::Get;
 
@@ -251,7 +252,7 @@ void hbCallback(std::shared_ptr<TimeObject> t, void *p)
         {
             if (io_write_point->is_enabled)
             {
-                auto io_work = make_work(io_write_point->register_type, io_write_point->device_id, io_write_point->offset,  io_write_point->off_by_one,
+                auto io_work = make_work(io_write_point->component, io_write_point->register_type, io_write_point->device_id, io_write_point->offset,  io_write_point->off_by_one,
                         io_write_point->size,
                     io_write_point->reg16, io_write_point->reg8, strToWorkType(smode, false));
                 io_work->wtype = WorkTypes::Set;

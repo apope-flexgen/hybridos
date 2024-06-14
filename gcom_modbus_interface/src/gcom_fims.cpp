@@ -29,6 +29,7 @@
 #include "load_to_dbi_client.h"
 #include "logger/logger.h"
 #include "shared_utils.h"
+#include "gcom_utils.h"
 
 // modbus_decode
 void store_raw_data(std::shared_ptr<IO_Work> io_work, bool debug);
@@ -45,10 +46,6 @@ std::thread collectThread1;
 uint64_t set_any_to_uint64(struct cfg& myCfg, std::shared_ptr<cfg::io_point_struct> io_point, std::any val);
 void get_stats(std::stringstream &ss, struct cfg &myCfg);
 void showRequestHelp(struct cfg& myCfg, std::stringstream &ss);
-
-PubGroup* get_pubgroup(std::shared_ptr<IO_Work> io_work);
-PubGroup* get_pubgroup(std::string& fstr);
-
 
 // fims helper functions:
 bool send_pub(fims &fims_gateway, std::string_view uri, std::string_view body) noexcept
@@ -570,7 +567,7 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
 #endif
                             std::string mode("set");
 
-                            std::shared_ptr<IO_Work> io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
+                            std::shared_ptr<IO_Work> io_work_single = make_work(io_point->component, io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
                             io_work_single->io_points.emplace_back(io_point);
                             io_work_single->replyto = replyto;
                             io_work_single->local = is_local_request;
@@ -742,7 +739,7 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
                         {
                             if(0)std::cout << " io_point id [" << io_point->id << "] not doing multi sets, added to work_vec " << std::endl;
 
-                            std::shared_ptr<IO_Work> io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset,
+                            std::shared_ptr<IO_Work> io_work_single = make_work(io_point->component, io_point->register_type, io_point->device_id, io_point->offset,
                                          io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType("set", false));
                             io_work_single->off_by_one = io_point->off_by_one;
 
@@ -1042,7 +1039,7 @@ bool parseHeader(struct cfg &myCfg, std::shared_ptr<IO_Fims> io_fims)
 
                 std::string mode("get");
 
-                std::shared_ptr<IO_Work> io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
+                std::shared_ptr<IO_Work> io_work_single = make_work(io_point->component, io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
                 io_work_single->io_points.emplace_back(io_point);
                 io_work_single->replyto = replyto;
                 io_work_single->local = is_local_request;

@@ -687,6 +687,7 @@ bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const s
 
     ok &= getItemFromMap(jsonMapOfConfig, "connection.dbi_save_frequency_seconds", myCfg.inherited_fields.dbi_update_frequency, 0.0, true, true, false);
 
+    ok &= getItemFromMap(jsonMapOfConfig, "connection.inter_message_delay_ms", myCfg.inherited_fields.inter_message_delay, 0.0, true, true, false);
     // format
     std::string format_str;
     ok &= getItemFromMap(jsonMapOfConfig, "connection.format", format_str, std::string(""), true, true, false);
@@ -784,6 +785,8 @@ bool extract_components(std::map<std::string, std::any> jsonMapOfConfig, const s
             ok &= getItemFromMap(jsonComponentMap, "watchdog_frequency_ms", component->watchdog_frequency, 1000, true, true, debug);
 
             ok &= getItemFromMap(jsonComponentMap, "dbi_save_frequency_seconds", component->dbi_update_frequency, myCfg.inherited_fields.dbi_update_frequency, true, true, debug);
+            ok &= getItemFromMap(jsonComponentMap, "inter_message_delay_ms", component->inter_message_delay, myCfg.inherited_fields.inter_message_delay, true, true, debug);
+            component->inter_message_delay = component->inter_message_delay / 1000.0; // convert to seconds
 
 
             // word_swap is actually the same as byte_swap?
@@ -2655,7 +2658,7 @@ void check_work_items(std::vector<std::shared_ptr<IO_Work>> &io_work_vec, std::v
     cfg::Register_Types register_type = cfg::Register_Types::Discrete_Input;
 
     auto io_point = io_map_vec.at(0);
-    auto io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, 1, nullptr, nullptr, strToWorkType(work_type, false));
+    auto io_work = make_work(io_point->component, io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, 1, nullptr, nullptr, strToWorkType(work_type, false));
     if ((io_point->register_type == cfg::Register_Types::Coil) || (io_point->register_type == cfg::Register_Types::Discrete_Input))
         max_item_size = max_bit_size;
     #ifdef FPS_DEBUG_MODE
@@ -2773,7 +2776,7 @@ void check_work_items(std::vector<std::shared_ptr<IO_Work>> &io_work_vec, std::v
                     << std::endl;
                 //#endif
                 // start a new one
-                io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, 1, nullptr, nullptr, strToWorkType(work_type, false));
+                io_work = make_work(io_point->component, io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, 1, nullptr, nullptr, strToWorkType(work_type, false));
                 offset = io_point->offset;
                 first_offset = io_point->offset;
                 device_id = io_point->device_id;

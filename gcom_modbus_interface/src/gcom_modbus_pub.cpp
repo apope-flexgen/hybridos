@@ -36,7 +36,7 @@
 #include "gcom_iothread.h"
 #include "gcom_modbus_pub.h"
 #include "logger/logger.h"
-
+#include "gcom_utils.h"
 
 // TODO today 09_29_2023...
 // 1..  put enough data in the IO_work to allow the response thread to collate the responses.
@@ -77,10 +77,6 @@
 // }    // getSubs(myCfg)
 
 std::mutex cb_output_mutex;
-
-int GetNumThreads(struct cfg *myCfg);
-bool testThread();
-bool killThread();
 
 // When a pub completes we need to record the completion time. no point in sending out a new pub idthe last one is not yet done.
 // I think we'll just skip the current request.
@@ -315,7 +311,7 @@ void pubCallback(std::shared_ptr<TimeObject>tObj, void *p)
         auto io_point = local_map_vec.at(0);
         if(debug)
             std::cout << __func__ << " local vec point id [" << io_point->id << "]" << std::endl;
-        auto io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, nullptr, nullptr, strToWorkType(oper, false));
+        auto io_work = make_work(io_point->component, io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, nullptr, nullptr, strToWorkType(oper, false));
         work_group_size++;
         io_work->tNow = tNow;
         io_work->work_group = work_group_size;

@@ -35,67 +35,55 @@ using namespace std::string_view_literals;
 ////////// GLOBAL VARIABLES ///////////
 ///////////////////////////////////////
 
-
-//constexpr size_t bufferSize = 4096 * 128;                            // Modify according to your needs
-std::map<std::string, std::map<int, struct type_map>> types;         // map of type names / offsets to actual map component
-std::map<std::string, std::map<std::string, struct type_map>> comps; // map of component names /  ids  to actual map components
+// constexpr size_t bufferSize = 4096 * 128;                            // Modify according to your needs
+std::map<std::string, std::map<int, struct type_map>> types;  // map of type names / offsets to actual map component
+std::map<std::string, std::map<std::string, struct type_map>>
+    comps;  // map of component names /  ids  to actual map components
 std::vector<std::string> subs;
 std::map<int, std::map<int, std::vector<std::shared_ptr<cfg::register_group_struct>>>> pubs;
 
 bool gcom_test_bit_str(void);
-void test_parse_message(const char *uri, const char *method, const char *body);
-void test_merge_message(const char *uri, const char *method, const char *body);
-bool gcom_points_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg &myCfg, const char *decode);
-bool gcom_point_type_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg &myCfg, const char *ptype, const char *decode);
-bool gcom_msg_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg &myCfg);
-bool gcom_config_test_uri(std::map<std::string, std::any> jsonMapOfConfig, struct cfg &myCfg, const char *uri, const char *id);
-bool uri_is_single(std::shared_ptr<cfg::io_point_struct> &io_point, struct cfg &myCfg, struct Uri_req &uri, bool debug);
+void test_parse_message(const char* uri, const char* method, const char* body);
+void test_merge_message(const char* uri, const char* method, const char* body);
+bool gcom_points_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg& myCfg, const char* decode);
+bool gcom_point_type_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg& myCfg, const char* ptype,
+                          const char* decode);
+bool gcom_msg_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg& myCfg);
+bool gcom_config_test_uri(std::map<std::string, std::any> jsonMapOfConfig, struct cfg& myCfg, const char* uri,
+                          const char* id);
+bool uri_is_single(std::shared_ptr<cfg::io_point_struct>& io_point, struct cfg& myCfg, struct Uri_req& uri, bool debug);
 
 void clearChan(bool debug);
-bool decode_io_point_struct(std::vector<std::shared_ptr<IO_Work>> &work_vec, std::shared_ptr<cfg::io_point_struct> io_point, std::any val, 
-                struct cfg &myCfg, Uri_req &uri, const char *mode, bool debug);
-std::string extractCompFromURI(const std::string &uri);
-std::string extractCompIdFromURI(const std::string &uri, const std::string &component);
+bool decode_io_point_struct(std::vector<std::shared_ptr<IO_Work>>& work_vec,
+                            std::shared_ptr<cfg::io_point_struct> io_point, std::any val, struct cfg& myCfg,
+                            Uri_req& uri, const char* mode, bool debug);
+std::string extractCompFromURI(const std::string& uri);
+std::string extractCompIdFromURI(const std::string& uri, const std::string& component);
 
-struct type_map *gcom_get_comp(struct cfg &myCfg, std::string component, std::string id, bool debug = false);
+struct type_map* gcom_get_comp(struct cfg& myCfg, std::string component, std::string id, bool debug = false);
 
-
-//maybe only used in test
-std::string getKeyFromURI(const std::string &uri);
-std::map<std::string, std::any> parseMessage(const std::string &uri, const std::string method, const std::string &body);
+// maybe only used in test
+std::string getKeyFromURI(const std::string& uri);
+std::map<std::string, std::any> parseMessage(const std::string& uri, const std::string method, const std::string& body);
 int test_printMap(void);
-std::string extractIdFromURI(const std::string &uri);
-std::string getKeyFromURI(const std::string &uri);
-void mergeSubMaps(std::map<std::string, std::any> &base, const std::map<std::string, std::any> &toMerge);
-void mapToBuffer(const std::map<std::string, std::any> &baseMap, spdlog::memory_buf_t &buf, int indent = 0);
-void printResultVector(const std::vector<std::pair<std::shared_ptr<cfg::io_point_struct>, std::any>> &result);
-Component_IO_point_map extract_structure(Component_IO_point_map &structure, const std::map<std::string, std::any> &jsonData);
-void printComponentIOPointMap(const Component_IO_point_map &items);
+std::string extractIdFromURI(const std::string& uri);
+std::string getKeyFromURI(const std::string& uri);
+void mergeSubMaps(std::map<std::string, std::any>& base, const std::map<std::string, std::any>& toMerge);
+void mapToBuffer(const std::map<std::string, std::any>& baseMap, spdlog::memory_buf_t& buf, int indent = 0);
+void printResultVector(const std::vector<std::pair<std::shared_ptr<cfg::io_point_struct>, std::any>>& result);
+Component_IO_point_map extract_structure(Component_IO_point_map& structure,
+                                         const std::map<std::string, std::any>& jsonData);
+void printComponentIOPointMap(const Component_IO_point_map& items);
 void printIOPoint(const std::shared_ptr<cfg::io_point_struct> io_point);
-void printPublishGroups(std::vector<std::shared_ptr<PublishGroup>> &publishGroups);
-//struct type_map *gcom_get_comp(struct cfg &myCfg, std::string component, std::string id, bool debug = false);
-std::string gcom_show_types(struct cfg &myCfg);
-std::string gcom_show_FirstLevel(const std::map<std::string, std::any> &m, std::string key);
-std::string gcom_show_subs(struct cfg &myCfg, bool debug = false);
-//std::string gcom_show_pubs(struct cfg &myCfg, bool debug = false);
+void printPublishGroups(std::vector<std::shared_ptr<PublishGroup>>& publishGroups);
+// struct type_map *gcom_get_comp(struct cfg &myCfg, std::string component, std::string id, bool debug = false);
+std::string gcom_show_types(struct cfg& myCfg);
+std::string gcom_show_FirstLevel(const std::map<std::string, std::any>& m, std::string key);
+std::string gcom_show_subs(struct cfg& myCfg, bool debug = false);
+// std::string gcom_show_pubs(struct cfg &myCfg, bool debug = false);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const std::shared_ptr<cfg::io_point_struct> &b);
-
+bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct>& a,
+                           const std::shared_ptr<cfg::io_point_struct>& b);
 
 // // ///////////////////////////////////////
 // // ////////// UTILITY METHODS ////////////
@@ -194,7 +182,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     return std::any(); // Return empty std::any
 // }
 
-// std::string check_str_for_error(const std::string_view str, const std::string_view Forbidden_Chars = R"({}\/ "%)", const std::size_t Max_Str_Size = std::numeric_limits<u8>::max());
+// std::string check_str_for_error(const std::string_view str, const std::string_view Forbidden_Chars = R"({}\/ "%)",
+// const std::size_t Max_Str_Size = std::numeric_limits<u8>::max());
 // // {
 // //     if (str.empty())
 // //     {
@@ -202,11 +191,13 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 // //     }
 // //     if (str.find_first_of(Forbidden_Chars) != std::string_view::npos)
 // //     {
-// //         return fmt::format("string (currently: \"{}\") contains one of the forbidden characters: '{}'", str, fmt::join(Forbidden_Chars, "', '"));
+// //         return fmt::format("string (currently: \"{}\") contains one of the forbidden characters: '{}'", str,
+// fmt::join(Forbidden_Chars, "', '"));
 // //     }
 // //     if (str.size() > Max_Str_Size)
 // //     {
-// //         return fmt::format("string (currently: \"{}\", size: {}) has exceeded the maximum character limit of {}", str, str.size(), Max_Str_Size);
+// //         return fmt::format("string (currently: \"{}\", size: {}) has exceeded the maximum character limit of {}",
+// str, str.size(), Max_Str_Size);
 // //     }
 // //     return "";
 // // }
@@ -238,7 +229,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 // //     serv = getservbyname(service.data(), "tcp");
 // //     if (serv == NULL)
 // //     {
-// //         FPS_INFO_LOG("port cannot be derived from service [%s] for protocol [tcp] (it doesn't exist), going back to port provided in config (or default)", service);
+// //         FPS_INFO_LOG("port cannot be derived from service [%s] for protocol [tcp] (it doesn't exist), going back
+// to port provided in config (or default)", service);
 // //         return false;
 // //     }
 // //     port = ntohs(serv->s_port);
@@ -278,7 +270,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 // }
 
 // bool ioPointExists(
-//     std::shared_ptr<cfg::io_point_struct> &io_point, const struct cfg &myCfg, const std::vector<std::string> &uri_keys, std::string io_point_key = "")
+//     std::shared_ptr<cfg::io_point_struct> &io_point, const struct cfg &myCfg, const std::vector<std::string>
+//     &uri_keys, std::string io_point_key = "")
 // {
 //     int key_idx = 0;
 //     if ((uri_keys.size() > 1) && (uri_keys[0].size() == 0))
@@ -317,7 +310,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 // //////// CONFIG PARSING METHODS////////
 // ///////////////////////////////////////
 
-// bool gcom_load_cfg_file(std::map<std::string, std::any> &jsonMapOfConfig, const char *filename, struct cfg &myCfg, bool debug)
+// bool gcom_load_cfg_file(std::map<std::string, std::any> &jsonMapOfConfig, const char *filename, struct cfg &myCfg,
+// bool debug)
 // {
 //     bool ok = true;
 //     ok = gcom_parse_file(jsonMapOfConfig, filename, false);
@@ -390,8 +384,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //             int first_offset = getFirstOffset(register_group->io_point_map);
 //             if (first_offset < 0)
 //             {
-//                 FPS_ERROR_LOG("Register group [%s] for component [%s] is empty.\n", register_group->register_type_str.c_str(), component->id.c_str());
-//                 return false;
+//                 FPS_ERROR_LOG("Register group [%s] for component [%s] is empty.\n",
+//                 register_group->register_type_str.c_str(), component->id.c_str()); return false;
 //             }
 
 //             int total_size = getTotalNumRegisters(register_group->io_point_map);
@@ -466,28 +460,28 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     return true;
 // }
 
-// bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const std::string &query, struct cfg &myCfg, bool debug = false)
+// bool extract_connection(std::map<std::string, std::any> jsonMapOfConfig, const std::string &query, struct cfg &myCfg,
+// bool debug = false)
 // {
 //     bool ok = true;
 //     std::string error_message;
 //     // connection name
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.name", myCfg.connection.name, std::string("modbus_client"), true, true, false);
-//     error_message = check_str_for_error(myCfg.connection.name);
-//     if (error_message.length() > 0)
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.name", myCfg.connection.name, std::string("modbus_client"),
+//     true, true, false); error_message = check_str_for_error(myCfg.connection.name); if (error_message.length() > 0)
 //     {
 //         FPS_INFO_LOG("Connection field \"name\" %s. Using default of \"modbus_client\".", error_message);
 //         error_message = "";
 //     }
 //     // port
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.port", myCfg.connection.port, static_cast<int>(502), true, true, false);
-//     if (ok && (myCfg.connection.port < 0 || myCfg.connection.port > std::numeric_limits<u16>::max()))
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.port", myCfg.connection.port, static_cast<int>(502), true,
+//     true, false); if (ok && (myCfg.connection.port < 0 || myCfg.connection.port > std::numeric_limits<u16>::max()))
 //     {
-//         FPS_INFO_LOG("Port must be between 0 and %d. Configured value is [%d]. Using default of 502.", std::numeric_limits<u16>::max(), myCfg.connection.port);
-//         myCfg.connection.port = 502;
+//         FPS_INFO_LOG("Port must be between 0 and %d. Configured value is [%d]. Using default of 502.",
+//         std::numeric_limits<u16>::max(), myCfg.connection.port); myCfg.connection.port = 502;
 //     }
 //     // ip_address
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.ip_address", myCfg.connection.ip_address, std::string("172.3.0.2"), true, true, false);
-//     if (ok && !myCfg.connection.ip_address.empty())
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.ip_address", myCfg.connection.ip_address,
+//     std::string("172.3.0.2"), true, true, false); if (ok && !myCfg.connection.ip_address.empty())
 //     {
 //         char new_ip[HOST_NAME_MAX + 1];
 //         new_ip[HOST_NAME_MAX] = '\0';
@@ -498,65 +492,72 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //         }
 //         else
 //         {
-//             FPS_ERROR_LOG("ip_address \"%s\" isn't valid or can't be found from the local service file", myCfg.connection.ip_address);
-//             ok = false;
+//             FPS_ERROR_LOG("ip_address \"%s\" isn't valid or can't be found from the local service file",
+//             myCfg.connection.ip_address); ok = false;
 //         }
 //     }
 //     // debug
 //     ok &= getItemFromMap(jsonMapOfConfig, "connection.debug", myCfg.connection.debug, false, true, true, false);
 //     // connection_timeout
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.connection_timeout", myCfg.connection.connection_timeout, 2, true, true, false);
-//     if (ok && (myCfg.connection.connection_timeout < 2 || myCfg.connection.connection_timeout > 10))
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.connection_timeout", myCfg.connection.connection_timeout, 2,
+//     true, true, false); if (ok && (myCfg.connection.connection_timeout < 2 || myCfg.connection.connection_timeout >
+//     10))
 //     {
-//         FPS_INFO_LOG("Connection timeout must be between 2 and 10 seconds. Configured value is [%d] seconds. Using default of 2s.", myCfg.connection.connection_timeout);
-//         myCfg.connection.connection_timeout = 2;
+//         FPS_INFO_LOG("Connection timeout must be between 2 and 10 seconds. Configured value is [%d] seconds. Using
+//         default of 2s.", myCfg.connection.connection_timeout); myCfg.connection.connection_timeout = 2;
 //     }
 //     // transfer_timeout
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.transfer_timeout", myCfg.connection.transfer_timeout, 500, true, true, false);
-//     if (ok && (myCfg.connection.transfer_timeout < 10 || myCfg.connection.transfer_timeout > 2000))
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.transfer_timeout", myCfg.connection.transfer_timeout, 500,
+//     true, true, false); if (ok && (myCfg.connection.transfer_timeout < 10 || myCfg.connection.transfer_timeout >
+//     2000))
 //     {
-//         FPS_INFO_LOG("Transfer timeout must be between 10 and 2000 milli seconds. Configured value is [%d] milliseconds. Using default of 500.", myCfg.connection.transfer_timeout);
-//         myCfg.connection.transfer_timeout = 500;
+//         FPS_INFO_LOG("Transfer timeout must be between 10 and 2000 milli seconds. Configured value is [%d]
+//         milliseconds. Using default of 500.", myCfg.connection.transfer_timeout); myCfg.connection.transfer_timeout =
+//         500;
 //     }
 
 //     // max_num_connections
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.max_num_connections", myCfg.connection.max_num_connections, 1, true, true, false);
-//     if (ok && (myCfg.connection.max_num_connections <= 0 || myCfg.connection.max_num_connections > 25))
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.max_num_connections", myCfg.connection.max_num_connections, 1,
+//     true, true, false); if (ok && (myCfg.connection.max_num_connections <= 0 || myCfg.connection.max_num_connections
+//     > 25))
 //     {
-//         FPS_INFO_LOG("max_num_connections must be greater than 0. Configured value is [%d]. Using default of 1.", myCfg.connection.max_num_connections);
-//         myCfg.connection.max_num_connections = 1;
+//         FPS_INFO_LOG("max_num_connections must be greater than 0. Configured value is [%d]. Using default of 1.",
+//         myCfg.connection.max_num_connections); myCfg.connection.max_num_connections = 1;
 //     }
 //     // data_buffer_size
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.data_buffer_size", myCfg.connection.data_buffer_size, 100000, true, true, false);
-//     if (ok && (myCfg.connection.data_buffer_size <= 10000 || myCfg.connection.data_buffer_size > 200000))
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.data_buffer_size", myCfg.connection.data_buffer_size, 100000,
+//     true, true, false); if (ok && (myCfg.connection.data_buffer_size <= 10000 || myCfg.connection.data_buffer_size >
+//     200000))
 //     {
-//         FPS_INFO_LOG("data_buffer_size must be between 10000 and 200000. Configured value is [%d]. Using default of 100000.", myCfg.connection.data_buffer_size);
-//         myCfg.connection.data_buffer_size = 100000;
+//         FPS_INFO_LOG("data_buffer_size must be between 10000 and 200000. Configured value is [%d]. Using default of
+//         100000.", myCfg.connection.data_buffer_size); myCfg.connection.data_buffer_size = 100000;
 //     }
 
 //     // auto_disable
 //     ok &= getItemFromMap(jsonMapOfConfig, "connection.auto_disable", myCfg.auto_disable, true, true, true, false);
 
 //     // allow_multi_sets
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.allow_multi_sets", myCfg.allow_multi_sets, false, true, true, false);
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.allow_multi_sets", myCfg.allow_multi_sets, false, true, true,
+//     false);
 
 //     // force_multi_sets
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.force_multi_sets", myCfg.force_multi_sets, false, true, true, false);
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.force_multi_sets", myCfg.force_multi_sets, false, true, true,
+//     false);
 
 //     // max_register_group_size
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.max_register_group_size", myCfg.max_register_group_size, 125, true, true, false);
-//     if (ok && myCfg.max_register_group_size <= 0)
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.max_register_group_size", myCfg.max_register_group_size, 125,
+//     true, true, false); if (ok && myCfg.max_register_group_size <= 0)
 //     {
-//         FPS_INFO_LOG("max register size must be greater than 0. Configured value is [%d]. Using default of 125.", myCfg.max_register_group_size);
-//         myCfg.max_register_group_size = 125;
+//         FPS_INFO_LOG("max register size must be greater than 0. Configured value is [%d]. Using default of 125.",
+//         myCfg.max_register_group_size); myCfg.max_register_group_size = 125;
 //     }
 
 //     // max_bit_size
 //     ok &= getItemFromMap(jsonMapOfConfig, "connection.max_bit_size", myCfg.max_bit_size, 125, true, true, false);
 //     if (ok && myCfg.max_bit_size <= 0)
 //     {
-//         FPS_INFO_LOG("max bit size must be greater than 0. Configured value is [%d]. Using default of 125.", myCfg.max_bit_size);
-//         myCfg.max_bit_size = 125;
+//         FPS_INFO_LOG("max bit size must be greater than 0. Configured value is [%d]. Using default of 125.",
+//         myCfg.max_bit_size); myCfg.max_bit_size = 125;
 //     }
 //     // service
 //     std::string service;
@@ -567,8 +568,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     }
 //     // serial_device
 //     bool is_RTU = false;
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.serial_device", myCfg.connection.device_name, std::string(""), false, false, false);
-//     if (ok && !myCfg.connection.device_name.empty())
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.serial_device", myCfg.connection.device_name, std::string(""),
+//     false, false, false); if (ok && !myCfg.connection.device_name.empty())
 //     {
 //         error_message = check_str_for_error(myCfg.connection.name);
 //         if (error_message.length() > 0)
@@ -584,11 +585,11 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     }
 //     myCfg.connection.is_RTU = is_RTU;
 //     // baud_rate
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.baud_rate", myCfg.connection.baud_rate, 115200, true, is_RTU, false);
-//     if (ok && myCfg.connection.baud_rate < 0)
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.baud_rate", myCfg.connection.baud_rate, 115200, true, is_RTU,
+//     false); if (ok && myCfg.connection.baud_rate < 0)
 //     {
-//         FPS_INFO_LOG("Baud rate cannot be less than 0. Current value is [%d]. Setting to 115200.", myCfg.connection.baud_rate);
-//         myCfg.connection.baud_rate = 115200;
+//         FPS_INFO_LOG("Baud rate cannot be less than 0. Current value is [%d]. Setting to 115200.",
+//         myCfg.connection.baud_rate); myCfg.connection.baud_rate = 115200;
 //     }
 //     // parity
 //     std::string parity("none");
@@ -609,27 +610,27 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //         }
 //         else
 //         {
-//             FPS_ERROR_LOG("parity (currently: \"%s\") must be one of \"none\", \"even\", or \"odd\". Setting to default of \"none\".", parity);
-//             myCfg.connection.parity = 'N';
+//             FPS_ERROR_LOG("parity (currently: \"%s\") must be one of \"none\", \"even\", or \"odd\". Setting to
+//             default of \"none\".", parity); myCfg.connection.parity = 'N';
 //         }
 //     }
 //     // data_bits
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.data_bits", myCfg.connection.data_bits, 8, true, is_RTU, false);
-//     if (ok && (myCfg.connection.data_bits < 5 || myCfg.connection.data_bits > 8))
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.data_bits", myCfg.connection.data_bits, 8, true, is_RTU,
+//     false); if (ok && (myCfg.connection.data_bits < 5 || myCfg.connection.data_bits > 8))
 //     {
-//         FPS_INFO_LOG("data_bits (currently: %d) must be between 5 and 8. Using default of 8.", myCfg.connection.data_bits);
-//         myCfg.connection.data_bits = 8;
+//         FPS_INFO_LOG("data_bits (currently: %d) must be between 5 and 8. Using default of 8.",
+//         myCfg.connection.data_bits); myCfg.connection.data_bits = 8;
 //     }
 //     // stop_bits
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.stop_bits", myCfg.connection.stop_bits, 1, true, is_RTU, false);
-//     if (ok && (!(myCfg.connection.stop_bits == 1 || myCfg.connection.stop_bits == 2)))
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.stop_bits", myCfg.connection.stop_bits, 1, true, is_RTU,
+//     false); if (ok && (!(myCfg.connection.stop_bits == 1 || myCfg.connection.stop_bits == 2)))
 //     {
-//         FPS_INFO_LOG("stop_bits (currently: %d) must be either 1 or 2. Using default of 1.", myCfg.connection.stop_bits);
-//         myCfg.connection.stop_bits = 1;
+//         FPS_INFO_LOG("stop_bits (currently: %d) must be either 1 or 2. Using default of 1.",
+//         myCfg.connection.stop_bits); myCfg.connection.stop_bits = 1;
 //     }
 
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.stats_pub_uri", myCfg.connection.stats_uri, std::string("/stats/modbus_client"), true, true, false);
-//     if (myCfg.connection.stats_uri.length() > 0)
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.stats_pub_uri", myCfg.connection.stats_uri,
+//     std::string("/stats/modbus_client"), true, true, false); if (myCfg.connection.stats_uri.length() > 0)
 //     {
 //         error_message = check_str_for_error(myCfg.connection.stats_uri, R"({}\ "%)");
 //         if (error_message.length() > 0)
@@ -640,28 +641,34 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //         }
 //     }
 
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.stats_pub_frequency", myCfg.connection.stats_frequency_ms, 1000, true, true, false);
-//     if (ok && myCfg.connection.stats_uri.length() > 0 && myCfg.connection.stats_frequency_ms <= 0)
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.stats_pub_frequency", myCfg.connection.stats_frequency_ms,
+//     1000, true, true, false); if (ok && myCfg.connection.stats_uri.length() > 0 &&
+//     myCfg.connection.stats_frequency_ms <= 0)
 //     {
-//         FPS_INFO_LOG("Connection field \"stats_pub_frequency\" must be greater than 0. Setting to default of 1000 ms.");
-//         myCfg.connection.stats_frequency_ms = 1000;
+//         FPS_INFO_LOG("Connection field \"stats_pub_frequency\" must be greater than 0. Setting to default of 1000
+//         ms."); myCfg.connection.stats_frequency_ms = 1000;
 //     }
 
 //     // inherited stuff:
 //     // device_id
 //     ok &= getItemFromMap(jsonMapOfConfig, "connection.device_id", myCfg.connection.device_id, 1, true, true, false);
 //     // off_by_one
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.off_by_one", myCfg.inherited_fields.off_by_one, false, true, true, false);
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.off_by_one", myCfg.inherited_fields.off_by_one, false, true,
+//     true, false);
 //     // byte_swap
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.byte_swap", myCfg.inherited_fields.byte_swap, false, true, true, false);
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.byte_swap", myCfg.inherited_fields.byte_swap, false, true,
+//     true, false);
 
 //     // multi_write_op_code
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.multi_write_op_code", myCfg.inherited_fields.multi_write_op_code, false, true, true, false);
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.multi_write_op_code",
+//     myCfg.inherited_fields.multi_write_op_code, false, true, true, false);
 
 //     // frequency
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.frequency", myCfg.inherited_fields.frequency, 100, true, true, false);
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.frequency", myCfg.inherited_fields.frequency, 100, true, true,
+//     false);
 //     // debounce
-//     ok &= getItemFromMap(jsonMapOfConfig, "connection.debounce", myCfg.inherited_fields.debounce, 0, true, true, false);
+//     ok &= getItemFromMap(jsonMapOfConfig, "connection.debounce", myCfg.inherited_fields.debounce, 0, true, true,
+//     false);
 
 //     // format
 //     std::string format_str;
@@ -696,7 +703,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 // //     ->  register_groups (extract_register_groups)
 // //           -> io_point_map (extract_io_point_map)
 // //                ->
-// bool extract_components(std::map<std::string, std::any> jsonMapOfConfig, const std::string &query, struct cfg &myCfg, bool debug = false)
+// bool extract_components(std::map<std::string, std::any> jsonMapOfConfig, const std::string &query, struct cfg &myCfg,
+// bool debug = false)
 // {
 //     bool ok = true;
 //     std::optional<std::vector<std::any>> compArray = getMapValue<std::vector<std::any>>(jsonMapOfConfig, query);
@@ -717,50 +725,66 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //             std::cout << " Processing component" << std::endl;
 //         if (rawComp.type() == typeid(std::map<std::string, std::any>))
 //         {
-//             std::map<std::string, std::any> jsonComponentMap = std::any_cast<std::map<std::string, std::any>>(rawComp);
-//             std::shared_ptr<cfg::component_struct> component = std::make_shared<cfg::component_struct>();
-//             std::string componentId;
-//             getItemFromMap(jsonComponentMap, "component_id", componentId, std::string("components"), true, true, false);
-//             component->component_id = componentId;
-//             component->myCfg = &myCfg;
+//             std::map<std::string, std::any> jsonComponentMap = std::any_cast<std::map<std::string,
+//             std::any>>(rawComp); std::shared_ptr<cfg::component_struct> component =
+//             std::make_shared<cfg::component_struct>(); std::string componentId; getItemFromMap(jsonComponentMap,
+//             "component_id", componentId, std::string("components"), true, true, false); component->component_id =
+//             componentId; component->myCfg = &myCfg;
 
-//             // ok &= getItemFromMap(jsonComponentMap, "name",                component->name,           std::string("noName"), true, true, debug);
-//             // ok &= getItemFromMap(jsonComponentMap, "serial_device",       component->serial_device,  std::string("none"),   true, true, debug);
-//             // ok &= getItemFromMap(jsonComponentMap, "parity",              component->parity,         std::string("none"),   true, true, debug);
-//             // ok &= getItemFromMap(jsonComponentMap, "data_bits",           component->data_bits,      8,                     true, true, debug);
-//             // ok &= getItemFromMap(jsonComponentMap, "stop_bits",           component->stop_bits,      1,                     true, true, debug);
-//             // ok &= getItemFromMap(jsonComponentMap, "baud_rate",           component->baud_rate,      115200,                true, true, debug);
+//             // ok &= getItemFromMap(jsonComponentMap, "name",                component->name, std::string("noName"),
+//             true, true, debug);
+//             // ok &= getItemFromMap(jsonComponentMap, "serial_device",       component->serial_device,
+//             std::string("none"),   true, true, debug);
+//             // ok &= getItemFromMap(jsonComponentMap, "parity",              component->parity, std::string("none"),
+//             true, true, debug);
+//             // ok &= getItemFromMap(jsonComponentMap, "data_bits",           component->data_bits,      8, true,
+//             true, debug);
+//             // ok &= getItemFromMap(jsonComponentMap, "stop_bits",           component->stop_bits,      1, true,
+//             true, debug);
+//             // ok &= getItemFromMap(jsonComponentMap, "baud_rate",           component->baud_rate,      115200, true,
+//             true, debug);
 
-//             // ok &= getItemFromMap(jsonComponentMap, "multi_write_op_code", component->multi_write_op_code, myCfg.inherited_fields.multi_write_op_code,            true, true, debug);
-//             // ok &= getItemFromMap(jsonComponentMap, "off_by_one",          component->off_by_one,          false,            true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "id", component->id, std::string("noId"), true, true, false);
-//             ok &= getItemFromMap(jsonComponentMap, "device_id", component->device_id, myCfg.connection.device_id, true, true, false);
-//             ok &= getItemFromMap(jsonComponentMap, "frequency", component->frequency, myCfg.inherited_fields.frequency, true, true, false);
-//             ok &= getItemFromMap(jsonComponentMap, "offset_time", component->offset_time, 0, true, true, false);
-//             ok &= getItemFromMap(jsonComponentMap, "byte_swap", component->is_byte_swap, myCfg.inherited_fields.byte_swap, true, true, debug);
-//             // ok &= getItemFromMap(jsonComponentMap, "off_by_one",          component->off_by_one,   myCfg.inherited_fields.off_by_one, true, true, debug);
+//             // ok &= getItemFromMap(jsonComponentMap, "multi_write_op_code", component->multi_write_op_code,
+//             myCfg.inherited_fields.multi_write_op_code,            true, true, debug);
+//             // ok &= getItemFromMap(jsonComponentMap, "off_by_one",          component->off_by_one,          false,
+//             true, true, debug); ok &= getItemFromMap(jsonComponentMap, "id", component->id, std::string("noId"),
+//             true, true, false); ok &= getItemFromMap(jsonComponentMap, "device_id", component->device_id,
+//             myCfg.connection.device_id, true, true, false); ok &= getItemFromMap(jsonComponentMap, "frequency",
+//             component->frequency, myCfg.inherited_fields.frequency, true, true, false); ok &=
+//             getItemFromMap(jsonComponentMap, "offset_time", component->offset_time, 0, true, true, false); ok &=
+//             getItemFromMap(jsonComponentMap, "byte_swap", component->is_byte_swap, myCfg.inherited_fields.byte_swap,
+//             true, true, debug);
+//             // ok &= getItemFromMap(jsonComponentMap, "off_by_one",          component->off_by_one,
+//             myCfg.inherited_fields.off_by_one, true, true, debug);
 
-//             ok &= getItemFromMap(jsonComponentMap, "pub_sync",                       myCfg.pub_sync, true, true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "heartbeat_enabled",              component->heartbeat_enabled, false, true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "watchdog_enabled",               component->watchdog_enabled, false, true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "component_heartbeat_read_uri",   component->component_heartbeat_read_uri, std::string(""), true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "component_heartbeat_write_uri",  component->component_heartbeat_write_uri, std::string(""), true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "component_heartbeat_max_value",  component->component_heartbeat_max_value, 4096, true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "modbus_heartbeat_timeout_ms",    component->modbus_heartbeat_timeout_ms, 0, true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "component_heartbeat_timeout_ms", component->component_heartbeat_timeout_ms, 0, true, true, debug);
+//             ok &= getItemFromMap(jsonComponentMap, "pub_sync",                       myCfg.pub_sync, true, true,
+//             true, debug); ok &= getItemFromMap(jsonComponentMap, "heartbeat_enabled", component->heartbeat_enabled,
+//             false, true, true, debug); ok &= getItemFromMap(jsonComponentMap, "watchdog_enabled",
+//             component->watchdog_enabled, false, true, true, debug); ok &= getItemFromMap(jsonComponentMap,
+//             "component_heartbeat_read_uri",   component->component_heartbeat_read_uri, std::string(""), true, true,
+//             debug); ok &= getItemFromMap(jsonComponentMap, "component_heartbeat_write_uri",
+//             component->component_heartbeat_write_uri, std::string(""), true, true, debug); ok &=
+//             getItemFromMap(jsonComponentMap, "component_heartbeat_max_value",
+//             component->component_heartbeat_max_value, 4096, true, true, debug); ok &=
+//             getItemFromMap(jsonComponentMap, "modbus_heartbeat_timeout_ms", component->modbus_heartbeat_timeout_ms,
+//             0, true, true, debug); ok &= getItemFromMap(jsonComponentMap, "component_heartbeat_timeout_ms",
+//             component->component_heartbeat_timeout_ms, 0, true, true, debug);
 
-//             ok &= getItemFromMap(jsonComponentMap, "watchdog_uri", component->watchdog_uri, std::string(""), true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "watchdog_alarm_timeout_ms", component->watchdog_alarm_timeout, 0, true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "watchdog_fault_timeout_ms", component->watchdog_fault_timeout, 0, true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "watchdog_recovery_timeout_ms", component->watchdog_recovery_timeout, 0, true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "watchdog_recovery_time_ms", component->watchdog_time_to_recover, 0, true, true, debug);
-//             ok &= getItemFromMap(jsonComponentMap, "watchdog_frequency_ms", component->watchdog_frequency, 1000, true, true, debug);
+//             ok &= getItemFromMap(jsonComponentMap, "watchdog_uri", component->watchdog_uri, std::string(""), true,
+//             true, debug); ok &= getItemFromMap(jsonComponentMap, "watchdog_alarm_timeout_ms",
+//             component->watchdog_alarm_timeout, 0, true, true, debug); ok &= getItemFromMap(jsonComponentMap,
+//             "watchdog_fault_timeout_ms", component->watchdog_fault_timeout, 0, true, true, debug); ok &=
+//             getItemFromMap(jsonComponentMap, "watchdog_recovery_timeout_ms", component->watchdog_recovery_timeout, 0,
+//             true, true, debug); ok &= getItemFromMap(jsonComponentMap, "watchdog_recovery_time_ms",
+//             component->watchdog_time_to_recover, 0, true, true, debug); ok &= getItemFromMap(jsonComponentMap,
+//             "watchdog_frequency_ms", component->watchdog_frequency, 1000, true, true, debug);
 
 //             // I think word_swap is actually the same as byte_swap?
 //             int word_order = 0;
 //             ok &= getItemFromMap(jsonComponentMap, "word_swap", component->is_byte_swap, false, true, true, debug);
 
-//             ok &= getItemFromMap(jsonComponentMap, "word_order", component->word_order, word_order, true, true, debug);
+//             ok &= getItemFromMap(jsonComponentMap, "word_order", component->word_order, word_order, true, true,
+//             debug);
 
 //             std::string format_str;
 //             ok &= getItemFromMap(jsonComponentMap, "format", format_str, std::string(""), true, true, false);
@@ -787,7 +811,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //             {
 //                 if (debug)
 //                     std::cout << " Processing  registers" << std::endl;
-//                 ok &= extract_register_groups(component->register_groups, reg_group_it->second, component, myCfg, debug);
+//                 ok &= extract_register_groups(component->register_groups, reg_group_it->second, component, myCfg,
+//                 debug);
 //             }
 //             else
 //             {
@@ -808,37 +833,43 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     return ok;
 // }
 
-// bool extract_register_groups(std::vector<std::shared_ptr<cfg::register_group_struct>> &register_groups, const std::any &raw_register_groups_json_array, std::shared_ptr<struct cfg::component_struct> component, struct cfg &myCfg, bool debug = false)
+// bool extract_register_groups(std::vector<std::shared_ptr<cfg::register_group_struct>> &register_groups, const
+// std::any &raw_register_groups_json_array, std::shared_ptr<struct cfg::component_struct> component, struct cfg &myCfg,
+// bool debug = false)
 // {
 //     bool ok = true;
 //     // initialize component
 //     if (raw_register_groups_json_array.type() == typeid(std::vector<std::any>))
 //     {
-//         std::vector<std::any> raw_register_groups = std::any_cast<std::vector<std::any>>(raw_register_groups_json_array);
-//         for (const std::any &raw_register_group : raw_register_groups)
+//         std::vector<std::any> raw_register_groups =
+//         std::any_cast<std::vector<std::any>>(raw_register_groups_json_array); for (const std::any &raw_register_group
+//         : raw_register_groups)
 //         {
 //             if (raw_register_group.type() == typeid(std::map<std::string, std::any>))
 //             {
-//                 std::map<std::string, std::any> jsonRegisterGroupMap = std::any_cast<std::map<std::string, std::any>>(raw_register_group);
-//                 std::shared_ptr<cfg::register_group_struct> register_group = std::make_shared<cfg::register_group_struct>();
-//                 register_group->multi_write_op_code = false; // component->multi_write_op_code;
-//                 register_group->component = component;
-//                 register_group->id = component->id;
-//                 register_group->component_id = component->component_id;
-//                 if (debug)
-//                     printf(" >>>>>>>>>>>>> <%s> component %p  initial register_group %p \n", __func__, (void *)component.get(), (void *)register_group.get());
-//                 ok &= getItemFromMap(jsonRegisterGroupMap, "type", register_group->register_type_str, std::string("type"), true, true, debug);
+//                 std::map<std::string, std::any> jsonRegisterGroupMap = std::any_cast<std::map<std::string,
+//                 std::any>>(raw_register_group); std::shared_ptr<cfg::register_group_struct> register_group =
+//                 std::make_shared<cfg::register_group_struct>(); register_group->multi_write_op_code = false; //
+//                 component->multi_write_op_code; register_group->component = component; register_group->id =
+//                 component->id; register_group->component_id = component->component_id; if (debug)
+//                     printf(" >>>>>>>>>>>>> <%s> component %p  initial register_group %p \n", __func__, (void
+//                     *)component.get(), (void *)register_group.get());
+//                 ok &= getItemFromMap(jsonRegisterGroupMap, "type", register_group->register_type_str,
+//                 std::string("type"), true, true, debug);
 //                 // now we get modbus specific
 //                 register_group->register_type = myCfg.typeFromStr(register_group->register_type_str);
-//                 ok &= getItemFromMap(jsonRegisterGroupMap, "starting_offset", register_group->starting_offset, 0, true, true, debug);
-//                 ok &= getItemFromMap(jsonRegisterGroupMap, "number_of_registers", register_group->number_of_registers, 0, true, true, debug);
-//                 ok &= getItemFromMap(jsonRegisterGroupMap, "device_id", register_group->device_id, component->device_id, true, true, debug);
-//                 ok &= getItemFromMap(jsonRegisterGroupMap, "byte_swap", register_group->is_byte_swap, component->is_byte_swap, true, true, debug);
-//                 ok &= getItemFromMap(jsonRegisterGroupMap, "word_swap", register_group->is_byte_swap, component->is_byte_swap, true, true, debug);
-//                 ok &= getItemFromMap(jsonRegisterGroupMap, "word_order", register_group->word_order, component->word_order, true, true, debug);
-//                 ok &= getItemFromMap(jsonRegisterGroupMap, "multi_write_op_code", register_group->multi_write_op_code, false, true, true, debug);
-//                 std::string format_str;
-//                 ok &= getItemFromMap(jsonRegisterGroupMap, "format", format_str, std::string(""), true, true, false);
+//                 ok &= getItemFromMap(jsonRegisterGroupMap, "starting_offset", register_group->starting_offset, 0,
+//                 true, true, debug); ok &= getItemFromMap(jsonRegisterGroupMap, "number_of_registers",
+//                 register_group->number_of_registers, 0, true, true, debug); ok &=
+//                 getItemFromMap(jsonRegisterGroupMap, "device_id", register_group->device_id, component->device_id,
+//                 true, true, debug); ok &= getItemFromMap(jsonRegisterGroupMap, "byte_swap",
+//                 register_group->is_byte_swap, component->is_byte_swap, true, true, debug); ok &=
+//                 getItemFromMap(jsonRegisterGroupMap, "word_swap", register_group->is_byte_swap,
+//                 component->is_byte_swap, true, true, debug); ok &= getItemFromMap(jsonRegisterGroupMap, "word_order",
+//                 register_group->word_order, component->word_order, true, true, debug); ok &=
+//                 getItemFromMap(jsonRegisterGroupMap, "multi_write_op_code", register_group->multi_write_op_code,
+//                 false, true, true, debug); std::string format_str; ok &= getItemFromMap(jsonRegisterGroupMap,
+//                 "format", format_str, std::string(""), true, true, false);
 
 //                 if (format_str.compare("naked") == 0)
 //                 {
@@ -861,7 +892,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //                 // Call extract_io_point_map for each register to extract map details...
 //                 if (ok)
 //                 {
-//                     // register_group.io_point_map = extract_io_point_map(&register_group, jsonRegisterGroupMap["map"], myCfg);
+//                     // register_group.io_point_map = extract_io_point_map(&register_group,
+//                     jsonRegisterGroupMap["map"], myCfg);
 //                     //  Add register details + extracted io_point_map to the register_groups vector...
 //                     register_groups.push_back(register_group);
 //                     // register_groups.emplace_back(register_group);
@@ -869,7 +901,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //                     // register_group->component = component;
 //                     extract_io_point_map(register_group, nullptr, jsonRegisterGroupMap["map"], myCfg, debug);
 //                     if (debug)
-//                         printf(" >>>>>>>>>>>>> <%s> component %p  register_group %p  device_id %d \n", __func__, (void *)component.get(), (void *)&register_group, register_group->device_id);
+//                         printf(" >>>>>>>>>>>>> <%s> component %p  register_group %p  device_id %d \n", __func__,
+//                         (void *)component.get(), (void *)&register_group, register_group->device_id);
 //                 }
 //             }
 //         }
@@ -877,7 +910,9 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     return ok;
 // }
 
-// bool extract_io_point_map(std::shared_ptr<struct cfg::register_group_struct> register_group, std::shared_ptr<cfg::io_point_struct> packed_io_point, std::any &rawIOPointList, struct cfg &myCfg, bool debug = false)
+// bool extract_io_point_map(std::shared_ptr<struct cfg::register_group_struct> register_group,
+// std::shared_ptr<cfg::io_point_struct> packed_io_point, std::any &rawIOPointList, struct cfg &myCfg, bool debug =
+// false)
 // {
 //     // did we get a vector of io_points
 //     if (rawIOPointList.type() == typeid(std::vector<std::any>))
@@ -887,7 +922,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //         {
 //             if (rawIOPoint.type() == typeid(std::map<std::string, std::any>))
 //             {
-//                 std::map<std::string, std::any> json_io_point = std::any_cast<std::map<std::string, std::any>>(rawIOPoint);
+//                 std::map<std::string, std::any> json_io_point = std::any_cast<std::map<std::string,
+//                 std::any>>(rawIOPoint);
 //                 // struct cfg::io_point_struct map;
 //                 std::shared_ptr<cfg::io_point_struct> io_point = std::make_shared<cfg::io_point_struct>();
 //                 io_point->register_type = register_group->register_type;
@@ -910,22 +946,25 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //                     parent_io_point = packed_io_point;
 //                 getItemFromMap(json_io_point, "id", io_point->id, std::string("Some_id"), true, true, debug);
 //                 getItemFromMap(json_io_point, "name", io_point->name, std::string("Some_name"), true, true, debug);
-//                 getItemFromMap(json_io_point, "offset", io_point->offset, parent_io_point->offset, true, true, debug);
-//                 getItemFromMap(json_io_point, "size", io_point->size, parent_io_point->size, true, true, debug);
-//                 getItemFromMap(json_io_point, "multi_write_op_code", io_point->multi_write_op_code, parent_io_point->multi_write_op_code, true, true, debug);
-//                 // getItemFromMap(json_io_point, "off_by_one",          io_point->off_by_one, myCfg.inherited_fields.off_by_one, true, true, debug);
+//                 getItemFromMap(json_io_point, "offset", io_point->offset, parent_io_point->offset, true, true,
+//                 debug); getItemFromMap(json_io_point, "size", io_point->size, parent_io_point->size, true, true,
+//                 debug); getItemFromMap(json_io_point, "multi_write_op_code", io_point->multi_write_op_code,
+//                 parent_io_point->multi_write_op_code, true, true, debug);
+//                 // getItemFromMap(json_io_point, "off_by_one",          io_point->off_by_one,
+//                 myCfg.inherited_fields.off_by_one, true, true, debug);
 
 //                 // set up default
 //                 io_point->number_of_bits = io_point->size * 16;
 //                 getItemFromMap(json_io_point, "shift", io_point->shift, parent_io_point->shift, true, true, debug);
-//                 getItemFromMap(json_io_point, "starting_bit_pos", io_point->starting_bit_pos, parent_io_point->starting_bit_pos, true, true, debug);
-//                 getItemFromMap(json_io_point, "number_of_bits", io_point->number_of_bits, parent_io_point->number_of_bits, true, true, debug);
+//                 getItemFromMap(json_io_point, "starting_bit_pos", io_point->starting_bit_pos,
+//                 parent_io_point->starting_bit_pos, true, true, debug); getItemFromMap(json_io_point,
+//                 "number_of_bits", io_point->number_of_bits, parent_io_point->number_of_bits, true, true, debug);
 //                 io_point->bit_mask = (io_point->number_of_bits * io_point->number_of_bits) - 1;
 //                 getItemFromMap(json_io_point, "scale", io_point->scale, parent_io_point->scale, true, true, debug);
-//                 getItemFromMap(json_io_point, "normal_set", io_point->normal_set, parent_io_point->normal_set, true, true, debug);
-//                 getItemFromMap(json_io_point, "signed", io_point->is_signed, parent_io_point->is_signed, true, true, debug);
-//                 std::string format_str;
-//                 getItemFromMap(json_io_point, "format", format_str, std::string(""), true, true, false);
+//                 getItemFromMap(json_io_point, "normal_set", io_point->normal_set, parent_io_point->normal_set, true,
+//                 true, debug); getItemFromMap(json_io_point, "signed", io_point->is_signed,
+//                 parent_io_point->is_signed, true, true, debug); std::string format_str; getItemFromMap(json_io_point,
+//                 "format", format_str, std::string(""), true, true, false);
 
 //                 if (format_str.compare("naked") == 0)
 //                 {
@@ -956,8 +995,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //                 std::string default_invert_mask_str("0x0");
 //                 io_point->invert_mask = 0;
 //                 io_point->invert_mask = parent_io_point->invert_mask;
-//                 getItemFromMap(json_io_point, "invert_mask", invert_mask_str, default_invert_mask_str, true, true, debug);
-//                 if (invert_mask_str != "0x0")
+//                 getItemFromMap(json_io_point, "invert_mask", invert_mask_str, default_invert_mask_str, true, true,
+//                 debug); if (invert_mask_str != "0x0")
 //                 {
 //                     uint64_t invmask = 0;
 //                     const char *istr = invert_mask_str.c_str();
@@ -978,10 +1017,11 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //                 io_point->is_float = false;
 //                 io_point->is_byte_swap = false;
 //                 io_point->is_byte_swap = false;
-//                 getItemFromMap(json_io_point, "float", io_point->is_float, parent_io_point->is_float, true, true, debug);
-//                 getItemFromMap(json_io_point, "word_swap", io_point->is_byte_swap, parent_io_point->is_byte_swap, true, true, debug);
-//                 getItemFromMap(json_io_point, "word_order", io_point->word_order, parent_io_point->word_order, true, true, debug);
-//                 getItemFromMap(json_io_point, "byte_swap", io_point->is_byte_swap, parent_io_point->is_byte_swap, true, true, debug);
+//                 getItemFromMap(json_io_point, "float", io_point->is_float, parent_io_point->is_float, true, true,
+//                 debug); getItemFromMap(json_io_point, "word_swap", io_point->is_byte_swap,
+//                 parent_io_point->is_byte_swap, true, true, debug); getItemFromMap(json_io_point, "word_order",
+//                 io_point->word_order, parent_io_point->word_order, true, true, debug); getItemFromMap(json_io_point,
+//                 "byte_swap", io_point->is_byte_swap, parent_io_point->is_byte_swap, true, true, debug);
 
 //                 // for the benefit of size 4 regs
 //                 // TODO remove word_swap
@@ -1012,22 +1052,22 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //                 io_point->is_random_enum = false;
 //                 io_point->is_individual_bits = false;
 //                 io_point->is_bit_field = false;
-//                 getItemFromMap(json_io_point, "enum", io_point->is_enum, parent_io_point->is_enum, true, true, debug);
-//                 getItemFromMap(json_io_point, "random_enum", io_point->is_random_enum, parent_io_point->is_random_enum, true, true, debug);
-//                 getItemFromMap(json_io_point, "individual_bits", io_point->is_individual_bits, parent_io_point->is_individual_bits, true, true, debug);
-//                 getItemFromMap(json_io_point, "bit_field", io_point->is_bit_field, io_point->is_bit_field, true, true, debug);
-//                 double dval = 0.0;
-//                 io_point->debounce = dval;
-//                 io_point->deadband = dval;
+//                 getItemFromMap(json_io_point, "enum", io_point->is_enum, parent_io_point->is_enum, true, true,
+//                 debug); getItemFromMap(json_io_point, "random_enum", io_point->is_random_enum,
+//                 parent_io_point->is_random_enum, true, true, debug); getItemFromMap(json_io_point, "individual_bits",
+//                 io_point->is_individual_bits, parent_io_point->is_individual_bits, true, true, debug);
+//                 getItemFromMap(json_io_point, "bit_field", io_point->is_bit_field, io_point->is_bit_field, true,
+//                 true, debug); double dval = 0.0; io_point->debounce = dval; io_point->deadband = dval;
 //                 io_point->use_bool = false;
-//                 getItemFromMap(json_io_point, "debounce", io_point->debounce, parent_io_point->debounce, true, true, debug);
-//                 getItemFromMap(json_io_point, "deadband", io_point->deadband, parent_io_point->deadband, true, true, debug);
-//                 if (io_point->debounce > 0.0)
+//                 getItemFromMap(json_io_point, "debounce", io_point->debounce, parent_io_point->debounce, true, true,
+//                 debug); getItemFromMap(json_io_point, "deadband", io_point->deadband, parent_io_point->deadband,
+//                 true, true, debug); if (io_point->debounce > 0.0)
 //                     io_point->use_debounce = true;
 //                 if (io_point->deadband > 0.0)
 //                     io_point->use_deadband = true;
-//                 getItemFromMap(json_io_point, "use_bool", io_point->use_bool, parent_io_point->use_bool, true, true, debug);
-//                 if ((io_point->is_enum) || (io_point->is_random_enum) || (io_point->is_individual_bits) || (io_point->is_bit_field)
+//                 getItemFromMap(json_io_point, "use_bool", io_point->use_bool, parent_io_point->use_bool, true, true,
+//                 debug); if ((io_point->is_enum) || (io_point->is_random_enum) || (io_point->is_individual_bits) ||
+//                 (io_point->is_bit_field)
 //                     /* maybe add more here */)
 //                 {
 //                     extract_bitstrings(io_point, json_io_point["bit_strings"]);
@@ -1053,17 +1093,20 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //                 }
 //                 // we only want the root registers in the main dict
 //                 // if(!packed_io_point)
-//                 // this will also add the packed_io_point items to the io_point so that they can be found with sets or gets
-//                 addIOPointToComponentIOPointMap(myCfg.component_io_point_map, register_group->component_id.c_str(), register_group->id.c_str(), io_point);
+//                 // this will also add the packed_io_point items to the io_point so that they can be found with sets
+//                 or gets addIOPointToComponentIOPointMap(myCfg.component_io_point_map,
+//                 register_group->component_id.c_str(), register_group->id.c_str(), io_point);
 //                 // addMapId(myCfg.idMap, device_id, io_point.register_type, mymap);
-//                 getItemFromMap(json_io_point, "packed_register", io_point->packed_register, false, true, true, debug);
-//                 if (io_point->packed_register && !packed_io_point)
+//                 getItemFromMap(json_io_point, "packed_register", io_point->packed_register, false, true, true,
+//                 debug); if (io_point->packed_register && !packed_io_point)
 //                 {
 //                     extract_io_point_map(register_group, io_point, json_io_point["bit_ranges"], myCfg, debug);
 //                 }
 //                 if (debug)
-//                     printf(" >>>>>>>>>>>>> <%s> component [%s] register_group [%s] id [%s] packed_io_point [%d] struct size %d \n", __func__,
-//                            register_group->component_id.c_str(), register_group->id.c_str(), io_point->id.c_str(), (int)io_point->packed_register, (int)sizeof(cfg::io_point_struct));
+//                     printf(" >>>>>>>>>>>>> <%s> component [%s] register_group [%s] id [%s] packed_io_point [%d]
+//                     struct size %d \n", __func__,
+//                            register_group->component_id.c_str(), register_group->id.c_str(), io_point->id.c_str(),
+//                            (int)io_point->packed_register, (int)sizeof(cfg::io_point_struct));
 //                 // pull out
 //             }
 //         }
@@ -1131,14 +1174,16 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     return;
 // }
 
-// void checkNonZeroIOPointSize(std::shared_ptr<cfg::register_group_struct> register_group, std::vector<std::shared_ptr<cfg::io_point_struct>> io_point_map, bool debug = false)
+// void checkNonZeroIOPointSize(std::shared_ptr<cfg::register_group_struct> register_group,
+// std::vector<std::shared_ptr<cfg::io_point_struct>> io_point_map, bool debug = false)
 // {
 //     for (size_t i = 0; i < io_point_map.size(); ++i)
 //     {
 //         if (!io_point_map[i]->packed_register)
 //         {
 //             if (debug)
-//                 printf(">>>> %s setting [%d] io_point_map_lookup %d to map %p id %s\n", __func__, (int)i, io_point_map[i]->offset, (void *)io_point_map[i].get(), io_point_map[i]->id.c_str());
+//                 printf(">>>> %s setting [%d] io_point_map_lookup %d to map %p id %s\n", __func__, (int)i,
+//                 io_point_map[i]->offset, (void *)io_point_map[i].get(), io_point_map[i]->id.c_str());
 
 //             if (io_point_map[i]->size == 0)
 //                 io_point_map[i]->size = 1;
@@ -1154,7 +1199,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //         //std::sort(elements.begin(), elements.end(), compareIOPointOffsets);
 
 //         std::sort(elements.begin(), elements.end(),
-//               [](const std::shared_ptr<cfg::io_point_struct> a, const std::shared_ptr<cfg::io_point_struct> b) -> bool
+//               [](const std::shared_ptr<cfg::io_point_struct> a, const std::shared_ptr<cfg::io_point_struct> b) ->
+//               bool
 //               {
 //                   return cfg::io_point_struct::compare(*a, *b); // Dereference the shared_ptr here
 //               });
@@ -1181,14 +1227,14 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     for (size_t i = 1; i < io_point_map.size(); ++i)
 //     {
 //         auto unpacked = io_point_map[i];
-//         //FPS_INFO_LOG("Checking Register [%s]: offset [%d] size [%d]", unpacked->id.c_str(), unpacked->offset,unpacked->size);
-//         unpacked->next.reset();
-//         if (!unpacked->packed_register)
+//         //FPS_INFO_LOG("Checking Register [%s]: offset [%d] size [%d]", unpacked->id.c_str(),
+//         unpacked->offset,unpacked->size); unpacked->next.reset(); if (!unpacked->packed_register)
 //         {
 //             total_size += unpacked->size;
 //             if (unpacked->offset > io_point_map[i - 1]->offset + io_point_map[i - 1]->size)
 //             {
-//                 FPS_INFO_LOG("Register size gap at Offset [%d]: [%s]", io_point_map[i - 1]->offset, io_point_map[i - 1]->id.c_str());
+//                 FPS_INFO_LOG("Register size gap at Offset [%d]: [%s]", io_point_map[i - 1]->offset, io_point_map[i -
+//                 1]->id.c_str());
 //             }
 //             else if (unpacked->offset < io_point_map[i - 1]->offset + io_point_map[i - 1]->size)
 //             {
@@ -1213,13 +1259,15 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     cfgInstance = newCfg;
 // }
 
-// void addIOPointToComponentIOPointMap(Component_IO_point_map &imap, const char *component_uri_prefix, const char *component_id, std::shared_ptr<cfg::io_point_struct> io_point)
+// void addIOPointToComponentIOPointMap(Component_IO_point_map &imap, const char *component_uri_prefix, const char
+// *component_id, std::shared_ptr<cfg::io_point_struct> io_point)
 // {
 //     if (io_point)
 //     {
 //         if (imap.find(component_uri_prefix) == imap.end())
 //         {
-//             imap[component_uri_prefix] = std::map<std::string, std::map<std::string, std::shared_ptr<cfg::io_point_struct>>>();
+//             imap[component_uri_prefix] = std::map<std::string, std::map<std::string,
+//             std::shared_ptr<cfg::io_point_struct>>>();
 //         }
 //         auto &component_map = imap[component_uri_prefix];
 //         if (component_map.find(component_id) == component_map.end())
@@ -1313,7 +1361,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 // }
 
 // // put the correct sized u64 val into the regs return the size
-// int set_reg16_from_uint64(struct cfg &myCfg, std::shared_ptr<cfg::io_point_struct> io_point, uint64_t &uval, uint16_t *regs16)
+// int set_reg16_from_uint64(struct cfg &myCfg, std::shared_ptr<cfg::io_point_struct> io_point, uint64_t &uval, uint16_t
+// *regs16)
 // {
 //     if (io_point->size == 1)
 //     {
@@ -1421,7 +1470,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //             }
 // #ifdef FPS_DEBUG_MODE
 //             if (debug)
-//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " found int >>" << i64val << std::endl;
+//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " found int >>" << i64val <<
+//                 std::endl;
 // #endif
 //             i64val <<= io_point->starting_bit_pos;
 //             i64val -= io_point->shift;
@@ -1444,7 +1494,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //             }
 // #ifdef FPS_DEBUG_MODE
 //             if (debug)
-//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " found uint >>" << u64val << std::endl;
+//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " found uint >>" << u64val <<
+//                 std::endl;
 // #endif
 //             u64val <<= io_point->starting_bit_pos;
 //             u64val -= io_point->shift;
@@ -1459,7 +1510,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //             f64val = std::any_cast<double>(val);
 // #ifdef FPS_DEBUG_MODE
 //             if (debug)
-//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " found double >>" << f64val << std::endl;
+//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " found double >>" << f64val <<
+//                 std::endl;
 // #endif
 //             f64val -= io_point->shift;
 //             if (io_point->scale)
@@ -1635,7 +1687,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 // }
 
 // /// populate regs16 with the correct value of the correct size.
-// uint64_t get_any_to_uint64(std::shared_ptr<cfg::io_point_struct> io_point, std::any val, Uri_req &uri, uint16_t *regs16)
+// uint64_t get_any_to_uint64(std::shared_ptr<cfg::io_point_struct> io_point, std::any val, Uri_req &uri, uint16_t
+// *regs16)
 // {
 // #ifdef FPS_DEBUG_MODE
 //     bool debug = false;
@@ -1710,7 +1763,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //             }
 // #ifdef FPS_DEBUG_MODE
 //             if (debug)
-//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " found int >>" << i64val << std::endl;
+//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " found int >>" << i64val <<
+//                 std::endl;
 // #endif
 //             i64val <<= io_point->starting_bit_pos;
 //             i64val -= io_point->shift;
@@ -1733,7 +1787,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //             }
 // #ifdef FPS_DEBUG_MODE
 //             if (debug)
-//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " found uint >>" << u64val << std::endl;
+//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " found uint >>" << u64val <<
+//                 std::endl;
 // #endif
 //             u64val <<= io_point->starting_bit_pos;
 //             u64val -= io_point->shift;
@@ -1748,7 +1803,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //             f64val = std::any_cast<double>(val);
 // #ifdef FPS_DEBUG_MODE
 //             if (debug)
-//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " found double >>" << f64val << std::endl;
+//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " found double >>" << f64val <<
+//                 std::endl;
 // #endif
 //             f64val -= io_point->shift;
 //             if (io_point->scale)
@@ -1784,7 +1840,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //             u16val ^= static_cast<uint16_t>(io_point->invert_mask);
 // #ifdef FPS_DEBUG_MODE
 //             if (debug)
-//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " final u64val >>" << u16val << " i64val >> " << i64val << std::endl;
+//                 std::cout << ">>>>" << __func__ << " offset  " << io_point->offset << " final u64val >>" << u16val <<
+//                 " i64val >> " << i64val << std::endl;
 // #endif
 //             if (uri.is_force_request)
 //             {
@@ -1949,7 +2006,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     return tokens;
 // }
 
-// std::map<std::string, std::shared_ptr<cfg::io_point_struct>> *cfg::findIOPointMapFromUriFragments(std::vector<std::string> keys)
+// std::map<std::string, std::shared_ptr<cfg::io_point_struct>>
+// *cfg::findIOPointMapFromUriFragments(std::vector<std::string> keys)
 // {
 //     // Look up outerKey in the outer map
 //     if (keys.size() < 3)
@@ -2026,7 +2084,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 // }
 
 // // used by check_work_items
-// bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const std::shared_ptr<cfg::io_point_struct> &b)
+// bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
+// std::shared_ptr<cfg::io_point_struct> &b)
 // {
 //     // First, compare by register_type
 //     if (a->register_type < b->register_type)
@@ -2049,7 +2108,9 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 
 // // TODO start with a blank result vector
 // /// create io_work structures from vectors of io_map points
-// void check_work_items(std::vector<std::shared_ptr<IO_Work>> &io_work_vec, std::vector<std::shared_ptr<cfg::io_point_struct>> &io_map_vec, struct cfg &myCfg, const char *oper, bool include_all_points, bool debug)
+// void check_work_items(std::vector<std::shared_ptr<IO_Work>> &io_work_vec,
+// std::vector<std::shared_ptr<cfg::io_point_struct>> &io_map_vec, struct cfg &myCfg, const char *oper, bool
+// include_all_points, bool debug)
 // {
 //     // Sort the vector using the custom comparison function
 //     if (io_map_vec.size() == 0)
@@ -2078,8 +2139,9 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     cfg::Register_Types register_type;
 //     // io_work->io_points.clear();
 //     auto io_point = io_map_vec.at(0);
-//     auto io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, 1, nullptr, nullptr, strToWorkType(oper, false));
-//     if ((io_point->register_type == cfg::Register_Types::Coil) || (io_point->register_type == cfg::Register_Types::Discrete_Input))
+//     auto io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, 1, nullptr, nullptr,
+//     strToWorkType(oper, false)); if ((io_point->register_type == cfg::Register_Types::Coil) ||
+//     (io_point->register_type == cfg::Register_Types::Discrete_Input))
 //         max_item_size = max_bit_size;
 //     if (debug)
 //     {
@@ -2098,8 +2160,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     }
 //     for (auto io_point : io_points)
 //     {
-//         // std::cout << " >>>>>>>>>>>> state  #1 offset " << offset << " isize " << isize <<" io_point->offset " << io_point->offset << std::endl;
-//         if (!io_point->is_enabled && !io_point->is_forced && !include_all_points)
+//         // std::cout << " >>>>>>>>>>>> state  #1 offset " << offset << " isize " << isize <<" io_point->offset " <<
+//         io_point->offset << std::endl; if (!io_point->is_enabled && !io_point->is_forced && !include_all_points)
 //             continue;
 //         if (first)
 //         {
@@ -2123,17 +2185,19 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //         }
 //         else
 //         {
-//             // std::cout << " >>>>>>>>>>>> state  #2 offset " << offset << " isize " << isize << " io_point->offset " << io_point->offset << " io_point size " << io_point->size << std::endl;
-//             if (debug)
+//             // std::cout << " >>>>>>>>>>>> state  #2 offset " << offset << " isize " << isize << " io_point->offset "
+//             << io_point->offset << " io_point size " << io_point->size << std::endl; if (debug)
 //             {
-//                 if (((offset + isize) != io_point->offset)) // || ((offset+io_point->size > max_item_size)) || (io_point->device_id != device_id) || (io_point->register_type != register_type))
+//                 if (((offset + isize) != io_point->offset)) // || ((offset+io_point->size > max_item_size)) ||
+//                 (io_point->device_id != device_id) || (io_point->register_type != register_type))
 //                 {
 //                     std::cout << " >>>>>>>>>>>> Break detected  #1 offset " << offset
 //                               << " isize " << isize
 //                               << " io_point->offset " << io_point->offset
 //                               << std::endl;
 //                 }
-//                 if (((offset + io_point->size - first_offset > max_item_size))) // || (io_point->device_id != device_id) || (io_point->register_type != register_type))
+//                 if (((offset + io_point->size - first_offset > max_item_size))) // || (io_point->device_id !=
+//                 device_id) || (io_point->register_type != register_type))
 //                 {
 //                     std::cout << " >>>>>>>>>>>> Break detected  #2 offset " << offset
 //                               << " io_point->size " << io_point->size
@@ -2158,7 +2222,9 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //                           << std::endl;
 //             }
 
-//             if (((offset + isize) != io_point->offset) || ((offset + io_point->size - first_offset > max_item_size)) || (io_point->device_id != device_id) || (io_point->register_type != register_type) || (!io_point->is_enabled && io_point->is_forced))
+//             if (((offset + isize) != io_point->offset) || ((offset + io_point->size - first_offset > max_item_size))
+//             || (io_point->device_id != device_id) || (io_point->register_type != register_type) ||
+//             (!io_point->is_enabled && io_point->is_forced))
 //             {
 //                 if ((!io_point->is_enabled && io_point->is_forced && !include_all_points))
 //                 {
@@ -2169,10 +2235,10 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //                 io_work->num_registers = num;
 //                 io_work_vec.emplace_back(io_work);
 //                 if (debug)
-//                     std::cout << " >>>>>>>>>>>> At break; offset : " << first_offset << " num : " << num << std::endl;
-//                 io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, 1, nullptr, nullptr, strToWorkType(oper, false));
-//                 offset = io_point->offset;
-//                 first_offset = io_point->offset;
+//                     std::cout << " >>>>>>>>>>>> At break; offset : " << first_offset << " num : " << num <<
+//                     std::endl;
+//                 io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, 1, nullptr,
+//                 nullptr, strToWorkType(oper, false)); offset = io_point->offset; first_offset = io_point->offset;
 //                 device_id = io_point->device_id;
 //                 num = io_point->size;
 //                 isize = io_point->size;
@@ -2188,7 +2254,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //                 isize = io_point->size;
 //                 num += io_point->size;
 //                 io_work->io_points.emplace_back(io_point);
-//                 // std::cout << " >>>>>>>>>>>> state  #3 offset " << offset << " isize " << isize << " io_point->offset " << io_point->offset << " io_point size " << io_point->size << std::endl;
+//                 // std::cout << " >>>>>>>>>>>> state  #3 offset " << offset << " isize " << isize << "
+//                 io_point->offset " << io_point->offset << " io_point size " << io_point->size << std::endl;
 //             }
 //         }
 //     }
@@ -2231,13 +2298,15 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //             if (tNow > io_point->debounce_time)
 //             {
 //                 if (debug)
-//                     std::cout << " debounce time   :" << io_point->debounce_time << " passed: tNow: " << tNow << std::endl;
+//                     std::cout << " debounce time   :" << io_point->debounce_time << " passed: tNow: " << tNow <<
+//                     std::endl;
 //                 io_point->debounce_time += io_point->debounce;
 //             }
 //             else
 //             {
 //                 if (debug)
-//                     std::cout << " still in debounce time :" << io_point->debounce_time << " tNow: " << tNow << std::endl;
+//                     std::cout << " still in debounce time :" << io_point->debounce_time << " tNow: " << tNow <<
+//                     std::endl;
 //                 enabled = false;
 //             }
 //         }
@@ -2261,7 +2330,7 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     auto result = parser.parse(padded_content);
 //     if (result.error())
 //     {
-//         //std::string cjerr = 
+//         //std::string cjerr =
 //         FPS_ERROR_LOG("input body [%s] ", data);
 //         FPS_ERROR_LOG("parser error [%s] ", simdjson::error_message(result.error()));
 
@@ -2294,7 +2363,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 // }
 
 // bool gcom_findCompVar(
-//     std::shared_ptr<cfg::io_point_struct> &io_point, const struct cfg &myCfg, const cfg::component_struct *comp, std::string kvar)
+//     std::shared_ptr<cfg::io_point_struct> &io_point, const struct cfg &myCfg, const cfg::component_struct *comp,
+//     std::string kvar)
 
 // {
 //     // std::string myvar = kvar;
@@ -2316,8 +2386,10 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     return false;
 // }
 
-// bool add_all_component_points_to_io_vec(std::vector<std::shared_ptr<cfg::io_point_struct>> &io_point_vec, const struct cfg &myCfg,
-//                                                                          const std::vector<std::string> &uri_keys, bool skip_disabled)
+// bool add_all_component_points_to_io_vec(std::vector<std::shared_ptr<cfg::io_point_struct>> &io_point_vec, const
+// struct cfg &myCfg,
+//                                                                          const std::vector<std::string> &uri_keys,
+//                                                                          bool skip_disabled)
 // {
 //     bool debug = false;
 //     int key_idx = 0;
@@ -2345,7 +2417,8 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //         for (std::pair<std::string, std::shared_ptr<cfg::io_point_struct>> io_point : component_points)
 //         {
 //             if (debug)
-//                 std::cout << __func__ << " Item : " << io_point.first << " offset : " << io_point.second->offset << "\n";
+//                 std::cout << __func__ << " Item : " << io_point.first << " offset : " << io_point.second->offset <<
+//                 "\n";
 //             if (skip_disabled)
 //                 if (!io_point.second->is_enabled)
 //                     continue;
@@ -2449,15 +2522,11 @@ bool compareIOPointOffsets(const std::shared_ptr<cfg::io_point_struct> &a, const
 //     }
 // }
 
+ioChannel<std::shared_ptr<IO_Work>> io_respChan;  // Use Channel to send IO-Work to thread
 
+u64 decode_raw(const u16* raw_registers, cfg::io_point_struct& io_point, std::any& decode_output);
 
-
-ioChannel<std::shared_ptr<IO_Work>> io_respChan; // Use Channel to send IO-Work to thread
-
-
-u64 decode_raw(const u16 *raw_registers, cfg::io_point_struct &io_point, std::any &decode_output);
-
-bool extractJsonValue(const simdjson::dom::element &el, std::any &value)
+bool extractJsonValue(const simdjson::dom::element& el, std::any& value)
 {
     bool ret = true;
     if (el.is_bool())
@@ -2484,22 +2553,22 @@ bool extractJsonValue(const simdjson::dom::element &el, std::any &value)
     return ret;
 }
 
-std::string mapToString(const std::map<std::string, std::any> &m)
+std::string mapToString(const std::map<std::string, std::any>& m)
 {
     std::string result = "{";
-    for (const auto &[key, value] : m)
+    for (const auto& [key, value] : m)
     {
         result += "\"" + key + "\": " + anyToString(value) + ", ";
     }
     if (result.length() > 1)
     {
-        result = result.substr(0, result.length() - 2); // remove the last ", "
+        result = result.substr(0, result.length() - 2);  // remove the last ", "
     }
     result += "}";
     return result;
 }
 
-int some_test(std::map<std::string, std::any> &m)
+int some_test(std::map<std::string, std::any>& m)
 {
     // Now m contains the JSON data
     for (auto mx : m)
@@ -2513,7 +2582,7 @@ int some_test(std::map<std::string, std::any> &m)
                 std::cout << "     Item " << my.first << std::endl;
             }
         }
-        catch (const std::bad_any_cast &)
+        catch (const std::bad_any_cast&)
         {
             std::cout << "     Value cannot be cast to map<string, any>" << std::endl;
         }
@@ -2531,20 +2600,20 @@ int some_test(std::map<std::string, std::any> &m)
 // we have not dome the output fims message handling yet but this is all
 // stuff we may hvae to use.
 // Your utility function to print nested maps
-size_t computeSize(const std::map<std::string, std::any> &baseMap, int indent = 0)
+size_t computeSize(const std::map<std::string, std::any>& baseMap, int indent = 0)
 {
     size_t totalSize = 0;
-    for (const auto &[key, value] : baseMap)
+    for (const auto& [key, value] : baseMap)
     {
-        totalSize += key.size() + 2 * indent + 2; // Key size + indentation + ": "
+        totalSize += key.size() + 2 * indent + 2;  // Key size + indentation + ": "
         if (value.type() == typeid(std::map<std::string, std::any>))
         {
-            totalSize += 1; // Newline
+            totalSize += 1;  // Newline
             totalSize += computeSize(std::any_cast<std::map<std::string, std::any>>(value), indent + 1);
         }
         else if (value.type() == typeid(int))
         {
-            totalSize += std::to_string(std::any_cast<int>(value)).size() + 1; // Value + newline
+            totalSize += std::to_string(std::any_cast<int>(value)).size() + 1;  // Value + newline
         }
         else if (value.type() == typeid(int64_t))
         {
@@ -2561,7 +2630,7 @@ size_t computeSize(const std::map<std::string, std::any> &baseMap, int indent = 
         }
         else if (value.type() == typeid(bool))
         {
-            totalSize += std::any_cast<bool>(value) ? 5 : 6; // Either "true\n" or "false\n"
+            totalSize += std::any_cast<bool>(value) ? 5 : 6;  // Either "true\n" or "false\n"
         }
     }
     return totalSize;
@@ -2570,13 +2639,13 @@ size_t computeSize(const std::map<std::string, std::any> &baseMap, int indent = 
 int test_buffer_size()
 {
     std::map<std::string, std::any> testMap = {
-        {"key1", std::map<std::string, std::any>{
-                     {"subkey1", 123},
-                     {"subkey2", "value2"},
-                     {"subkey3", std::map<std::string, std::any>{
-                                     {"subsubkey1", 45.6}}}}},
-        {"key2", "value2"},
-        {"key3", 789}};
+        { "key1",
+          std::map<std::string, std::any>{ { "subkey1", 123 },
+                                           { "subkey2", "value2" },
+                                           { "subkey3", std::map<std::string, std::any>{ { "subsubkey1", 45.6 } } } } },
+        { "key2", "value2" },
+        { "key3", 789 }
+    };
     size_t requiredBufferSize = computeSize(testMap);
     std::cout << "Required buffer size: " << requiredBufferSize << std::endl;
     return 0;
@@ -2607,7 +2676,8 @@ bool test_decode_raw()
 
     auto res = decode_raw(raw_registers, io_point, decode_output);
     anyTypeString(decode_output);
-    std::cout << "test decode " << std::hex << res << std::dec << " decode_output " << anyToString(decode_output) << std::endl;
+    std::cout << "test decode " << std::hex << res << std::dec << " decode_output " << anyToString(decode_output)
+              << std::endl;
 
     raw_registers[0] = (u16)0x4499;
     raw_registers[1] = (u16)0xc000;
@@ -2618,86 +2688,88 @@ bool test_decode_raw()
 
     res = decode_raw(raw_registers, io_point, decode_output);
     anyTypeString(decode_output);
-    std::cout << "test decode " << std::hex << res << std::dec << " decode_output " << anyToString(decode_output) << std::endl;
+    std::cout << "test decode " << std::hex << res << std::dec << " decode_output " << anyToString(decode_output)
+              << std::endl;
 
     return true;
 }
 
-std::string anyToString(const std::any &value)
+std::string anyToString(const std::any& value)
 {
     // std::cout << "Type of value: " << value.type().name() << std::endl;
     try
     {
         return std::to_string(std::any_cast<int>(value));
     }
-    catch (const std::bad_any_cast &)
+    catch (const std::bad_any_cast&)
     {
     }
     try
     {
         return std::to_string(std::any_cast<double>(value));
     }
-    catch (const std::bad_any_cast &)
+    catch (const std::bad_any_cast&)
     {
     }
     try
     {
         return std::to_string(std::any_cast<long>(value));
     }
-    catch (const std::bad_any_cast &)
+    catch (const std::bad_any_cast&)
     {
     }
     try
     {
         return std::to_string(std::any_cast<unsigned long>(value));
     }
-    catch (const std::bad_any_cast &)
+    catch (const std::bad_any_cast&)
     {
     }
     try
     {
         return std::any_cast<bool>(value) ? "true" : "false";
     }
-    catch (const std::bad_any_cast &)
+    catch (const std::bad_any_cast&)
     {
     }
     try
     {
         return std::any_cast<std::string>(value);
     }
-    catch (const std::bad_any_cast &)
+    catch (const std::bad_any_cast&)
     {
     }
     try
     {
         return mapToString(std::any_cast<std::map<std::string, std::any>>(value));
     }
-    catch (const std::bad_any_cast &)
+    catch (const std::bad_any_cast&)
     {
     }
     try
     {
         std::vector<std::any> vec = std::any_cast<std::vector<std::any>>(value);
         std::string result = "[";
-        for (const auto &v : vec)
+        for (const auto& v : vec)
         {
             result += anyToString(v) + ", ";
         }
         if (result.length() > 1)
         {
-            result = result.substr(0, result.length() - 2); // remove the last ", "
+            result = result.substr(0, result.length() - 2);  // remove the last ", "
         }
         result += "]";
         return result;
     }
-    catch (const std::bad_any_cast &e)
+    catch (const std::bad_any_cast& e)
     {
         std::cout << "Bad type " << e.what() << std::endl;
     }
     return "unknown";
 }
 
-bool test_uri_body(struct cfg &myCfg, const char *uri, const char *method, const char *pname, const char *uname, const char *repto, const char *body)
+bool test_uri_body(struct cfg& myCfg, const char* uri, const char* method, const char* pname, const char* uname,
+                   const char* repto, const char* body)
 {
     std::string_view uri_view;
     Uri_req uri_req(uri_view, uri);
@@ -2766,7 +2838,7 @@ bool test_uri_body(struct cfg &myCfg, const char *uri, const char *method, const
             {
                 std::cout << " found map\n";
                 auto baseMap = std::any_cast<std::map<std::string, std::any>>(gcom_data);
-                for (const auto &[key, value] : baseMap)
+                for (const auto& [key, value] : baseMap)
                 {
                     auto vok = ioPointExists(var, myCfg, uri_req.uri_vec, uri_req.num_uris, key);
                     if (vok)
@@ -2801,7 +2873,7 @@ bool test_uri_body(struct cfg &myCfg, const char *uri, const char *method, const
             std::cout << __func__ << "  Not yet processing get multi [" << uri << "]" << std::endl;
         }
     }
-    return true; // You might want to return a status indicating success or failure.
+    return true;  // You might want to return a status indicating success or failure.
 }
 
 /*
@@ -2816,22 +2888,22 @@ std::vector<std::string> any_split(std::string_view str, char delimiter)
     while ((next_pos = str.find(delimiter, pos)) != std::string_view::npos)
     {
         result.emplace_back(str.substr(pos, next_pos - pos));
-        pos = next_pos + 1; // Move past the delimiter
+        pos = next_pos + 1;  // Move past the delimiter
     }
-    result.emplace_back(str.substr(pos)); // Add the last token
+    result.emplace_back(str.substr(pos));  // Add the last token
     return result;
 }
 
 // map of typenames / offsets to actual map component
 // std::map<std::string,std::map<int,struct type_map>>types;
 /// @brief extract the different types in a config
-void gcom_extract_types(struct cfg &myCfg)
+void gcom_extract_types(struct cfg& myCfg)
 {
-    for (auto &rawComp : myCfg.components)
+    for (auto& rawComp : myCfg.components)
     {
-        for (auto &rawReg : rawComp->register_groups)
+        for (auto& rawReg : rawComp->register_groups)
         {
-            for (auto &rawMap : rawReg->io_point_map)
+            for (auto& rawMap : rawReg->io_point_map)
             {
                 struct type_map tmap;
                 tmap.map = rawMap;
@@ -2846,7 +2918,7 @@ void gcom_extract_types(struct cfg &myCfg)
 // Given a device_id (TODO) a type and an offset find the type_map
 // we may not need this now
 /// @brief Given a device_id (TODO) a type and an offset find the type_map
-struct type_map *gcom_get_type(std::string type, int offset, bool debug = false)
+struct type_map* gcom_get_type(std::string type, int offset, bool debug = false)
 {
     if (types.find(type) != types.end())
     {
@@ -2860,7 +2932,8 @@ struct type_map *gcom_get_type(std::string type, int offset, bool debug = false)
                           << "                   \"type\": \"" << type << "\",\n"
                           << "                   \"offset\": " << offset << ",\n "
                           << "                   \"component_id\": \"" << register_type->component->id << "\",\n "
-                          << "                   \"register_type\": \"" << register_type->register_group->register_type_str << "\",\n"
+                          << "                   \"register_type\": \""
+                          << register_type->register_group->register_type_str << "\",\n"
                           << "                   \"map_id\": \"" << register_type->map->id << "\",\n"
                           << "                   \"map_offset\": " << register_type->map->offset << "\n"
                           << "                   }" << std::endl;
@@ -2882,9 +2955,9 @@ struct type_map *gcom_get_type(std::string type, int offset, bool debug = false)
 
 // std::map<std::string,std::map<std::string,struct type_map>>comps;
 //  no longer used
-void gcom_extract_comps(struct cfg &myCfg)
+void gcom_extract_comps(struct cfg& myCfg)
 {
-    for (auto &rawComp : myCfg.components)
+    for (auto& rawComp : myCfg.components)
     {
         for (auto rawReg : rawComp->register_groups)
         {
@@ -2900,15 +2973,16 @@ void gcom_extract_comps(struct cfg &myCfg)
     }
 }
 
-void gcom_extract_subs(struct cfg &myCfg)
+void gcom_extract_subs(struct cfg& myCfg)
 {
-    for (auto &rawComp : myCfg.components)
+    for (auto& rawComp : myCfg.components)
     {
         subs.push_back(rawComp->id);
     }
 }
 
-bool gcom_config_test_uri(std::map<std::string, std::any> jsonMapOfConfig, struct cfg &myCfg, const char *uri, const char *id)
+bool gcom_config_test_uri(std::map<std::string, std::any> jsonMapOfConfig, struct cfg& myCfg, const char* uri,
+                          const char* id)
 {
     bool debug = false;
     extract_components(jsonMapOfConfig, "components", myCfg, false);
@@ -2921,11 +2995,11 @@ bool gcom_config_test_uri(std::map<std::string, std::any> jsonMapOfConfig, struc
 }
 
 // may well be deprecated
-void gcom_extract_pubs(struct cfg &myCfg)
+void gcom_extract_pubs(struct cfg& myCfg)
 {
-    for (auto &rawComp : myCfg.components)
+    for (auto& rawComp : myCfg.components)
     {
-        for (auto &rawReg : rawComp->register_groups)
+        for (auto& rawReg : rawComp->register_groups)
         {
             if (pubs.find(rawComp->frequency) == pubs.end() ||
                 pubs[rawComp->frequency].find(rawComp->offset_time) == pubs[rawComp->frequency].end())
@@ -2940,8 +3014,8 @@ void gcom_extract_pubs(struct cfg &myCfg)
 }
 
 // TODO test for max register_group size
-int merge_IO_Work_Reg(std::vector<std::shared_ptr<IO_Work>> &work_vector,
-                      std::vector<std::shared_ptr<IO_Work>> &discard_vector)
+int merge_IO_Work_Reg(std::vector<std::shared_ptr<IO_Work>>& work_vector,
+                      std::vector<std::shared_ptr<IO_Work>>& discard_vector)
 {
     auto it = work_vector.begin();
     while (it != work_vector.end())
@@ -2956,7 +3030,7 @@ int merge_IO_Work_Reg(std::vector<std::shared_ptr<IO_Work>> &work_vector,
             (*it)->size += (*(it + 1))->size;
             (*it)->num_registers += (*(it + 1))->size;
             discard_vector.emplace_back(*(it + 1));
-            it = work_vector.erase(it + 1); // it now points to the element after the erased one
+            it = work_vector.erase(it + 1);  // it now points to the element after the erased one
         }
         else
         {
@@ -2966,21 +3040,21 @@ int merge_IO_Work_Reg(std::vector<std::shared_ptr<IO_Work>> &work_vector,
     return 0;
 }
 
-int sort_IO_Work(std::vector<std::shared_ptr<IO_Work>> &work_vector)
+int sort_IO_Work(std::vector<std::shared_ptr<IO_Work>>& work_vector)
 {
     // Sorting the vector based on IO_Work->offset
     std::sort(work_vector.begin(), work_vector.end(),
-              [](const std::shared_ptr<IO_Work> &a, const std::shared_ptr<IO_Work> &b) -> bool
-              {
+              [](const std::shared_ptr<IO_Work>& a, const std::shared_ptr<IO_Work>& b) -> bool {
                   return a->offset < b->offset;
               });
     return 0;
 }
 
 using IO_point_ptr = std::shared_ptr<cfg::io_point_struct>;
-using RetVar = std::variant<std::monostate, std::map<std::string, std::shared_ptr<cfg::io_point_struct>> *, IO_point_ptr>;
+using RetVar =
+    std::variant<std::monostate, std::map<std::string, std::shared_ptr<cfg::io_point_struct>>*, IO_point_ptr>;
 
-RetVar findMapVar(struct cfg &myCfg, std::vector<std::string> keys)
+RetVar findMapVar(struct cfg& myCfg, std::vector<std::string> keys)
 {
     // Look up outerKey in the outer map
     std::cout << "skipping key 0" << std::endl;
@@ -3001,7 +3075,7 @@ RetVar findMapVar(struct cfg &myCfg, std::vector<std::string> keys)
     {
         std::cout << "found key 0" << std::endl;
         // If outerKey is found, look up innerKey in the inner map
-        auto &innerMap = outerIt->second;
+        auto& innerMap = outerIt->second;
         auto innerIt = innerMap.find(keys[key_idx + 1]);
         if (innerIt != innerMap.end())
         {
@@ -3032,29 +3106,29 @@ std::string getElementTypeString(simdjson::dom::element_type etype)
 {
     switch (etype)
     {
-    case simdjson::dom::element_type::ARRAY:
-        return "ARRAY";
-    case simdjson::dom::element_type::OBJECT:
-        return "OBJECT";
-    case simdjson::dom::element_type::INT64:
-        return "INT64";
-    case simdjson::dom::element_type::UINT64:
-        return "UINT64";
-    case simdjson::dom::element_type::DOUBLE:
-        return "DOUBLE";
-    case simdjson::dom::element_type::STRING:
-        return "STRING";
-    case simdjson::dom::element_type::BOOL:
-        return "BOOL";
-    case simdjson::dom::element_type::NULL_VALUE:
-        return "NULL_VALUE";
-    default:
-        return "UNKNOWN";
+        case simdjson::dom::element_type::ARRAY:
+            return "ARRAY";
+        case simdjson::dom::element_type::OBJECT:
+            return "OBJECT";
+        case simdjson::dom::element_type::INT64:
+            return "INT64";
+        case simdjson::dom::element_type::UINT64:
+            return "UINT64";
+        case simdjson::dom::element_type::DOUBLE:
+            return "DOUBLE";
+        case simdjson::dom::element_type::STRING:
+            return "STRING";
+        case simdjson::dom::element_type::BOOL:
+            return "BOOL";
+        case simdjson::dom::element_type::NULL_VALUE:
+            return "NULL_VALUE";
+        default:
+            return "UNKNOWN";
     }
 }
 
 // deprecated
-std::string processFieldAsString(const simdjson::dom::element &field_value)
+std::string processFieldAsString(const simdjson::dom::element& field_value)
 {
     simdjson::dom::element_type etype = field_value.type();
     if (field_value.is_string())
@@ -3097,7 +3171,7 @@ std::string processFieldAsString(const simdjson::dom::element &field_value)
     }
     else if (field_value.is_object())
     {
-        return "{...}"; // Some generic representation for objects, or you can serialize it if you want
+        return "{...}";  // Some generic representation for objects, or you can serialize it if you want
     }
     else
     {
@@ -3107,7 +3181,7 @@ std::string processFieldAsString(const simdjson::dom::element &field_value)
 }
 
 // deprecated
-std::any processField(const simdjson::dom::element &field_value)
+std::any processField(const simdjson::dom::element& field_value)
 {
     simdjson::dom::element_type etype = field_value.type();
     std::cout << " this is the type encountered: " << getElementTypeString(etype) << std::endl;
@@ -3167,10 +3241,11 @@ std::any processField(const simdjson::dom::element &field_value)
     }
     // // In case of an unknown type or an error, you might want to log it:
     // std::cerr << "Unknown or unhandled type encountered." << std::endl;
-    return {}; // returning an empty std::any
+    return {};  // returning an empty std::any
 }
 
-std::map<std::string, std::any> parseInputMessage(std::map<std::string, std::any> sysMap, const std::string &uri, const std::string &method, const std::string &body)
+std::map<std::string, std::any> parseInputMessage(std::map<std::string, std::any> sysMap, const std::string& uri,
+                                                  const std::string& method, const std::string& body)
 {
     std::map<std::string, std::any> baseMap;
     // Extract the id and key from the URI
@@ -3209,7 +3284,7 @@ std::map<std::string, std::any> parseInputMessage(std::map<std::string, std::any
     //    baseMap[id] = std::map<std::string, std::any>();
     //}
     // If the URI contains a key, process the body as its value
-    auto &componentMap = std::any_cast<std::map<std::string, std::any> &>(sysMap[key]);
+    auto& componentMap = std::any_cast<std::map<std::string, std::any>&>(sysMap[key]);
     for (auto [key, value] : obj.get_object())
     {
         std::cout << " Processing key:" << key << std::endl;
@@ -3225,16 +3300,18 @@ std::map<std::string, std::any> parseInputMessage(std::map<std::string, std::any
                 for (auto [nested_key, nested_value] : value.get_object())
                 {
                     if (nested_key == "value")
-                    { // if you're specifically looking for the "value" key
+                    {  // if you're specifically looking for the "value" key
                         auto valstr = processFieldAsString(nested_value);
-                        std::cout << "  found nested key/value [" << nested_key << " ] [" << valstr << "] in sysMap." << std::endl;
+                        std::cout << "  found nested key/value [" << nested_key << " ] [" << valstr << "] in sysMap."
+                                  << std::endl;
                     }
                 }
             }
             else
             {
                 auto foo = getElementTypeString(value.type());
-                std::cout << "found key/value [" << key << " ] [" << value << "] type [" << foo << "] in sysMap." << std::endl;
+                std::cout << "found key/value [" << key << " ] [" << value << "] type [" << foo << "] in sysMap."
+                          << std::endl;
             }
             // now value can be an obg with "value" i it or some kid of raw valye
         }
@@ -3261,25 +3338,29 @@ std::map<std::string, std::any> parseInputMessage(std::map<std::string, std::any
 }
 
 // this may be deprecated
-void test_parse_message(const char *uri, const char *method, const char *body)
+void test_parse_message(const char* uri, const char* method, const char* body)
 {
     std::vector<std::tuple<std::string, std::string, std::string>> testCases = {
-        {"/components/comp_sel_2440/fuse_monitoring", "set", "false"},
-        {"/components/comp_sel_2440/fuse_monitoring", "set", "{\"value\":false}"},
-        {"/components/comp_sel_2440", "set", "{\"fuse_monitoring\":false}"},
-        {"/components/comp_sel_2440", "set", "{\"fuse_monitoring\": {\"value\":false}}"},
-        {"/components/comp_sel_2440/voltage", "set", "1234"},
-        {"/components/comp_sel_2440/voltage", "set", "{\"value\":1234}"},
-        {"/components/comp_sel_2440", "set", "{\"voltage\":1234}"},
-        {"/components/comp_sel_2440", "set", "{\"voltage\": {\"value\":1234}}"},
-        {"/components/comp_sel_2440/status", "set", "\"running\""},
-        {"/components/comp_sel_2440/status", "set", "{\"value\":\"running\"}"},
-        {"/components/comp_sel_2440", "set", "{\"status\":\"running\"}"},
-        {"/components/comp_sel_2440", "set", "{\"status\": {\"value\":\"running\"}}"},
-        {"/components/comp_sel_2440", "set", "{\"voltage\":1234, \"fuse_monitoring\":false, \"status\":\"running\" }"},
-        {"/components/comp_sel_2440", "set", "{\"voltage\":{\"value\":1234}, \"fuse_monitoring\":{\"value\":false}, \"status\":{\"value\":\"running\"}}"},
-        {"/components/comp_sel_2440", "set", "{\"voltage\":{\"value\":1234, \"size\":2}, \"fuse_monitoring\":{\"value\":false}, \"status\":{\"value\":\"running\"}}"}};
-    for (const auto &testCase : testCases)
+        { "/components/comp_sel_2440/fuse_monitoring", "set", "false" },
+        { "/components/comp_sel_2440/fuse_monitoring", "set", "{\"value\":false}" },
+        { "/components/comp_sel_2440", "set", "{\"fuse_monitoring\":false}" },
+        { "/components/comp_sel_2440", "set", "{\"fuse_monitoring\": {\"value\":false}}" },
+        { "/components/comp_sel_2440/voltage", "set", "1234" },
+        { "/components/comp_sel_2440/voltage", "set", "{\"value\":1234}" },
+        { "/components/comp_sel_2440", "set", "{\"voltage\":1234}" },
+        { "/components/comp_sel_2440", "set", "{\"voltage\": {\"value\":1234}}" },
+        { "/components/comp_sel_2440/status", "set", "\"running\"" },
+        { "/components/comp_sel_2440/status", "set", "{\"value\":\"running\"}" },
+        { "/components/comp_sel_2440", "set", "{\"status\":\"running\"}" },
+        { "/components/comp_sel_2440", "set", "{\"status\": {\"value\":\"running\"}}" },
+        { "/components/comp_sel_2440", "set",
+          "{\"voltage\":1234, \"fuse_monitoring\":false, \"status\":\"running\" }" },
+        { "/components/comp_sel_2440", "set",
+          "{\"voltage\":{\"value\":1234}, \"fuse_monitoring\":{\"value\":false}, \"status\":{\"value\":\"running\"}}" },
+        { "/components/comp_sel_2440", "set",
+          "{\"voltage\":{\"value\":1234, \"size\":2}, \"fuse_monitoring\":{\"value\":false}, \"status\":{\"value\":\"running\"}}" }
+    };
+    for (const auto& testCase : testCases)
     {
         std::string uri, method, body;
         std::tie(uri, method, body) = testCase;
@@ -3288,19 +3369,19 @@ void test_parse_message(const char *uri, const char *method, const char *body)
         std::cout << "Body: " << body << "\n";
         std::map<std::string, std::any> resultMap = parseMessage(uri, method, body);
         parseInputMessage(resultMap, uri, method, body);
-        printMap(resultMap,0);
+        printMap(resultMap, 0);
         std::cout << "--------------------\n";
     }
     if (uri && body)
     {
         std::map<std::string, std::any> resultMap = parseMessage(uri, method, body);
-        printMap(resultMap,0);
+        printMap(resultMap, 0);
         std::cout << "--------------------\n";
     }
     test_printMap();
 }
 
-std::map<std::string, std::any> parseMessage(const std::string &uri, const std::string method, const std::string &body)
+std::map<std::string, std::any> parseMessage(const std::string& uri, const std::string method, const std::string& body)
 {
     std::map<std::string, std::any> baseMap;
     // Parsing JSON using simdjson
@@ -3323,7 +3404,7 @@ std::map<std::string, std::any> parseMessage(const std::string &uri, const std::
         baseMap[id] = std::map<std::string, std::any>();
     }
     // If the URI contains a key, process the body as its value
-    auto &componentMap = std::any_cast<std::map<std::string, std::any> &>(baseMap[id]);
+    auto& componentMap = std::any_cast<std::map<std::string, std::any>&>(baseMap[id]);
     for (auto [key, value] : obj.get_object())
     {
         std::cout << " Processing key:" << key << std::endl;
@@ -3354,26 +3435,30 @@ int test_extract()
 
 // this tests the concept of merging maps
 // we may not use it since we can create the results vecs from FimsInput
-void test_merge_message(const char *uri, const char *method, const char *body)
+void test_merge_message(const char* uri, const char* method, const char* body)
 {
     std::vector<std::tuple<std::string, std::string, std::string>> testCases = {
-        {"/components/comp_sel_2440/fuse_monitoring", "set", "false"},
-        {"/components/comp_sel_2440/hvac_status", "set", "{\"value\":false}"},
-        {"/components/comp_sel_2440", "set", "{\"active_power\":23456}"},
-        {"/components/comp_sel_2440", "set", "{\"fuse_monitoring\": {\"value\":false}}"},
-        {"/components/comp_sel_2440/voltage", "set", "1234"},
-        {"/components/comp_sel_2440/max_voltage", "set", "{\"value\":1234}"},
-        {"/components/comp_sel_2440", "set", "{\"avg_voltage\":1234}"},
-        {"/components/comp_sel_2440", "set", "{\"min_voltage\": {\"value\":1234}}"},
-        {"/components/comp_sel_2440/status", "set", "\"running\""},
-        {"/components/comp_sel_2440/old_status", "set", "{\"value\":\"running\"}"},
-        {"/components/comp_sel_2440", "set", "{\"new_status\":\"running\"}"},
-        {"/components/comp_sel_2440", "set", "{\"any_status\": {\"value\":\"running\"}}"},
-        {"/components/comp_sel_2440", "set", "{\"voltage\":1234, \"fuse_monitoring\":false, \"status\":\"running\" }"},
-        {"/components/comp_sel_2440", "set", "{\"avg_voltage\":{\"value\":1234}, \"old_fuse_monitoring\":{\"value\":false}, \"new_status\":{\"value\":\"running\"}}"},
-        {"/components/comp_sel_2440", "set", "{\"voltage\":{\"value\":1234, \"size\":2}, \"fuse_monitoring\":{\"value\":false}, \"status\":{\"value\":\"running\"}}"}};
+        { "/components/comp_sel_2440/fuse_monitoring", "set", "false" },
+        { "/components/comp_sel_2440/hvac_status", "set", "{\"value\":false}" },
+        { "/components/comp_sel_2440", "set", "{\"active_power\":23456}" },
+        { "/components/comp_sel_2440", "set", "{\"fuse_monitoring\": {\"value\":false}}" },
+        { "/components/comp_sel_2440/voltage", "set", "1234" },
+        { "/components/comp_sel_2440/max_voltage", "set", "{\"value\":1234}" },
+        { "/components/comp_sel_2440", "set", "{\"avg_voltage\":1234}" },
+        { "/components/comp_sel_2440", "set", "{\"min_voltage\": {\"value\":1234}}" },
+        { "/components/comp_sel_2440/status", "set", "\"running\"" },
+        { "/components/comp_sel_2440/old_status", "set", "{\"value\":\"running\"}" },
+        { "/components/comp_sel_2440", "set", "{\"new_status\":\"running\"}" },
+        { "/components/comp_sel_2440", "set", "{\"any_status\": {\"value\":\"running\"}}" },
+        { "/components/comp_sel_2440", "set",
+          "{\"voltage\":1234, \"fuse_monitoring\":false, \"status\":\"running\" }" },
+        { "/components/comp_sel_2440", "set",
+          "{\"avg_voltage\":{\"value\":1234}, \"old_fuse_monitoring\":{\"value\":false}, \"new_status\":{\"value\":\"running\"}}" },
+        { "/components/comp_sel_2440", "set",
+          "{\"voltage\":{\"value\":1234, \"size\":2}, \"fuse_monitoring\":{\"value\":false}, \"status\":{\"value\":\"running\"}}" }
+    };
     std::map<std::string, std::any> baseMap;
-    for (const auto &testCase : testCases)
+    for (const auto& testCase : testCases)
     {
         std::string uri, method, body;
         std::tie(uri, method, body) = testCase;
@@ -3389,27 +3474,27 @@ void test_merge_message(const char *uri, const char *method, const char *body)
         mergeSubMaps(baseMap, tmpMap);
         std::cout << "--------------------\n";
     }
-    printMap(baseMap,0);
+    printMap(baseMap, 0);
     spdlog::memory_buf_t buffer;
-    mapToBuffer(baseMap, buffer,0);
+    mapToBuffer(baseMap, buffer, 0);
     spdlog::info("{}", fmt::to_string(buffer));
 }
 
 // TODO put Component_IO_point_map inside cfg
-void addMapId(MapIdMap &imap, const int device_id, cfg::Register_Types register_type, cfg::io_point_struct *io_point)
+void addMapId(MapIdMap& imap, const int device_id, cfg::Register_Types register_type, cfg::io_point_struct* io_point)
 {
     if (io_point)
     {
         if (imap.find(device_id) == imap.end())
         {
-            imap[device_id] = std::map<cfg::Register_Types, std::map<int, cfg::io_point_struct *>>();
+            imap[device_id] = std::map<cfg::Register_Types, std::map<int, cfg::io_point_struct*>>();
         }
-        auto &itype = imap[device_id];
+        auto& itype = imap[device_id];
         if (itype.find(register_type) == itype.end())
         {
-            itype[register_type] = std::map<int, cfg::io_point_struct *>();
+            itype[register_type] = std::map<int, cfg::io_point_struct*>();
         }
-        auto &ioffset = itype[register_type];
+        auto& ioffset = itype[register_type];
         ioffset[io_point->offset] = io_point;
     }
     else
@@ -3420,11 +3505,12 @@ void addMapId(MapIdMap &imap, const int device_id, cfg::Register_Types register_
 
 //
 // this is for random sets , we are able to bin the data into CompressedResults
-// for processing pubs we.ll need to get back to the register structure , if all the mapped items are included in the message then the whole register set can be
-// processed.
-// this is really for the modbus server.
-// the jsonMapOfConfig is the items
-bool parseFimsMessage(struct cfg &myCfg, const Component_IO_point_map &items, std::vector<std::pair<std::shared_ptr<cfg::io_point_struct>, std::any>> &result,const std::string &method, const std::string &uri, const std::string &body)
+// for processing pubs we.ll need to get back to the register structure , if all the mapped items are included in the
+// message then the whole register set can be processed. this is really for the modbus server. the jsonMapOfConfig is
+// the items
+bool parseFimsMessage(struct cfg& myCfg, const Component_IO_point_map& items,
+                      std::vector<std::pair<std::shared_ptr<cfg::io_point_struct>, std::any>>& result,
+                      const std::string& method, const std::string& uri, const std::string& body)
 {
     simdjson::dom::parser parser;
     simdjson::dom::object json_obj;
@@ -3432,29 +3518,29 @@ bool parseFimsMessage(struct cfg &myCfg, const Component_IO_point_map &items, st
     if (error)
     {
         std::cout << "parse body failed [" << body << "]" << std::endl;
-        return false; // JSON parsing failed
+        return false;  // JSON parsing failed
     }
     std::cout << "parse body OK" << std::endl;
     auto uri_tokens = split_string(uri, '/');
     if (uri_tokens.size() < 2)
     {
         std::cout << "uri_tokens fail size :" << uri_tokens.size() << " uri :" << uri << std::endl;
-        return false; // Invalid URI
+        return false;  // Invalid URI
     }
     // auto uri_keys = split(uri_view, "/")
     // find component_io_point_map[uri[0]][uri[1]
     auto IO_point_map = myCfg.findIOPointMapFromUriFragments(uri_tokens);
     return true;
     std::cout << "uri_tokens OK size :" << uri_tokens.size() << std::endl;
-    printf(" IO_point_map %p \n", (void *)IO_point_map);
-    const auto &first_field = uri_tokens[1];
+    printf(" IO_point_map %p \n", (void*)IO_point_map);
+    const auto& first_field = uri_tokens[1];
     if (items.find(first_field) == items.end())
     {
         std::cout << "components field not mapped in config :" << first_field << std::endl;
-        return false; // The first field of the URI doesn't match with the map
+        return false;  // The first field of the URI doesn't match with the map
     }
     // std::cout << "first_field :"<< first_field << " OK" << std::endl;
-    const auto &io_point_id = uri_tokens[2];
+    const auto& io_point_id = uri_tokens[2];
     // std::cout << "item_id :"<< item_id << " OK" << std::endl;
     // If the URI provides a direct identification to an io_point
     // ie /components/comp_sel_2440/heartbeat 1234
@@ -3464,20 +3550,21 @@ bool parseFimsMessage(struct cfg &myCfg, const Component_IO_point_map &items, st
         if (json_obj.size() != 1)
         {
             std::cout << "single uri body invalid :" << body << std::endl;
-            return false; // Expected a direct value
+            return false;  // Expected a direct value
         }
         for (auto [key, value] : json_obj)
         {
             if (key == io_point_id)
             {
-                std::shared_ptr<cfg::io_point_struct> found_io_point = items.at(first_field).begin()->second.at(io_point_id);
+                std::shared_ptr<cfg::io_point_struct> found_io_point =
+                    items.at(first_field).begin()->second.at(io_point_id);
                 std::any foundValue;
                 extractJsonValue(value, foundValue);
                 result.emplace_back(found_io_point, foundValue);
-                return true; // Successfully matched a specific io_point
+                return true;  // Successfully matched a specific io_point
             }
         }
-        return false; // No match found
+        return false;  // No match found
     }
     // Check the body for multiple items
     for (auto [key, value] : json_obj)
@@ -3490,7 +3577,8 @@ bool parseFimsMessage(struct cfg &myCfg, const Component_IO_point_map &items, st
             auto it = items.at(first_field).at(io_point_id).find(key_str);
             if (it != items.at(first_field).at(io_point_id).end())
             {
-                std::shared_ptr<cfg::io_point_struct> found_io_point = items.at(first_field).at(io_point_id).at(key_str);
+                std::shared_ptr<cfg::io_point_struct> found_io_point =
+                    items.at(first_field).at(io_point_id).at(key_str);
                 // std::shared_ptr<cfg::io_point_struct> foundItem = (it->second.begin())->second;
                 std::any foundValue;
                 if (value.is_object() && value["value"].error() == simdjson::SUCCESS)
@@ -3511,17 +3599,15 @@ bool parseFimsMessage(struct cfg &myCfg, const Component_IO_point_map &items, st
             return false;
         }
     }
-    return true; // Parsing and matching process completed successfully (even if no matches are found)
+    return true;  // Parsing and matching process completed successfully (even if no matches are found)
 }
 
 // may be deprecated
 
-
-
 // may be deprecated
-void mapToRawBuffer(const std::map<std::string, std::any> &baseMap, spdlog::memory_buf_t &buf, int indent = 0)
+void mapToRawBuffer(const std::map<std::string, std::any>& baseMap, spdlog::memory_buf_t& buf, int indent = 0)
 {
-    for (const auto &[key, value] : baseMap)
+    for (const auto& [key, value] : baseMap)
     {
         for (int i = 0; i < indent; ++i)
         {
@@ -3559,11 +3645,11 @@ void mapToRawBuffer(const std::map<std::string, std::any> &baseMap, spdlog::memo
 }
 
 // deprecated
-void mapToBuffer(const std::map<std::string, std::any> &baseMap, spdlog::memory_buf_t &buf, int indent )
+void mapToBuffer(const std::map<std::string, std::any>& baseMap, spdlog::memory_buf_t& buf, int indent)
 {
     fmt::format_to(std::back_inserter(buf), "{{\n");
     bool firstItem = true;
-    for (const auto &[key, value] : baseMap)
+    for (const auto& [key, value] : baseMap)
     {
         if (!firstItem)
         {
@@ -3599,13 +3685,13 @@ void mapToBuffer(const std::map<std::string, std::any> &baseMap, spdlog::memory_
             {
                 fmt::format_to(std::back_inserter(buf), "{}", std::any_cast<double>(value));
             }
-            else if (value.type() == typeid(const char *))
+            else if (value.type() == typeid(const char*))
             {
-                fmt::format_to(std::back_inserter(buf), "\"{}\"", std::any_cast<const char *>(value));
+                fmt::format_to(std::back_inserter(buf), "\"{}\"", std::any_cast<const char*>(value));
             }
             else if (value.type() == typeid(std::string))
             {
-                const auto &strValue = std::any_cast<std::string>(value);
+                const auto& strValue = std::any_cast<std::string>(value);
                 // buf.append(strValue.begin(), strValue.end());
                 // fmt::format_to(std::back_inserter(buf), "\"{}\"", std::any_cast<std::string>(value));
                 std::cout << " found strvalue [" << strValue << "]" << std::endl;
@@ -3626,14 +3712,14 @@ void mapToBuffer(const std::map<std::string, std::any> &baseMap, spdlog::memory_
 }
 
 // may be deprecated
-std::any parseValue(const std::string &mystr)
+std::any parseValue(const std::string& mystr)
 {
     simdjson::dom::parser parser;
     auto result = parser.parse(mystr);
     if (result.error())
     {
         std::cerr << simdjson::error_message(result.error()) << std::endl;
-        return std::any(); // Return an empty any object
+        return std::any();  // Return an empty any object
     }
     simdjson::dom::element obj = result.value();
     // Check if it's a simple type: string, number or boolean
@@ -3677,7 +3763,7 @@ std::any parseValue(const std::string &mystr)
             }
         }
     }
-    return std::any(); // Return an empty any object for unsupported types
+    return std::any();  // Return an empty any object for unsupported types
 }
 
 //
@@ -3686,7 +3772,7 @@ std::any parseValue(const std::string &mystr)
 // see if you get a results vector
 //
 // now this is getting closer to the real thing.
-bool gcom_msg_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg &myCfg)
+bool gcom_msg_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg& myCfg)
 {
     // pull out the components into myCfg
     extract_components(jsonMapOfConfig, "components", myCfg, false);
@@ -3694,7 +3780,8 @@ bool gcom_msg_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg &
     Component_IO_point_map gcom_cfg;
     extract_structure(gcom_cfg, jsonMapOfConfig);
     std::vector<std::pair<std::shared_ptr<cfg::io_point_struct>, std::any>> result;
-    parseFimsMessage(myCfg, gcom_cfg, result, "set", "/components/comp_sel_2440", "{\"door_latch\": false, \"fire_relay\":true,\"disconnect_switch\":true}");
+    parseFimsMessage(myCfg, gcom_cfg, result, "set", "/components/comp_sel_2440",
+                     "{\"door_latch\": false, \"fire_relay\":true,\"disconnect_switch\":true}");
     parseFimsMessage(myCfg, gcom_cfg, result, "set", "/components/comp_sel_2440", "{\"heartbeat\":234}");
     auto res = result.size();
     std::cout << " result size :" << res << std::endl;
@@ -3739,13 +3826,13 @@ int test_printMap()
     // Setup spdlog
     spdlog::set_level(spdlog::level::debug);
     std::map<std::string, std::any> testMap = {
-        {"key1", std::map<std::string, std::any>{
-                     {"subkey1", 123},
-                     {"subkey2", "value2"},
-                     {"subkey3", std::map<std::string, std::any>{
-                                     {"subsubkey1", 45.6}}}}},
-        {"key2", "value2"},
-        {"key3", 789}};
+        { "key1",
+          std::map<std::string, std::any>{ { "subkey1", 123 },
+                                           { "subkey2", "value2" },
+                                           { "subkey3", std::map<std::string, std::any>{ { "subsubkey1", 45.6 } } } } },
+        { "key2", "value2" },
+        { "key3", 789 }
+    };
     // spdlog::details::fixed_buffer<bufferSize> raw_buffer;
     // int raw_buffer = 4096;
     // spdlog::memory_buf_t buffer(raw_buffer);
@@ -3756,23 +3843,24 @@ int test_printMap()
 }
 
 // Dummy timer create function
-void timer_create(const std::string &name, int frequency, int offset, void (*callback)(void *, void *), void *data)
+void timer_create(const std::string& name, int frequency, int offset, void (*callback)(void*, void*), void* data)
 {
     // For now, let's just print the timer setup
     // Cast the void pointer back to PublishGroup*
-    PublishGroup *pg = static_cast<PublishGroup *>(data);
-    std::cout << "Timer created with name: " << name << ", frequency: " << pg->frequency << ", offset: " << offset << std::endl;
+    PublishGroup* pg = static_cast<PublishGroup*>(data);
+    std::cout << "Timer created with name: " << name << ", frequency: " << pg->frequency << ", offset: " << offset
+              << std::endl;
 }
 
-
-// this is run once after start up 
+// this is run once after start up
 // it will create the different publish_groups
-// when connected to a timer, the callback will get a requests list generated and send the requrst to the iothread pub queue.
-// as each result gets back from the iothread the main thread will collect all the results into a pub_vector 
-// when they are all back we can then pub the results out.
-// of course we'll have to decode the results and save the values in the local Itemmap
+// when connected to a timer, the callback will get a requests list generated and send the requrst to the iothread pub
+// queue. as each result gets back from the iothread the main thread will collect all the results into a pub_vector when
+// they are all back we can then pub the results out. of course we'll have to decode the results and save the values in
+// the local Itemmap
 
-// bool extract_publish_groups(std::vector<std::shared_ptr<PublishGroup>> &publishGroups, ItemMap& items, const std::map<std::string, std::any>& jsonData) {
+// bool extract_publish_groups(std::vector<std::shared_ptr<PublishGroup>> &publishGroups, ItemMap& items, const
+// std::map<std::string, std::any>& jsonData) {
 //     bool debug = false;
 //     // Extract components array
 //     auto rawComponents = getMapValue<std::vector<std::any>>(jsonData, "components");
@@ -3784,10 +3872,9 @@ void timer_create(const std::string &name, int frequency, int offset, void (*cal
 
 //     for (const std::any& rawComponent : rawComponents.value()) {
 //         if (rawComponent.type() == typeid(std::map<std::string, std::any>)) {
-//             std::map<std::string, std::any> componentData = std::any_cast<std::map<std::string, std::any>>(rawComponent);
-//             std::string componentId;
-//             getItemFromMap(componentData, "component_id", componentId, std::string("components"), true, true, false);
-//             std::string comp_id; 
+//             std::map<std::string, std::any> componentData = std::any_cast<std::map<std::string,
+//             std::any>>(rawComponent); std::string componentId; getItemFromMap(componentData, "component_id",
+//             componentId, std::string("components"), true, true, false); std::string comp_id;
 //             getItemFromMap(componentData, "id", comp_id, std::string(), true, false, false);
 //             int frequency;
 //             getItemFromMap(componentData, "frequency", frequency, 1000, true, false, false);
@@ -3796,9 +3883,9 @@ void timer_create(const std::string &name, int frequency, int offset, void (*cal
 //             int comp_device_id;
 //             getItemFromMap(componentData, "device_id", comp_device_id, 255, true, false,  debug);
 
-
 //             std::string groupName = componentId + "_" + comp_id;
-//             auto pubGroup = std::make_shared<PublishGroup>(componentId, comp_id, frequency, offset_time); // Frequency and offset are hardcoded to 0 for now.
+//             auto pubGroup = std::make_shared<PublishGroup>(componentId, comp_id, frequency, offset_time); //
+//             Frequency and offset are hardcoded to 0 for now.
 
 //             auto rawRegisters = getMapValue<std::vector<std::any>>(componentData, "registers");
 //             if (!rawRegisters.has_value()) {
@@ -3807,13 +3894,13 @@ void timer_create(const std::string &name, int frequency, int offset, void (*cal
 
 //             for (const std::any& rawRegister : rawRegisters.value()) {
 //                 if (rawRegister.type() == typeid(std::map<std::string, std::any>)) {
-//                     std::map<std::string, std::any> registerData = std::any_cast<std::map<std::string, std::any>>(rawRegister);
+//                     std::map<std::string, std::any> registerData = std::any_cast<std::map<std::string,
+//                     std::any>>(rawRegister);
 
 //                     CompressedItem compressedItem;
 //                     int device_id;
 //                     getItemFromMap(registerData, "device_id", device_id, comp_device_id, true, true,  debug);
 //                     compressedItem.device_id = device_id;
-                    
 
 //                     std::string rtype;
 //                     if (getItemFromMap(registerData, "type", rtype, std::string(), true, false,  debug)) {
@@ -3824,10 +3911,12 @@ void timer_create(const std::string &name, int frequency, int offset, void (*cal
 //                     if (getItemFromMap(registerData, "starting_offset", start_offset, 0, true, false,  debug)) {
 //                         compressedItem.start_offset = start_offset;
 //                     }
-//                     compressedItem.end_offset = compressedItem.start_offset; // Assuming end_offset is the same for now.
+//                     compressedItem.end_offset = compressedItem.start_offset; // Assuming end_offset is the same for
+//                     now.
 
 //                     int number_of_registers;
-//                     if (getItemFromMap(registerData, "number_of_registers", number_of_registers, 1, true, false,  debug)) {
+//                     if (getItemFromMap(registerData, "number_of_registers", number_of_registers, 1, true, false,
+//                     debug)) {
 //                         compressedItem.end_offset = compressedItem.start_offset + number_of_registers - 1;
 //                         compressedItem.number_of_registers = number_of_registers;
 //                     }
@@ -3838,20 +3927,20 @@ void timer_create(const std::string &name, int frequency, int offset, void (*cal
 
 //                     for (const std::any& rawMap : rawMaps.value()) {
 //                         if (rawMap.type() == typeid(std::map<std::string, std::any>)) {
-//                             std::map<std::string, std::any> mapData = std::any_cast<std::map<std::string, std::any>>(rawMap);
+//                             std::map<std::string, std::any> mapData = std::any_cast<std::map<std::string,
+//                             std::any>>(rawMap);
 
-//                             std::string id; 
+//                             std::string id;
 //                             getItemFromMap(mapData, "id", id, std::string("some_id"), true, false, false);
 //                             // need to push this into the values vec structure[componentId][id][item->id] = item;
-//                             // 
+//                             //
 
-//                             std::cout << " adding comp :["<< componentId << "]  id :[" <<comp_id << "] item : "<< id << std::endl;
-//                             auto itemP = findItem(items, componentId, comp_id, id);
-//                             if (itemP)
+//                             std::cout << " adding comp :["<< componentId << "]  id :[" <<comp_id << "] item : "<< id
+//                             << std::endl; auto itemP = findItem(items, componentId, comp_id, id); if (itemP)
 //                             {
 
-//                                 std::cout << " found comp :["<< componentId << "]  id :[" <<comp_id << "] item : "<< id << std::endl;
-//                                 std::any foundValue = itemP->value;
+//                                 std::cout << " found comp :["<< componentId << "]  id :[" <<comp_id << "] item : "<<
+//                                 id << std::endl; std::any foundValue = itemP->value;
 //                                 compressedItem.values.emplace_back(itemP, foundValue);
 //                             }
 //                         }
@@ -3868,12 +3957,11 @@ void timer_create(const std::string &name, int frequency, int offset, void (*cal
 //     return true;
 // }
 
-
-std::string extractCompFromURI(const std::string &uri)
+std::string extractCompFromURI(const std::string& uri)
 {
     // Finding the start of the component ID
     std::size_t start = uri.find("/");
-    start += std::strlen("/"); // moving past "/"
+    start += std::strlen("/");  // moving past "/"
     // Finding the end of the component ID (next slash or end of the string)
     std::size_t end = uri.find("/", start);
     // Extracting the component ID
@@ -3883,19 +3971,19 @@ std::string extractCompFromURI(const std::string &uri)
     }
     else
     {
-        return uri.substr(start); // Till the end of the string
+        return uri.substr(start);  // Till the end of the string
     }
 }
 
-std::string extractCompIdFromURI(const std::string &uri, const std::string &component)
+std::string extractCompIdFromURI(const std::string& uri, const std::string& component)
 {
     // Finding the start of the component ID
     std::size_t start = uri.find(component);
     if (start == std::string::npos)
     {
-        return ""; // or throw an error if appropriate
+        return "";  // or throw an error if appropriate
     }
-    start += std::strlen("/"); // moving past "/components/"
+    start += std::strlen("/");  // moving past "/components/"
     // Finding the end of the component ID (next slash or end of the string)
     std::size_t end = uri.find("/", start);
     // Extracting the component ID
@@ -3905,19 +3993,19 @@ std::string extractCompIdFromURI(const std::string &uri, const std::string &comp
     }
     else
     {
-        return uri.substr(start); // Till the end of the string
+        return uri.substr(start);  // Till the end of the string
     }
 }
 
-std::string extractIdFromURI(const std::string &uri)
+std::string extractIdFromURI(const std::string& uri)
 {
     // Finding the start of the component ID
     std::size_t start = uri.find("/components/");
     if (start == std::string::npos)
     {
-        return ""; // or throw an error if appropriate
+        return "";  // or throw an error if appropriate
     }
-    start += std::strlen("/components/"); // moving past "/components/"
+    start += std::strlen("/components/");  // moving past "/components/"
     // Finding the end of the component ID (next slash or end of the string)
     std::size_t end = uri.find("/", start);
     // Extracting the component ID
@@ -3927,11 +4015,11 @@ std::string extractIdFromURI(const std::string &uri)
     }
     else
     {
-        return uri.substr(start); // Till the end of the string
+        return uri.substr(start);  // Till the end of the string
     }
 }
 
-std::string getKeyFromURI(const std::string &uri)
+std::string getKeyFromURI(const std::string& uri)
 {
     if (uri.back() == '/')
     {
@@ -3945,14 +4033,16 @@ std::string getKeyFromURI(const std::string &uri)
     return uri.substr(pos + 1);
 }
 
-void mergeSubMaps(std::map<std::string, std::any> &base, const std::map<std::string, std::any> &toMerge)
+void mergeSubMaps(std::map<std::string, std::any>& base, const std::map<std::string, std::any>& toMerge)
 {
-    for (const auto &[key, value] : toMerge)
+    for (const auto& [key, value] : toMerge)
     {
-        if (base.find(key) != base.end() && base[key].type() == typeid(std::map<std::string, std::any>) && value.type() == typeid(std::map<std::string, std::any>))
+        if (base.find(key) != base.end() && base[key].type() == typeid(std::map<std::string, std::any>) &&
+            value.type() == typeid(std::map<std::string, std::any>))
         {
             // If the key exists in both maps and both values are maps, merge them recursively
-            mergeSubMaps(std::any_cast<std::map<std::string, std::any> &>(base[key]), std::any_cast<const std::map<std::string, std::any> &>(value));
+            mergeSubMaps(std::any_cast<std::map<std::string, std::any>&>(base[key]),
+                         std::any_cast<const std::map<std::string, std::any>&>(value));
         }
         else
         {
@@ -3962,20 +4052,20 @@ void mergeSubMaps(std::map<std::string, std::any> &base, const std::map<std::str
     }
 }
 
-
-std::shared_ptr<cfg::io_point_struct> findItem(const Component_IO_point_map &items, const std::string &component, const std::string &id, const std::string &name)
+std::shared_ptr<cfg::io_point_struct> findItem(const Component_IO_point_map& items, const std::string& component,
+                                               const std::string& id, const std::string& name)
 {
     std::cout << " Seeking :" << component << "/" << id << "  " << name << std::endl;
     auto componentIt = items.find(component);
     if (componentIt != items.end())
     {
-        const auto &idMap = componentIt->second;
+        const auto& idMap = componentIt->second;
         auto idIt = idMap.find(id);
         if (idIt != idMap.end())
         {
-            for (const auto &innerIdPair : idIt->second)
+            for (const auto& innerIdPair : idIt->second)
             {
-                const std::shared_ptr<cfg::io_point_struct> &io_point = innerIdPair.second;
+                const std::shared_ptr<cfg::io_point_struct>& io_point = innerIdPair.second;
                 if (io_point && io_point->id == name)
                 {
                     return io_point;
@@ -3986,7 +4076,7 @@ std::shared_ptr<cfg::io_point_struct> findItem(const Component_IO_point_map &ite
     return nullptr;
 }
 
-struct type_map *gcom_get_comp(struct cfg &myCfg, std::string component, std::string id, bool debug)
+struct type_map* gcom_get_comp(struct cfg& myCfg, std::string component, std::string id, bool debug)
 {
     std::ostringstream oss;
     // if (comps.find(component) != comps.end()) {
@@ -4004,7 +4094,7 @@ struct type_map *gcom_get_comp(struct cfg &myCfg, std::string component, std::st
     // }
     if (debug)
     {
-        oss.str(""); // Clear the stringstream for new data
+        oss.str("");  // Clear the stringstream for new data
         oss << "\"gcom_get_comp\" :{\n"
             << "                   \"status\": \"error\",\n"
             << "                   \"component\": \"" << component << "\",\n"
@@ -4017,12 +4107,12 @@ struct type_map *gcom_get_comp(struct cfg &myCfg, std::string component, std::st
 }
 
 // /// @brief show the types found in a cfg
-std::string gcom_show_types(struct cfg &myCfg)
+std::string gcom_show_types(struct cfg& myCfg)
 {
     std::ostringstream oss;
     oss << "\"Types found\": {\n";
     bool firstTypeItem = true;
-    for (const auto &type_item : types)
+    for (const auto& type_item : types)
     {
         if (!firstTypeItem)
         {
@@ -4030,14 +4120,14 @@ std::string gcom_show_types(struct cfg &myCfg)
         }
         oss << "      \"" << type_item.first << "\": {\n";
         bool firstTypeReg = true;
-        for (const auto &type_reg : type_item.second)
+        for (const auto& type_reg : type_item.second)
         {
             if (!firstTypeReg)
             {
                 oss << ",\n";
             }
-            oss << "         \"" << type_reg.first << "\": {";          // If the type_map has any properties, add them here
-            oss << "\"map_id\": \"" << type_reg.second.map->id << "\""; // Adding the map_id property
+            oss << "         \"" << type_reg.first << "\": {";  // If the type_map has any properties, add them here
+            oss << "\"map_id\": \"" << type_reg.second.map->id << "\"";  // Adding the map_id property
             oss << "}";
             firstTypeReg = false;
         }
@@ -4049,15 +4139,16 @@ std::string gcom_show_types(struct cfg &myCfg)
     return oss.str();
 }
 
-bool gcom_config_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg &myCfg)
+bool gcom_config_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg& myCfg)
 {
     gcom_show_FirstLevel(jsonMapOfConfig, "connection");
     if (jsonMapOfConfig.find("connection") != jsonMapOfConfig.end())
     {
-        auto &connectionAny = jsonMapOfConfig["connection"];
+        auto& connectionAny = jsonMapOfConfig["connection"];
         if (connectionAny.type() == typeid(std::map<std::string, std::any>))
         {
-            std::map<std::string, std::any> connectionMap = std::any_cast<std::map<std::string, std::any>>(connectionAny);
+            std::map<std::string, std::any> connectionMap = std::any_cast<std::map<std::string, std::any>>(
+                connectionAny);
             // std::cout << " Connection ... "<< std::endl;
             gcom_show_FirstLevel(connectionMap, "types");
         }
@@ -4066,7 +4157,8 @@ bool gcom_config_test(std::map<std::string, std::any> jsonMapOfConfig, struct cf
     bool debug = false;
     getItemFromMap(jsonMapOfConfig, "connection.port", myCfg.connection.port, static_cast<int>(503), true, true, debug);
     // ok =
-    getItemFromMap(jsonMapOfConfig, "connection.ip_address", myCfg.connection.ip_address, std::string("172.3.0.2"), true, true, debug);
+    getItemFromMap(jsonMapOfConfig, "connection.ip_address", myCfg.connection.ip_address, std::string("172.3.0.2"),
+                   true, true, debug);
     // ok =
     getItemFromMap(jsonMapOfConfig, "connection.debug", myCfg.connection.debug, false, true, true, debug);
     // ok =
@@ -4090,7 +4182,7 @@ bool gcom_config_test(std::map<std::string, std::any> jsonMapOfConfig, struct cf
     gcom_show_subs(myCfg, debug);
     // get pubs
     gcom_extract_pubs(myCfg);
-    //gcom_show_pubs(myCfg, debug);
+    // gcom_show_pubs(myCfg, debug);
     //
     Component_IO_point_map structure;
     extract_structure(structure, jsonMapOfConfig);
@@ -4120,13 +4212,10 @@ void clearChan(bool debug)
     }
     while (io_respChan.receive(io_work, delay))
     {
-        // runThreadWork(io_thread, io_work, debug);
         if (debug)
         {
-            std::cout
-                << "  start " << io_work.get()->offset
-                << "  number " << io_work.get()->num_registers
-                << std::endl;
+            std::cout << "  start " << io_work.get()->offset << "  number " << io_work.get()->num_registers
+                      << std::endl;
         }
     }
     if (debug)
@@ -4137,7 +4226,8 @@ void clearChan(bool debug)
 
 // this create the Item map
 // from the jsonMapOfConfig
-Component_IO_point_map extract_structure(Component_IO_point_map &structure, const std::map<std::string, std::any> &jsonData)
+Component_IO_point_map extract_structure(Component_IO_point_map& structure,
+                                         const std::map<std::string, std::any>& jsonData)
 {
     bool debug = false;
     // Component_IO_point_map structure;
@@ -4150,11 +4240,12 @@ Component_IO_point_map extract_structure(Component_IO_point_map &structure, cons
         // throw std::runtime_error("Missing components in JSON data.");
     }
     std::cout << __func__ << " >>>> found components in jsonData" << std::endl;
-    for (const std::any &rawComponent : rawComponents.value())
+    for (const std::any& rawComponent : rawComponents.value())
     {
         if (rawComponent.type() == typeid(std::map<std::string, std::any>))
         {
-            std::map<std::string, std::any> componentData = std::any_cast<std::map<std::string, std::any>>(rawComponent);
+            std::map<std::string, std::any> componentData = std::any_cast<std::map<std::string, std::any>>(
+                rawComponent);
             std::string componentId;
             getItemFromMap(componentData, "component_id", componentId, std::string("components"), true, true, false);
             std::cout << __func__ << " >>>> found componentsId :" << componentId << " in jsonData" << std::endl;
@@ -4168,32 +4259,35 @@ Component_IO_point_map extract_structure(Component_IO_point_map &structure, cons
                 throw std::runtime_error("Missing registers in component data.");
             }
             std::cout << __func__ << " >>>> found registers in jsonData" << std::endl;
-            for (const std::any &rawRegister : rawRegisters.value())
+            for (const std::any& rawRegister : rawRegisters.value())
             {
                 if (rawRegister.type() == typeid(std::map<std::string, std::any>))
                 {
-                    std::map<std::string, std::any> registerData = std::any_cast<std::map<std::string, std::any>>(rawRegister);
+                    std::map<std::string, std::any> registerData = std::any_cast<std::map<std::string, std::any>>(
+                        rawRegister);
                     std::string register_type_str;
                     getItemFromMap(registerData, "type", register_type_str, std::string(), true, false, debug);
                     auto rawMaps = getMapValue<std::vector<std::any>>(registerData, "map");
                     if (!rawMaps.has_value())
                     {
-                        continue; // No maps to process in this register
+                        continue;  // No maps to process in this register
                     }
-                    for (const std::any &rawMap : rawMaps.value())
+                    for (const std::any& rawMap : rawMaps.value())
                     {
                         if (rawMap.type() == typeid(std::map<std::string, std::any>))
                         {
-                            std::map<std::string, std::any> mapData = std::any_cast<std::map<std::string, std::any>>(rawMap);
+                            std::map<std::string, std::any> mapData = std::any_cast<std::map<std::string, std::any>>(
+                                rawMap);
                             // this needs to be struct cfg::io_point_struct
-                            // std::vector<cfg::io_point_struct> extract_io_point_map(struct cfg::register_group_struct* register_group,  std::any& rawMapData) {
-                            // but we may need a different root object here
+                            // std::vector<cfg::io_point_struct> extract_io_point_map(struct cfg::register_group_struct*
+                            // register_group,  std::any& rawMapData) { but we may need a different root object here
                             // look at extract components
                             std::shared_ptr<cfg::io_point_struct> io_point = std::make_shared<cfg::io_point_struct>();
                             // io_point->id =
                             getItemFromMap(mapData, "id", io_point->id, std::string("some_id"), true, false, false);
                             // io_point->name =
-                            getItemFromMap(mapData, "name", io_point->name, std::string("some_name"), true, false, false);
+                            getItemFromMap(mapData, "name", io_point->name, std::string("some_name"), true, false,
+                                           false);
                             io_point->register_type_str = register_type_str;
                             // io_point->offset =
                             getItemFromMap(mapData, "offset", io_point->offset, 0, true, false, debug);
@@ -4213,18 +4307,18 @@ Component_IO_point_map extract_structure(Component_IO_point_map &structure, cons
 ///////////////////////////////////////
 ///////////// PRINT STUFF /////////////
 ///////////////////////////////////////
-void printComponentIOPointMap(const Component_IO_point_map &items)
+void printComponentIOPointMap(const Component_IO_point_map& items)
 {
-    for (const auto &component : items)
+    for (const auto& component : items)
     {
         std::cout << "Component: " << component.first << "\n";
-        for (const auto &idPair : component.second)
+        for (const auto& idPair : component.second)
         {
             std::cout << "  Uri: " << idPair.first << "\n";
-            for (const auto &itemPair : idPair.second)
+            for (const auto& itemPair : idPair.second)
             {
                 std::cout << "    Inner ID: " << itemPair.first << "\n";
-                auto &io_point = itemPair.second;
+                auto& io_point = itemPair.second;
                 printIOPoint(io_point);
             }
         }
@@ -4250,15 +4344,15 @@ void printIOPoint(const std::shared_ptr<cfg::io_point_struct> io_point)
 }
 
 // after getting in a fims message we'll get a vector of items found in the message and values
-// if this is a SET message then we'll have to compress the result vector and the encode the values into the compressed buffer.
-// a SET message will also set the local values.
-// the iothread can then send the compressed buffer to the device and return the result to the main thread.
-// the pubs already have compressed resuts ready to send in that case the iothread will return data in the iobuffer and we'll have to decode that into the actual values.
-// a GET message will only access the local data values
+// if this is a SET message then we'll have to compress the result vector and the encode the values into the compressed
+// buffer. a SET message will also set the local values. the iothread can then send the compressed buffer to the device
+// and return the result to the main thread. the pubs already have compressed resuts ready to send in that case the
+// iothread will return data in the iobuffer and we'll have to decode that into the actual values. a GET message will
+// only access the local data values
 //
-void printResultVector(const std::vector<std::pair<std::shared_ptr<cfg::io_point_struct>, std::any>> &result)
+void printResultVector(const std::vector<std::pair<std::shared_ptr<cfg::io_point_struct>, std::any>>& result)
 {
-    for (const auto &[io_point_ptr, anyValue] : result)
+    for (const auto& [io_point_ptr, anyValue] : result)
     {
         // Accessing members of the io_point struct via the shared_ptr
         // printIOPoint(io_point_ptr);
@@ -4293,8 +4387,8 @@ void printResultVector(const std::vector<std::pair<std::shared_ptr<cfg::io_point
         else
         {
             std::cout << "using unhandled type :" << anyValue.type().name();
-        } // Add more types as needed
-          // You can add more types if needed
+        }  // Add more types as needed
+           // You can add more types if needed
         std::cout << "--------------------\n";
     }
 }
@@ -4304,12 +4398,12 @@ void printResultVector(const std::vector<std::pair<std::shared_ptr<cfg::io_point
     test code to decode a map object
 */
 
-std::string gcom_show_FirstLevel(const std::map<std::string, std::any> &m, std::string key)
+std::string gcom_show_FirstLevel(const std::map<std::string, std::any>& m, std::string key)
 {
     std::ostringstream oss;
     oss << "\"" << key << "\" :{\n";
     bool isFirstItem = true;
-    for (const auto &[key, value] : m)
+    for (const auto& [key, value] : m)
     {
         if (!isFirstItem)
         {
@@ -4330,7 +4424,7 @@ std::string gcom_show_FirstLevel(const std::map<std::string, std::any> &m, std::
         }
         else if (value.type() == typeid(std::string))
         {
-            oss << "\"" << std::any_cast<std::string>(value) << "\""; // Quoted because it's a string in JSON
+            oss << "\"" << std::any_cast<std::string>(value) << "\"";  // Quoted because it's a string in JSON
         }
         else
         {
@@ -4346,12 +4440,12 @@ std::string gcom_show_FirstLevel(const std::map<std::string, std::any> &m, std::
 
 // TODO put subs in config
 
-std::string gcom_show_subs(struct cfg &myCfg, bool debug)
+std::string gcom_show_subs(struct cfg& myCfg, bool debug)
 {
     std::ostringstream oss;
     oss << "\"subs\": [";
     bool first = true;
-    for (const auto &sub : subs)
+    for (const auto& sub : subs)
     {
         if (!first)
             oss << ",\n         \"" << sub << "\"";
@@ -4386,7 +4480,8 @@ std::string gcom_show_subs(struct cfg &myCfg, bool debug)
 //             for (auto regPtr : offsetPair.second)
 //             {
 //                 std::ostringstream regStream;
-//                 regStream << "\t\t\t\"" << regPtr->register_type_str << "\": [ [" << regPtr->device_id << "," << regPtr->starting_offset << ", " << regPtr->number_of_registers << "] ]";
+//                 regStream << "\t\t\t\"" << regPtr->register_type_str << "\": [ [" << regPtr->device_id << "," <<
+//                 regPtr->starting_offset << ", " << regPtr->number_of_registers << "] ]";
 //                 regStrings.push_back(regStream.str());
 //             }
 //             offsetStream << join(",\n", regStrings.begin(), regStrings.end());
@@ -4410,11 +4505,11 @@ std::string gcom_show_subs(struct cfg &myCfg, bool debug)
 ///////////////////////////////////////
 // test_uri_body
 // extract the strucure find all the register_group maps and see if they work
-bool gcom_points_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg &myCfg, const char *decode)
+bool gcom_points_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg& myCfg, const char* decode)
 {
     bool debug = false;
     // pull out connection from jsonMapOfConfig
-    Logging::Init("gcom_points", (const int)0, (const char **)nullptr);
+    Logging::Init("gcom_points", (const int)0, (const char**)nullptr);
     // extract_connection(jsonMapOfConfig, "connection", myCfg);
     // // pull out the components into myCfg
     // extract_components(jsonMapOfConfig, "components", myCfg);
@@ -4426,7 +4521,7 @@ bool gcom_points_test(std::map<std::string, std::any> jsonMapOfConfig, struct cf
     //   auto run = (mygo == "run") ;
     int idx = 0;
     auto io_thread = make_IO_Thread(idx, myCfg.connection.ip_address.c_str(), myCfg.connection.port,
-            myCfg.connection.connection_timeout,myCfg.connection.transfer_timeout, myCfg);
+                                    myCfg.connection.connection_timeout, myCfg.connection.transfer_timeout, myCfg);
     std::cout << " connection ip  ..." << myCfg.connection.ip_address << ":" << myCfg.connection.port << "   ->\n";
     SetupModbusForThread(myCfg, io_thread, debug);
     io_thread->jobs = 0;
@@ -4434,51 +4529,41 @@ bool gcom_points_test(std::map<std::string, std::any> jsonMapOfConfig, struct cf
     for (int runs = 0; runs < 3; ++runs)
     {
         std::cout << " run  : " << runs << std::endl;
-        for (const auto &component : myCfg.components)
-        { // Assuming components is a std::vector or similar container
+        for (const auto& component : myCfg.components)
+        {  // Assuming components is a std::vector or similar container
             if (debug)
-                std::cout << " component : " << component->id
-                          << " Time  Now:" << get_time_double()
-                          << " Run Time :" << runTime
-                          << std::endl;
-            for (const auto &register_group : component->register_groups)
-            { // Assuming register_groups is a std::vector or similar container inside the component
+                std::cout << " component : " << component->id << " Time  Now:" << get_time_double()
+                          << " Run Time :" << runTime << std::endl;
+            for (const auto& register_group : component->register_groups)
+            {  // Assuming register_groups is a std::vector or similar container inside the component
                 if (debug)
-                    std::cout << " >>>>  "
-                              << std::left << std::setw(20)
-                              << register_group->register_type_str << " start :"
-                              << register_group->starting_offset
-                              << std::endl;
-                for (const auto &io_point : register_group->io_point_map)
-                { // Assuming io_point_map is a std::vector or similar container inside the register
+                    std::cout << " >>>>  " << std::left << std::setw(20) << register_group->register_type_str
+                              << " start :" << register_group->starting_offset << std::endl;
+                for (const auto& io_point : register_group->io_point_map)
+                {  // Assuming io_point_map is a std::vector or similar container inside the register
                     // auto regshr = map->register_group.lock();
                     if (debug)
-                        std::cout << ">>>>>>>>\t\t\t\t"
-                                  << std::left << std::setw(20)
+                        std::cout << ">>>>>>>>\t\t\t\t" << std::left << std::setw(20)
                                   << io_point->id
                                   //<<  " dev " << regshr->device_id
-                                  << "\toffset " << io_point->offset
-                                  << "\tsize " << io_point->size
-                                  << "\tdevice_id " << io_point->device_id
-                                  << std::endl;
+                                  << "\toffset " << io_point->offset << "\tsize " << io_point->size << "\tdevice_id "
+                                  << io_point->device_id << std::endl;
                     std::shared_ptr<IO_Work> io_work;
                     {
                         // double tNow = get_time_double();
                         // std::cout   << ">>>>>>>> start time #1 :" << tNow
                         //                 << " delay since start " << tNow-tStart
                         //                 << std::endl;
-                        io_work = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one,io_point->size, io_point->reg16, io_point->reg8, strToWorkType("get", false));
+                        io_work = make_work(io_point->component, io_point->register_type, io_point->device_id,
+                                            io_point->offset, io_point->off_by_one, io_point->size, io_point->reg16,
+                                            io_point->reg8, strToWorkType("get", false));
                         // double tEnd = get_time_double();
                         // std::cout   << ">>>>>>>> done time #1 :" << tEnd
                         //     << " elapsed: " << tEnd - tNow
                         //     << " delay since start "  << tEnd - tStart
                         //     << std::endl;
                     }
-                    // std::cout << " start runThreadWork  device_id "<< io_point->device_id<< std::endl;
-                    // io_work->device_id = 2;
-                    // io_work->jobs = 0;
                     bool enabled = true;
-                    // double tNow = get_time_double(); // to do use io_work time
                     if (!io_point->is_enabled)
                     {
                         enabled = false;
@@ -4520,12 +4605,9 @@ bool gcom_points_test(std::map<std::string, std::any> jsonMapOfConfig, struct cf
                         if (io_work->errors < 0)
                         {
                             io_point->is_enabled = false;
-                            std::cout << "\n\n>>>>>>>>>>   runThreadWork  failed for [/" << component->component_id << "/" << component->id << ":" << io_point->id
-                                      << "] offset :"
-                                      << io_point->offset
-                                      << " size :"
-                                      << io_point->size
-                                      << "\n\n"
+                            std::cout << "\n\n>>>>>>>>>>   runThreadWork  failed for [/" << component->component_id
+                                      << "/" << component->id << ":" << io_point->id << "] offset :" << io_point->offset
+                                      << " size :" << io_point->size << "\n\n"
                                       << std::endl;
                         }
                         else
@@ -4548,24 +4630,21 @@ bool gcom_points_test(std::map<std::string, std::any> jsonMapOfConfig, struct cf
                     }
                     else
                     {
-                        std::cout << "\n\n>>>>>>>>>>   runThreadWork  skipping  [/" << component->component_id << "/" << component->id << ":" << io_point->id
-                                  << "] offset :"
-                                  << io_point->offset
-                                  << " size :"
-                                  << io_point->size
-                                  << "\n\n"
+                        std::cout << "\n\n>>>>>>>>>>   runThreadWork  skipping  [/" << component->component_id << "/"
+                                  << component->id << ":" << io_point->id << "] offset :" << io_point->offset
+                                  << " size :" << io_point->size << "\n\n"
                                   << std::endl;
                     }
                     // jobs += io_work->jobs;
                     // std::cout << "                  done runThreadWork" << std::endl;
                     // if (run)
                     //     std::cout << " test_iothread deprecated" << std::endl;
-                    //      test_iothread(myCfg.connection.ip_address.c_str(), myCfg.connection.port, "poll", map.register_group->device_id, register_group.type.c_str(), map.offset, 0, false);
+                    //      test_iothread(myCfg.connection.ip_address.c_str(), myCfg.connection.port, "poll",
+                    //      map.register_group->device_id, register_group.type.c_str(), map.offset, 0, false);
                 }
             }
             std::cout << ">>> done runThreadWork now : " << get_time_double() << " run time : " << runTime
-                      << " Jobs : " << io_thread->jobs
-                      << std::endl;
+                      << " Jobs : " << io_thread->jobs << std::endl;
         }
         if (runs == 1)
         {
@@ -4578,66 +4657,58 @@ bool gcom_points_test(std::map<std::string, std::any> jsonMapOfConfig, struct cf
     return ok;
 }
 
-bool gcom_point_type_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg &myCfg, const char *ptype, const char *decode)
+bool gcom_point_type_test(std::map<std::string, std::any> jsonMapOfConfig, struct cfg& myCfg, const char* ptype,
+                          const char* decode)
 {
     bool debug = false;
     // pull out connection from jsonMapOfConfig
-    Logging::Init("gcom_point_type", (const int)0, (const char **)nullptr);
+    Logging::Init("gcom_point_type", (const int)0, (const char**)nullptr);
     std::cout << std::endl;
     std::cout << "point type test ..." << std::endl;
     double runTime = 0.0;
     int idx = 0;
     auto io_thread = make_IO_Thread(idx, myCfg.connection.ip_address.c_str(), myCfg.connection.port,
-        myCfg.connection.connection_timeout, myCfg.connection.transfer_timeout, myCfg);
+                                    myCfg.connection.connection_timeout, myCfg.connection.transfer_timeout, myCfg);
     std::cout << " connection ip  ..." << myCfg.connection.ip_address << ":" << myCfg.connection.port << "   ->\n";
     SetupModbusForThread(myCfg, io_thread, debug);
     io_thread->jobs = 0;
     for (int runs = 0; runs < 2; ++runs)
     {
         std::cout << " run  : " << runs << std::endl;
-        for (const auto &component : myCfg.components)
-        { // Assuming components is a std::vector or similar container
+        for (const auto& component : myCfg.components)
+        {  // Assuming components is a std::vector or similar container
             if (debug)
-                std::cout << " component : " << component->id
-                          << " Time  Now:" << get_time_double()
-                          << " Run Time :" << runTime
-                          << std::endl;
-            for (const auto &register_group : component->register_groups)
-            { // Assuming register_groups is a std::vector or similar container inside the component
+                std::cout << " component : " << component->id << " Time  Now:" << get_time_double()
+                          << " Run Time :" << runTime << std::endl;
+            for (const auto& register_group : component->register_groups)
+            {  // Assuming register_groups is a std::vector or similar container inside the component
                 if (debug)
-                    std::cout << " >>>>  "
-                              << std::left << std::setw(20) << register_group->register_type_str
-                              << " start :" << register_group->starting_offset
-                              << std::endl;
+                    std::cout << " >>>>  " << std::left << std::setw(20) << register_group->register_type_str
+                              << " start :" << register_group->starting_offset << std::endl;
                 if (register_group->register_type_str != ptype)
                     continue;
-                std::cout << " >>>>  "
-                          << std::left << std::setw(20)
-                          << register_group->register_type_str
+                std::cout << " >>>>  " << std::left << std::setw(20) << register_group->register_type_str
                           << " start :" << register_group->starting_offset
-                          << " num :" << register_group->number_of_registers
-                          << std::endl;
+                          << " num :" << register_group->number_of_registers << std::endl;
                 // continue;
                 // std::shared_ptr<IO_Work> io_work;
                 std::vector<std::shared_ptr<IO_Work>> io_work_vec;
                 std::vector<std::shared_ptr<cfg::io_point_struct>> io_map_vec;
                 // {
                 //     io_work = make_work(register_group->register_type, register_group->device_id
-                //                                 , register_group->starting_offset, register_group->number_of_registers, nullptr
-                //                                 , nullptr, strToWorkType("get", false));
+                //                                 , register_group->starting_offset,
+                //                                 register_group->number_of_registers, nullptr , nullptr,
+                //                                 strToWorkType("get", false));
                 // }
-                for (const auto &io_point : register_group->io_point_map)
-                { // Assuming io_point_map is a std::vector or similar container inside the register
+                for (const auto& io_point : register_group->io_point_map)
+                {  // Assuming io_point_map is a std::vector or similar container inside the register
                     // auto regshr = map->register_group.lock();
                     if (debug)
-                        std::cout << ">>>>>>>>\t\t\t\t"
-                                  << std::left << std::setw(20)
+                        std::cout << ">>>>>>>>\t\t\t\t" << std::left << std::setw(20)
                                   << io_point->id
                                   //<<  " dev " << regshr->device_id
-                                  << "\toffset " << io_point->offset
-                                  << "\tsize " << io_point->size
-                                  << "\tdevice_id " << io_point->device_id
-                                  << std::endl;
+                                  << "\toffset " << io_point->offset << "\tsize " << io_point->size << "\tdevice_id "
+                                  << io_point->device_id << std::endl;
                     bool enabled = true;
                     // if(io_point->packer)
                     // {
@@ -4663,7 +4734,8 @@ bool gcom_point_type_test(std::map<std::string, std::any> jsonMapOfConfig, struc
                         // if (io_work->errors < 0)
                         //  {
                         //      io_point->is_enabled = false;
-                        //      std::cout << "\n\n>>>>>>>>>>   runThreadWork  failed for [/"<< component->component_id << "/"<< component->id <<":" << io_point->id
+                        //      std::cout << "\n\n>>>>>>>>>>   runThreadWork  failed for [/"<< component->component_id
+                        //      << "/"<< component->id <<":" << io_point->id
                         //          << "] offset :"
                         //          << io_point->offset
                         //          << " size :"
@@ -4690,12 +4762,9 @@ bool gcom_point_type_test(std::map<std::string, std::any> jsonMapOfConfig, struc
                     }
                     else
                     {
-                        std::cout << "\n\n>>>>>>>>>>   runThreadWork  skipping  [/" << component->component_id << "/" << component->id << ":" << io_point->id
-                                  << "] offset :"
-                                  << io_point->offset
-                                  << " size :"
-                                  << io_point->size
-                                  << "\n\n"
+                        std::cout << "\n\n>>>>>>>>>>   runThreadWork  skipping  [/" << component->component_id << "/"
+                                  << component->id << ":" << io_point->id << "] offset :" << io_point->offset
+                                  << " size :" << io_point->size << "\n\n"
                                   << std::endl;
                     }
                 }
@@ -4704,10 +4773,8 @@ bool gcom_point_type_test(std::map<std::string, std::any> jsonMapOfConfig, struc
                 io_map_vec.clear();
                 for (auto io_work : io_work_vec)
                 {
-                    std::cout << ">>>>>>>>>> io_work io_point  start: " << io_work->offset
-                              << " num " << io_work->num_registers
-                              << " device_id " << io_work->device_id
-                              << std::endl;
+                    std::cout << ">>>>>>>>>> io_work io_point  start: " << io_work->offset << " num "
+                              << io_work->num_registers << " device_id " << io_work->device_id << std::endl;
                     std::string rundecode;
                     if (decode)
                     {
@@ -4716,18 +4783,15 @@ bool gcom_point_type_test(std::map<std::string, std::any> jsonMapOfConfig, struc
                     if (rundecode == "decode")
                     {
                         std::cout << ">>>>>>>>>> runThreadWork   start offset: " << io_work->offset
-                                  << " num :" << io_work->num_registers
-                                  << std::endl;
+                                  << " num :" << io_work->num_registers << std::endl;
                         runThreadWork(myCfg, io_thread, io_work, debug);
-                        std::cout << ">>>>>>>>>> runThreadWork  done errors: " << io_work->errors
-                                  << "\n\n"
+                        std::cout << ">>>>>>>>>> runThreadWork  done errors: " << io_work->errors << "\n\n"
                                   << std::endl;
                     }
                 }
             }
             std::cout << ">>> done runThreadWork now : " << get_time_double() << " run time : " << runTime
-                      << " Jobs : " << io_thread->jobs
-                      << std::endl;
+                      << " Jobs : " << io_thread->jobs << std::endl;
         }
         if (runs == 1)
         {
@@ -4740,7 +4804,8 @@ bool gcom_point_type_test(std::map<std::string, std::any> jsonMapOfConfig, struc
     return ok;
 }
 
-bool test_findMapVar(std::shared_ptr<cfg::io_point_struct> &io_point, const struct cfg &myCfg, const std::vector<std::string> &uri_keys, std::string kvar = "")
+bool test_findMapVar(std::shared_ptr<cfg::io_point_struct>& io_point, const struct cfg& myCfg,
+                     const std::vector<std::string>& uri_keys, std::string kvar = "")
 {
     int key_idx = 0;
     if ((uri_keys.size() > 1) && (uri_keys[0].size() == 0))
@@ -4760,14 +4825,14 @@ bool test_findMapVar(std::shared_ptr<cfg::io_point_struct> &io_point, const stru
     try
     {
         // Using at() for safe access. Catch exceptions if key not found
-        auto &myComp = myCfg.component_io_point_map.at(uri_keys[key_idx]);
+        auto& myComp = myCfg.component_io_point_map.at(uri_keys[key_idx]);
         // std::cout   << "         func : #2 "<< __func__ << "\n";
-        auto &register_group = myComp.at(uri_keys[key_idx + 1]);
+        auto& register_group = myComp.at(uri_keys[key_idx + 1]);
         // std::cout   << "         func : #3 "<< __func__ << "\n";
         io_point = register_group.at(myvar);
         return true;
     }
-    catch (const std::out_of_range &)
+    catch (const std::out_of_range&)
     {
         // Key not found, return nullptr
         return false;
@@ -4775,7 +4840,8 @@ bool test_findMapVar(std::shared_ptr<cfg::io_point_struct> &io_point, const stru
     return false;
 }
 
-bool test_findMapMap(std::map<std::string, std::shared_ptr<cfg::io_point_struct>> &map_result, const struct cfg &myCfg, const std::vector<std::string> &uri_keys)
+bool test_findMapMap(std::map<std::string, std::shared_ptr<cfg::io_point_struct>>& map_result, const struct cfg& myCfg,
+                     const std::vector<std::string>& uri_keys)
 {
     int key_idx = 0;
     if ((uri_keys.size() > 1) && (uri_keys[0].size() == 0))
@@ -4786,15 +4852,15 @@ bool test_findMapMap(std::map<std::string, std::shared_ptr<cfg::io_point_struct>
         try
         {
             // Using at() for safe access. Catch exceptions if key not found
-            const auto &myComp = myCfg.component_io_point_map.at(uri_keys[key_idx]);
+            const auto& myComp = myCfg.component_io_point_map.at(uri_keys[key_idx]);
             std::cout << "         func : #2 " << __func__ << "\n";
             map_result = myComp.at(uri_keys[key_idx + 1]);
             return true;
         }
-        catch (const std::out_of_range &)
+        catch (const std::out_of_range&)
         {
             // If you want to log or handle the exception here, you can do it.
-            throw; // Then, rethrow the exception.
+            throw;  // Then, rethrow the exception.
         }
     }
     // Throw an exception if there aren't enough keys provided
@@ -4802,16 +4868,17 @@ bool test_findMapMap(std::map<std::string, std::shared_ptr<cfg::io_point_struct>
     return false;
 }
 
-bool test_uri(struct cfg &myCfg, const char *uri)
+bool test_uri(struct cfg& myCfg, const char* uri)
 {
     std::cout << "client_name #2 " << myCfg.client_name << "\n";
-    for (auto &myComp : myCfg.component_io_point_map)
+    for (auto& myComp : myCfg.component_io_point_map)
     {
-        for (auto &register_group : myComp.second)
+        for (auto& register_group : myComp.second)
         {
-            for (auto &myMap : register_group.second)
+            for (auto& myMap : register_group.second)
             {
-                printf(" >>>>>>>>>>>>> <%s> component >> <%s>  register_group <%s> map <%s>\n", __func__, myComp.first.c_str(), register_group.first.c_str(), myMap.first.c_str());
+                printf(" >>>>>>>>>>>>> <%s> component >> <%s>  register_group <%s> map <%s>\n", __func__,
+                       myComp.first.c_str(), register_group.first.c_str(), myMap.first.c_str());
             }
         }
     }
@@ -4821,7 +4888,8 @@ bool test_uri(struct cfg &myCfg, const char *uri)
     {
         std::cout << " key : [" << key << "] "
                   << " size : " << key.size() << std::endl;
-        if (key.front() == '_') num_uris--;
+        if (key.front() == '_')
+            num_uris--;
     }
     std::map<std::string, std::shared_ptr<cfg::io_point_struct>> map_result;
 
@@ -4847,7 +4915,7 @@ bool test_uri(struct cfg &myCfg, const char *uri)
         }
     }
     else
-    { // this is a map
+    {  // this is a map
         try
         {
             // auto& rfoo =
@@ -4857,7 +4925,7 @@ bool test_uri(struct cfg &myCfg, const char *uri)
             std::cout << " >>> map found "
                       << "\n";
         }
-        catch (const std::out_of_range &)
+        catch (const std::out_of_range&)
         {
             std::cout << " >>> map NOT found "
                       << "\n";
@@ -4866,15 +4934,18 @@ bool test_uri(struct cfg &myCfg, const char *uri)
     return (var_result != nullptr);
 }
 
-bool decode_io_point_struct(std::vector<std::shared_ptr<IO_Work>> &work_vec, std::shared_ptr<cfg::io_point_struct> io_point, std::any val, struct cfg &myCfg, Uri_req &uri, const char *mode, bool debug)
+bool decode_io_point_struct(std::vector<std::shared_ptr<IO_Work>>& work_vec,
+                            std::shared_ptr<cfg::io_point_struct> io_point, std::any val, struct cfg& myCfg,
+                            Uri_req& uri, const char* mode, bool debug)
 {
     std::shared_ptr<IO_Work> iop;
-    iop = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, 1, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
+    iop = make_work(io_point->component, io_point->register_type, io_point->device_id, io_point->offset,
+                    io_point->off_by_one, 1, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
     work_vec.emplace_back(iop);
     return true;
 }
 
-bool uri_is_single(std::shared_ptr<cfg::io_point_struct> &io_point, struct cfg &myCfg, struct Uri_req &uri, bool debug)
+bool uri_is_single(std::shared_ptr<cfg::io_point_struct>& io_point, struct cfg& myCfg, struct Uri_req& uri, bool debug)
 {
     bool single = false;
     for (auto key : uri.uri_vec)
@@ -4892,7 +4963,7 @@ bool uri_is_single(std::shared_ptr<cfg::io_point_struct> &io_point, struct cfg &
     {
         std::cout << "  looking for var  "
                   << "\n";
-        single = ioPointExists(io_point, myCfg, uri.uri_vec,uri.num_uris, "");
+        single = ioPointExists(io_point, myCfg, uri.uri_vec, uri.num_uris, "");
         if (single)
         {
             std::cout << " io_point found " << io_point->id << "\n";
@@ -4924,7 +4995,7 @@ bool uri_is_single(std::shared_ptr<cfg::io_point_struct> &io_point, struct cfg &
        used to test the type of a std::any object
 */
 template <typename T>
-bool testAnyVal(const std::any &anyVal, const T &defaultValue)
+bool isTypeMatch(const std::any& anyVal, const T& defaultValue)
 {
     return anyVal.type() == typeid(T);
 }
@@ -4938,15 +5009,15 @@ bool gcom_test_bit_str()
     auto my_map = std::make_shared<cfg::io_point_struct>();
     std::vector<std::any> rawStringData = {
         std::string("Stopped"),
-        std::map<std::string, std::any>{{"value", 1}, {"string", std::string("Running")}},
-        std::map<std::string, std::any>{{"value", 4}, {"string", std::string("Paused")}},
+        std::map<std::string, std::any>{ { "value", 1 }, { "string", std::string("Running") } },
+        std::map<std::string, std::any>{ { "value", 4 }, { "string", std::string("Paused") } },
         std::string("Fault"),
     };
     std::any data = rawStringData;
-    extract_bitstrings(my_map, data); // Ensure extract_bitstrings is modified to accept shared_ptr
+    extract_bitstrings(my_map, data);  // Ensure extract_bitstrings is modified to accept shared_ptr
     std::cout << "Bit Strings " << std::endl;
-    for (const auto &s : my_map->bit_str)
-    { // Note the use of -> instead of . for accessing members
+    for (const auto& s : my_map->bit_str)
+    {  // Note the use of -> instead of . for accessing members
         std::cout << s << std::endl;
     }
     // std::cout <<"Bit Numbers " << std::endl;
@@ -4954,25 +5025,24 @@ bool gcom_test_bit_str()
     //     std::cout << s << std::endl;
     // }
     std::cout << "Bits Known "
-              << "0x"
-              << std::setfill('0')
-              << std::setw(8)
-              << std::hex << my_map->bits_known << std::endl; // Note the use of -> instead of . for accessing members
+              << "0x" << std::setfill('0') << std::setw(8) << std::hex << my_map->bits_known
+              << std::endl;  // Note the use of -> instead of . for accessing members
     std::cout << "Bits Unknown "
-              << "0x"
-              << std::setfill('0')
-              << std::setw(8)
-              << std::hex << my_map->bits_unknown << std::endl; // Note the use of -> instead of . for accessing members
+              << "0x" << std::setfill('0') << std::setw(8) << std::hex << my_map->bits_unknown
+              << std::endl;  // Note the use of -> instead of . for accessing members
     return true;
 }
 
 //// TODO complete this.
-/// @brief given an io_point , a value and a vector of IO_Work objects , add this io_point to the vector assuyme a "set" operationm
+/// @brief given an io_point , a value and a vector of IO_Work objects , add this io_point to the vector assuyme a "set"
+/// operationm
 /// @param work_vec  vector of IO_Work items
 /// @param io_point  the io_point we are setting
 /// @param val   the value we are using
 /// @return true if all worked out
-bool encode_io_point_struct(std::vector<std::shared_ptr<IO_Work>> &work_vec, std::shared_ptr<cfg::io_point_struct> io_point, std::any val, struct cfg &myCfg, Uri_req &uri, std::string &replyto, const char *mode, bool debug)
+bool encode_io_point_struct(std::vector<std::shared_ptr<IO_Work>>& work_vec,
+                            std::shared_ptr<cfg::io_point_struct> io_point, std::any val, struct cfg& myCfg,
+                            Uri_req& uri, std::string& replyto, const char* mode, bool debug)
 {
     debug = false;
     std::shared_ptr<IO_Work> io_work_single;
@@ -4989,7 +5059,9 @@ bool encode_io_point_struct(std::vector<std::shared_ptr<IO_Work>> &work_vec, std
         {
             std::cout << ">>>>" << __func__ << " regtype Coil " << std::endl;
         }
-        io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one,1, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
+        io_work_single = make_work(io_point->component, io_point->register_type, io_point->device_id, io_point->offset,
+                                   io_point->off_by_one, 1, io_point->reg16, io_point->reg8,
+                                   strToWorkType(mode, false));
         // io_work_single->ip_address = myCfg.connection.ip_address;
         // io_work_single->port = myCfg.connection.port;
 
@@ -5011,7 +5083,9 @@ bool encode_io_point_struct(std::vector<std::shared_ptr<IO_Work>> &work_vec, std
         {
             std::cout << ">>>>" << __func__ << " regtype Holding " << std::endl;
         }
-        io_work_single = make_work(io_point->register_type, io_point->device_id, io_point->offset, io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8, strToWorkType(mode, false));
+        io_work_single = make_work(io_point->component, io_point->register_type, io_point->device_id, io_point->offset,
+                                   io_point->off_by_one, io_point->size, io_point->reg16, io_point->reg8,
+                                   strToWorkType(mode, false));
         io_work_single->replyto = replyto;
         if (uri.is_unforce_request)
         {
@@ -5030,4 +5104,3 @@ bool encode_io_point_struct(std::vector<std::shared_ptr<IO_Work>> &work_vec, std
     // work_vec.emplace_back(io_work_single);
     return true;
 }
-

@@ -24,7 +24,7 @@ void get_stats(std::stringstream &ss, struct cfg &myCfg) {
     ss << "\"git_build\":" << myCfg.git_version_info.get_build() << ",";
     ss << "\"git_commit\":" << myCfg.git_version_info.get_commit() << ",";
     ss << "\"git_tag\":" << myCfg.git_version_info.get_tag() << ",";
-    getConnectTimes(ss, true);
+    formatThreadConnectionInfo(ss, true);
     ss << ",";
 
     //ss << "\"multi_pub_message_prep_times\":";
