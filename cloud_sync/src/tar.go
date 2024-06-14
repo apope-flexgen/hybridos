@@ -6,9 +6,11 @@ import (
 	"compress/gzip"
 	"fmt"
 	"io"
+	"math"
 	"os"
 	"path"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -22,14 +24,35 @@ const tarBufferSize = 1000000
 
 // Creates a metaarchive of the given files in the source directory and places the resulting
 // metaarchive into a metaarchive subdirectory
-func compress(fileNames []string, srcDirPath, clientName string) (string, error) {
+func compress(fileNames []string, srcDirPath, clientName string, UseCSDTNamingFormat bool) (string, error) {
 	destDir := path.Join(srcDirPath, metaArchiveDirName)
 	err := ensureDirectoryExists(destDir)
 	if err != nil {
 		return "", fmt.Errorf("could not ensure that %s exists: %w", destDir, err)
 	}
-
-	tarName := fmt.Sprintf("%s_%d%s", clientName, time.Now().UnixMicro(), metaArchiveExtension)
+	var tarName string
+	// If UseCSDTNamingFormat flag is true then create the tar file with the name in ("<client_name>"__"<site_name>"__"<device_name>"__"<lane_name>"__"<16-digit timestamp>"."ext") format
+	if UseCSDTNamingFormat {
+		// Find the latest timestamp out of all the files to use in the final name
+		latestTimestamp := int64(math.MinInt64)
+		clientNameForFile := clientName
+		siteName := ""
+		deviceName := ""
+		laneName := ""
+		for _, fileName := range fileNames {
+			var fileTimestamp int64
+			clientNameForFile, siteName, deviceName, laneName, fileTimestamp, err = parseFilenameCSDT(fileName)
+			if err != nil {
+				return "", fmt.Errorf("failed to compress file %s: %w", fileName, err)
+			}
+			if fileTimestamp > latestTimestamp {
+				latestTimestamp = fileTimestamp
+			}
+		}
+		tarName = fmt.Sprintf("%s__%s__%s__%s__%d%s", clientNameForFile, siteName, deviceName, laneName, latestTimestamp, metaArchiveExtension)
+	} else {
+		tarName = fmt.Sprintf("%s_%d%s", clientName, time.Now().UnixMicro(), metaArchiveExtension)
+	}
 
 	dest, err := os.Create(path.Join(destDir, tarName))
 	if err != nil {
@@ -169,4 +192,32 @@ func decompressSingleFile(tarBallReader *tar.Reader, fileHeader *tar.Header, des
 		return fmt.Errorf("failed to copy file %s: %w", fileHeader.Name, err)
 	}
 	return nil
+}
+
+// Takes a filename which may follow the format of client__site__device__lane__timestamp.ext and parses out the file origin data
+// Returns an error if the filename fails to parse.
+func parseFilenameCSDT(fileName string) (clientName string, siteName string, deviceName string, laneName string, fileTimestamp int64, err error) {
+	// Split the filename on the extension
+	baseFileNameSplit := strings.Split(fileName, ".")
+	if len(baseFileNameSplit) == 1 {
+		return clientName, siteName, deviceName, laneName, fileTimestamp, fmt.Errorf("file extension not present")
+	}
+
+	// Keep the base name of the file after removing the extension
+	baseFileName := baseFileNameSplit[0]
+	filenameSplits := strings.Split(baseFileName, "__")
+	if len(filenameSplits) != 5 {
+		return clientName, siteName, deviceName, laneName, fileTimestamp, fmt.Errorf("filename not in correct format")
+	}
+
+	clientName = filenameSplits[0]
+	siteName = filenameSplits[1]
+	deviceName = filenameSplits[2]
+	laneName = filenameSplits[3]
+	fileTimestampStr := filenameSplits[4]
+	fileTimestamp, err = strconv.ParseInt(fileTimestampStr, 10, 64)
+	if err != nil {
+		return clientName, siteName, deviceName, laneName, fileTimestamp, fmt.Errorf("failed to parse file timestamp: %w", err)
+	}
+	return clientName, siteName, deviceName, laneName, fileTimestamp, nil
 }

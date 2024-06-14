@@ -36,14 +36,15 @@ type client struct {
 }
 
 type ClientConfig struct {
-	Dir        string `json:"directory"`
-	Key        string `json:"private_key"`
-	Knownhosts string `json:"known_hosts"`
-	Servers    []string
-	Ext        string    `json:"extension"`
-	Tar        TarConfig `json:"tar_mode"`
-	AWSId      string    `json:"aws_id"`
-	AWSSecret  string    `json:"aws_secret_key"`
+	Dir                 string `json:"directory"`
+	Key                 string `json:"private_key"`
+	Knownhosts          string `json:"known_hosts"`
+	Servers             []string
+	Ext                 string    `json:"extension"`
+	Tar                 TarConfig `json:"tar_mode"`
+	AWSId               string    `json:"aws_id"`
+	AWSSecret           string    `json:"aws_secret_key"`
+	UseCSDTNamingFormat bool      `json:"use_csdt_naming_format"` // set to true if the naming format ("<client_name>"__"<site_name>"__"<device_name>"__"<lane_name>"__"<16-digit timestamp>"."ext") is to be followed while creating tar files. Defaults to false if not included (tar files are created with name “<client_name>_<16-digit timestamp>"."ext"). Incoming files named to be in the same format ("<client_name>"__"<site_name>"__"<device_name>"__"<lane_name>"__"<16-digit timestamp>"."ext").
 }
 
 type TarConfig struct {
@@ -97,24 +98,62 @@ func (cl *client) tar() {
 		}
 
 		if flush {
-			// perform tar
-			tarBallName, err := compress(fileBuffer, cl.config.Dir, cl.name)
-			if err != nil {
-				log.Errorf("%v", err)
-				continue
+			// If UseCSDTNamingFormat flag is false then use the older method
+			if !cl.config.UseCSDTNamingFormat {
+				// perform tar
+				tarBallName, err := compress(fileBuffer, cl.config.Dir, cl.name, cl.config.UseCSDTNamingFormat)
+				if err != nil {
+					log.Errorf("%v", err)
+					continue
+				}
+				// send tarball
+				cl.tarQOut <- tarBallName
+
+				// clean up contents
+				for _, file := range fileBuffer {
+					cl.clearQ <- path.Join(cl.config.Dir, file)
+				}
+			} else {
+				// Else use the ("<client_name>"__"<site_name>"__"<device_name>"__"<lane_name>"__"<16-digit timestamp>"."ext") format to name the created compressed tar file
+				// The incoming files also need to be in the same naming format to parse them
+				// Create a map of array of filenames with client__site__device__lane as key
+				clientsSiteDeviceLaneMap := make(map[string][]string)
+				for _, filename := range fileBuffer {
+					clientName, siteName, deviceName, laneName, _, err := parseFilenameCSDT(filename)
+					if err != nil {
+						log.Errorf("failed to parse file timestamp: %v", err)
+						continue
+					}
+
+					fileKey := clientName + "__" + siteName + "__" + deviceName + "__" + laneName
+					if _, ok := clientsSiteDeviceLaneMap[fileKey]; !ok {
+						clientsSiteDeviceLaneMap[fileKey] = []string{}
+					}
+					clientsSiteDeviceLaneMap[fileKey] = append(clientsSiteDeviceLaneMap[fileKey], filename)
+				}
+
+				// Send files to compress based on client__site__device__lane uniqueness
+				for clientSideDeviceLaneKey, fileNames := range clientsSiteDeviceLaneMap {
+					// perform tar
+					clientName := strings.Split(clientSideDeviceLaneKey, "__")[0]
+					tarBallName, err := compress(fileNames, cl.config.Dir, clientName, cl.config.UseCSDTNamingFormat)
+					if err != nil {
+						log.Errorf("%v", err)
+						continue
+					}
+					// send tarball
+					cl.tarQOut <- tarBallName
+
+					// clean up contents
+					for _, file := range fileNames {
+						cl.clearQ <- path.Join(cl.config.Dir, file)
+					}
+				}
 			}
-
-			// send tarball
-			cl.tarQOut <- tarBallName
-
-			// clean up contents
-			for _, file := range fileBuffer {
-				cl.clearQ <- path.Join(cl.config.Dir, file)
-			}
-
 			// reset variables
 			fileBuffer = make([]string, 0, cl.config.Tar.BufferSize)
 			flush = false
+
 		}
 	}
 }

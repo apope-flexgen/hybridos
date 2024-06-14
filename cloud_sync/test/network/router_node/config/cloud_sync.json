@@ -4,7 +4,7 @@
             "directory" : "/home/archives",
             "private_key" : "/root/.ssh/id_rsa",
             "known_hosts" : "/root/.ssh/known_hosts",
-            "extension" : ".tar.gz"
+            "extension" : ".batchpqtgz"
         }
     },
     "servers": {

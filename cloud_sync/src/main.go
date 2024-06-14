@@ -235,7 +235,9 @@ func getConfiguration(configSrc string) error {
 // Checks if the given directory exists, and creates it if it does not exist.
 func ensureDirectoryExists(directoryPath string) error {
 	_, err := os.Stat(directoryPath)
-	if err == nil {
+	if err != nil {
+		log.Errorf("failed to ensure directory exists: %v", err)
+	} else {
 		return nil
 	}
 	if !errors.Is(err, fs.ErrNotExist) {

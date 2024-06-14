@@ -5,7 +5,7 @@ services:
     build:
       context: ./client_node
       args:
-        imageName: centos7
+        imageName: rocky9
         imageTag: devel
     image:
       flexgen/cloud_sync/test/network/client_node:test
@@ -32,7 +32,7 @@ services:
     build:
       context: ./router_node
       args:
-        imageName: centos7
+        imageName: rocky9
         imageTag: devel
     image:
       flexgen/cloud_sync/test/network/router_node:test
@@ -59,7 +59,7 @@ services:
     build:
       context: ./server_node
       args:
-        imageName: centos7
+        imageName: rocky9
         imageTag: devel
     image:
       flexgen/cloud_sync/test/network/server_node:test
@@ -86,7 +86,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 1.1.1.0/8
+        - subnet: 1.0.0.0/8
 
 secrets:
   client_id_rsa:

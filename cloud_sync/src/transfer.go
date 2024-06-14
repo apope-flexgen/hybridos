@@ -140,7 +140,7 @@ func (serv *server) handleTransferRequest(cl *client, request transferRequest) (
 	if serv.config.Bucket != "" {
 		// S3 transfer
 		log.Debugf("S3 uploading %s to %s from %s.", request.fileName, serv.name, cl.name)
-		return uploadS3(serv.s3Uploader, request.fileName, request.srcDirPath, serv.config.Bucket, serv.config.Dir, time.Second*time.Duration(serv.config.Timeout))
+		return uploadS3(serv.s3Uploader, request.fileName, request.srcDirPath, serv.config.Bucket, serv.config.Dir, time.Second*time.Duration(serv.config.Timeout), serv.config.Sorted)
 	} else if serv.config.IP != "" {
 		if serv.config.UseSFTP {
 			// remote server transfer with SFTP
@@ -419,7 +419,9 @@ func parseScpResponse(pipes *sshPipe) error {
 // "bucket" name of destination bucket and "destDir" directory within bucket.
 //
 // "timeout" duration for hanging requests.
-func uploadS3(uploader *s3manager.Uploader, filename, srcDir, bucket, destDir string, timeout time.Duration) (err error, retryable bool) {
+//
+// "sorted" set to true to store files in subdirectories organized by client/site/device/YYYY/MM/DD/HH format while uploading to s3
+func uploadS3(uploader *s3manager.Uploader, filename, srcDir, bucket, destDir string, timeout time.Duration, sorted bool) (err error, retryable bool) {
 	if uploader == nil {
 		return fmt.Errorf("s3 uploader does not exist"), true
 	}
@@ -431,6 +433,21 @@ func uploadS3(uploader *s3manager.Uploader, filename, srcDir, bucket, destDir st
 
 	ctx, cancel := context.WithTimeout(aws.BackgroundContext(), timeout)
 	defer cancel()
+
+	// If sorted flag is true then store the files in subdirectories in client/site/device/YYYY/MM/DD/HH format
+	if sorted {
+		// Split the filename on "__" and take out client, site, device and timestamp
+		clientName, siteName, deviceName, _, fileTimestamp, err := parseFilenameCSDT(filename)
+		if err != nil {
+			return fmt.Errorf("%v", err), false
+		}
+
+		timeNow := time.UnixMicro(fileTimestamp)
+
+		// Get YYYY, MM, DD, HH from the timestamp
+		year, month, day, hour := parseTimestamp(timeNow)
+		destDir = destDir + "/" + clientName + "/" + siteName + "/" + deviceName + "/" + year + "/" + month + "/" + day + "/" + hour
+	}
 
 	res, err := uploader.UploadWithContext(ctx, &s3manager.UploadInput{
 		Body:   file,
@@ -482,4 +499,13 @@ func uploadSFTP(sftpCl *sftp.Client, srcDirPath string, destDirPath string, file
 	}
 
 	return nil, true
+}
+
+// Parse timestamp to get YYYY, MM, DD, HH
+func parseTimestamp(timestamp time.Time) (year string, month string, day string, hour string) {
+	year = strconv.Itoa(timestamp.Year())
+	month = fmt.Sprintf("%02d", timestamp.Month())
+	day = fmt.Sprintf("%02d", timestamp.Day())
+	hour = fmt.Sprintf("%02d", timestamp.Hour())
+	return year, month, day, hour
 }

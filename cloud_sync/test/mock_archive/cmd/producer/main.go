@@ -26,16 +26,29 @@ func main() {
 	averageSize := 100000
 	stdDevSize := 0.05 * float64(averageSize)
 	archiveCount := 1
+	clients := []string{"engie", "vitol"}
+	sites := []string{"libra", "ows"}
+	devices := []string{"hp_la_site_controller_01", "hp_la_ess_controller_01"} // there would be specific device names for each client/site/device
+	lane := []string{"1", "2"}
 	for range ticker.C {
 		for i := 0; i < numArchivesPerPeriod; i++ {
 			size := int(rand.NormFloat64()*stdDevSize) + averageSize
-			archive := mock_archive.RandomDataArchive(fmt.Sprintf("archive_#%d_%d.tar.gz", archiveCount, time.Now().UnixMicro()), size)
-			err := archive.WriteToFile(outputDirPath)
-			if err != nil {
-				log.Printf("Failed to write archive: %v", err)
-			} else {
-				archiveCount++
+			for _, client := range clients {
+				for _, site := range sites {
+					for _, device := range devices {
+						for _, lane := range lane {
+							archive := mock_archive.RandomDataArchive(fmt.Sprintf("%s__%s__%s__%s__%d.batchpqtgz", client, site, device, lane, time.Now().UnixMicro()), size)
+							err := archive.WriteToFile(outputDirPath)
+							if err != nil {
+								log.Printf("Failed to write archive: %v", err)
+							} else {
+								archiveCount++
+							}
+						}
+					}
+				}
 			}
+
 		}
 	}
 }
