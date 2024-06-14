@@ -1174,9 +1174,9 @@ void stashWork(std::shared_ptr<IO_Work> io_work);
 /**
  * @brief Creates and initializes a new IO_Work object.
  *
- * This function creates and initializes an IO_Work object, either by reusing an available one from the pool or by
- * creating a new one if the pool is empty. The function sets various fields of the IO_Work object based on the input
- * parameters.
+ * This function creates and initializes an IO_Work object, either by reusing an available one from the pool or
+ * by creating a new one if the pool is empty. The function sets various fields of the IO_Work object based on
+ * the input parameters.
  *
  * @param component Pointer to the component structure associated with the work.
  * @param register_type The type of register involved in the work.
