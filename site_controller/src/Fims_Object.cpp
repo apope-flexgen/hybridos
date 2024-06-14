@@ -570,8 +570,8 @@ void Fims_Object::build_JSON_Object(fmt::memory_buffer& buf, bool control2status
             }
         }
     } else {
-        for (size_t i = 0; i < options_map.size(); i++) {
-            add_options_item_to_buf(buf, i);
+        for (const auto& option : options_map) {
+            add_options_item_to_buf(buf, option.first);
         }
     }
     // Status cannot have empty options array, publish the default string value pair at a minimum

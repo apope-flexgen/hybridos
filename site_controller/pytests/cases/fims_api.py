@@ -160,3 +160,147 @@ def test_fr_multiple_inputs(test):
 ])
 def test_grid_mode_doesnt_spam(test):
     return test
+
+mask_before_testing = {}
+
+# setup_available_features_mask
+def setup_multiple_inputs(value: str):
+    global mask_before_testing
+    if len(mask_before_testing.keys()) == 0:
+        mask_before_testing = fims_get("/dbi/site_controller/variables/variables/features/active_power/available_features_runmode1_kW_mode")
+
+    update_mask = fims_get("/dbi/site_controller/variables/variables/features/active_power/available_features_runmode1_kW_mode")
+    update_mask['value'] = value
+
+    # Get the currently configured multiple_inputs selections if present, default to false if not
+
+    edits: list[dict] = [
+        {
+            "uri": "/dbi/site_controller/variables/variables/features/active_power/available_features_runmode1_kW_mode",
+            "up": update_mask,
+        }
+    ]
+    return edits
+
+# Validate feature dropdown by checking the cmd object
+@ fixture
+@ parametrize("test", [
+    Setup(
+        "validate_feat_dropdown",
+        {},
+        [],
+        # Restart with 0x3F mask (all feats on)
+        post_lambda=[
+            lambda: Site_Controller_Instance.get_instance().mig.upload(setup_multiple_inputs("0x3F")),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller(True)
+        ]
+    ),
+    Steps(
+        {},
+        [
+            Flex_Assertion(Assertion_Type.obj_eq, "/features/active_power",
+                           [    
+                                {
+                                    "name": "Disabled",
+                                    "return_value": 5
+                                },
+                                {
+                                    "name": "ESS Calibration",
+                                    "return_value": 4
+                                },
+                                {
+                                    "name": "Manual",
+                                    "return_value": 3
+                                },
+                                {
+                                    "name": "Active Power Setpoint",
+                                    "return_value": 2
+                                },
+                                {
+                                    "name": "Target SOC",
+                                    "return_value": 1
+                                },
+                                {
+                                    "name": "Energy Arbitrage",
+                                    "return_value": 0
+                                }
+                            ], 
+                           wait_secs=1, pattern="runmode1_kW_mode_cmd.options"),
+        ],
+        # Restart with 0xF mask (remove disabled/ess calibration)
+        post_lambda=[
+            lambda: Site_Controller_Instance.get_instance().mig.upload(setup_multiple_inputs("0xF")),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller(True)
+        ]
+    ),
+    Steps(
+        {},
+        [
+            Flex_Assertion(Assertion_Type.obj_eq, "/features/active_power",
+                           [    
+                                {
+                                    "name": "Manual",
+                                    "return_value": 3
+                                },
+                                {
+                                    "name": "Active Power Setpoint",
+                                    "return_value": 2
+                                },
+                                {
+                                    "name": "Target SOC",
+                                    "return_value": 1
+                                },
+                                {
+                                    "name": "Energy Arbitrage",
+                                    "return_value": 0
+                                }
+                            ], 
+                           wait_secs=1, pattern="runmode1_kW_mode_cmd.options"),
+        ],
+        # Restart with 0x2F mask (remove only ess calibration) (PROVES YOU CAN HAVE A "JUMP")
+        post_lambda=[
+            lambda: Site_Controller_Instance.get_instance().mig.upload(setup_multiple_inputs("0x2F")),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller(True)
+        ]
+    ),
+    Steps(
+        {},
+        [
+            Flex_Assertion(Assertion_Type.obj_eq, "/features/active_power",
+                           [    
+                                {
+                                    "name": "Disabled",
+                                    "return_value": 5
+                                },
+                                {
+                                    "name": "Manual",
+                                    "return_value": 3
+                                },
+                                {
+                                    "name": "Active Power Setpoint",
+                                    "return_value": 2
+                                },
+                                {
+                                    "name": "Target SOC",
+                                    "return_value": 1
+                                },
+                                {
+                                    "name": "Energy Arbitrage",
+                                    "return_value": 0
+                                }
+                            ], 
+                           wait_secs=1, pattern="runmode1_kW_mode_cmd.options"),
+        ]
+    ),
+    # nothing to really do for teardown restore prior state and finish
+    Teardown(
+        {},
+        [],
+        post_lambda=[
+            lambda: Site_Controller_Instance.get_instance().mig.upload(setup_multiple_inputs(mask_before_testing['value'])),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller(True)
+        ]
+    )
+])
+def test_validate_feat_dropdown(test):
+    return test
