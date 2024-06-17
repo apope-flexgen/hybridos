@@ -223,6 +223,8 @@ github.com/flexgen-power/glog v1.0.0/go.mod h1:DcZQUOiOpHxXmlcjxreltuUGfbZLjXv5d
 github.com/flexgen-power/go_flexgen v0.0.0-20220815181946-6c5f95925a31/go.mod h1:JrdGFivcmK9R+0YCT65p4xy88ZQ+Fhb2o9cdS0oYOBQ=
 github.com/flexgen-power/go_flexgen v0.0.0-20230404160509-52f567a64aab h1:cLXK4swo2gScrhATb8LPEhjVZTzJW7CBdshWwwmp7wU=
 github.com/flexgen-power/go_flexgen v0.0.0-20230404160509-52f567a64aab/go.mod h1:mxQBTPnyaPiRkLX4yS02XnXeYWr8KSpH4jSNWnXbjv4=
+github.com/flexgen-power/hybridos/fims/go_fims v0.0.0-20240604140041-532528be725a h1:c+MwTvAgCP0VjH/gh418U1OSmWp/krE3JOe+KkgmPMk=
+github.com/flexgen-power/hybridos/fims/go_fims v0.0.0-20240604140041-532528be725a/go.mod h1:5RoobZwpMwHL7nuAEGYs13yaqsdXfbCkP8Rfk6dmtYM=
 github.com/flexgen-power/influxdb_client v0.0.0-20230322221340-8842e616f777 h1:lt3+o3opza8sbS+uYLKImv/cd7Tzr6f99HaEKhY+kgg=
 github.com/flexgen-power/influxdb_client v0.0.0-20230322221340-8842e616f777/go.mod h1:Pr/BVfAIXdCV0Cl+4uZcPORuEib3US94HiLryIEdd5k=
 github.com/form3tech-oss/jwt-go v3.2.2+incompatible/go.mod h1:pbq4aXjuKjdthFRnoDwaVPLA+WlJuPGy+QneDUgJi2k=
@@ -842,6 +844,7 @@ golang.org/x/sys v0.0.0-20220227234510-4e6760a101f9/go.mod h1:oPkhp1MJrh7nUepCBc
 golang.org/x/sys v0.0.0-20220328115105-d36c6a25d886/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220330033206-e17cdc41300f/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220405210540-1e041c57c461/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20220412211240-33da011f77ad/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220704084225-05e143d24a9e/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=

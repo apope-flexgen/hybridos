@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf
+	github.com/flexgen-power/hybridos/fims/go_fims v0.0.0-20240604140041-532528be725a
 	github.com/flexgen-power/influxdb_client v0.0.0-20230322221340-8842e616f777
 	github.com/gosnmp/gosnmp v1.35.0
 	github.com/influxdata/influxdb-client-go/v2 v2.11.0

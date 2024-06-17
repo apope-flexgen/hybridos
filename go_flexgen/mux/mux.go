@@ -3,8 +3,9 @@
 package mux
 
 import (
-	"fims"
 	"fmt"
+
+	fims "github.com/flexgen-power/hybridos/fims/go_fims"
 )
 
 // Router provides the engine framework of tracking and
@@ -55,9 +56,12 @@ func (r *Router) Serve(msg *fims.FimsMsg) error {
 		handler = route.handler
 	}
 
-	// Verify a handler exists before execution.
-	if handler == nil {
+	// Handle error cases.
+	switch {
+	case handler == nil: // Verify a handler exists before execution.
 		handler = NotFoundHandler()
+	case route.method != msg.Method: // Verify route method matches the FIMS message method.
+		handler = InvalidMethodHandler()
 	}
 
 	// Execute handler for FIMS.

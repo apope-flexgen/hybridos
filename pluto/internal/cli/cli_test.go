@@ -21,22 +21,22 @@ func TestParse(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "no flags",
-			args:    []string{},
-			want:    &Config{Hello: false},
+			name:    "nofims flag",
+			args:    []string{"-nofims"},
+			want:    &Config{NoFims: true},
 			wantErr: false,
 		},
 		{
-			name:    "unknown flag",
-			args:    []string{"-unknown"},
-			want:    nil,
-			wantErr: true,
+			name:    "no flags",
+			args:    []string{},
+			want:    &Config{},
+			wantErr: false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Parse(tt.args...)
+			got, err := Parse(tt.args)
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
