@@ -223,7 +223,7 @@ void features::Frequency_Response::handle_fims_set(std::string uri_endpoint, con
     }
     // If a frequency endpoint was matched, check its component variables
     if (matched_comp) {
-        matched_comp->handle_fims_set(&msg_value, uri_endpoint.c_str());
+        matched_comp->handle_fims_set(&msg_value, uri_endpoint.c_str(), target_freq_hz.value.value_float);
     }
 
     if (msg_value.type == cJSON_True || msg_value.type == cJSON_False) {
